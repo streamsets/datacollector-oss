@@ -59,7 +59,6 @@ public abstract class RuntimeInfo {
   public static final String SDC_PRODUCT = "sdc";
 
   public static final String SECURITY_PREFIX = "java.security.";
-  public static final String DATA_COLLECTOR_BASE_HTTP_URL = "sdc.base.http.url";
   public static final String PIPELINE_ACCESS_CONTROL_ENABLED = "pipeline.access.control.enabled";
   public static final boolean PIPELINE_ACCESS_CONTROL_ENABLED_DEFAULT = false;
   public static final String DPM_COMPONENT_TYPE_CONFIG = "dpm.componentType";
@@ -79,6 +78,8 @@ public abstract class RuntimeInfo {
   public static final String LOG4J_PROPERTIES = "-log4j.properties";
 
   private static final String STREAMSETS_LIBRARIES_EXTRA_DIR_SYS_PROP = "STREAMSETS_LIBRARIES_EXTRA_DIR";
+
+  protected static final String BASE_HTTP_URL_ATTR = "%s.base.http.url";
 
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
@@ -341,6 +342,14 @@ public abstract class RuntimeInfo {
     return propertyPrefix;
   }
 
+  public String getBaseHttpUrlAttr() {
+    return getBaseHttpUrlAttr(getProductName());
+  }
+
+  public static String getBaseHttpUrlAttr(String productName) {
+    return String.format(BASE_HTTP_URL_ATTR, productName);
+  }
+
   public File getPropertiesFile() {
     return new File(getConfigDir(), getProductName() + ".properties");
   }
@@ -352,7 +361,7 @@ public abstract class RuntimeInfo {
     if (configFile.exists()) {
       try(FileReader reader = new FileReader(configFile)) {
         conf.load(reader);
-        runtimeInfo.setBaseHttpUrl(conf.get(DATA_COLLECTOR_BASE_HTTP_URL, runtimeInfo.getBaseHttpUrl()));
+        runtimeInfo.setBaseHttpUrl(conf.get(runtimeInfo.getBaseHttpUrlAttr(), runtimeInfo.getBaseHttpUrl()));
         String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);

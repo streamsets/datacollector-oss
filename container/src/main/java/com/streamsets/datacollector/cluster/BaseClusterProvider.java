@@ -122,7 +122,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
   private static final String CONFIG_ADDITIONAL_CONFIGS_TO_REMOVE = "cluster.slave.configs.remove";
   // List of properties that we want to always remove as they do not make sense when passed from master sdc to slave sdcs
   private static final String []SDC_CONFIGS_TO_ALWAYS_REMOVE = {
-    RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL,
+    RuntimeInfo.getBaseHttpUrlAttr(RuntimeInfo.SDC_PRODUCT),
     "http.bindHost"
   };
 
@@ -243,6 +243,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       sdcProperties.setProperty(WebServerTask.REALM_FILE_PERMISSION_CHECK, "false");
 
       // Remove always problematical properties
+
       for(String property: SDC_CONFIGS_TO_ALWAYS_REMOVE) {
         sdcProperties.remove(property);
       }

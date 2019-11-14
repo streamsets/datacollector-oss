@@ -431,7 +431,7 @@ public class Configuration implements com.streamsets.pipeline.api.Configuration 
   }
 
   private String get(String name) {
-    Preconditions.checkNotNull(name, "name cannot be null");
+    Preconditions.checkNotNull(name, name + " cannot be null");
     return map.containsKey(name) ? map.get(name).getValue() : null;
   }
 

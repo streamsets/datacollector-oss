@@ -783,7 +783,7 @@ public class TestShellClusterProvider {
     sdcProperties.put("stay", "Don't try to touch me!");
     sdcProperties.put("remove.me", "Yes please!");
     sdcProperties.put("remove.me.too", "Yes please!");
-    sdcProperties.put(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "Yes please!");
+    sdcProperties.put(RuntimeInfo.getBaseHttpUrlAttr(RuntimeInfo.SDC_PRODUCT), "Yes please!");
     sdcProperties.put("http.bindHost", "Yes please!");
     sdcProperties.put("cluster.slave.configs.remove", "remove.me,remove.me.too");
     File etcDir = tempFolder.newFolder();
@@ -811,7 +811,7 @@ public class TestShellClusterProvider {
       Assert.assertFalse(updatedProperties.containsValue("remove.me"));
       Assert.assertFalse(updatedProperties.containsValue("remove.me.too"));
       Assert.assertFalse(updatedProperties.containsValue("http.bindHost"));
-      Assert.assertFalse(updatedProperties.containsValue(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL));
+      Assert.assertFalse(updatedProperties.containsValue(RuntimeInfo.getBaseHttpUrlAttr(RuntimeInfo.SDC_PRODUCT)));
     }
   }
 

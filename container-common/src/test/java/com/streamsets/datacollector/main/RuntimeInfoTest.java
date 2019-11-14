@@ -29,23 +29,24 @@ import static org.junit.Assert.assertEquals;
 
 public class RuntimeInfoTest {
 
-  public RuntimeInfo generateRuntimeInfo() throws IOException {
+  public RuntimeInfo generateRuntimeInfo(String productName) throws IOException {
     Path dataDir = Files.createTempDirectory("data-dir");
     Path confDir = Files.createTempDirectory("conf-dir");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getProductName()).thenReturn("sdc");
-    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn("sdc");
+    Mockito.when(runtimeInfo.getProductName()).thenReturn(productName);
+    Mockito.when(runtimeInfo.getPropertyPrefix()).thenReturn(productName);
     Mockito.when(runtimeInfo.getPropertiesFile()).thenCallRealMethod();
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(dataDir.toString());
     Mockito.when(runtimeInfo.getConfigDir()).thenReturn(confDir.toString());
+    Mockito.when(runtimeInfo.getBaseHttpUrlAttr()).thenReturn(productName + ".base.http.url");
 
     return runtimeInfo;
   }
 
   @Test
   public void testLoadOrReloadConfigs() throws IOException {
-    RuntimeInfo runtimeInfo = generateRuntimeInfo();
+    RuntimeInfo runtimeInfo = generateRuntimeInfo("sdc");
 
     // Generate both standard sdc.properties as well as control hub configuration override
     Files.write(
@@ -60,13 +61,35 @@ public class RuntimeInfoTest {
     // Validate that we see expected configs
     Configuration configuration = new Configuration();
     RuntimeInfo.loadOrReloadConfigs(runtimeInfo, configuration);
+    String baseUrl = runtimeInfo.getBaseHttpUrl();
     assertEquals("true", configuration.get("sdc", null));
     assertEquals("true", configuration.get("sch", null));
   }
 
   @Test
+  public void testTransformerConfigs() throws IOException {
+    RuntimeInfo runtimeInfo = generateRuntimeInfo("transformer");
+
+    // Generate both standard sdc.properties as well as control hub configuration override
+    Files.write(
+        Paths.get(runtimeInfo.getConfigDir(), "transformer.properties"),
+        Collections.singletonList("transformer.http.base.url=http://localhost:18630")
+    );
+    Files.write(
+        Paths.get(runtimeInfo.getDataDir(), RuntimeInfo.SCH_CONF_OVERRIDE),
+        Collections.singletonList("sch=true")
+    );
+
+    // Validate that we see expected configs
+    Configuration configuration = new Configuration();
+    RuntimeInfo.loadOrReloadConfigs(runtimeInfo, configuration);
+    assertEquals("http://localhost:18630", configuration.get("transformer.http.base.url", null));
+    assertEquals("true", configuration.get("sch", null));
+  }
+
+  @Test
   public void testStoreControlHubConfigs() throws IOException {
-    RuntimeInfo runtimeInfo = generateRuntimeInfo();
+    RuntimeInfo runtimeInfo = generateRuntimeInfo("sdc");
 
     // Save new config
     RuntimeInfo.storeControlHubConfigs(runtimeInfo, Collections.singletonMap("sch", "true"));

@@ -41,7 +41,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 public class TestRuntimeInfo {
-
   @Before
   public void before() {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "target/w");
@@ -58,7 +57,7 @@ public class TestRuntimeInfo {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR);
-    System.getProperties().remove(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL);
+    System.getProperties().remove(RuntimeInfo.getBaseHttpUrlAttr(RuntimeInfo.SDC_PRODUCT));
   }
 
   @Test
@@ -123,7 +122,8 @@ public class TestRuntimeInfo {
     Assert.assertTrue(dir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
-    props.setProperty(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    final String productName = "sdc";
+    props.setProperty(String.format(RuntimeInfo.BASE_HTTP_URL_ATTR, productName), "HTTP");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
     props.setProperty(RemoteSSOService.DPM_ENABLED, "true");
     props.setProperty(RemoteSSOService.DPM_DEPLOYMENT_ID, "foo");
@@ -140,12 +140,37 @@ public class TestRuntimeInfo {
   }
 
   @Test
+  public void testTransformerRuntimeInfoConfigAndId() throws Exception {
+    final String productName = "transformer";
+    System.setProperty(productName + RuntimeInfo.STATIC_WEB_DIR, "target/w");
+    System.setProperty(productName + RuntimeInfo.CONFIG_DIR, "target/x");
+    System.setProperty(productName + RuntimeInfo.LOG_DIR, "target/y");
+    System.setProperty(productName + RuntimeInfo.DATA_DIR, "target/z");
+    System.setProperty(productName + RuntimeInfo.RESOURCES_DIR, "target/R");
+
+    File dir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(dir.mkdirs());
+    System.setProperty(productName + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
+    Properties props = new Properties();
+    props.setProperty(String.format(RuntimeInfo.BASE_HTTP_URL_ATTR, productName), "HTTP");
+    Writer writer = new FileWriter(new File(dir, productName + ".properties"));
+    props.store(writer, "");
+    writer.close();
+    RuntimeModule.setProductName(productName);
+    RuntimeModule.setPropertyPrefix(productName);
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    og.get(Configuration.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    Assert.assertEquals("HTTP", info.getBaseHttpUrl());
+  }
+
+  @Test
   public void testSlaveRuntimeInfoConfigAndId() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, dir.getAbsolutePath());
     Properties props = new Properties();
-    props.setProperty(RuntimeInfo.DATA_COLLECTOR_BASE_HTTP_URL, "HTTP");
+    props.setProperty(RuntimeInfo.getBaseHttpUrlAttr(RuntimeInfo.SDC_PRODUCT), "HTTP");
     props.setProperty(ClusterModeConstants.CLUSTER_PIPELINE_REMOTE, "true");
     props.setProperty(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "AUTH_TOKEN");
     props.setProperty(RemoteSSOService.DPM_ENABLED, "true");
