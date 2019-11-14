@@ -27,20 +27,29 @@ import java.util.regex.Pattern;
 public class SecurityConfiguration {
 
   public final static String KERBEROS_ENABLED_KEY = "kerberos.client.enabled";
+  public final static String KERBEROS_ALWAYS_RESOLVE_PROPS_KEY = "kerberos.client.alwaysResolveProperties";
   public final static boolean KERBEROS_ENABLED_DEFAULT = false;
+  public final static boolean KERBEROS_ALWAYS_RESOLVE_PROPS_DEFAULT = false;
   public final static String KERBEROS_PRINCIPAL_KEY = "kerberos.client.principal";
   public final static String KERBEROS_PRINCIPAL_DEFAULT = "sdc/_HOST";
   public final static String KERBEROS_KEYTAB_KEY = "kerberos.client.keytab";
   public final static String KERBEROS_KEYTAB_DEFAULT = "sdc.keytab";
 
   private final boolean kerberosEnabled;
+  private final boolean kerberosAlwaysResolveProperties;
   private final String kerberosPrincipal;
   private final String kerberosKeytab;
 
   public SecurityConfiguration(RuntimeInfo runtimeInfo, Configuration serviceConf) {
     kerberosEnabled = serviceConf.get(KERBEROS_ENABLED_KEY, KERBEROS_ENABLED_DEFAULT);
-    kerberosPrincipal = (kerberosEnabled) ? resolveKerberosPrincipal(serviceConf) : null;
-    if (kerberosEnabled) {
+    kerberosAlwaysResolveProperties = serviceConf.get(
+        KERBEROS_ALWAYS_RESOLVE_PROPS_KEY,
+        KERBEROS_ALWAYS_RESOLVE_PROPS_DEFAULT
+    );
+
+    final boolean resolveProps = kerberosEnabled || kerberosAlwaysResolveProperties;
+    kerberosPrincipal = resolveProps ? resolveKerberosPrincipal(serviceConf) : null;
+    if (resolveProps) {
       String keytab = serviceConf.get(KERBEROS_KEYTAB_KEY, KERBEROS_KEYTAB_DEFAULT);
       if (!(keytab.charAt(0) == '/')) {
         String confDir = runtimeInfo.getConfigDir();

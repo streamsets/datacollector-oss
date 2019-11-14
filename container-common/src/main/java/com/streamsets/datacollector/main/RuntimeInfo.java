@@ -65,6 +65,8 @@ public abstract class RuntimeInfo {
   public static final String DPM_COMPONENT_TYPE_CONFIG = "dpm.componentType";
   public static final String DC_COMPONENT_TYPE = "dc";
 
+  public static final String EMBEDDED_FLAG = "EMBEDDED";
+
   private boolean DPMEnabled;
   private boolean aclEnabled;
   private boolean remoteSsoDisabled;
@@ -436,6 +438,14 @@ public abstract class RuntimeInfo {
     try(FileWriter writer = new FileWriter(configFile)) {
       properties.store(writer, null);
     }
+  }
+
+  /**
+   * Checks whether this RuntimeInfo is in EMBEDDED mode
+   * @return true if the {@link #EMBEDDED_FLAG} is present and set to true
+   */
+  public boolean isEmbedded() {
+    return hasAttribute(EMBEDDED_FLAG) && this.<Boolean>getAttribute(EMBEDDED_FLAG);
   }
 
 }

@@ -30,6 +30,8 @@ import javax.security.auth.kerberos.KerberosPrincipal;
 import javax.security.auth.kerberos.KerberosTicket;
 import java.io.File;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -123,6 +125,22 @@ public class TestSecurityContext {
     Assert.assertNotNull(subject);
     System.out.println(subject);
     context.logout();
+  }
+
+  @Test
+  public void propertiesStillResolvedIfKerberosDisabled() throws Exception {
+    final Configuration conf = new Configuration();
+    conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, false);
+    conf.set(SecurityConfiguration.KERBEROS_ALWAYS_RESOLVE_PROPS_KEY, true);
+    final String principal = "jeff@CLUSTER";
+    final Path keytab = Files.createTempFile("jeff", ".keytab");
+    keytab.toFile().deleteOnExit();
+    conf.set(SecurityConfiguration.KERBEROS_PRINCIPAL_KEY, principal);
+    conf.set(SecurityConfiguration.KERBEROS_KEYTAB_KEY, keytab.toString());
+    SecurityContext context = new SecurityContext(getMockRuntimeInfo(), conf);
+    Assert.assertFalse(context.getSecurityConfiguration().isKerberosEnabled());
+    Assert.assertEquals(keytab.toString(), context.getSecurityConfiguration().getKerberosKeytab());
+    Assert.assertEquals(principal, context.getSecurityConfiguration().getKerberosPrincipal());
   }
 
   @Test

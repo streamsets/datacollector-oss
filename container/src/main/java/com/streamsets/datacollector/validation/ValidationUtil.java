@@ -1063,7 +1063,14 @@ public class ValidationUtil {
                 runtimeInfo,
                 dataCollectorConfiguration
             );
-            validateYarnClusterConfigs(dataCollectorConfiguration, securityConfiguration, issueCreator, errors, config);
+            validateYarnClusterConfigs(
+                dataCollectorConfiguration,
+                securityConfiguration,
+                issueCreator,
+                errors,
+                config,
+                runtimeInfo
+            );
             break;
           case STANDALONE_SPARK_CLUSTER:
             validateStandaloneClusterConfigs(issueCreator, errors, config);
@@ -1081,9 +1088,9 @@ public class ValidationUtil {
       SecurityConfiguration securityConfig,
       IssueCreator issueCreator,
       List<Issue> errors,
-      PipelineConfigBean config
+      PipelineConfigBean config,
+      RuntimeInfo runtimeInfo
   ) {
-    final boolean kerbConfigEnabled = securityConfig.isKerberosEnabled();
     final boolean keytabEnabled = config.clusterConfig.useYarnKerberosKeytab;
     final boolean keytabAllowed = dataCollectorConfiguration.get(
         ALLOW_KEYTAB_PROPERTY,
@@ -1100,73 +1107,63 @@ public class ValidationUtil {
       ));
     }
 
-    if (kerbConfigEnabled) {
-      if (keytabEnabled) {
-        String keytabPathStr = null;
-        String errorMsgSuffix = null;
-        switch (config.clusterConfig.yarnKerberosKeytabSource) {
-          case PIPELINE:
-            keytabPathStr = config.clusterConfig.yarnKerberosKeytab;
-            // no suffix needed, since the validation error will show up directly next to the UI config
-            errorMsgSuffix = "";
-            break;
-          case PROPERTIES_FILE:
-            keytabPathStr = securityConfig.getKerberosKeytab();
-            errorMsgSuffix = " via the " + SecurityConfiguration.KERBEROS_KEYTAB_KEY + " configuration property";
-            break;
-        }
-        final Path keytabPath = Paths.get(keytabPathStr);
-        if (!keytabPath.isAbsolute()) {
-          errors.add(issueCreator.create(
-              PipelineGroups.CLUSTER.name(),
-              "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0302,
-              keytabPath.toString(),
-              errorMsgSuffix
-          ));
-        } else if (!Files.exists(keytabPath)) {
-          errors.add(issueCreator.create(
-              PipelineGroups.CLUSTER.name(),
-              "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0303,
-              keytabPath.toString(),
-              errorMsgSuffix
-          ));
-        } else if (!Files.isRegularFile(keytabPath)) {
-          errors.add(issueCreator.create(
-              PipelineGroups.CLUSTER.name(),
-              "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0304,
-              keytabPath.toString(),
-              errorMsgSuffix
-          ));
-        }
-        // TODO: actually check that the keytab file is valid and contains the principal?
+    if (keytabEnabled && !runtimeInfo.isEmbedded()) {
+      // only validate the keytab if not in embedded mode (since otherwise, we already validated in the launcher)
+      String keytabPathStr = null;
+      String errorMsgSuffix = null;
+      switch (config.clusterConfig.yarnKerberosKeytabSource) {
+        case PIPELINE:
+          keytabPathStr = config.clusterConfig.yarnKerberosKeytab;
+          // no suffix needed, since the validation error will show up directly next to the UI config
+          errorMsgSuffix = "";
+          break;
+        case PROPERTIES_FILE:
+          keytabPathStr = securityConfig.getKerberosKeytab();
+          errorMsgSuffix = " via the " + SecurityConfiguration.KERBEROS_KEYTAB_KEY + " configuration property";
+          break;
       }
-    } else {
-      // Kerberos is disabled via configuration
-      // therefore, if using a keytab, it MUST come from pipeline configuration
-      if (config.clusterConfig.useYarnKerberosKeytab &&
-          config.clusterConfig.yarnKerberosKeytabSource != KeytabSource.PIPELINE) {
+      final Path keytabPath = Paths.get(keytabPathStr);
+      if (!keytabPath.isAbsolute()) {
         errors.add(issueCreator.create(
             PipelineGroups.CLUSTER.name(),
-            "clusterConfig.yarnKerberosKeytabSource",
-            ValidationError.VALIDATION_0307,
-            SecurityConfiguration.KERBEROS_ENABLED_KEY
+            "clusterConfig.yarnKerberosKeytab",
+            ValidationError.VALIDATION_0302,
+            keytabPath.toString(),
+            errorMsgSuffix
         ));
-      }
-      final boolean alwaysImpersonate = dataCollectorConfiguration.get(
-          IMPERSONATION_ALWAYS_CURRENT_USER,
-          false
-      );
-      if (alwaysImpersonate && StringUtils.isNotBlank(config.clusterConfig.hadoopUserName)) {
+      } else if (!Files.exists(keytabPath)) {
         errors.add(issueCreator.create(
             PipelineGroups.CLUSTER.name(),
-            "clusterConfig.hadoopUserName",
-            ValidationError.VALIDATION_0305,
-            IMPERSONATION_ALWAYS_CURRENT_USER
+            "clusterConfig.yarnKerberosKeytab",
+            ValidationError.VALIDATION_0303,
+            keytabPath.toString(),
+            errorMsgSuffix
+        ));
+      } else if (!Files.isRegularFile(keytabPath)) {
+        errors.add(issueCreator.create(
+            PipelineGroups.CLUSTER.name(),
+            "clusterConfig.yarnKerberosKeytab",
+            ValidationError.VALIDATION_0304,
+            keytabPath.toString(),
+            errorMsgSuffix
         ));
       }
+      // TODO: actually check that the keytab file is valid and contains the principal?
+    }
+
+    // Kerberos client is disabled via configuration
+    // keytab could still come from properties (we just don't log in from our own code)
+    final boolean alwaysImpersonate = dataCollectorConfiguration.get(
+        IMPERSONATION_ALWAYS_CURRENT_USER,
+        false
+    );
+    if (alwaysImpersonate && StringUtils.isNotBlank(config.clusterConfig.hadoopUserName)) {
+      errors.add(issueCreator.create(
+          PipelineGroups.CLUSTER.name(),
+          "clusterConfig.hadoopUserName",
+          ValidationError.VALIDATION_0305,
+          IMPERSONATION_ALWAYS_CURRENT_USER
+      ));
     }
   }
 
