@@ -408,6 +408,7 @@ public class JdbcUtil {
     );
     for (String offsetColumn : offsetColumnNames) {
       final String minMaxOffsetQuery = String.format(minMaxQuery, offsetColumn, qualifiedName);
+      LOG.debug("Issuing min/max offset query: {}", minMaxOffsetQuery);
       try (
         Statement st = connection.createStatement();
         ResultSet rs = st.executeQuery(minMaxOffsetQuery)
