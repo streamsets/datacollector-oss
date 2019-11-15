@@ -250,8 +250,9 @@ public class TableContext {
 
     if (sourceTableContext.getOffsetColumns().size() > 1) {
       reasons.add(String.format(
-          "Table %s is not partitionable because it has more than one offset column",
-          tableName
+          "Table %s is not partitionable because it has more than one offset column: %s",
+          tableName,
+          String.join(", ", sourceTableContext.getOffsetColumns())
       ));
     }
 
