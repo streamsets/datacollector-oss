@@ -51,6 +51,7 @@ public class TestSalesforceSource {
   private static final String offsetColumn = "Id";
   private static final String query = "SELECT Id, Name FROM Account WHERE Id > '${offset}' ORDER BY Id";
   private static final String SOQL_QUERY_MUST_INCLUDE = "SOQL query must include";
+  public static final String ERROR_PARSING_SOQL_QUERY = "Error parsing SOQL query";
 
   private int port;
   private String authEndpoint;
@@ -310,5 +311,21 @@ public class TestSalesforceSource {
     conf.showTrace = true;
 
     return conf;
+  }
+
+  // SDC-12932 - The Salesforce Origin fails and gives cryptic error message
+  @Test
+  public void testSoqlQueryParseError() throws Exception {
+    ForceSourceConfigBean conf = getForceSourceConfig();
+    conf.soqlQuery = "FirstName, LastName, Email, LeadSource FROM Contact";
+    ForceSource origin = new ForceSource(conf);
+
+    SourceRunner runner = new SourceRunner.Builder(ForceDSource.class, origin)
+        .addOutputLane("lane")
+        .build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.get(0).toString().contains(ERROR_PARSING_SOQL_QUERY));
   }
 }

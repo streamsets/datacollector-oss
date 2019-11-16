@@ -48,7 +48,7 @@ public enum Errors implements ErrorCode {
   FORCE_24("Invalid External ID Field expression '{}': {}"),
   FORCE_25("Preview timed out before the origin retrieved data. Try increasing the timeout."),
   FORCE_26("Pipeline was stopped as the origin was retrieving data."),
-  FORCE_27("Error parsing SOQL query {}"),
+  FORCE_27("Error parsing SOQL query: {}"),
   FORCE_28("Error retrieving data: {}"),
   FORCE_29("Malformed ID: {}"),
   FORCE_30("Invalid field name: {}"),

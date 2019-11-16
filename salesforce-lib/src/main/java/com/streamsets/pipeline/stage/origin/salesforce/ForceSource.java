@@ -54,6 +54,7 @@ import com.streamsets.pipeline.lib.salesforce.SoapRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.SobjectRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -203,37 +204,44 @@ public class ForceSource extends BaseSource {
       }
 
       if (!conf.disableValidation) {
-        SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(conf.soqlQuery);
-        SOQLParser.ConditionExpressionsContext conditionExpressions = statementContext.conditionExpressions();
-        SOQLParser.FieldOrderByListContext fieldOrderByList = statementContext.fieldOrderByList();
+        try {
+          SOQLParser.StatementContext statementContext = ForceUtils.getStatementContext(conf.soqlQuery);
+          SOQLParser.ConditionExpressionsContext conditionExpressions = statementContext.conditionExpressions();
+          SOQLParser.FieldOrderByListContext fieldOrderByList = statementContext.fieldOrderByList();
 
-        if (conf.usePKChunking) {
-          if (fieldOrderByList != null) {
-            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-                ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_31
-            ));
-          }
+          if (conf.usePKChunking) {
+            if (fieldOrderByList != null) {
+              issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                  ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_31
+              ));
+            }
 
-          if (conditionExpressions != null && checkConditionExpressions(conditionExpressions, ID)) {
-            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-                ForceConfigBean.CONF_PREFIX + "soqlQuery",
-                Errors.FORCE_32
-            ));
-          }
+            if (conditionExpressions != null && checkConditionExpressions(conditionExpressions, ID)) {
+              issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                  ForceConfigBean.CONF_PREFIX + "soqlQuery",
+                  Errors.FORCE_32
+              ));
+            }
 
-          if (conf.repeatQuery == ForceRepeatQuery.INCREMENTAL) {
-            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-                ForceConfigBean.CONF_PREFIX + "repeatQuery", Errors.FORCE_33
-            ));
+            if (conf.repeatQuery == ForceRepeatQuery.INCREMENTAL) {
+              issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                  ForceConfigBean.CONF_PREFIX + "repeatQuery", Errors.FORCE_33
+              ));
+            }
+          } else {
+            if (conditionExpressions == null || !checkConditionExpressions(conditionExpressions,
+                conf.offsetColumn
+            ) || fieldOrderByList == null || !checkFieldOrderByList(fieldOrderByList, conf.offsetColumn)) {
+              issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+                  ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn
+              ));
+            }
           }
-        } else {
-          if (conditionExpressions == null || !checkConditionExpressions(conditionExpressions,
-              conf.offsetColumn
-          ) || fieldOrderByList == null || !checkFieldOrderByList(fieldOrderByList, conf.offsetColumn)) {
-            issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
-                ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn
-            ));
-          }
+        } catch (ParseCancellationException e) {
+          LOG.error(Errors.FORCE_27.getMessage(), conf.soqlQuery, e);
+          issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
+              ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_27, conf.soqlQuery, e
+          ));
         }
       }
     }
