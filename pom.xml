@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2017 StreamSets Inc.
+    Copyright 2019 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -541,6 +541,7 @@
         <cdh_kafka_2_1-lib>cdh_kafka_2_1-lib</cdh_kafka_2_1-lib>
         <cdh_kafka_3_0-lib>cdh_kafka_3_0-lib</cdh_kafka_3_0-lib>
         <cdh_kafka_3_1-lib>cdh_kafka_3_1-lib</cdh_kafka_3_1-lib>
+        <cdh_kafka_4_1-lib>cdh_kafka_4_1-lib</cdh_kafka_4_1-lib>
         <couchbase_5-lib>couchbase_5-lib</couchbase_5-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
@@ -625,6 +626,7 @@
         <module>cdh_kafka_2_1-lib</module>
         <module>cdh_kafka_3_0-lib</module>
         <module>cdh_kafka_3_1-lib</module>
+        <module>cdh_kafka_4_1-lib</module>
         <module>cdh_spark_2_1_r1-lib</module>
         <module>cdh-spark_2_1-lib</module>
         <module>cdh-spark_2_2-lib</module>
@@ -691,7 +693,7 @@
         <cdh-spark_2_3-lib>cdh-spark_2_3-lib</cdh-spark_2_3-lib>
         <cdh_5_16-lib>cdh_5_16-lib</cdh_5_16-lib>
         <cdh_6_3-lib>cdh_6_3-lib</cdh_6_3-lib>
-        <cdh_kafka_3_1-lib>cdh_kafka_3_1-lib</cdh_kafka_3_1-lib>
+        <cdh_kafka_4_1-lib>cdh_kafka_4_1-lib</cdh_kafka_4_1-lib>
         <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <couchbase_5-lib>couchbase_5-lib</couchbase_5-lib>
         <elasticsearch_5-lib>elasticsearch_5-lib</elasticsearch_5-lib>
@@ -727,7 +729,7 @@
         <module>cdh-spark_2_1-lib</module>
         <module>cdh_5_16-lib</module>
         <module>cdh_6_3-lib</module>
-        <module>cdh_kafka_3_1-lib</module>
+        <module>cdh_kafka_4_1-lib</module>
         <module>cdh-spark_2_3-lib</module>
         <module>couchbase_5-lib</module>
         <module>elasticsearch_5-lib</module>
