@@ -209,6 +209,8 @@ public class ForceSource extends BaseSource {
           SOQLParser.ConditionExpressionsContext conditionExpressions = statementContext.conditionExpressions();
           SOQLParser.FieldOrderByListContext fieldOrderByList = statementContext.fieldOrderByList();
 
+          String sobject = statementContext.objectList().getText().toLowerCase();
+
           if (conf.usePKChunking) {
             if (fieldOrderByList != null) {
               issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
@@ -216,7 +218,7 @@ public class ForceSource extends BaseSource {
               ));
             }
 
-            if (conditionExpressions != null && checkConditionExpressions(conditionExpressions, ID)) {
+            if (conditionExpressions != null && checkConditionExpressions(conditionExpressions, sobject, ID)) {
               issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
                   ForceConfigBean.CONF_PREFIX + "soqlQuery",
                   Errors.FORCE_32
@@ -229,9 +231,9 @@ public class ForceSource extends BaseSource {
               ));
             }
           } else {
-            if (conditionExpressions == null || !checkConditionExpressions(conditionExpressions,
+            if (conditionExpressions == null || !checkConditionExpressions(conditionExpressions, sobject,
                 conf.offsetColumn
-            ) || fieldOrderByList == null || !checkFieldOrderByList(fieldOrderByList, conf.offsetColumn)) {
+            ) || fieldOrderByList == null || !checkFieldOrderByList(fieldOrderByList, sobject, conf.offsetColumn)) {
               issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
                   ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_07, conf.offsetColumn
               ));
@@ -367,19 +369,26 @@ public class ForceSource extends BaseSource {
   }
 
   // Returns true if the first ORDER BY field matches fieldName
-  private boolean checkFieldOrderByList(SOQLParser.FieldOrderByListContext fieldOrderByList, String fieldName) {
-    return fieldOrderByList.fieldOrderByElement(0).fieldElement().getText().equalsIgnoreCase(fieldName);
+  private boolean checkFieldOrderByList(SOQLParser.FieldOrderByListContext fieldOrderByList, String objectName, String fieldName) {
+    String objectFieldName = objectName + "." + fieldName;
+    String orderByField = fieldOrderByList.fieldOrderByElement(0).fieldElement().getText();
+
+    return orderByField.equalsIgnoreCase(fieldName) || orderByField.equalsIgnoreCase(objectFieldName);
   }
 
-  // Returns true if any of the nested conditions contains fieldName
+  // Returns true if any of the nested conditions contains fieldName, optionally preceded by objectName
   private boolean checkConditionExpressions(
-      SOQLParser.ConditionExpressionsContext conditionExpressions,
-      String fieldName
+      SOQLParser.ConditionExpressionsContext conditionExpressions, String objectName, String fieldName
   ) {
+    String objectFieldName = objectName + "." + fieldName;
+
     for (SOQLParser.ConditionExpressionContext ce : conditionExpressions.conditionExpression()) {
-      if ((ce.conditionExpressions() != null && checkConditionExpressions(ce.conditionExpressions(), fieldName))
-          || (ce.fieldExpression() != null && ce.fieldExpression().fieldElement().getText().equalsIgnoreCase(fieldName))) {
+      if (ce.conditionExpressions() != null && checkConditionExpressions(ce.conditionExpressions(), objectName, fieldName)) {
         return true;
+      } else if (ce.fieldExpression() != null){
+        String conditionField = ce.fieldExpression().fieldElement().getText();
+
+        return conditionField.equalsIgnoreCase(fieldName) || conditionField.equalsIgnoreCase(objectFieldName);
       }
     }
 
