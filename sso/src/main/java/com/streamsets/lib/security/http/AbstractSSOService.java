@@ -42,6 +42,7 @@ public abstract class AbstractSSOService implements SSOService {
   private String logoutUrl;
   private PrincipalCache userPrincipalCache;
   private PrincipalCache appPrincipalCache;
+  private long connectionTimeout;
 
   protected RegistrationResponseDelegate registrationResponseDelegate;
 
@@ -65,6 +66,8 @@ public abstract class AbstractSSOService implements SSOService {
         validateAuthTokenFrequencySecs,
         30
     ));
+    connectionTimeout = conf.get(RemoteSSOService.SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG,
+        RemoteSSOService.DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT);
     initializePrincipalCaches(TimeUnit.SECONDS.toMillis(validateAuthTokenFrequencySecs));
   }
 
@@ -191,8 +194,11 @@ public abstract class AbstractSSOService implements SSOService {
             trace("Retrying getting lock for token '{}' component '{}'", tokenForLog, componentId);
           }
           counter++;
-          if (System.currentTimeMillis() - start > 10000) {
-            String msg = Utils.format("Exceeded 10sec max wait time trying to validate component '{}'", componentId);
+          if (System.currentTimeMillis() - start > (connectionTimeout + 1000)) {
+            String msg = Utils.format("Exceeded '{}' millis max wait time trying to validate component '{}'",
+                connectionTimeout,
+                componentId
+            );
             LOG.warn(msg);
             throw new RuntimeException(msg);
           }
