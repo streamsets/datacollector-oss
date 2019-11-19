@@ -16,5 +16,17 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 6
+    actions:
+      - renameConfig:
+          oldNamePattern: conf.disableBatchInsert
+          newNamePattern: conf.enableBatches
+      - replaceConfig:
+          name: conf.enableBatches
+          ifOldValueMatches: true
+          newValue: false
+          elseNewValue: true
+      - renameConfig:
+          oldNamePattern: conf.requestTimeout
+          newNamePattern: conf.writeTimeout
