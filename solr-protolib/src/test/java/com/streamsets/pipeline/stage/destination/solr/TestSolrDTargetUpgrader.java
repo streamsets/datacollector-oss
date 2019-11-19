@@ -17,9 +17,6 @@
 package com.streamsets.pipeline.stage.destination.solr;
 
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.el.ELEval;
-import com.streamsets.pipeline.api.el.ELEvalException;
-import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.upgrader.YamlStageUpgrader;
 import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
 import org.junit.After;
