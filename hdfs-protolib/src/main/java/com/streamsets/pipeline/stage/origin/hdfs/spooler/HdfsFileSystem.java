@@ -226,7 +226,14 @@ public class HdfsFileSystem implements WrappedFileSystem {
   }
 
   public void mkdir(WrappedFile filePath) {
-    new File(filePath.getAbsolutePath()).mkdir();
+    try {
+      boolean result = fs.mkdirs(new Path(filePath.getAbsolutePath()));
+      if (!result) {
+        LOG.error("Could not create directory '{}", filePath.getAbsolutePath());
+      }
+    } catch (IOException ex) {
+      LOG.error("Could not create directory '{}'", filePath.getAbsolutePath(), ex);
+    }
   }
 
   public boolean patternMatches(String fileName) {
