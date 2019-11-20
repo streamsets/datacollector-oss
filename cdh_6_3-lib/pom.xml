@@ -47,6 +47,7 @@
         <solr.test.jetty.version>9.3.20.v20170531</solr.test.jetty.version>
         <spark.version>2.4.0-cdh6.3.0</spark.version>
         <kafka.version>2.2.1-cdh6.3.0</kafka.version>
+        <confluent.version>5.2.3</confluent.version>
 
         <thrift.version>0.9.3</thrift.version>
         <netty.version>4.1.17.Final</netty.version>
@@ -491,6 +492,12 @@
                     <artifactId>netty</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>${confluent.version}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.kafka</groupId>
