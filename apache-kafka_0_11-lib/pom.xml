@@ -34,6 +34,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <confluent.version>3.3.3</confluent.version>
         <kafka.version>0.11.0.3</kafka.version>
         <h2.version>1.4.187</h2.version>
         <tec.version>0.7</tec.version>
@@ -132,6 +133,12 @@
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.11</artifactId>
             <version>${kafka.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-avro-serializer</artifactId>
+            <version>${confluent.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
