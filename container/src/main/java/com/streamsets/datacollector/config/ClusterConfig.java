@@ -61,7 +61,7 @@ public class ClusterConfig {
       defaultValue = "CLIENT",
       displayPosition = 103,
       dependsOn = "clusterType",
-      triggeredByValue = {"YARN", "STANDALONE_SPARK_CLUSTER"}
+      triggeredByValue = {"YARN", "STANDALONE_SPARK_CLUSTER", "KUBERNETES"}
   )
   @ValueChooserModel(SparkDeployModeChooserValues.class)
   public SparkDeployMode deployMode = SparkDeployMode.CLIENT;
