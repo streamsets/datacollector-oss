@@ -35,6 +35,7 @@ import com.streamsets.pipeline.api.service.dataformats.SdcRecordGeneratorService
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction;
 import com.streamsets.pipeline.api.service.dataformats.log.LogParserService;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +58,8 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
     DataFormatGeneratorService.class,
     DataFormatParserService.class,
     SdcRecordGeneratorService.class,
-    LogParserService.class
+    LogParserService.class,
+    SshTunnelService.class
   );
 
   /**
