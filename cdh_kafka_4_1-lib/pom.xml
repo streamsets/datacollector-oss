@@ -47,7 +47,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-11</artifactId>
+      <artifactId>streamsets-datacollector-sdc-kafka-2_0</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>
       <exclusions>
@@ -204,7 +204,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdc-kafka-11</artifactId>
+      <artifactId>streamsets-datacollector-sdc-kafka-2_0</artifactId>
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
