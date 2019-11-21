@@ -84,6 +84,7 @@ public abstract class RuntimeInfo {
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String httpUrl;
+  private String originalHttpUrl;
   private String appAuthToken;
   private final Map<String, Object> attributes;
   private ShutdownHandler shutdownRunnable;
@@ -139,6 +140,14 @@ public abstract class RuntimeInfo {
 
   public String getBaseHttpUrl() {
     return StringUtils.stripEnd(httpUrl, "/");
+  }
+
+  public void setOriginalHttpUrl(String url) {
+    this.originalHttpUrl = url;
+  }
+
+  public String getOriginalHttpUrl() {
+    return StringUtils.stripEnd(originalHttpUrl, "/");
   }
 
   public String getStaticWebDir() {
