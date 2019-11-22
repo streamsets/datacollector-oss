@@ -100,6 +100,8 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
             .setSshPrivateKey(sshKeyInfo.getPrivateKey())
             .setSshPublicKey(sshKeyInfo.getPublicKey())
             .setSshPrivateKeyPassword(sshKeyInfo.getPassword())
+            .setReadyTimeOut(sshTunnelConfig.sshReadyTimeout)
+            .setSshKeepAlive(sshTunnelConfig.sshKeepAlive)
         ;
         try {
           // create a dummy tunnel to verify required config values are set. It does not check correctness of data here.

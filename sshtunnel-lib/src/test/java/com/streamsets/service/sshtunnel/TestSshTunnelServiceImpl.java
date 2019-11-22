@@ -105,6 +105,8 @@ public class TestSshTunnelServiceImpl {
     Mockito.when(tunnelBuilder.setSshPrivateKey(Mockito.anyString())).thenReturn(tunnelBuilder);
     Mockito.when(tunnelBuilder.setSshPublicKey(Mockito.anyString())).thenReturn(tunnelBuilder);
     Mockito.when(tunnelBuilder.setSshPrivateKeyPassword(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setReadyTimeOut(Mockito.anyInt())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshKeepAlive(Mockito.anyInt())).thenReturn(tunnelBuilder);
     Mockito.when(tunnelBuilder.build()).thenReturn(tunnel);
     Mockito.doReturn(tunnelBuilder).when(service).createSshTunnelBuilder();
 

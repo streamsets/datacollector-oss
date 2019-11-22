@@ -90,4 +90,34 @@ public class SshTunnelConfigBean {
   )
   public CredentialValue sshKeyInfo;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "2000",
+      dependencies = {
+          @Dependency(configName = "sshTunneling", triggeredByValues = "true"),
+      },
+      label = "SSH Tunnel Ready Timeout (millisecs)",
+      description = "Time to wait for tunnel to establish",
+      displayPosition = 1060,
+      group = "SSH_TUNNEL",
+      min = 1
+  )
+  public int sshReadyTimeout;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "30",
+      dependencies = {
+          @Dependency(configName = "sshTunneling", triggeredByValues = "true"),
+      },
+      label = "SSH Tunnel Keep Alive (secs)",
+      description = "Set it to 0 to disable it",
+      displayPosition = 1070,
+      group = "SSH_TUNNEL",
+      min = 0
+  )
+  public int sshKeepAlive;
+
 }
