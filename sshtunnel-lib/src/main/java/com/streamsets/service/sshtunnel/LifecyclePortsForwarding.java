@@ -15,29 +15,12 @@
  */
 package com.streamsets.service.sshtunnel;
 
-import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 
-public enum Errors implements ErrorCode {
-  SSH_TUNNEL_00("SSH tunnel not running"),
-  SSH_TUNNEL_01("Could not start forwarder SSH client: {}"),
-  SSH_TUNNEL_02("SSH tunnel broken: {}"),
-  SSH_TUNNEL_03("SSH tunnel missing configuration: {}"),
-  SSH_TUNNEL_04("Invalid SSK key information: {}"),
-  ;
-
-  private final String message;
-
-  Errors(String message) {
-    this.message = message;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return message;
-  }
+/**
+ * Adds start and stop lifecycle to the SshTunnel interface
+ */
+public interface LifecyclePortsForwarding extends SshTunnelService.PortsForwarding {
+  default void start() {};
+  default void stop() {};
 }

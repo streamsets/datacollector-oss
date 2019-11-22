@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2019 StreamSets Inc.
  *
@@ -19,6 +18,7 @@ package com.streamsets.service.sshtunnel;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 
 @ConfigGroups(Groups.class)
@@ -50,7 +50,9 @@ public class SshTunnelConfigBean {
       dependencies = {@Dependency(configName = "sshTunneling", triggeredByValues = "true")},
       label = "SSH Tunnel Port",
       displayPosition = 1020,
-      group = "SSH_TUNNEL"
+      group = "SSH_TUNNEL",
+      min = 1,
+      max = 65535
   )
   public int sshPort;
 
@@ -62,7 +64,7 @@ public class SshTunnelConfigBean {
       displayPosition = 1030,
       group = "SSH_TUNNEL"
   )
-  public String sshHostFingerprint;
+  public String sshHostFingerprints;
 
   @ConfigDef(
       required = true,
@@ -78,7 +80,10 @@ public class SshTunnelConfigBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "${credential:get(\"streamsets\", \"all\", \"streamsetsOrgDefault/streamsetsDefaultSshTunnel\")}",
-      dependencies = {@Dependency(configName = "sshTunneling", triggeredByValues = "true")},
+      dependencies = {
+          @Dependency(configName = "sshTunneling", triggeredByValues = "true"),
+          @Dependency(configName = "sshHost", triggeredByValues = "\u0007") // it will never happen, trick to hide it
+      },
       label = "SSH Key Info",
       displayPosition = 1050,
       group = "SSH_TUNNEL"

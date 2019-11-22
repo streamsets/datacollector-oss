@@ -51,7 +51,7 @@ import java.util.Set;
  * object rather then Service instance itself because we need to wrap each method execution to change active class
  * loader and execute the code in privileged mode to apply the proper permissions.
  */
-public class ServiceRuntime implements DataFormatGeneratorService, DataFormatParserService, LogParserService, SdcRecordGeneratorService {
+public class ServiceRuntime implements DataFormatGeneratorService, DataFormatParserService, LogParserService, SdcRecordGeneratorService, SshTunnelService {
 
   // Static list with all supported services
   private static Set<Class> SUPPORTED_SERVICES = ImmutableSet.of(
@@ -282,6 +282,33 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
             cl,
             ((LogParserService) serviceBean.getService()).getLogParser(id, reader, offset)
         )
+    );
+  }
+
+  @Override // From SshTunnelService
+  public boolean isEnabled() {
+      return LambdaUtil.privilegedWithClassLoader(
+          serviceBean.getDefinition().getStageClassLoader(),
+          () -> ((SshTunnelService)serviceBean.getService()).isEnabled()
+      );
+  }
+
+  @Override // From SshTunnelService
+  public SshTunnelService.PortsForwarding start(List<HostPort> targetHostsPorts) {
+    return LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> ((SshTunnelService)serviceBean.getService()).start(targetHostsPorts)
+    );
+  }
+
+  @Override // From SshTunnelService
+  public void stop(PortsForwarding portsForwarding) {
+    LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> {
+          ((SshTunnelService) serviceBean.getService()).stop(portsForwarding);
+          return null;
+        }
     );
   }
 }

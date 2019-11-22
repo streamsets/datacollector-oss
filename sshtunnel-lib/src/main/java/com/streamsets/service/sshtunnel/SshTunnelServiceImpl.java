@@ -18,18 +18,25 @@ package com.streamsets.service.sshtunnel;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseService;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * SSH Tunnel service implementation.
+ * <p/>
+ * Provides embedded SSH tunnel entry points (as many as needed) for the stage using the service.
+ */
 @ServiceDef(
     provides = SshTunnelService.class,
     version = 1,
@@ -38,11 +45,17 @@ import java.util.stream.Collectors;
 )
 @ConfigGroups(Groups.class)
 public class SshTunnelServiceImpl extends BaseService implements SshTunnelService {
-
   private static final Logger LOG = LoggerFactory.getLogger(SshTunnelServiceImpl.class);
 
   @ConfigDefBean(groups = {"SSH_TUNNEL"})
   public SshTunnelConfigBean sshTunnelConfig;
+
+  private SshTunnel.Builder sshTunnelBuilder;
+
+  //visible for testing
+  SshTunnel.Builder createSshTunnelBuilder() {
+    return SshTunnel.builder();
+  }
 
   @Override
   public List<ConfigIssue> init() {
@@ -50,42 +63,84 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
 
     List issues = new ArrayList();
 
+    if (sshTunnelConfig.sshTunneling) {
+      SshKeyInfoBean sshKeyInfo = null;
+      try {
+        JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
+        sshKeyInfo = json.readValue(sshTunnelConfig.sshKeyInfo.get(), SshKeyInfoBean.class);
+      } catch (IOException ex) {
+        issues.add(getContext().createConfigIssue(
+            Groups.SSH_TUNNEL.name(),
+            "sshTunnelConfig.sshKeyInfo",
+            Errors.SSH_TUNNEL_04,
+            ex.getMessage()
+        ));
+      }
+      if (sshKeyInfo != null) {
+        //splitting the fingerprints config into one a List<String> of fingerprints
+        //didn't feel like bringing in Guava just for this.
+        List<String> fingerprints = Arrays.stream(sshTunnelConfig.sshHostFingerprints.split(","))
+            .map(String::trim)
+            .filter(e -> !e.isEmpty())
+            .collect(Collectors.toList());
+
+        sshTunnelBuilder = createSshTunnelBuilder()
+            .setSshHost(sshTunnelConfig.sshHost)
+            .setSshPort(sshTunnelConfig.sshPort)
+            .setSshUser(sshTunnelConfig.sshUsername)
+            .setSshHostFingerprints(fingerprints)
+            .setSshPrivateKey(sshKeyInfo.getPrivateKey())
+            .setSshPublicKey(sshKeyInfo.getPublicKey())
+            .setSshPrivateKeyPassword(sshKeyInfo.getPassword())
+        ;
+        try {
+          // create a dummy tunnel to verify required config values are set. It does not check correctness of data here.
+          sshTunnelBuilder.build();
+        } catch (Exception ex) {
+          issues.add(getContext().createConfigIssue(
+              Groups.SSH_TUNNEL.name(),
+              "",
+              Errors.SSH_TUNNEL_03,
+              ex.getMessage()
+          ));
+        }
+      }
+    }
     return issues;
   }
 
   @Override
   public void destroy() {
     LOG.debug("Destroying SSH Tunnel service");
+    sshTunnelBuilder = null;
   }
-
 
   @Override
   public boolean isEnabled() {
-    return false;
+    return sshTunnelConfig.sshTunneling;
   }
 
   @Override
   public PortsForwarding start(List<HostPort> targetHostsPorts) {
-    return new PortsForwarding() {
-      @Override
-      public boolean isEnabled() {
-        return false;
-      }
-
-      @Override
-      public Map<HostPort, HostPort> getPortMapping() {
-        return targetHostsPorts.stream().collect(Collectors.toMap(e -> e, e -> e));
-      }
-
-      @Override
-      public void healthCheck() throws StageException {
-      }
-
-    };
+    LifecyclePortsForwarding portsForwarding;
+    if (sshTunnelBuilder == null) {
+      LOG.debug("SSH tunneling disabled, creating a NoOpPortsForwarding");
+      portsForwarding = new NoOpPortsForwarding(targetHostsPorts);
+    } else {
+      LOG.debug("SSH tunneling enabled, creating an ActivePortsForwarding");
+      portsForwarding = new ActivePortsForwarding(sshTunnelBuilder, targetHostsPorts);
+    }
+    portsForwarding.start();
+    return portsForwarding;
   }
 
   @Override
-  public void stop(PortsForwarding PortsForwarding) {
-
+  public void stop(PortsForwarding portsForwarding) {
+    if (portsForwarding instanceof LifecyclePortsForwarding) { //it won't be if it is the NONE constant
+      if (isEnabled()) {
+        ((LifecyclePortsForwarding) portsForwarding).stop();
+      }
+    }
   }
+
 }

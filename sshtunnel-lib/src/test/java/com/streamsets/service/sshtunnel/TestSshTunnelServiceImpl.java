@@ -15,5 +15,131 @@
  */
 package com.streamsets.service.sshtunnel;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.streamsets.pipeline.api.ext.DataCollectorServices;
+import com.streamsets.pipeline.api.ext.json.JsonMapper;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
+import org.junit.Assert;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import java.io.IOException;
+
 public class TestSshTunnelServiceImpl {
+
+  @Test
+  public void testServiceDisabled() {
+    SshTunnelConfigBean config = new SshTunnelConfigBean();
+    config.sshTunneling = false;
+    SshTunnelServiceImpl service = new SshTunnelServiceImpl();
+    service.sshTunnelConfig = config;
+
+    Assert.assertTrue(service.init().isEmpty());
+    Assert.assertFalse(service.isEnabled());
+
+    SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("l", 1);
+
+    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(hostPort));
+    Assert.assertTrue(portsForwarding instanceof NoOpPortsForwarding);
+    Assert.assertEquals(ImmutableMap.of(hostPort, hostPort), portsForwarding.getPortMapping());
+    service.destroy();
+  }
+
+  @Test
+  public void testServiceEnabled() {
+    DataCollectorServices.instance().put(JsonMapper.SERVICE_KEY, new JsonMapper() {
+      @Override
+      public String writeValueAsString(Object value) throws IOException {
+        return null;
+      }
+
+      @Override
+      public byte[] writeValueAsBytes(Object value) throws IOException {
+        return new byte[0];
+      }
+
+      @Override
+      public <T> T readValue(byte[] src, Class<T> valueType) throws IOException {
+        return null;
+      }
+
+      @Override
+      public <T> T readValue(String src, Class<T> valueType) throws IOException {
+        return new ObjectMapper().readValue(src, valueType);
+      }
+
+      @Override
+      public boolean isValidJson(String json) {
+        return false;
+      }
+    });
+
+    SshTunnelConfigBean config = new SshTunnelConfigBean();
+    config.sshTunneling = true;
+    config.sshHost = "l";
+    config.sshPort = 1;
+    config.sshUsername = "user";
+    config.sshHostFingerprints = "f1,f2,";
+    config.sshKeyInfo = () -> "{\n" +
+        "  \"privateKey\": \"priv\",\n" +
+        "  \"publicKey\": \"pub\",\n" +
+        "  \"password\": \"pass\"\n" +
+        "}";
+
+    SshTunnelServiceImpl service = new SshTunnelServiceImpl();
+    service = Mockito.spy(service);
+
+    SshTunnel tunnel = Mockito.mock(SshTunnel.class);
+    Mockito.when(tunnel.getTunnelEntryHost()).thenReturn("L");
+    Mockito.when(tunnel.getTunnelEntryPort()).thenReturn(2);
+    SshTunnel.Builder tunnelBuilder = Mockito.mock(SshTunnel.Builder.class);
+    Mockito.when(tunnelBuilder.setSshHost(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshPort(Mockito.anyInt())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshUser(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshHostFingerprints(Mockito.anyList())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshPrivateKey(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshPublicKey(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.setSshPrivateKeyPassword(Mockito.anyString())).thenReturn(tunnelBuilder);
+    Mockito.when(tunnelBuilder.build()).thenReturn(tunnel);
+    Mockito.doReturn(tunnelBuilder).when(service).createSshTunnelBuilder();
+
+    service.sshTunnelConfig = config;
+
+    Assert.assertTrue(service.init().isEmpty());
+    Assert.assertTrue(service.isEnabled());
+
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshHost(Mockito.eq("l"));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPort(Mockito.eq(1));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshUser(Mockito.eq("user"));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshHostFingerprints(Mockito.eq(ImmutableList.of("f1", "f2")));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPrivateKey(Mockito.eq("priv"));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPublicKey(Mockito.eq("pub"));
+    Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPrivateKeyPassword(Mockito.eq("pass"));
+
+    SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("K", 3);
+    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(hostPort));
+    Assert.assertTrue(portsForwarding instanceof ActivePortsForwarding);
+    Assert.assertEquals(
+        ImmutableMap.of(hostPort, new SshTunnelService.HostPort("L", 2)),
+        portsForwarding.getPortMapping()
+    );
+
+    portsForwarding.healthCheck();
+
+    service.stop(portsForwarding);
+
+    try {
+      portsForwarding.healthCheck();
+      Assert.fail();
+    } catch (IllegalStateException ex) {
+
+    }
+
+    service.destroy();
+
+  }
+
+
 }

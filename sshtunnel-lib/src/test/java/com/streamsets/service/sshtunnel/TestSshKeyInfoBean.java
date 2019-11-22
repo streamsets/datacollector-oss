@@ -15,29 +15,20 @@
  */
 package com.streamsets.service.sshtunnel;
 
-import com.streamsets.pipeline.api.ErrorCode;
+import org.junit.Assert;
+import org.junit.Test;
 
-public enum Errors implements ErrorCode {
-  SSH_TUNNEL_00("SSH tunnel not running"),
-  SSH_TUNNEL_01("Could not start forwarder SSH client: {}"),
-  SSH_TUNNEL_02("SSH tunnel broken: {}"),
-  SSH_TUNNEL_03("SSH tunnel missing configuration: {}"),
-  SSH_TUNNEL_04("Invalid SSK key information: {}"),
-  ;
+public class TestSshKeyInfoBean {
 
-  private final String message;
-
-  Errors(String message) {
-    this.message = message;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return message;
+  @Test
+  public void testBean() {
+    SshKeyInfoBean bean = new SshKeyInfoBean();
+    Assert.assertFalse(bean.isValid());
+    bean.setPrivateKey("priv");
+    Assert.assertFalse(bean.isValid());
+    bean.setPublicKey("pub");
+    Assert.assertFalse(bean.isValid());
+    bean.setPassword("pass");
+    Assert.assertTrue(bean.isValid());
   }
 }
