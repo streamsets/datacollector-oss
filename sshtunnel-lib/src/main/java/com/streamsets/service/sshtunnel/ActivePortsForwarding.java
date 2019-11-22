@@ -29,7 +29,7 @@ import java.util.Map;
  * <p/>
  * The returned host and port pairs are the entry points in the tunnel.
  */
-public class ActivePortsForwarding implements LifecyclePortsForwarding {
+public class ActivePortsForwarding implements PortsForwarding {
   private static final Logger LOG = LoggerFactory.getLogger(ActivePortsForwarding.class);
 
   private volatile int state; //0 created, 1 started, 2 stopped
@@ -41,11 +41,6 @@ public class ActivePortsForwarding implements LifecyclePortsForwarding {
     this.sshTunnel = Utils.checkNotNull(sshTunnel, "sshTunnel");
     this.targetHostsPorts = Utils.checkNotNull(targetHostsPorts, "targetHostsPorts");
     Utils.checkArgument(targetHostsPorts.size() > 0, "targetHostPorts must have at least one element");
-  }
-
-  @Override
-  public boolean isEnabled() {
-    return true;
   }
 
   @Override

@@ -294,7 +294,7 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   }
 
   @Override // From SshTunnelService
-  public SshTunnelService.PortsForwarding start(List<HostPort> targetHostsPorts) {
+  public Map<HostPort, HostPort>  start(List<HostPort> targetHostsPorts) {
     return LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),
         () -> ((SshTunnelService)serviceBean.getService()).start(targetHostsPorts)
@@ -302,11 +302,22 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   }
 
   @Override // From SshTunnelService
-  public void stop(PortsForwarding portsForwarding) {
+  public void healthCheck() {
     LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),
         () -> {
-          ((SshTunnelService) serviceBean.getService()).stop(portsForwarding);
+          ((SshTunnelService) serviceBean.getService()).healthCheck();
+          return null;
+        }
+    );
+  }
+
+  @Override // From SshTunnelService
+  public void stop() {
+    LambdaUtil.privilegedWithClassLoader(
+        serviceBean.getDefinition().getStageClassLoader(),
+        () -> {
+          ((SshTunnelService) serviceBean.getService()).stop();
           return null;
         }
     );

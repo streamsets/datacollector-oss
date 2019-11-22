@@ -18,9 +18,11 @@ package com.streamsets.service.sshtunnel;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseService;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import org.slf4j.Logger;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -47,10 +50,14 @@ import java.util.stream.Collectors;
 public class SshTunnelServiceImpl extends BaseService implements SshTunnelService {
   private static final Logger LOG = LoggerFactory.getLogger(SshTunnelServiceImpl.class);
 
+  private int state; // 0 created, 1 inited, 2 error, 3 started, 4 stopped, 5 destroyed
+
   @ConfigDefBean(groups = {"SSH_TUNNEL"})
   public SshTunnelConfigBean sshTunnelConfig;
 
   private SshTunnel.Builder sshTunnelBuilder;
+
+  private PortsForwarding portsForwarding;
 
   //visible for testing
   SshTunnel.Builder createSshTunnelBuilder() {
@@ -59,6 +66,7 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
 
   @Override
   public List<ConfigIssue> init() {
+    Utils.checkState(state == 0, "Already inited");
     LOG.debug("Initializing SSH Tunnel service");
 
     List issues = new ArrayList();
@@ -106,13 +114,17 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
         }
       }
     }
+    state = (issues.isEmpty()) ? 1 : 2;
     return issues;
   }
 
   @Override
   public void destroy() {
     LOG.debug("Destroying SSH Tunnel service");
-    sshTunnelBuilder = null;
+    if (state == 3) {
+      stop();
+    }
+    state = 5;
   }
 
   @Override
@@ -121,26 +133,37 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
   }
 
   @Override
-  public PortsForwarding start(List<HostPort> targetHostsPorts) {
-    LifecyclePortsForwarding portsForwarding;
+  public Map<HostPort, HostPort> start(List<HostPort> targetHostsPorts) {
+    Utils.checkState(state == 1, "Not in inited state");
+    state = 3;
     if (sshTunnelBuilder == null) {
       LOG.debug("SSH tunneling disabled, creating a NoOpPortsForwarding");
       portsForwarding = new NoOpPortsForwarding(targetHostsPorts);
     } else {
       LOG.debug("SSH tunneling enabled, creating an ActivePortsForwarding");
-      portsForwarding = new ActivePortsForwarding(sshTunnelBuilder.build(), targetHostsPorts);
+      try {
+        portsForwarding = new ActivePortsForwarding(sshTunnelBuilder.build(), targetHostsPorts);
+      } catch (Exception ex) {
+        state = 2;
+        throw  ex;
+      }
     }
     portsForwarding.start();
-    return portsForwarding;
+    state = 3;
+    return portsForwarding.getPortMapping();
   }
 
   @Override
-  public void stop(PortsForwarding portsForwarding) {
-    if (portsForwarding instanceof LifecyclePortsForwarding) { //it won't be if it is the NONE constant
-      if (isEnabled()) {
-        ((LifecyclePortsForwarding) portsForwarding).stop();
-      }
-    }
+  public void healthCheck() throws StageException {
+    Utils.checkState(state == 3, "Not in started state");
+    portsForwarding.healthCheck();
+  }
+
+  @Override
+  public void stop() {
+    Utils.checkState(state == 3, "Not in started state");
+    state = 4;
+    portsForwarding.stop();
   }
 
 }

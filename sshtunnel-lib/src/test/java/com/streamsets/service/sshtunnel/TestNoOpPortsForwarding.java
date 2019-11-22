@@ -26,12 +26,11 @@ public class TestNoOpPortsForwarding {
   @Test
   public void testTunnels() {
     SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("l", 1);
-    SshTunnelService.PortsForwarding portsForwarding = new NoOpPortsForwarding(ImmutableList.of(hostPort));
-
-    Assert.assertFalse(portsForwarding.isEnabled());
+    PortsForwarding portsForwarding = new NoOpPortsForwarding(ImmutableList.of(hostPort));
 
     Assert.assertEquals(ImmutableMap.of(hostPort, hostPort), portsForwarding.getPortMapping());
 
     portsForwarding.healthCheck();
   }
+
 }

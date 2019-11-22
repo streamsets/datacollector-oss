@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.util.Map;
 
 public class TestSshTunnelServiceImpl {
 
@@ -41,9 +42,9 @@ public class TestSshTunnelServiceImpl {
 
     SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("l", 1);
 
-    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(hostPort));
-    Assert.assertTrue(portsForwarding instanceof NoOpPortsForwarding);
-    Assert.assertEquals(ImmutableMap.of(hostPort, hostPort), portsForwarding.getPortMapping());
+    Map<SshTunnelService.HostPort, SshTunnelService.HostPort> map = service.start(ImmutableList.of(hostPort));
+    Assert.assertNotNull(map);
+    Assert.assertEquals(ImmutableMap.of(hostPort, hostPort), map);
     service.destroy();
   }
 
@@ -120,16 +121,16 @@ public class TestSshTunnelServiceImpl {
     Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPublicKey(Mockito.eq("pub"));
     Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPrivateKeyPassword(Mockito.eq("pass"));
 
-    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(target));
-    Assert.assertTrue(portsForwarding instanceof ActivePortsForwarding);
-    Assert.assertEquals(ImmutableMap.of(target, forwarder), portsForwarding.getPortMapping());
+    Map<SshTunnelService.HostPort, SshTunnelService.HostPort> map = service.start(ImmutableList.of(target));
+    Assert.assertNotNull(map);
+    Assert.assertEquals(ImmutableMap.of(target, forwarder), map);
 
-    portsForwarding.healthCheck();
+    service.healthCheck();
 
-    service.stop(portsForwarding);
+    service.stop();
 
     try {
-      portsForwarding.healthCheck();
+      service.healthCheck();
       Assert.fail();
     } catch (IllegalStateException ex) {
 

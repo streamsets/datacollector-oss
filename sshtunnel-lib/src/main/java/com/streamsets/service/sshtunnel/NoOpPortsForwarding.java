@@ -15,7 +15,6 @@
  */
 package com.streamsets.service.sshtunnel;
 
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 
 import java.util.List;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
  * <p/>
  * The port mapping returns the same target host port pair.
  */
-public class NoOpPortsForwarding implements LifecyclePortsForwarding {
+public class NoOpPortsForwarding implements PortsForwarding {
   private final Map<SshTunnelService.HostPort, SshTunnelService.HostPort> mapping;
 
   public NoOpPortsForwarding(List<SshTunnelService.HostPort> targetHostsPorts) {
@@ -35,18 +34,8 @@ public class NoOpPortsForwarding implements LifecyclePortsForwarding {
   }
 
   @Override
-  public boolean isEnabled() {
-    return false;
-  }
-
-  @Override
   public Map<SshTunnelService.HostPort, SshTunnelService.HostPort> getPortMapping() {
     return mapping;
-  }
-
-  @Override
-  public void healthCheck() throws StageException {
-    //no-op
   }
 
 }

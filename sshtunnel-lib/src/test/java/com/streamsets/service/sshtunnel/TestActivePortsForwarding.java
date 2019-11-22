@@ -41,8 +41,6 @@ public class TestActivePortsForwarding {
 
     ActivePortsForwarding portsForwarding = new ActivePortsForwarding(tunnel, ImmutableList.of(targetHostPort));
 
-    Assert.assertTrue(portsForwarding.isEnabled());
-
     portsForwarding.start();
 
     Mockito.verify(tunnel, Mockito.times(1)).start(Mockito.eq(ImmutableList.of(targetHostPort)));

@@ -15,12 +15,19 @@
  */
 package com.streamsets.service.sshtunnel;
 
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 
-/**
- * Adds start and stop lifecycle to the SshTunnel interface
- */
-public interface LifecyclePortsForwarding extends SshTunnelService.PortsForwarding {
-  default void start() {};
-  default void stop() {};
+import java.util.Map;
+
+public interface PortsForwarding {
+
+  default void start() {}
+
+  Map<SshTunnelService.HostPort, SshTunnelService.HostPort> getPortMapping();
+
+  default void stop() {}
+
+  default void healthCheck() throws StageException {}
+
 }
