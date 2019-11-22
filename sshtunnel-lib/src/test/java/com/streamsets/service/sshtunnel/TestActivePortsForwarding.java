@@ -22,62 +22,60 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class TestActiveActivePortsForwarding {
+public class TestActivePortsForwarding {
 
   @Test
   public void testTunnelsLifecycle() {
+    SshTunnelService.HostPort targetHostPort = new SshTunnelService.HostPort("l", 1);
+
+    SshTunnelService.HostPort forwarderHostPort = new SshTunnelService.HostPort("L", 2);
+
     SshTunnel tunnel = Mockito.mock(SshTunnel.class);
-    Mockito.when(tunnel.getTunnelEntryHost()).thenReturn("L");
-    Mockito.when(tunnel.getTunnelEntryPort()).thenReturn(2);
+    Mockito.when(tunnel.start(Mockito.eq(ImmutableList.of(targetHostPort)))).thenReturn(ImmutableMap.of(
+        targetHostPort,
+        forwarderHostPort
+    ));
 
     SshTunnel.Builder tunnelBuilder = Mockito.mock(SshTunnel.Builder.class);
     Mockito.when(tunnelBuilder.build()).thenReturn(tunnel);
 
-    SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("l", 1);
-
-    ActivePortsForwarding portsForwarding = new ActivePortsForwarding(tunnelBuilder, ImmutableList.of(hostPort));
+    ActivePortsForwarding portsForwarding = new ActivePortsForwarding(tunnel, ImmutableList.of(targetHostPort));
 
     Assert.assertTrue(portsForwarding.isEnabled());
 
     portsForwarding.start();
 
-    Mockito.verify(tunnel, Mockito.times(1)).start(Mockito.eq("l"), Mockito.eq(1));
+    Mockito.verify(tunnel, Mockito.times(1)).start(Mockito.eq(ImmutableList.of(targetHostPort)));
 
-    Assert.assertEquals(ImmutableList.of(tunnel), portsForwarding.getSshTunnels());
-
-    Assert.assertEquals(
-        ImmutableMap.of(hostPort, new SshTunnelService.HostPort("L", 2)),
-        portsForwarding.getPortMapping()
-    );
+    Assert.assertEquals(ImmutableMap.of(targetHostPort, forwarderHostPort), portsForwarding.getPortMapping());
 
     Mockito.verify(tunnel, Mockito.times(0)).healthCheck();
     portsForwarding.healthCheck();
     Mockito.verify(tunnel, Mockito.times(1)).healthCheck();
 
+    Mockito.verify(tunnel, Mockito.times(0)).stop();
     portsForwarding.stop();
+    Mockito.verify(tunnel, Mockito.times(1)).stop();
+
   }
 
   @Test
   public void testTunnelsIllegalStates() {
+    SshTunnelService.HostPort targetHostPort = new SshTunnelService.HostPort("l", 1);
+
+    SshTunnelService.HostPort forwarderHostPort = new SshTunnelService.HostPort("L", 2);
+
     SshTunnel tunnel = Mockito.mock(SshTunnel.class);
-    Mockito.when(tunnel.getTunnelEntryHost()).thenReturn("L");
-    Mockito.when(tunnel.getTunnelEntryPort()).thenReturn(2);
+    Mockito.when(tunnel.start(Mockito.eq(ImmutableList.of(targetHostPort)))).thenReturn(ImmutableMap.of(
+        targetHostPort,
+        forwarderHostPort
+    ));
 
-    SshTunnel.Builder tunnelBuilder = Mockito.mock(SshTunnel.Builder.class);
-    Mockito.when(tunnelBuilder.build()).thenReturn(tunnel);
 
-    SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("l", 1);
-
-    ActivePortsForwarding portsForwarding = new ActivePortsForwarding(tunnelBuilder, ImmutableList.of(hostPort));
+    ActivePortsForwarding portsForwarding = new ActivePortsForwarding(tunnel, ImmutableList.of(targetHostPort));
 
     try {
       portsForwarding.stop();
-      Assert.fail();
-    } catch (IllegalStateException ex) {
-    }
-
-    try {
-      portsForwarding.getSshTunnels();
       Assert.fail();
     } catch (IllegalStateException ex) {
     }
@@ -96,22 +94,7 @@ public class TestActiveActivePortsForwarding {
     } catch (IllegalStateException ex) {
     }
 
-    portsForwarding.getSshTunnels();
-    portsForwarding.getPortMapping();
-    tunnel.stop();
     portsForwarding.stop();
-
-    try {
-      portsForwarding.start();
-      Assert.fail();
-    } catch (IllegalStateException ex) {
-    }
-
-    try {
-      portsForwarding.getSshTunnels();
-      Assert.fail();
-    } catch (IllegalStateException ex) {
-    }
 
     try {
       portsForwarding.getPortMapping();

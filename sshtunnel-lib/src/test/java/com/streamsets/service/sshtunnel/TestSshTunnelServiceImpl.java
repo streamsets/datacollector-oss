@@ -91,9 +91,11 @@ public class TestSshTunnelServiceImpl {
     SshTunnelServiceImpl service = new SshTunnelServiceImpl();
     service = Mockito.spy(service);
 
+    SshTunnelService.HostPort target = new SshTunnelService.HostPort("K", 3);
+    SshTunnelService.HostPort forwarder = new SshTunnelService.HostPort("L", 4);
+
     SshTunnel tunnel = Mockito.mock(SshTunnel.class);
-    Mockito.when(tunnel.getTunnelEntryHost()).thenReturn("L");
-    Mockito.when(tunnel.getTunnelEntryPort()).thenReturn(2);
+    Mockito.when(tunnel.start(Mockito.eq(ImmutableList.of(target)))).thenReturn(ImmutableMap.of(target, forwarder));
     SshTunnel.Builder tunnelBuilder = Mockito.mock(SshTunnel.Builder.class);
     Mockito.when(tunnelBuilder.setSshHost(Mockito.anyString())).thenReturn(tunnelBuilder);
     Mockito.when(tunnelBuilder.setSshPort(Mockito.anyInt())).thenReturn(tunnelBuilder);
@@ -118,13 +120,9 @@ public class TestSshTunnelServiceImpl {
     Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPublicKey(Mockito.eq("pub"));
     Mockito.verify(tunnelBuilder, Mockito.times(1)).setSshPrivateKeyPassword(Mockito.eq("pass"));
 
-    SshTunnelService.HostPort hostPort = new SshTunnelService.HostPort("K", 3);
-    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(hostPort));
+    SshTunnelService.PortsForwarding portsForwarding = service.start(ImmutableList.of(target));
     Assert.assertTrue(portsForwarding instanceof ActivePortsForwarding);
-    Assert.assertEquals(
-        ImmutableMap.of(hostPort, new SshTunnelService.HostPort("L", 2)),
-        portsForwarding.getPortMapping()
-    );
+    Assert.assertEquals(ImmutableMap.of(target, forwarder), portsForwarding.getPortMapping());
 
     portsForwarding.healthCheck();
 

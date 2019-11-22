@@ -17,6 +17,7 @@ package com.streamsets.service.sshtunnel;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.connection.channel.direct.LocalPortForwarder;
 import net.schmizz.sshj.transport.verification.PromiscuousVerifier;
@@ -35,7 +36,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * SSH Tunnel class to establish a port forwarding SSH tunnel.
@@ -194,37 +198,58 @@ public class SshTunnel {
     return new Builder();
   }
 
+  private static class Forwarder {
+    private final ServerSocket serverSocketForwarder;
+    private final LocalPortForwarder localPortForwarder;
+    private final SshTunnelService.HostPort target;
+    private final SshTunnelService.HostPort forwarder;
+    private final Thread thread;
+
+    public Forwarder(
+        SshTunnelService.HostPort target,
+        SshTunnelService.HostPort forwarder,
+        Thread thread,
+        ServerSocket serverSocketForwarder,
+        LocalPortForwarder localPortForwarder
+    ) {
+      this.serverSocketForwarder = serverSocketForwarder;
+      this.localPortForwarder = localPortForwarder;
+      this.thread = thread;
+      this.target = target;
+      this.forwarder = forwarder;
+    }
+
+    public SshTunnelService.HostPort getTarget() {
+      return target;
+    }
+
+    public SshTunnelService.HostPort getForwarder() {
+      return forwarder;
+    }
+
+    public Thread getThread() {
+      return thread;
+    }
+
+    public ServerSocket getServerSocketForwarder() {
+      return serverSocketForwarder;
+    }
+
+    public LocalPortForwarder getLocalPortForwarder() {
+      return localPortForwarder;
+    }
+  }
+
+  private volatile byte state; //0 created, 1 started, 2 stopped
   private final Configs configs;
-  private SSHClient sshClient = null;
-  private ServerSocket serverSocketForwarder;
-  private volatile LocalPortForwarder localPortForwarder;
-
   private String tunnelEntryHost;
-  private volatile int tunnelEntryPort = -1;
-  private Thread forwarderThread;
-  private final Object lock = new Object();
-  private volatile IOException forwarderEx = null;
-
+  private SSHClient sshClient;
+  private List<Forwarder> forwarders;
+  private volatile IOException forwarderEx;
 
   private SshTunnel(Configs configs) {
     this.configs = configs;
     tunnelEntryHost = "localhost";
-  }
-
-  /**
-   * Returns the SSH tunnel entry host.
-   */
-  public String getTunnelEntryHost() {
-    return tunnelEntryHost;
-  }
-
-  /**
-   * Returns the SSH tunnel entry port. This port is assigned at tunnel start time.
-   * <p/>
-   * If the tunnel is not up, it returns -1.
-   */
-  public int getTunnelEntryPort() {
-    return tunnelEntryPort;
   }
 
   static boolean isPortOpen(String ip, int port) {
@@ -244,13 +269,18 @@ public class SshTunnel {
   }
 
   /**
-   * Starts an SSH port forwarding tunnel to the specified targetHost:targetPort via the SSH server.
+   * Starts an SSH ports forwarding tunnel to the specified target hosts and ports pairs via the SSH server.
+   * Returns a Map with mapping from the target hosts ports to the forwarder host ports.
    */
-  public synchronized void start(String targetHost, int targetPort) {
-    if (tunnelEntryPort != -1) {
-      throw new IllegalStateException("Already running");
-    }
+  public synchronized Map<SshTunnelService.HostPort, SshTunnelService.HostPort> start(
+      List<SshTunnelService.HostPort> targetHostsPorts
+  ) {
+    Utils.checkState(state == 0, "Already started");
+    Utils.checkNotNull(targetHostsPorts, "targetHostsPorts");
+    Utils.checkArgument(!targetHostsPorts.isEmpty(), "targetHostsPorts cannot be empty");
     try {
+      // establish the SSH Tunnel
+
       sshClient = new SSHClient();
 
       if (configs.useCompression) {
@@ -276,7 +306,6 @@ public class SshTunnel {
         ), ex);
       }
 
-
       OpenSSHKeyFile sshKey = new OpenSSHKeyFile();
 
       sshKey.init(configs.sshPrivateKey, configs.sshPublicKey, new PasswordFinder() {
@@ -296,77 +325,108 @@ public class SshTunnel {
       sshClient.auth(configs.sshUser, methods);
       sshClient.getConnection().getKeepAlive().setKeepAliveInterval(configs.sshKeepAliveSecs);
 
+      // create the port forwarders
+      Map<SshTunnelService.HostPort, SshTunnelService.HostPort> mapping = new HashMap<>();
+      forwarders = new ArrayList<>();
 
-      serverSocketForwarder = new ServerSocket();
-      serverSocketForwarder.setReuseAddress(true);
       try {
-        // letting ServerSocket to find a free port
-        serverSocketForwarder.bind(new InetSocketAddress(tunnelEntryHost, 0));
-      } catch (BindException ex) {
-        throw new IOException(String.format("Could not bind to '%s' on an ephemeral port, error: %s",
-            tunnelEntryHost, ex
-        ), ex);
-      }
-      tunnelEntryPort = serverSocketForwarder.getLocalPort();
-
-      LocalPortForwarder.Parameters params = new LocalPortForwarder.Parameters(
-          tunnelEntryHost,
-          tunnelEntryPort,
-          targetHost,
-          targetPort
-      );
-
-      localPortForwarder = sshClient.newLocalPortForwarder(params, serverSocketForwarder);
-
-      forwarderThread = new Thread(() -> {
-        try {
-          localPortForwarder.listen();
-        } catch (IOException ex) {
-          forwarderEx = ex;
-          synchronized (lock) {
-            lock.notify();
-          }
-        } finally {
-          localPortForwarder = null;
+        for (SshTunnelService.HostPort targetHostPort : targetHostsPorts) {
+          Forwarder forwarder = createPortForwarder(sshClient, targetHostPort);
+          forwarders.add(forwarder);
+          mapping.put(forwarder.getTarget(), forwarder.getForwarder());
         }
-      });
-      forwarderThread.setDaemon(true);
-      forwarderThread.setPriority(Thread.MIN_PRIORITY);
-      forwarderThread.start();
-
-      // waiting for 1 sec to see if something went wrong starting the port forwarder in the forwarderThread
-      synchronized (lock) {
-        lock.wait(1000);
+      } catch (Exception ex) {
+        stopInternal();
+        throw ex;
       }
-
-      verifyForwarderIsReady();
-      LOG.debug(
-          "Started tunnel from '{}:{}' to '{}:{}'",
-          tunnelEntryHost,
-          tunnelEntryPort,
-          configs.sshHost,
-          configs.sshPort
-      );
+      state = 1;
+      return Collections.unmodifiableMap(mapping);
     } catch (Exception ex) {
+      state = 2;
       throw new StageException(Errors.SSH_TUNNEL_01, ex);
     }
   }
 
-  void verifyForwarderIsReady() throws IOException {
+  private Forwarder createPortForwarder(SSHClient sshClient, SshTunnelService.HostPort targetHostPort)
+      throws IOException, InterruptedException {
+    ServerSocket serverSocketForwarder = new ServerSocket();
+    serverSocketForwarder.setReuseAddress(true);
+    try {
+      // letting ServerSocket to find a free port
+      serverSocketForwarder.bind(new InetSocketAddress(tunnelEntryHost, 0));
+    } catch (BindException ex) {
+      throw new IOException(String.format("Could not bind to '%s' on an ephemeral port, error: %s",
+          tunnelEntryHost, ex
+      ), ex);
+    }
+    int forwarderLocalPort = serverSocketForwarder.getLocalPort();
+
+    LocalPortForwarder.Parameters params = new LocalPortForwarder.Parameters(
+        tunnelEntryHost,
+        forwarderLocalPort,
+        targetHostPort.getHost(),
+        targetHostPort.getPort()
+    );
+
+    LocalPortForwarder localPortForwarder = sshClient.newLocalPortForwarder(params, serverSocketForwarder);
+
+    Object lock = new Object();
+
+    Thread forwarderThread = new Thread(() -> {
+      try {
+        localPortForwarder.listen();
+      } catch (IOException ex) {
+        forwarderEx = ex;
+        synchronized (lock) {
+          lock.notify();
+        }
+      }
+    });
+
+    forwarderThread.setDaemon(true);
+    forwarderThread.setPriority(Thread.MIN_PRIORITY);
+    forwarderThread.start();
+
+    // waiting for 1 sec to see if something when wrong starting the port forwarder in the forwarderThread
+    synchronized (lock) {
+      lock.wait(1000);
+    }
+
+    SshTunnelService.HostPort forwarderPort = new SshTunnelService.HostPort(tunnelEntryHost, forwarderLocalPort);
+    verifyForwarderIsReady(targetHostPort, forwarderPort);
+    LOG.debug(
+        "Started forwarder from '{}:{}' to '{}:{}'",
+        forwarderPort.getHost(),
+        forwarderPort.getPort(),
+        targetHostPort.getHost(),
+        targetHostPort.getPort()
+    );
+    return new Forwarder(targetHostPort, forwarderPort, forwarderThread, serverSocketForwarder, localPortForwarder);
+  }
+
+  void verifyForwarderIsReady(SshTunnelService.HostPort targetHostPort, SshTunnelService.HostPort forwarderPort)
+      throws IOException {
     if (forwarderEx != null) {
       throw forwarderEx;
     }
     int retries = configs.readyTimeOutMillis / 100;
-    while ((retries--) > 0 && !isPortOpen(tunnelEntryHost, tunnelEntryPort)) {
+    while ((retries--) > 0 && !isPortOpen(forwarderPort.getHost(), forwarderPort.getPort())) {
       try {
-        Thread.sleep(100);
+        Thread.sleep(40);
       } catch (InterruptedException ex) {
-        throw new IOException("Startup interrupted : " + ex, ex);
+        throw new IOException("Forwarder start interrupted : " + ex, ex);
       }
     }
 
     if (retries <= 0) {
-      throw new IOException("Port forwarding failed to start");
+      throw new IOException(
+          String.format(
+              "Forwarder from '%s:%d' to '%s:%d' failed to start",
+              forwarderPort.getHost(),
+              forwarderPort.getPort(),
+              targetHostPort.getHost(),
+              targetHostPort.getPort()
+          ));
     }
   }
 
@@ -374,61 +434,48 @@ public class SshTunnel {
    * Checks the health of the SSH tunnel throwing a StageException if unhealthy.
    */
   public void healthCheck() {
+    Utils.checkState(state == 1, "Not running");
     if (forwarderEx != null) {
       throw new StageException(Errors.SSH_TUNNEL_02, forwarderEx);
     }
-    if (localPortForwarder == null) {
-      throw new StageException(Errors.SSH_TUNNEL_00);
-    }
   }
 
-  /**
-   * Stops the SSH port forwarding tunnel.
-   */
-  public synchronized void stop() {
-    if (tunnelEntryPort == -1) {
-      throw new IllegalStateException("Not running");
-    }
-    tunnelEntryPort = -1;
-    if (forwarderThread != null) {
+  private synchronized void stopInternal() {
+    for (Forwarder forwarder : forwarders) {
       LOG.debug(
           "Stopping forwarderThread from '{}:{}' to '{}:{}'",
-          tunnelEntryHost,
-          tunnelEntryPort,
-          configs.sshHost,
-          configs.sshPort
+          forwarder.getForwarder().getHost(),
+          forwarder.getForwarder().getPort(),
+          forwarder.getTarget().getHost(),
+          forwarder.getTarget().getPort()
       );
-      forwarderEx = null;
-      forwarderThread.interrupt();
-      forwarderThread = null;
-    }
-
-    if (serverSocketForwarder != null) {
+      forwarder.getThread().interrupt();
       try {
-        LOG.debug(
-            "Closing forwarder serverSocketForwarder from '{}:{}' to '{}:{}'",
-            tunnelEntryHost,
-            tunnelEntryPort,
-            configs.sshHost,
-            configs.sshPort
-        );
-        serverSocketForwarder.close();
+        forwarder.getLocalPortForwarder().close();
       } catch (IOException ex) {
-        LOG.error("Could not close serverSocketForwarder, error: {} ", ex, ex);
-      } finally {
-        serverSocketForwarder = null;
+        LOG.warn(
+            "Error closing LocalPortForwarder for '{}:{}': {}",
+            forwarder.getTarget().getHost(),
+            forwarder.getTarget().getHost(),
+            ex,
+            ex
+        );
+      }
+      try {
+        forwarder.getServerSocketForwarder().close();
+      } catch (IOException ex) {
+        LOG.warn(
+            "Error closing local ServerSocket for '{}:{}': {}",
+            forwarder.getTarget().getHost(),
+            forwarder.getTarget().getHost(),
+            ex,
+            ex
+        );
       }
     }
-
     if (sshClient != null) {
-      LOG.debug(
-          "Stopping tunnel from '{}:{}' to '{}:{}'",
-          tunnelEntryHost,
-          tunnelEntryPort,
-          configs.sshHost,
-          configs.sshPort
-      );
       try {
+        LOG.debug("Closing tunnel to '{}:{}'", configs.sshHost, configs.sshPort);
         sshClient.disconnect();
       } catch (Exception ex) {
         LOG.warn("Error while disconnecting SSH client, error: {}", ex, ex);
@@ -436,6 +483,16 @@ public class SshTunnel {
         sshClient = null;
       }
     }
+  }
+
+  /**
+   * Stops the SSH tunnel.
+   */
+  public synchronized void stop() {
+    if (state == 1) {
+      stopInternal();
+    }
+    state = 2;
   }
 
 }

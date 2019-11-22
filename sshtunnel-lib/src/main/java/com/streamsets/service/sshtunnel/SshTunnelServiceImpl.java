@@ -128,7 +128,7 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
       portsForwarding = new NoOpPortsForwarding(targetHostsPorts);
     } else {
       LOG.debug("SSH tunneling enabled, creating an ActivePortsForwarding");
-      portsForwarding = new ActivePortsForwarding(sshTunnelBuilder, targetHostsPorts);
+      portsForwarding = new ActivePortsForwarding(sshTunnelBuilder.build(), targetHostsPorts);
     }
     portsForwarding.start();
     return portsForwarding;

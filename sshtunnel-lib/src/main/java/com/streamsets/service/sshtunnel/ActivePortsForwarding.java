@@ -21,9 +21,6 @@ import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -35,13 +32,13 @@ import java.util.Map;
 public class ActivePortsForwarding implements LifecyclePortsForwarding {
   private static final Logger LOG = LoggerFactory.getLogger(ActivePortsForwarding.class);
 
-  private final SshTunnel.Builder sshTunnelBuilder;
+  private volatile int state; //0 created, 1 started, 2 stopped
+  private final SshTunnel sshTunnel;
   private final List<SshTunnelService.HostPort> targetHostsPorts;
   private Map<SshTunnelService.HostPort, SshTunnelService.HostPort> mapping;
-  private List<SshTunnel> sshTunnels;
 
-  public ActivePortsForwarding(SshTunnel.Builder sshTunnelBuilder, List<SshTunnelService.HostPort> targetHostsPorts) {
-    this.sshTunnelBuilder = Utils.checkNotNull(sshTunnelBuilder, "sshTunnelBuilder");
+  public ActivePortsForwarding(SshTunnel sshTunnel, List<SshTunnelService.HostPort> targetHostsPorts) {
+    this.sshTunnel = Utils.checkNotNull(sshTunnel, "sshTunnel");
     this.targetHostsPorts = Utils.checkNotNull(targetHostsPorts, "targetHostsPorts");
     Utils.checkArgument(targetHostsPorts.size() > 0, "targetHostPorts must have at least one element");
   }
@@ -51,68 +48,39 @@ public class ActivePortsForwarding implements LifecyclePortsForwarding {
     return true;
   }
 
-  List<SshTunnel> getSshTunnels() {
-    Utils.checkState(mapping != null && !mapping.isEmpty(), "Not running");
-    return sshTunnels;
-  }
-
   @Override
   public Map<SshTunnelService.HostPort, SshTunnelService.HostPort> getPortMapping() {
-    Utils.checkState(mapping != null && !mapping.isEmpty(), "Not running");
+    Utils.checkState(state == 1, "Not running");
     return mapping;
   }
 
   @Override
-  public void start() {
-    Utils.checkState(mapping == null, "Already Running");
-    LOG.debug("Starting tunnels");
-    sshTunnels = new ArrayList<>();
-    Map<SshTunnelService.HostPort, SshTunnelService.HostPort> newMapping = new HashMap<>();
+  public synchronized void start() {
+    Utils.checkState(state == 0, "Already started");
+    LOG.debug("Starting tunnel and port forwarders");
     try {
-      for (SshTunnelService.HostPort targetHostPort : targetHostsPorts) {
-        SshTunnel sshTunnel = sshTunnelBuilder.build();
-        sshTunnel.start(targetHostPort.getHost(), targetHostPort.getPort());
-        SshTunnelService.HostPort tunnelEntryHostPort = new SshTunnelService.HostPort(
-            sshTunnel.getTunnelEntryHost(),
-            sshTunnel.getTunnelEntryPort()
-        );
-        sshTunnels.add(sshTunnel);
-        newMapping.put(targetHostPort, tunnelEntryHostPort);
-      }
-    } catch (StageException ex) {
-      stop();
-      sshTunnels.clear();
+      mapping = sshTunnel.start(targetHostsPorts);
+      state = 1;
+    } catch (Exception ex) {
+      state = 2;
       throw ex;
     }
-    this.mapping = Collections.unmodifiableMap(newMapping);
-    LOG.debug("Started tunnels");
+    LOG.debug("Started tunnel and port forwarders");
   }
 
   @Override
-  public void stop() {
-    Utils.checkState(mapping != null && !mapping.isEmpty(), "Not running");
-    mapping = Collections.emptyMap();
-    if (!sshTunnels.isEmpty()) {
-      LOG.debug("Stopping tunnels");
-      for (SshTunnel sshTunnel : sshTunnels) {
-        try {
-          LOG.debug("Stopping tunnel '{}:{}'", sshTunnel.getTunnelEntryHost(), sshTunnel.getTunnelEntryPort());
-          sshTunnel.stop();
-        } catch (Exception ex) {
-          LOG.warn("Error stopping tunnel: {}", ex, ex);
-        }
-      }
-      sshTunnels.clear();
-      LOG.debug("Stopped tunnels");
-    }
+  public synchronized void stop() {
+    Utils.checkState(state == 1, "Not running");
+    state = 2;
+    LOG.debug("Stopping tunnels");
+    sshTunnel.stop();
+    LOG.debug("Stopped tunnels");
   }
 
   @Override
   public void healthCheck() throws StageException {
-    Utils.checkState(mapping != null && !mapping.isEmpty(), "Not running");
-    for (SshTunnel sshTunnel : sshTunnels) {
-      sshTunnel.healthCheck();
-    }
+    Utils.checkState(state == 1, "Not running");
+    sshTunnel.healthCheck();
   }
 
 }

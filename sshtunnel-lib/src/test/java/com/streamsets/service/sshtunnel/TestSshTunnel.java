@@ -15,9 +15,11 @@
  */
 package com.streamsets.service.sshtunnel;
 
+import com.google.common.collect.ImmutableList;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.KeyPair;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import org.apache.sshd.common.config.keys.AuthorizedKeyEntry;
 import org.apache.sshd.common.config.keys.PublicKeyEntryResolver;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
@@ -42,6 +44,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -209,14 +212,17 @@ public class TestSshTunnel {
       if (mode == Mode.FAIL_BEFORE_SSH_TUNNEL_CREATION) {
         sshdStopper.run();
       }
-      tunnel.start("localhost", appPort);
+      SshTunnelService.HostPort targetHostPort = new SshTunnelService.HostPort("localhost", appPort);
+      Map<SshTunnelService.HostPort, SshTunnelService.HostPort> portMapping
+          = tunnel.start(ImmutableList.of(targetHostPort));
 
       if (mode == Mode.FAIL_BEFORE_CLIENT_CONNECTION) {
         sshdStopper.run();
       }
       tunnel.healthCheck();
 
-      Socket socket = new Socket(tunnel.getTunnelEntryHost(), tunnel.getTunnelEntryPort());
+      SshTunnelService.HostPort forwarderPort = portMapping.get(targetHostPort);
+      Socket socket = new Socket(forwarderPort.getHost(), forwarderPort.getPort());
       Assert.assertTrue(socket.isConnected());
 
       if (mode == Mode.FAIL_DURING_CLIENT_CONNECTION) {
