@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.SdcRecordGeneratorService;
 
 @StageDef(
-    version = 11,
+    version = 12,
     label = "Write to Amazon S3",
     description = "Writes error records to Amazon S3",
     upgraderDef = "upgrader/ToErrorAmazonS3DTarget.yaml",

@@ -94,6 +94,17 @@ public abstract class S3ConnectionBaseConfig {
   )
   public String delimiter;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Path Style Address Model",
+      defaultValue = "false",
+      description = "If checked data is accessed using https://<s3_server>/<bucket>/<path>.  If unchecked, data is accessed using Virtual Model style of https://<bucket>.<s3_server>/<path>",
+      displayPosition = 50,
+      group = "#0"
+  )
+  public boolean usePathAddressModel = false;
+
   private int maxErrorRetries;
 
   public int getMaxErrorRetries(){
@@ -157,7 +168,7 @@ public abstract class S3ConnectionBaseConfig {
         .withCredentials(credentials)
         .withClientConfiguration(clientConfig)
         .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
-        .withPathStyleAccessEnabled(true);
+        .withPathStyleAccessEnabled(usePathAddressModel);
 
     if (region == AwsRegion.OTHER) {
       if (endpoint == null || endpoint.isEmpty()) {

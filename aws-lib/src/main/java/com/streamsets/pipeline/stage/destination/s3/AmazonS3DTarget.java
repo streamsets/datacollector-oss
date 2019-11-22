@@ -28,7 +28,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
-    version = 11,
+    version = 12,
     label = "Amazon S3",
     description = "Writes to Amazon S3",
     icon = "s3.png",
