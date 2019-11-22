@@ -70,6 +70,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.Authorization;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -339,9 +340,6 @@ public class PreviewResource {
         dynamicPreviewRequest
     );
 
-    if (dynamicPreviewEvent == null) {
-      throw new StageException(PreviewError.PREVIEW_0104);
-    }
 
     String generatedPipelineId = null;
     try {
@@ -429,6 +427,7 @@ public class PreviewResource {
     DYNAMIC_PREVIEW_REQUEST_OBJECT_MAPPER.registerModule(module);
   }
 
+  @NotNull
   private DynamicPreviewEventJson getDynamicPreviewEvent(
       String schBaseUrl,
       String requestPath,
@@ -444,12 +443,13 @@ public class PreviewResource {
     if (response.haveData() && response.successful()) {
       return response.getData(DynamicPreviewEventJson.class);
     } else {
+      String errorBody = StringUtils.join(response.getError());
       LOG.error(
           "Error trying to get DynamicPreviewEventJson; status {}, error: {}",
           response.getStatus(),
-          response.getError()
+          errorBody
       );
-      return null;
+      throw new StageException(PreviewError.PREVIEW_0104, errorBody);
     }
   }
 

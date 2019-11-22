@@ -47,6 +47,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 
 
@@ -149,7 +150,6 @@ public class TestPreviewResource extends JerseyTest {
 
     RestClient.Response response = PowerMockito.mock(RestClient.Response.class);
     PowerMockito.when(response.successful()).thenReturn(false);
-    PowerMockito.when((response.getData(DynamicPreviewEventJson.class))).thenReturn(dpEvent);
 
     PowerMockito.when(controlHubClient.post(Matchers.any())).thenReturn(response);
 
@@ -160,6 +160,28 @@ public class TestPreviewResource extends JerseyTest {
       Assert.fail("Exception should be thrown");
     } catch (Exception ex) {
       Assert.assertTrue(ex.getCause().getMessage().contains("PREVIEW_0104"));
+    }
+  }
+
+  @Test
+  public void dynamicPreviewShouldShowErrorIfControlHubFailsWithAnError() throws IOException {
+    // Mock Control hub failure response
+    DynamicPreviewEventJson dpEvent = new DynamicPreviewEventJson();
+
+    RestClient.Response response = PowerMockito.mock(RestClient.Response.class);
+    PowerMockito.when(response.successful()).thenReturn(false);
+    PowerMockito.when((response.getError())).thenReturn(new HashMap<String, String>() {{ put("ISSUES", "SOME_ERROR"); }});
+
+    PowerMockito.when(controlHubClient.post(Matchers.any())).thenReturn(response);
+
+    // Call to control hub to initialize the dynamic preview
+    try {
+      target("/v1/pipeline/dynamicPreview").request()
+          .post(Entity.json(requestWithOverridesJson));
+      Assert.fail("Exception should be thrown");
+    } catch (Exception ex) {
+      Assert.assertTrue(ex.getCause().getMessage().contains("PREVIEW_0104"));
+      Assert.assertTrue(ex.getCause().getMessage().contains("SOME_ERROR"));
     }
   }
 
