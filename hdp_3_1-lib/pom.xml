@@ -49,6 +49,7 @@
     <aws.java.sdk.version>1.11.134</aws.java.sdk.version>
     <parquet.version>1.10.0.3.1.4.0-315</parquet.version>
     <atlas.version>1.1.0.3.1.4.0-315</atlas.version>
+    <failureaccess.version>1.0.1</failureaccess.version>
   </properties>
 
   <dependencies>
@@ -634,6 +635,12 @@
       <artifactId>streamsets-datacollector-cluster-hdfs-protolib</artifactId>
       <type>test-jar</type>
       <scope>test</scope>
+    </dependency>
+    <!-- Version of guava used here which is 11.0.2 doesn't include failure-access so bring it in explicitly-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>failureaccess</artifactId>
+      <version>${failureaccess.version}</version>
     </dependency>
 
   </dependencies>
