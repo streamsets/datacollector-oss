@@ -19,8 +19,10 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.util.scripting.Errors;
 import com.streamsets.pipeline.stage.util.scripting.ScriptObjectFactory;
 import com.streamsets.pipeline.stage.util.scripting.ScriptRecord;
 import com.streamsets.pipeline.stage.util.scripting.ScriptingStageBindings;
@@ -96,6 +98,7 @@ public class ScriptingOriginBindings extends ScriptingStageBindings {
     public void addError(ScriptRecord scriptRecord, String errorMsg) {
       errorCount++;
       Record record = scriptObjectFactory.getRecord(scriptRecord);
+      errorRecordHandler.onError(Errors.SCRIPTING_04, errorMsg);
       batchContext.toError(record, errorMsg);
     }
 

@@ -152,6 +152,7 @@ public class ScriptingOriginTestUtil<T extends AbstractScriptingSource> {
     PushSourceRunner runner = new PushSourceRunner.Builder(clazz, scriptingDSource)
         .addConstants(pipelineConstants)
         .addConfiguration("script", getScript(scriptName, clazz))
+        .setOnRecordError(OnRecordError.TO_ERROR)
         .addOutputLane("lane")
         .build();
     runner.runInit();
