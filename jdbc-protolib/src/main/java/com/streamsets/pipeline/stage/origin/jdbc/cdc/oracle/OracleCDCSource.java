@@ -243,7 +243,7 @@ public class OracleCDCSource extends BaseSource {
     UNKNOWN
   }
 
-  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS ORDER BY TIMESTAMP";
+  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS WHERE ROWNUM = 1 ORDER BY TIMESTAMP";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
@@ -1371,9 +1371,9 @@ public class OracleCDCSource extends BaseSource {
     String commitScnField;
     BigDecimal scn = null;
     try {
-      scn = getEndingSCN();
       switch (configBean.startValue) {
         case SCN:
+          scn = getEndingSCN();
           if (new BigDecimal(configBean.startSCN).compareTo(scn) > 0) {
             issues.add(
                 getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startSCN", JDBC_47, scn.toPlainString()));
@@ -1654,19 +1654,37 @@ public class OracleCDCSource extends BaseSource {
         LOG.debug("Cached SCN {} is no longer valid, retrieving new SCN", cachedSCNForRedoLogs);
       }
     }
-
-    // Cached SCN is no longer valid, try to get the next oldest ones and start.
-    getOldestSCN.setBigDecimal(1, cachedSCNForRedoLogs.get());
-    try (ResultSet rs = getOldestSCN.executeQuery()) {
-      while (rs.next()) {
-        BigDecimal oldestSCN = rs.getBigDecimal(1);
-        try {
-          startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
-          cachedSCNForRedoLogs.set(oldestSCN);
-          startedLogMiner = true;
-          break;
-        } catch (SQLException ex) {
-          lastException = ex;
+    if (configBean.durationDictExtract > 0 ) {
+      // Introduced from version 11.
+      LocalDateTime currentTime = nowAtDBTz();
+      String end = currentTime.format(dateTimeColumnHandler.dateFormatter);
+      LocalDateTime startTime = currentTime.minusSeconds(configBean.durationDictExtract);
+      String start = startTime.format(dateTimeColumnHandler.dateFormatter);
+      try {
+        // Start LogMinor with current time - duration
+        LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, start, end);
+        startLogMnrForData.setString(1, start);
+        startLogMnrForData.setString(2, end);
+        startLogMnrForData.execute();
+        return;
+      } catch (SQLException e) {
+        LOG.debug("Unable to use start time {} and end time {} to start a LogMiner: {}", start, end, e);
+      }
+    } else {
+      // Default behavior is always start with oldest SCN.
+      // Cached SCN is no longer valid, try to get the next oldest ones and start.
+      getOldestSCN.setBigDecimal(1, cachedSCNForRedoLogs.get());
+      try (ResultSet rs = getOldestSCN.executeQuery()) {
+        while (rs.next()) {
+          BigDecimal oldestSCN = rs.getBigDecimal(1);
+          try {
+            startLogMinerUsingGivenSCNs(oldestSCN, endSCN);
+            cachedSCNForRedoLogs.set(oldestSCN);
+            startedLogMiner = true;
+            break;
+          } catch (SQLException ex) {
+            lastException = ex;
+          }
         }
       }
     }

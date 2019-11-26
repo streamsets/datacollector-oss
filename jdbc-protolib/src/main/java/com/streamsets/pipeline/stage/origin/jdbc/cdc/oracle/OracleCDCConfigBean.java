@@ -89,6 +89,20 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "Duration of Directory Extraction",
+      description = "Interval of extracting Directory information to Redo Log Files",
+      dependsOn = "dictionary",
+      triggeredByValue = "DICT_FROM_REDO_LOGS",
+      defaultValue = "${24 * HOURS}",
+      displayPosition = 75,
+      elDefs = TimeEL.class,
+      group = "CDC"
+  )
+  public long durationDictExtract = -1;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Buffer Changes Locally",
       description = "Buffer changes in SDC memory or on Disk. Use this to reduce PGA memory usage on the DB",

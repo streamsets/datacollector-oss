@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 10,
+    version = 11,
     label = "Oracle CDC Client",
     description = "Origin that an read change events from an Oracle Database",
     icon = "rdbms.png",

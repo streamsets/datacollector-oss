@@ -85,7 +85,14 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 9:
-        return upgradeV9ToV10(configs);
+        configs =  upgradeV9ToV10(configs);
+        if (toVersion == 10){
+          return configs;
+        }
+      case 10:
+        return upgradeV10ToV11(configs);
+
+
 
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -185,6 +192,12 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
         .findAny().get();
 
     configs.add(new Config("oracleCDCConfigBean.fetchSizeLatest", fetchSize.getValue()));
+    return configs;
+  }
+
+  private static List<Config> upgradeV10ToV11(List<Config> configs) {
+    // Applying existing fetch size to fetchSizeLatest in order to persist the behavior
+    configs.add(new Config("oracleCDCConfigBean.durationDictExtract", -1));
     return configs;
   }
 }
