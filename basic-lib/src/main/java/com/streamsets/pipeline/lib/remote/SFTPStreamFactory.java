@@ -15,8 +15,11 @@
  */
 package com.streamsets.pipeline.lib.remote;
 
+import com.sun.org.apache.bcel.internal.generic.RETURN;
 import net.schmizz.sshj.sftp.RemoteFile;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -33,7 +36,20 @@ public class SFTPStreamFactory {
   private static final int MAX_UNCONFIRMED_READ_WRITES = 64;
 
   public static InputStream createReadAheadInputStream(RemoteFile remoteFile) {
+    return createReadAheadInputStream(remoteFile, -1);
+  }
+
+  public static InputStream createReadAheadInputStream(RemoteFile remoteFile, int bufferSizeWholeFile) {
+
     return remoteFile.new ReadAheadRemoteFileInputStream(MAX_UNCONFIRMED_READ_WRITES) {
+
+      private static final int DEFAULT_SIZE_READ_AHEAD = 80 * 1024;
+      private int size = bufferSizeWholeFile;
+      private byte[] data;
+      private int currentPos;
+      private int last;
+      private boolean eof;
+
       private boolean isClosed = false;
       @Override
       public synchronized void close() throws IOException {
@@ -42,6 +58,59 @@ public class SFTPStreamFactory {
           isClosed = true;
         }
       }
+
+      @Override
+      public int read(@NotNull byte[] b) throws IOException {
+        return super.read(b, 0, b.length);
+      }
+
+      /**
+       * Implementation of an intermediate buffer in order to allow the SFTP + S3 pipeline work with the
+       * the Read Ahead Stream option. Because of the problem addressed on the SDC-13025 ticket we implemented
+       * a solution that calls the read(byte[] into, int off, int len) always on a fixed size and using always the
+       * buffer size property form the SFTP config. If this property is not set a DEFAULT_SIZE_READ_AHEAD is taken.
+       *
+       * {@inheritDoc}
+       */
+      @Override
+      public int read(byte[] into, int off, int len) throws IOException {
+        if (eof) {
+          return -1;
+        }
+        if (data==null) {
+          init();
+        }
+        int counter = 0;
+        for (int i=0; i<len; i++) {
+          if (currentPos == 0) {
+            fillBuffer();
+            if (eof) break;
+          }
+          into[i+off] = data[currentPos];
+          currentPos = (currentPos+1) % last;
+          counter++;
+        }
+        return counter == 0 ? -1 : counter;
+      }
+
+      public void fillBuffer() throws IOException {
+        int last = super.read(data,0,size);
+        if (last == -1) {
+          eof=true;
+        } else {
+          this.last = last;
+        }
+      }
+
+      private void init(){
+        if (size <= 0) {
+          size = DEFAULT_SIZE_READ_AHEAD;
+        }
+        data = new byte[size];
+        currentPos = 0;
+        eof = false;
+      }
+
     };
   }
 

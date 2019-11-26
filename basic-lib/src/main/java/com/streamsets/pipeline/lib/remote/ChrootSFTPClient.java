@@ -47,6 +47,8 @@ public class ChrootSFTPClient {
   private SFTPClient sftpClient;
   private final boolean disableReadAheadStream;
 
+  private int bufferSizeReadAheadStream;
+
   /**
    * Wraps the provided {@link SFTPClient} at the given root.  The given root can either be an absolute path or a path
    * relative to the user's home directory.
@@ -141,7 +143,7 @@ public class ChrootSFTPClient {
     if (disableReadAheadStream) {
       return SFTPStreamFactory.createInputStream(remoteFile);
     } else {
-      return SFTPStreamFactory.createReadAheadInputStream(remoteFile);
+      return SFTPStreamFactory.createReadAheadInputStream(remoteFile, bufferSizeReadAheadStream);
     }
   }
 
@@ -233,5 +235,13 @@ public class ChrootSFTPClient {
     public FileMode.Type getType() {
       return type;
     }
+  }
+
+  public int getBufferSizeReadAheadStream() {
+    return bufferSizeReadAheadStream;
+  }
+
+  public void setBufferSizeReadAheadStream(int bufferSizeReadAheadStream) {
+    this.bufferSizeReadAheadStream = bufferSizeReadAheadStream;
   }
 }
