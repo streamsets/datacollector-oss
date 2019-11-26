@@ -38,8 +38,13 @@ public class MultiKafkaSourceUpgrader implements StageUpgrader {
         }
         // fall through
       case 2:
+      case 3:
         // handled by YAML upgrader
         if (toVersion == 3) {
+          break;
+        }
+        // handled by YAML upgrader
+        if (toVersion == 4) {
           break;
         }
         // fall through
