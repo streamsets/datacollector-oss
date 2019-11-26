@@ -73,20 +73,35 @@ public class VaultClient {
 
   private SSLSocketFactory getSSLSocketFactory(final SslOptions sslOptions) {
     try {
-      final KeyStore trustStore = KeyStore.getInstance("jks");
+
+      final KeyStore trustStore = initializeTrustStore(KeyStore.getInstance("JKS"), sslOptions);
 
       SSLContext sslContext = SSLContext.getInstance(TLS);
 
-      TrustManager[] trustManagers = getTrustManagers(
-          Strings.isNullOrEmpty(sslOptions.getTrustStoreFile()) ? null : trustStore
-      );
-      sslContext.init(getKeyManagers(trustStore, sslOptions), trustManagers, null);
+      TrustManager[] trustManagers = getTrustManagers(Strings.isNullOrEmpty(sslOptions.getTrustStoreFile()) ? null :
+                                                      trustStore);
+      KeyManager[] keyManagers = getKeyManagers(trustStore, sslOptions.getTrustStorePassword());
+      sslContext.init(keyManagers, trustManagers, null);
       sslContext.getDefaultSSLParameters().setProtocols(sslOptions.getEnabledProtocols().split(","));
 
       return sslContext.getSocketFactory();
     } catch (IOException | GeneralSecurityException e) {
       throw new VaultRuntimeException("Failed to initialize SSL: " + e.toString(), e);
     }
+  }
+
+  private KeyStore initializeTrustStore(final KeyStore keystore, SslOptions sslOptions) throws GeneralSecurityException,
+      IOException {
+
+    if (sslOptions.getTrustStoreFile() != null && !sslOptions.getTrustStoreFile().isEmpty()) {
+      try (InputStream is = new FileInputStream(sslOptions.getTrustStoreFile())) {
+        keystore.load(is, sslOptions.getTrustStorePassword().toCharArray());
+      }
+    } else {
+      // Load empty trust store
+      keystore.load(null, null);
+    }
+    return keystore;
   }
 
   private TrustManager[] getTrustManagers(KeyStore keystore) throws GeneralSecurityException {
@@ -102,20 +117,9 @@ public class VaultClient {
     return trustManagers;
   }
 
-  private KeyManager[] getKeyManagers(final KeyStore trustStore, SslOptions sslOptions)
-      throws GeneralSecurityException, IOException {
-
-    if (sslOptions.getTrustStoreFile() != null && !sslOptions.getTrustStoreFile().isEmpty()) {
-      try (InputStream is = new FileInputStream(sslOptions.getTrustStoreFile())) {
-        trustStore.load(is, sslOptions.getTrustStorePassword().toCharArray());
-      }
-    } else {
-      // Load empty trust store
-      trustStore.load(null, null);
-    }
-
+  private KeyManager[] getKeyManagers(final KeyStore trustStore, String password) throws GeneralSecurityException {
     KeyManagerFactory keyMgrFactory = KeyManagerFactory.getInstance(X509);
-    keyMgrFactory.init(trustStore, sslOptions.getTrustStorePassword().toCharArray());
+    keyMgrFactory.init(trustStore, password.toCharArray());
     return keyMgrFactory.getKeyManagers();
   }
 
