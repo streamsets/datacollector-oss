@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -43,6 +44,7 @@ public class WebSocketTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(WebSocketTarget.class);
   private static final String DATA_FORMAT_CONFIG_PREFIX = "conf.dataFormatConfig.";
   private static final String RESOURCE_URL_CONFIG = "conf.resourceUrl";
+  private static final String HEADERS_CONFIG = "conf.headers";
 
   private final WebSocketTargetConfig conf;
   private DataGeneratorFactory generatorFactory;
@@ -77,7 +79,39 @@ public class WebSocketTarget extends BaseTarget {
           Errors.HTTP_52, e.toString()
       ));
     }
-    createWebSocketClient();
+
+    // Filter empty headers and signal error on headers with value but empty key.
+    ListIterator<HeaderBean> iter = conf.headers.listIterator();
+    while (iter.hasNext()) {
+      HeaderBean header = iter.next();
+      if (header.key.isEmpty()) {
+        if (header.value.get().isEmpty()) {
+          LOG.info("Ignoring empty header.");
+          iter.remove();
+        } else {
+          LOG.error("Invalid header with empty name: header with value '{}'.", header.value.get());
+          issues.add(getContext().createConfigIssue(
+              Groups.WEB_SOCKET.name(),
+              HEADERS_CONFIG,
+              Errors.HTTP_53,
+              String.format("header with value '%s' has no name", header.value.get())
+          ));
+        }
+      }
+    }
+
+    if (issues.isEmpty() && conf.tlsConfig.isEnabled()) {
+      // this configuration has no separate "tlsEnabled" field on the bean level, so need to do it this way
+      conf.tlsConfig.init(
+          getContext(),
+          Groups.TLS.name(),
+          "conf.tlsConfig.",
+          issues
+      );
+    }
+
+    createWebSocketClient();  // For secure connections TLS config must be initialized before.
+
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     if (issues.isEmpty()) {
       conf.dataGeneratorFormatConfig.init(
@@ -91,15 +125,7 @@ public class WebSocketTarget extends BaseTarget {
         generatorFactory = conf.dataGeneratorFormatConfig.getDataGeneratorFactory();
       }
     }
-    if (issues.isEmpty() && conf.tlsConfig.isEnabled()) {
-      // this configuration has no separate "tlsEnabled" field on the bean level, so need to do it this way
-      conf.tlsConfig.init(
-          getContext(),
-          Groups.TLS.name(),
-          "conf.tlsConfig.",
-          issues
-      );
-    }
+
     return issues;
   }
 
@@ -110,15 +136,6 @@ public class WebSocketTarget extends BaseTarget {
         SslContextFactory sslContextFactory = new SslContextFactory();
         final TlsConfigBean tlsConf = conf.tlsConfig;
 
-        if (tlsConf.keyStoreFilePath != null) {
-          sslContextFactory.setKeyStorePath(tlsConf.keyStoreFilePath);
-        }
-        if (tlsConf.keyStoreType != null) {
-          sslContextFactory.setKeyStoreType(tlsConf.keyStoreType.getJavaValue());
-        }
-        if (tlsConf.keyStorePassword != null) {
-          sslContextFactory.setKeyStorePassword(tlsConf.keyStorePassword.get());
-        }
         if (tlsConf.trustStoreFilePath != null) {
           sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
         }
@@ -154,10 +171,12 @@ public class WebSocketTarget extends BaseTarget {
       );
       webSocketClient.start();
       URI webSocketUri = new URI(conf.resourceUrl);
+
       ClientUpgradeRequest request = new ClientUpgradeRequest();
-      for(HeaderBean header : conf.headers) {
+      for (HeaderBean header : conf.headers) {
         request.setHeader(header.key, header.value.get());
       }
+
       Future<Session> connectFuture = webSocketClient.connect(webSocketTargetSocket, webSocketUri, request);
       wsSession = connectFuture.get();
       if (!webSocketTargetSocket.awaitClose(conf.maxRequestCompletionSecs, TimeUnit.SECONDS)) {
