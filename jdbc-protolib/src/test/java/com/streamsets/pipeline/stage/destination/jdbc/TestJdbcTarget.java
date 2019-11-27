@@ -33,6 +33,7 @@ import junit.framework.Assert;
 import org.joda.time.Instant;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -57,6 +58,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Parameterized.class)
 @SuppressWarnings("Duplicates")
+@Ignore //SCJDBC-132. Migrate this class to STF
 public class TestJdbcTarget {
 
   private final String username = "sa";

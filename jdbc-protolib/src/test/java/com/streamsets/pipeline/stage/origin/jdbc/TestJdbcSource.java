@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -34,9 +35,11 @@ import org.h2.tools.SimpleResultSet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,6 +59,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("Duplicates")
+@Ignore //SCJDBC-130. Migrate this class to STF
 public class TestJdbcSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestJdbcSource.class);
   private static final int BATCH_SIZE = 1000;
@@ -176,8 +180,9 @@ public class TestJdbcSource {
   }
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.setConnectionString(connectionString);
+    HikariPoolConfigBean bean = Mockito.mock(HikariPoolConfigBean.class);
+    Mockito.when(bean.isConnectionSecured()).thenReturn(true);
+    bean.connectionString = connectionString;
     bean.useCredentials = true;
     bean.username = () -> username;
     bean.password = () -> password;
@@ -1394,7 +1399,7 @@ public class TestJdbcSource {
       Assert.assertTrue(record.has("/GEO"));
       Assert.assertEquals(2, record.get("/P_ID").getValueAsLong());
       Assert.assertEquals(Field.Type.STRING, record.get("/GEO").getType());
-      Assert.assertEquals(null, record.get("/GEO").getValue());
+      assertNull(record.get("/GEO").getValue());
     } finally {
       runner.runDestroy();
     }
@@ -1462,11 +1467,37 @@ public class TestJdbcSource {
       assertEquals(Field.Type.STRING, parsedRecords.get(0).get("/TS").getType());
       assertEquals("2018-08-09 19:21:36.992415", parsedRecords.get(0).get("/TS").getValueAsString());
       assertEquals(Field.Type.STRING, parsedRecords.get(1).get("/TS").getType());
-      assertEquals(null, parsedRecords.get(1).get("/TS").getValueAsString());
+      assertNull(parsedRecords.get(1).get("/TS").getValueAsString());
 
     } finally {
       runner.runDestroy();
     }
   }
 
+  @Test
+  public void testNonSecureConnection() throws Exception {
+    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+    JdbcSource origin = new JdbcSource(
+        true,
+        query,
+        initialOffset,
+        "P_ID",
+        false,
+        "",
+        1000,
+        JdbcRecordType.LIST_MAP,
+        new CommonSourceConfigBean(queriesPerSecond, BATCH_SIZE, CLOB_SIZE, CLOB_SIZE),
+        false,
+        "",
+        bean,
+        UnknownTypeAction.STOP_PIPELINE,
+        queryInterval
+    );
+
+    SourceRunner runner = new SourceRunner.Builder(JdbcDSource.class, origin).addOutputLane("lane").build();
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertEquals(1, issues.size());
+    assertTrue(issues.toString().contains(JdbcErrors.JDBC_501.toString()));
+  }
 }

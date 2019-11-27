@@ -24,7 +24,9 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import com.streamsets.pipeline.lib.jdbc.BasicConnectionString;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -96,6 +98,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   private MultithreadedTableProvider tableOrderProvider;
   private int numberOfThreads;
 
+  private SshTunnelService sshTunnelService;
+
   protected JdbcUtil jdbcUtil;
   protected TableContextUtil tableContextUtil;
 
@@ -108,6 +112,10 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
       CommonSourceConfigBean commonSourceConfigBean,
       TableJdbcConfigBean tableJdbcConfigBean) {
     this(hikariConfigBean, commonSourceConfigBean, tableJdbcConfigBean, UtilsProvider.getTableContextUtil());
+  }
+
+  protected BasicConnectionString getBasicConnectionString() {
+    return new BasicConnectionString(hikariConfigBean.getPatterns(), hikariConfigBean.getConnectionStringTemplate());
   }
 
   public AbstractTableJdbcSource(
@@ -130,15 +138,42 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
+    sshTunnelService = getContext().getService(SshTunnelService.class);
 
-    PushSource.Context context = getContext();
-    issues = hikariConfigBean.validateConfigs(context, issues);
-    issues = commonSourceConfigBean.validateConfigs(context, issues);
+    if (!hikariConfigBean.isConnectionSecured() && !sshTunnelService.isEnabled()) {
+      issues.add(getContext().createConfigIssue("JDBC", "hikariConfigBean.connectionString", JdbcErrors.JDBC_501));
+    } else {
 
-    validateTableJdbcConfigBean(context, issues);
+      BasicConnectionString.Info
+          info
+          = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
 
-    if (issues.isEmpty()) {
-      checkConnectionAndBootstrap(context, issues);
+      if (info != null) {
+        // basic connection string format
+        SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
+        Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
+            portMapping
+            = sshTunnelService.start(Collections.singletonList(target));
+        SshTunnelService.HostPort tunnel = portMapping.get(target);
+        info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
+        hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
+      } else {
+        // complex connection string format, we don't support this right now with SSH tunneling
+        issues.add(getContext().createConfigIssue("JDBC",
+            "hikariConfigBean.connectionString",
+            hikariConfigBean.getNonBasicUrlErrorCode()
+        ));
+      }
+
+      PushSource.Context context = getContext();
+      issues = hikariConfigBean.validateConfigs(context, issues);
+      issues = commonSourceConfigBean.validateConfigs(context, issues);
+
+      validateTableJdbcConfigBean(context, issues);
+
+      if (issues.isEmpty()) {
+        checkConnectionAndBootstrap(context, issues);
+      }
     }
 
     return issues;
@@ -345,6 +380,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
 
   @Override
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+    sshTunnelService.healthCheck();
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
     handleLastOffset(new HashMap<>(lastOffsets));
     try {
@@ -479,6 +515,9 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
 
   @Override
   public void destroy() {
+    if (sshTunnelService != null){
+      sshTunnelService.stop();
+    }
     boolean interrupted = shutdownExecutorIfNeeded();
     //Invalidate all the thread cache so that all statements/result sets are properly closed.
     toBeInvalidatedThreadCaches.forEach(Cache::invalidateAll);

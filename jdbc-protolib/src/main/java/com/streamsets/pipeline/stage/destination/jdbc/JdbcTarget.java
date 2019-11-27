@@ -23,8 +23,10 @@ import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.jdbc.BasicConnectionString;
 import com.streamsets.pipeline.lib.jdbc.DuplicateKeyAction;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
@@ -45,7 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -81,6 +85,8 @@ public class JdbcTarget extends BaseTarget {
   protected final UnsupportedOperationAction unsupportedAction;
   protected final DuplicateKeyAction duplicateKeyAction;
 
+  private SshTunnelService sshTunnelService;
+
   protected final JdbcUtil jdbcUtil;
 
   protected boolean tableAutoCreate;
@@ -107,6 +113,11 @@ public class JdbcTarget extends BaseTarget {
       );
     }
   }
+
+  protected BasicConnectionString getBasicConnectionString() {
+    return new BasicConnectionString(hikariConfigBean.getPatterns(), hikariConfigBean.getConnectionStringTemplate());
+  }
+
 
   protected LoadingCache<SchemaAndTable, JdbcRecordWriter> recordWriters;
 
@@ -197,46 +208,75 @@ public class JdbcTarget extends BaseTarget {
     issues = hikariConfigBean.validateConfigs(context, issues);
     errorRecordHandler = new DefaultErrorRecordHandler(context);
 
-    if (dynamicSchemaName || dynamicTableName) {
-      schemaTableClassifier = new SchemaTableClassifier(schemaNameTemplate, tableNameTemplate, context);
-    }
+    sshTunnelService = getContext().getService(SshTunnelService.class);
 
-    ELUtils.validateExpression(
-        schemaNameTemplate,
-        context,
-        Groups.JDBC.getLabel(),
-        JdbcUtil.SCHEMA_NAME,
-        JdbcErrors.JDBC_103,
-        issues
-    );
+    if (!hikariConfigBean.isConnectionSecured() && !sshTunnelService.isEnabled()) {
+      issues.add(getContext().createConfigIssue("JDBC", "hikariConfigBean.connectionString", JdbcErrors.JDBC_501));
+    } else {
+      BasicConnectionString.Info
+          info
+          = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
 
-    ELUtils.validateExpression(
-        tableNameTemplate,
-        context,
-        Groups.JDBC.getLabel(),
-        JdbcUtil.TABLE_NAME,
-        JdbcErrors.JDBC_26,
-        issues
-    );
+      if (info != null) {
+        // basic connection string format
+        SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
+        Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
+            portMapping
+            = sshTunnelService.start(Collections.singletonList(target));
+        SshTunnelService.HostPort tunnel = portMapping.get(target);
+        info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
+        hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
+      } else {
+        // complex connection string format, we don't support this right now with SSH tunneling
+        issues.add(getContext().createConfigIssue("JDBC",
+            "hikariConfigBean.connectionString",
+            hikariConfigBean.getNonBasicUrlErrorCode()
+        ));
+      }
 
-    if (issues.isEmpty() && null == dataSource) {
-      try {
-        dataSource = jdbcUtil.createDataSourceForWrite(
-            hikariConfigBean,
-            schemaNameTemplate,
-            tableNameTemplate,
-            caseSensitive,
-            issues,
-            customMappings,
-            context,
-            tableAutoCreate
-        );
-      } catch (StageException e) {
-        LOG.error("Could not connect to data source", e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
-      } catch (RuntimeException | SQLException e) {
-        LOG.error("Could not connect to data source", e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
+      if (dynamicSchemaName || dynamicTableName) {
+        schemaTableClassifier = new SchemaTableClassifier(schemaNameTemplate, tableNameTemplate, context);
+      }
+
+      ELUtils.validateExpression(schemaNameTemplate,
+          context,
+          Groups.JDBC.getLabel(),
+          JdbcUtil.SCHEMA_NAME,
+          JdbcErrors.JDBC_103,
+          issues
+      );
+
+      ELUtils.validateExpression(tableNameTemplate,
+          context,
+          Groups.JDBC.getLabel(),
+          JdbcUtil.TABLE_NAME,
+          JdbcErrors.JDBC_26,
+          issues
+      );
+
+      if (issues.isEmpty() && null == dataSource) {
+        try {
+          dataSource = jdbcUtil.createDataSourceForWrite(hikariConfigBean,
+              schemaNameTemplate,
+              tableNameTemplate,
+              caseSensitive,
+              issues,
+              customMappings,
+              context,
+              tableAutoCreate
+          );
+        } catch (StageException e) {
+          LOG.error("Could not connect to data source", e);
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
+        } catch (RuntimeException | SQLException e) {
+          LOG.error("Could not connect to data source", e);
+          issues.add(context.createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STRING,
+              JdbcErrors.JDBC_00,
+              e.toString()
+          ));
+        }
       }
     }
 
@@ -245,6 +285,9 @@ public class JdbcTarget extends BaseTarget {
 
   @Override
   public void destroy() {
+    if (sshTunnelService != null){
+      sshTunnelService.stop();
+    }
     recordWriters.invalidateAll();
     if (null != dataSource) {
       dataSource.close();
@@ -254,6 +297,7 @@ public class JdbcTarget extends BaseTarget {
 
   @Override
   public void write(Batch batch) throws StageException {
+    sshTunnelService.healthCheck();
     // jdbc target always commit batch execution
     write(batch, false);
   }

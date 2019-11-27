@@ -15,7 +15,9 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -41,6 +43,9 @@ import java.util.Set;
 
 public class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
+
+  private static final String GENERIC_CONNECTION_STRING_TEMPLATE = "jdbc:vendor://%s:%d%s";
+  private static final String PROTOCOL = "jdbc:vendor://";
 
   private static final String CONF_DRIVERS_LOAD = "com.streamsets.pipeline.stage.jdbc.drivers.load";
 
@@ -261,7 +266,7 @@ public class HikariPoolConfigBean {
       mode = ConfigDef.Mode.SQL,
       label = "Init Query",
       description = "SQL query that will be executed on all new connections when they are created, before they are" +
-        " added to connection pool.",
+          " added to the connection pool.",
       displayPosition = 80,
       group = "ADVANCED"
   )
@@ -449,6 +454,10 @@ public class HikariPoolConfigBean {
     return connectionString;
   }
 
+  public boolean isConnectionSecured() {
+    return false;
+  }
+
   public DatabaseVendor getVendor() {
     if (connectionString.startsWith("jdbc:oracle:")) {
       return DatabaseVendor.ORACLE;
@@ -463,6 +472,50 @@ public class HikariPoolConfigBean {
     for (Map.Entry<String, String> property : keyValueProperties.entrySet()) {
       additionalProperties.setProperty(property.getKey(), property.getValue());
     }
+  }
+
+  public String getConnectionStringTemplate() {
+    return GENERIC_CONNECTION_STRING_TEMPLATE;
+  }
+
+  public Set<BasicConnectionString.Pattern> getPatterns() {
+    List<BasicConnectionString.Pattern> listOfPatterns = new ArrayList<>();
+
+    for (String pattern : BasicConnectionString.getAllRegex()) {
+      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s):" + "(\\d+)(/.*)*", PROTOCOL, pattern),
+          1,
+          null,
+          5,
+          0,
+          6
+      ));
+      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s):(\\d+)*", PROTOCOL, pattern),
+          1,
+          null,
+          5,
+          0,
+          0
+      ));
+      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s)(/.*)*", PROTOCOL, pattern),
+          1,
+          null,
+          0,
+          3306,
+          5
+      ));
+      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s)*", PROTOCOL, pattern),
+          1,
+          null,
+          0,
+          3306,
+          0
+      ));
+    }
+    return ImmutableSet.copyOf(listOfPatterns);
+  }
+
+  public ErrorCode getNonBasicUrlErrorCode() {
+    return JdbcErrors.JDBC_500;
   }
 
   public void setAutoCommit(boolean autoCommit) {

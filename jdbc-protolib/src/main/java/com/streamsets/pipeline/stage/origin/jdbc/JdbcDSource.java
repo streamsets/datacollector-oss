@@ -25,6 +25,8 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.api.service.ServiceDependency;
+import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
@@ -45,7 +47,8 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class},
-    onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs"
+    onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs",
+    services = @ServiceDependency(service = SshTunnelService.class)
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle

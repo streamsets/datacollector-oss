@@ -38,6 +38,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
@@ -63,6 +64,7 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@Ignore //SCJDBC-131. Migrate this class to STF
 public class TestTableJdbcSource {
   private static final Logger LOG = LoggerFactory.getLogger(TestTableJdbcSource.class);
 
