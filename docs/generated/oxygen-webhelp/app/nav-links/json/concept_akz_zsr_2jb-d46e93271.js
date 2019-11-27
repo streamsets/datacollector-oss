@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Control Hub API Processor","href":"datacollector\/UserGuide\/Processors\/ControlHubAPI.html#task_oqs_4tr_2jb","attributes": {"data-id":"task_oqs_4tr_2jb",},"menu": {"hasChildren":false,},"tocID":"task_oqs_4tr_2jb-d46e93303","topics":[]}]});

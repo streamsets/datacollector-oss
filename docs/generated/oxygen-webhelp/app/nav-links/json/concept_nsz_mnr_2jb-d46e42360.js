@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Cron Scheduler Origin","href":"datacollector\/UserGuide\/Origins\/CronScheduler.html#task_hcz_x4r_2jb","attributes": {"data-id":"task_hcz_x4r_2jb",},"menu": {"hasChildren":false,},"tocID":"task_hcz_x4r_2jb-d46e42392","topics":[]}]});
