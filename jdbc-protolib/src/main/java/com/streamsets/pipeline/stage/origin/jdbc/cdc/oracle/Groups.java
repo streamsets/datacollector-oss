@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
   CDC("Oracle CDC"),
   JDBC("JDBC"),
-  ENCRYPTION("Connection Encryption"),
   CREDENTIALS("Credentials"),
   LEGACY("Legacy"),
   ADVANCED("Advanced"),
