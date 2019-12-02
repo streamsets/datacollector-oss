@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
+import static org.mockito.Mockito.mock;
+
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
@@ -51,7 +53,7 @@ public class TestWalRecordFilteringUtils {
 
   private void createConfigBeans() {
     hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connectionString = h2ConnectionString;
+    hikariConfigBean.setConnectionString(h2ConnectionString);
     hikariConfigBean.useCredentials = true;
     hikariConfigBean.username = () -> username;
     hikariConfigBean.password = () -> password;

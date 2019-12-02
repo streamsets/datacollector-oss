@@ -100,13 +100,13 @@ public class PrivateHikariConfigBean {
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     underlying = new HikariPoolConfigBean();
-    underlying.connectionString = connectionString;
+    underlying.setConnectionString(connectionString);
     underlying.useCredentials = useCredentials;
     underlying.username = username;
     underlying.password = password;
     underlying.driverProperties = driverProperties;
     underlying.readOnly = true;
-    underlying.autoCommit = true;
+    underlying.setAutoCommit(true);
     underlying.connectionTimeout = HikariPoolConfigBean.DEFAULT_CONNECTION_TIMEOUT;
     underlying.idleTimeout = HikariPoolConfigBean.DEFAULT_IDLE_TIMEOUT;
     underlying.maxLifetime = HikariPoolConfigBean.DEFAULT_MAX_LIFETIME;

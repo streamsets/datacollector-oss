@@ -106,7 +106,7 @@ public class TestJdbcMetadata {
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connectionString = connectionString;
+    bean.setConnectionString(connectionString);
     bean.useCredentials = true;
     bean.username = () -> username;
     bean.password = () -> password;

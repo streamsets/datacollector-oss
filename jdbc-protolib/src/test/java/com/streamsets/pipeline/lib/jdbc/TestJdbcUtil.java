@@ -63,7 +63,7 @@ public class TestJdbcUtil {
 
   private HikariPoolConfigBean createConfigBean() {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connectionString = h2ConnectionString;
+    bean.setConnectionString(h2ConnectionString);
     bean.useCredentials = true;
     bean.username = () -> username;
     bean.password = () -> password;

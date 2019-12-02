@@ -280,7 +280,6 @@ public class HikariPoolConfigBean {
   @ValueChooserModel(TransactionIsolationLevelChooserValues.class)
   public TransactionIsolationLevel transactionIsolation = TransactionIsolationLevel.DEFAULT;
 
-
   private static final String HIKARI_CONFIG_PREFIX = "hikariConfigBean.";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
 
@@ -480,5 +479,9 @@ public class HikariPoolConfigBean {
 
   public CredentialValue getPassword() {
     return password;
+  }
+
+  public void setConnectionString(String connectionString) {
+    this.connectionString = connectionString;
   }
 }

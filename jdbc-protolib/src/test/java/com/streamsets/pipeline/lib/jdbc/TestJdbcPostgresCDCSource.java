@@ -16,43 +16,24 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.DecoderValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCSource;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRecord;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCWalReceiver;
 import com.zaxxer.hikari.HikariDataSource;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.nio.ByteBuffer;
+
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Queue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.postgresql.replication.LogSequenceNumber;
-import org.postgresql.replication.PGReplicationStream;
-import org.powermock.api.mockito.PowerMockito;
 
 public class TestJdbcPostgresCDCSource {
 
@@ -67,7 +48,7 @@ public class TestJdbcPostgresCDCSource {
 
   private void createConfigBeans() {
     hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connectionString = h2ConnectionString;
+    hikariConfigBean.setConnectionString(h2ConnectionString);
     hikariConfigBean.useCredentials = true;
     hikariConfigBean.username = () -> username;
     hikariConfigBean.password = () -> password;
