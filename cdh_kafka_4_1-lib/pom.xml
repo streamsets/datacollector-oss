@@ -35,16 +35,12 @@
 
   <properties>
     <kafka.version>2.2.1-kafka-4.1.0</kafka.version>
-    <zookeeper.version>3.4.5-cdh5.15.0</zookeeper.version>
+    <!-- Set the jackson version to 2.9.7, since that is what the Apache Kafka 2.2.1 brings in -->
+    <jackson.version>2.9.7</jackson.version>
   </properties>
 
   <dependencies>
     <!-- Compile Dependencies -->
-    <dependency>
-      <groupId>org.apache.zookeeper</groupId>
-      <artifactId>zookeeper</artifactId>
-      <version>${zookeeper.version}</version>
-    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdc-kafka-2_0</artifactId>
@@ -108,7 +104,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.11</artifactId>
+      <artifactId>kafka-clients</artifactId>
       <version>${kafka.version}</version>
       <scope>compile</scope>
     </dependency>
@@ -158,29 +154,10 @@
     </dependency>
     <dependency>
       <groupId>org.apache.kafka</groupId>
-      <artifactId>kafka_2.11</artifactId>
-      <version>${kafka.version}</version>
-      <classifier>test</classifier>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.zookeeper</groupId>
-          <artifactId>zookeeper</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
       <version>${kafka.version}</version>
       <classifier>test</classifier>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.zookeeper</groupId>
-          <artifactId>zookeeper</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
