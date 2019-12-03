@@ -38,26 +38,87 @@ public class SelectorStageUpgrader implements StageUpgrader {
   }
 
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
-    if (legacyUpgrader != null) {
-      int toLegacyVersion = (yamlUpgrader != null) ? yamlUpgrader.getMinimumConfigVersionHandled()
-                                                   : context.getToVersion();
+    boolean hasYamlUpgrades = yamlUpgrader != null && yamlUpgrader.getMinimumConfigVersionHandled()
+        != YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED;
 
-      if (toLegacyVersion == YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED || toLegacyVersion > context.getFromVersion()) {
+    if (legacyUpgrader != null) {
+      int toLegacyVersion = (hasYamlUpgrades) ? yamlUpgrader.getMinimumConfigVersionHandled()
+                                              : context.getToVersion();
+
+      if (toLegacyVersion > context.getFromVersion()) {
         LOG.debug(
             "Running legacy upgrader to upgrade '{}' stage from '{}' version to '{}' version",
             context.getStageName(),
             context.getFromVersion(),
-            toLegacyVersion == YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED ? context.getToVersion() : toLegacyVersion
+            toLegacyVersion
         );
-        configs = legacyUpgrader.upgrade(configs, context);
+        MutableVersionRangeContextWrapper legacyContext = new MutableVersionRangeContextWrapper(context);
+        legacyContext.setToVersion(toLegacyVersion);
+        configs = legacyUpgrader.upgrade(configs, legacyContext);
       }
     }
 
-    if (yamlUpgrader != null) {
-      configs = yamlUpgrader.upgrade(configs, context);
+    if (hasYamlUpgrades) {
+      int fromYamlVersion = yamlUpgrader.getMinimumConfigVersionHandled();
+      MutableVersionRangeContextWrapper yamlContext = new MutableVersionRangeContextWrapper(context);
+      yamlContext.setFromVersion(fromYamlVersion);
+      configs = yamlUpgrader.upgrade(configs, yamlContext);
     }
 
     return configs;
+  }
+
+  static class MutableVersionRangeContextWrapper implements Context {
+
+    private Context context;
+    private int toVersion;
+    private int fromVersion;
+
+    MutableVersionRangeContextWrapper(Context context) {
+      this.context = context;
+      this.fromVersion = context.getFromVersion();
+      this.toVersion = context.getToVersion();
+    }
+
+    @Override
+    public String getLibrary() {
+      return context.getLibrary();
+    }
+
+    @Override
+    public String getStageName() {
+      return context.getStageName();
+    }
+
+    @Override
+    public String getStageInstance() {
+      return context.getStageInstance();
+    }
+
+    @Override
+    public int getFromVersion() {
+      return fromVersion;
+    }
+
+    public void setFromVersion(int fromVersion) {
+      if (fromVersion > 0) {
+        this.fromVersion = fromVersion;
+      }
+    }
+
+    @Override
+    public int getToVersion() {
+      return toVersion;
+    }
+
+    public void setToVersion(int toVersion) {
+      this.toVersion = toVersion;
+    }
+
+    @Override
+    public void registerService(Class aClass, List<Config> list) {
+      context.registerService(aClass, list);
+    }
   }
 
 }
