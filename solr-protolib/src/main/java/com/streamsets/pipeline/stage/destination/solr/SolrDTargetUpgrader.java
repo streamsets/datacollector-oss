@@ -81,7 +81,7 @@ public class SolrDTargetUpgrader implements StageUpgrader {
     configs.add(new Config("waitFlush", true));
     configs.add(new Config("waitSearcher", true));
     configs.add(new Config("softCommit", false));
-    configs.add(new Config("ignoreOptionalFields", false));
+    configs.add(new Config("ignoreOptionalFields", true));
   }
 
   private static void upgradeV3ToV4(List<Config> configs) {
