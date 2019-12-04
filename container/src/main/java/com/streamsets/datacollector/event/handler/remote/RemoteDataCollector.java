@@ -435,8 +435,15 @@ public class RemoteDataCollector implements DataCollector {
               pipelineState.getNextRetryTimeStamp()
           );
         }
-        // We're currently sending with attempts set to 0 because we are disabling this function by default
-        sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, attempts);
+        try {
+          // We're currently sending with attempts set to 0 because we are disabling this function by default
+          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, attempts);
+        } catch (IOException | PipelineException ex) {
+          // if metrics sending fail, lets log an error and continue with delete of the pipeline
+          LOG.error(Utils.format("Cannot send metrics for pipeline: {} due to: {}", pipelineState.getPipelineId(), ex),
+              ex
+          );
+        }
         remoteDataCollector.delete(pipelineName, rev);
       } catch (Exception ex) {
         ackStatus = AckEventStatus.ERROR;
