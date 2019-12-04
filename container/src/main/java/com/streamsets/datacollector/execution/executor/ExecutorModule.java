@@ -161,7 +161,7 @@ public class ExecutorModule {
   public static int getEventSize(Configuration configuration) {
     return configuration.get(
       ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_KEY,
-      ExecutorConstants.EVENT_EXECUTOR_THREAD_POOL_SIZE_DEFAULT
+      getRunnerSize(configuration)
     );
   }
 
