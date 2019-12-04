@@ -904,6 +904,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Map<String, String> requestHeader,
       long attempts
   ) throws IOException, PipelineException {
+    if (attempts == 0) {
+      // avoid the below deserialization if never planning to send metrics
+      return;
+    }
     ObjectMapper objectMapper = ObjectMapperFactory.get();
     List<SDCMetricsJson> sdcMetricsJsonList = new ArrayList<>();
     for (PipelineState pipelineState : remoteDataCollector.getRemotePipelines()) {
