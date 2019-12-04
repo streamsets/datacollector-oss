@@ -495,7 +495,7 @@ public class RemoteDataCollector implements DataCollector {
         title = null;
       }
       pipelineAndValidationStatuses.add(new PipelineAndValidationStatus(
-          getSchGeneratedPipelineName(name, rev),
+          getSchGeneratedPipelineName(pipelineState),
           title,
           rev,
           pipelineState.getTimeStamp(),
@@ -563,12 +563,14 @@ public class RemoteDataCollector implements DataCollector {
 
 
   String getSchGeneratedPipelineName(String name, String rev) throws PipelineException {
+    return getSchGeneratedPipelineName(pipelineStateStore.getState(name, rev));
+  }
+
+  private String getSchGeneratedPipelineName(PipelineState pipelineState) {
     // return name with colon so control hub can interpret the job id from the name
-    Object schGenName = pipelineStateStore.getState(name, rev)
-        .getAttributes()
-        .get(RemoteDataCollector.SCH_GENERATED_PIPELINE_NAME);
+    Object schGenName = pipelineState.getAttributes().get(RemoteDataCollector.SCH_GENERATED_PIPELINE_NAME);
     // will be null for pipelines with version earlier than 3.7
-    return (schGenName == null) ? name : (String) schGenName;
+    return (schGenName == null) ? pipelineState.getPipelineId() : (String) schGenName;
   }
 
   @Override
