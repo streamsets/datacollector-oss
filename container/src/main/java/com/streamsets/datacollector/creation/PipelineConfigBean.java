@@ -98,6 +98,20 @@ public class PipelineConfigBean implements Stage {
 
   public static final String EDGE_HTTP_URL_DEFAULT = "http://localhost:18633";
 
+  public static final String DEFAULT_PREPROCESS_SCRIPT = "" +
+      "/*\n" +
+      "The following script define a method\n" +
+      "that increments an integer by 1 \n" +
+      "and registers it as a UDF with \n" +
+      "the SparkSession, which can be accessed\n" +
+      "using the variable named \"spark\":\n" +
+      "def inc(i: Integer): Integer = {\n" +
+      "  i + 1\n" +
+      "}\n" +
+      "spark.udf.register (\"inc\", inc _)\n" +
+      "\n" +
+      "*/";
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -500,19 +514,7 @@ public class PipelineConfigBean implements Stage {
       required = false,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SCALA,
-      defaultValue = "" +
-          "/*\n" +
-          "The following script define a method\n" +
-          "that increments an integer by 1 \n" +
-          "and registers it as a UDF with \n" +
-          "the SparkSession, which can be accessed\n" +
-          "using the variable named \"spark\":\n" +
-          "def inc(i: Integer): Integer = {\n" +
-          "  i + 1\n" +
-          "}\n" +
-          "spark.udf.register (\"inc\", inc _)\n" +
-          "\n" +
-          "*/",
+      defaultValue = DEFAULT_PREPROCESS_SCRIPT,
       label = "Preprocessing Script",
       description = "Scala script to run on the driver before starting the pipeline. " +
           "Can be used to register user defined functions, etc. Use the 'spark' variable to access the Spark session",
