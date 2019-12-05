@@ -189,7 +189,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   }
 
   private Field getField(String value) {
-    if(settings.getNullConstant() != null && settings.getNullConstant().equals(value)) {
+    if(settings.parseNull() && settings.getNullConstant() != null && settings.getNullConstant().equals(value)) {
       return Field.create(Field.Type.STRING, null);
     }
 

@@ -616,4 +616,58 @@ public class TestDelimitedCharDataParser {
 
     parser.close();
   }
+
+  @Test
+  public void testParserNull() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,B\r\nnull,b"), 1000, true, false);
+    DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+      .withSkipStartLines(0)
+      .withFormat(CSVFormat.DEFAULT)
+      .withHeader(CsvHeader.WITH_HEADER)
+      .withMaxObjectLen(-1)
+      .withRecordType(CsvRecordType.LIST_MAP)
+      .withParseNull(true)
+      .withNullConstant("null")
+      .build();
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, settings);
+
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertTrue(record.has("/A"));
+    Assert.assertTrue(record.has("/B"));
+    Assert.assertEquals(null, record.get("/A").getValueAsString());
+    Assert.assertEquals("b", record.get("/B").getValueAsString());
+
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals("-1", parser.getOffset());
+    parser.close();
+  }
+
+  @Test // See SDC-12513
+  public void testParserNullSetToFalseWithNullConstant() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("A,B\r\nnull,b"), 1000, true, false);
+    DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+      .withSkipStartLines(0)
+      .withFormat(CSVFormat.DEFAULT)
+      .withHeader(CsvHeader.WITH_HEADER)
+      .withMaxObjectLen(-1)
+      .withRecordType(CsvRecordType.LIST_MAP)
+      .withParseNull(false) // We should not parse nulls even thought we set the null constant below
+      .withNullConstant("null")
+      .build();
+    DataParser parser = new DelimitedCharDataParser(getContext(), "id", reader, 0, settings);
+
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertTrue(record.has("/A"));
+    Assert.assertTrue(record.has("/B"));
+    Assert.assertEquals("null", record.get("/A").getValueAsString());
+    Assert.assertEquals("b", record.get("/B").getValueAsString());
+
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals("-1", parser.getOffset());
+    parser.close();
+  }
 }
