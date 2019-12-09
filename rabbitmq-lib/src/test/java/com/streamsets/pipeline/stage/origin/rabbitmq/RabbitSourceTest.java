@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.rabbitmq;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Envelope;
+import com.streamsets.pipeline.api.ErrorStage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
@@ -27,6 +28,7 @@ import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
 import com.streamsets.pipeline.lib.parser.DataParserFormat;
+import com.streamsets.pipeline.lib.rabbitmq.config.Errors;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Before;
@@ -63,6 +65,7 @@ public class RabbitSourceTest extends BaseRabbitStageTest{
   @Before
   public void setup() {
     this.conf = new RabbitSourceConfigBean();
+    this.conf.queue.name = QUEUE_NAME;
   }
 
   @Override
@@ -156,5 +159,17 @@ public class RabbitSourceTest extends BaseRabbitStageTest{
     assertNull(record.getHeader().getAttribute("appId"));
     assertEquals(CUSTOM_HEADER_VAL, record.getHeader().getAttribute(CUSTOM_HEADER_KEY));
     runner.runDestroy();
+  }
+
+  @Test
+  public void testUnspecifiedQueue() throws Exception {
+    conf.queue.name = "";
+
+    stage = newStage();
+
+    this.runner = newStageRunner("output");
+
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    assertTrue(issues.stream().anyMatch(issue -> checkIssue(issue, Errors.RABBITMQ_10.getCode())));
   }
 }

@@ -65,6 +65,14 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
+    if (conf.queue.name == null || conf.queue.name.equals("")) {
+      issues.add(getContext().createConfigIssue(
+          Groups.QUEUE.name(),
+          "conf.queue.name",
+          Errors.RABBITMQ_10
+      ));
+    }
+
     RabbitUtil.initRabbitStage(
         getContext(),
         conf,
