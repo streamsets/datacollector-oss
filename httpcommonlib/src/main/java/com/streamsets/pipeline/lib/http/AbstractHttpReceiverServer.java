@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.http;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import com.streamsets.lib.security.http.LimitedMethodServer;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -36,6 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.DispatcherType;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -100,7 +103,7 @@ public abstract class AbstractHttpReceiverServer {
 
       TlsConfigBean tlsConfig = configs.getTlsConfigBean();
       try {
-        sslContextFactory.setKeyStorePath(tlsConfig.keyStoreFilePath);
+        sslContextFactory.setKeyStorePath(resolvePath(tlsConfig.keyStoreFilePath, context));
         sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
         sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
@@ -108,7 +111,7 @@ public abstract class AbstractHttpReceiverServer {
         sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
         if (configs.getNeedClientAuth()) {
           sslContextFactory.setNeedClientAuth(true);
-          sslContextFactory.setTrustStorePath(tlsConfig.trustStoreFilePath);
+          sslContextFactory.setTrustStorePath(resolvePath(tlsConfig.trustStoreFilePath, context));
           sslContextFactory.setTrustStoreType(tlsConfig.trustStoreType.getJavaValue());
           sslContextFactory.setTrustStorePassword(tlsConfig.trustStorePassword.get());
           sslContextFactory.setTrustManagerFactoryAlgorithm(tlsConfig.trustStoreAlgorithm);
@@ -175,5 +178,24 @@ public abstract class AbstractHttpReceiverServer {
   public abstract void addReceiverServlet(Stage.Context context, ServletContextHandler contextHandler);
 
   public abstract void setShuttingDown();
+
+  /**
+   * Resolve a relative path by using the SDC resources directory as base directory. If the path is absolute, do
+   * nothing and return the path unchanged.
+   *
+   * @param path Relative or absolute path to a given resource.
+   * @param context The stage context employed to get the SDC resources directory.
+   * @return An absolute path to the given resource, or null if {@code path} is null or empty.
+   */
+  private String resolvePath(String path, Stage.Context context) {
+    if (Strings.isNullOrEmpty(path)) {
+      return null;
+    }
+    Path p = Paths.get(path);
+    if (!p.isAbsolute()) {
+      p = Paths.get(context.getResourcesDirectory(), p.toString());
+    }
+    return p.toString();
+  }
 
 }
