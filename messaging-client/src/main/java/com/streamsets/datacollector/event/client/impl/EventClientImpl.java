@@ -17,10 +17,10 @@ package com.streamsets.datacollector.event.client.impl;
 
 import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
+import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
-import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.glassfish.jersey.client.ClientConfig;
@@ -105,22 +105,21 @@ public class EventClientImpl implements EventClient {
     }
   }
 
-  @Override
-  public void submit(
-      String targetURL,
+  private void _submitSync(
+      String absoluteTargetUrl,
       Map<String, String> queryParams,
       Map<String, String> headerParams,
-      List<SDCMetricsJson> sdcMetricsJsonList,
+      Object entity,
       long retryAttempts
   ) {
-    WebTarget webTarget = client.target(targetURL);
+    WebTarget webTarget = client.target(absoluteTargetUrl);
     int delaySecs = 1;
     int attempts = 0;
     while (attempts < retryAttempts || retryAttempts == -1) {
       if (attempts > 0) {
         delaySecs = delaySecs * 2;
         delaySecs = Math.min(delaySecs, 60);
-        LOG.warn("Post attempt '{}', waiting for '{}' seconds before retrying ...",
+        LOG.warn("Post attempt '{}', waiting for '{}' seconds before retrying sending sync evens ...",
             attempts, delaySecs);
         sleep(delaySecs);
       }
@@ -134,19 +133,19 @@ public class EventClientImpl implements EventClient {
         for (Map.Entry<String, String> entry : headerParams.entrySet()) {
           builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
         }
-        response = builder.post(Entity.json(sdcMetricsJsonList));
+        response = builder.post(Entity.json(entity));
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {
           return;
         } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
-          LOG.warn("Error writing to jobrunner app: DPM unavailable");
+          LOG.warn("Error writing DPM, Service unavailable");
           // retry
         } else {
           String responseMessage = response.readEntity(String.class);
-          LOG.error(Utils.format("Error writing to DPM: {}", responseMessage));
+          LOG.error(Utils.format("Error writing to DPM: {}, status code: {}", responseMessage, response.getStatus()));
           //retry
         }
       } catch (Exception ex) {
-        LOG.error(Utils.format("Error writing to DPM: {}", ex.toString(), ex));
+        LOG.error(Utils.format("Error writing to DPM: {}", ex.toString()), ex);
         // retry
       } finally {
         if (response != null) {
@@ -156,14 +155,35 @@ public class EventClientImpl implements EventClient {
     }
 
     // no success after retry
-    LOG.error("Unable to write metrics to DPM after {} attempts", retryAttempts);
+    LOG.error("Unable to write events to DPM after {} attempts", retryAttempts);
   }
 
-  public void sleep(int secs) {
+  @Override
+  public void submit(
+      String absoluteTargetUrl,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      List<SDCMetricsJson> sdcMetricsJsons,
+      long retryAttempts
+  ) {
+    _submitSync(absoluteTargetUrl, queryParams, headerParams, sdcMetricsJsons, retryAttempts);
+  }
+
+  @Override
+  public void sendSyncEvents(
+      String absoluteTargetUrl,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      Event event,
+      long retryAttempts) {
+    _submitSync(absoluteTargetUrl, queryParams, headerParams, event, retryAttempts);
+  }
+
+  private static void sleep(int secs) {
     try {
       Thread.sleep(secs * 1000);
     } catch (InterruptedException ex) {
-      String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
+      String msg = "Interrupted while attempting to send events to DPM";
       LOG.error(msg);
       throw new RuntimeException(msg, ex);
     }

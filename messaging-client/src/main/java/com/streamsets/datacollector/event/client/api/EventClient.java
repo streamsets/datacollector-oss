@@ -18,6 +18,8 @@ package com.streamsets.datacollector.event.client.api;
 import java.util.List;
 import java.util.Map;
 
+import com.streamsets.datacollector.event.dto.Event;
+import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
@@ -32,10 +34,28 @@ public interface EventClient {
     List<ClientEventJson> clientEventJson) throws EventException;
 
   void submit(
-      String targetUrl,
+      String path,
       Map<String, String> queryParams,
       Map<String, String> headerParams,
-      List<SDCMetricsJson> clientEventJson,
+      List<SDCMetricsJson> sdcMetricsJsons,
+      long retryAttempts);
+
+  /**
+   *
+   * This API is for sending updates to SCH directly without going through messaging app.
+   * The newer SDC's should use this API to send critical events to SCH.
+   *
+   * @param absoluteTargetUrl - the absolute target URL of the APP
+   * @param queryParams - query params for the REST call
+   * @param headerParams - header parameters for the REST call
+   * @param event - Event to be sent
+   * @param retryAttempts - No of attempts before bailing out
+   */
+  void sendSyncEvents(
+      String absoluteTargetUrl,
+      Map<String, String> queryParams,
+      Map<String, String> headerParams,
+      Event event,
       long retryAttempts);
 
 }

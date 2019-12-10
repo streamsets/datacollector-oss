@@ -37,5 +37,8 @@ public class ExecutorConstants {
   public static final String BUNDLE_EXECUTOR_THREAD_POOL_SIZE_KEY = "bundle.executor.thread.pool.size";
   public static final int BUNDLE_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 1;
 
+  public static final String SYNC_EVENTS_SENDER_EXECUTOR_THREAD_POOL_SIZE_KEY = "sync.events.sender.executor.thread.pool.size";
+  public static final int SYNC_EVENTS_SENDER_EXECUTOR_THREAD_POOL_SIZE_DEFAULT = 3;
+
   private ExecutorConstants() {}
 }
