@@ -45,13 +45,13 @@ public class TestRemoteEventHandlerTask {
     RemoteEventHandlerTask task = new RemoteEventHandlerTask(remoteDataCollector,
         eventSenderReceiver,
         executorService,
+        executorService,
         stageLibrary,
         runtimeInfo,
         conf
     );
 
-    Assert.assertEquals(
-        new File(testDir, DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE),
+    Assert.assertEquals(new File(testDir, DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE),
         task.getDisconnectedSsoCredentialsDataStore().getFile()
     );
   }

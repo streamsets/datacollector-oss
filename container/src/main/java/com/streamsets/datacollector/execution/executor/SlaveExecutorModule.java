@@ -65,6 +65,16 @@ public class SlaveExecutorModule {
 
   @Provides
   @Singleton
+  @Named("syncEventsHandlerExecutor")
+  public SafeScheduledExecutorService provideEventSenderHandlerExecutor(Configuration configuration) {
+    return new SafeScheduledExecutorService(
+        ExecutorModule.getSyncEventsSenderSize(configuration),
+        "syncEventsHandlerExecutor"
+    );
+  }
+
+  @Provides
+  @Singleton
   @Named("supportBundleExecutor")
   public SafeScheduledExecutorService provideSupportBundleExecutor(Configuration configuration) {
     return new SafeScheduledExecutorService(

@@ -46,6 +46,7 @@ public class EventHandlerModule {
   @Singleton
   public EventHandlerTask provideEventHandler(
       @Named("eventHandlerExecutor") SafeScheduledExecutorService eventHandlerExecutor,
+      @Named("syncEventsHandlerExecutor") SafeScheduledExecutorService syncEventsHandlerExecutor,
       Configuration conf,
       RemoteDataCollector remoteDataCollector,
       RuntimeInfo runtimeInfo,
@@ -64,6 +65,7 @@ public class EventHandlerModule {
           new PipelineIdEncodedRemoteDatacollector(new ColonCompatibleRemoteDataCollector(remoteDataCollector)),
           new EventClientImpl(targetURL, conf),
           eventHandlerExecutor,
+          syncEventsHandlerExecutor,
           stageLibraryTask,
           runtimeInfo,
           conf
