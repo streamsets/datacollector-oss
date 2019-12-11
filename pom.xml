@@ -151,6 +151,7 @@
     <module>httpcommonlib</module>
     <module>net-commonlib</module>
 
+    <module>azure-keyvault-credentialstore-protolib</module>
     <module>lookup-protolib</module>
 
     <module>hdfs-protolib</module>

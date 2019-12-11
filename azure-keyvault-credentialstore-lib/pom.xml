@@ -33,79 +33,12 @@
   <name>StreamSets Data Collector Azure Key Vault 1.0.0 Lib</name>
   <packaging>jar</packaging>
 
-  <properties>
-    <azure-keyvault.version>1.0.0</azure-keyvault.version>
-    <azure.version>1.24.2</azure.version>
-  </properties>
-
   <dependencies>
-
-    <!-- To set specific Azure Key Vault versions -->
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>azure</artifactId>
-      <version>${azure.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
-      <artifactId>azure-keyvault</artifactId>
-      <version>${azure-keyvault.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
-    <!-- Provided Dependencies -->
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.dropwizard.metrics</groupId>
-      <artifactId>metrics-core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <!-- Test Dependencies -->
-    <dependency>
-      <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-sdk</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-module-junit4</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.powermock</groupId>
-      <artifactId>powermock-api-mockito</artifactId>
-      <scope>test</scope>
+      <artifactId>streamsets-datacollector-azure-keyvault-credentialstore-protolib</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
