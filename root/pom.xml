@@ -57,7 +57,7 @@
          All dependency versions should be defined here to avoid version
          mismatches with multiple artifacts of the same logical dependency.
     -->
-    <airlift.version>0.7</airlift.version>
+    <airlift.version>0.8</airlift.version>
     <commons-beanutils.version>1.9.3</commons-beanutils.version>
     <commons-cli.version>1.2</commons-cli.version>
     <commons-codec.version>1.10</commons-codec.version>
@@ -69,7 +69,7 @@
     <commons-pool.version>2.4.1</commons-pool.version>
     <dagger.version>1.2.2</dagger.version>
     <google.http.version>1.22.0</google.http.version>
-    <guava.version>18.0</guava.version>
+    <guava.version>28.1-jre</guava.version>
     <hk2-api.version>2.5.0-b32</hk2-api.version>
     <httpclient.version>4.5.2</httpclient.version>
     <icegreen.version>1.4.0</icegreen.version>

@@ -36,7 +36,7 @@
   <properties>
     <elasticsearch.version>5.3.0</elasticsearch.version>
     <gson.version>2.2.4</gson.version>
-    <log4j2.version>2.7</log4j2.version>
+    <log4j2.version>2.12.1</log4j2.version>
   </properties>
 
   <dependencies>

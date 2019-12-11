@@ -87,7 +87,7 @@ public class HBaseLookupProcessor extends BaseProcessor {
   public HBaseLookupProcessor(HBaseLookupConfig conf) {
     if (null != conf.hBaseConnectionConfig.zookeeperQuorum) {
       conf.hBaseConnectionConfig.zookeeperQuorum =
-        CharMatcher.WHITESPACE.removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum);
+        CharMatcher.whitespace().removeFrom(conf.hBaseConnectionConfig.zookeeperQuorum);
     }
     this.conf = conf;
   }

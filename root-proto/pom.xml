@@ -71,7 +71,7 @@
     <!-- Sets the VM argument line used when unit and integration tests are run. -->
     <argLine>-Xmx4g</argLine>
     <testcontainers.version>1.4.3</testcontainers.version>
-    <netty.version>4.1.16.Final</netty.version>
+    <netty.version>4.1.43.Final</netty.version>
     <jetty.version>9.4.12.v20180830</jetty.version>
     <avro.version>1.7.7</avro.version>
 

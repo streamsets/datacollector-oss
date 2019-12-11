@@ -36,12 +36,12 @@
   <properties>
     <h2.version>1.4.195</h2.version>
     <jts.version>1.13</jts.version>
-    <guava.version>18.0</guava.version>
+    <guava.version>28.1-jre</guava.version>
     <commons-codec.version>1.9</commons-codec.version>
     <commons-lang.version>3.4</commons-lang.version>
     <commons-io.version>2.4</commons-io.version>
     <joda.version>2.8</joda.version>
-    <jackson.version>2.8.9</jackson.version>
+    <jackson.version>2.10.1</jackson.version>
     <antlr.version>4.5.3</antlr.version>
     <mockrunner-jdbc.version>1.1.2</mockrunner-jdbc.version>
   </properties>
