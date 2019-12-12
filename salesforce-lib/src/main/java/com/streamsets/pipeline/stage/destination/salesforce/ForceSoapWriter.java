@@ -36,6 +36,7 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
+import java.util.regex.Pattern;
 
 import static com.streamsets.pipeline.api.Field.Type.DATETIME;
 import static com.streamsets.pipeline.api.Field.Type.TIME;
@@ -58,6 +60,9 @@ public class ForceSoapWriter extends ForceWriter {
   // See https://developer.salesforce.com/docs/atlas.en-us.api.meta/api/sforce_api_calls_create.htm
   private static final int MAX_RECORDS_CREATE = 200;
   private static final Logger LOG = LoggerFactory.getLogger(ForceSoapWriter.class);
+  // ObjectType:RelationshipName.IndexedFieldName
+  private static final String POLYMORPHIC_REFERENCE_SYNTAX = "^[a-zA-Z_]\\w*:[a-zA-Z_]\\w*\\.[a-zA-Z_]\\w*$";
+  private static final Pattern POLYMORPHIC_REFERENCE_PATTERN = Pattern.compile(POLYMORPHIC_REFERENCE_SYNTAX);
 
   private DescribeSObjectResult describeResult = null;
   private Map<String, String> fieldTypeMap = new HashMap<>();
@@ -258,8 +263,6 @@ public class ForceSoapWriter extends ForceWriter {
       boolean done = false;
       while (batchIterator.hasNext() && !done) {
         Record record = batchIterator.next();
-        SObject so = new SObject();
-        so.setType(sObjectName);
 
         int opCode = ForceUtils.getOperationFromRecord(record, target.conf.defaultOperation,
             target.conf.unsupportedAction, errorRecords);
@@ -268,50 +271,8 @@ public class ForceSoapWriter extends ForceWriter {
         }
         List<SObject> sRecords = sRecordsByOp.computeIfAbsent(opCode, k -> new ArrayList<>());
 
-        SortedSet<String> columnsPresent = Sets.newTreeSet(fieldMappings.keySet());
-        List<String> fieldsToNull = new ArrayList<>();
-        for (Map.Entry<String, String> mapping : fieldMappings.entrySet()) {
-          String sFieldName = mapping.getKey();
-          String fieldPath = mapping.getValue();
+        SObject so = writeRecord(sObjectName, record, opCode);
 
-          // If we're missing fields, skip them.
-          if (!record.has(fieldPath)) {
-            columnsPresent.remove(sFieldName);
-            continue;
-          }
-
-          final Field field = record.get(fieldPath);
-          Object value = field.getValue();
-
-          if (value == null &&
-              (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
-            fieldsToNull.add(sFieldName);
-          } else {
-            if (sFieldName.contains(".")) {
-              String[] parts = sFieldName.split("\\.");
-              if (parts.length > 2) {
-                throw new StageException(Errors.FORCE_42, sFieldName);
-              }
-              SObject parent = new SObject();
-              parent.setType(getTypeForRelationship(parts[0]));
-              parent.setField(parts[1], value);
-
-              so.setField(parts[0], parent);
-            } else {
-              Field.Type type = field.getType();
-              // Salesforce WSC does not work correctly with Date type for times or datetimes
-              if (type == TIME || type == DATETIME) {
-                Calendar cal = Calendar.getInstance();
-                cal.setTime((Date)value);
-                value = cal;
-              }
-              so.setField(sFieldName, value);
-            }
-          }
-        }
-        if (fieldsToNull.size() > 0) {
-          so.setFieldsToNull(fieldsToNull.toArray(new String[0]));
-        }
         sRecords.add(so);
         recordMap.put(so, record);
 
@@ -349,5 +310,65 @@ public class ForceSoapWriter extends ForceWriter {
     }
 
     return errorRecords;
+  }
+
+  @NotNull
+  private SObject writeRecord(String sObjectName, Record record, int opCode) {
+    SObject so = new SObject();
+    so.setType(sObjectName);
+
+    SortedSet<String> columnsPresent = Sets.newTreeSet(fieldMappings.keySet());
+    List<String> fieldsToNull = new ArrayList<>();
+    for (Map.Entry<String, String> mapping : fieldMappings.entrySet()) {
+      String sFieldName = mapping.getKey();
+      String fieldPath = mapping.getValue();
+
+      // If we're missing fields, skip them.
+      if (!record.has(fieldPath)) {
+        columnsPresent.remove(sFieldName);
+        continue;
+      }
+
+      final Field field = record.get(fieldPath);
+      Object value = field.getValue();
+
+      if (value == null &&
+          (opCode == OperationType.UPDATE_CODE || opCode == OperationType.UPSERT_CODE)) {
+        fieldsToNull.add(sFieldName);
+      } else {
+        String parentType = null;
+        // SDC-13117 Support ObjectType:RelationshipName.IndexedFieldName syntax
+        if (POLYMORPHIC_REFERENCE_PATTERN.matcher(sFieldName).matches()) {
+          String[] parts = sFieldName.split(":");
+          parentType = parts[0];
+          sFieldName = parts[1];
+        }
+
+        if (sFieldName.contains(".")) {
+          String[] parts = sFieldName.split("\\.");
+          if (parts.length > 2) {
+            throw new StageException(Errors.FORCE_42, sFieldName);
+          }
+          SObject parent = new SObject();
+          parent.setType((parentType != null) ? parentType : getTypeForRelationship(parts[0]));
+          parent.setField(parts[1], value);
+
+          so.setField(parts[0], parent);
+        } else {
+          Field.Type type = field.getType();
+          // Salesforce WSC does not work correctly with Date type for times or datetimes
+          if (type == TIME || type == DATETIME) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime((Date)value);
+            value = cal;
+          }
+          so.setField(sFieldName, value);
+        }
+      }
+    }
+    if (fieldsToNull.size() > 0) {
+      so.setFieldsToNull(fieldsToNull.toArray(new String[0]));
+    }
+    return so;
   }
 }

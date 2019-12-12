@@ -53,6 +53,7 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 /**
  * This target writes records to Salesforce objects
@@ -77,6 +78,10 @@ public class ForceTarget extends BaseTarget {
   private BulkConnection bulkConnection;
   private ELVars sObjectNameVars;
   private ELEval sObjectNameEval;
+
+  // RelationshipName:IndexedFieldName
+  private static final String BULK_LOADER_FIELD_SYNTAX = "^[a-zA-Z_]\\w*:[a-zA-Z_]\\w*$";
+  private static final Pattern BULK_LOADER_FIELD_PATTERN = Pattern.compile(BULK_LOADER_FIELD_SYNTAX);
 
   private class ApiAndSObject {
     public boolean bulkApi;
@@ -177,7 +182,8 @@ public class ForceTarget extends BaseTarget {
       customMappings = new TreeMap<>();
       for (ForceFieldMapping mapping : conf.fieldMapping) {
         // SDC-7446 Allow colon as well as period as field separator
-        String salesforceField = conf.useBulkAPI
+        // SDC-13117 But only if it's a Bulk Loader syntax field name
+        String salesforceField = (conf.useBulkAPI && BULK_LOADER_FIELD_PATTERN.matcher(mapping.salesforceField).matches())
             ? mapping.salesforceField.replace(':', '.')
             : mapping.salesforceField;
         customMappings.put(salesforceField, mapping.sdcField);
