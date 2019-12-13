@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum EncryptionGroups implements Label {
-  ENCRYPTION("SSL/TLS encryption"),
+  ENCRYPTION("SSL/TLS Encryption"),
   ;
 
   private final String label;
