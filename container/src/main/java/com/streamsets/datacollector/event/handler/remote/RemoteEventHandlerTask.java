@@ -169,9 +169,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private String jobRunnerPipelineStatusEventUrl;
   private String jobRunnerSdcProcessMetricsEventUrl;
   private boolean shouldSendSyncEvents;
+  private int percentOfWaitIntervalBeforeSkip;
   // config to send via sync or async fashion till SDC-13109 is in
   public static final String SHOULD_SEND_SYNC_EVENTS = AbstractSSOService.CONFIG_PREFIX + "should.send.sync.events";
   private static final boolean SHOULD_SEND_SYNC_EVENTS_DEFAULT = false;
+  // Percent of sendAllStatusEventsInterval after which sending events will be skipped
+  public static final String PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP = AbstractSSOService.CONFIG_PREFIX +
+      "percent.wait.interval.before.skip";
+  public static final int DEFAULT_PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP = 70;
 
   public RemoteEventHandlerTask(
       DataCollector remoteDataCollector,
@@ -228,6 +233,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL
     );
     sendAllPipelineMetricsInterval = conf.get(REMOTE_URL_SEND_ALL_PIPELINE_METRICS_INTERVAL_MILLIS, DEFAULT_PIPELINE_METRICS_INTERVAL);
+    percentOfWaitIntervalBeforeSkip = conf.get(PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP, DEFAULT_PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP);
     requestHeader = new HashMap<>();
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
@@ -315,7 +321,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           runtimeInfo,
           syncEventsExecutorService,
           stopWatchForSyncEvents,
-          pipelineStatusSyncEventsSendFrequency
+          pipelineStatusSyncEventsSendFrequency,
+          percentOfWaitIntervalBeforeSkip
       ));
     }
   }
@@ -608,6 +615,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     private final EventClient eventClient;
     private final Stopwatch stopWatch;
     private long delay;
+    private int percentOfWaitIntervalBeforeSkip;
 
     public SyncEventSender(
         EventClient eventClient,
@@ -617,7 +625,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         RuntimeInfo runtimeInfo,
         SafeScheduledExecutorService syncEventsExecutorService,
         Stopwatch stopWatch,
-        long delay) {
+        long delay,
+        int percentOfWaitIntervalBeforeSkip) {
       this.eventClient = eventClient;
       this.remoteDataCollector = remoteDataCollector;
       this.jsonToFromDto = jsonToFromDto;
@@ -626,6 +635,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       this.syncEventsExecutorService = syncEventsExecutorService;
       this.delay = delay;
       this.stopWatch = stopWatch;
+      this.percentOfWaitIntervalBeforeSkip = percentOfWaitIntervalBeforeSkip;
     }
 
     @Override
@@ -646,7 +656,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             runtimeInfo,
             syncEventsExecutorService,
             stopWatch,
-            delay
+            delay,
+            percentOfWaitIntervalBeforeSkip
 
         ), delay, TimeUnit.MILLISECONDS);
       } return null;
@@ -657,7 +668,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         // get state of all running pipeline and state of all remote pipelines
         try {
           List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
-          LOG.debug("Sending status of all pipelines through sync thread");
+          LOG.info("Sending status of all pipelines through sync thread");
           stopWatch.reset();
           for (PipelineAndValidationStatus pipelineAndValidationStatus : remoteDataCollector.getPipelines()) {
             pipelineStatusEventList.add(createPipelineStatusEvent(jsonToFromDto, pipelineAndValidationStatus));
@@ -665,21 +676,29 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
           pipelineStatusEvents.setPipelineStatusEventList(pipelineStatusEventList);
 
-          eventClient.sendSyncEvents(
-              jobRunnerPipelineStatusEventsUrl,
+          eventClient.sendSyncEvents(jobRunnerPipelineStatusEventsUrl,
               new HashMap<>(),
               requestHeader,
               pipelineStatusEvents,
-              1);
-
-          LOG.debug("Sending process metrics event through sync thread");
-          eventClient.sendSyncEvents(
-              jobRunnerSdcProcessMetricsEventUrl,
-              new HashMap<>(),
-              requestHeader,
-              getSdcMetricsEvent(runtimeInfo),
               1
           );
+          if (hasElapsedWaitPercentInterval(stopWatch,
+              waitBetweenSendingStatusEvents,
+              percentOfWaitIntervalBeforeSkip
+          )) {
+            LOG.warn(
+                "Timer already past {}% of wait interval, so not going to send process metrics event",
+                percentOfWaitIntervalBeforeSkip
+            );
+          } else {
+            LOG.info("Sending process metrics event through sync thread");
+            eventClient.sendSyncEvents(jobRunnerSdcProcessMetricsEventUrl,
+                new HashMap<>(),
+                requestHeader,
+                getSdcMetricsEvent(runtimeInfo),
+                1
+            );
+          }
         } catch (Exception e) {
           LOG.warn(Utils.format("Error while sending pipeline updates to DPM: '{}'", e), e);
         }
@@ -691,17 +710,23 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             PipelineStatusEvent pipelineStatusEvent = createPipelineStatusEvent(jsonToFromDto,
                 pipelineAndValidationStatus
             );
-            LOG.info(Utils.format(
-                "Sending event for remote pipeline: '{}' in status: '{}' through sync thread",
-                pipelineStatusEvent.getName(),
-                pipelineStatusEvent.getPipelineStatus()
-            ));
-            eventClient.sendSyncEvents(
-                jobRunnerPipelineStatusEventUrl,
-                new HashMap<>(),
-                requestHeader,
-                pipelineStatusEvent,
-                1);
+            if (hasElapsedWaitPercentInterval(stopWatch, waitBetweenSendingStatusEvents, percentOfWaitIntervalBeforeSkip)) {
+              LOG.warn("Timer already past {}% of wait interval, so not going to send any more pipeline updates",
+                  percentOfWaitIntervalBeforeSkip);
+              break;
+            } else {
+              LOG.info(Utils.format(
+                  "Sending event for remote pipeline: '{}' in status: '{}' through sync thread",
+                  pipelineStatusEvent.getName(),
+                  pipelineStatusEvent.getPipelineStatus()
+              ));
+              eventClient.sendSyncEvents(jobRunnerPipelineStatusEventUrl,
+                  new HashMap<>(),
+                  requestHeader,
+                  pipelineStatusEvent,
+                  1
+              );
+            }
           }
         } catch (Exception e) {
           LOG.error(Utils.format("Error while sending a single pipeline status to DPM: {}", e), e);
@@ -710,6 +735,16 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       if (!stopWatch.isRunning()) {
         stopWatch.start();
       }
+    }
+  }
+
+  static boolean hasElapsedWaitPercentInterval(
+      Stopwatch stopWatch, long waitBetweenSendingStatusEvents, int x
+  ) {
+    if (stopWatch.elapsed(TimeUnit.MILLISECONDS) >= (float) x / 100 * waitBetweenSendingStatusEvents) {
+      return true;
+    } else {
+      return false;
     }
   }
 
