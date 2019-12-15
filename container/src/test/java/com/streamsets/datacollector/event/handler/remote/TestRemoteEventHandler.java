@@ -1432,7 +1432,8 @@ public class TestRemoteEventHandler {
         runtimeInfo,
         new SafeScheduledExecutorService(1, "testSyncSender"),
         Stopwatch.createUnstarted(),
-        120000
+        120000,
+        70
     );
     syncEventSender.call();
     Mockito.verify(remoteDataCollector, Mockito.times(1)).getPipelines();
@@ -1474,7 +1475,8 @@ public class TestRemoteEventHandler {
         runtimeInfo,
         new SafeScheduledExecutorService(1, "testSyncSender"),
         Stopwatch.createStarted(),
-        120000
+        120000,
+        70
     );
     PipelineAndValidationStatus pipelineAndValidationStatus = new PipelineAndValidationStatus("",
         "",
@@ -1495,6 +1497,58 @@ public class TestRemoteEventHandler {
     Mockito.verify(remoteDataCollector, Mockito.times(1)).getRemotePipelinesWithChanges();
     Mockito.verify(eventClient, Mockito.times(1))
         .sendSyncEvents(Mockito.eq(remoteEventHandlerTask.getJobRunnerPipelineStatusEventUrl()),
+            Mockito.anyMap(),
+            Mockito.anyMap(),
+            Mockito.any(),
+            Mockito.any(Long.class)
+        );
+  }
+
+  @Test
+  public void testSyncSenderSkipSinglePipelineStatus() throws Exception {
+    EventClient eventClient = Mockito.mock(EventClient.class);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    RemoteDataCollector remoteDataCollector = Mockito.mock(RemoteDataCollector.class);
+    Configuration conf = new Configuration();
+    conf.set(RemoteEventHandlerTask.SHOULD_SEND_SYNC_EVENTS, true);
+    final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(remoteDataCollector,
+        eventClient,
+        new SafeScheduledExecutorService(1, "testSyncSender"),
+        new SafeScheduledExecutorService(1, "testSyncSender"),
+        Mockito.mock(StageLibraryTask.class),
+        Mockito.mock(RuntimeInfo.class),
+        conf
+    );
+    RemoteEventHandlerTask.SyncEventSender syncEventSender = remoteEventHandlerTask.new SyncEventSender(eventClient,
+        remoteDataCollector,
+        jsonDto,
+        60000,
+        runtimeInfo,
+        new SafeScheduledExecutorService(1, "testSyncSender"),
+        Stopwatch.createStarted(),
+        120000,
+        0
+    );
+    PipelineAndValidationStatus pipelineAndValidationStatus = new PipelineAndValidationStatus("",
+        "",
+        "",
+        -1,
+        false,
+        null,
+        null,
+        null,
+        false,
+        null,
+        null,
+        0
+    );
+    Mockito.when(remoteDataCollector.getRemotePipelinesWithChanges()).thenReturn(Collections.singletonList(
+        pipelineAndValidationStatus));
+    syncEventSender.call();
+    Mockito.verify(remoteDataCollector, Mockito.times(1)).getRemotePipelinesWithChanges();
+    Mockito.verify(eventClient, Mockito.times(0))
+        .sendSyncEvents(
+            Mockito.any(),
             Mockito.anyMap(),
             Mockito.anyMap(),
             Mockito.any(),
