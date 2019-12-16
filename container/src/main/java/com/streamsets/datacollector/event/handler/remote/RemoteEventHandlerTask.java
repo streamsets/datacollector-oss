@@ -341,7 +341,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         labelList,
         OFFSET_PROTOCOL_VERSION,
         Strings.emptyToNull(runtimeInfo.getDeploymentId()),
-        runtime.totalMemory()
+        runtime.maxMemory()
     );
     return new ClientEvent(
         UUID.randomUUID().toString(),
@@ -671,6 +671,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               requestHeader,
               pipelineStatusEvents,
               1);
+
           LOG.debug("Sending process metrics event through sync thread");
           eventClient.sendSyncEvents(
               jobRunnerSdcProcessMetricsEventUrl,
