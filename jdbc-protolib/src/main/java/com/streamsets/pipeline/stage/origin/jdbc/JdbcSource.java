@@ -97,11 +97,9 @@ public class JdbcSource extends BaseSource {
   private ErrorRecordHandler errorRecordHandler;
   private long queryIntervalMillis = Long.MIN_VALUE;
   private HikariDataSource dataSource = null;
-  private Connection connection = null;
   private ResultSet resultSet = null;
   private long lastQueryCompletedTime = 0L;
   private String preparedQuery;
-  private String hashedQuery;
   private int queryRowCount = 0;
   private int numQueryErrors = 0;
   private SQLException firstQueryException = null;
@@ -324,13 +322,12 @@ public class JdbcSource extends BaseSource {
   @Override
   public void destroy() {
     closeQuietly(resultSet);
-    closeQuietly(connection);
     closeQuietly(dataSource);
     super.destroy();
   }
 
   @Override
-  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+  public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
     String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
 
@@ -344,12 +341,9 @@ public class JdbcSource extends BaseSource {
     } else {
       Statement statement = null;
       Hasher hasher = HF.newHasher();
-      try {
+      try (Connection connection = dataSource.getConnection()) {
         if (null == resultSet || resultSet.isClosed()) {
           // The result set got closed outside of us, so we also clean up the connection (if any)
-          closeQuietly(connection);
-
-          connection = dataSource.getConnection();
 
           if (!txnColumnName.isEmpty()) {
             // CDC requires scrollable cursors.
@@ -371,9 +365,9 @@ public class JdbcSource extends BaseSource {
             statement.setMaxRows(batchSize);
           }
           preparedQuery = prepareQuery(query, lastSourceOffset);
-          LOG.trace("Executing query: " + preparedQuery);
-          hashedQuery = hasher.putString(preparedQuery, Charsets.UTF_8).hash().toString();
-          LOG.debug("Executing query: " + hashedQuery);
+          LOG.trace("Executing query: {}", preparedQuery);
+          String hashedQuery = hasher.putString(preparedQuery, Charsets.UTF_8).hash().toString();
+          LOG.debug("Executing query: {}", hashedQuery);
           resultSet = statement.executeQuery(preparedQuery);
           queryRowCount = 0;
           numQueryErrors = 0;
@@ -417,7 +411,10 @@ public class JdbcSource extends BaseSource {
           ++noMoreDataRecordCount;
           shouldFire = true;
         }
-        LOG.debug("Processed rows: " + rowCount);
+
+        if (LOG.isDebugEnabled()){
+          LOG.debug("Processed rows: {}", rowCount);
+        }
 
         if (!haveNext || rowCount == 0) {
           // We didn't have any data left in the cursor. Close everything
@@ -427,7 +424,6 @@ public class JdbcSource extends BaseSource {
           statement = resultSet.getStatement();
           closeQuietly(resultSet);
           closeQuietly(statement);
-          closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
           JDBCQuerySuccessEvent.EVENT_CREATOR.create(getContext())
@@ -472,7 +468,6 @@ public class JdbcSource extends BaseSource {
           closeQuietly(resultSet);
           closeQuietly(statement);
         }
-        closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         JDBCQueryFailureEvent.EVENT_CREATOR.create(getContext())
             .with(QUERY, preparedQuery)
@@ -527,7 +522,7 @@ public class JdbcSource extends BaseSource {
     return query.replaceAll("\\$\\{(offset|OFFSET)}", offset);
   }
 
-  private Record processRow(ResultSet resultSet, long rowCount) throws SQLException, StageException {
+  private Record processRow(ResultSet resultSet, long rowCount) throws SQLException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();
@@ -564,7 +559,7 @@ public class JdbcSource extends BaseSource {
       record.set(Field.create(row));
     }
     if (createJDBCNsHeaders) {
-      jdbcUtil.setColumnSpecificHeaders(record, Collections.<String>emptySet(), md, jdbcNsHeaderPrefix);
+      jdbcUtil.setColumnSpecificHeaders(record, Collections.emptySet(), md, jdbcNsHeaderPrefix);
     }
     // We will add cdc operation type to record header even if createJDBCNsHeaders is false
     // we currently support CDC on only MS SQL.
