@@ -59,7 +59,8 @@ public class SdcIpcWithDiskBufferSource extends AbstractHttpServerSource<HttpRec
   @Override
   protected List<ConfigIssue> init() {
     contextExtensions = (ContextExtensions) getContext();
-    List<ConfigIssue> issues = getReceiver().init(getContext());
+    List<ConfigIssue> issues = getHttpConfigs().init(getContext());
+    issues.addAll(getReceiver().init(getContext()));
     issues.addAll(getReceiver().getWriter().init(getContext()));
     if (issues.isEmpty()) {
       issues.addAll(super.init());
