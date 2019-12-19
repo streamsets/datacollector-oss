@@ -129,8 +129,8 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
 
       S3Offset offset = getOffsetFromGivenKey(s3Offset.getKey());
 
-      int offsetVal = AmazonS3Util.parseOffset(offset);
-      int s3offsetVal = AmazonS3Util.parseOffset(s3Offset);
+      long offsetVal = AmazonS3Util.parseOffset(offset);
+      long s3offsetVal = AmazonS3Util.parseOffset(s3Offset);
 
       if (!offset.getOffset().equals(S3Constants.MINUS_ONE) &&
           (s3Offset.getOffset().equals(S3Constants.MINUS_ONE) || s3offsetVal > offsetVal)) {
