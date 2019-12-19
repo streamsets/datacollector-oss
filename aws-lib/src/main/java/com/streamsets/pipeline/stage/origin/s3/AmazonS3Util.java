@@ -295,16 +295,16 @@ public class AmazonS3Util {
    * Zipped files: The offset is a json containing fileName + fileOffset
    * Excel files: Offset contains multiple separators
    */
-  static Integer parseOffset(S3Offset s3Offset) {
-    Integer offset;
+  static Long parseOffset(S3Offset s3Offset) {
+    Long offset;
     if (s3Offset != null && s3Offset.getOffset().contains(S3Offset.OFFSET_SEPARATOR)) {
-      offset = Integer.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
+      offset =  Long.valueOf(s3Offset.getOffset().split(S3Offset.OFFSET_SEPARATOR)[1]);
     } else if (isJSONOffset(s3Offset)) {
       offset = getFileName(s3Offset.getOffset()).equals(getFileName(s3Offset.getOffset()))
           ? getFileOffset(s3Offset.getOffset())
           : 0;
     } else {
-      offset = Integer.valueOf(s3Offset.getOffset());
+      offset = Long.valueOf(s3Offset.getOffset());
     }
     return offset;
   }
@@ -321,8 +321,8 @@ public class AmazonS3Util {
   }
 
   @VisibleForTesting
-  static int getFileOffset(String offset) {
+  static long getFileOffset(String offset) {
     JSONObject object = new JSONObject(offset);
-    return Integer.valueOf(object.get("fileOffset").toString());
+    return Long.valueOf(object.get("fileOffset").toString());
   }
 }
