@@ -306,6 +306,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
   @Override
   public void runTask() {
+    this.shouldSendSyncEvents = conf.get(SHOULD_SEND_SYNC_EVENTS, SHOULD_SEND_SYNC_EVENTS_DEFAULT);
+    LOG.info("Will send sync events: {}", this.shouldSendSyncEvents);
     executorService.submit(new EventHandlerCallable(
         remoteDataCollector,
         new EventClientImpl(conf),

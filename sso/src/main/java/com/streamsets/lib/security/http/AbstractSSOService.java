@@ -36,6 +36,8 @@ public abstract class AbstractSSOService implements SSOService {
   public static final String SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_CONFIG =
       CONFIG_PREFIX + "security.validationTokenFrequency.secs";
 
+  public static final String SEND_SYNC_EVENTS = "dpm.should.send.sync.events";
+
   public static final long SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT = 60;
 
   private String loginPageUrl;
