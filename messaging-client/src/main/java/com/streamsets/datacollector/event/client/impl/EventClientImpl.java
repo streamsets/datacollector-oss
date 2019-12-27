@@ -43,11 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 public class EventClientImpl implements EventClient {
-
-  private final String targetURL;
-  private final Client client;
   private static final Logger LOG = LoggerFactory.getLogger(EventClientImpl.class);
-
+  private final Client client;
   public static final String EVENT_CONNECT_TIMEOUT = "event.connect.timeout";
   public static final String EVENT_READ_TIMEOUT = "event.read.timeout";
   public static final int EVENT_CONNECT_TIMEOUT_DEFAULT = 10000;
@@ -55,11 +52,10 @@ public class EventClientImpl implements EventClient {
   // to be 60 seconds
   public static final int EVENT_READ_TIMEOUT_DEFAULT = 60000;
 
-  public EventClientImpl(String targetURL, Configuration conf) {
+  public EventClientImpl(Configuration conf) {
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.CONNECT_TIMEOUT, conf.get(EVENT_CONNECT_TIMEOUT, EVENT_CONNECT_TIMEOUT_DEFAULT))
         .property(ClientProperties.READ_TIMEOUT, conf.get(EVENT_READ_TIMEOUT, EVENT_READ_TIMEOUT_DEFAULT));
-    this.targetURL = targetURL;
     this.client = ClientBuilder.newClient(clientConfig);
     client.register(new CsrfProtectionFilter("CSRF"));
   }
@@ -71,12 +67,11 @@ public class EventClientImpl implements EventClient {
     Map<String, String> headerParams,
     boolean compression,
     List<ClientEventJson> clientEventJson) throws EventException {
-
     if (compression) {
       client.register(GZipEncoder.class);
       client.register(EncodingFilter.class);
     }
-    WebTarget target = client.target(targetURL + path);
+    WebTarget target = client.target(path);
 
     for (Map.Entry<String, String> entry : queryParams.entrySet()) {
       target = target.queryParam(entry.getKey(), entry.getValue());

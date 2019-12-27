@@ -45,8 +45,6 @@ import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.dto.PipelinePreviewEvent;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
-import com.streamsets.datacollector.event.dto.PipelineStatusEvent;
-import com.streamsets.datacollector.event.dto.PipelineStatusEvents;
 import com.streamsets.datacollector.event.dto.SDCBuildInfo;
 import com.streamsets.datacollector.event.dto.SDCInfoEvent;
 import com.streamsets.datacollector.event.dto.StageInfo;
@@ -118,7 +116,6 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
-import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -837,9 +834,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testPipelineBaseEventTriggered"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testPipelineBaseEventTriggered"),
         new SafeScheduledExecutorService(1, "syncSender"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -927,9 +922,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testPipelineSaveEventTriggered"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testPipelineSaveEventTriggered"),
         new SafeScheduledExecutorService(1, "testPipelineStartEventTriggered"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -974,9 +967,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testPipelineAckEventError"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testPipelineAckEventError"),
         new SafeScheduledExecutorService(1, "testPipelineAckEventError"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1021,9 +1012,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testPingFrequencyEvent"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testPingFrequencyEvent"),
         new SafeScheduledExecutorService(1, "testPingFrequencyEvent"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1072,9 +1061,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testSendingEventClientToServer"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testSendingEventClientToServer"),
         new SafeScheduledExecutorService(1, "testSendingEventClientToServer"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1182,9 +1169,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testSendSDCInfoEvent"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testSendSDCInfoEvent"),
         new SafeScheduledExecutorService(1, "testSendSDCInfoEvent"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1249,9 +1234,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1291,9 +1274,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1352,9 +1333,7 @@ public class TestRemoteEventHandler {
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        mockRemoteDataCollector,
-        eventSenderReceiver,
-        new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
+        mockRemoteDataCollector, new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         new SafeScheduledExecutorService(1, "testDisconnectedSsoCredentialsEvent"),
         mockStageLibraryTask,
         mockRuntimeInfo,
@@ -1416,9 +1395,7 @@ public class TestRemoteEventHandler {
     Configuration conf = new Configuration();
     conf.set(RemoteEventHandlerTask.SHOULD_SEND_SYNC_EVENTS, true);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
-        remoteDataCollector,
-        eventClient,
-        new SafeScheduledExecutorService(1, "testSyncSender"),
+        remoteDataCollector, new SafeScheduledExecutorService(1, "testSyncSender"),
         new SafeScheduledExecutorService(1, "testSyncSender"),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(RuntimeInfo.class),
@@ -1461,7 +1438,6 @@ public class TestRemoteEventHandler {
     Configuration conf = new Configuration();
     conf.set(RemoteEventHandlerTask.SHOULD_SEND_SYNC_EVENTS, true);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(remoteDataCollector,
-        eventClient,
         new SafeScheduledExecutorService(1, "testSyncSender"),
         new SafeScheduledExecutorService(1, "testSyncSender"),
         Mockito.mock(StageLibraryTask.class),
@@ -1512,7 +1488,6 @@ public class TestRemoteEventHandler {
     Configuration conf = new Configuration();
     conf.set(RemoteEventHandlerTask.SHOULD_SEND_SYNC_EVENTS, true);
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(remoteDataCollector,
-        eventClient,
         new SafeScheduledExecutorService(1, "testSyncSender"),
         new SafeScheduledExecutorService(1, "testSyncSender"),
         Mockito.mock(StageLibraryTask.class),

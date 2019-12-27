@@ -31,6 +31,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.event.binding.MessagingJsonToFromDto;
 import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.api.EventException;
+import com.streamsets.datacollector.event.client.impl.EventClientImpl;
 import com.streamsets.datacollector.event.dto.AckEvent;
 import com.streamsets.datacollector.event.dto.AckEventStatus;
 import com.streamsets.datacollector.event.dto.BlobDeleteEvent;
@@ -146,7 +147,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String DPM_JOB_ID = "dpm.job.id";
   private static final String JOB_ID = "JOB_ID";
   private final DataCollector remoteDataCollector;
-  private final EventClient eventSenderReceiver;
   private final MessagingJsonToFromDto jsonToFromDto;
   private final SafeScheduledExecutorService executorService;
   private final SafeScheduledExecutorService syncEventsExecutorService;
@@ -163,7 +163,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final long sendAllStatusEventsInterval;
   private final DataStore dataStore;
   private final long sendAllPipelineMetricsInterval;
-  private String jobRunnerUrl;
+  private String jobRunnerMetricsUrl;
+  private String messagingEventsUrl;
+  private Configuration conf;
   private final int attempts;
   private String jobRunnerPipelineStatusEventsUrl;
   private String jobRunnerPipelineStatusEventUrl;
@@ -180,19 +182,17 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
   public RemoteEventHandlerTask(
       DataCollector remoteDataCollector,
-      EventClient eventSenderReceiver,
       SafeScheduledExecutorService executorService,
       SafeScheduledExecutorService syncEventsExecutorService,
       StageLibraryTask stageLibrary,
       RuntimeInfo runtimeInfo,
       Configuration conf
   ) {
-    this(remoteDataCollector, eventSenderReceiver, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null);
+    this(remoteDataCollector, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null);
   }
 
   public RemoteEventHandlerTask(
       DataCollector remoteDataCollector,
-      EventClient eventSenderReceiver,
       SafeScheduledExecutorService executorService,
       SafeScheduledExecutorService syncEventsExecutorService,
       StageLibraryTask stageLibrary,
@@ -201,13 +201,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       DataStore disconnectedSsoCredentialsDataStore
   ) {
     super("REMOTE_EVENT_HANDLER");
+
     this.remoteDataCollector = remoteDataCollector;
     this.jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
     this.executorService = executorService;
-    this.eventSenderReceiver = eventSenderReceiver;
     this.syncEventsExecutorService = syncEventsExecutorService;
     this.stageLibrary = stageLibrary;
     this.runtimeInfo = runtimeInfo;
+    this.conf = conf;
     this.attempts = conf.get(SEND_METRIC_ATTEMPTS, DEFAULT_SEND_METRIC_ATTEMPTS);
     this.shouldSendSyncEvents = conf.get(SHOULD_SEND_SYNC_EVENTS, SHOULD_SEND_SYNC_EVENTS_DEFAULT);
     appDestinationList = Arrays.asList(conf.get(
@@ -264,7 +265,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     String remoteBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
     ));
-    jobRunnerUrl = remoteBaseURL + "jobrunner/rest/v1/jobs/metrics";
+    jobRunnerMetricsUrl = remoteBaseURL + "jobrunner/rest/v1/jobs/metrics";
+    messagingEventsUrl = remoteBaseURL + RemoteDataCollector.MESSAGING_EVENTS_URL;
     jobRunnerPipelineStatusEventsUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUSES_ENDPOINT;
     jobRunnerPipelineStatusEventUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUS_ENDPOINT;
     jobRunnerSdcProcessMetricsEventUrl = remoteBaseURL + REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT;
@@ -296,7 +298,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   public void runTask() {
     executorService.submit(new EventHandlerCallable(
         remoteDataCollector,
-        eventSenderReceiver,
+        new EventClientImpl(conf),
         jsonToFromDto,
         new ArrayList<>(),
         new ArrayList<>(),
@@ -314,7 +316,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     ));
     if (shouldSendSyncEvents) {
       syncEventsExecutorService.submit(new SyncEventSender(
-          eventSenderReceiver,
+          new EventClientImpl(conf),
           remoteDataCollector,
           jsonToFromDto,
           sendAllStatusEventsInterval,
@@ -797,7 +799,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
     public EventHandlerCallable(
         DataCollector remoteDataCollector,
-        EventClient eventSenderReceiver,
+        EventClient messagingEventClient,
         MessagingJsonToFromDto jsonToFromDto,
         List<ClientEvent> ackEventList,
         List<ClientEvent> remoteEventList,
@@ -814,7 +816,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         RuntimeInfo runtimeInfo
     ) {
       this.remoteDataCollector = remoteDataCollector;
-      this.eventClient = eventSenderReceiver;
+      this.eventClient = messagingEventClient;
       this.jsonToFromDto = jsonToFromDto;
       this.executorService = executorService;
       this.delay = delay;
@@ -950,14 +952,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         // If waitBetweenSendingPipelineMetrics is set to -1, pipeline metrics sending is disabled
         if (waitBetweenSendingPipelineMetrics != -1 && (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingPipelineMetrics)) {
           // We're currently sending with attempts set to 0 because we are disabling this function by default
-          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerUrl, requestHeader, attempts);
+          sendPipelineMetrics(remoteDataCollector, eventClient, jobRunnerMetricsUrl, requestHeader, attempts);
         }
       } catch (IOException | PipelineException e) {
         LOG.warn("Error while sending metrics to server:  " + e, e);
       }
       try {
         List<ClientEventJson> clientEventJsonList = jsonToFromDto.toJson(clientEventList);
-        serverEventJsonList = eventClient.submit("", new HashMap<>(), requestHeader, false, clientEventJsonList);
+        serverEventJsonList = eventClient.submit(messagingEventsUrl, new HashMap<>(), requestHeader, false, clientEventJsonList);
         remoteEventList.clear();
         if (!eventToAckEventFuture.isEmpty()) {
           Set<String> eventIds = clientEventList.stream().map(ClientEvent::getEventId).collect(Collectors.toSet());

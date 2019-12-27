@@ -110,7 +110,7 @@ public class RemoteDataCollector implements DataCollector {
   private final BlobStoreTask blobStoreTask;
   private final SafeScheduledExecutorService eventHandlerExecutor;
   private final EventClient eventClient;
-  private String jobRunnerUrl;
+  private String jobRunnerMetricsUrl;
   private final Map<String, String> requestHeader;
   protected static final String SEND_METRIC_ATTEMPTS =  "pipeline.metrics.attempts";
   protected static final int DEFAULT_SEND_METRIC_ATTEMPTS = 0;
@@ -149,9 +149,8 @@ public class RemoteDataCollector implements DataCollector {
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
     requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, runtimeInfo.getId());
-    jobRunnerUrl = remoteBaseURL + JOB_METRICS_URL;
-    String defaultUrl = remoteBaseURL + MESSAGING_EVENTS_URL;
-    eventClient = new EventClientImpl(defaultUrl, configuration);
+    jobRunnerMetricsUrl = remoteBaseURL + JOB_METRICS_URL;
+    eventClient = new EventClientImpl(configuration);
   }
 
   PipelineStoreTask getPipelineStoreTask() {
@@ -468,7 +467,7 @@ public class RemoteDataCollector implements DataCollector {
         rev,
         forceTimeoutMillis,
         eventClient,
-        jobRunnerUrl,
+        jobRunnerMetricsUrl,
         requestHeader,
         configuration
     ));
