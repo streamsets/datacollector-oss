@@ -87,7 +87,7 @@ public class CollectdRecordConverter implements RecordConverter {
   @VisibleForTesting
   static String getMeasurementBaseName(Record record) throws OnRecordErrorException {
     if (!record.has(FIELD_PATH_PREFIX + PLUGIN)) {
-      throw new OnRecordErrorException(Errors.INFLUX_02);
+      throw new OnRecordErrorException(Errors.INFLUX_03);
     }
 
     return record.get(FIELD_PATH_PREFIX + PLUGIN).getValueAsString();
