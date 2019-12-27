@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.event.handler.dagger;
 
-import com.streamsets.datacollector.event.client.impl.EventClientImpl;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.NoOpEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.ColonCompatibleRemoteDataCollector;
@@ -63,7 +62,6 @@ public class EventHandlerModule {
       String targetURL = remoteBaseURL + "messaging/rest/v1/events";
       eventHandlerTask = new RemoteEventHandlerTask(
           new PipelineIdEncodedRemoteDatacollector(new ColonCompatibleRemoteDataCollector(remoteDataCollector)),
-          new EventClientImpl(targetURL, conf),
           eventHandlerExecutor,
           syncEventsHandlerExecutor,
           stageLibraryTask,

@@ -42,9 +42,7 @@ public class TestRemoteEventHandlerTask {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
     Configuration conf = new Configuration();
-    RemoteEventHandlerTask task = new RemoteEventHandlerTask(remoteDataCollector,
-        eventSenderReceiver,
-        executorService,
+    RemoteEventHandlerTask task = new RemoteEventHandlerTask(remoteDataCollector, executorService,
         executorService,
         stageLibrary,
         runtimeInfo,
