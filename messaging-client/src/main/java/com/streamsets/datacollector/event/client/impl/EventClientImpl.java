@@ -128,7 +128,7 @@ public class EventClientImpl implements EventClient {
         for (Map.Entry<String, String> entry : headerParams.entrySet()) {
           builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
         }
-        response = builder.post(Entity.json(entity));
+        response = entity != null ? builder.post(Entity.json(entity)) : builder.post(null);
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {
           return;
         } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {

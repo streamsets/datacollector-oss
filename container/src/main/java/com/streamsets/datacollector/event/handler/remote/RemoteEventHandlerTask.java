@@ -137,11 +137,14 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final String DEFAULT_REMOTE_CONTROL_EVENTS_RECIPIENT = "jobrunner-app";
   private static final String REMOTE_CONTROL_PROCESS_EVENTS_RECIPIENTS = REMOTE_CONTROL + "process.events.recipients";
   private static final String REMOTE_URL_SYNC_EVENTS_PING_FREQUENCY = REMOTE_CONTROL  + "sync.events.ping.frequency";
+  private static final String REMOTE_URL_HEARTBEAT_FREQUENCY = REMOTE_CONTROL  + "heartbeat.ping.frequency";
+  private static final int DEFAULT_REMOTE_URL_HEARTBEAT_FREQUENCY = 60000;
   private static final int DEFAULT_REMOTE_URL_SYNC_EVENTS_PING_FREQUENCY = 5000;
   private static final String DEFAULT_REMOTE_CONTROL_PROCESS_EVENTS_RECIPIENTS = "jobrunner-app,timeseries-app";
   private static final String REMOTE_URL_PIPELINE_STATUSES_ENDPOINT = "jobrunner/rest/v1/job/pipelineStatusEvents";
   private static final String REMOTE_URL_PIPELINE_STATUS_ENDPOINT = "jobrunner/rest/v1/job/pipelineStatusEvent";
-  private static final String REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT = "jobrunner/rest/v1/job/sdcProcessMetrics";
+  private static final String REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT = "jobrunner/rest/v1/sdc/processMetrics";
+  private static final String REMOTE_URL_SDC_HEARTBEAT_ENDPOINT = "jobrunner/rest/v1/sdc/updateLastModifiedTime";
   public static final String OFFSET = "offset";
   public static final int OFFSET_PROTOCOL_VERSION = 2;
   private static final String DPM_JOB_ID = "dpm.job.id";
@@ -158,6 +161,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final Map<String, String> requestHeader;
   private final long defaultPingFrequency;
   private final long pipelineStatusSyncEventsSendFrequency;
+  private final long heartbeatSendFrequency;
   private final Stopwatch stopWatch;
   private final Stopwatch stopWatchForSyncEvents;
   private final long sendAllStatusEventsInterval;
@@ -170,6 +174,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private String jobRunnerPipelineStatusEventsUrl;
   private String jobRunnerPipelineStatusEventUrl;
   private String jobRunnerSdcProcessMetricsEventUrl;
+  private String jobRunnerSdcHeartBeatUrl;
   private boolean shouldSendSyncEvents;
   private int percentOfWaitIntervalBeforeSkip;
   // config to send via sync or async fashion till SDC-13109 is in
@@ -229,6 +234,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         conf.get(REMOTE_URL_SYNC_EVENTS_PING_FREQUENCY, DEFAULT_REMOTE_URL_SYNC_EVENTS_PING_FREQUENCY),
         SYSTEM_LIMIT_MIN_PING_FREQUENCY
     );
+    heartbeatSendFrequency = Math.max(conf.get(REMOTE_URL_HEARTBEAT_FREQUENCY, DEFAULT_REMOTE_URL_HEARTBEAT_FREQUENCY),
+        SYSTEM_LIMIT_MIN_PING_FREQUENCY);
+
     sendAllStatusEventsInterval = Math.max(
         conf.get(REMOTE_URL_SEND_ALL_STATUS_EVENTS_INTERVAL, DEFAULT_STATUS_EVENTS_INTERVAL),
         SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL
@@ -270,6 +278,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     jobRunnerPipelineStatusEventsUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUSES_ENDPOINT;
     jobRunnerPipelineStatusEventUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUS_ENDPOINT;
     jobRunnerSdcProcessMetricsEventUrl = remoteBaseURL + REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT;
+    jobRunnerSdcHeartBeatUrl = remoteBaseURL + REMOTE_URL_SDC_HEARTBEAT_ENDPOINT;
 
   }
 
@@ -315,6 +324,13 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         runtimeInfo
     ));
     if (shouldSendSyncEvents) {
+      HeartbeatSender heartbeatSender =  new HeartbeatSender(new EventClientImpl(conf));
+      syncEventsExecutorService.scheduleAtFixedRate(
+          heartbeatSender,
+          1000,
+          heartbeatSendFrequency,
+          TimeUnit.MILLISECONDS
+      );
       syncEventsExecutorService.submit(new SyncEventSender(
           new EventClientImpl(conf),
           remoteDataCollector,
@@ -608,6 +624,32 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     return sourceOffset;
   }
 
+  class HeartbeatSender implements Runnable {
+    private EventClient eventClient;
+
+    public HeartbeatSender(
+        EventClient eventClient
+    ) {
+      this.eventClient = eventClient;
+    }
+
+    @Override
+    public void run() {
+      try {
+        callHeartBeatSender();
+      } catch (Exception e) {
+        LOG.warn("Cannot send heartbeat to SCH: {}", e, e);
+      }
+    }
+
+    private void callHeartBeatSender() {
+      LOG.info("HeartBeat sender started");
+      eventClient.sendSyncEvents(jobRunnerSdcHeartBeatUrl, new HashMap<>(), requestHeader, null, 1);
+      LOG.info("HeartBeat sender ended");
+
+    }
+  }
+
   class SyncEventSender implements Callable<Void> {
     private final DataCollector remoteDataCollector;
     private final MessagingJsonToFromDto jsonToFromDto;
@@ -684,6 +726,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelineStatusEvents,
               1
           );
+          LOG.info("Ended sending status of all pipelines through sync thread");
           if (hasElapsedWaitPercentInterval(stopWatch,
               waitBetweenSendingStatusEvents,
               percentOfWaitIntervalBeforeSkip
@@ -700,6 +743,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 getSdcMetricsEvent(runtimeInfo),
                 1
             );
+            LOG.info("Ended sending process metrics event through sync thread");
           }
         } catch (Exception e) {
           LOG.warn(Utils.format("Error while sending pipeline updates to DPM: '{}'", e), e);
@@ -728,6 +772,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                   pipelineStatusEvent,
                   1
               );
+              LOG.info(Utils.format(
+                  "Ended sending event for remote pipeline: '{}' in status: '{}' through sync thread",
+                  pipelineStatusEvent.getName(),
+                  pipelineStatusEvent.getPipelineStatus()
+              ));
             }
           }
         } catch (Exception e) {
