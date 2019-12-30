@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.config.Groups;
@@ -27,12 +28,13 @@ import com.streamsets.pipeline.stage.origin.scripting.config.Groups;
 @GenerateResourceBundle
 @StageDef(
     version = 1,
-    label="JavaScript Scripting",
+    label = "JavaScript Scripting",
     description = "Produces record batches using JavaScript script",
     execution = {ExecutionMode.STANDALONE},
-    icon= "javascript.png",
+    icon = "javascript.png",
     producesEvents = true,
-    onlineHelpRefUrl =""
+    flags = StageBehaviorFlags.USER_CODE_INJECTION,
+    onlineHelpRefUrl = "index.html?contextID=task_hnz_nnj_l3b"
 )
 @ConfigGroups(value = Groups.class)
 

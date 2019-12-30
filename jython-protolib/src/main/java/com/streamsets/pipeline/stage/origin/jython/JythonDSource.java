@@ -20,35 +20,36 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.config.Groups;
 
-
 @GenerateResourceBundle
 @StageDef(
     version = 1,
-    label="Jython Scripting",
+    label = "Jython Scripting",
     description = "Produces record batches using Jython script",
     execution = {ExecutionMode.STANDALONE},
-    icon= "jython.png",
+    icon = "jython.png",
     producesEvents = true,
-    onlineHelpRefUrl ="index.html?contextID=task_ptn_xnj_l3b"
+    flags = StageBehaviorFlags.USER_CODE_INJECTION,
+    onlineHelpRefUrl = "index.html?contextID=task_ptn_xnj_l3b"
 )
 @ConfigGroups(value = Groups.class)
 
 public class JythonDSource extends AbstractScriptingDSource {
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.TEXT,
-    defaultValueFromResource = "GeneratorOriginScript.py",
-    label = "User Script",
-    description = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
-      + "toggle full screen editing.",
-    displayPosition = 10,
-    group = "SCRIPT",
-    mode = ConfigDef.Mode.PYTHON)
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      defaultValueFromResource = "GeneratorOriginScript.py",
+      label = "User Script",
+      description = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
+        + "toggle full screen editing.",
+      displayPosition = 10,
+      group = "SCRIPT",
+      mode = ConfigDef.Mode.PYTHON)
   public String script;
 
   @Override
