@@ -48,7 +48,7 @@ public final class Grok {
     Matcher matcher = compiledPattern.matcher(rawData);
     if (matcher.find()) {
       MatchResult r = matcher.toMatchResult();
-      if (r != null && r.namedGroups() != null) {
+      if (r != null && !r.namedGroups().isEmpty()) {
         return r.namedGroups();
       }
     }
