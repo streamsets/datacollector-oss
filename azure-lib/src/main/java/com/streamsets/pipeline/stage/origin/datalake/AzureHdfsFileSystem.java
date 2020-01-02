@@ -40,9 +40,6 @@ import java.util.TimeZone;
 /**
  * AzureHdfsFileSystem provides some reimplementations to address:
  *
- * SDC-12302: A temporary workaround for HADOOP-16479 to fix the wrong modification time in the FileStatus object. It
- * should be removed once v3.3.0 is released, and HdfsFileSystem.fs should be reverted to private.
- *
  * SDC-12642: Improve the performance when scanning Azure directories to collect the pending files to be included in the
  * batches. To that end, the walkDirectory function is provided.
  *
@@ -58,16 +55,6 @@ public class AzureHdfsFileSystem extends HdfsFileSystem {
 
   public AzureHdfsFileSystem(String filePattern, PathMatcherMode mode, boolean processSubdirectories, FileSystem fs) {
     super(filePattern, mode, processSubdirectories, fs);
-  }
-
-  /**
-   * SDC-12302: Method that temporarily reverts the effects of HADOOP-16479 until version 3.3.0 is available
-   *
-   * @return The corrected modification time after patching the time zone offset
-   */
-  public long patchLastModifiedTime(long buggyModTime) {
-    long offset = TimeZone.getDefault().getOffset(System.currentTimeMillis());
-    return buggyModTime + offset;
   }
 
   /**
@@ -119,9 +106,8 @@ public class AzureHdfsFileSystem extends HdfsFileSystem {
           }
 
           WrappedFile file = new AzureFile(fs, fileStatus);
-          // SDC-12302: Method that temporarily reverts the effects of HADOOP-16479 until version 3.3.0 is available
-          long fixedModificationTime = patchLastModifiedTime(fileStatus.getModificationTime());
-          if (fixedModificationTime < scanTime) {
+          long modificationTime = fileStatus.getModificationTime();
+          if (modificationTime < scanTime) {
             if (startingFile == null || startingFile.toString().isEmpty()) {
               filesSet.add(file);
             } else {
