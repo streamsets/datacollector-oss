@@ -694,7 +694,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       // Firstly destroy the runner, to make sure that any potential run away thread from origin will be denied
       // further processing.
       if (runnerPool != null) {
-        runnerPool.destroy();
+        try {
+          runnerPool.destroy();
+        } catch (PipelineRuntimeException e) {
+          LOG.warn(e.getMessage());
+        }
       }
 
       int batchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
