@@ -202,7 +202,7 @@
            ng-model="detailPaneConfig.configuration[configIndex].value">
 
     <div ui-codemirror
-          ng-if="!isPipelineReadOnly && !isPipelineRunning && fieldParamHash[configDefinition.name]"
+          ng-if="fieldParamHash[configDefinition.name]"
           id="{{configDefinition.name + 'param'}}"
           ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
           class="pc100px"
