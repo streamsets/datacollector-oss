@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.streamsets.datacollector.bundles.BundleWriter;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -23,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Ignore("Stats collection functionality is disabled for now - refer SDC-13110")
 public class TestStatsGenerator {
 
   @Test

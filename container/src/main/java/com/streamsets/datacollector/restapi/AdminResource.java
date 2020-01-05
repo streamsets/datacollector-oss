@@ -407,30 +407,6 @@ public class AdminResource {
       .build();
   }
 
-  @GET
-  @Path("/bundle/upload")
-  @ApiOperation(
-      value = "Generates new support bundle and uploads it to StreamSets.",
-      response = Object.class,
-      authorizations = @Authorization(value = "basic")
-  )
-  @Consumes(MediaType.APPLICATION_JSON)
-  @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({
-      AuthzRole.ADMIN,
-      AuthzRole.ADMIN_REMOTE
-  })
-  public Response uploadSupportBundlesContentGenerators(
-    @QueryParam("generators") @DefaultValue("") String generators
-  ) throws IOException {
-    // The call with throw IOException on any error that will be propagated to the client
-    supportBundleManager.uploadNewBundle(getGeneratorList(generators), BundleType.SUPPORT);
-
-    return Response
-      .ok()
-      .build();
-  }
-
   private List<String> getGeneratorList(String queryValue) {
     if(StringUtils.isEmpty(queryValue)) {
       return Collections.emptyList();

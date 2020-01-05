@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -35,7 +36,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +44,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+@Ignore("Stats collection functionality is disabled for now - refer SDC-13110")
 public class TestStatsCollectorTask {
 
   private File createTestDir() {
@@ -498,10 +499,6 @@ public class TestStatsCollectorTask {
     //verifying we rolled the read stats
     Assert.assertEquals("v1", task.getStatsInfo().getActiveStats().getDataCollectorVersion());
 
-    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundleFromInstances(
-        Mockito.any(List.class),
-        Mockito.eq(BundleType.STATS)
-    );
     task.stop();
   }
 
@@ -528,10 +525,6 @@ public class TestStatsCollectorTask {
     );
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
-    Mockito.doThrow(new UnknownHostException("foo"))
-        .when(supportBundleManager)
-        .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
-
     StatsCollectorTask task = new StatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, supportBundleManager);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
@@ -563,19 +556,12 @@ public class TestStatsCollectorTask {
     Assert.assertTrue(task.isOpted());
     Assert.assertTrue(task.isActive());
 
-    // Stop throwing an exception (the issue was fixed somehow)
-    Mockito.doNothing().when(supportBundleManager).uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
-
     // count resets because it works now
     task.getRunnable().run();
     Assert.assertTrue(task.isOpted());
     Assert.assertTrue(task.isActive());
     Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
 
-    // Resume throwing an exception
-    Mockito.doThrow(new UnknownHostException("foo"))
-        .when(supportBundleManager)
-        .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
     task.getStatsInfo().getCollectedStats().add(new StatsBean());
 
     // It will retry 5 times, once a minute, before backing off for 1 day.  After 1 day, it will retry the 5 times again
@@ -590,8 +576,6 @@ public class TestStatsCollectorTask {
       for (int i = 0; i < 5; i++) {
         System.out.println("AAA k = " + k + " i = " + i);
         if (doOnceOnly == 0 && k == 2 && i == 3) {
-          // Stop throwing an exception (the issue was fixed somehow)
-          Mockito.doNothing().when(supportBundleManager).uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
 
           // count resets because it works now
           task.getRunnable().run();
@@ -599,10 +583,6 @@ public class TestStatsCollectorTask {
           Assert.assertTrue(task.isActive());
           Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
 
-          // Resume throwing an exception
-          Mockito.doThrow(new UnknownHostException("foo"))
-              .when(supportBundleManager)
-              .uploadNewBundleFromInstances(Mockito.any(), Mockito.any());
           task.getStatsInfo().getCollectedStats().add(new StatsBean());
 
           k = 0;
@@ -648,11 +628,6 @@ public class TestStatsCollectorTask {
         );
       }
     }
-
-    Mockito.verify(supportBundleManager, Mockito.times(43)).uploadNewBundleFromInstances(
-        Mockito.any(List.class),
-        Mockito.eq(BundleType.STATS)
-    );
 
     task.stop();
   }
@@ -826,7 +801,6 @@ public class TestStatsCollectorTask {
 
     Assert.assertTrue(task.reportStats(stats));
     ArgumentCaptor<List> generatorCaptor = ArgumentCaptor.forClass(List.class);
-    Mockito.verify(supportBundleManager, Mockito.times(1)).uploadNewBundleFromInstances(generatorCaptor.capture(), Mockito.eq(BundleType.STATS));
     Assert.assertEquals(1, generatorCaptor.getValue().size());
     Assert.assertEquals(StatsGenerator.class, generatorCaptor.getValue().get(0).getClass());
   }

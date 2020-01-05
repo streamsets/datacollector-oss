@@ -84,22 +84,6 @@ angular
       $scope.message = {id: 'sdcSupportBundle.downloadingMessage', type: 'success'};
     },
 
-    uploadBundle: function() {
-      if (!this.hasAnyGeneratorSelected()) {
-        return;
-      }
-
-      $scope.uploading = true;
-      $scope.message = null;
-      api.system.uploadSupportBundle(this.getSelectedGenerators()).then(function(res) {
-        $scope.uploading = false;
-        $scope.message = {id: 'sdcSupportBundle.uploadedMessage', type: 'success'};
-      }, function(res) {
-        $scope.uploading = false;
-        $scope.common.errors = [res.data];
-      });
-    },
-
     done: function() {
       $modalInstance.dismiss('cancel');
     },

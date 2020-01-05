@@ -85,16 +85,6 @@
         ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
         translate="global.form.download">Download
     </button>
-    <button
-        type="button"
-        class="btn btn-primary"
-        ng-if="isSupportBundleUplodEnabled"
-        ng-disabled="showLoading || uploading || !hasAnyGeneratorSelected()"
-        ng-click="uploadBundle()">
-      <span ng-if="!uploading" translate="global.form.upload">Upload</span>
-      <i ng-if="uploading" class="fa fa-spinner fa-spin"></i>
-      <span ng-if="uploading" translate="global.form.uploading">Uploading...</span>
-    </button>
 
   </div>
 </form>
