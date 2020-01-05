@@ -16,10 +16,7 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.bundles.BundleType;
-import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
@@ -39,10 +36,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -225,9 +220,15 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       LOG.info("Stats Collection, opted '{}, active '{}'", opted, active);
     }
     // when disabled all persistency/reporting done by the Runnable is a No Op.
-    getStatsInfo().startSystem();
-    getRunnable().run();
-    future = executorService.scheduleAtFixedRate(getRunnable(), REPORT_PERIOD, REPORT_PERIOD, TimeUnit.SECONDS);
+    /*
+     * Disable stats collection thread from being run for now,
+     * since this is closely tied with support bundle upload feature - which is removed - refer SDC-13110
+     * This will be reworked in a future release
+     *
+     * getStatsInfo().startSystem();
+     * getRunnable().run();
+     * future = executorService.scheduleAtFixedRate(getRunnable(), REPORT_PERIOD, REPORT_PERIOD, TimeUnit.SECONDS);
+     */
   }
 
   Runnable getRunnable() {
@@ -280,16 +281,17 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   }
 
   protected boolean reportStats(List<StatsBean> stats) {
-    try {
-      getBundleManager().uploadNewBundleFromInstances(
-        Collections.singletonList(new StatsGenerator(stats)),
-        BundleType.STATS
-      );
-      return true;
-    } catch (IOException ex) {
-      LOG.warn("Reporting failed. Error: {}", ex.getMessage(), ex);
-      return false;
-    }
+//    try {
+//      getBundleManager().uploadNewBundleFromInstances(
+//        Collections.singletonList(new StatsGenerator(stats)),
+//        BundleType.STATS
+//      );
+//      return true;
+//    } catch (IOException ex) {
+//      LOG.warn("Reporting failed. Error: {}", ex.getMessage(), ex);
+//      return false;
+//    }
+    return false;
   }
 
   protected void saveStats() {
@@ -311,11 +313,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   @Override
   protected void stopTask() {
-    if (getFuture() != null) {
-      getFuture().cancel(false);
-    }
-    getStatsInfo().stopSystem();
-    getRunnable().run();
+//    if (getFuture() != null) {
+//      getFuture().cancel(false);
+//    }
+//    getStatsInfo().stopSystem();
+//    getRunnable().run();
     super.stopTask();
   }
 

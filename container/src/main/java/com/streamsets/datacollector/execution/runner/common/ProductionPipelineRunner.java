@@ -395,10 +395,6 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       sendPipelineErrorNotificationRequest(throwable);
       errorNotification(originPipe, pipes, throwable);
 
-      if(supportBundleManager != null) {
-        supportBundleManager.uploadNewBundleOnError();
-      }
-
       Throwables.propagateIfInstanceOf(throwable, StageException.class);
       Throwables.propagateIfInstanceOf(throwable, PipelineRuntimeException.class);
       Throwables.propagate(throwable);
