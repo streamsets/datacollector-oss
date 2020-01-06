@@ -644,10 +644,19 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     }
 
     private void callHeartBeatSender() {
-      LOG.info("HeartBeat sender started");
+      LOG.debug("HeartBeat sender started");
+      long startTime = System.currentTimeMillis();
       eventClient.sendSyncEvents(jobRunnerSdcHeartBeatUrl, new HashMap<>(), requestHeader, null, 1);
-      LOG.info("HeartBeat sender ended");
+      long endTime = System.currentTimeMillis();
+      LOG.debug("HeartBeat sender ended");
+      logWarningIfAPICallTimeExceedsThreshold(jobRunnerSdcHeartBeatUrl, 30000, startTime, endTime);
+    }
+  }
 
+  private static void logWarningIfAPICallTimeExceedsThreshold(String apiName, long threshold, long startTime, long endTime) {
+    long duration = endTime - startTime;
+    if (duration > threshold) {
+      LOG.warn("Time taken to make {} call: {} secs", apiName, duration / 1000);
     }
   }
 
@@ -713,21 +722,24 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         // get state of all running pipeline and state of all remote pipelines
         try {
           List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
-          LOG.info("Sending status of all pipelines through sync thread");
+
           stopWatch.reset();
           for (PipelineAndValidationStatus pipelineAndValidationStatus : remoteDataCollector.getPipelines()) {
             pipelineStatusEventList.add(createPipelineStatusEvent(jsonToFromDto, pipelineAndValidationStatus));
           }
           PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
           pipelineStatusEvents.setPipelineStatusEventList(pipelineStatusEventList);
-
+          LOG.debug("Sending status of all pipelines through sync thread");
+          long startTime = System.currentTimeMillis();
           eventClient.sendSyncEvents(jobRunnerPipelineStatusEventsUrl,
               new HashMap<>(),
               requestHeader,
               pipelineStatusEvents,
               1
           );
-          LOG.info("Ended sending status of all pipelines through sync thread");
+          long endTime = System.currentTimeMillis();
+          LOG.debug("Ended sending status of all pipelines through sync thread");
+          logWarningIfAPICallTimeExceedsThreshold(jobRunnerPipelineStatusEventsUrl, 30000, startTime, endTime);
           if (hasElapsedWaitPercentInterval(stopWatch,
               waitBetweenSendingStatusEvents,
               percentOfWaitIntervalBeforeSkip
@@ -737,14 +749,17 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                 percentOfWaitIntervalBeforeSkip
             );
           } else {
-            LOG.info("Sending process metrics event through sync thread");
+            LOG.debug("Sending process metrics event through sync thread");
+            startTime = System.currentTimeMillis();
             eventClient.sendSyncEvents(jobRunnerSdcProcessMetricsEventUrl,
                 new HashMap<>(),
                 requestHeader,
                 getSdcMetricsEvent(runtimeInfo),
                 1
             );
-            LOG.info("Ended sending process metrics event through sync thread");
+            endTime = System.currentTimeMillis();
+            LOG.debug("Ended sending process metrics event through sync thread");
+            logWarningIfAPICallTimeExceedsThreshold(jobRunnerSdcProcessMetricsEventUrl, 30000, startTime, endTime);
           }
         } catch (Exception e) {
           LOG.warn(Utils.format("Error while sending pipeline updates to DPM: '{}'", e), e);
@@ -762,22 +777,25 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
                   percentOfWaitIntervalBeforeSkip);
               break;
             } else {
-              LOG.info(Utils.format(
+              LOG.debug(Utils.format(
                   "Sending event for remote pipeline: '{}' in status: '{}' through sync thread",
                   pipelineStatusEvent.getName(),
                   pipelineStatusEvent.getPipelineStatus()
               ));
+              long startTime = System.currentTimeMillis();
               eventClient.sendSyncEvents(jobRunnerPipelineStatusEventUrl,
                   new HashMap<>(),
                   requestHeader,
                   pipelineStatusEvent,
                   1
               );
-              LOG.info(Utils.format(
+              long endTime = System.currentTimeMillis();
+              LOG.debug(Utils.format(
                   "Ended sending event for remote pipeline: '{}' in status: '{}' through sync thread",
                   pipelineStatusEvent.getName(),
                   pipelineStatusEvent.getPipelineStatus()
               ));
+              logWarningIfAPICallTimeExceedsThreshold(jobRunnerPipelineStatusEventUrl, 30000, startTime, endTime);
             }
           }
         } catch (Exception e) {
