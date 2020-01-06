@@ -141,6 +141,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final int DEFAULT_REMOTE_URL_HEARTBEAT_FREQUENCY = 60000;
   private static final int DEFAULT_REMOTE_URL_SYNC_EVENTS_PING_FREQUENCY = 5000;
   private static final String DEFAULT_REMOTE_CONTROL_PROCESS_EVENTS_RECIPIENTS = "jobrunner-app,timeseries-app";
+  private static final String TIMESERIES_APP = "timeseries-app";
   private static final String REMOTE_URL_PIPELINE_STATUSES_ENDPOINT = "jobrunner/rest/v1/job/pipelineStatusEvents";
   private static final String REMOTE_URL_PIPELINE_STATUS_ENDPOINT = "jobrunner/rest/v1/job/pipelineStatusEvent";
   private static final String REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT = "jobrunner/rest/v1/sdc/processMetrics";
@@ -995,6 +996,21 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
       if (!shouldSendSyncEvents) {
         sendEventsAsync(clientEventList);
+      } else {
+        // sends async message to timeseries-app even if sync events is turned on
+        if (!stopWatch.isRunning() || stopWatch.elapsed(TimeUnit.MILLISECONDS) > waitBetweenSendingStatusEvents) {
+          stopWatch.reset();
+          LOG.debug("Sending metrics event to time-series app");
+          clientEventList.add(new ClientEvent(
+              UUID.randomUUID().toString(),
+              Collections.singletonList(TIMESERIES_APP),
+              false,
+              false,
+              EventType.SDC_PROCESS_METRICS_EVENT,
+              getSdcMetricsEvent(runtimeInfo),
+              null
+          ));
+        }
       }
       List<ServerEventJson> serverEventJsonList;
       try {
