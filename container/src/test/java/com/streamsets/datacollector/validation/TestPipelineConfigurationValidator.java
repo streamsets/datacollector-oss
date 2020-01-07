@@ -42,9 +42,12 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.empty;
@@ -707,6 +710,38 @@ public class TestPipelineConfigurationValidator {
     List<Issue> issues = conf.getIssues().getIssues();
     Assert.assertThat(issues, hasSize(1));
     Assert.assertEquals(ValidationError.VALIDATION_0401.name(), issues.get(0).getErrorCode());
+  }
+
+  @Test
+  public void testNullKeytabPropertyWhileDisallowed() {
+    PipelineConfigurationValidator validator = createClusterPropertiesValidator(
+        false,
+        conf -> {
+          conf.addConfiguration(new Config("executionMode", "BATCH"));
+          conf.addConfiguration(new Config("clusterConfig.clusterType", "YARN"));
+          conf.addConfiguration(new Config("clusterConfig.useYarnKerberosKeytab", true));
+          conf.addConfiguration(new Config("clusterConfig.yarnKerberosKeytabSource", KeytabSource.PROPERTIES_FILE));
+          return null;
+        },
+        conf -> {
+          conf.set(ValidationUtil.ALLOW_KEYTAB_PROPERTY, false);
+          conf.set(SecurityConfiguration.KERBEROS_ENABLED_KEY, false);
+          conf.unset(SecurityConfiguration.KERBEROS_KEYTAB_KEY);
+          return null;
+        }
+    );
+    final PipelineConfiguration conf = validator.validate();
+    Assert.assertTrue(conf.getIssues().hasIssues());
+    List<Issue> issues = conf.getIssues().getIssues();
+    Assert.assertEquals(
+        // we should have both of these errors, in this case
+        // prior to SDC-13243, this just resulted in a NullPointerException
+        new HashSet<>(Arrays.asList(
+            ValidationError.VALIDATION_0307.getCode(),
+            ValidationError.VALIDATION_0401.getCode())
+        ),
+        issues.stream().map(issue -> issue.getErrorCode()).collect(Collectors.toSet())
+    );
   }
 
   @Test

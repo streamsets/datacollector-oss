@@ -1122,31 +1122,40 @@ public class ValidationUtil {
           errorMsgSuffix = " via the " + SecurityConfiguration.KERBEROS_KEYTAB_KEY + " configuration property";
           break;
       }
-      final Path keytabPath = Paths.get(keytabPathStr);
-      if (!keytabPath.isAbsolute()) {
+      if (Strings.isNullOrEmpty(keytabPathStr)) {
         errors.add(issueCreator.create(
             PipelineGroups.CLUSTER.name(),
             "clusterConfig.yarnKerberosKeytab",
-            ValidationError.VALIDATION_0302,
-            keytabPath.toString(),
+            ValidationError.VALIDATION_0307,
             errorMsgSuffix
         ));
-      } else if (!Files.exists(keytabPath)) {
-        errors.add(issueCreator.create(
-            PipelineGroups.CLUSTER.name(),
-            "clusterConfig.yarnKerberosKeytab",
-            ValidationError.VALIDATION_0303,
-            keytabPath.toString(),
-            errorMsgSuffix
-        ));
-      } else if (!Files.isRegularFile(keytabPath)) {
-        errors.add(issueCreator.create(
-            PipelineGroups.CLUSTER.name(),
-            "clusterConfig.yarnKerberosKeytab",
-            ValidationError.VALIDATION_0304,
-            keytabPath.toString(),
-            errorMsgSuffix
-        ));
+      } else {
+        final Path keytabPath = Paths.get(keytabPathStr);
+        if (!keytabPath.isAbsolute()) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0302,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        } else if (!Files.exists(keytabPath)) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0303,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        } else if (!Files.isRegularFile(keytabPath)) {
+          errors.add(issueCreator.create(
+              PipelineGroups.CLUSTER.name(),
+              "clusterConfig.yarnKerberosKeytab",
+              ValidationError.VALIDATION_0304,
+              keytabPath.toString(),
+              errorMsgSuffix
+          ));
+        }
       }
       // TODO: actually check that the keytab file is valid and contains the principal?
     }

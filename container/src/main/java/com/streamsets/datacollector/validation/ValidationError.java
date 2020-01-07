@@ -126,6 +126,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0304("{} was not a regular file; please double check the keytab path{}"),
   VALIDATION_0305("Impersonation is required by {} configuration property, so an explicit user may not be specified."),
   VALIDATION_0306("Invalid URL for Standalone Spark Cluster Type, The Master URL must use the following format: 'spark://HOST:PORT'"),
+  VALIDATION_0307("No keytab was specified{}"),
   VALIDATION_0401(
       "The {} property was set to {}, therefore you are not allowed to specify a keytab. Please contact your system " +
           "administrator with any questions."
