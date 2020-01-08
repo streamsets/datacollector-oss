@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Start Pipeline Processor","href":"datacollector\/UserGuide\/Processors\/StartPipeline.html#task_yh1_wxr_2jb","attributes": {"data-id":"task_yh1_wxr_2jb",},"menu": {"hasChildren":false,},"tocID":"task_yh1_wxr_2jb-d46e107929","topics":[]}]});
