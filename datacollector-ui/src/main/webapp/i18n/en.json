@@ -917,7 +917,7 @@
     "description": "Description",
     "downloadingMessage" : "Downloading support bundle...",
     "generator": "Generator",
-    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the Data Collector. Please select one or more generators to be included in the archive. Then you can either Download the archive file for review, or Upload it directly to StreamSets.",
+    "infoMessage": "The support bundle allows you to generate an archive file with the information required to troubleshoot various issues with the Data Collector. Please select one or more generators to be included in the archive. Then you can Download the archive file for review and, if necessary, upload it to StreamSets as an attachment in your support ticket.",
     "title": "Support Bundle",
     "uploadedMessage" : "Support bundle was successfully uploaded."
   },
