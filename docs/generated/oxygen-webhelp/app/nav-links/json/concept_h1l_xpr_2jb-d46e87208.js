@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a Start Pipeline Origin","href":"datacollector\/UserGuide\/Origins\/StartPipeline.html#task_nvq_1rr_2jb","attributes": {"data-id":"task_nvq_1rr_2jb",},"menu": {"hasChildren":false,},"tocID":"task_nvq_1rr_2jb-d46e87240","topics":[]}]});
