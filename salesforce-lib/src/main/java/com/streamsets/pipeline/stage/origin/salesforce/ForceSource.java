@@ -301,16 +301,12 @@ public class ForceSource extends BaseSource {
     }
 
     if (issues.isEmpty() && conf.subscribeToStreaming) {
-      switch (conf.subscriptionType) {
-        case PUSH_TOPIC:
-          setObjectTypeFromQuery(issues);
-          break;
-        case PLATFORM_EVENT:
-          // Do nothing
-          break;
-        case CDC:
-          sobjectType = conf.cdcObject;
-          break;
+      // Push topic sets the sobject type here so that streamingProduce can populate the metadata cache - PushTopic
+      // notifications do not include the sobject type
+      // Platform events doesn't use sobjects
+      // CDC gets object type with each update
+      if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC) {
+        setObjectTypeFromQuery(issues);
       }
 
       messageQueue = new ArrayBlockingQueue<>(2 * conf.basicConfig.maxBatchSize);
