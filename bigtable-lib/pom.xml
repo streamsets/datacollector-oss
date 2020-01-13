@@ -190,6 +190,13 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-common</artifactId>
       <scope>compile</scope>
+      <exclusions>
+        <!-- Exclude guava 28.1-jre due to incompatibility with bigtable version 1.0.0-pre3. See SDC-13215 -->
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
