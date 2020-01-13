@@ -32,9 +32,14 @@ public class SSOAuthenticator extends AbstractSSOAuthenticator {
   private final SSOUserAuthenticator userAuthenticator;
   private final SSOAppAuthenticator appAuthenticator;
 
-  public SSOAuthenticator(String appContext, SSOService ssoService, Configuration configuration) {
+  public SSOAuthenticator(
+      String appContext,
+      SSOService ssoService,
+      Configuration configuration,
+      String productName
+  ) {
     super(ssoService);
-    userAuthenticator = new SSOUserAuthenticator(getSsoService(), configuration);
+    userAuthenticator = new SSOUserAuthenticator(getSsoService(), configuration, productName);
     appAuthenticator = new SSOAppAuthenticator(getSsoService());
   }
 

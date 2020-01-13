@@ -43,13 +43,26 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
       ImmutableSet.of(SSOConstants.USER_AUTH_TOKEN_PARAM, SSOConstants.REPEATED_REDIRECT_PARAM);
 
   public static final String HTTP_META_REDIRECT_TO_SSO = "http.meta.redirect.to.sso";
+  private static final String BASE_HTTP_URL_ATTR = "%s.base.http.url";
 
   private Configuration conf;
   private boolean doMetaRedirectToSso;
   private String dpmBaseUrl;
   private final boolean isDataCollector;
+  private String engineBaseHttpUrl;
 
-  public SSOUserAuthenticator(SSOService ssoService, @NotNull Configuration conf) {
+  public SSOUserAuthenticator(
+      SSOService ssoService,
+      @NotNull Configuration conf
+  ) {
+    this(ssoService, conf, null);
+  }
+
+  public SSOUserAuthenticator(
+      SSOService ssoService,
+      @NotNull Configuration conf,
+      String productName
+  ) {
     super(ssoService);
     this.conf = conf;
 
@@ -59,6 +72,10 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
 
     if (StringUtils.isNotEmpty(this.dpmBaseUrl) && this.dpmBaseUrl.endsWith("/")) {
       this.dpmBaseUrl = this.dpmBaseUrl.substring(0, this.dpmBaseUrl.length() - 1);
+    }
+
+    if (isDataCollector) {
+      this.engineBaseHttpUrl = conf.get(String.format(BASE_HTTP_URL_ATTR, productName), null);
     }
   }
 
@@ -73,10 +90,11 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
     if (this.dpmBaseUrl != null && !isDataCollector) {
       requestUrl = new StringBuffer(this.dpmBaseUrl);
       requestUrl.append(request.getRequestURI());
+    } else if (this.engineBaseHttpUrl != null && this.isDataCollector) {
+      requestUrl = new StringBuffer(this.engineBaseHttpUrl);
     } else {
       requestUrl = new StringBuffer(request.getRequestURL());
     }
-
 
     String qs = request.getQueryString();
     if (qs != null) {

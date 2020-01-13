@@ -25,7 +25,7 @@ public class TestSSOUtils {
   @Test
   public void testGetAuthTokenForLogging() {
     SSOService ssoService = Mockito.mock(SSOService.class);
-    SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, new Configuration()));
+    SSOUserAuthenticator authenticator = Mockito.spy(new SSOUserAuthenticator(ssoService, new Configuration(), null));
     Assert.assertEquals("TOKEN:null", SSOUtils.tokenForLog(null));
     Assert.assertEquals("TOKEN:abcdefghij123456...", SSOUtils.tokenForLog("abcdefghij1234567"));
   }

@@ -122,7 +122,7 @@
         </li>
 
         <li ng-if="!common.isSlaveNode && isAuthorized([userRoles.admin])">
-          <a href="/collector/packageManager"
+          <a href="collector/packageManager"
              tooltip-placement="bottom"
              tooltip="{{'global.menu.packageManager' | translate}}"
              tooltip-trigger="mouseenter"
@@ -263,7 +263,7 @@
             </li>
 
             <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isDPMEnabled && common.authenticationType !== 'none'">
-              <a href="/collector/usersAndGroups">
+              <a href="collector/usersAndGroups">
                 <i class="glyphicon glyphicon-user"></i>
                 <span translate="global.menu.admin.usersAndGroups">Users & Groups</span>
               </a>

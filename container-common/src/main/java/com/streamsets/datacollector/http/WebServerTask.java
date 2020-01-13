@@ -542,7 +542,12 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     // registering ssoService with runtime, to enable cache flushing
     ((List)getRuntimeInfo().getAttribute(SSO_SERVICES_ATTR)).add(proxySsoService);
     appHandler.getServletContext().setAttribute(SSOService.SSO_SERVICE_KEY, proxySsoService);
-    security.setAuthenticator(injectActivationCheck(new SSOAuthenticator(appContext, proxySsoService, appConf)));
+    security.setAuthenticator(injectActivationCheck(new SSOAuthenticator(
+        appContext,
+        proxySsoService,
+        appConf,
+        runtimeInfo.getProductName()
+    )));
     return security;
   }
 

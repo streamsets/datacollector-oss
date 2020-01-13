@@ -32,7 +32,7 @@ public class TestSSOAuthenticator {
   @Test
   public void testRequestIpAddress() throws Exception {
     SSOService ssoService = Mockito.mock(SSOService.class);
-    SSOAuthenticator authenticator = new SSOAuthenticator(null, ssoService, new Configuration());
+    SSOAuthenticator authenticator = new SSOAuthenticator(null, ssoService, new Configuration(), null);
     authenticator = Mockito.spy(authenticator);
 
     // faking delegation to real authenticator to return a non-authenticated Authentication
