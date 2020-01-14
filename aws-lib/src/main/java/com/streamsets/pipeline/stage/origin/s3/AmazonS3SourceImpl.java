@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.event.FinishedFileEvent;
 import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -173,7 +172,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
       offsetsMap.put(runnerId, offset);
     } else {
       offset = offsetsMap.computeIfAbsent(runnerId,
-          k -> new S3Offset(S3Constants.EMPTY, S3Constants.MINUS_ONE, S3Constants.EMPTY, S3Constants.ZERO)
+          k -> new S3Offset(S3Constants.EMPTY, S3Constants.ZERO, S3Constants.EMPTY, S3Constants.ZERO)
       );
     }
     return new S3Offset(offset);
@@ -260,9 +259,11 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   boolean allFilesAreFinished() {
     boolean filesFinished = true;
     for (S3Offset s3Offset : offsetsMap.values()) {
-      filesFinished = s3Offset.getOffset().equals(S3Constants.MINUS_ONE);
-      if (!filesFinished) {
-        break;
+      if (s3Offset.representsFile()) {
+        filesFinished = s3Offset.getOffset().equals(S3Constants.MINUS_ONE);
+        if (!filesFinished) {
+          break;
+        }
       }
     }
     return filesFinished;

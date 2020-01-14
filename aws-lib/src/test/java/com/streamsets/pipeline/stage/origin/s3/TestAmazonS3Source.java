@@ -185,6 +185,8 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
 
   @Test
   public void testAllFilesAreFinished() throws Exception {
+    String emptyOffsetString = "::0::::0";
+
     AmazonS3SourceImpl amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
 
     String offset1 = "FL_insurance.txt::1000::0dd65bf073ad0616a91901c9349dd5a4::1534360";
@@ -241,13 +243,70 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
 
     amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
     Assert.assertTrue(amazonS3Source.allFilesAreFinished());
+
+    // Start again with different offsets
+    amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
+    // Mix offsets that represent files and not
+    offset1 = emptyOffsetString;
+    offset2 = emptyOffsetString;
+    offset3 = "FL_insurance.txt::-1::0dd65bf073ad0616a91901c9349dd5a4::1534361";
+
+    listOfOffsets = new ArrayList<>();
+    listOfOffsets.add(S3Offset.fromString(offset1));
+    listOfOffsets.add(S3Offset.fromString(offset2));
+    listOfOffsets.add(S3Offset.fromString(offset3));
+
+    mapOfOffsets = new HashMap<>();
+    for (int iterator = 0; iterator < listOfOffsets.size(); iterator++) {
+      mapOfOffsets.put(String.valueOf(iterator), listOfOffsets.get(iterator).toString());
+    }
+
+    amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
+    Assert.assertTrue(amazonS3Source.allFilesAreFinished());
+
+    // Start again with different offsets
+    amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
+    offset1 = emptyOffsetString;
+    offset2 = "FL_insurance.txt::-1::0dd65bf073ad0616a91901c9349dd5a4::1534361";
+    offset3 = emptyOffsetString;
+    listOfOffsets = new ArrayList<>();
+    listOfOffsets.add(S3Offset.fromString(offset1));
+    listOfOffsets.add(S3Offset.fromString(offset2));
+    listOfOffsets.add(S3Offset.fromString(offset3));
+
+    mapOfOffsets = new HashMap<>();
+    for (int iterator = 0; iterator < listOfOffsets.size(); iterator++) {
+      mapOfOffsets.put(String.valueOf(iterator), listOfOffsets.get(iterator).toString());
+    }
+
+    amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
+    Assert.assertTrue(amazonS3Source.allFilesAreFinished());
+
+    // Start again with different offsets
+    amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
+    offset1 = emptyOffsetString;
+    offset2 = "FL_insurance.txt::10::0dd65bf073ad0616a91901c9349dd5a4::1534361";
+    offset3 = emptyOffsetString;
+
+    listOfOffsets = new ArrayList<>();
+    listOfOffsets.add(S3Offset.fromString(offset1));
+    listOfOffsets.add(S3Offset.fromString(offset2));
+    listOfOffsets.add(S3Offset.fromString(offset3));
+
+    mapOfOffsets = new HashMap<>();
+    for (int iterator = 0; iterator < listOfOffsets.size(); iterator++) {
+      mapOfOffsets.put(String.valueOf(iterator), listOfOffsets.get(iterator).toString());
+    }
+
+    amazonS3Source.createInitialOffsetsMap(mapOfOffsets);
+    Assert.assertFalse(amazonS3Source.allFilesAreFinished());
   }
 
   @Test
   public void testGetOffsetNoOrphanThreads() throws Exception {
     AmazonS3SourceImpl amazonS3Source = new AmazonS3SourceImpl(createConfigTimestamp());
 
-    String emptyOffsetString = "::-1::::0";
+    String emptyOffsetString = "::0::::0";
 
     Assert.assertEquals(emptyOffsetString, amazonS3Source.getOffset(0).toString());
 

@@ -95,4 +95,11 @@ public class S3Offset implements Serializable {
     }
     return new S3Offset(null, ZERO, null, ZERO);
   }
+
+  public boolean representsFile() {
+    return !getKey().equals(S3Constants.EMPTY) ||
+        !getOffset().equals(S3Constants.ZERO) ||
+        !geteTag().equals(S3Constants.EMPTY) ||
+        !getTimestamp().equals(S3Constants.ZERO);
+  }
 }
