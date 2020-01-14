@@ -20,8 +20,9 @@ import com.streamsets.pipeline.api.impl.Utils;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
+import java.util.Queue;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -49,7 +50,6 @@ public final class TopologicalSorter<V> {
    * @return Topological sorted order for the @{@link DirectedGraph}
    */
   public SortedSet<V> sort() {
-    Utils.checkState(!new CycleDetector<>(directedGraph).isGraphCyclic(), "Cycles found in the graph");
     final Map<V, Integer> vertexToSortedNumber = new HashMap<>();
     Map<V, Integer> inEdgesCount = new TreeMap<>();
 
@@ -58,39 +58,43 @@ public final class TopologicalSorter<V> {
       Integer sortedNumber2 = vertexToSortedNumber.get(o2);
       if (sortedNumber1.intValue() == sortedNumber2.intValue()) {
         //If there is no tie comparator and there is a tie, arrange o1 before o2.
-        return (tieComparator != null)? tieComparator.compare(o1, o2) : -1;
+        return (tieComparator != null) ? tieComparator.compare(o1, o2) : -1;
       }
       return sortedNumber1.compareTo(sortedNumber2);
     });
 
-    final AtomicInteger startNumber = new AtomicInteger(1);
 
     directedGraph.vertices().forEach(vertex -> {
       Collection<V> inwardVertices = directedGraph.getInwardEdgeVertices(vertex);
       inEdgesCount.put(vertex, inwardVertices.size());
     });
 
-    while (!inEdgesCount.isEmpty()) {
-      Set<V> nextVertices = nextVerticesForProcessing(inEdgesCount);
-      nextVertices.forEach(vertexForProcessing -> {
-        inEdgesCount.remove(vertexForProcessing);
-        updateCounts(vertexForProcessing, inEdgesCount);
-        vertexToSortedNumber.put(vertexForProcessing, startNumber.getAndIncrement());
-      });
+    Queue<V> currentVertices = inEdgesCount.keySet()
+                                           .stream()
+                                           .filter(v -> inEdgesCount.get(v) == 0)
+                                           .collect(Collectors.toCollection(LinkedList::new));
+
+
+    final AtomicInteger order = new AtomicInteger(0);
+
+    while(!currentVertices.isEmpty()) {
+      V currentVertex = currentVertices.poll();
+      vertexToSortedNumber.put(currentVertex, order.getAndIncrement());
+      sortedSet.add(currentVertex);
+      directedGraph.getOutwardEdgeVertices(currentVertex).forEach(
+          neighbor -> {
+            int inDegree = inEdgesCount.get(neighbor);
+            if(--inDegree == 0) {
+              currentVertices.add(neighbor);
+            }
+            inEdgesCount.put(neighbor, inDegree);
+          }
+      );
     }
-    sortedSet.addAll(vertexToSortedNumber.keySet());
+    // If our resulting topological ordering does not contain all the vertices it necessarily means that
+    // there is a cycle
+    Utils.checkState(sortedSet.size() == directedGraph.vertices().size(), "Graph contains cycles");
     return sortedSet;
   }
 
-  private Set<V> nextVerticesForProcessing(Map<V, Integer> inEdgesCount) {
-    return inEdgesCount.keySet().stream().filter(v-> inEdgesCount.get(v) == 0).collect(Collectors.toSet());
-  }
-
-  private void updateCounts(V v, Map<V, Integer> inEdgesCount) {
-    Collection<V> outwardVertices = directedGraph.getOutwardEdgeVertices(v);
-    outwardVertices.forEach(outwardVertex->{
-      int inEdgeCount = inEdgesCount.get(outwardVertex);
-      inEdgesCount.put(outwardVertex, inEdgeCount - 1);
-    });
-  }
 }

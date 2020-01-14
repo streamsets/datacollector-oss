@@ -20,6 +20,7 @@ import org.junit.Test;
 
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Random;
 import java.util.SortedSet;
 
 public class TestTopologicalSorter {
@@ -102,4 +103,86 @@ public class TestTopologicalSorter {
       i++;
     }
   }
+
+  private int randomInteger(Random rng, int lo, int hi) {
+    int r = Math.abs(rng.nextInt());
+    int n = hi - lo + 1;
+    return (r % n) + lo;
+  }
+
+  // Edges are always a -> b such that a < b, so no loop is possible
+  private DirectedGraph<Integer> randomDirectedAcyclicGraph(int n, int degreeLo, int degreeHi, int seed) {
+    DirectedGraph<Integer> ret = new DirectedGraph<>();
+    Random rng = new Random(seed);
+    for(int i = 1; i < n; ++i) {
+      int degree = randomInteger(rng, degreeLo, degreeHi);
+      for(int j = 0; j < degree; ++j) {
+        int neighbor = randomInteger(rng, 0, i - 1);
+        ret.addDirectedEdge(neighbor, i);
+      }
+    }
+    return ret;
+  }
+
+  // Graph from SDC-13273
+  @Test
+  public void testTopologicalSorterDAG() {
+    DirectedGraph<Integer> g = new DirectedGraph<>();
+
+    Assert.assertTrue(g.addVertex(0));
+    Assert.assertTrue(g.addVertex(1));
+    Assert.assertTrue(g.addVertex(2));
+    Assert.assertTrue(g.addVertex(3));
+    Assert.assertTrue(g.addVertex(4));
+
+    g.addDirectedEdge(0, 1);
+    g.addDirectedEdge(0, 2);
+    g.addDirectedEdge(0, 3);
+    g.addDirectedEdge(0, 4);
+
+    g.addDirectedEdge(1, 2);
+    g.addDirectedEdge(1, 3);
+    g.addDirectedEdge(1, 4);
+
+    g.addDirectedEdge(2, 4);
+
+    g.addDirectedEdge(3, 4);
+
+    TopologicalSorter topologicalSorter = new TopologicalSorter(g, Comparator.naturalOrder());
+
+    SortedSet<Integer> order = topologicalSorter.sort();
+
+    int zero = order.first();
+    order.remove(zero);
+
+    Assert.assertEquals(0, zero);
+
+    int one = order.first();
+    order.remove(one);
+
+    Assert.assertEquals(1, one);
+
+    int two = order.first();
+    order.remove(two);
+
+    int three = order.first();
+    order.remove(three);
+
+    Assert.assertEquals(2, two);
+    Assert.assertEquals(3, three);
+
+    int four = order.first();
+    order.remove(four);
+
+    Assert.assertEquals(4, four);
+  }
+
+
+  @Test
+  public void testTopologicalSorterBigGraph() {
+    DirectedGraph<Integer> g = randomDirectedAcyclicGraph(100000, 0, 20, 1234);
+    TopologicalSorter topologicalSorter = new TopologicalSorter(g, (Comparator<Integer>) (a, b) -> 0);
+    topologicalSorter.sort();
+  }
+
 }

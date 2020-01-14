@@ -77,7 +77,7 @@ public class TestTableOrderProvider {
           .put("d", "a")
           .put("d", "c")
           .put("f", "a")
-          .put("f", "a")
+          .put("f", "d")
           .put("e", "f")
           .build();
 
