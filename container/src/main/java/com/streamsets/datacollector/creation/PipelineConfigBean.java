@@ -537,6 +537,9 @@ public class PipelineConfigBean implements Stage {
   @ConfigDefBean
   public AmazonEMRConfig amazonEMRConfig;
 
+  @ConfigDefBean
+  public com.streamsets.transformer.config.AmazonEMRConfig transformerEMRConfig;
+
   @Override
   public List<ConfigIssue> init(Info info, Context context) {
     return Collections.emptyList();
