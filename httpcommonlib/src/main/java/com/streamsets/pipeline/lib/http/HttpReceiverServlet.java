@@ -105,7 +105,9 @@ public class HttpReceiverServlet extends HttpServlet {
     String reqAppId = req.getHeader(HttpConstants.X_SDC_APPLICATION_ID_HEADER);
 
     if (reqAppId == null && receiver.isAppIdViaQueryParamAllowed()) {
-      reqAppId = getQueryParameters(req).get(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM)[0];
+      String[] ids = getQueryParameters(req).get(HttpConstants.SDC_APPLICATION_ID_QUERY_PARAM);
+      if(ids!=null && ids.length>0)
+        reqAppId = ids[0];
     }
 
     if (reqAppId == null) {
@@ -122,7 +124,7 @@ public class HttpReceiverServlet extends HttpServlet {
 
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-    if (validateAppId(req, res)) {
+    if (getReceiver().isApplicationIdEnabled() && validateAppId(req, res)) {
       LOG.debug("Validation from '{}', OK", req.getRemoteAddr());
       res.setHeader(HttpConstants.X_SDC_PING_HEADER, HttpConstants.X_SDC_PING_VALUE);
       res.setStatus(HttpServletResponse.SC_OK);
@@ -136,7 +138,7 @@ public class HttpReceiverServlet extends HttpServlet {
   boolean validatePostRequest(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
     boolean valid = false;
-    if (validateAppId(req, res)) {
+    if (getReceiver().isApplicationIdEnabled() && validateAppId(req, res)) {
       String compression = req.getHeader(HttpConstants.X_SDC_COMPRESSION_HEADER);
       if (compression == null) {
         valid = true;

@@ -72,7 +72,7 @@ public class RawHttpConfigs extends HttpConfigs {
   public int maxConcurrentRequests;
 
   @ConfigDef(
-      required = true,
+      required = false,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Application ID",
       description = "Only HTTP requests presenting this token will be accepted.",
@@ -137,6 +137,11 @@ public class RawHttpConfigs extends HttpConfigs {
   @Override
   public boolean getNeedClientAuth() {
     return needClientAuth;
+  }
+
+  @Override
+  public boolean isApplicationIdEnabled(){
+    return appId != null && appId.get().length()>0 ;
   }
 
 }

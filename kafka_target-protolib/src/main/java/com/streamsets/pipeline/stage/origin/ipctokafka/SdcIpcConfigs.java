@@ -116,4 +116,9 @@ public class SdcIpcConfigs extends HttpConfigs {
   public TlsConfigBean getTlsConfigBean() {
     return tlsConfigBean;
   }
+
+  @Override
+  public boolean isApplicationIdEnabled() {
+    return true;
+  }
 }

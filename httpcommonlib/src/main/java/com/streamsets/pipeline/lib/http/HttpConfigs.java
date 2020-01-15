@@ -48,6 +48,8 @@ public abstract class HttpConfigs {
 
   public abstract TlsConfigBean getTlsConfigBean();
 
+  public abstract boolean isApplicationIdEnabled();
+
   public boolean getNeedClientAuth() {
     return false;
   }

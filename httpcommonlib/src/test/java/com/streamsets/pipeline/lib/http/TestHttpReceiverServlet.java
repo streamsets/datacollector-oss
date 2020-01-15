@@ -94,12 +94,15 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
+    Mockito.when(receiver.isApplicationIdEnabled()).thenReturn(true);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
 
     servlet = Mockito.spy(servlet);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+
 
     // invalid ID;
     Mockito.doReturn(false).when(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
@@ -122,8 +125,10 @@ public class TestHttpReceiverServlet {
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
     Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
+    Mockito.when(receiver.isApplicationIdEnabled()).thenReturn(true);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
     servlet = Mockito.spy(servlet);
+
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
@@ -134,7 +139,6 @@ public class TestHttpReceiverServlet {
     Mockito.verify(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.verifyZeroInteractions(req);
     Mockito.verifyZeroInteractions(res);
-    Mockito.verify(servlet, Mockito.times(0)).getReceiver();
 
     // valid AppID no compression valid receiver
     Mockito.reset(req);
@@ -146,7 +150,6 @@ public class TestHttpReceiverServlet {
     Mockito.verify(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.verify(req, Mockito.times(1)).getHeader(Mockito.eq(HttpConstants.X_SDC_COMPRESSION_HEADER));
     Mockito.verifyZeroInteractions(res);
-    Mockito.verify(servlet, Mockito.times(1)).getReceiver();
     Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.eq(req), Mockito.eq(res));
 
     // valid AppID no compression invalid receiver
@@ -154,13 +157,13 @@ public class TestHttpReceiverServlet {
     Mockito.reset(res);
     Mockito.reset(servlet);
     Mockito.reset(receiver);
+    Mockito.doReturn(true).when(receiver).isApplicationIdEnabled();
     Mockito.doReturn(false).when(receiver).validate(Mockito.eq(req), Mockito.eq(res));
     Mockito.doReturn(true).when(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Assert.assertFalse(servlet.validatePostRequest(req, res));
     Mockito.verify(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.verify(req, Mockito.times(1)).getHeader(Mockito.eq(HttpConstants.X_SDC_COMPRESSION_HEADER));
     Mockito.verifyZeroInteractions(res);
-    Mockito.verify(servlet, Mockito.times(1)).getReceiver();
     Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.eq(req), Mockito.eq(res));
 
     // valid AppID with compression valid receiver
@@ -168,13 +171,13 @@ public class TestHttpReceiverServlet {
     Mockito.reset(res);
     Mockito.reset(servlet);
     Mockito.reset(receiver);
+    Mockito.doReturn(true).when(receiver).isApplicationIdEnabled();
     Mockito.doReturn(true).when(receiver).validate(Mockito.eq(req), Mockito.eq(res));
     Mockito.doReturn(true).when(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.doReturn(HttpConstants.SNAPPY_COMPRESSION).when(req).getHeader(HttpConstants.X_SDC_COMPRESSION_HEADER);
     Assert.assertTrue(servlet.validatePostRequest(req, res));
     Mockito.verify(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.verify(req, Mockito.times(1)).getHeader(Mockito.eq(HttpConstants.X_SDC_COMPRESSION_HEADER));
-    Mockito.verify(servlet, Mockito.times(1)).getReceiver();
     Mockito.verify(receiver, Mockito.times(1)).validate(Mockito.eq(req), Mockito.eq(res));
 
     // valid AppID with compression valid receiver
@@ -182,13 +185,13 @@ public class TestHttpReceiverServlet {
     Mockito.reset(res);
     Mockito.reset(servlet);
     Mockito.reset(receiver);
+    Mockito.doReturn(true).when(receiver).isApplicationIdEnabled();
     Mockito.doReturn(true).when(receiver).validate(Mockito.eq(req), Mockito.eq(res));
     Mockito.doReturn(true).when(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.doReturn("invalid-compression").when(req).getHeader(HttpConstants.X_SDC_COMPRESSION_HEADER);
     Assert.assertFalse(servlet.validatePostRequest(req, res));
     Mockito.verify(servlet).validateAppId(Mockito.eq(req), Mockito.eq(res));
     Mockito.verify(req, Mockito.times(1)).getHeader(Mockito.eq(HttpConstants.X_SDC_COMPRESSION_HEADER));
-    Mockito.verify(servlet, Mockito.times(0)).getReceiver();
     Mockito.verify(receiver, Mockito.times(0)).validate(Mockito.eq(req), Mockito.eq(res));
     Mockito
         .verify(res, Mockito.times(1))

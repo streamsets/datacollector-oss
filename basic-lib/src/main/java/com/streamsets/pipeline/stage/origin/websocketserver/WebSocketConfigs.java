@@ -137,6 +137,11 @@ public class WebSocketConfigs extends HttpConfigs {
     return tlsConfigBean;
   }
 
+  @Override
+  public boolean isApplicationIdEnabled() {
+    return true;
+  }
+
   int getMaxRequestSizeMB() {
     return maxRequestSizeMB;
   }

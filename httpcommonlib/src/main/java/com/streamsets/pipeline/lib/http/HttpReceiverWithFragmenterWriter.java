@@ -68,6 +68,11 @@ public class HttpReceiverWithFragmenterWriter implements HttpReceiver {
   }
 
   @Override
+  public boolean isApplicationIdEnabled() {
+    return httpConfigs.isApplicationIdEnabled();
+  }
+
+  @Override
   public CredentialValue getAppId() {
     return httpConfigs.getAppId();
   }
