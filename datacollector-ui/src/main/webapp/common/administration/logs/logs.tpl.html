@@ -68,13 +68,13 @@
             aria-labelledby="dropdownMenu1">
 
           <li role="presentation" ng-if="common.isUserAdmin">
-            <a role="menuitem" tabindex="-1" ng-href="/collector/logs">
+            <a role="menuitem" tabindex="-1" ng-href="collector/logs">
               <span translate="logs.all">All</span>
             </a>
           </li>
 
           <li role="presentation" ng-repeat="pipeline in pipelines">
-            <a role="menuitem" tabindex="-1" ng-href="/collector/logs/{{pipeline.title}}/{{pipeline.name}}">
+            <a role="menuitem" tabindex="-1" ng-href="collector/logs/{{pipeline.title}}/{{pipeline.name}}">
               <span>{{pipeline.title}}/{{pipeline.name}}</span>
             </a>
           </li>
@@ -82,7 +82,7 @@
         </ul>
       </div>
 
-      <a ng-if="filterPipeline" ng-href="/collector/pipeline/{{filterPipeline}}">( view pipeline... )</a>
+      <a ng-if="filterPipeline" ng-href="collector/pipeline/{{filterPipeline}}">( view pipeline... )</a>
 
     </div>
 
