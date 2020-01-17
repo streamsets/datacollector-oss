@@ -209,6 +209,20 @@ public class JdbcUtil {
       return true;
     } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0, 2))) {
       return true;
+    } else if (connectionString.contains(":db2:") && StringUtils.isEmpty(sqlState)) {
+      // DB2 driver wraps the original SQL Exception and its meaning is lost. This change is so that we can see
+      // the original SQLException that triggered the error
+      SQLException nextException = ex.getNextException();
+      if (nextException != null) {
+        String nextExceptionSqlState = nextException.getSQLState();
+        if (!StringUtils.isEmpty(nextExceptionSqlState)) {
+          for (String s : customDataSqlCodes) {
+            if (nextExceptionSqlState.equals(s.trim())) {
+              return true;
+            }
+          }
+        }
+      }
     }
     return false;
   }
