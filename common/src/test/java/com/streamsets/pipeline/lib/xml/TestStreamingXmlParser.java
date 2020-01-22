@@ -19,9 +19,11 @@ import com.streamsets.pipeline.api.Field;
 import org.junit.Assert;
 import org.junit.Test;
 
+import javax.xml.stream.XMLEventReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -260,6 +262,22 @@ public class TestStreamingXmlParser {
     f = parser.read();
     Assert.assertNull(f);
     parser.close();
+  }
+
+  @Test
+  public void testParserComplexInputAndInitialPosition() throws Exception {
+    StreamingXmlParser parser = new StreamingXmlParser(
+        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
+        "root[1]/toplevel[3]/blargh[@theone='yes']/record");
+    parser.read();
+    // Store the current stack
+    LinkedList<String> elementNameStack = parser.elementNameStack;
+    long pos = parser.getReaderPosition();
+    // Instance new parser with initial position
+    parser = new StreamingXmlParser(
+        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
+        "root[1]/toplevel[3]/blargh[@theone='yes']/record", pos);
+    Assert.assertEquals(elementNameStack, parser.elementNameStack);
   }
 
   @Test

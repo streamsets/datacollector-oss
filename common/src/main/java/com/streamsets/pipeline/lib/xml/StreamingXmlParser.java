@@ -61,7 +61,7 @@ public class StreamingXmlParser {
   private boolean closed;
 
   private String lastParsedFieldXpathPrefix;
-  private final LinkedList<String> elementNameStack = new LinkedList<>();
+  final LinkedList<String> elementNameStack = new LinkedList<>();
 
   private int generatedNsPrefixCount = 1;
   private final Map<String, String> namespaceUriToPrefix = new HashMap<>();
@@ -124,7 +124,7 @@ public class StreamingXmlParser {
     if (initialPosition > 0) {
       //fastforward to initial position
       while (hasNext(xmlEventReader) && peek(xmlEventReader).getLocation().getCharacterOffset() < initialPosition) {
-        read(xmlEventReader);
+        processNextEvent();
         fastForwardLeaseReader();
       }
       xmlEventReader.clearLastMatch();
@@ -187,14 +187,7 @@ public class StreamingXmlParser {
       // we need to skip first level elements that are not the record delimiter and we have to ignore record delimiter
       // elements deeper than first level
       while (hasNext(xmlEventReader) && !isStartOfRecord(peek(xmlEventReader), depth)) {
-        XMLEvent event = read(xmlEventReader);
-        if (event.isStartElement()) {
-          elementNameStack.addFirst(getNameAndTrackNs(event.asStartElement().getName()));
-          depth++;
-        } else if (event.getEventType() == XMLEvent.END_ELEMENT) {
-          elementNameStack.removeFirst();
-          depth--;
-        }
+        depth += processNextEvent();
       }
       if (hasNext(xmlEventReader)) {
         StartElement startE = (StartElement) xmlEventReader.getLastMatchingEvent();
@@ -368,6 +361,19 @@ public class StreamingXmlParser {
   }
 
   protected void throwIfOverMaxObjectLength() throws XMLStreamException, ObjectLengthException {
+  }
+
+  private int processNextEvent() throws XMLStreamException {
+    XMLEvent event = read(xmlEventReader);
+    int depthUpdate = 0;
+    if (event.isStartElement()) {
+      elementNameStack.addFirst(getNameAndTrackNs(event.asStartElement().getName()));
+      depthUpdate = 1;
+    } else if (event.getEventType() == XMLEvent.END_ELEMENT) {
+      elementNameStack.removeFirst();
+      depthUpdate = -1;
+    }
+    return depthUpdate;
   }
 
 }
