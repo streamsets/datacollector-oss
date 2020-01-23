@@ -73,8 +73,11 @@ public class TableContextUtil {
   public static final String GENERIC_PARTITION_SIZE_GT_ZERO_MSG = "partition size must be greater than zero";
   public static final String SQL_SERVER_CDC_TABLE_SUFFIX = "_CT";
 
+  public static final int TYPE_ORACLE_BINARY_FLOAT = 100;
+  public static final int TYPE_ORACLE_BINARY_DOUBLE = 101;
   public static final int TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE = -101;
   public static final int TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE = -102;
+  public static final int TYPE_SQL_SERVER_DATETIMEOFFSET = -155;
 
   public static final String OFFSET_VALUE_NANO_SEPARATOR = "<n>";
   public static final String TIMESTAMP_NANOS_PATTERN = "^[0-9]+" + OFFSET_VALUE_NANO_SEPARATOR + "[0-9]+$";
@@ -94,10 +97,13 @@ public class TableContextUtil {
     .add(Types.NUMERIC)
     .build();
 
-  public static final Map<DatabaseVendor, Set<Integer>> VENDOR_PARTITIONABLE_TYPES = ImmutableMap.<DatabaseVendor, Set<Integer>>builder()
+  public static final Map<DatabaseVendor, Set<Integer>> VENDOR_PARTITIONABLE_TYPES = ImmutableMap.<DatabaseVendor, Set<Integer>> builder()
     .put(DatabaseVendor.ORACLE, ImmutableSet.of(
       TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE,
       TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE
+    ))
+    .put(DatabaseVendor.SQL_SERVER, ImmutableSet.of(
+      TYPE_SQL_SERVER_DATETIMEOFFSET
     ))
     .build();
 
@@ -144,6 +150,11 @@ public class TableContextUtil {
         switch (jdbcType) {
           case TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE: return "TIMESTAMP WITH TIME ZONE";
           case TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE: return "TIMESTAMP WITH LOCAL TIME ZONE";
+        }
+        break;
+      case SQL_SERVER:
+        switch (jdbcType) {
+          case TYPE_SQL_SERVER_DATETIMEOFFSET: return "SQLSERVER DATETIMEOFFSET";
         }
         break;
     }
@@ -708,6 +719,16 @@ public class TableContextUtil {
                 ));
             }
           }
+          break;
+        case SQL_SERVER:
+          if (TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.SQL_SERVER).contains(offsetJdbcType)) {
+            if (offsetJdbcType == TableContextUtil.TYPE_SQL_SERVER_DATETIMEOFFSET) {
+              final ZonedDateTime left = ZonedDateTime.parse(leftOffset, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+              final ZonedDateTime right = ZonedDateTime.parse(rightOffset, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+              return left.compareTo(right);
+            }
+          }
+          break;
       }
     }
 
@@ -769,6 +790,16 @@ public class TableContextUtil {
               throw new IllegalStateException(Utils.format("Unsupported type: {}", offsetColumnType));
           }
         }
+        break;
+      case SQL_SERVER:
+        if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.SQL_SERVER).contains(offsetColumnType)) {
+          if (offsetColumnType == TableContextUtil.TYPE_SQL_SERVER_DATETIMEOFFSET) {
+            return ZonedDateTime.parse(offset, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
+                .plusSeconds(Integer.parseInt(partitionSize))
+                .format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+          }
+        }
+        break;
     }
 
     switch (offsetColumnType) {

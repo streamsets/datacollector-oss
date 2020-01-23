@@ -47,6 +47,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import microsoft.sql.DateTimeOffset;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -446,6 +447,18 @@ public class JdbcUtil {
                     throw new IllegalStateException(Utils.format("Unexpected type: {}", colType));
                 }
               }
+              break;
+
+            case SQL_SERVER:
+              if(TableContextUtil.VENDOR_PARTITIONABLE_TYPES.get(DatabaseVendor.SQL_SERVER).contains(colType)) {
+                if (colType == TableContextUtil.TYPE_SQL_SERVER_DATETIMEOFFSET) {
+                  DateTimeOffset dateTimeOffset = rs.getObject(MIN_MAX_OFFSET_VALUE_QUERY_RESULT_SET_INDEX, DateTimeOffset.class);
+                  if (dateTimeOffset != null) {
+                    minMaxValue = dateTimeOffset.getOffsetDateTime().toZonedDateTime().format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+                  }
+                }
+              }
+              break;
           }
 
           if(minMaxValue == null) {
@@ -637,14 +650,14 @@ public class JdbcUtil {
         // Firstly resolve some vendor specific types - we are careful in case that someone will be clashing
         if(vendor == DatabaseVendor.ORACLE) {
           switch (md.getColumnType(columnIndex)) {
-            case 100: // BINARY_FLOAT
+            case TableContextUtil.TYPE_ORACLE_BINARY_FLOAT:
               float floatValue = rs.getFloat(columnIndex);
               return Field.create(Field.Type.FLOAT, rs.wasNull() ? null : floatValue);
-            case 101: // BINARY_DOUBLE
+            case TableContextUtil.TYPE_ORACLE_BINARY_DOUBLE:
               double doubleValue = rs.getDouble(columnIndex);
               return Field.create(Field.Type.DOUBLE, rs.wasNull() ? null : doubleValue);
-            case -101: // TIMESTAMP WITH TIMEZONE
-            case -102: // TIMESTAMP WITH LOCAL TIMEZONE
+            case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_TIME_ZONE:
+            case TableContextUtil.TYPE_ORACLE_TIMESTAMP_WITH_LOCAL_TIME_ZONE:
               OffsetDateTime offsetDateTime = rs.getObject(columnIndex, OffsetDateTime.class);
               if (offsetDateTime == null) {
                 return timestampToString ?
@@ -659,6 +672,19 @@ public class JdbcUtil {
             case Types.SQLXML:
               SQLXML xml = rs.getSQLXML(columnIndex);
               return Field.create(Field.Type.STRING, xml == null ? null : xml.getString());
+          }
+        } else if (vendor == DatabaseVendor.SQL_SERVER) {
+          if (md.getColumnType(columnIndex) == TableContextUtil.TYPE_SQL_SERVER_DATETIMEOFFSET) {
+              DateTimeOffset dateTimeOffset = rs.getObject(columnIndex, DateTimeOffset.class);
+              if (dateTimeOffset == null) {
+                return timestampToString ?
+                    Field.create(Field.Type.STRING, null) :
+                    Field.create(Field.Type.ZONED_DATETIME, null);
+              }
+              if (timestampToString) {
+                return Field.create(Field.Type.STRING, dateTimeOffset.toString());
+              }
+              return Field.create(Field.Type.ZONED_DATETIME, dateTimeOffset.getOffsetDateTime().toZonedDateTime());
           }
         }
 
