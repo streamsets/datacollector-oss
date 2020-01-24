@@ -45,16 +45,24 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class PipelineConfigurationUtil {
 
   private static final String KEY = "key";
   private static final String VALUE = "value";
+  private static final String PIPELINE_ID_REGEX = "[\\W]|_";
 
   private static final String SPARK_PROCESSOR_STAGE = "com_streamsets_pipeline_stage_processor_spark_SparkDProcessor";
 
   private PipelineConfigurationUtil() {}
+
+  public static String generatePipelineId(String pipelineTitle) {
+    return pipelineTitle
+        .substring(0, Math.min(pipelineTitle.length(), 10))
+        .replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
+  }
 
   public static Map<String, String> getFlattenedStringMap(String mapName, PipelineConfiguration pipelineConf) {
     Map<String, String> result = new HashMap<>();

@@ -127,7 +127,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -180,8 +179,6 @@ public class PipelineStoreResource {
   private static final String SAMPLE_MICROSERVICE_PIPELINE = "sampleMicroservicePipeline.json";
 
   private static final String PIPELINE_IDS = "pipelineIds";
-
-  private static final String PIPELINE_ID_REGEX = "[\\W]|_";
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
@@ -719,7 +716,7 @@ public class PipelineStoreResource {
   ) throws PipelineException, IOException {
     String pipelineId = pipelineTitle;
     if (autoGeneratePipelineId) {
-      pipelineId = pipelineTitle.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
+      pipelineId = PipelineConfigurationUtil.generatePipelineId(pipelineTitle);
     }
     RestAPIUtils.injectPipelineInMDC(pipelineTitle + "/" + pipelineId);
     PipelineConfiguration pipelineConfig = store.create(user, pipelineId, pipelineTitle, description, false, draft,
@@ -865,7 +862,7 @@ public class PipelineStoreResource {
       @QueryParam("executionMode") ExecutionMode executionMode,
       List<StageConfigurationJson> stageConfigurations
   ) throws PipelineException {
-    String pipelineId = pipelineFragmentTitle.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
+    String pipelineId = PipelineConfigurationUtil.generatePipelineId(pipelineFragmentTitle);
     RestAPIUtils.injectPipelineInMDC(pipelineFragmentTitle + "/" + pipelineId);
     PipelineFragmentConfiguration pipelineFragmentConfig = store.createPipelineFragment(
         user,
@@ -1453,7 +1450,7 @@ public class PipelineStoreResource {
         newPipelineConfig = store.load(name, rev);
       } else {
         if (autoGeneratePipelineId) {
-          name = label.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
+          name = PipelineConfigurationUtil.generatePipelineId(label);
         }
         newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft,
             new HashMap<String, Object>()
@@ -1461,7 +1458,7 @@ public class PipelineStoreResource {
       }
     } else {
       if (autoGeneratePipelineId) {
-        name = label.replaceAll(PIPELINE_ID_REGEX, "") + UUID.randomUUID().toString();
+        name = PipelineConfigurationUtil.generatePipelineId(label);
       }
       newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft,
           new HashMap<String, Object>()

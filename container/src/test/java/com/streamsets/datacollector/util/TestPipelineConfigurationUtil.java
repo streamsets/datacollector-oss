@@ -15,7 +15,8 @@
  */
 package com.streamsets.datacollector.util;
 
-import static org.junit.Assert.assertEquals;
+import com.google.common.io.Resources;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -23,10 +24,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import org.junit.Test;
-
-import com.google.common.io.Resources;
-import com.streamsets.datacollector.util.PipelineConfigurationUtil;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class TestPipelineConfigurationUtil {
 
@@ -36,5 +36,13 @@ public class TestPipelineConfigurationUtil {
       new String(Files.readAllBytes(Paths.get(Resources.getResource("sample_pipeline.json").toURI())),
         StandardCharsets.UTF_8);
     assertEquals("streamsets-datacollector-cdh5_4_0-lib", PipelineConfigurationUtil.getSourceLibName(pipelineJson));
+  }
+
+  @Test
+  public void testGeneratePipelineId() {
+    String pipelineId = PipelineConfigurationUtil.generatePipelineId("samplePipeline12345");
+    assertEquals(46, pipelineId.length());
+    assertTrue(pipelineId.startsWith("samplePipe"));
+    assertFalse(pipelineId.startsWith("samplePipeline12345"));
   }
 }
