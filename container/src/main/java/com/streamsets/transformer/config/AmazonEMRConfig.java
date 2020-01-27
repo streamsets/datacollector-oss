@@ -17,7 +17,6 @@ package com.streamsets.transformer.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
@@ -25,12 +24,10 @@ import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 
-import java.util.Properties;
+import static com.streamsets.datacollector.config.AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT;
+import static com.streamsets.datacollector.config.AmazonEMRConfig.SERVICE_ROLE_DEFAULT;
 
 public class AmazonEMRConfig {
-
-  public static final String SERVICE_ROLE_DEFAULT = "EMR_DefaultRole";
-  public static final String JOB_FLOW_ROLE_DEFAULT = "EMR_EC2_DefaultRole";
 
   @ConfigDef(
       required = true,

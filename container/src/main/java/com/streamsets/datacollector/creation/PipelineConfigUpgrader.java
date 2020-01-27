@@ -86,6 +86,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 15:
         upgradeV15ToV16(configs);
+        // fall through
+      case 16:
+        upgradeV16ToV17(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -213,33 +216,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
 
   private void addAmazonEmrConfigs(List<Config> configs) {
     String amazonEmrConfigPrefix = "amazonEMRConfig.";
-    configs.add(new Config("logLevel", "INFO"));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_STAGING_URI, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_PREFIX, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_ID, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.TERMINATE_CLUSTER, false));
+    addEmrConfigs(configs, amazonEmrConfigPrefix);
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ENABLE_EMR_DEBUGGING, true));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_LOG_URI, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SERVICE_ROLE, AmazonEMRConfig.SERVICE_ROLE_DEFAULT));
-    configs.add(new Config(
-        amazonEmrConfigPrefix + AmazonEMRConfig.JOB_FLOW_ROLE,
-        AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT
-    ));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.VISIBLE_TO_ALL_USERS, true));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.LOGGING_ENABLED, true));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.EC2_SUBNET_ID, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_SECURITY_GROUP, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_SECURITY_GROUP, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.INSTANCE_COUNT, 2));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ACCESS_KEY, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SECRET_KEY, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.PROVISION_NEW_CLUSTER, false));
+    configs.add(new Config("logLevel", "INFO"));
   }
 
   private final static Set<String> PROPERTIES_TO_CHECK_FOR_CUSTOM =
@@ -312,5 +291,38 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void upgradeV15ToV16(List<Config> configs) {
     configs.add(new Config("preprocessScript", ""));
   }
-
+  
+  private void upgradeV16ToV17(List<Config> configs) {
+    String amazonEmrConfigPrefix = "transformerEMRConfig.";
+    addEmrConfigs(configs, amazonEmrConfigPrefix);
+  }
+  
+  private void addEmrConfigs(List<Config> configs, String amazonEmrConfigPrefix) {
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_STAGING_URI, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_PREFIX, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_ID, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.TERMINATE_CLUSTER, false));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_LOG_URI, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SERVICE_ROLE, AmazonEMRConfig.SERVICE_ROLE_DEFAULT));
+    configs.add(new Config(
+      amazonEmrConfigPrefix + AmazonEMRConfig.JOB_FLOW_ROLE,
+      AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT
+    ));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.VISIBLE_TO_ALL_USERS, true));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.LOGGING_ENABLED, true));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.EC2_SUBNET_ID, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_SECURITY_GROUP, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_SECURITY_GROUP, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.INSTANCE_COUNT, 2));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ACCESS_KEY, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SECRET_KEY, null));
+    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.PROVISION_NEW_CLUSTER, false));
+  }
+  
 }
