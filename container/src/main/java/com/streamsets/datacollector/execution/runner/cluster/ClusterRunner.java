@@ -56,7 +56,6 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipeline;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder;
 import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
-import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -73,7 +72,6 @@ import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -148,7 +146,6 @@ public class ClusterRunner extends AbstractRunner {
   private ScheduledFuture<?> metricRunnableFuture;
   private volatile boolean isClosed;
   private ScheduledFuture<?> updateCheckerFuture;
-  private UpdateChecker updateChecker;
   private MetricsEventRunnable metricsEventRunnable;
   private PipelineConfiguration pipelineConf;
   private int maxRetries;
@@ -1057,8 +1054,6 @@ public class ClusterRunner extends AbstractRunner {
   }
 
   private void scheduleRunnable(String user, PipelineConfiguration pipelineConf, PipelineConfigBean pipelineConfigBean) {
-    updateChecker = new UpdateChecker(getRuntimeInfo(), getConfiguration(), pipelineConf, this);
-    updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
     if(metricsEventRunnable != null) {
       metricRunnableFuture =
         runnerExecutor.scheduleAtFixedRate(metricsEventRunnable, 0, metricsEventRunnable.getScheduledDelay(),
@@ -1079,9 +1074,6 @@ public class ClusterRunner extends AbstractRunner {
     }
     if (managerRunnableFuture != null) {
       managerRunnableFuture.cancel(false);
-    }
-    if (updateCheckerFuture != null) {
-      updateCheckerFuture.cancel(true);
     }
   }
 
@@ -1111,11 +1103,6 @@ public class ClusterRunner extends AbstractRunner {
       ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
       postTerminate(user, appState, pipelineConf, pipelineConfigBean, PipelineStatus.STOPPED, "Stopped cluster pipeline");
     }
-  }
-
-  @Override
-  public Map getUpdateInfo() {
-    return updateChecker.getUpdateInfo();
   }
 
   RuleDefinitions getRules() throws PipelineException {

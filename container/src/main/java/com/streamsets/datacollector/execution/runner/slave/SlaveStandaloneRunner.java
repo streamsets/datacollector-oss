@@ -263,11 +263,6 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public Map getUpdateInfo() {
-    return standaloneRunner.getUpdateInfo();
-  }
-
-  @Override
   public String getToken() {
     return standaloneRunner.getToken();
   }

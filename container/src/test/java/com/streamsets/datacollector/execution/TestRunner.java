@@ -208,11 +208,6 @@ public class TestRunner {
     }
 
     @Override
-    public Map getUpdateInfo() {
-      return null;
-    }
-
-    @Override
     public String getToken() {
       return null;
     }
@@ -399,11 +394,6 @@ public class TestRunner {
 
     @Override
     public Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo) {
-      return null;
-    }
-
-    @Override
-    public Map getUpdateInfo() {
       return null;
     }
 

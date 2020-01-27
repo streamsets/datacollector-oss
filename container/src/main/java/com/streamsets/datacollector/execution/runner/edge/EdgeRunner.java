@@ -281,11 +281,6 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public Map getUpdateInfo() {
-    return null;
-  }
-
-  @Override
   public String getToken() {
     return null;
   }

@@ -33,6 +33,7 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
+import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -60,7 +61,6 @@ import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter
 import com.streamsets.datacollector.execution.runner.common.dagger.PipelineProviderModule;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
-import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
@@ -72,7 +72,6 @@ import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
-import com.streamsets.datacollector.updatechecker.UpdateChecker;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
@@ -159,7 +158,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   private ProductionPipelineRunnable pipelineRunnable;
   private boolean isRetrying;
   private volatile boolean isClosed;
-  private UpdateChecker updateChecker;
   private volatile String metricsForRetry;
   private final List<ErrorListener> errorListeners;
 
@@ -899,11 +897,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           taskBuilder.add(idleRunnersFuture);
         }
 
-        // update checker
-        updateChecker = new UpdateChecker(getRuntimeInfo(), getConfiguration(), pipelineConfiguration, this);
-        ScheduledFuture<?> updateCheckerFuture = runnerExecutor.scheduleAtFixedRate(updateChecker, 1, 24 * 60, TimeUnit.MINUTES);
-        taskBuilder.add(updateCheckerFuture);
-
         observerRunnable.setRequestQueue(productionObserveRequests);
         observerRunnable.setStatsQueue(statsQueue);
         Future<?> observerFuture = runnerExecutor.submit(observerRunnable);
@@ -970,11 +963,6 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public void close() {
     isClosed = true;
-  }
-
-  @Override
-  public Map getUpdateInfo() {
-    return updateChecker.getUpdateInfo();
   }
 
   public Pipeline getPipeline() {

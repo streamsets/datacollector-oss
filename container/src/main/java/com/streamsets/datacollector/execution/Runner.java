@@ -189,8 +189,6 @@ public interface Runner {
 
   Map<String, Object> updateSlaveCallbackInfo(CallbackInfo callbackInfo);
 
-  Map getUpdateInfo();
-
   String getToken();
 
   int getRunnerCount();

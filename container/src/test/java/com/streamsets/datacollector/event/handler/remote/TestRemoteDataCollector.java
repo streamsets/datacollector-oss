@@ -495,12 +495,6 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public Map getUpdateInfo() {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
-    @Override
     public String getToken() {
       // TODO Auto-generated method stub
       return null;

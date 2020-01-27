@@ -261,11 +261,6 @@ public class StatsCollectorRunner implements Runner {
   }
 
   @Override
-  public Map getUpdateInfo() {
-    return runner.getUpdateInfo();
-  }
-
-  @Override
   public String getToken() {
     return runner.getToken();
   }
