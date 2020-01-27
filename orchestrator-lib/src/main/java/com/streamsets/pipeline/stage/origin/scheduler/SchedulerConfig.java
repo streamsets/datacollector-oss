@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.scheduler;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.config.TimeZoneChooserValues;
 
 public class SchedulerConfig {
 
@@ -29,5 +31,17 @@ public class SchedulerConfig {
       group = "CRON"
   )
   public String cronExpression;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTC",
+      label = "Time Zone",
+      description = "The time zone in which to base the schedule",
+      displayPosition = 20,
+      group = "CRON"
+  )
+  @ValueChooserModel(TimeZoneChooserValues.class)
+  public String timeZoneID = "UTC";
 
 }

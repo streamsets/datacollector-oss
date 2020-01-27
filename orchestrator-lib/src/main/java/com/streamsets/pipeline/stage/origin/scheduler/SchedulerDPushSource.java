@@ -24,13 +24,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Cron Scheduler",
     description = "Generates a record with the current datetime based on a cron expression",
     icon="scheduler.png",
     execution = {ExecutionMode.STANDALONE},
     beta = true,
-    onlineHelpRefUrl ="index.html?contextID=task_hcz_x4r_2jb"
+    onlineHelpRefUrl ="index.html?contextID=task_hcz_x4r_2jb",
+    upgraderDef = "upgrader/SchedulerDPushSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle

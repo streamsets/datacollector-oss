@@ -28,9 +28,11 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -83,9 +85,11 @@ public class SchedulerPushSource implements PushSource {
       JobDetail job = JobBuilder.newJob(SchedulerJob.class)
           .withIdentity("dataCollectorJob", "dataCollectorJobGroup")
           .build();
+      CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(conf.cronExpression)
+          .inTimeZone(TimeZone.getTimeZone(ZoneId.of(conf.timeZoneID)));
       cronTrigger = TriggerBuilder.newTrigger()
           .withIdentity("dataCollectorJob", "dataCollectorJobGroup")
-          .withSchedule(CronScheduleBuilder.cronSchedule(conf.cronExpression))
+          .withSchedule(cronScheduleBuilder)
           .build();
 
       scheduler.getContext().put(PUSH_SOURCE_CONTEXT, context);
