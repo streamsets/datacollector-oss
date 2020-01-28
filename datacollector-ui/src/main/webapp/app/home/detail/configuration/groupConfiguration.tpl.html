@@ -118,6 +118,9 @@
 
       <div class="controls" ng-class="configDefinition.label ? 'col-md-7' : 'col-md-12'">
 
+        <span class="empty-value"
+              ng-if="isPipelineReadOnly && (!detailPaneConfig.configuration[configIndex].value || detailPaneConfig.configuration[configIndex].value.length === 0)">--</span>
+
         <table class="table" ng-if="_.size(configDefinition.model.configDefinitions) <= 4 && !bulkEdit">
           <thead>
           <tr>

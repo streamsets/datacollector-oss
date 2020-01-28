@@ -249,6 +249,9 @@
   <div class="controls col-lg-7 col-md-8 container-fluid"
        ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 50)">
 
+    <span class="empty-value"
+          ng-show="isPipelineReadOnly && (!detailPaneConfig.configuration[configIndex].value || detailPaneConfig.configuration[configIndex].value.length === 0)">--</span>
+
     <div class="row map-list-type"
          ng-if="!bulkEdit"
          ng-repeat="val in listValue = detailPaneConfig.configuration[configIndex].value track by $index">
@@ -333,6 +336,10 @@
 <script type="text/ng-template" id="mapConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8"
        ng-init="bulkEdit=(detailPaneConfig.configuration[configIndex].value.length > 50)">
+
+    <span class="empty-value"
+          ng-show="isPipelineReadOnly && (!detailPaneConfig.configuration[configIndex].value || detailPaneConfig.configuration[configIndex].value.length === 0)">--</span>
+
     <div class="row map-list-type"
          ng-if="!bulkEdit"
          ng-repeat="mapObject in detailPaneConfig.configuration[configIndex].value track by $index">
