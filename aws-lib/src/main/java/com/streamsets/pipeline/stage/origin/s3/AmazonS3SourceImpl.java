@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.event.FinishedFileEvent;
 import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
+import com.streamsets.pipeline.lib.util.AntPathMatcher;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,8 +80,13 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
   @VisibleForTesting
   void createInitialOffsetsMap(Map<String, String> lastSourceOffset) throws StageException {
     List<S3Offset> unorderedListOfOffsets = new ArrayList<>();
+    AntPathMatcher pathMatcher = new AntPathMatcher(s3ConfigBean.s3Config.delimiter);
+    String prefixPattern = s3ConfigBean.s3Config.commonPrefix + s3ConfigBean.s3FileConfig.prefixPattern;
     for (String offset : lastSourceOffset.values()) {
-      unorderedListOfOffsets.add(S3Offset.fromString(offset));
+      S3Offset s3Offset = S3Offset.fromString(offset);
+      if (pathMatcher.match(prefixPattern, s3Offset.getKey())) {
+        unorderedListOfOffsets.add(s3Offset);
+      }
     }
 
     List<S3Offset> orderedListOfOffsets = orderOffsets(unorderedListOfOffsets);

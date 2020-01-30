@@ -35,6 +35,10 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
     S3ConfigBean config = new S3ConfigBean();
     config.s3FileConfig = new S3FileConfig();
     config.s3FileConfig.objectOrdering = ObjectOrdering.LEXICOGRAPHICAL;
+    config.s3FileConfig.prefixPattern = "*.txt";
+    config.s3Config = new S3ConnectionSourceConfig();
+    config.s3Config.commonPrefix = "";
+    config.s3Config.delimiter = "/";
 
     return config;
   }
@@ -44,6 +48,10 @@ public class TestAmazonS3Source extends AmazonS3TestSuite {
 
     config.s3FileConfig = new S3FileConfig();
     config.s3FileConfig.objectOrdering = ObjectOrdering.TIMESTAMP;
+    config.s3FileConfig.prefixPattern = "*.txt";
+    config.s3Config = new S3ConnectionSourceConfig();
+    config.s3Config.commonPrefix = "";
+    config.s3Config.delimiter = "/";
 
     return config;
   }
