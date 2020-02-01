@@ -71,7 +71,7 @@ public class IotHubProducerTarget extends BaseTarget implements IotHubEventCallb
             CONNECTION_STRING_TEMPLATE,
             producerConfigBean.iotHubName,
             producerConfigBean.deviceId,
-            producerConfigBean.sasKey
+            producerConfigBean.sasKey.get()
         );
         iotHubClient = new DeviceClient(connString, IotHubClientProtocol.MQTT);
         iotHubClient.open();

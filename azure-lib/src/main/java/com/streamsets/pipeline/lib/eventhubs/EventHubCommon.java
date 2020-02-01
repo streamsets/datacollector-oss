@@ -37,7 +37,7 @@ public class EventHubCommon {
     final ConnectionStringBuilder connStr = new ConnectionStringBuilder()
         .setNamespaceName(commonConf.namespaceName)
         .setEventHubName(commonConf.eventHubName)
-        .setSasKey(commonConf.sasKey)
+        .setSasKey(commonConf.sasKey.get())
         .setSasKeyName(commonConf.sasKeyName);
 
 

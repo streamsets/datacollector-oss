@@ -39,7 +39,7 @@ class IotHubProducerTargetBuilder {
   }
 
   IotHubProducerTargetBuilder sasKey(String sasKey) {
-    producerConf.sasKey = sasKey;
+    producerConf.sasKey = () -> sasKey;
     return this;
   }
 

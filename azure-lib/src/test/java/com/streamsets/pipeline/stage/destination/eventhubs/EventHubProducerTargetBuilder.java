@@ -47,7 +47,7 @@ class EventHubProducerTargetBuilder {
   }
 
   EventHubProducerTargetBuilder sasKey(String sasKey) {
-    commonConf.sasKey = sasKey;
+    commonConf.sasKey = () -> sasKey;
     return this;
   }
 

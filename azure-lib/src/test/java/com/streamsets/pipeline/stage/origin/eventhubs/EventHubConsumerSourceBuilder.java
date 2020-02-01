@@ -47,7 +47,7 @@ class EventHubConsumerSourceBuilder {
   }
 
   EventHubConsumerSourceBuilder sasKey(String sasKey) {
-    commonConf.sasKey = sasKey;
+    commonConf.sasKey = () -> sasKey;
     return this;
   }
 

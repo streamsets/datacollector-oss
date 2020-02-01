@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.iothub;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.eventhubs.DestinationDataFormatChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
@@ -63,14 +64,14 @@ public class IotHubProducerConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Shared Access Key",
       defaultValue = "",
       description = "Shared Access Primary Key string associated with the policy",
       displayPosition = 30,
       group = "IOT_HUB"
   )
-  public String sasKey = "";
+  public CredentialValue sasKey = () -> "";
 
   @ConfigDef(
       required = true,

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.eventhubs;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.eventhubs.DataFormatChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -75,14 +76,14 @@ public class EventHubConsumerConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
       label = "Storage Account Key",
       description = "",
       displayPosition = 130,
       group = "EVENT_HUB"
   )
-  public String storageAccountKey;
+  public CredentialValue storageAccountKey;
 
   @ConfigDef(
       required = true,

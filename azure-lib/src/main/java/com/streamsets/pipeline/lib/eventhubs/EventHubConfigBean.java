@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.eventhubs;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class EventHubConfigBean {
 
@@ -54,12 +55,12 @@ public class EventHubConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Connection String Key",
       defaultValue = "",
       description = "One of the connection string key values associated with the policy",
       displayPosition = 40,
       group = "EVENT_HUB"
   )
-  public String sasKey = "";
+  public CredentialValue sasKey = () -> "";
 }

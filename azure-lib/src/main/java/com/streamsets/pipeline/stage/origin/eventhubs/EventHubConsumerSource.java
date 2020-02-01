@@ -113,7 +113,7 @@ public class EventHubConsumerSource implements PushSource, IEventProcessorFactor
       ConnectionStringBuilder eventHubConnectionString = new ConnectionStringBuilder()
           .setNamespaceName(commonConf.namespaceName)
           .setEventHubName(commonConf.eventHubName)
-          .setSasKey(commonConf.sasKey)
+          .setSasKey(commonConf.sasKey.get())
           .setSasKeyName(commonConf.sasKeyName);
 
       String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" +
