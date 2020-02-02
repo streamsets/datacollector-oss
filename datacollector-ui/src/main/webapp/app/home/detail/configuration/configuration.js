@@ -970,4 +970,9 @@ angular
     $scope.$watch('previewMode', function() {
       refreshCodemirrorWidget();
     });
+
+    $scope.cronOptions = {
+      hideAdvancedTab: false, // Whether to hide the advanced tab
+      hideSeconds: true // Whether to show/hide the seconds time picker
+    };
   });

@@ -33,5 +33,6 @@ angular.module('dataCollectorApp', [
   'ngStorage',
   'ngSanitize',
   'angular-google-analytics',
-  'xeditable'
+  'xeditable',
+  'angular-cron-gen'
 ]);

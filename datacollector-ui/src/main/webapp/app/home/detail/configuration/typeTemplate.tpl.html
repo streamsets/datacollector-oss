@@ -85,6 +85,7 @@
   <div class="controls col-lg-7 col-md-8">
 
     <div ui-codemirror
+         ng-if="configDefinition.name !== 'conf.cronExpression'"
          ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
          focus-me="{{autoFocusConfigName === configDefinition.name}}"
          ng-model="detailPaneConfig.configuration[configIndex].value"
@@ -102,6 +103,17 @@
          field-paths="fieldPaths"
          d-field-paths="dFieldPaths"
          data-type="configDefinition.type">
+    </div>
+
+    <div ng-if="configDefinition.name === 'conf.cronExpression'">
+      <cron-gen
+        ng-model="detailPaneConfig.configuration[configIndex].value"
+        options="cronOptions"
+        ng-disabled="isPipelineReadOnly || isPipelineRunning">
+      </cron-gen>
+
+      <p>The resulting Cron expression:</p>
+      <pre>{{detailPaneConfig.configuration[configIndex].value}}</pre>
     </div>
 
     <ng-include src="'configurationIssuesTemplate'"></ng-include>
