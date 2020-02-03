@@ -16,13 +16,8 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import kafka.producer.Partitioner;
-import kafka.utils.VerifiableProperties;
 
 public class ExpressionPartitioner implements Partitioner {
-
-  public ExpressionPartitioner(VerifiableProperties props) {
-
-  }
 
   @Override
   public int partition(Object key, int numPartitions) {

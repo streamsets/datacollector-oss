@@ -16,15 +16,10 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import kafka.producer.Partitioner;
-import kafka.utils.VerifiableProperties;
 
 public class RoundRobinPartitioner implements Partitioner {
 
   private int lastPartition = 0;
-
-  public RoundRobinPartitioner(VerifiableProperties props) {
-
-  }
 
   @Override
   public int partition(Object key, int numPartitions) {

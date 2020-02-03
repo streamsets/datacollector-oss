@@ -16,17 +16,12 @@
 package com.streamsets.pipeline.kafka.impl;
 
 import kafka.producer.Partitioner;
-import kafka.utils.VerifiableProperties;
 
 import java.util.Random;
 
 public class RandomPartitioner implements Partitioner {
 
-  private Random random;
-
-  public RandomPartitioner (VerifiableProperties props) {
-    random = new Random();
-  }
+  private Random random = new Random();
 
   @Override
   public int partition(Object key, int numPartitions) {
