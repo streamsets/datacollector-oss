@@ -31,7 +31,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     execution = {
         ExecutionMode.STANDALONE
     },
-    beta = true,
     onlineHelpRefUrl ="index.html?contextID=task_oqs_4tr_2jb"
 )
 @GenerateResourceBundle

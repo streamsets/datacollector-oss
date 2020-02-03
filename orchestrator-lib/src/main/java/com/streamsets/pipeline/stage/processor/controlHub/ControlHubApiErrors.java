@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum ControlHubApiErrors implements ErrorCode {
   CONTROL_HUB_API_01("Failed to connect to Control Hub URL: {}"),
+  CONTROL_HUB_API_02("Control Hub Login failed, status code '{}': {}"),
   ;
 
   private final String msg;

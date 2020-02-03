@@ -33,7 +33,6 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
     execution = {
         ExecutionMode.STANDALONE
     },
-    beta = true,
     onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb"
 )
 @GenerateResourceBundle

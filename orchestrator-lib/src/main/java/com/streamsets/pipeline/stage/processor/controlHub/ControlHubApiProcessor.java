@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.http.Errors;
@@ -151,7 +150,6 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
 
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
-
       Record record = records.next();
       String resolvedUrl = httpClientCommon.getResolvedUrl(conf.baseUrl, record);
       String userAuthToken = getUserAuthToken(resolvedUrl);
@@ -323,18 +321,16 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
             .request()
             .post(Entity.json(loginJson));
         if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-          throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
-              response.getStatus(),
-              response.readEntity(String.class)
-          ));
+          String reason = response.getStatusInfo().getReasonPhrase();
+          String respString = response.readEntity(String.class);
+          final String errorMsg = reason + " : " + respString;
+          LOG.warn(Errors.HTTP_01.getMessage(), response.getStatus(), errorMsg);
+        } else {
+          String userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
+          resolveUrlToTokenMap.put(baseUrl, userAuthToken);
         }
-
-        String userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
-        resolveUrlToTokenMap.put(baseUrl, userAuthToken);
       }
-
       return resolveUrlToTokenMap.get(baseUrl);
-
     } catch (Exception e) {
       throw new StageException(ControlHubApiErrors.CONTROL_HUB_API_01, e.getMessage(), e);
     } finally {

@@ -44,7 +44,7 @@ public class SchedulerJob implements Job {
         BatchContext batchContext = pushSourceContext.startBatch();
         Record record = pushSourceContext.createRecord("cronRecord");
         LinkedHashMap<String, Field> linkedHashMap = new LinkedHashMap<>();
-        linkedHashMap.put("timestamp", Field.createDate(new Date()));
+        linkedHashMap.put("timestamp", Field.createDatetime(new Date()));
         record.set(Field.createListMap(linkedHashMap));
         batchContext.getBatchMaker().addRecord(record);
         pushSourceContext.processBatch(batchContext);
