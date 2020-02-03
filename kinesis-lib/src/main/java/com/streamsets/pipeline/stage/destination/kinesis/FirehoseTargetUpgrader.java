@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.destination.kinesis;
 
-import com.streamsets.datacollector.config.AmazonEMRConfig;
+
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
