@@ -291,12 +291,13 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void upgradeV15ToV16(List<Config> configs) {
     configs.add(new Config("preprocessScript", ""));
   }
-  
+
   private void upgradeV16ToV17(List<Config> configs) {
     String amazonEmrConfigPrefix = "transformerEMRConfig.";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
+    configs.add(new Config(amazonEmrConfigPrefix + "useIAMRoles", false));
   }
-  
+
   private void addEmrConfigs(List<Config> configs, String amazonEmrConfigPrefix) {
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION, null));
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION_CUSTOM, null));
@@ -324,5 +325,5 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SECRET_KEY, null));
     configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.PROVISION_NEW_CLUSTER, false));
   }
-  
+
 }

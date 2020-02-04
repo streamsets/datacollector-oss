@@ -58,13 +58,25 @@ public class AmazonEMRConfig {
   public String userRegionCustom;
 
   @ConfigDef(
+    required = true,
+    label = "Use IAM Roles",
+    type = ConfigDef.Type.BOOLEAN,
+    defaultValue = "false",
+    description = "Use IAM roles instead of AWS credentials to connect to AWS",
+    displayPosition = 108,
+    group = "EMR"
+  )
+  public boolean useIAMRoles;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "AWS access key",
       group = "EMR",
       displayPosition = 110,
       dependencies = {
-      @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
+        @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+        @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
   }
   )
   public CredentialValue accessKey = () -> "";
@@ -76,7 +88,8 @@ public class AmazonEMRConfig {
       group = "EMR",
       displayPosition = 120,
       dependencies = {
-          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
+        @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+        @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
       }
   )
   public CredentialValue secretKey = () -> "";

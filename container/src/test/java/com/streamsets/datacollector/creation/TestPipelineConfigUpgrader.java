@@ -187,12 +187,12 @@ public class TestPipelineConfigUpgrader {
     Assert.assertEquals("preprocessScript", upgrade.get(0).getName());
     Assert.assertEquals("", upgrade.get(0).getValue());
   }
-  
+
   @Test
   public void testPipelineConfigUpgradeV16ToV17() throws StageException {
     doTestEMRConfigs(16, 17);
   }
-  
+
   private void doTestEMRConfigs(int from, int to) {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
@@ -202,7 +202,7 @@ public class TestPipelineConfigUpgrader {
     List<String> emrConfigList = upgraded.stream()
                                    .map(conf -> conf.getName().replaceAll(regex,""))
                                    .collect(Collectors.toList());
-  
+
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.ACCESS_KEY));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.SECRET_KEY));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.CLUSTER_ID));
@@ -225,15 +225,19 @@ public class TestPipelineConfigUpgrader {
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.TERMINATE_CLUSTER));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.VISIBLE_TO_ALL_USERS));
     Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.LOGGING_ENABLED));
-  
+
     if (to == 10) {
       List<Config> testOriginStageConfigList = upgraded.stream()
                                                  .filter(config -> config.getName().equals("testOriginStage"))
                                                  .collect(Collectors.toList());
-    
+
       Assert.assertEquals(1, testOriginStageConfigList.size());
       Assert.assertEquals(PipelineConfigBean.RAW_DATA_ORIGIN, testOriginStageConfigList.get(0).getValue());
       Assert.assertTrue(emrConfigList.contains(AmazonEMRConfig.ENABLE_EMR_DEBUGGING));
+    }
+
+    if (to == 17) {
+      Assert.assertTrue(emrConfigList.contains("useIAMRoles"));
     }
   }
 
