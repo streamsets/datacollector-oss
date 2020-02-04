@@ -32,7 +32,7 @@ public interface HttpReceiver {
 
   boolean isApplicationIdEnabled();
 
-  CredentialValue getAppId();
+  List<? extends CredentialValue> getAppIds();
 
   boolean isAppIdViaQueryParamAllowed();
 

@@ -17,9 +17,14 @@ package com.streamsets.pipeline.lib.httpsource;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RawHttpConfigs extends HttpConfigs {
 
@@ -73,13 +78,15 @@ public class RawHttpConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Application ID",
-      description = "Only HTTP requests presenting this token will be accepted.",
+      type = ConfigDef.Type.MODEL,
+      label = "List of Application IDs",
+      description = "HTTP requests must contain one of the listed application IDs. " +
+          "If none are listed, HTTP requests do not require an application ID.",
       displayPosition = 20,
       group = "HTTP"
   )
-  public CredentialValue appId = () -> "";
+  @ListBeanModel
+  public List<CredentialValueBean> appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean()));
 
   @ConfigDef(
       required = true,
@@ -103,8 +110,8 @@ public class RawHttpConfigs extends HttpConfigs {
   }
 
   @Override
-  public CredentialValue getAppId() {
-    return appId;
+  public List<CredentialValueBean> getAppIds() {
+    return appIds;
   }
 
   private int maxHttpRequestSizeKB = -1;
@@ -141,7 +148,7 @@ public class RawHttpConfigs extends HttpConfigs {
 
   @Override
   public boolean isApplicationIdEnabled(){
-    return appId != null && appId.get().length()>0 ;
+    return appIds != null && appIds.size() > 0 && appIds.get(0).get().length() > 0 ;
   }
 
 }

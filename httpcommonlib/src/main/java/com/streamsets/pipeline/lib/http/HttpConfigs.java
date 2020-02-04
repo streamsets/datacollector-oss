@@ -38,7 +38,7 @@ public abstract class HttpConfigs {
 
   public abstract int getMaxConcurrentRequests();
 
-  public abstract CredentialValue getAppId();
+  public abstract List<? extends CredentialValue> getAppIds();
 
   public abstract int getMaxHttpRequestSizeKB();
 

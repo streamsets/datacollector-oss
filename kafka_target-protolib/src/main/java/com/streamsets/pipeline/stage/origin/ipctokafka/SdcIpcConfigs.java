@@ -21,6 +21,9 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class SdcIpcConfigs extends HttpConfigs {
 
   public SdcIpcConfigs() {
@@ -93,8 +96,8 @@ public class SdcIpcConfigs extends HttpConfigs {
   }
 
   @Override
-  public CredentialValue getAppId() {
-    return appId;
+  public List<CredentialValue> getAppIds() {
+    return Arrays.asList(appId);
   }
 
   @Override

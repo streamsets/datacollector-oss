@@ -21,6 +21,7 @@ import com.streamsets.pipeline.config.OriginAvroSchemaSource;
 import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConstants;
 import com.streamsets.pipeline.lib.http.HttpReceiverServer;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.lib.util.SdcAvroTestUtil;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -44,6 +45,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -55,7 +57,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testSource() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -116,7 +118,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testWithAppIdViaQueryParam() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -180,7 +182,7 @@ public class TestHttpServerPushSource {
   @Test
   public void testAvroData() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;

@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
@@ -35,6 +36,8 @@ import org.mockito.Mockito;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestPushHttpReceiver {
@@ -86,7 +89,8 @@ public class TestPushHttpReceiver {
     @Test
   public void testGetters() throws Exception {
     HttpConfigs httpConfigs = Mockito.mock(HttpConfigs.class);
-    Mockito.when(httpConfigs.getAppId()).thenReturn(() -> "id");
+    List id = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    Mockito.when(httpConfigs.getAppIds()).thenReturn(id);
 
     DataParserFactory parserFactory = Mockito.mock(DataParserFactory.class);
     DataParserFormatConfig dataConfigs = Mockito.mock(DataParserFormatConfig.class);
@@ -100,8 +104,8 @@ public class TestPushHttpReceiver {
     Assert.assertEquals(context, receiver.getContext());
     Assert.assertEquals(parserFactory, receiver.getParserFactory());
 
-    Assert.assertEquals("id", receiver.getAppId().get());
-    Mockito.verify(httpConfigs, Mockito.times(1)).getAppId();
+    Assert.assertEquals("id", receiver.getAppIds().get(0).get());
+    Mockito.verify(httpConfigs, Mockito.times(1)).getAppIds();
 
     Assert.assertEquals("/", receiver.getUriPath());
 

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.restservice;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -52,6 +53,7 @@ import java.security.KeyPair;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -65,7 +67,7 @@ public class TestRestServicePushSource {
   @Test
   public void testRestServiceOrigin() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -295,7 +297,7 @@ public class TestRestServicePushSource {
     TLSTestUtils.createTrustStore(clientTrustStore.toString(), trustStorePassword, "web", clientCert);
 
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
 
@@ -416,7 +418,7 @@ public class TestRestServicePushSource {
   @Test
   public void testSendingRawResponse() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;

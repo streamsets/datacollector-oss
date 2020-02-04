@@ -23,6 +23,10 @@ import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class Configs extends HttpConfigs {
   private static final Logger LOG = LoggerFactory.getLogger(Configs.class);
 
@@ -96,8 +100,8 @@ public class Configs extends HttpConfigs {
   }
 
   @Override
-  public CredentialValue getAppId() {
-    return appId;
+  public List<CredentialValue> getAppIds() {
+    return new ArrayList<>(Arrays.asList(appId));
   }
 
   @Override

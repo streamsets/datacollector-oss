@@ -20,6 +20,7 @@ import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -95,9 +97,9 @@ public class HttpReceiverServlet extends HttpServlet {
   protected boolean validateAppId(HttpServletRequest req, HttpServletResponse res)
       throws ServletException, IOException {
     boolean valid = false;
-    String ourAppId = null;
+    List<? extends CredentialValue> ourAppIds = null;
     try {
-      ourAppId = getReceiver().getAppId().get();
+      ourAppIds = getReceiver().getAppIds();
     } catch (StageException e) {
       throw new IOException("Cant resolve credential value", e);
     }
@@ -113,11 +115,16 @@ public class HttpReceiverServlet extends HttpServlet {
     if (reqAppId == null) {
       LOG.warn("Request from '{}' missing appId, rejected", requestor);
       res.sendError(HttpServletResponse.SC_FORBIDDEN, "Missing 'appId'");
-    } else if (!ourAppId.equals(reqAppId)) {
-      LOG.warn("Request from '{}' invalid appId '{}', rejected", requestor, reqAppId);
-      res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
     } else {
-      valid = true;
+      int counter = 0;
+      while(counter < ourAppIds.size() && !valid){
+        valid = valid || ourAppIds.get(counter).get().equals(reqAppId);
+        counter++;
+      }
+      if(!valid) {
+        LOG.warn("Request from {} rejected due to invalid appid {}", requestor, reqAppId);
+        res.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid 'appId'");
+      }
     }
     return valid;
   }

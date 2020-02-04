@@ -15,8 +15,17 @@
  */
 package com.streamsets.pipeline.stage.origin.httpserver;
 
+import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestHttpServerPushSourceUpgrader {
 
@@ -28,4 +37,20 @@ public class TestHttpServerPushSourceUpgrader {
         10
     );
   }
+
+  @Test
+  public void testV10ToV11() throws Exception {
+    HttpServerPushSourceUpgrader upgrader = new HttpServerPushSourceUpgrader();
+    List<Config> configs = new ArrayList<>();
+    String idValue = "idFooo";
+    configs.add(new Config("httpConfigs.appId", (CredentialValue) () -> idValue));
+    upgrader.upgrade("", "", "", 10, 11, configs);
+    UpgraderTestUtils.assertNoneExist(configs,"httpConfigs.appId");
+    UpgraderTestUtils.assertAllExist(configs, "httpConfigs.appIds");
+    Config configWithName = UpgraderUtils.getConfigWithName(configs, "httpConfigs.appIds");
+    List<CredentialValueBean> listCredentials = (List<CredentialValueBean>) configWithName.getValue();
+    Assert.assertEquals(listCredentials.size(), 1);
+    Assert.assertEquals(listCredentials.get(0).get().equals(idValue), true);
+  }
+
 }

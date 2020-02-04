@@ -22,6 +22,10 @@ import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.lib.websocket.Groups;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class WebSocketConfigs extends HttpConfigs {
 
   public WebSocketConfigs() {
@@ -113,8 +117,8 @@ public class WebSocketConfigs extends HttpConfigs {
   }
 
   @Override
-  public CredentialValue getAppId() {
-    return appId;
+  public List<CredentialValue> getAppIds() {
+    return new ArrayList<>(Arrays.asList(appId));
   }
 
   @Override

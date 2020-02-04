@@ -92,7 +92,7 @@ public class PushWebSocketReceiver implements WebSocketReceiver {
 
   @Override
   public CredentialValue getAppId() {
-    return webSocketConfigs.getAppId();
+    return webSocketConfigs.getAppIds().get(0);
   }
 
   @Override

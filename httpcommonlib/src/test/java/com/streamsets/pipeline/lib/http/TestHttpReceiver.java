@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestHttpReceiver {
@@ -30,14 +32,15 @@ public class TestHttpReceiver {
   @Test
   public void testReceiver() throws Exception {
     HttpConfigs configs = Mockito.mock(HttpConfigs.class);
-    Mockito.when(configs.getAppId()).thenReturn(() -> "id");
+    List id = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    Mockito.when(configs.getAppIds()).thenReturn(id);
     HttpRequestFragmenter fragmenter = Mockito.mock(HttpRequestFragmenter.class);
     FragmentWriter writer = Mockito.mock(FragmentWriter.class);
     HttpReceiver receiver = new HttpReceiverWithFragmenterWriter("/", configs, fragmenter, writer);
 
     Assert.assertEquals("/", receiver.getUriPath());
 
-    Assert.assertEquals("id", receiver.getAppId().get());
+    Assert.assertEquals("id", receiver.getAppIds().get(0).get());
 
     Mockito
         .when(fragmenter.validate(Mockito.any(HttpServletRequest.class), Mockito.any(HttpServletResponse.class)))

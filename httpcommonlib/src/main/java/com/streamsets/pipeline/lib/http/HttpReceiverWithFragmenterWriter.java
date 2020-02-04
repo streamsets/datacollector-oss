@@ -73,8 +73,8 @@ public class HttpReceiverWithFragmenterWriter implements HttpReceiver {
   }
 
   @Override
-  public CredentialValue getAppId() {
-    return httpConfigs.getAppId();
+  public List<? extends CredentialValue> getAppIds() {
+    return httpConfigs.getAppIds();
   }
 
   @Override

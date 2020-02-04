@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.http;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +31,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -66,7 +70,8 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
+    List id = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    Mockito.when(receiver.getAppIds()).thenReturn(id);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -124,7 +129,8 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
+    List id = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    Mockito.when(receiver.getAppIds()).thenReturn(id);
     Mockito.when(receiver.isApplicationIdEnabled()).thenReturn(true);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, null);
     servlet = Mockito.spy(servlet);
@@ -203,7 +209,8 @@ public class TestHttpReceiverServlet {
     Stage.Context context =
         ContextInfoCreator.createSourceContext("n", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
     HttpReceiver receiver = Mockito.mock(HttpReceiverWithFragmenterWriter.class);
-    Mockito.when(receiver.getAppId()).thenReturn(() -> "id");
+    List id = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    Mockito.when(receiver.getAppIds()).thenReturn(id);
     Mockito.when(receiver.process(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(true);
     BlockingQueue<Exception> errorQueue = new ArrayBlockingQueue<Exception>(1);
     HttpReceiverServlet servlet = new HttpReceiverServlet(context, receiver, errorQueue);
