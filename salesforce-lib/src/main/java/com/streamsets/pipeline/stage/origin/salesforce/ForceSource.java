@@ -406,7 +406,7 @@ public class ForceSource extends BaseSource {
         case PLATFORM_EVENT:
           return new PlatformEventRecordCreator(getContext(), conf.platformEvent, conf);
         case CDC:
-          return new ChangeDataCaptureRecordCreator(getContext(), conf, sobjectType);
+          return new ChangeDataCaptureRecordCreator(getContext(), conf);
       }
     }
 

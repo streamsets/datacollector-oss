@@ -67,6 +67,7 @@ public enum Errors implements ErrorCode {
   FORCE_43("Can't find type for field name: {}"),
   FORCE_44("Can't find Id field for field name: {}"),
   FORCE_45("Can't retrieve record with id: {}"),
+  FORCE_46("Can't get schema with Id: {}"),
   ;
   private final String msg;
 

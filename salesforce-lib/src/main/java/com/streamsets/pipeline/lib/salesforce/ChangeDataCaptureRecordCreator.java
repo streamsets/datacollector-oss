@@ -16,20 +16,21 @@
 package com.streamsets.pipeline.lib.salesforce;
 
 import com.google.common.collect.ImmutableMap;
-import com.sforce.soap.partner.PartnerConnection;
-import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.Source;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.operation.OperationType;
-import org.apache.commons.lang3.tuple.Pair;
+import org.apache.avro.Schema;
+import org.apache.avro.SchemaBuilder;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ChangeDataCaptureRecordCreator extends SobjectRecordCreator {
+public class ChangeDataCaptureRecordCreator extends EventRecordCreator {
   private static final String HEADER_ATTRIBUTE_PREFIX = "salesforce.cdc.";
   private static final Map<String, Integer> SFDC_TO_SDC_OPERATION = new ImmutableMap.Builder<String, Integer>()
           .put("CREATE", OperationType.INSERT_CODE)
@@ -45,27 +46,22 @@ public class ChangeDataCaptureRecordCreator extends SobjectRecordCreator {
           .build();
   private static final String CHANGE_EVENT_HEADER = "ChangeEventHeader";
 
-  public ChangeDataCaptureRecordCreator(Source.Context context, ForceSourceConfigBean conf, String sobjectType) {
-    super(context, conf, sobjectType);
+  public ChangeDataCaptureRecordCreator(Stage.Context context, ForceConfigBean conf) {
+    super(context, conf);
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public Record createRecord(String sourceId, Object source) throws StageException {
-    Pair<PartnerConnection,Map<String, Object>> pair = (Pair<PartnerConnection,Map<String, Object>>)source;
-    PartnerConnection partnerConnection = pair.getLeft();
-    Map<String, Object> data = pair.getRight();
-    Map<String, Object> payload = (Map<String, Object>) data.get("payload");
-
-    Record rec = context.createRecord(sourceId);
+  Record createRecord(String sourceId, LinkedHashMap<String, Field> map, Map<String, Object> payload) {
+    Record record = context.createRecord(sourceId);
 
     // Process ChangeEventHeader since we need the object type
     String objectType = null;
-    Record.Header recordHeader = rec.getHeader();
+    Record.Header recordHeader = record.getHeader();
     Map<String, Object> headers = (Map<String, Object>) payload.get(CHANGE_EVENT_HEADER);
     if (headers == null) {
       throw new StageException(Errors.FORCE_40);
     }
+
     // event data becomes header attributes
     // of the form salesforce.cdc.createdDate,
     // salesforce.cdc.type
@@ -73,7 +69,7 @@ public class ChangeDataCaptureRecordCreator extends SobjectRecordCreator {
       if ("recordIds".equals(header.getKey())) {
         // Turn list of record IDs into a comma-separated list
         recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + header.getKey(),
-                String.join(",", (List<String>)header.getValue()));
+            String.join(",", (List<String>)header.getValue()));
       } else {
         recordHeader.setAttribute(HEADER_ATTRIBUTE_PREFIX + header.getKey(), header.getValue().toString());
         if ("changeType".equals(header.getKey())) {
@@ -87,28 +83,23 @@ public class ChangeDataCaptureRecordCreator extends SobjectRecordCreator {
     }
     payload.remove(CHANGE_EVENT_HEADER);
 
-    // payload data becomes fields
-    LinkedHashMap<String, Field> map = new LinkedHashMap<>();
-    for (Map.Entry<String, Object> entry : payload.entrySet()) {
-      String key = entry.getKey();
-      Object val = entry.getValue();
-      if (!objectTypeIsCached(objectType)) {
-        try {
-          addObjectTypeToCache(partnerConnection, objectType);
-        } catch (ConnectionException e) {
-          throw new StageException(Errors.FORCE_21, objectType, e);
-        }
-      }
-      com.sforce.soap.partner.Field sfdcField = getFieldMetadata(objectType, key);
-      Field field = createField(val, sfdcField);
-      if (conf.createSalesforceNsHeaders) {
-        setHeadersOnField(field, getFieldMetadata(objectType, key));
-      }
-      map.put(key, field);
-    }
+    createRecordFields(record, map, payload);
 
-    rec.set(Field.createListMap(map));
+    return record;
+  }
 
-    return rec;
+  @NotNull
+  protected Schema.Parser getParser() {
+    Schema.Parser parser = new Schema.Parser();
+
+    // CDC events contain diffs for fields such as Description
+    Map<String, Schema> types = new HashMap<>();
+    types.put("diff", SchemaBuilder.record("diff").
+        fields().
+          requiredString("diff").
+        endRecord());
+    parser.addTypes(types);
+
+    return parser;
   }
 }
