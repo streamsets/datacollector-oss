@@ -20,6 +20,8 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageBehaviorFlags;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -696,6 +698,15 @@ public class TestJavaScriptProcessor {
     ScriptingProcessorTestUtil.verifyDeprecatedBindings(
         JavaScriptDProcessor.class,
         processor
+    );
+  }
+
+  @Test
+  public void testUserCodeInjectionFlag() {
+    Assert.assertArrayEquals(
+        "This stage should _only_ have the USER_CODE_INJECTION flag set",
+        new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
+        JavaScriptDProcessor.class.getAnnotation(StageDef.class).flags()
     );
   }
 }

@@ -15,9 +15,12 @@
  */
 package com.streamsets.pipeline.stage.origin.jython;
 
+import com.streamsets.pipeline.api.StageBehaviorFlags;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.ScriptingOriginTestUtil;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TestJythonSource {
@@ -88,6 +91,15 @@ public class TestJythonSource {
         DSOURCECLASS,
         getDSource(),
         "GeneratorOriginScriptEvents.py"
+    );
+  }
+
+  @Test
+  public void testUserCodeInjectionFlag() {
+    Assert.assertArrayEquals(
+        "This stage should _only_ have the USER_CODE_INJECTION flag set",
+        new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
+        JythonDSource.class.getAnnotation(StageDef.class).flags()
     );
   }
 }

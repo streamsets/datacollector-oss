@@ -15,8 +15,11 @@
  */
 package com.streamsets.pipeline.stage.origin.javascript;
 
+import com.streamsets.pipeline.api.StageBehaviorFlags;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.scripting.AbstractScriptingDSource;
 import com.streamsets.pipeline.stage.origin.scripting.ScriptingOriginTestUtil;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class TestJavascriptSource {
@@ -51,6 +54,15 @@ public class TestJavascriptSource {
         DSOURCECLASS,
         getDSource(),
         "TestNullTypes.js"
+    );
+  }
+
+  @Test
+  public void testUserCodeInjectionFlag() {
+    Assert.assertArrayEquals(
+        "This stage should _only_ have the USER_CODE_INJECTION flag set",
+        new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
+        JavascriptDSource.class.getAnnotation(StageDef.class).flags()
     );
   }
 }
