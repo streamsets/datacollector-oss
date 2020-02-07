@@ -90,7 +90,7 @@ public class StartPipelineConfig {
       description = "Runs the pipeline in the background, passing the record downstream after starting the pipeline. " +
           "When not used, the processor waits until the pipeline is complete before passing the record downstream.",
       defaultValue = "false",
-      displayPosition = 50,
+      displayPosition = 70,
       group = "PIPELINE"
   )
   public boolean runInBackground = false;
@@ -101,7 +101,7 @@ public class StartPipelineConfig {
       defaultValue = "5000",
       label = "Delay Between State Checks",
       description = "Milliseconds to wait before checking pipeline state",
-      displayPosition = 60,
+      displayPosition = 80,
       group = "PIPELINE",
       min = 0,
       max = Integer.MAX_VALUE,
