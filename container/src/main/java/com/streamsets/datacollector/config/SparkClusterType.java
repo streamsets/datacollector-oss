@@ -27,7 +27,7 @@ public enum SparkClusterType implements Label {
   DATABRICKS("Databricks"),
   EMR("EMR"),
   YARN("Hadoop YARN"),
-  KUBERNETES("Kubernetes Cluster"),
+  KUBERNETES("Kubernetes Cluster (advanced users only)"),
   LOCAL("None (local)"),
   STANDALONE_SPARK_CLUSTER("Spark Standalone Cluster"),
   SQL_SERVER_BIG_DATA_CLUSTER("SQL Server 2019 Big Data Cluster"),
