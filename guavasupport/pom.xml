@@ -38,7 +38,7 @@
        we should be able to re-evalute if the version needs to be hardcoded here
   -->
   <properties>
-    <guava.version>28.1-jre</guava.version>
+    <guava.version>18.0</guava.version>
   </properties>
 
   <dependencies>

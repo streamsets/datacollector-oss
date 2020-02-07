@@ -86,7 +86,7 @@ public class HBaseTarget extends BaseTarget {
     this.conf = conf;
     // ZooKeeper Quorum may be null for MapRDBTarget
     if (conf.zookeeperQuorum != null) {
-      this.conf.zookeeperQuorum = CharMatcher.whitespace().removeFrom(conf.zookeeperQuorum);
+      this.conf.zookeeperQuorum = CharMatcher.WHITESPACE.removeFrom(conf.zookeeperQuorum);
     }
     this.hbaseRowKey = hbaseRowKey;
     this.hbaseFieldColumnMapping = hbaseFieldColumnMapping;

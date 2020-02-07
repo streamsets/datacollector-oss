@@ -33,6 +33,10 @@
   <name>StreamSets Data Collector Lookup Protolib</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <guava.version>18.0</guava.version>
+  </properties>
+
   <dependencies>
     <!-- Common StreamSets Dependencies -->
     <dependency>
@@ -79,7 +83,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>28.1-jre</version>
+      <version>${guava.version}</version>
     </dependency>
 
     <!-- Test Dependencies -->

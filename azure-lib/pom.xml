@@ -41,9 +41,17 @@
 
     <!-- WARNING: Hadoop versions lower than 3.2.1 have a problem with parsing timestamps, see SDC-12465 and SDC-12302 -->
     <hadoop.version>3.2.1</hadoop.version>
+
+    <guava.version>28.1-jre</guava.version>
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guava.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
@@ -83,6 +91,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-common</artifactId>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- Exclude the Confluent Schema Registry Client's Jackson library since this one ships its own -->
     <dependency>
