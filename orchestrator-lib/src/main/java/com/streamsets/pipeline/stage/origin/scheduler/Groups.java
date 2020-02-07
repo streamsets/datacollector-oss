@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum Groups implements Label {
-  CRON("CRON"),
+  CRON("Cron"),
   ;
 
   private final String label;
