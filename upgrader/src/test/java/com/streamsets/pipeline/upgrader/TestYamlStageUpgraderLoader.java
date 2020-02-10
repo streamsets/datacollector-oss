@@ -239,7 +239,7 @@ public class TestYamlStageUpgraderLoader {
         ImmutableList.of("value", "foo")
     ))));
     configs = upgrader.upgrade("lib", "stage", "instance", 6, 7, configs);
-    Assert.assertEquals(6, configs.size());
+    Assert.assertEquals(7, configs.size());
     Assert.assertEquals(
         ImmutableList.of(ImmutableMap.of("key", "key", "value", "value")),
         find(configs, "map1").getValue()
@@ -264,6 +264,11 @@ public class TestYamlStageUpgraderLoader {
         "list1"));
     Assert.assertEquals(ImmutableList.of("foo"), ((Map) ((List) find(configs, "listConfig").getValue()).get(0)).get(
         "list2"));
+
+    configs = upgrader.upgrade("lib", "stage", "instance", 7, 8, configs);
+
+    Assert.assertEquals(ImmutableList.of("valueFromOldVariable"), find(configs, "list3").getValue());
+
   }
 
 }

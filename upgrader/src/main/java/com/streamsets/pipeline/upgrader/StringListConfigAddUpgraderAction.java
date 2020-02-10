@@ -47,7 +47,7 @@ public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringL
     ConfigsAdapter.Pair pair = configsAdapter.find(getName());
     List<String> entries = (pair == null) ? new ArrayList<>() : (List<String>) pair.getValue();
     entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
-    entries.add(value);
+    entries.add(resolveValueIfEL(originalConfigs, value).toString());
     configsAdapter.set(getName(), entries);
   }
 

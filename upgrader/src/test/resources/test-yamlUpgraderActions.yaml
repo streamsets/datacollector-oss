@@ -191,6 +191,9 @@ upgrades:
 
 - toVersion: 7
   actions:
+  - setConfig:
+      name: controlVariable
+      value: valueFromOldVariable
   - configStringMapPut:
       name: map1
       key: key
@@ -226,3 +229,9 @@ upgrades:
       - configStringListRemove:
           name: list2
           value: value
+
+- toVersion: 8
+  actions:
+    - configStringListAdd:
+        name: list3
+        value: ${value("controlVariable")}
