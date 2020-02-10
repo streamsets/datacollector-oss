@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.mysql;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDef.Type;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class MysqlSourceConfig {
 
@@ -46,23 +47,23 @@ public class MysqlSourceConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       description = "MySql username. User must have REPLICATION SLAVE privilege",
       displayPosition = 30,
       group = "CREDENTIALS"
   )
-  public String username;
+  public CredentialValue username;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       description = "MySql user password.",
       displayPosition = 40,
       group = "CREDENTIALS"
   )
-  public String password;
+  public CredentialValue password;
 
   @ConfigDef(
       required = false,

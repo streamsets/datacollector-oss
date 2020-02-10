@@ -20,10 +20,12 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.eclipse.jetty.util.security.Credential;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.joda.time.format.DateTimeFormat;
@@ -675,8 +677,8 @@ public abstract class AbstractMysqlSource {
   private int nextServerId = 1;
   protected MysqlSourceConfig createConfig(String username) {
     MysqlSourceConfig config = new MysqlSourceConfig();
-    config.username = username;
-    config.password = MYSQL_PASSWORD;
+    config.username = () -> username;
+    config.password = () -> MYSQL_PASSWORD;
     Matcher matcher = Pattern.compile("jdbc:mysql://(.*):(\\d+)/test")
         .matcher(getJdbcUrl());
     matcher.find();

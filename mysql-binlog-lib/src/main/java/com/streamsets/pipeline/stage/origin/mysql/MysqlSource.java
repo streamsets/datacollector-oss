@@ -138,8 +138,8 @@ public abstract class MysqlSource extends BaseSource {
     // connect to mysql
     HikariConfig hikariConfig = new HikariConfig();
     hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", getConfig().hostname, port));
-    hikariConfig.setUsername(getConfig().username);
-    hikariConfig.setPassword(getConfig().password);
+    hikariConfig.setUsername(getConfig().username.get());
+    hikariConfig.setPassword(getConfig().password.get());
     hikariConfig.setReadOnly(true);
     hikariConfig.addDataSourceProperty("useSSL", getConfig().useSsl);
     try {
@@ -160,8 +160,8 @@ public abstract class MysqlSource extends BaseSource {
     BinaryLogClient binLogClient = new BinaryLogClient(
         getConfig().hostname,
         port,
-        getConfig().username,
-        getConfig().password
+        getConfig().username.get(),
+        getConfig().password.get()
     );
     if (getConfig().useSsl) {
       binLogClient.setSSLMode(SSLMode.REQUIRED);
