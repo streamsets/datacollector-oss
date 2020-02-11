@@ -368,10 +368,6 @@ public class DirectorySpooler {
   private void startSpooling(WrappedFile currentFile) throws IOException {
     running = true;
 
-    if(!context.isPreview() && currentFile != null) {
-      handleOlderFiles(currentFile);
-    }
-
     scheduledExecutor = new SafeScheduledExecutorService(1, "directory-dirspooler");
 
     findAndQueueFiles(true, false);
@@ -684,56 +680,6 @@ public class DirectorySpooler {
     spoolQueueMeter.mark(filesQueue.size());
     pendingFilesCounter.inc(filesQueue.size() - pendingFilesCounter.getCount());
     LOG.debug("Found '{}' files", filesQueue.size());
-  }
-
-  void handleOlderFiles(final WrappedFile startingFile) throws IOException {
-    if (postProcessing != FilePostProcessing.NONE) {
-      final ArrayList<WrappedFile> toProcess = new ArrayList<>();
-
-      try {
-        fs.handleOldFiles(spoolDirPath, startingFile, useLastModified, toProcess);
-      } catch (Exception ex) {
-        throw new IOException("traverseDirectories(): walkFileTree error. startingFile "
-            + startingFile.getAbsolutePath()
-            + ex.getMessage(),
-            ex
-        );
-      }
-
-      for (WrappedFile p : toProcess) {
-        switch (postProcessing) {
-          case DELETE:
-            if (fs.patternMatches(p.getFileName())) {
-              if (fs.exists(p)) {
-                fs.delete(p);
-                LOG.debug("Deleting old file '{}'", p);
-              } else {
-                LOG.debug("The old file '{}' does not exist", p);
-              }
-            } else {
-              LOG.debug("Ignoring old file '{}' that do not match the file name pattern '{}'", p, pattern);
-            }
-            break;
-          case ARCHIVE:
-            if (fs.patternMatches(p.getFileName())) {
-              if (fs.exists(p)) {
-                moveIt(p, archiveDirPath);
-                LOG.debug("Archiving old file '{}'", p);
-              } else {
-                LOG.debug("The old file '{}' does not exist", p);
-              }
-            } else {
-              LOG.debug("Ignoring old file '{}' that do not match the file name pattern '{}'", p, pattern);
-            }
-            break;
-          case NONE:
-            // no action required
-            break;
-          default:
-            throw new IllegalStateException("Unexpected post processing option " + postProcessing);
-        }
-      }
-    }
   }
 
   class FileFinder implements Runnable {
