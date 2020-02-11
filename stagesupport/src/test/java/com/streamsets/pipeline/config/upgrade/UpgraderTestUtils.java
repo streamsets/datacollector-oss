@@ -168,6 +168,15 @@ public class UpgraderTestUtils {
     fail(String.format("configs did not contain property %s", propertyName));
   }
 
+  public static void assertExists(List<Config> configs, String propertyName) {
+    for (Config config : configs) {
+      if (config.getName().equals(propertyName)) {
+        return;
+      }
+    }
+    fail(String.format("configs did not contain property %s", propertyName));
+  }
+
   /**
    * <p>
    *   Captures the state of a list of {@link Config} objects.  Call this before the upgrader runs to capture the

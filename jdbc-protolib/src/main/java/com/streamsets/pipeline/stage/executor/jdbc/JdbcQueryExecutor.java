@@ -34,10 +34,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -48,6 +50,11 @@ public class JdbcQueryExecutor extends BaseExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(JdbcQueryExecutor.class);
 
+  private static final String QUERIES_CONFIGURATION = "config.queries";
+
+  private static final String INSERT = "INSERT";
+  private static final String DELETE = "DELETE";
+
   private JdbcQueryExecutorConfig config;
   private ErrorRecordHandler errorRecordHandler;
 
@@ -57,52 +64,89 @@ public class JdbcQueryExecutor extends BaseExecutor {
     this.config = config;
   }
 
-
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     config.init(getContext(), issues);
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    if (config.parallel) {
-      if (config.hikariConfigBean.maximumPoolSize != config.hikariConfigBean.minIdle) {
+
+    validateQueries(issues);
+
+    try (Connection connection = config.getConnection()) {
+      if (connection == null) {
+        issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.executor.jdbc.Groups.JDBC.name(),
+            QUERIES_CONFIGURATION,
+            QueryExecErrors.QUERY_EXECUTOR_002
+        ));
+      }
+    } catch (SQLException e) {
+      issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.executor.jdbc.Groups.JDBC.name(),
+          QUERIES_CONFIGURATION,
+          QueryExecErrors.QUERY_EXECUTOR_002,
+          e.getMessage()
+      ));
+    }
+
+    if (config.isParallel()) {
+      if (config.getHikariConfigBean().maximumPoolSize != config.getHikariConfigBean().minIdle) {
         LOG.error(QueryExecErrors.QUERY_EXECUTOR_003.getMessage());
-        issues.add(getContext().createConfigIssue(
-            Groups.ADVANCED.name(),
-            "parallel",
+        issues.add(getContext().createConfigIssue(Groups.ADVANCED.name(),
+            "config.isParallel",
             QueryExecErrors.QUERY_EXECUTOR_003
         ));
       } else {
-        service = Executors.newFixedThreadPool(config.hikariConfigBean.maximumPoolSize);
+        service = Executors.newFixedThreadPool(config.getHikariConfigBean().maximumPoolSize);
       }
     }
-    return  issues;
+    return issues;
+  }
+
+  private void validateQueries(List<ConfigIssue> issues) {
+    List<String> queries = config.getQueries();
+
+    boolean queriesAreEmpty = true;
+    for (String query : queries) {
+      if (!query.trim().isEmpty()) {
+        queriesAreEmpty = false;
+        break;
+      }
+    }
+    if (queriesAreEmpty) {
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(),
+          QUERIES_CONFIGURATION,
+          QueryExecErrors.QUERY_EXECUTOR_007
+      ));
+    }
+
   }
 
   @Override
-  public void write(Batch batch) throws StageException {
-
-    if (config.parallel) {
+  public void write(Batch batch) {
+    if (config.isParallel()) {
       processInParallel(errorRecordHandler, batch);
     } else {
       processSerially(errorRecordHandler, batch);
     }
   }
 
-  private void processSerially(ErrorRecordHandler errorRecordHandler, Batch batch) throws StageException {
+  private void processSerially(ErrorRecordHandler errorRecordHandler, Batch batch) {
     ELVars variables = getContext().createELVars();
-    ELEval eval = getContext().createELEval("query");
+    ELEval eval = getContext().createELEval(config.getQueriesVariableName());
 
     Iterator<Record> it = batch.getRecords();
     try (Connection connection = config.getConnection()) {
       while (it.hasNext()) {
         Record record = it.next();
         RecordEL.setRecordInContext(variables, record);
-        String query = eval.eval(variables, config.query, String.class);
 
-        processARecord(connection, errorRecordHandler, query, record);
+        for (String query : config.getQueries()) {
+          if (!query.trim().isEmpty()) {
+            processARecord(connection, errorRecordHandler, eval.eval(variables, query, String.class), record);
+          }
+        }
       }
 
-      if (config.batchCommit) {
+      if (config.isBatchCommit()) {
         connection.commit();
       }
 
@@ -113,35 +157,37 @@ public class JdbcQueryExecutor extends BaseExecutor {
 
   }
 
-  private void processInParallel(ErrorRecordHandler errorRecordHandler, Batch batch) throws StageException {
+  private void processInParallel(ErrorRecordHandler errorRecordHandler, Batch batch) {
     ELVars variables = getContext().createELVars();
-    ELEval eval = getContext().createELEval("query");
+    ELEval eval = getContext().createELEval(config.getQueriesVariableName());
 
     Iterator<Record> it = batch.getRecords();
 
     List<Future<Void>> insertsAndDeletes = new LinkedList<>();
-    Set<WorkQueueElement> updatesAndOthers = new LinkedHashSet<>();
-    Set<WorkQueueElement> deletes = new LinkedHashSet<>();
+    Set<Map.Entry<String, Record>> updatesAndOthers = new LinkedHashSet<>();
+    Set<Map.Entry<String, Record>> deletes = new LinkedHashSet<>();
     DBTask task;
 
     while (it.hasNext()) {
       Record record = it.next();
       RecordEL.setRecordInContext(variables, record);
-      String query = eval.eval(variables, config.query, String.class);
 
-      // TODO: split into INSERT/UPDATE (and others)/DELETE.
-      query = query.trim();
-      String cmd = query.substring(0, query.indexOf(" ")).trim().toUpperCase();
+      for (String rawQuery : config.getQueries()) {
+        if (!rawQuery.trim().isEmpty()) {
+          String query = eval.eval(variables, rawQuery, String.class).trim().toUpperCase();
 
-      if (cmd.equals("INSERT")) {
-        insertsAndDeletes.add(service.submit(new DBTask(new WorkQueueElement(query, record), errorRecordHandler, config)));
-
-      } else if (cmd.equals("DELETE")) {
-        deletes.add(new WorkQueueElement(query, record));
-
-      } else {
-        updatesAndOthers.add(new WorkQueueElement(query, record));
-
+          if (query.startsWith(INSERT)) {
+            insertsAndDeletes.add(service.submit(new DBTask(
+                new AbstractMap.SimpleEntry<>(query, record),
+                errorRecordHandler,
+                config
+            )));
+          } else if (query.startsWith(DELETE)) {
+            deletes.add(new AbstractMap.SimpleEntry<>(query, record));
+          } else {
+            updatesAndOthers.add(new AbstractMap.SimpleEntry<>(query, record));
+          }
+        }
       }
     }
 
@@ -154,12 +200,12 @@ public class JdbcQueryExecutor extends BaseExecutor {
     // there is a very remote (but possible) chance
     // that 2 back-to-back UPDATEs for the same record
     // could execute out-of-order.
-    if (updatesAndOthers.size() > 0) {
+    if (!updatesAndOthers.isEmpty()) {
       try (Connection connection = config.getConnection()) {
-        for (WorkQueueElement e : updatesAndOthers) {
-          processARecord(connection, errorRecordHandler, e.query, e.record);
+        for (Map.Entry<String, Record> element : updatesAndOthers) {
+          processARecord(connection, errorRecordHandler, element.getKey(), element.getValue());
         }
-        if(!config.hikariConfigBean.autoCommit) {
+        if (!config.getHikariConfigBean().isAutoCommit()) {
           connection.commit();
         }
 
@@ -170,48 +216,51 @@ public class JdbcQueryExecutor extends BaseExecutor {
     }
 
     // finally, process DELETE statements in parallel.
-    if (deletes.size() > 0) {
+    if (!deletes.isEmpty()) {
       insertsAndDeletes.clear();
-      for (WorkQueueElement e : deletes) {
-        task = new DBTask(e, errorRecordHandler, config);
+      for (Map.Entry<String, Record> element : deletes) {
+        task = new DBTask(element, errorRecordHandler, config);
         insertsAndDeletes.add(service.submit(task));
       }
       waitForCompletion(insertsAndDeletes);
     }
   }
 
-  private void processARecord(Connection connection, ErrorRecordHandler errorRecordHandler, String query, Record record) throws StageException {
+  private void processARecord(
+      Connection connection, ErrorRecordHandler errorRecordHandler, String query, Record record
+  ) {
     LOG.trace("Executing query: {}", query);
+    ResultSet rs = null;
+
     try (Statement stmt = connection.createStatement()) {
       final boolean queryResult = stmt.execute(query);
 
-      if (queryResult && config.queryResultCount){
+      if (queryResult && config.queryResultCount) {
         int count = 0;
-        ResultSet rs = stmt.getResultSet();
-        while(rs.next()){
+        rs = stmt.getResultSet();
+        while (rs.next()) {
           count++;
         }
 
-        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
-                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
-                .with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, count + " row(s) returned")
-                .createAndSend();
-      }
-      else if (config.queryResultCount){
-        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
-                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
-                .with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, stmt.getUpdateCount() + " row(s) affected")
-                .createAndSend();
-      }
-      else{
-        JdbcQueryExecutorEvents.successfulQuery.create(getContext())
-                .with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query)
-                .createAndSend();
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD,
+            query
+        ).with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, count + " row(s) returned").createAndSend();
+      } else if (config.queryResultCount) {
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD,
+            query
+        ).with(JdbcQueryExecutorEvents.QUERY_RESULT_FIELD, stmt.getUpdateCount() + " row(s) affected").createAndSend();
+      } else {
+        JdbcQueryExecutorEvents.successfulQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD,
+            query
+        ).createAndSend();
       }
     } catch (SQLException ex) {
       LOG.error("Can't execute query", ex);
 
-      EventCreator.EventBuilder failedQueryEventBuilder = JdbcQueryExecutorEvents.failedQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD, query);
+      EventCreator.EventBuilder failedQueryEventBuilder =
+          JdbcQueryExecutorEvents.failedQuery.create(getContext()).with(JdbcQueryExecutorEvents.QUERY_EVENT_FIELD,
+          query
+      );
       errorRecordHandler.onError(new OnRecordErrorException(record,
           QueryExecErrors.QUERY_EXECUTOR_001,
           query,
@@ -219,13 +268,21 @@ public class JdbcQueryExecutor extends BaseExecutor {
       ));
 
       failedQueryEventBuilder.createAndSend();
+    } finally {
+      try {
+        if (rs != null) {
+          rs.close();
+        }
+      } catch (SQLException e) {
+        LOG.trace("Failed to close result set", e);
+      }
     }
   }
 
-  private void waitForCompletion(List<Future<Void>> insertsAndDeletes) throws StageException {
+  private void waitForCompletion(List<Future<Void>> insertsAndDeletes) {
     try {
-      for (Future<Void> f : insertsAndDeletes) {
-        f.get();
+      for (Future<Void> element : insertsAndDeletes) {
+        element.get();
       }
     } catch (InterruptedException | ExecutionException ex) {
       LOG.info("InterruptedException: {}", ex.getMessage(), ex);

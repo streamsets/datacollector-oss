@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "JDBC Query",
     description = "Executes queries against JDBC compliant database",
     upgrader = JdbcQueryExecutorUpgrader.class,
@@ -45,12 +45,25 @@ public class JdbcQueryDExecutor extends DExecutor {
   @ConfigDefBean
   public JdbcQueryExecutorConfig config;
 
+  /**
+   * Returns the JdbcQueryExecutorConfig bean.
+   * <p/>
+   * This method is used to pass the JdbcQueryExecutorConfig bean to the underlaying connector.
+   * <p/>
+   * Subclasses may override this method to provide specific vendor configurations.
+   * <p/>
+   * IMPORTANT: when a subclass is overriding this method to return a specialized JdbcQueryExecutorConfig bean, the
+   * config property itself in the connector subclass must have the same name as the config property in this class,
+   * this is "config".
+   */
+  protected JdbcQueryExecutorConfig getQueryExecutorConfigBean() {
+    return config;
+  }
+
   @Override
   protected Executor createExecutor() {
     // The executor is meant to issue changing queries so having connection in read only mode doesn't make sense
-    config.hikariConfigBean.readOnly = false;
-
-    return new JdbcQueryExecutor(config);
+    config.getHikariConfigBean().readOnly = false;
+    return new JdbcQueryExecutor(getQueryExecutorConfigBean());
   }
-
 }

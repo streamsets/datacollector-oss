@@ -25,6 +25,7 @@ public enum QueryExecErrors implements ErrorCode {
   QUERY_EXECUTOR_004("Error executing statement {} "),
   QUERY_EXECUTOR_005("Connection Error {}"),
   QUERY_EXECUTOR_006("Exception while waiting for completion {}"),
+  QUERY_EXECUTOR_007("Queries cannot be blank"),
   ;
 
   private final String msg;

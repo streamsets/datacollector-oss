@@ -920,8 +920,8 @@ public class JdbcUtil {
 
     config.setJdbcUrl(hikariConfigBean.getConnectionString());
     if (hikariConfigBean.useCredentials){
-       config.setUsername(hikariConfigBean.username.get());
-       config.setPassword(hikariConfigBean.password.get());
+      config.setUsername(hikariConfigBean.getUsername().get());
+      config.setPassword(hikariConfigBean.getPassword().get());
     }
     config.setAutoCommit(autoCommit);
     config.setReadOnly(readOnly);
@@ -962,7 +962,8 @@ public class JdbcUtil {
       Stage.Context context,
       boolean tableAutoCreate
   ) throws SQLException, StageException {
-    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean, hikariConfigBean.autoCommit, false));
+    HikariDataSource dataSource = new HikariDataSource(createDataSourceConfig(hikariConfigBean,
+        hikariConfigBean.isAutoCommit(), false));
 
     // Can only validate schema+table configuration when the user specified plain constant values and table auto
     // create is not set
@@ -1003,8 +1004,7 @@ public class JdbcUtil {
     HikariDataSource dataSource;
     try {
       dataSource = new HikariDataSource(createDataSourceConfig(
-          hikariConfigBean,
-          hikariConfigBean.autoCommit,
+          hikariConfigBean, hikariConfigBean.isAutoCommit(),
           hikariConfigBean.readOnly
       ));
     } catch (RuntimeException e) {

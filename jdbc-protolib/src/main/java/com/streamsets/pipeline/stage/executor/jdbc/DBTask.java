@@ -16,7 +16,7 @@
 
 package com.streamsets.pipeline.stage.executor.jdbc;
 
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -25,38 +25,43 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 class DBTask implements Callable<Void> {
-  private final Logger LOG = LoggerFactory.getLogger(DBTask.class);
-  private WorkQueueElement work;
-  private ErrorRecordHandler errorRecordHandler;
-  private JdbcQueryExecutorConfig config;
+  private static final Logger LOG = LoggerFactory.getLogger(DBTask.class);
+  private final String query;
+  private final Record record;
+  private final ErrorRecordHandler errorRecordHandler;
+  private final JdbcQueryExecutorConfig config;
 
-  public DBTask(WorkQueueElement work, ErrorRecordHandler errorRecordHandler, JdbcQueryExecutorConfig config) {
-    LOG.trace("DBTask: create thread {} query {} ", Thread.currentThread().getName(), work.query);
-    this.work = work;
+  public DBTask(
+      Map.Entry<String, Record> queryAndRecord, ErrorRecordHandler errorRecordHandler, JdbcQueryExecutorConfig config
+  ) {
+    LOG.trace("DBTask: create thread {} query {} ", Thread.currentThread().getName(), queryAndRecord.getKey());
+    this.query = queryAndRecord.getKey();
+    this.record = queryAndRecord.getValue();
     this.errorRecordHandler = errorRecordHandler;
     this.config = config;
   }
 
   @Override
-  public Void call() throws StageException {
-    LOG.debug("thread {} query {} ", Thread.currentThread().getName(), work.query);
+  public Void call() {
+    LOG.debug("thread {} query {} ", Thread.currentThread().getName(), query);
 
     try (Connection conn = config.getConnection()) {
       try (Statement stmt = conn.createStatement()) {
-        stmt.execute(work.query);
-        if(!config.hikariConfigBean.autoCommit) {
+        stmt.execute(query);
+        if (!config.getHikariConfigBean().isAutoCommit()) {
           conn.commit();
         }
       } catch (SQLException ex) {
         // DEBUG level due to the fact that duplicate keys, etc kick out here.
         LOG.trace(QueryExecErrors.QUERY_EXECUTOR_004.getMessage(), ex.getMessage());
         synchronized (errorRecordHandler) {
-          errorRecordHandler.onError(new OnRecordErrorException(work.record,
+          errorRecordHandler.onError(new OnRecordErrorException(record,
               QueryExecErrors.QUERY_EXECUTOR_004,
-              work.query,
+              query,
               ex.getMessage()
           ));
         }
@@ -64,9 +69,9 @@ class DBTask implements Callable<Void> {
     } catch (SQLException ex) {
       LOG.error(QueryExecErrors.QUERY_EXECUTOR_005.getMessage(), ex.getMessage(), ex);
       synchronized (errorRecordHandler) {
-        errorRecordHandler.onError(new OnRecordErrorException(work.record,
+        errorRecordHandler.onError(new OnRecordErrorException(record,
             QueryExecErrors.QUERY_EXECUTOR_005,
-            work.query,
+            query,
             ex.getMessage()
         ));
       }

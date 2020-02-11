@@ -36,6 +36,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.sql.Types;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -190,7 +191,7 @@ public class TestJdbcQueryExecutor {
 
   JdbcQueryExecutor createExecutor(String query, boolean queryResultCount){
     JdbcQueryExecutorConfig config = createJdbcQueryExecutorConfig();
-    config.query = query;
+    config.queries = Collections.singletonList(query);
     config.queryResultCount = queryResultCount;
 
     return new JdbcQueryExecutor(config);
@@ -199,7 +200,7 @@ public class TestJdbcQueryExecutor {
   public JdbcQueryExecutor createExecutor(String query) {
     JdbcQueryExecutorConfig config = createJdbcQueryExecutorConfig();
 
-    config.query = query;
+    config.queries = Collections.singletonList(query);
     return new JdbcQueryExecutor(config);
   }
 

@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -73,6 +74,7 @@ public class HikariPoolConfigBean {
   public static final String MAX_LIFETIME_NAME = "maxLifetime";
   public static final String READ_ONLY_NAME = "readOnly";
 
+  private Properties additionalProperties = new Properties();
 
   @ConfigDef(
       required = true,
@@ -422,11 +424,10 @@ public class HikariPoolConfigBean {
   }
 
   public Properties getDriverProperties() throws StageException {
-    Properties properties = new Properties();
     for (ConnectionPropertyBean bean : driverProperties) {
-      properties.setProperty(bean.key, bean.value.get());
+      additionalProperties.setProperty(bean.key, bean.value.get());
     }
-    return properties;
+    return additionalProperties;
   }
 
   public String getConnectionString() {
@@ -441,5 +442,27 @@ public class HikariPoolConfigBean {
     }
 
     return DatabaseVendor.UNKNOWN;
+  }
+
+  public void addExtraDriverProperties(Map<String, String> keyValueProperties) {
+    for (Map.Entry<String, String> property : keyValueProperties.entrySet()) {
+      additionalProperties.setProperty(property.getKey(), property.getValue());
+    }
+  }
+
+  public void setAutoCommit(boolean autoCommit) {
+    this.autoCommit = autoCommit;
+  }
+
+  public boolean isAutoCommit() {
+    return autoCommit;
+  }
+
+  public CredentialValue getUsername() {
+    return username;
+  }
+
+  public CredentialValue getPassword() {
+    return password;
   }
 }

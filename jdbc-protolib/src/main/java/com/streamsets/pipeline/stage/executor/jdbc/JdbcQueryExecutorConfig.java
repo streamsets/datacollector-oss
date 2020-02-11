@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 public class JdbcQueryExecutorConfig {
@@ -38,34 +39,39 @@ public class JdbcQueryExecutorConfig {
   public HikariPoolConfigBean hikariConfigBean;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.TEXT,
-    mode = ConfigDef.Mode.SQL,
-    label = "SQL Query",
-    description = "SQL Query that should be executed for each incoming record.",
-    evaluation = ConfigDef.Evaluation.EXPLICIT,
-    elDefs = { RecordEL.class },
-    displayPosition = 20,
-    group = "JDBC"
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      required = true,
+      type = ConfigDef.Type.LIST,
+      mode = ConfigDef.Mode.SQL,
+      label = "SQL Queries",
+      description = "SQL queries to execute for each incoming record.",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      elDefs = { RecordEL.class },
+      displayPosition = 20,
+      group = "JDBC"
   )
-  public String query;
+  public List<String> queries;
+  //Since the name of the variable is used to define the EL functions
+  private static final String QUERIES_VARIABLE_NAME = "queries";
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.BOOLEAN,
-    label = "Include Query Result Count in Events",
-    description = "The number of results returned/affected by the query when produce events is enabled",
-    defaultValue = "false",
-    displayPosition = 40,
-    group = "JDBC"
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Include Query Result Count in Events",
+      description = "Include the number of rows impacted by a query in generated event records.",
+      defaultValue = "false",
+      displayPosition = 40,
+      group = "JDBC"
   )
   public boolean queryResultCount = false;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Batch Commit",
-      description = "Whether the executor should commit each batch or not.",
+      description = "Commit changes to database after each batch.",
       defaultValue = "true",
       displayPosition = 52,
       group = "ADVANCED"
@@ -73,37 +79,43 @@ public class JdbcQueryExecutorConfig {
   public boolean batchCommit = true;
 
   @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Enable Parallel Queries",
       description = "Execute multiple queries simultaneously.  Within a batch, " +
           "there can be up to three phases. " +
-          "Records are reordered so that all inserts are processed first, " +
-          "all updates are processed second (in original order), all deletes are processed last.",
-
+          "Records are reordered to process all inserts first, all updates second (in original order), and all " +
+          "deletes last.",
       displayPosition = 25,
       group = "ADVANCED"
   )
-  public boolean parallel = false;
+  public boolean isParallel = false;
 
   private HikariDataSource dataSource = null;
 
+  public String getQueriesVariableName() {
+    return QUERIES_VARIABLE_NAME;
+  }
+
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    issues.addAll(hikariConfigBean.validateConfigs(context, issues));
+    overrideDefaultValues();
+    issues.addAll(getHikariConfigBean().validateConfigs(context, issues));
+    addDriverAdditionalProperties();
 
     if(issues.isEmpty()) {
       try {
-        dataSource = UtilsProvider.getJdbcUtil().createDataSourceForRead(hikariConfigBean);
+        dataSource = UtilsProvider.getJdbcUtil().createDataSourceForRead(getHikariConfigBean());
       } catch (StageException e) {
         LOG.error("Can't open connection", e);
         issues.add(
-          context.createConfigIssue(
-            Groups.JDBC.name(),
-            "config.query",
-            QueryExecErrors.QUERY_EXECUTOR_002,
-            e.getMessage()
-          )
-      );
+            context.createConfigIssue(
+                Groups.JDBC.name(),
+                "config.query",
+                QueryExecErrors.QUERY_EXECUTOR_002,
+                e.getMessage()
+            )
+        );
       }
     }
   }
@@ -115,7 +127,37 @@ public class JdbcQueryExecutorConfig {
   }
 
   public Connection getConnection() throws SQLException {
-    return dataSource.getConnection();
+    if (dataSource != null) {
+      return dataSource.getConnection();
+    }
+    return null;
   }
 
+  protected void addDriverAdditionalProperties() {
+    getHikariConfigBean().addExtraDriverProperties(new HashMap<>());
+  }
+
+  protected void overrideDefaultValues(){
+    //Empty method to be overrided and be able to change defaulted values in HikariConfigBean
+  }
+
+  public List<String> getQueries() {
+    return queries;
+  }
+
+  public boolean isBatchCommit() {
+    return batchCommit;
+  }
+
+  public void setBatchCommit(boolean batchCommit) {
+    this.batchCommit = batchCommit;
+  }
+
+  public HikariPoolConfigBean getHikariConfigBean() {
+    return hikariConfigBean;
+  }
+
+  public boolean isParallel() {
+    return isParallel;
+  }
 }

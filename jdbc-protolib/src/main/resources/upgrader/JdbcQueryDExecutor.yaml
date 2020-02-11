@@ -16,5 +16,14 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 4
+    actions:
+      - renameConfig:
+          oldNamePattern: config.parallel
+          newNamePattern: config.isParallel
+      - removeConfigs:
+          namePattern: config.query
+      - configStringListAdd:
+          name: config.queries
+          value: ${value("config.query")}

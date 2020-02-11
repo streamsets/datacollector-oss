@@ -214,8 +214,8 @@ public class PostgresCDCWalReceiver {
   {
     try (Connection localConnection = DriverManager.getConnection(
             hikariConfigBean.getConnectionString(),
-            hikariConfigBean.username.get(),
-            hikariConfigBean.password.get()
+            hikariConfigBean.getUsername().get(),
+            hikariConfigBean.getPassword().get()
     )) {
       if (isReplicationSlotActive(slotName)) {
         try (PreparedStatement preparedStatement = localConnection.prepareStatement(
@@ -242,8 +242,8 @@ public class PostgresCDCWalReceiver {
     try {
       try (Connection localConnection = DriverManager.getConnection(
           hikariConfigBean.getConnectionString(),
-          hikariConfigBean.username.get(),
-          hikariConfigBean.password.get()
+          hikariConfigBean.getUsername().get(),
+          hikariConfigBean.getPassword().get()
       )) {
         String sql = SELECT_SLOT;
         String flushedLabel = "confirmed_flush_lsn";
@@ -358,8 +358,8 @@ public class PostgresCDCWalReceiver {
     try {
       this.connection = getConnection(
           hikariConfigBean.getConnectionString(),
-          hikariConfigBean.username.get(),
-          hikariConfigBean.password.get());
+          hikariConfigBean.getUsername().get(),
+          hikariConfigBean.getPassword().get());
     } catch (SQLException e) {
       throw new StageException(JDBC_00, e.getMessage(), e);
     }
@@ -374,8 +374,8 @@ public class PostgresCDCWalReceiver {
     this.confirmedFlushLSN = null ;
 
     this.properties = new Properties();
-    PGProperty.USER.set(properties, hikariConfigBean.username.get());
-    PGProperty.PASSWORD.set(properties, hikariConfigBean.password.get());
+    PGProperty.USER.set(properties, hikariConfigBean.getUsername().get());
+    PGProperty.PASSWORD.set(properties, hikariConfigBean.getPassword().get());
     PGProperty.ASSUME_MIN_SERVER_VERSION.set(properties, configBean.minVersion.getLabel());
     PGProperty.REPLICATION.set(properties, configBean.replicationType);
     PGProperty.PREFER_QUERY_MODE.set(properties, "simple");
