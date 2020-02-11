@@ -251,13 +251,35 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
               ids
           );
 
-          for (SObject sObject : sObjects) {
-            String id = sObject.getId();
-            Map<String, Field> fieldMap = recordCreator.addFields(sObject, columnsToTypes);
-            for (Record record : recordsToRetrieve.get(id)) {
-              setFieldsInRecord(record, fieldMap);
+          for (int i = 0; i < sObjects.length; i++) {
+            SObject sObject = sObjects[i];
+            if (sObject == null) {
+              // No results for this id - probably deleted
+              switch (conf.missingValuesBehavior) {
+                case SEND_TO_ERROR:
+                  LOG.error(Errors.FORCE_45.getMessage(), ids[i]);
+                  List<Record> errorRecords = recordsToRetrieve.get(ids[i]);
+                  for (Record record: errorRecords) {
+                    errorRecordHandler.onError(new OnRecordErrorException(record, Errors.FORCE_45, ids[i]));
+                  }
+                  badRecords.addAll(errorRecords);
+                  break;
+                case PASS_RECORD_ON:
+                  for (Record record: recordsToRetrieve.get(ids[i])) {
+                    setFieldsInRecord(record, getDefaultFields());
+                  }
+                  break;
+                default:
+                  throw new IllegalStateException("Unknown missing value behavior: " + conf.missingValuesBehavior);
+              }
+            } else {
+              String id = sObject.getId();
+              Map<String, Field> fieldMap = recordCreator.addFields(sObject, columnsToTypes);
+              for (Record record : recordsToRetrieve.get(id)) {
+                setFieldsInRecord(record, fieldMap);
+              }
+              cache.put(id, Optional.of(ImmutableList.of(fieldMap)));
             }
-            cache.put(id, Optional.of(ImmutableList.of(fieldMap)));
           }
         } catch (InvalidIdFault e) {
           // exceptionMessage has form "malformed id 0013600001NnbAdOnE"

@@ -66,6 +66,7 @@ public enum Errors implements ErrorCode {
   FORCE_42("Can only follow one level of external ID relationship: {}"),
   FORCE_43("Can't find type for field name: {}"),
   FORCE_44("Can't find Id field for field name: {}"),
+  FORCE_45("Can't retrieve record with id: {}"),
   ;
   private final String msg;
 
