@@ -58,13 +58,16 @@ public class AmazonEMRConfig {
   public String userRegionCustom;
 
   @ConfigDef(
-    required = true,
-    label = "Use IAM Roles",
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    description = "Use IAM roles instead of AWS credentials to connect to AWS",
-    displayPosition = 108,
-    group = "EMR"
+      required = true,
+      label = "Use IAM Roles",
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      description = "Use IAM roles instead of AWS credentials to connect to AWS",
+      displayPosition = 108,
+      group = "EMR",
+      dependencies = {
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
+      }
   )
   public boolean useIAMRoles;
 
@@ -75,9 +78,9 @@ public class AmazonEMRConfig {
       group = "EMR",
       displayPosition = 110,
       dependencies = {
-        @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
-        @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
-  }
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+          @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
+      }
   )
   public CredentialValue accessKey = () -> "";
 
@@ -88,8 +91,8 @@ public class AmazonEMRConfig {
       group = "EMR",
       displayPosition = 120,
       dependencies = {
-        @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
-        @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+          @Dependency(configName = "useIAMRoles", triggeredByValues = "false")
       }
   )
   public CredentialValue secretKey = () -> "";
@@ -137,15 +140,15 @@ public class AmazonEMRConfig {
   public String clusterId = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "EMR Version",
-    group = "EMR",
-    displayPosition = 190,
-    dependencies = {
-      @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
-      @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
-    }
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "EMR Version",
+      group = "EMR",
+      displayPosition = 190,
+      dependencies = {
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+      }
   )
   public String emrVersion;
 
