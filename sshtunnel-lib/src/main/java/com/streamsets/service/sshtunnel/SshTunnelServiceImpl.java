@@ -20,15 +20,12 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseService;
-import com.streamsets.pipeline.api.ext.DataCollectorServices;
-import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.ServiceDef;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,18 +69,7 @@ public class SshTunnelServiceImpl extends BaseService implements SshTunnelServic
     List issues = new ArrayList();
 
     if (sshTunnelConfig.sshTunneling) {
-      SshKeyInfoBean sshKeyInfo = null;
-      try {
-        JsonMapper json = DataCollectorServices.instance().get(JsonMapper.SERVICE_KEY);
-        sshKeyInfo = json.readValue(sshTunnelConfig.sshKeyInfo.get(), SshKeyInfoBean.class);
-      } catch (IOException ex) {
-        issues.add(getContext().createConfigIssue(
-            Groups.SSH_TUNNEL.name(),
-            "sshTunnelConfig.sshKeyInfo",
-            Errors.SSH_TUNNEL_04,
-            ex.getMessage()
-        ));
-      }
+      SshKeyInfoBean sshKeyInfo = sshTunnelConfig.getSshKeyInfo();
       if (sshKeyInfo != null) {
         //splitting the fingerprints config into one a List<String> of fingerprints
         //didn't feel like bringing in Guava just for this.

@@ -22,7 +22,6 @@ public enum Errors implements ErrorCode {
   SSH_TUNNEL_01("Could not start forwarder SSH client: {}"),
   SSH_TUNNEL_02("SSH tunnel broken: {}"),
   SSH_TUNNEL_03("SSH tunnel missing configuration: {}"),
-  SSH_TUNNEL_04("Invalid SSK key information: {}"),
   ;
 
   private final String message;
