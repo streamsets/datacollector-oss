@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
@@ -36,6 +37,12 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
     onlineHelpRefUrl ="index.html?contextID=task_nvq_1rr_2jb"
 )
 @GenerateResourceBundle
+@HideConfigs({
+    "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.keyStoreType",
+    "conf.tlsConfig.keyStorePassword",
+    "conf.tlsConfig.keyStoreAlgorithm"
+})
 @ConfigGroups(Groups.class)
 public class StartPipelineDSource extends DSource {
 

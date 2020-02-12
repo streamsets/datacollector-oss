@@ -17,6 +17,8 @@ package com.streamsets.pipeline.lib.startJob;
 
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.startPipeline.Groups;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,9 +36,17 @@ public class StartJobCommon {
     this.conf = conf;
   }
 
-  public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues) {
+  public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues, Stage.Context context) {
     if (!conf.baseUrl.endsWith("/")) {
       conf.baseUrl += "/";
+    }
+    if (conf.tlsConfig.isEnabled()) {
+      conf.tlsConfig.init(
+          context,
+          Groups.TLS.name(),
+          StartPipelineCommon.SSL_CONFIG_PREFIX,
+          issues
+      );
     }
     return issues;
   }

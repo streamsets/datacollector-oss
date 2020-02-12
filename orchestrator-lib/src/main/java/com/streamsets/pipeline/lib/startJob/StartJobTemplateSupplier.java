@@ -51,6 +51,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
   private Field responseField = null;
   private String userAuthToken;
   private List<String> jobInstancesIdList = new ArrayList<>();
+  private ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
   private List<String> successStates = ImmutableList.of(
       "INACTIVE"
@@ -71,6 +72,10 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
     this.templateJobId = templateJobId;
     this.runtimeParametersList = runtimeParametersList;
     this.context = context;
+
+    if (conf.tlsConfig.getSslContext() != null) {
+      clientBuilder.sslContext(conf.tlsConfig.getSslContext());
+    }
   }
 
   @Override
@@ -120,7 +125,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
       Map<String, String> loginJson = new HashMap<>();
       loginJson.put("userName", conf.username.get());
       loginJson.put("password", conf.password.get());
-      response = ClientBuilder.newClient()
+      response = clientBuilder.build()
           .target(conf.baseUrl + "security/public-rest/v1/authentication/login")
           .register(new CsrfProtectionFilter("CSRF"))
           .request()
@@ -151,7 +156,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
     jobTemplateCreationInfo.put("paramName", conf.parameterName);
     jobTemplateCreationInfo.put("runtimeParametersList", runtimeParametersList);
 
-    try (Response response = ClientBuilder.newClient()
+    try (Response response = clientBuilder.build()
         .target(jobStartUrl)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()
@@ -169,7 +174,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
 
   private Map<String, Map<String, Object>> getMultipleJobStatus() {
     String jobStatusUrl = conf.baseUrl + "jobrunner/rest/v1/jobs/status";
-    try (Response response = ClientBuilder.newClient()
+    try (Response response = clientBuilder.build()
         .target(jobStatusUrl)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()

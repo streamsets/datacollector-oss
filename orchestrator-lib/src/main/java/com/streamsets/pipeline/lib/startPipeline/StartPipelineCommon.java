@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutionException;
 public class StartPipelineCommon {
 
   private static final Logger LOG = LoggerFactory.getLogger(StartPipelineCommon.class);
+  public static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
   public ManagerApi managerApi;
   public StoreApi storeApi;
   private StartPipelineConfig conf;
@@ -42,6 +43,15 @@ public class StartPipelineCommon {
   }
 
   public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    if (conf.tlsConfig.isEnabled()) {
+      conf.tlsConfig.init(
+          context,
+          Groups.TLS.name(),
+          SSL_CONFIG_PREFIX,
+          issues
+      );
+    }
+
     ApiClient apiClient;
 
     // Validate Server is reachable
@@ -79,7 +89,8 @@ public class StartPipelineCommon {
     apiClient.setUsername(conf.username.get());
     apiClient.setPassword(conf.password.get());
     apiClient.setDPMBaseURL(conf.controlHubUrl);
-    return  apiClient;
+    apiClient.setSslContext(conf.tlsConfig.getSslContext());
+    return apiClient;
   }
 
   public LinkedHashMap<String, Field> startPipelineInParallel(

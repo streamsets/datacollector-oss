@@ -62,7 +62,7 @@ public class StartJobProcessor extends SingleLaneProcessor {
     jobIdConfigVars = getContext().createELVars();
     jobIdEval = getContext().createELEval("jobId");
     runtimeParametersEval = getContext().createELEval("runtimeParameters");
-    return this.startJobCommon.init(issues);
+    return this.startJobCommon.init(issues, getContext());
   }
 
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {

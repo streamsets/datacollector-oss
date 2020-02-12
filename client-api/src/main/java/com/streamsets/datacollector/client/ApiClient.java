@@ -24,6 +24,7 @@ import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.glassfish.jersey.logging.LoggingFeature;
 
+import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -55,6 +56,7 @@ public class ApiClient {
   private boolean debugging = false;
   private String basePath = "https://localhost/rest";
   private JSON json = new JSON();
+  private SSLContext sslContext = null;
 
   private final Authentication authentication;
 
@@ -379,9 +381,18 @@ public class ApiClient {
     }
   }
 
-  private Response getAPIResponse(String path, String method, List<Pair> queryParams, Object body, byte[] binaryBody,
-                                  Map<String, String> headerParams, Map<String, Object> formParams, String accept,
-                                  String contentType, String[] authNames) throws ApiException {
+  private Response getAPIResponse(
+      String path,
+      String method,
+      List<Pair> queryParams,
+      Object body,
+      byte[] binaryBody,
+      Map<String, String> headerParams,
+      Map<String, Object> formParams,
+      String accept,
+      String contentType,
+      String[] authNames
+  ) throws ApiException {
 
     if (body != null && binaryBody != null){
       throw new ApiException(500, "either body or binaryBody must be null");
@@ -541,14 +552,23 @@ public class ApiClient {
     return encodedFormParams;
   }
 
+  public void setSslContext(SSLContext sslContext) {
+    this.sslContext = sslContext;
+  }
+
   /**
    * Get an existing client or create a new client to handle HTTP request.
    */
   private Client getClient() {
-    if(!hostMap.containsKey(basePath)) {
+    if (!hostMap.containsKey(basePath)) {
       ClientConfig config = new ClientConfig();
       config.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
-      Client client = ClientBuilder.newClient(config);
+      Client client;
+      if (sslContext != null) {
+        client = ClientBuilder.newBuilder().sslContext(sslContext).withConfig(config).build();
+      } else {
+        client = ClientBuilder.newClient(config);
+      }
       client.register(new CsrfProtectionFilter("CSRF"));
       hostMap.put(basePath, client);
     }
