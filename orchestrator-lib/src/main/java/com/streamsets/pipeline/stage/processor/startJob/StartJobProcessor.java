@@ -31,6 +31,8 @@ import com.streamsets.pipeline.lib.startJob.StartJobCommon;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 import com.streamsets.pipeline.lib.startJob.StartJobSupplier;
 import com.streamsets.pipeline.lib.startJob.StartJobTemplateSupplier;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +43,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@SuppressWarnings("unchecked")
 public class StartJobProcessor extends SingleLaneProcessor {
 
   private StartJobCommon startJobCommon;
@@ -50,6 +51,7 @@ public class StartJobProcessor extends SingleLaneProcessor {
   private ELVars jobIdConfigVars;
   private ELEval jobIdEval;
   private ELEval runtimeParametersEval;
+  private ErrorRecordHandler errorRecordHandler;
 
   StartJobProcessor(StartJobConfig conf) {
     this.conf = conf;
@@ -62,6 +64,7 @@ public class StartJobProcessor extends SingleLaneProcessor {
     jobIdConfigVars = getContext().createELVars();
     jobIdEval = getContext().createELEval("jobId");
     runtimeParametersEval = getContext().createELEval("runtimeParameters");
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return this.startJobCommon.init(issues, getContext());
   }
 
@@ -93,7 +96,7 @@ public class StartJobProcessor extends SingleLaneProcessor {
               conf,
               templateJobId,
               runtimeParametersList,
-              getContext()
+              errorRecordHandler
           ), executor);
           startJobFutures.add(future);
         } else {
@@ -114,7 +117,7 @@ public class StartJobProcessor extends SingleLaneProcessor {
             CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartJobSupplier(
                 conf,
                 resolvedJobIdConfig,
-                getContext()
+                errorRecordHandler
             ), executor);
             startJobFutures.add(future);
           }

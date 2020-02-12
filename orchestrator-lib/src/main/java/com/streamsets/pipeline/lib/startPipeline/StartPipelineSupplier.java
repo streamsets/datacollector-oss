@@ -23,9 +23,11 @@ import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.datacollector.client.model.SourceOffsetJson;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,12 +36,13 @@ import java.util.function.Supplier;
 
 public class StartPipelineSupplier implements Supplier<Field> {
 
+  private static final Logger LOG = LoggerFactory.getLogger(StartPipelineSupplier.class);
   private static final String REV = "0";
   private final StartPipelineConfig conf;
   private final PipelineIdConfig pipelineIdConfig;
   private final StoreApi storeApi;
   private final ManagerApi managerApi;
-  private final Stage.Context context;
+  private final ErrorRecordHandler errorRecordHandler;
   private ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
   private PipelineConfigurationJson pipelineConfiguration = null;
@@ -61,13 +64,13 @@ public class StartPipelineSupplier implements Supplier<Field> {
       StoreApi storeApi,
       StartPipelineConfig conf,
       PipelineIdConfig pipelineIdConfig,
-      Stage.Context context
+      ErrorRecordHandler errorRecordHandler
   ) {
     this.managerApi = managerApi;
     this.storeApi = storeApi;
     this.conf = conf;
     this.pipelineIdConfig = pipelineIdConfig;
-    this.context = context;
+    this.errorRecordHandler = errorRecordHandler;
   }
 
   @Override
@@ -94,7 +97,8 @@ public class StartPipelineSupplier implements Supplier<Field> {
         waitForPipelineCompletion();
       }
     } catch (Exception ex) {
-      context.reportError(ex);
+      LOG.error(ex.toString(), ex);
+      errorRecordHandler.onError(StartPipelineErrors.START_PIPELINE_04, ex.toString(), ex);
     }
     return responseField;
   }

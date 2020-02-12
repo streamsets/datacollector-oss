@@ -13,19 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.startPipeline;
+package com.streamsets.pipeline.lib.startJob;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  START_PIPELINE_01("Failed to connect to Execution Engine: {}"),
-  START_PIPELINE_02("Pipeline ID {} does not exist in Execution Engine: {}"),
+public enum StartJobErrors implements ErrorCode {
+  START_JOB_01("Control Hub Login failed, status code '{}': {}"),
+  START_JOB_02("Reset failed for Job ID: {}, status code '{}': {}"),
+  START_JOB_03("Failed to Start Job for Job ID: {}, status code '{}': {}"),
+  START_JOB_04("Failed to Start Job Template for Job ID: {}, status code '{}': {}"),
+  START_JOB_05("Failed to parse runtime parameters for Job ID: {}, error: {}"),
+  START_JOB_06("Configuration value is required for Job ID, at index: {}"),
   ;
 
   private final String msg;
-  Errors(String msg) {
+  StartJobErrors(String msg) {
     this.msg = msg;
   }
 

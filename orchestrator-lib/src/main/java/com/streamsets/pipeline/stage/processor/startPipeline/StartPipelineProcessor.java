@@ -23,13 +23,14 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineErrors;
 import com.streamsets.pipeline.lib.startPipeline.PipelineIdConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineSupplier;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +52,7 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
   private ELVars pipelineIdConfigVars;
   private ELEval pipelineIdEval;
   private ELEval runtimeParametersEval;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
   StartPipelineProcessor(StartPipelineConfig conf) {
     this.startPipelineCommon = new StartPipelineCommon(conf);
@@ -63,6 +65,7 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
     pipelineIdConfigVars = getContext().createELVars();
     pipelineIdEval = getContext().createELEval("pipelineId");
     runtimeParametersEval = getContext().createELEval("runtimeParameters");
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return this.startPipelineCommon.init(issues, getContext());
   }
 
@@ -97,27 +100,14 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
               this.startPipelineCommon.storeApi,
               conf,
               resolvedPipelineIdConfig,
-              getContext()
+              errorRecordHandler
           ), executor);
           startPipelineFutures.add(future);
         }
 
       } catch (OnRecordErrorException ex) {
-        switch (this.getContext().getOnErrorRecord()) {
-          case DISCARD:
-            break;
-          case TO_ERROR:
-            this.getContext().toError(record, ex);
-            break;
-          case STOP_PIPELINE:
-            throw ex;
-          default:
-            throw new IllegalStateException(Utils.format(
-                "It should never happen. OnError '{}'",
-                this.getContext().getOnErrorRecord(),
-                ex
-            ));
-        }
+        LOG.error(ex.toString(), ex);
+        errorRecordHandler.onError(ex);
       }
     }
 
@@ -128,7 +118,7 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
     try {
       LinkedHashMap<String, Field> outputField = startPipelineCommon.startPipelineInParallel(
           startPipelineFutures,
-          getContext()
+          errorRecordHandler
       );
 
       if (firstRecord == null) {
@@ -146,7 +136,8 @@ public class StartPipelineProcessor extends SingleLaneProcessor {
       }
       batchMaker.addRecord(firstRecord);
     } catch (Exception ex) {
-      getContext().reportError(ex);
+      LOG.error(ex.toString(), ex);
+      errorRecordHandler.onError(StartPipelineErrors.START_PIPELINE_04, ex.toString(), ex);
     }
   }
 }

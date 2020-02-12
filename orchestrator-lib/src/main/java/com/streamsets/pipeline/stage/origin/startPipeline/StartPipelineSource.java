@@ -20,10 +20,14 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineErrors;
 import com.streamsets.pipeline.lib.startPipeline.PipelineIdConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineSupplier;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -34,8 +38,10 @@ import java.util.concurrent.Executors;
 
 public class StartPipelineSource extends BaseSource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(StartPipelineSource.class);
   private StartPipelineCommon startPipelineCommon;
   private StartPipelineConfig conf;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
   StartPipelineSource(StartPipelineConfig conf) {
     this.startPipelineCommon = new StartPipelineCommon(conf);
@@ -45,6 +51,7 @@ public class StartPipelineSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return this.startPipelineCommon.init(issues, getContext());
   }
 
@@ -59,7 +66,7 @@ public class StartPipelineSource extends BaseSource {
           this.startPipelineCommon.storeApi,
           conf,
           pipelineIdConfig,
-          getContext()
+          errorRecordHandler
       ), executor);
       startPipelineFutures.add(future);
     }
@@ -67,13 +74,14 @@ public class StartPipelineSource extends BaseSource {
     try {
       LinkedHashMap<String, Field> outputField = startPipelineCommon.startPipelineInParallel(
           startPipelineFutures,
-          getContext()
+          errorRecordHandler
       );
       Record outputRecord = getContext().createRecord("startPipelineSource");
       outputRecord.set(Field.createListMap(outputField));
       batchMaker.addRecord(outputRecord);
     } catch (Exception ex) {
-      getContext().reportError(ex);
+      LOG.error(ex.toString(), ex);
+      errorRecordHandler.onError(StartPipelineErrors.START_PIPELINE_04, ex.toString(), ex);
     }
 
     return null;

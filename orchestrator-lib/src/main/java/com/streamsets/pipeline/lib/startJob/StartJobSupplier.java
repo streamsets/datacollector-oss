@@ -18,10 +18,9 @@ package com.streamsets.pipeline.lib.startJob;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public class StartJobSupplier implements Supplier<Field> {
   private String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
   private final StartJobConfig conf;
   private final JobIdConfig jobIdConfig;
-  private final Stage.Context context;
+  private final ErrorRecordHandler errorRecordHandler;
   private ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
   private String userAuthToken;
@@ -60,11 +59,11 @@ public class StartJobSupplier implements Supplier<Field> {
   public StartJobSupplier(
       StartJobConfig conf,
       JobIdConfig jobIdConfig,
-      Stage.Context context
+      ErrorRecordHandler errorRecordHandler
   ) {
     this.conf = conf;
     this.jobIdConfig = jobIdConfig;
-    this.context = context;
+    this.errorRecordHandler = errorRecordHandler;
   }
 
   @Override
@@ -80,9 +79,9 @@ public class StartJobSupplier implements Supplier<Field> {
       } else {
         waitForJobCompletion();
       }
-    } catch (Exception ex) {
+    } catch (StageException ex) {
       LOG.error(ex.getMessage(), ex);
-      context.reportError(ex);
+      errorRecordHandler.onError(ex.getErrorCode(), ex.getMessage(), ex);
     }
     return responseField;
   }
@@ -100,7 +99,7 @@ public class StartJobSupplier implements Supplier<Field> {
     }
   }
 
-  private void getUserAuthToken() throws StageException {
+  private void getUserAuthToken() {
     // 1. Login to DPM to get user auth token
     Response response = null;
     try {
@@ -113,10 +112,11 @@ public class StartJobSupplier implements Supplier<Field> {
           .request()
           .post(Entity.json(loginJson));
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("DPM Login failed, status code '{}': {}",
+        throw new StageException(
+            StartJobErrors.START_JOB_01,
             response.getStatus(),
             response.readEntity(String.class)
-        ));
+        );
       }
       userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
     } finally {
@@ -135,19 +135,30 @@ public class StartJobSupplier implements Supplier<Field> {
         .header(X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(ImmutableList.of(jobIdConfig.jobId)))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("Reset failed, status code '{}': {}",
+        throw new StageException(
+            StartJobErrors.START_JOB_02,
+            jobIdConfig.jobId,
             response.getStatus(),
             response.readEntity(String.class)
-        ));
+        );
       }
     }
   }
 
-  private Map<String, Object> startJob() throws IOException {
+  private Map<String, Object> startJob() {
     String jobStartUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + jobIdConfig.jobId + "/start";
     Map<String, Object> runtimeParameters = null;
     if (StringUtils.isNotEmpty(jobIdConfig.runtimeParameters)) {
-      runtimeParameters = objectMapper.readValue(jobIdConfig.runtimeParameters, Map.class);
+      try {
+        runtimeParameters = objectMapper.readValue(jobIdConfig.runtimeParameters, Map.class);
+      } catch (IOException e) {
+        throw new StageException(
+            StartJobErrors.START_JOB_05,
+            jobIdConfig.jobId,
+            e.toString(),
+            e
+        );
+      }
     }
     try (Response response = ClientBuilder.newClient()
         .target(jobStartUrl)
@@ -156,10 +167,12 @@ public class StartJobSupplier implements Supplier<Field> {
         .header(X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(runtimeParameters))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new RuntimeException(Utils.format("Job Start failed, status code '{}': {}",
+        throw new StageException(
+            StartJobErrors.START_JOB_03,
+            jobIdConfig.jobId,
             response.getStatus(),
             response.readEntity(String.class)
-        ));
+        );
       }
       return (Map<String, Object>)response.readEntity(Map.class);
     }
