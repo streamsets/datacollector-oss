@@ -33,11 +33,7 @@ angular
       yes: function() {
         $scope.operationInProgress = true;
 
-        api.remote.getPipelineCommitHistory(
-          authService.getRemoteBaseUrl(),
-          authService.getSSOToken(),
-          $scope.dpmPipelineId
-        ).then(
+        api.controlHub.getPipelineCommitHistory($scope.dpmPipelineId).then(
           function(res) {
             var commits = res.data;
             var remotePipeline;
@@ -48,7 +44,7 @@ angular
             }
 
             if (remotePipeline) {
-              api.remote.getPipeline(authService.getRemoteBaseUrl(), authService.getSSOToken(), remotePipeline)
+              api.controlHub.getPipeline(remotePipeline)
                 .then(
                   function(res) {
                     var orgRemotePipeline = res.data;

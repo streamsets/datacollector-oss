@@ -20,11 +20,14 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.BaseEncoding;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineDefinition;
+import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
+import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
@@ -32,24 +35,38 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
+import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.PipelineFragmentEnvelopeJson;
+import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PipelineConfigurationUtil {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PipelineConfigurationUtil.class);
   private static final String KEY = "key";
   private static final String VALUE = "value";
   private static final String PIPELINE_ID_REGEX = "[\\W]|_";
@@ -376,4 +393,186 @@ public class PipelineConfigurationUtil {
     return newConfigurations;
   }
 
+  public static PipelineEnvelopeJson getPipelineEnvelope(
+      StageLibraryTask stageLibrary,
+      PipelineConfiguration pipelineConfig,
+      RuleDefinitions ruleDefinitions,
+      boolean includeLibraryDefinitions,
+      boolean includePlainTextCredentials
+  ) {
+    if (!includePlainTextCredentials) {
+      PipelineConfigurationUtil.stripPipelineConfigPlainCredentials(pipelineConfig, stageLibrary);
+    }
+    PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
+    pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
+    pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+    if (includeLibraryDefinitions) {
+      DefinitionsJson definitions = new DefinitionsJson();
+
+      // Add only stage definitions for stages present in pipeline config
+      List<StageDefinition> stageDefinitions = new ArrayList<>();
+      Map<String, String> stageIcons = new HashMap<>();
+
+      for (StageConfiguration conf : pipelineConfig.getOriginalStages()) {
+        fetchStageDefinition(stageLibrary, conf, stageDefinitions, stageIcons);
+      }
+
+      // add from fragments
+      if (CollectionUtils.isNotEmpty(pipelineConfig.getFragments())) {
+        pipelineConfig.getFragments().forEach(pipelineFragmentConfiguration -> {
+          for (StageConfiguration conf : pipelineFragmentConfiguration.getOriginalStages()) {
+            fetchStageDefinition(stageLibrary, conf, stageDefinitions, stageIcons);
+          }
+        });
+      }
+
+      StageConfiguration errorStageConfig = pipelineConfig.getErrorStage();
+      if (errorStageConfig != null) {
+        fetchStageDefinition(stageLibrary, errorStageConfig, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration originStageConfig = pipelineConfig.getTestOriginStage();
+      if (originStageConfig != null) {
+        fetchStageDefinition(stageLibrary, originStageConfig, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration statsAggregatorStageConfig = pipelineConfig.getStatsAggregatorStage();
+      if (statsAggregatorStageConfig != null) {
+        fetchStageDefinition(stageLibrary, statsAggregatorStageConfig, stageDefinitions, stageIcons);
+      }
+
+      for (StageConfiguration startEventStage: pipelineConfig.getStartEventStages()) {
+        fetchStageDefinition(stageLibrary, startEventStage, stageDefinitions, stageIcons);
+      }
+
+      for (StageConfiguration stopEventStage: pipelineConfig.getStopEventStages()) {
+        fetchStageDefinition(stageLibrary, stopEventStage, stageDefinitions, stageIcons);
+      }
+
+      List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
+      definitions.setStages(stages);
+
+      definitions.setStageIcons(stageIcons);
+
+      List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
+      pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
+      definitions.setPipeline(pipeline);
+
+      List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
+      pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
+      definitions.setPipelineRules(pipelineRules);
+
+      Map<Class, ServiceDefinition> serviceByClass = stageLibrary.getServiceDefinitions().stream()
+          .collect(Collectors.toMap(ServiceDefinition::getProvides, Function.identity()));
+
+      List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
+          .flatMap(stageDefinition -> stageDefinition.getServices().stream())
+          .map(ServiceDependencyDefinition::getServiceClass)
+          .distinct()
+          .map(serviceClass -> serviceByClass.get(serviceClass))
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      definitions.setServices(BeanHelper.wrapServiceDefinitions(pipelineServices));
+
+      pipelineEnvelope.setLibraryDefinitions(definitions);
+    }
+
+    return pipelineEnvelope;
+  }
+
+  public static PipelineFragmentEnvelopeJson getPipelineFragmentEnvelope(
+      StageLibraryTask stageLibrary,
+      PipelineFragmentConfiguration pipelineFragmentConfig,
+      RuleDefinitions ruleDefinitions,
+      boolean includeLibraryDefinitions
+  ) {
+    PipelineFragmentEnvelopeJson pipelineFragmentEnvelope = new PipelineFragmentEnvelopeJson();
+    pipelineFragmentEnvelope.setPipelineFragmentConfig(
+        BeanHelper.wrapPipelineFragmentConfiguration(pipelineFragmentConfig)
+    );
+    pipelineFragmentEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));
+    if (includeLibraryDefinitions) {
+      DefinitionsJson definitions = new DefinitionsJson();
+
+      // Add only stage definitions for stages present in pipeline config
+      List<StageDefinition> stageDefinitions = new ArrayList<>();
+      Map<String, String> stageIcons = new HashMap<>();
+
+      for (StageConfiguration conf : pipelineFragmentConfig.getStages()) {
+        fetchStageDefinition(stageLibrary, conf, stageDefinitions, stageIcons);
+      }
+
+      StageConfiguration originStageConfig = pipelineFragmentConfig.getTestOriginStage();
+      if (originStageConfig != null) {
+        fetchStageDefinition(stageLibrary, originStageConfig, stageDefinitions, stageIcons);
+      }
+
+      // add from fragments
+      if (CollectionUtils.isNotEmpty(pipelineFragmentConfig.getFragments())) {
+        pipelineFragmentConfig.getFragments().forEach(pipelineFragmentConfiguration -> {
+          for (StageConfiguration conf : pipelineFragmentConfiguration.getOriginalStages()) {
+            fetchStageDefinition(stageLibrary, conf, stageDefinitions, stageIcons);
+          }
+        });
+      }
+
+      List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
+      definitions.setStages(stages);
+
+      definitions.setStageIcons(stageIcons);
+
+      List<PipelineFragmentDefinitionJson> pipelineFragment = new ArrayList<>(1);
+      pipelineFragment.add(BeanHelper.wrapPipelineFragmentDefinition(stageLibrary.getPipelineFragment()));
+      definitions.setPipelineFragment(pipelineFragment);
+
+      List<PipelineRulesDefinitionJson> pipelineRules = new ArrayList<>(1);
+      pipelineRules.add(BeanHelper.wrapPipelineRulesDefinition(stageLibrary.getPipelineRules()));
+      definitions.setPipelineRules(pipelineRules);
+
+      Map<Class, ServiceDefinition> serviceByClass = stageLibrary.getServiceDefinitions().stream()
+          .collect(Collectors.toMap(ServiceDefinition::getProvides, Function.identity()));
+
+      List<ServiceDefinition> pipelineServices = stageDefinitions.stream()
+          .flatMap(stageDefinition -> stageDefinition.getServices().stream())
+          .map(ServiceDependencyDefinition::getServiceClass)
+          .distinct()
+          .map(serviceClass -> serviceByClass.get(serviceClass))
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      definitions.setServices(BeanHelper.wrapServiceDefinitions(pipelineServices));
+
+      pipelineFragmentEnvelope.setLibraryDefinitions(definitions);
+    }
+
+    return pipelineFragmentEnvelope;
+  }
+
+  private static void fetchStageDefinition(
+      StageLibraryTask stageLibrary,
+      StageConfiguration conf,
+      List<StageDefinition> stageDefinitions,
+      Map<String, String> stageIcons
+  ) {
+    String key = conf.getLibrary() + ":"  + conf.getStageName();
+    if (!stageIcons.containsKey(key)) {
+      StageDefinition stageDefinition = stageLibrary.getStage(conf.getLibrary(),
+          conf.getStageName(), false);
+      if (stageDefinition != null) {
+        stageDefinitions.add(stageDefinition);
+        String iconFile = stageDefinition.getIcon();
+        if (iconFile != null && iconFile.trim().length() > 0) {
+          try(InputStream icon = stageDefinition.getStageClassLoader().getResourceAsStream(iconFile)) {
+            stageIcons.put(key, BaseEncoding.base64().encode(IOUtils.toByteArray(icon)));
+          } catch (Exception e) {
+            LOG.debug("Failed to convert stage icons to Base64 - " + e.getLocalizedMessage());
+            stageIcons.put(key, null);
+          }
+        } else {
+          stageIcons.put(key, null);
+        }
+      }
+    }
+  }
 }

@@ -97,7 +97,7 @@ angular.module('dataCollectorApp.common')
      * Fetch Remote User Roles
      */
     this.fetchRemoteUserRoles = function() {
-      api.remote.getRemoteRoles(this.getRemoteBaseUrl(), this.getSSOToken())
+      api.controlHub.getRemoteRoles()
         .then(function(res) {
           self.remoteUserInfo = res.data;
         });

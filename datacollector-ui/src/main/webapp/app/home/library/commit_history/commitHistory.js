@@ -35,7 +35,7 @@ angular
 
       downloadRemotePipeline : function(remotePipeline) {
         $scope.downloading = true;
-        api.remote.getPipeline(authService.getRemoteBaseUrl(), authService.getSSOToken(), remotePipeline)
+        api.controlHub.getPipeline(remotePipeline)
           .then(
             function(res) {
               var remotePipeline = res.data;
@@ -80,18 +80,15 @@ angular
     });
 
     var getPipelineCommitHistory = function() {
-      api.remote.getPipelineCommitHistory(
-        authService.getRemoteBaseUrl(),
-        authService.getSSOToken(),
-        $scope.pipelineId
-      ).then(
-        function(res) {
-          $scope.pipelinesCommit = res.data;
-        },
-        function(res) {
-          $scope.common.errors = [res.data];
-        }
-      );
+      api.controlHub.getPipelineCommitHistory($scope.pipelineId)
+        .then(
+          function(res) {
+            $scope.pipelinesCommit = res.data;
+          },
+          function(res) {
+            $scope.common.errors = [res.data];
+          }
+        );
     };
 
     getPipelineCommitHistory();

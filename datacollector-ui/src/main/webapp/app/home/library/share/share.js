@@ -150,20 +150,8 @@ angular
       $scope.fetching = true;
 
       $q.all([
-        api.remote.getRemoteGroups(
-          authService.getRemoteBaseUrl(),
-          authService.getSSOToken(),
-          authService.getRemoteOrgId(),
-          0,
-          50
-        ),
-        api.remote.getRemoteUsers(
-          authService.getRemoteBaseUrl(),
-          authService.getSSOToken(),
-          authService.getRemoteOrgId(),
-          0,
-          50
-        )
+        api.controlHub.getRemoteGroups(0, 50),
+        api.controlHub.getRemoteUsers(0, 50)
       ]).then(
         function (results) {
           $scope.fetching = false;

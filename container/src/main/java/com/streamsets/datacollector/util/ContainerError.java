@@ -180,6 +180,9 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_01603("Starting Edge pipeline failed, status code '{}': {}"),
   CONTAINER_01604("Reset Offset for Edge pipeline failed, status code '{}': {}"),
   CONTAINER_01605("Publishing Edge pipeline failed, status code '{}': {}"),
+
+
+  CONTAINER_01700("Publishing pipeline to Control Hub failed, status code '{}': {}"),
   ;
 
   private final String msg;

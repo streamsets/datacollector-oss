@@ -1466,79 +1466,38 @@ angular.module('dataCollectorApp.common')
       }
     };
 
-    api.remote = {
-      publishPipeline: function(remoteBaseURL, ssoToken, name, commitPipelineModel) {
-        var deferred = $q.defer();
-        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
-        var url = apiBase + '/pipeline/' + name + '/export?includeLibraryDefinitions=true';
-        var newMetadata;
-        $http({
-          method: 'GET',
-          url: url
-        }).then(function(res) {
-          var pipeline = res.data;
-
-          commitPipelineModel.pipelineDefinition = JSON.stringify(pipeline.pipelineConfig);
-          commitPipelineModel.libraryDefinitions = JSON.stringify(pipeline.libraryDefinitions);
-          commitPipelineModel.rulesDefinition = JSON.stringify(pipeline.pipelineRules);
-
-          return $http({
-            method: 'PUT',
-            url: remoteURL,
-            data: commitPipelineModel,
-            useXDomain: true,
-            withCredentials : false,
-            headers:  {
-              'Content-Type': 'application/json; charset=utf-8',
-              'X-SS-User-Auth-Token': ssoToken
-            }
-          });
-        }).then(function(result) {
-          var remoteStorePipeline = result.data;
-          var pipelineDefinition = JSON.parse(remoteStorePipeline.pipelineDefinition);
-          var rulesDefinition = JSON.parse(remoteStorePipeline.currentRules.rulesDefinition);
-          newMetadata = pipelineDefinition.metadata;
-          newMetadata['lastConfigId'] = pipelineDefinition.uuid;
-          newMetadata['lastRulesId'] = rulesDefinition.uuid;
-          return $q.all([
-            api.pipelineAgent.savePipelineMetadata(name, newMetadata)
-          ]);
-        }).then(function(res) {
-          deferred.resolve(newMetadata);
-        }, function(err) {
-          deferred.reject(err);
+    api.controlHub = {
+      publishPipeline: function(pipelineId, commitMessage) {
+        var url = apiBase + '/controlHub/publishPipeline/' + pipelineId;
+        return $http({
+          method: 'POST',
+          url: url,
+          params: {
+            commitMessage: commitMessage
+          }
         });
-        return deferred.promise;
       },
 
-      fetchPipelines: function(remoteBaseURL, ssoToken) {
-        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelines';
+      fetchPipelines: function() {
+        var url = apiBase + '/controlHub/pipelines';
         return $http({
           method: 'GET',
-          url: remoteURL,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
-          },
+          url: url,
           params: {
             executionModes: 'STANDALONE,CLUSTER_BATCH,CLUSTER_YARN_STREAMING,CLUSTER_MESOS_STREAMING,EDGE,EMR_BATCH'
           }
         });
       },
 
-      getPipeline: function(remoteBaseURL, ssoToken, remotePipeline) {
-        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipelineCommit/' + remotePipeline.commitId;
+      getPipeline: function(remotePipeline) {
+        var url = apiBase + '/controlHub/pipeline/' + remotePipeline.commitId;
         return $http({
           method: 'GET',
-          url: remoteURL,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
-          }
+          url: url
         });
       },
 
-      getPipelineCommitHistory: function(remoteBaseURL, ssoToken, pipelineId, offset, len, order) {
+      getPipelineCommitHistory: function(pipelineId, offset, len, order) {
         if (offset === undefined) {
           offset = 0;
         }
@@ -1548,105 +1507,58 @@ angular.module('dataCollectorApp.common')
         if (order === undefined) {
           order = 'DESC';
         }
-        var remoteURL = remoteBaseURL + 'pipelinestore/rest/v1/pipeline/' + pipelineId + '/log?' +
-          'offset=' + offset +
-          '&len=' + len +
-          '&order=' + order;
-
+        var url = apiBase + '/controlHub/pipeline/' + pipelineId + '/log';
         return $http({
           method: 'GET',
-          url: remoteURL,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
+          url: url,
+          params: {
+            offset: offset,
+            len: len,
+            order: order
           }
         });
       },
 
-      getRemoteRoles: function(remoteBaseURL, ssoToken) {
-        var remoteURL = remoteBaseURL + 'security/rest/v1/currentUser';
+      getRemoteRoles: function() {
+        var url = apiBase + '/controlHub/currentUser';
         return $http({
           method: 'GET',
-          url: remoteURL,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
-          }
+          url: url
         });
       },
 
-      generateApplicationToken: function(remoteBaseURL, ssoToken, orgId) {
-        var newComponentsModel = {
-          organization: orgId,
-          componentType: 'dc',
-          numberOfComponents: 1,
-          active: true
-        };
-        var remoteURL = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/components';
-        return $http({
-          method: 'PUT',
-          url: remoteURL,
-          data: newComponentsModel,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
-          }
-        });
-      },
-
-      getRemoteUsers: function(remoteBaseURL, ssoToken, orgId, offset, len, orderBy, order, active, filterText) {
+      getRemoteUsers: function(offset, len) {
         if (offset === undefined) {
           offset = 0;
         }
         if (len === undefined) {
           len = -1;
         }
-        var url = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/users?offset=' + offset + '&len=' + len;
-        if (orderBy) {
-          url += '&orderBy=' + orderBy;
-        }
-        if (order) {
-          url += '&order=' + order;
-        }
-        if (active !== undefined) {
-          url += '&active=' + active;
-        }
-        if (filterText && filterText.trim().length) {
-          url += '&filterText=' + filterText;
-        }
+        var url = apiBase + '/controlHub/users';
         return $http({
           method: 'GET',
           url: url,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
+          params:  {
+            offset: offset,
+            len: len
           }
         });
       },
 
-      getRemoteGroups: function(remoteBaseURL, ssoToken, orgId, offset, len, orderBy, order, filterText) {
+      getRemoteGroups: function(offset, len) {
         if (offset === undefined) {
           offset = 0;
         }
         if (len === undefined) {
           len = -1;
         }
-        var url = remoteBaseURL + 'security/rest/v1/organization/' + orgId + '/groups?offset=' + offset + '&len=' + len;
-        if (orderBy) {
-          url += '&orderBy=' + orderBy;
-        }
-        if (order) {
-          url += '&order=' + order;
-        }
-        if (filterText && filterText.trim().length) {
-          url += '&filterText=' + filterText;
-        }
+        var url = apiBase + '/controlHub/groups';
         return $http({
           method: 'GET',
           url: url,
-          headers:  {
-            'Content-Type': 'application/json; charset=utf-8',
-            'X-SS-User-Auth-Token': ssoToken
+          params:   {
+            offset: offset,
+            len: len
           }
         });
       }

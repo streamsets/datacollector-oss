@@ -38,7 +38,7 @@ angular
       },
       downloadRemotePipeline : function(remotePipeline) {
         $scope.downloading[remotePipeline.commitId] = true;
-        api.remote.getPipeline(authService.getRemoteBaseUrl(), authService.getSSOToken(), remotePipeline)
+        api.controlHub.getPipeline(remotePipeline)
           .then(
             function(res) {
               var remotePipeline = res.data;
@@ -85,7 +85,7 @@ angular
     });
 
     var fetchRemotePipelines = function() {
-      api.remote.fetchPipelines(authService.getRemoteBaseUrl(), authService.getSSOToken())
+      api.controlHub.fetchPipelines()
         .then(
           function(res) {
             if ( _.isArray(res.data)) {

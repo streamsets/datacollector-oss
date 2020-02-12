@@ -36,14 +36,9 @@ angular
         if ($scope.isList) {
           var deferList = [];
           for (var i = 0; i < pipelineInfo.length; i++) {
-            deferList.push(api.remote.publishPipeline(
-              authService.getRemoteBaseUrl(),
-              authService.getSSOToken(),
+            deferList.push(api.controlHub.publishPipeline(
               pipelineInfo[i].pipelineId,
-              {
-                name:  pipelineInfo[i].title,
-                commitMessage: $scope.commitPipelineModel.commitMessage
-              }
+              $scope.commitPipelineModel.commitMessage
             ));
           }
           $q.all(deferList).then(
@@ -61,15 +56,12 @@ angular
             }
           );
         } else {
-          $q.when(api.remote.publishPipeline(
-            authService.getRemoteBaseUrl(),
-            authService.getSSOToken(),
+          api.controlHub.publishPipeline(
             pipelineInfo.pipelineId,
-            $scope.commitPipelineModel
-          )).
-          then(
-            function(metadata) {
-              $modalInstance.close(metadata);
+            $scope.commitPipelineModel.commitMessage
+          ).then(
+            function(res) {
+              $modalInstance.close(res.data.metadata);
             },
             function(res) {
               if (res && res.status === 403) {
