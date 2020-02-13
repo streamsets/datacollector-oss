@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Map;
@@ -51,7 +52,11 @@ public class RenameConfigUpgraderAction<T> extends UpgraderAction<RenameConfigUp
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, T configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      T configs
+  ) {
     Utils.checkNotNull(getOldNamePattern(), "oldNamePattern");
     Utils.checkNotNull(getNewNamePattern(), "newNamePattern");
     Pattern pattern = Pattern.compile(getOldNamePattern());

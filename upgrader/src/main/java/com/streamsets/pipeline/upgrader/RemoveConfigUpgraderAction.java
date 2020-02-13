@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.upgrader;
 
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Iterator;
@@ -41,7 +42,11 @@ public class RemoveConfigUpgraderAction<T> extends UpgraderAction<IterateConfigL
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, T configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      T configs
+  ) {
     Utils.checkNotNull(getNamePattern(), "namePattern");
     Pattern pattern = Pattern.compile(getNamePattern());
     ConfigsAdapter configsAdapter = wrap(configs);

@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   YAML_UPGRADER_10("Invalid upgrader version '{}'"),
   YAML_UPGRADER_11("Nested iterations are not supported in '{}' toVersion upgrader configuration for '{}' stage from '{}' "),
   YAML_UPGRADER_12("Configuration '{}' EL '{}' evaluation error: {}"),
+  YAML_UPGRADER_13("Cannot find service definition with name '{}' "),
   ;
 
   private final String message;

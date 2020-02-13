@@ -18,6 +18,7 @@ package com.streamsets.pipeline.upgrader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -44,18 +45,18 @@ public class TestYamlStageUpgraderLoader {
     YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
     YamlStageUpgrader upgrader = loader.get();
 
-    List<Config> configs = upgrader.upgrade("lib", "stage", "instance", 0, 0, new ArrayList<>());
+    List<Config> configs = upgrader.upgrade(new ArrayList<>(), new TestUpgraderContext("lib", "stage", "instance", 0, 0));
     Assert.assertEquals(0, configs.size());
 
-    configs = upgrader.upgrade("lib", "stage", "instance", 0, 1, new ArrayList<>());
+    configs = upgrader.upgrade(new ArrayList<>(), new TestUpgraderContext("lib", "stage", "instance", 0, 1));
     Assert.assertEquals(1, configs.size());
     Assert.assertNotNull(find(configs, "u1"));
 
-    configs = upgrader.upgrade("lib", "stage", "instance", 1, 2, new ArrayList<>());
+    configs = upgrader.upgrade(new ArrayList<>(), new TestUpgraderContext("lib", "stage", "instance", 1, 2));
     Assert.assertEquals(1, configs.size());
     Assert.assertNotNull(find(configs, "u2"));
 
-    configs = upgrader.upgrade("lib", "stage", "instance", 0, 3, new ArrayList<>());
+    configs = upgrader.upgrade(new ArrayList<>(), new TestUpgraderContext("lib", "stage", "instance", 0, 3));
     Assert.assertEquals(3, configs.size());
     Assert.assertNotNull(find(configs, "u1"));
     Assert.assertNotNull(find(configs, "u2"));
@@ -71,7 +72,7 @@ public class TestYamlStageUpgraderLoader {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("set2", false));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of())));
-    configs = upgrader.upgrade("lib", "stage", "instance", 0, 1, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 0, 1));
     Assert.assertEquals(5, configs.size());
 
     //testing EL
@@ -93,7 +94,7 @@ public class TestYamlStageUpgraderLoader {
     configs.add(new Config("c", "xFOOx"));
     configs.add(new Config("d", ImmutableList.of(1)));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of("b", "BB"))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 1, 2, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 1, 2));
     Assert.assertEquals(8, configs.size());
     Assert.assertEquals("A", find(configs, "a").getValue());
     Assert.assertEquals("X", find(configs, "x").getValue());
@@ -117,7 +118,7 @@ public class TestYamlStageUpgraderLoader {
     configs.add(new Config("d", "xFOOx"));
     configs.add(new Config("e", "BAR"));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of("b", "B"))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 2, 3, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 2, 3));
     Assert.assertEquals(10, configs.size());
     Assert.assertEquals("A", find(configs, "a").getValue());
     Assert.assertEquals("Y", find(configs, "y").getValue());
@@ -142,7 +143,7 @@ public class TestYamlStageUpgraderLoader {
     configs.add(new Config("old", "V1"));
     configs.add(new Config("old.a", "V2"));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of("old", "V3"))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 3, 4, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 3, 4));
     Assert.assertEquals(4, configs.size());
     Assert.assertEquals("X", find(configs, "x").getValue());
     Assert.assertEquals("V1", find(configs, "new").getValue());
@@ -161,7 +162,7 @@ public class TestYamlStageUpgraderLoader {
     configs.add(new Config("b", "B"));
     configs.add(new Config("a.x", "AX"));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of("a", "A", "b", "B"))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 4, 5, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 4, 5));
     Assert.assertEquals(2, configs.size());
     Assert.assertEquals("B", find(configs, "b").getValue());
     Assert.assertEquals(ImmutableList.of(ImmutableMap.of("a", "A")), find(configs, "listConfig").getValue());
@@ -185,7 +186,7 @@ public class TestYamlStageUpgraderLoader {
     configs.add(new Config("bbb", "foo"));
     configs.add(new Config("bbbb", "bar"));
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of("a", "A"))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 5, 6, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 5, 6));
     Assert.assertEquals(11, configs.size());
     Assert.assertEquals("X", find(configs, "x").getValue());
     // testing EL
@@ -238,7 +239,7 @@ public class TestYamlStageUpgraderLoader {
         "list2",
         ImmutableList.of("value", "foo")
     ))));
-    configs = upgrader.upgrade("lib", "stage", "instance", 6, 7, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 6, 7));
     Assert.assertEquals(7, configs.size());
     Assert.assertEquals(
         ImmutableList.of(ImmutableMap.of("key", "key", "value", "value")),
@@ -265,10 +266,75 @@ public class TestYamlStageUpgraderLoader {
     Assert.assertEquals(ImmutableList.of("foo"), ((Map) ((List) find(configs, "listConfig").getValue()).get(0)).get(
         "list2"));
 
-    configs = upgrader.upgrade("lib", "stage", "instance", 7, 8, configs);
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 7, 8));
 
     Assert.assertEquals(ImmutableList.of("valueFromOldVariable"), find(configs, "list3").getValue());
 
   }
 
+  public class Service1 {
+  }
+
+  public class Service2 {
+  }
+
+  public class Service3 {
+  }
+
+  @Test
+  public void testRegisterServiceConfigs() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config(
+        "bean1.innerBean.prop1",
+        "prop1Value"
+    ));
+    configs.add(new Config(
+        "bean2.innerBean1.prop1",
+        "prop1Value"
+    ));
+    configs.add(new Config(
+        "bean2.innerBean1.prop2",
+        "prop2Value"
+    ));
+    List innerListValues = ImmutableList.of(ImmutableMap.of("key", "key", "value", "value"), ImmutableMap.of("key", "foo", "value", "bar"));
+    configs.add(new Config("bean2.innerBean2.innerList", innerListValues));
+
+    Map innerMapValues = ImmutableMap.of("key", "key", "value", "value");
+    configs.add(new Config("bean2.innerBean2.innerMap", innerMapValues));
+
+    TestUpgraderContext upgradeContext = new TestUpgraderContext("lib", "stage", "instance", 8, 9);
+    configs = upgrader.upgrade(configs, upgradeContext);
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("bean1.innerBean.prop1", configs.get(0).getName());
+    Assert.assertEquals("prop1Value", configs.get(0).getValue());
+
+    Assert.assertEquals(3, upgradeContext.getRegisteredServices().size());
+
+    Assert.assertNotNull(upgradeContext.getRegisteredServices().get(Service1.class));
+    List<Config> service1Config = upgradeContext.getRegisteredServices().get(Service1.class);
+
+    Assert.assertEquals(2, service1Config.size());
+    Assert.assertTrue(service1Config.stream().anyMatch(s -> s.getName().equals("prop1")));
+    Assert.assertTrue(service1Config.stream().anyMatch(s -> s.getName().equals("prop2")));
+
+    Assert.assertEquals("prop1Value", service1Config.stream().filter(s -> s.getName().equals("prop1")).findFirst().get().getValue());
+    Assert.assertEquals("prop2Value", service1Config.stream().filter(s -> s.getName().equals("prop2")).findFirst().get().getValue());
+
+    Assert.assertNotNull(upgradeContext.getRegisteredServices().get(Service2.class));
+    List<Config> service2Config = upgradeContext.getRegisteredServices().get(Service2.class);
+
+    Assert.assertEquals(2, service2Config.size());
+    Assert.assertTrue(service2Config.stream().anyMatch(s -> s.getName().equals("innerList")));
+    Assert.assertTrue(service2Config.stream().anyMatch(s -> s.getName().equals("innerMap")));
+
+    Assert.assertEquals(innerListValues, service2Config.stream().filter(s -> s.getName().equals("innerList")).findFirst().get().getValue());
+    Assert.assertEquals(innerMapValues, service2Config.stream().filter(s -> s.getName().equals("innerMap")).findFirst().get().getValue());
+
+    Assert.assertNotNull(upgradeContext.getRegisteredServices().get(Service3.class));
+    Assert.assertEquals(0, upgradeContext.getRegisteredServices().get(Service3.class).size());
+  }
 }

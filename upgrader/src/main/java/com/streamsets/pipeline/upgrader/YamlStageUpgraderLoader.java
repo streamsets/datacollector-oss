@@ -105,10 +105,22 @@ public class YamlStageUpgraderLoader {
       action = parseConfigStringListAddConfig(wrapper, map);
     } else if (map.containsKey("configStringListRemove")) {
       action = parseConfigStringListRemoveConfig(wrapper, map);
+    } else if (map.containsKey("registerService")) {
+      action = parseRegisterService(wrapper, map);
     } else {
       throw new StageException(Errors.YAML_UPGRADER_08, toVersion, stageName, resource);
     }
     return action;
+  }
+
+  private RegisterServiceAction<?> parseRegisterService(Function<?, UpgraderAction.ConfigsAdapter> wrapper, Map map) {
+    Map registerService = (Map) map.get("registerService");
+    String service = (String)registerService.get("service");
+    String existingConfigPattern = (String) registerService.get("existingConfigsPattern");
+    RegisterServiceAction<?> serviceAction = new RegisterServiceAction<>(wrapper);
+    serviceAction.setService(service);
+    serviceAction.setExistingConfigsPattern(existingConfigPattern);
+    return serviceAction;
   }
 
   SetConfigUpgraderAction parseSetConfigAction(

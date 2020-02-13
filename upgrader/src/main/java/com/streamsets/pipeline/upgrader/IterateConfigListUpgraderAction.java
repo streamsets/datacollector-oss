@@ -17,6 +17,7 @@ package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Collections;
@@ -43,7 +44,11 @@ public class IterateConfigListUpgraderAction extends UpgraderAction<IterateConfi
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, List<Config> configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      List<Config> configs
+  ) {
     Utils.checkNotNull(getName(), "name");
     ConfigsAdapter wrapper = wrap(configs);
     ConfigsAdapter.Pair configsAdapter = wrapper.find(getName());
@@ -57,7 +62,7 @@ public class IterateConfigListUpgraderAction extends UpgraderAction<IterateConfi
     listConfig = listConfig.stream().map(HashMap::new).collect(Collectors.toList());
     for (Map<String, Object> element : listConfig) {
       for (UpgraderAction<?, Map<String, Object>> action : getActions()) {
-        action.upgrade(originalConfigs, element);
+        action.upgrade(context, originalConfigs, element);
       }
     }
 

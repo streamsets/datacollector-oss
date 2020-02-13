@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.origin.scheduler;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.upgrader.YamlStageUpgrader;
 import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
+import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,19 +52,21 @@ public class TestSchedulerDPushSourceUpgrader {
       }
     };
     int oldNumberOfFields = validV1Configs.size();
-    Set< String > fieldNames = validV1Configs.stream().map(Config::getName).collect(Collectors.toSet());
+    Set<String> fieldNames = validV1Configs.stream().map(Config::getName).collect(Collectors.toSet());
     fieldNames.add("conf.timeZoneID");
     List<Config> newConfigs = yamlUpgrader.upgrade(
-        "lib",
-        "stage",
-        "instance",
-        1,
-        2,
-        validV1Configs
+        validV1Configs,
+        new TestUpgraderContext(
+            "lib",
+            "stage",
+            "instance",
+            1,
+            2
+        )
     );
     Assert.assertEquals(oldNumberOfFields + 1, newConfigs.size());
     // Check that the field names are all correct
-    for(Config config: newConfigs) {
+    for (Config config : newConfigs) {
       String configName = config.getName();
       assertTrue(fieldNames.contains(configName));
       // Check that no duplicates happened when upgrading

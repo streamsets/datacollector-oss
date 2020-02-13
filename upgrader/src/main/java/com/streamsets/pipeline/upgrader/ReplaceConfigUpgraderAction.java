@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Map;
@@ -94,7 +95,11 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, T configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      T configs
+  ) {
     Utils.checkNotNull(getName(), "name");
     Utils.checkNotNull(getNewValue(), "newValue");
     ConfigsAdapter configsAdapter = wrap(configs);

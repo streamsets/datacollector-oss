@@ -235,3 +235,14 @@ upgrades:
     - configStringListAdd:
         name: list3
         value: ${value("controlVariable")}
+
+- toVersion: 9
+  actions:
+    - registerService:
+        service: com.streamsets.pipeline.upgrader.TestYamlStageUpgraderLoader$Service1
+        existingConfigsPattern: bean2.innerBean1.(.*$)
+    - registerService:
+        service: com.streamsets.pipeline.upgrader.TestYamlStageUpgraderLoader$Service2
+        existingConfigsPattern: bean2.innerBean2.(.*$)
+    - registerService:
+        service: com.streamsets.pipeline.upgrader.TestYamlStageUpgraderLoader$Service3

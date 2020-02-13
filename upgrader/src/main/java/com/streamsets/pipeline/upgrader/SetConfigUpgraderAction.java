@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.upgrader;
 
+import com.streamsets.pipeline.api.StageUpgrader;
+
 import java.util.Map;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -81,7 +83,11 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, T configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      T configs
+  ) {
     if (getName() == null && getElseName() == null) {
       throw new NullPointerException("either name or elseName must be not null");
     } else if (getName() != null && getValue() == null) {
@@ -107,8 +113,8 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
   /**
    * Check if a configuration exists and has a given value.
    *
-   * @param name Name of the configuration to look for.
-   * @param value Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
+   * @param name    Name of the configuration to look for.
+   * @param value   Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
    * @param adapter Adapter used to find the configuration.
    * @return true if {@code name} exists and equals {@code value}, false otherwise.
    */

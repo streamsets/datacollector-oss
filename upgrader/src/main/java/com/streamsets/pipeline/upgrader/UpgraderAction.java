@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import org.apache.commons.el.ExpressionEvaluatorImpl;
 import org.jetbrains.annotations.NotNull;
@@ -249,7 +250,7 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
     return value;
   }
 
-  public abstract void upgrade(Map<String, Object> originalConfigs, T configs);
+  public abstract void upgrade(StageUpgrader.Context context, Map<String, Object> originalConfigs, T configs);
 
   public String getName() {
     return name;

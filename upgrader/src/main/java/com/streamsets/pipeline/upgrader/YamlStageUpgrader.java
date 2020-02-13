@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -76,31 +75,33 @@ public class YamlStageUpgrader implements StageUpgrader {
     return minimumConfigVersionHandled;
   }
 
-  public List<Config> upgrade(
-      String library,
-      String stageName,
-      String stageInstance,
-      int fromVersion,
-      int toVersion,
-      List<Config> configs
-  ) throws StageException {
+
+  @Override
+  public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     LOG.debug(
         "Upgrade '{}' stage from '{}' version to '{}' version",
         stageName,
-        fromVersion,
-        toVersion
+        context.getFromVersion(),
+        context.getToVersion()
     );
     configs = new ArrayList<>(configs); // making sure it is mutable
     TreeMap<Integer, UpgradeToVersion> upgradesToVersionToUse = toVersionMap
         .entrySet()
         .stream()
-        .filter(e -> e.getKey() > fromVersion && e.getKey() <= toVersion)
+        .filter(e -> e.getKey() > context.getFromVersion() && e.getKey() <= context.getToVersion())
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o1, o2) -> o1, TreeMap::new)); //dummy merger
     for (Map.Entry<Integer, UpgradeToVersion> upgradeToVersion : upgradesToVersionToUse.entrySet()) {
       LOG.debug("Upgrading '{}' stage to '{}' version", stageName, upgradeToVersion.getKey());
-      upgradeToVersion.getValue().upgrade(configs);
+      upgradeToVersion.getValue().upgrade(configs, context);
     }
     return configs;
+  }
+
+  @Override
+  public List<Config> upgrade(
+      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
+  ) throws StageException {
+    throw new UnsupportedOperationException("Use the new signature");
   }
 
 }

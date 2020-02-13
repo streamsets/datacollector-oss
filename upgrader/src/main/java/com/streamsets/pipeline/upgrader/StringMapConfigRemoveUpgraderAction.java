@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.upgrader;
 
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.ArrayList;
@@ -51,7 +52,11 @@ public class StringMapConfigRemoveUpgraderAction<T> extends UpgraderAction<Strin
   }
 
   @Override
-  public void upgrade(Map<String, Object> originalConfigs, T configs) {
+  public void upgrade(
+      StageUpgrader.Context context,
+      Map<String, Object> originalConfigs,
+      T configs
+  ) {
     Utils.checkNotNull(getName(), "name");
     Utils.checkArgument(getKey() != null || getValue() != null, "key and value cannot be both NULL");
     ConfigsAdapter configsAdapter = wrap(configs);

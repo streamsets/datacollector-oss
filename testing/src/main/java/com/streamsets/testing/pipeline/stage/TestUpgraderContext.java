@@ -76,4 +76,8 @@ public class TestUpgraderContext implements StageUpgrader.Context {
   public void registerService(Class service, List<Config> configs) {
     registeredServices.put(service, configs);
   }
+
+  public Map<Class, List<Config>> getRegisteredServices() {
+    return registeredServices;
+  }
 }
