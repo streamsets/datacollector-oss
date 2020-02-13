@@ -67,7 +67,7 @@ public class TestRestServicePushSource {
   @Test
   public void testRestServiceOrigin() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -297,7 +297,7 @@ public class TestRestServicePushSource {
     TLSTestUtils.createTrustStore(clientTrustStore.toString(), trustStorePassword, "web", clientCert);
 
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
 
@@ -418,7 +418,7 @@ public class TestRestServicePushSource {
   @Test
   public void testSendingRawResponse() throws Exception {
     RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appIds = new ArrayList<>(Arrays.asList(new CredentialValueBean("id")));
+    httpConfigs.appId = () -> "id";
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
