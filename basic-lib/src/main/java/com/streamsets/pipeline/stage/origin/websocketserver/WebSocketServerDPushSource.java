@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 @StageDef(
-    version = 12,
+    version = 13,
     label = "WebSocket Server",
     description = "Listens for requests on a WebSocket endpoint",
     icon="websockets_multithreaded.png",

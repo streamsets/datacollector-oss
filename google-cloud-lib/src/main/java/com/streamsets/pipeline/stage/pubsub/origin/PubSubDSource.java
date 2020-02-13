@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Google Pub Sub Subscriber",
     description = "Consumes messages from a Google Pub/Sub subscription",
     icon = "pubsub.png",

@@ -17,16 +17,34 @@ package com.streamsets.pipeline.stage.origin.spooldir;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.dirspooler.FileOrdering;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestSpoolDirSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SpoolDirDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new SpoolDirSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testSpoolDirSourceUpgrader() throws StageException {
@@ -76,5 +94,17 @@ public class TestSpoolDirSourceUpgrader {
     assertEquals(1, upgraded.size());
     assertEquals(5, upgraded.get(0).getValue());
     assertEquals("conf.spoolingPeriod", upgraded.get(0).getName());
+  }
+
+  @Test
+  public void testV10ToV11() {
+    Mockito.doReturn(10).when(context).getFromVersion();
+    Mockito.doReturn(11).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }

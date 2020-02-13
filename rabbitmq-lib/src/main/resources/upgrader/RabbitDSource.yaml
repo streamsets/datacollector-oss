@@ -58,3 +58,8 @@ upgrades:
     - setConfig:
         name: conf.tlsConfig.cipherSuites
         value: []
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: conf.dataFormatConfig.preserveRootElement
+          value: false

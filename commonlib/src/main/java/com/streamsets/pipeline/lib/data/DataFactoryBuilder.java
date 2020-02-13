@@ -55,8 +55,7 @@ public class DataFactoryBuilder<B extends DataFactoryBuilder, DF extends DataFac
 
   public B setMode(Enum mode) {
     Utils.checkNotNull(mode, "mode");
-    Utils.checkArgument(expectedModes.contains(mode.getClass()), Utils.formatL("Format '{}' does not support mode '{}'",
-                                                                               format, mode.getClass()));
+    Utils.checkArgument(expectedModes.contains(mode.getClass()), Utils.formatL("Format '{}' does not support mode '{}'", format, mode.getClass()));
     modes.put(mode.getClass(), mode);
     return (B) this;
   }

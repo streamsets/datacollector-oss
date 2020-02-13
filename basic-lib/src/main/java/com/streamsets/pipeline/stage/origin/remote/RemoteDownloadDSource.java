@@ -28,7 +28,7 @@ import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "SFTP/FTP/FTPS Client",
     description = "Uses an SFTP/FTP/FTPS client to read data from a URL.",
     icon = "sftp-client.png",

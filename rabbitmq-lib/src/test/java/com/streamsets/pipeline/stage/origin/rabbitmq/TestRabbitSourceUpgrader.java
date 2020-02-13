@@ -23,6 +23,7 @@ import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,11 +33,23 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TestRabbitSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RabbitDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new RabbitSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testUpgradeV1ToV2() throws Exception{
     final Joiner JOINER = Joiner.on(".");
 
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config(JOINER.join("conf", "uri"), "amqp://localhost:5672"));
     configs.add(new Config(JOINER.join("conf", "consumerTag"), ""));
     configs.add(new Config(JOINER.join("conf", "dataFormat"), DataFormat.JSON));
@@ -52,16 +65,10 @@ public class TestRabbitSourceUpgrader {
       }
     }
     Assert.assertTrue("Should contain produceSingleRecordPerMessage and its value set to false", isValid);
-
   }
 
   @Test
   public void testUpgradeV3ToV4() throws Exception {
-    List<Config> configs = new ArrayList<>();
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RabbitDSource.yaml");
-    StageUpgrader upgrader = new SelectorStageUpgrader("stage", new RabbitSourceUpgrader(), yamlResource);
-
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(3).when(context).getFromVersion();
     Mockito.doReturn(4).when(context).getToVersion();
 
@@ -81,5 +88,17 @@ public class TestRabbitSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.protocols", new LinkedList<String>());
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.useDefaultCiperSuites", true);
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.cipherSuites", new LinkedList<String>());
+  }
+
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }

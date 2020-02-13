@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.Field;
 import org.junit.Assert;
 import org.junit.Test;
 
-import javax.xml.stream.XMLEventReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
@@ -29,13 +28,24 @@ import java.util.Map;
 
 public class TestStreamingXmlParser {
 
+  private final String XML_RECORDS = "TestStreamingXmlParser-records.xml";
+  private final String XML_COMPLEX_REC = "com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml";
+  private final String XML_NAMESPACED = "com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-namespaced-records.xml";
+  private final String XML_WHITESPACES = "TestStreamingXmlParser-whitespaces.xml";
+  private final String XML_DOC_AS_RECORD = "TestStreamingXmlParser-docAsRecord.xml";
+
+  private final String XML_TEST_ELEMENT_ROOT = "root[1]/toplevel[3]/blargh[@theone='yes']/record";
+
   private Reader getXml(String name) throws Exception {
     return new InputStreamReader(Thread.currentThread().getContextClassLoader().getResourceAsStream(name));
   }
 
   @Test
   public void testParser() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-records.xml"), "record" );
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_RECORDS))
+        .withRecordElement("record")
+        .build();
 
     Field f = parser.read();
     Assert.assertNotNull(f);
@@ -98,7 +108,10 @@ public class TestStreamingXmlParser {
 
   @Test
   public void testComplexInput() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"), "root[1]/toplevel[3]/blargh[@theone='yes']/record" );
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withRecordElement(XML_TEST_ELEMENT_ROOT)
+        .build();
 
     Field f = parser.read();
     Assert.assertNotNull(f);
@@ -156,10 +169,10 @@ public class TestStreamingXmlParser {
 
   @Test
   public void testPositionPredicate() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(
-        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
-        "root[1]/toplevel[3]/blargh[@theone='yes']/record[5]"
-    );
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withRecordElement(XML_TEST_ELEMENT_ROOT + "[5]")
+        .build();
 
     Field f = parser.read();
     Assert.assertNotNull(f);
@@ -178,11 +191,11 @@ public class TestStreamingXmlParser {
   public void testXPathWithNamespaces() throws Exception {
     Map<String, String> namespaces = new HashMap<>();
     namespaces.put("myns", "x");
-    StreamingXmlParser parser = new StreamingXmlParser(
-        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-namespaced-records.xml"),
-        "myns:record",
-        namespaces
-    );
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_NAMESPACED))
+        .withRecordElement("myns:record")
+        .withNamespaces(namespaces)
+        .build();
 
     Field f = parser.read();
     Assert.assertNotNull(f);
@@ -211,7 +224,10 @@ public class TestStreamingXmlParser {
 
   @Test
   public void testParserWithInitialPosition() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-records.xml"), "record" );
+    StreamingXmlParserBuilder parserBuilder = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_RECORDS))
+        .withRecordElement("record");
+    StreamingXmlParser parser = parserBuilder.build();
 
     parser.read();
     parser.read();
@@ -219,7 +235,13 @@ public class TestStreamingXmlParser {
     long pos = parser.getReaderPosition();
     parser.close();
 
-    parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-records.xml"), "record", pos);
+    parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_RECORDS))
+        .withRecordElement("record")
+        .withInitialPosition(pos)
+        .withPreserveRootElement(false)
+        .build();
+
     Field f = parser.read();
     Assert.assertNotNull(f);
     Assert.assertEquals(0, f.getValueAsMap().size());
@@ -266,46 +288,86 @@ public class TestStreamingXmlParser {
 
   @Test
   public void testParserComplexInputAndInitialPosition() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(
-        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
-        "root[1]/toplevel[3]/blargh[@theone='yes']/record");
+    StreamingXmlParserBuilder parserBuilder = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withRecordElement(XML_TEST_ELEMENT_ROOT);
+    StreamingXmlParser parser = parserBuilder.build();
+
     parser.read();
+
     // Store the current stack
     LinkedList<String> elementNameStack = parser.elementNameStack;
     long pos = parser.getReaderPosition();
+
     // Instance new parser with initial position
-    parser = new StreamingXmlParser(
-        getXml("com/streamsets/pipeline/lib/xml/TestStreamingXmlParser-complex-records.xml"),
-        "root[1]/toplevel[3]/blargh[@theone='yes']/record", pos);
+    parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withRecordElement(XML_TEST_ELEMENT_ROOT)
+        .withInitialPosition(pos)
+        .withPreserveRootElement(false)
+        .build();
+
     Assert.assertEquals(elementNameStack, parser.elementNameStack);
   }
 
   @Test
   public void testParserFullDocumentAsRecord() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-docAsRecord.xml"));
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_DOC_AS_RECORD))
+        .build();
+
     Field f = parser.read();
     Assert.assertEquals(2, f.getValueAsMap().size());
     Assert.assertEquals(1, f.getValueAsMap().get("a").getValueAsList().size());
     Assert.assertEquals(1, f.getValueAsMap().get("b").getValueAsList().size());
+
     f = parser.read();
     Assert.assertNull(f);
+
     parser.close();
   }
 
   @Test
   public void testParserWithWhitespaces() throws Exception {
-    StreamingXmlParser parser = new StreamingXmlParser(getXml("TestStreamingXmlParser-whitespaces.xml"));
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_WHITESPACES))
+        .build();
+
     Field f = parser.read();
     Assert.assertEquals(1, f.getValueAsMap().size());
     Map<String, Field> a = f.getValueAsMap().get("a").getValueAsList().get(0).getValueAsMap();
     Assert.assertEquals(2, a.size());
+
     Field b = a.get("b").getValueAsList().get(0);
     Assert.assertEquals("foo", b.getValueAsMap().get("value").getValueAsString());
+
     Field c = a.get("c").getValueAsList().get(0);
     Assert.assertNull(c.getValueAsMap().get("value"));
     f = parser.read();
     Assert.assertNull(f);
+
     parser.close();
   }
 
+  @Test
+  public void testParserPreserveRootElement() throws Exception {
+    // No record element
+    StreamingXmlParser parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withPreserveRootElement(true)
+        .build();
+
+    Field field = parser.read();
+    Assert.assertNotNull(field.getValueAsMap().get("root"));
+
+    // With record element delimiter
+    parser = new StreamingXmlParserBuilder()
+        .withReader(getXml(XML_COMPLEX_REC))
+        .withRecordElement(XML_TEST_ELEMENT_ROOT)
+        .withPreserveRootElement(true)
+        .build();
+
+    field = parser.read();
+    Assert.assertNotNull(field.getValueAsMap().get("record"));
+  }
 }

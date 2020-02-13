@@ -584,6 +584,7 @@ public class HttpProcessorIT extends JerseyTest {
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.XML;
     conf.resourceUrl = getBaseUri() + "test/xml/get";
+    conf.dataFormatConfig.preserveRootElement = false;
 
     List<Record> records = createRecords("test/xml/get");
     ProcessorRunner runner = createProcessorRunner(conf);

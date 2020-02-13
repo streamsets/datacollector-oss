@@ -17,17 +17,35 @@ package com.streamsets.pipeline.stage.origin.redis;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class TestRedisSourceUpgrader {
+
+  private StageUpgrader redisSourceUpgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RedisDSource.yaml");
+    redisSourceUpgrader = new SelectorStageUpgrader("stage", new RedisSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testV1toV2() throws StageException {
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config("redisOriginConfigBean.readStrategy", "BATCH"));
     configs.add(new Config("redisOriginConfigBean.queueName", ""));
     configs.add(new Config("redisOriginConfigBean.advancedConfig.keysPattern", "*"));
@@ -47,5 +65,17 @@ public class TestRedisSourceUpgrader {
 
     Assert.assertTrue(configValues.containsKey("redisOriginConfigBean.connectionTimeout"));
     Assert.assertEquals("60", configValues.get("redisOriginConfigBean.connectionTimeout"));
+  }
+
+  @Test
+  public void testV3ToV4() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    String dataFormatPrefix = "redisOriginConfigBean.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = redisSourceUpgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }

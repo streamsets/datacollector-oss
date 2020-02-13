@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "RabbitMQ Consumer",
     description = "Reads data from a RabbitMQ source.",
     icon = "rabbitmq.png",

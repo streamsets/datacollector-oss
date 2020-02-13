@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "REST Service",
     description = "Listens for requests on an HTTP endpoint and send response back",
     icon="api.png",

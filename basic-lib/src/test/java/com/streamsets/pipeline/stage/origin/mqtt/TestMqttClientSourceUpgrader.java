@@ -19,13 +19,29 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestMqttClientSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MqttClientDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new MqttClientSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testV1ToV2() throws Exception {
@@ -38,9 +54,7 @@ public class TestMqttClientSourceUpgrader {
 
   @Test
   public void testV2ToV3() throws Exception {
-    final List<Config> configs = new LinkedList<>();
     final MqttClientSourceUpgrader upgrader = new MqttClientSourceUpgrader();
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(2).when(context).getFromVersion();
     Mockito.doReturn(3).when(context).getToVersion();
     assertCleanSessionFlagAdded(upgrader.upgrade(configs, context));
@@ -48,5 +62,17 @@ public class TestMqttClientSourceUpgrader {
 
   public static void assertCleanSessionFlagAdded(List<Config> configs) {
     UpgraderTestUtils.assertExists(configs, "commonConf.cleanSession", false);
+  }
+
+  @Test
+  public void testV3ToV4() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    String dataFormatPrefix = "subscriberConf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }

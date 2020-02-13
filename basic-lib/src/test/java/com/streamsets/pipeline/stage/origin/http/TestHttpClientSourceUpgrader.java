@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.http;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
@@ -30,12 +31,16 @@ import com.streamsets.pipeline.lib.http.logging.JulLogLevelChooserValues;
 import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.logging.VerbosityChooserValues;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,11 +53,21 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestHttpClientSourceUpgrader {
-  private static final Logger LOG = LoggerFactory.getLogger(TestHttpClientSourceUpgrader.class);
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HttpClientDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new HttpClientSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testV1toV2() throws StageException {
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config("dataFormat", DataFormat.JSON));
     configs.add(new Config("resourceUrl", "stream.twitter.com/1.1/statuses/sample.json"));
     configs.add(new Config("httpMethod", HttpMethod.GET));
@@ -134,8 +149,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV2ToV3() throws StageException {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 2, 3, configs);
 
@@ -154,8 +167,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV3ToV4() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.authType", "BASIC"));
 
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
@@ -167,8 +178,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV4ToV5() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 4, 5, configs);
 
@@ -179,7 +188,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV5ToV6() throws Exception {
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config("conf.requestData", ""));
 
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
@@ -193,8 +201,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV6ToV7() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.requestTimeoutMillis", 1000));
     configs.add(new Config("conf.numThreads", 10));
     configs.add(new Config("conf.authType", AuthenticationType.NONE));
@@ -205,7 +211,6 @@ public class TestHttpClientSourceUpgrader {
     configs.add(new Config("conf.sslConfig", new SslConfigBean()));
 
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
-
     upgrader.upgrade("a", "b", "c", 6, 7, configs);
 
     for (Config config : configs) {
@@ -245,13 +250,10 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV7ToV8() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.entityDelimiter", "\\r\\n"));
     configs.add(new Config("conf.client.requestTimeoutMillis", 1000));
 
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
-
     upgrader.upgrade("a", "b", "c", 7, 8, configs);
     Map<String, Object> configValues = getConfigsAsMap(configs);
 
@@ -289,12 +291,9 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV8ToV9() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.dataFormatConfig.schemaInMessage", true));
 
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
-
     upgrader.upgrade("a", "b", "c", 8, 9, configs);
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
@@ -333,8 +332,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV9ToV10() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("a", "b", "c", 9, 10, configs);
 
@@ -349,6 +346,7 @@ public class TestHttpClientSourceUpgrader {
     List<Map<String, Object>> statusActions =
             (List<Map<String, Object>>) configValues.get("conf.responseStatusActionConfigs");
     Assert.assertEquals(1, statusActions.size());
+
     Map<String, Object> defaultStatusAction = statusActions.get(0);
     assertEquals(HttpResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES, defaultStatusAction.get("maxNumRetries"));
     assertEquals(HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS, defaultStatusAction.get("backoffInterval"));
@@ -358,10 +356,7 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV10ToV11() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
-
     upgrader.upgrade("a", "b", "c", 10, 11, configs);
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
@@ -371,10 +366,7 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV11ToV12() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader upgrader = new HttpClientSourceUpgrader();
-
     upgrader.upgrade("a", "b", "c", 11, 12, configs);
 
     Map<String, Object> configValues = getConfigsAsMap(configs);
@@ -392,8 +384,6 @@ public class TestHttpClientSourceUpgrader {
 
   @Test
   public void testV13ToV14() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpClientSourceUpgrader httpClientSourceUpgrader = new HttpClientSourceUpgrader();
     httpClientSourceUpgrader.upgrade("lib", "stage", "inst", 13, 14, configs);
 
@@ -422,6 +412,18 @@ public class TestHttpClientSourceUpgrader {
           fail();
       }
     }
+  }
+
+  @Test
+  public void testV14ToV15() {
+    Mockito.doReturn(14).when(context).getFromVersion();
+    Mockito.doReturn(15).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {

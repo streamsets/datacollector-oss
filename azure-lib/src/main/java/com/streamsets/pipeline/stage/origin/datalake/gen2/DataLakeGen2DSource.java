@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Azure Data Lake Storage Gen2",
     description = "Reads data from Azure Data Lake Storage Gen2",
     icon = "data-lake-store-gen2.png",

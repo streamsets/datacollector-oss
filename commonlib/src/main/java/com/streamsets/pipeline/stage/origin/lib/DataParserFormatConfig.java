@@ -495,6 +495,19 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public String xmlRecordElement = "";
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Preserve Root Element",
+      defaultValue = "true",
+      description = Constants.XML_PRESERVE_ROOT_ELEMENT,
+      displayPosition = 441,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "XML"
+  )
+  public boolean preserveRootElement = true;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Include Field XPaths",
@@ -1545,7 +1558,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
         builder.setMaxDataLen(xmlMaxObjectLen).setConfig(XmlDataParserFactory.RECORD_ELEMENT_KEY, xmlRecordElement)
             .setConfig(XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_KEY, includeFieldXpathAttributes)
             .setConfig(XmlDataParserFactory.RECORD_ELEMENT_XPATH_NAMESPACES_KEY, xPathNamespaceContext)
-            .setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, outputFieldAttributes);
+            .setConfig(XmlDataParserFactory.USE_FIELD_ATTRIBUTES, outputFieldAttributes)
+            .setConfig(XmlDataParserFactory.PRESERVE_ROOT_ELEMENT_KEY, preserveRootElement);
         break;
       case SDC_JSON:
         builder.setMaxDataLen(-1);

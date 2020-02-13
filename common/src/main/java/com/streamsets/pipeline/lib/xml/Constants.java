@@ -27,6 +27,10 @@ public abstract class Constants {
       "  Or, it can be a simplified XPath expression (see docs), with elements matching the XPath expression" +
       " as records.  Leaving it blank will treat the whole XML document as one record.";
 
+  public static final String XML_PRESERVE_ROOT_ELEMENT = "Include the root element in the output records." +
+      " The root element is the last element defined in the record element delimiter or is the root element" +
+      " of the XML document when no delimiter is defined";
+
   public static final String INCLUDE_FIELD_XPATH_ATTRIBUTES_DESCRIPTION = "Include XPath expressions that indicate " +
       "the path to the input node that was parsed to create each field.  If enabled, each field will receive an " +
       "attribute named \"xpath\" whose value is the XPath expression.  Any namespace prefixes will be mapped to " +

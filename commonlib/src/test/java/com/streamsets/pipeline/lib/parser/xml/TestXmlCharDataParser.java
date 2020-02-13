@@ -56,8 +56,12 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testParse() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
+    OverrunReader reader = new OverrunReader(
+        new StringReader(
+            "<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
+    DataParser parser = new XmlCharDataParser(
+        getContext(), "id", reader, 0, "e", false,
+        null, 100, true, false);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -77,8 +81,11 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testXpathWithoutDelimiterElement() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "", true, 1000);
+    OverrunReader reader = new OverrunReader(
+        new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
+    DataParser parser = new XmlCharDataParser(
+        getContext(), "id", reader, 0, "", true,
+        null , 1000, true, false);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -110,8 +117,11 @@ public class TestXmlCharDataParser {
   public void testXpathWithDelimiterElement() throws Exception {
     //ensure the output xpath remains consistent regardless of record path
     for (String delimiter : Arrays.asList("/bookstore/book", "book", "/*[1]/*")) {
-      OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
-      DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, delimiter, true, 1000);
+      OverrunReader reader = new OverrunReader(
+          new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
+      DataParser parser = new XmlCharDataParser(
+          getContext(), "id", reader, 0, delimiter, true,
+          null, 1000, true, false);
       Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
       Record record = parser.parse();
       assertBookRecord("/bookstore/book", "Harry Potter", "en", "29.99", record);
@@ -126,8 +136,11 @@ public class TestXmlCharDataParser {
     // backwards compatibility for SDC-5407
 
     for (String delimiter : Arrays.asList("/bookstore/book", "book", "/*[1]/*")) {
-      OverrunReader reader = new OverrunReader(new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
-      DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, delimiter, true, null, 1000, false);
+      OverrunReader reader = new OverrunReader(
+          new StringReader(BOOK_XML_NO_NAMESPACE), 1000, true, false);
+      DataParser parser = new XmlCharDataParser(getContext(), "id", reader,
+          0, delimiter, true, null,
+          1000, false, false);
       Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
       Record record = parser.parse();
       assertBookRecordOldStyle(
@@ -195,7 +208,8 @@ public class TestXmlCharDataParser {
         true,
         namespaces,
         1000,
-        true
+        true,
+        false
     );
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
 
@@ -236,7 +250,9 @@ public class TestXmlCharDataParser {
             "  <something attr1=\"attrVal1-2\" attr2=\"attrVal2-2\">2</something>\n" +
             "</root>"
     ), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "something", true, null, 1000, false);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader,
+        0, "something", true, null,
+        1000, false, false);
     Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
 
@@ -289,7 +305,8 @@ public class TestXmlCharDataParser {
       Record record
   ) {
     Assert.assertNotNull(record);
-    assertBookRecord(bookXpath, bookTitle, lang, price, record.get("/title"), record.get("/price"), "", "", "");
+    assertBookRecord(bookXpath, bookTitle, lang, price, record.get("/title"),
+        record.get("/price"), "", "", "");
   }
 
   private static void assertBookRecord(
@@ -419,8 +436,10 @@ public class TestXmlCharDataParser {
 
   @Test
   public void testParseWithOffset() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 18, "e", 100);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000,
+        true, false);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 18, "e",
+        false, null, 100, true, false);
     Assert.assertEquals(18, Long.parseLong(parser.getOffset()));
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -435,16 +454,20 @@ public class TestXmlCharDataParser {
 
   @Test(expected = IOException.class)
   public void testClose() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><e>Hello</e><e>Bye</e></r>"),
+        1000, true, false);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e",
+        false, null, 100, true, false);
     parser.close();
     parser.parse();
   }
 
   @Test
   public void testInvalidXml() throws Exception {
-    OverrunReader reader = new OverrunReader(new StringReader("<r><open-tag>asdf</r>"), 1000, true, false);
-    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e", 100);
+    OverrunReader reader = new OverrunReader(new StringReader("<r><open-tag>asdf</r>"),
+        1000, true, false);
+    DataParser parser = new XmlCharDataParser(getContext(), "id", reader, 0, "e",
+        false, null, 100, true, false);
 
     try {
       parser.parse();

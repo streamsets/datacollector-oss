@@ -47,6 +47,7 @@ import java.util.List;
   provides = DataFormatGeneratorService.class,
   version = 1,
   upgrader = GeneratorUpgrader.class,
+  upgraderDef = "upgrader/DataFormatGeneratorUpgrader.yaml",
   label = "DataFormat Generator"
 )
 @ConfigGroups(Groups.class)

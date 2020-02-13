@@ -56,53 +56,11 @@ public class XmlCharDataParser extends AbstractDataParser {
       OverrunReader reader,
       long readerOffset,
       String recordElement,
-      int maxObjectLen
-  ) throws IOException {
-    this(
-        context,
-        readerId,
-        reader,
-        readerOffset,
-        recordElement,
-        false,
-        null,
-        maxObjectLen,
-        true
-    );
-  }
-
-  public XmlCharDataParser(
-      ProtoConfigurableEntity.Context context,
-      String readerId,
-      OverrunReader reader,
-      long readerOffset,
-      String recordElement,
-      boolean includeXpath,
-      int maxObjectLen
-  ) throws IOException {
-    this(
-        context,
-        readerId,
-        reader,
-        readerOffset,
-        recordElement,
-        includeXpath,
-        null,
-        maxObjectLen,
-        true
-    );
-  }
-
-  public XmlCharDataParser(
-      ProtoConfigurableEntity.Context context,
-      String readerId,
-      OverrunReader reader,
-      long readerOffset,
-      String recordElement,
       boolean includeXpath,
       Map<String, String> namespaces,
       int maxObjectLen,
-      boolean useFieldAttributesInsteadOfFields
+      boolean useFieldAttributesInsteadOfFields,
+      boolean preserveRootElement
   ) throws IOException {
     this.context = context;
     this.readerId = readerId;
@@ -116,7 +74,8 @@ public class XmlCharDataParser extends AbstractDataParser {
           namespaces,
           readerOffset,
           maxObjectLen,
-          useFieldAttributesInsteadOfFields
+          useFieldAttributesInsteadOfFields,
+          preserveRootElement
       );
     } catch (XMLStreamException ex) {
       throw new IOException(ex);

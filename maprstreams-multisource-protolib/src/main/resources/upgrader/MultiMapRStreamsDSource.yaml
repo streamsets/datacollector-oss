@@ -33,3 +33,8 @@ upgrades:
       - setConfig:
           name: conf.dataFormatConfig.basicAuth
           value: ""
+  - toVersion: 5
+    actions:
+      - setConfig:
+            name: conf.dataFormatConfig.preserveRootElement
+            value: false

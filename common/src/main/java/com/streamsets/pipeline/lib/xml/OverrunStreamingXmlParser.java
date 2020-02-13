@@ -47,15 +47,16 @@ public class OverrunStreamingXmlParser  extends StreamingXmlParser {
         null,
         initialPosition,
         maxObjectLen,
-        true
+        true,
+        false
     );
     this.initialPosition = initialPosition;
   }
 
   public OverrunStreamingXmlParser(OverrunReader reader, String recordElement, Map<String, String> namespaces,
-      long initialPosition, int maxObjectLen, boolean useFieldAttributesInsteadOfFields)
+      long initialPosition, int maxObjectLen, boolean useFieldAttributesInsteadOfFields, boolean preserveRootElement)
       throws IOException, XMLStreamException {
-    super(reader, recordElement, namespaces, initialPosition, useFieldAttributesInsteadOfFields);
+    super(reader, recordElement, namespaces, initialPosition, useFieldAttributesInsteadOfFields, preserveRootElement);
     countingReader = (OverrunReader) getReader();
     countingReader.setEnabled(true);
     this.maxObjectLen = maxObjectLen;

@@ -913,6 +913,7 @@ public class HttpClientSourceIT extends JerseyTest {
     conf.httpMethod = HttpMethod.GET;
     conf.dataFormat = DataFormat.XML;
     conf.dataFormatConfig.xmlRecordElement = "record";
+    conf.dataFormatConfig.preserveRootElement = false;
 
     runBatchAndAssertNames(DataFormat.XML, conf);
   }

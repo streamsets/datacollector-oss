@@ -33,3 +33,8 @@ upgrades:
       - setConfig:
           name: kafkaConfigBean.dataFormatConfig.basicAuth
           value: ""
+  - toVersion: 10
+    actions:
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.preserveRootElement
+          value: false

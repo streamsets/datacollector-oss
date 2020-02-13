@@ -46,8 +46,9 @@ import java.util.Map;
 
 @ServiceDef(
   provides = DataFormatParserService.class,
-  version = 1,
+  version = 2,
   upgrader = ParserUpgrader.class,
+  upgraderDef = "upgrader/DataFormatParserUpgrader.yaml",
   label = "DataFormat Parser"
 )
 @ConfigGroups(Groups.class)

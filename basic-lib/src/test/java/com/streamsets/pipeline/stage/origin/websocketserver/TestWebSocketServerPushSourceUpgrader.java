@@ -16,18 +16,36 @@
 package com.streamsets.pipeline.stage.origin.websocketserver;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TestWebSocketServerPushSourceUpgrader {
 
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/WebSocketServerDPushSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new WebSocketServerPushSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
-  public void testV1ToV10() throws Exception {
+  public void testV1ToV10() {
     TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
         "webSocketConfigs.",
         new WebSocketServerPushSourceUpgrader(),
@@ -36,10 +54,10 @@ public class TestWebSocketServerPushSourceUpgrader {
   }
 
   @Test
-  public void testV10ToV11() throws Exception {
-    List<Config> configs = new LinkedList<>();
-    WebSocketServerPushSourceUpgrader upgrader = new WebSocketServerPushSourceUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 10, 11);
+  public void testV10ToV11() {
+    Mockito.doReturn(10).when(context).getFromVersion();
+    Mockito.doReturn(11).when(context).getToVersion();
+
     upgrader.upgrade(configs, context);
     UpgraderTestUtils.assertAllExist(
         configs,
@@ -50,14 +68,25 @@ public class TestWebSocketServerPushSourceUpgrader {
   }
 
   @Test
-  public void testV11ToV12() throws Exception {
-    List<Config> configs = new LinkedList<>();
-    WebSocketServerPushSourceUpgrader upgrader = new WebSocketServerPushSourceUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("l", "s", "i", 11, 12);
+  public void testV11ToV12() {
+    Mockito.doReturn(11).when(context).getFromVersion();
+    Mockito.doReturn(12).when(context).getToVersion();
+
     upgrader.upgrade(configs, context);
     UpgraderTestUtils.assertAllExist(
         configs,
         "responseConfig.sendRawResponse"
     );
+  }
+
+  @Test
+  public void testV12ToV13() {
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+
+    configs.add(new Config("dataFormatConfig.preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "dataFormatConfig.preserveRootElement", false);
   }
 }

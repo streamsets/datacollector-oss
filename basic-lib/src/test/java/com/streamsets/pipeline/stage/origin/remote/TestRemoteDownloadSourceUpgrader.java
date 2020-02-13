@@ -17,30 +17,47 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.remote.Authentication;
 import com.streamsets.pipeline.lib.remote.PrivateKeyProvider;
+import com.streamsets.pipeline.stage.origin.websocketserver.WebSocketServerPushSourceUpgrader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestRemoteDownloadSourceUpgrader {
 
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RemoteDownloadDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new RemoteDownloadSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testUpgradeV1ToV2() throws Exception {
-    List<Config> configs = new ArrayList<>(1);
     // This should be removed.
     configs.add(new Config("conf.pollInterval", 1000));
 
-    configs = new RemoteDownloadSourceUpgrader().upgrade("a", "b", "v", 1, 2, configs);
+    configs = new RemoteDownloadSourceUpgrader()
+        .upgrade("a", "b", "v", 1, 2, configs);
     Assert.assertTrue(configs.isEmpty());
   }
 
   @Test
   public void testUpgradeV3ToV4() throws StageException {
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config("conf.remoteAddress", "sftp://localhost:1234"));
     configs.add(new Config("conf.auth", Authentication.PASSWORD.name()));
     configs.add(new Config("conf.username", "user"));
@@ -56,7 +73,8 @@ public class TestRemoteDownloadSourceUpgrader {
 
     UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
 
-    new RemoteDownloadSourceUpgrader().upgrade("a", "b", "v", 3, 4, configs);
+    new RemoteDownloadSourceUpgrader()
+        .upgrade("a", "b", "v", 3, 4, configs);
 
     Assert.assertEquals(12, configs.size());
 
@@ -87,5 +105,17 @@ public class TestRemoteDownloadSourceUpgrader {
     );
 
     UpgraderTestUtils.assertExists(configs, "conf.leaveMeAlone", "foo");
+  }
+
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }

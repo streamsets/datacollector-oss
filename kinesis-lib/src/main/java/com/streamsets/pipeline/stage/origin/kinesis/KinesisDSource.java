@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis_multithreaded.png",

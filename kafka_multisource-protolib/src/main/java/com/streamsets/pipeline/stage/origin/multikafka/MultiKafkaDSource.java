@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Kafka Multitopic Consumer",
     description = "Reads data from multiple topics of a Kafka Broker",
     execution = ExecutionMode.STANDALONE,
@@ -39,6 +39,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
 public class MultiKafkaDSource extends DPushSource {
+
   @ConfigDefBean
   public MultiKafkaBeanConfig conf;
 

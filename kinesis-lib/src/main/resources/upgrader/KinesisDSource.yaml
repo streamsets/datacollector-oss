@@ -16,5 +16,9 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 7
+    actions:
+      - setConfig:
+          name: kinesisConfig.dataFormatConfig.preserveRootElement
+          value: false
