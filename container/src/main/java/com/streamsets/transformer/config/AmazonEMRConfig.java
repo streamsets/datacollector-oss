@@ -303,6 +303,7 @@ public class AmazonEMRConfig {
       defaultValue = "2",
       label = "Instance Count",
       group = "EMR",
+      min = 2,
       displayPosition = 320,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
