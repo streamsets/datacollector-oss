@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.dirspooler;
 
-import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.lib.io.fileref.AbstractSpoolerFileRef;
 
 import java.io.IOException;
@@ -128,7 +127,7 @@ public interface WrappedFileSystem {
    * @param filePath {@link WrappedFile}
    * @return  {@code true} if, and only if, the file exists
    */
-  WrappedFile getFile(String file);
+  WrappedFile getFile(String file) throws IOException;
 
   /**
    * Tells whether or not the file exists.
@@ -136,7 +135,7 @@ public interface WrappedFileSystem {
    * @param filePath {@link WrappedFile}
    * @return  {@code true} if, and only if, the file exists
    */
-  WrappedFile getFile(String dir, String file);
+  WrappedFile getFile(String dir, String file) throws IOException;
 
   /**
    * Tells whether or not the file exists.

@@ -21,12 +21,6 @@ import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -36,8 +30,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -94,7 +92,7 @@ public class DirectorySpooler {
       return this;
     }
 
-    public Builder setDir(String dir) {
+    public Builder setDir(String dir) throws IOException {
       Preconditions.checkNotNull(fs, "WrappedFileSystem cannot be null, setWrappedFileSystem before setDir");
       final String spoolDirInput = Preconditions.checkNotNull(dir, "dir cannot be null");
       final WrappedFile spoolDirPath = fs.getFile(spoolDirInput);
@@ -282,7 +280,6 @@ public class DirectorySpooler {
   private WrappedFile archiveDirPath;
   private WrappedFile errorArchiveDirPath;
   protected PriorityBlockingQueue<WrappedFile> filesQueue;
-  private Set<WrappedFile> filesSet;
   private WrappedFile previousFile;
   private ScheduledExecutorService scheduledExecutor;
   private boolean waitForPathAppearance;
@@ -295,7 +292,9 @@ public class DirectorySpooler {
   volatile FilePurger purger;
   volatile FileFinder finder;
 
-  private void checkBaseDir(WrappedFile path) {
+  private Set<WrappedFile> filesBeingProcessed;
+
+  private void checkBaseDir(WrappedFile path) throws IOException {
     Preconditions.checkState(path.isAbsolute(), Utils.formatL("Path '{}' is not an absolute path", path));
 
     if (SpoolDirUtil.isGlobPattern(path.getAbsolutePath())) {
@@ -312,6 +311,10 @@ public class DirectorySpooler {
     try {
       spoolDirPath = fs.getFile(spoolDir);
 
+      // 11 is the DEFAULT_INITIAL_CAPACITY -- seems pretty random, but lets use the same one.
+      filesQueue = new PriorityBlockingQueue<>(11, pathComparator);
+      filesBeingProcessed = ConcurrentHashMap.newKeySet();
+
       if(StringUtils.isEmpty(sourceFile)) {
         this.currentFile = null;
       } else {
@@ -324,6 +327,10 @@ public class DirectorySpooler {
           this.currentFile = fs.getFile(spoolDirPath.toString(), sourceFile);
         }
         this.initialFile = this.currentFile;
+        // Adding initialFile to the filesQueue as it is not added later due to thread safety
+        if (fs.exists(initialFile)) {
+          filesQueue.add(initialFile);
+        }
       }
 
       if (!waitForPathAppearance) {
@@ -347,16 +354,12 @@ public class DirectorySpooler {
       }
       LOG.debug("Post processing mode '{}'{}", postProcessing, extraInfo);
 
-      // 11 is the DEFAULT_INITIAL_CAPACITY -- seems pretty random, but lets use the same one.
-      filesQueue = new PriorityBlockingQueue<>(11, pathComparator);
-      filesSet = new HashSet<>(); //Set to speed up "contains" search for filesQueue
-
       spoolQueueMeter = context.createMeter("spoolQueue");
 
       pendingFilesCounter = context.createCounter(PENDING_FILES);
 
       if (!waitForPathAppearance) {
-        startSpooling(currentFile);
+        startSpooling();
       }
 
     } catch (IOException ex) {
@@ -365,7 +368,7 @@ public class DirectorySpooler {
     }
   }
 
-  private void startSpooling(WrappedFile currentFile) throws IOException {
+  private void startSpooling() throws IOException {
     running = true;
 
     scheduledExecutor = new SafeScheduledExecutorService(1, "directory-dirspooler");
@@ -427,6 +430,18 @@ public class DirectorySpooler {
     return archiveDir;
   }
 
+  public void addFileBeingProcessed(WrappedFile file) {
+    if (file != null && !filesBeingProcessed.contains(file)) {
+      filesBeingProcessed.add(file);
+    }
+  }
+
+  public void removeFileBeingProcessed(WrappedFile file) {
+    if (file != null) {
+      filesBeingProcessed.remove(file);
+    }
+  }
+
   public void doPostProcessing(WrappedFile file) {
     switch (postProcessing) {
       case NONE:
@@ -461,6 +476,7 @@ public class DirectorySpooler {
       default:
         LOG.error("poolForFile(): switch failed. postProcesing " + postProcessing.name() + " " + postProcessing.toString());
     }
+    removeFileBeingProcessed(file);
   }
 
   protected void addFileToQueue(WrappedFile file, boolean checkCurrent) {
@@ -516,9 +532,14 @@ public class DirectorySpooler {
       }
     }
 
-    if (!filesSet.contains(file)) {
-      filesQueue.add(file);
-      filesSet.add(file);
+    if (!filesQueue.contains(file) && !filesBeingProcessed.contains(file)) {
+      if (currentFile != null) {
+        if (fs.compare(file, currentFile, useLastModified) > 0) {
+          filesQueue.add(file);
+        }
+      } else {
+        filesQueue.add(file);
+      }
       spoolQueueMeter.mark(filesQueue.size());
     } else {
       LOG.debug("File '{}' already in queue, ignoring", file);
@@ -530,7 +551,7 @@ public class DirectorySpooler {
       try {
         if (fs.findDirectoryPathCreationWatcher(Arrays.asList(spoolDirPath))) {
           waitForPathAppearance = false;
-          startSpooling(this.currentFile);
+          startSpooling();
         }
       } catch (IOException e) {
         throw new RuntimeException(Utils.format("Some Problem with the file system: {}", e.toString()), e);
@@ -559,10 +580,14 @@ public class DirectorySpooler {
     while (!context.isStopped() && System.currentTimeMillis() - initial < wait && next == null) {
       closeLock.readLock().lock();
       try {
-        next = filesQueue.poll();
+        next = filesQueue.peek();
         if (next != null) {
-          filesSet.remove(next);
-          break;
+          if (filesBeingProcessed.contains(next)) {
+            // file is already being processed by some other thread
+            next = null;
+          } else {
+            addFileBeingProcessed(next);
+          }
         }
       } finally {
         LOG.debug("Polling for file returned '{}'", next);
@@ -571,6 +596,8 @@ public class DirectorySpooler {
           currentFile = next;
           previousFile = next;
         }
+
+        filesQueue.poll();
 
         closeLock.readLock().unlock();
       }
@@ -587,8 +614,16 @@ public class DirectorySpooler {
   public void handleCurrentFileAsError() throws IOException {
     if (errorArchiveDirPath != null && !context.isPreview() && previousFile != null) {
       WrappedFile current = previousFile;//spoolDirPath.resolve(previousFile);
-      LOG.error("Archiving file in error '{}' in error archive directory '{}'", previousFile, errorArchiveDirPath);
-      moveIt(current, errorArchiveDirPath);
+      if (fs.exists(current)) {
+        LOG.error("Archiving file in error '{}' in error archive directory '{}'", previousFile, errorArchiveDirPath);
+        moveIt(current, errorArchiveDirPath);
+      } else {
+        LOG.error(
+            "Wanted to archive file in error '{}' in error archive directory '{}' but file does not exist.",
+            previousFile,
+            errorArchiveDirPath
+        );
+      }
       // we need to set the currentFile to null because we just moved to error.
       previousFile = null;
     } else {
@@ -615,7 +650,8 @@ public class DirectorySpooler {
     }
   }
 
-  protected void findAndQueueFiles(final boolean includeStartingFile, boolean checkCurrent) throws IOException {
+  protected void findAndQueueFiles(final boolean includeStartingFile, boolean checkCurrent)
+      throws IOException {
     if (filesQueue.size() >= maxSpoolFiles) {
       LOG.debug(Utils.format("Exceeded max number '{}' of spool files in directory", maxSpoolFiles));
       return;

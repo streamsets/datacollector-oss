@@ -74,7 +74,7 @@ public class TestDirectorySpoolerSubDirectories {
         .of("a"));
   }
 
-  private DirectorySpooler.Builder initializeAndGetBuilder() {
+  private DirectorySpooler.Builder initializeAndGetBuilder() throws IOException {
     return new DirectorySpooler.Builder()
         .setContext(context)
         .setWrappedFileSystem(fs)
@@ -83,7 +83,7 @@ public class TestDirectorySpoolerSubDirectories {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testNoSpoolDirWithoutWaiting() {
+  public void testNoSpoolDirWithoutWaiting() throws IOException {
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(1);
     DirectorySpooler spooler = builder.build();

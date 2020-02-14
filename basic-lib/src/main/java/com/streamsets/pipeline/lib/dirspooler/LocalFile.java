@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.dirspooler;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 
 import java.io.File;
@@ -27,20 +26,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static com.streamsets.pipeline.lib.dirspooler.LocalFileSystem.PERMISSIONS;
 
 public class LocalFile implements WrappedFile {
 
-  private Map<String, Object> customMetadata = null;
+  public static final String LAST_MODIFIED_TIMESTAMP_KEY = "lastModifiedTime";
 
-  private Path filePath;
+  private final Map<String, Object> customMetadata;
 
-  public LocalFile(Path filePath) {
+  private final Path filePath;
+
+  public LocalFile(Path filePath) throws IOException {
     this.filePath = filePath;
+    this.customMetadata = getFileMetadata();
   }
 
   public boolean isAbsolute() {
@@ -69,24 +71,30 @@ public class LocalFile implements WrappedFile {
   }
 
   public Map<String, Object> getFileMetadata() throws IOException {
-    boolean isPosix = filePath.getFileSystem().supportedFileAttributeViews().contains("posix");
-    Map<String, Object>  metadata = new HashMap<>(Files.readAttributes(filePath, isPosix? "posix:*" : "*"));
-    metadata.put(HeaderAttributeConstants.FILE_NAME, filePath.getFileName().toString());
-    metadata.put(HeaderAttributeConstants.FILE, filePath);
-    if (isPosix && metadata.containsKey(PERMISSIONS) && Set.class.isAssignableFrom(metadata.get(PERMISSIONS).getClass())) {
-      Set<PosixFilePermission> posixFilePermissions = (Set<PosixFilePermission>)(metadata.get(PERMISSIONS));
-      //converts permission to rwx- format and replace it in permissions field.
-      // (totally containing 9 characters 3 for user 3 for group and 3 for others)
-      metadata.put(PERMISSIONS, PosixFilePermissions.toString(posixFilePermissions));
+    Map<String, Object>  metadata;
+    if (filePath.toFile().exists()) {
+      boolean isPosix = filePath.getFileSystem().supportedFileAttributeViews().contains("posix");
+      metadata = new ConcurrentHashMap<>(Files.readAttributes(filePath, isPosix ? "posix:*" : "*"));
+      metadata.put(HeaderAttributeConstants.FILE_NAME, filePath.getFileName().toString());
+      metadata.put(HeaderAttributeConstants.FILE, filePath);
+      if (isPosix && metadata.containsKey(PERMISSIONS) && Set.class.isAssignableFrom(metadata.get(PERMISSIONS).getClass())) {
+        Set<PosixFilePermission> posixFilePermissions = (Set<PosixFilePermission>)(metadata.get(PERMISSIONS));
+        //converts permission to rwx- format and replace it in permissions field.
+        // (totally containing 9 characters 3 for user 3 for group and 3 for others)
+        metadata.put(PERMISSIONS, PosixFilePermissions.toString(posixFilePermissions));
+      }
+      metadata.put(HeaderAttributeConstants.LAST_CHANGE_TIME, Files.getAttribute(filePath, "unix:ctime"));
+    } else {
+      metadata = new ConcurrentHashMap<>();
+      metadata.put(HeaderAttributeConstants.LAST_CHANGE_TIME, 0L);
+      metadata.put(HeaderAttributeConstants.LAST_MODIFIED_TIME, 0L);
+      metadata.put(LAST_MODIFIED_TIMESTAMP_KEY, 0L);
     }
     return metadata;
   }
 
   @Override
   public Map<String, Object> getCustomMetadata() {
-    if (customMetadata == null) {
-      customMetadata = new HashMap<>();
-    }
     return customMetadata;
   }
 

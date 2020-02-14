@@ -197,7 +197,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
     }
   }
 
-  public WrappedFile getFile(String filePath) {
+  public WrappedFile getFile(String filePath) throws IOException {
     if (StringUtils.isEmpty(filePath)) {
       return new HdfsFile(fs, null);
     }
@@ -205,7 +205,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
     return new HdfsFile(fs, path);
   }
 
-  public WrappedFile getFile(String dirPath, String filePath) {
+  public WrappedFile getFile(String dirPath, String filePath) throws IOException {
     if (isAbsolutePath(dirPath, filePath)) {
       return getFile(filePath);
     }

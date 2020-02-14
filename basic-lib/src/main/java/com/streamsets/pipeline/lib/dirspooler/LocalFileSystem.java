@@ -32,11 +32,12 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -84,18 +85,35 @@ public class LocalFileSystem implements WrappedFileSystem {
     Files.move(Paths.get(filePath.getAbsolutePath()), Paths.get(destFilePath.getAbsolutePath()));
   }
 
-  public long getLastModifiedTime(WrappedFile filePath) throws IOException {
-    if (filePath == null) {
-      return -1;
+  private long getFileTimeProperty(WrappedFile filePath, String propertyKey) {
+    long result = -1L;
+
+    if (filePath != null) {
+      Map<String,Object> fileMetadata = filePath.getCustomMetadata();
+      if (fileMetadata.containsKey(propertyKey)) {
+        Object time = fileMetadata.get(propertyKey);
+        if (time instanceof FileTime) {
+          result = ((FileTime) time).toMillis();
+        } else if (time instanceof Long) {
+          result = (Long) time;
+        } else if (time instanceof Integer){
+          result = ((Integer) time).longValue();
+        } else {
+          // guessing time is a String
+          result = Date.valueOf((String)time).getTime();
+        }
+      }
     }
-    return getLastModifiedTime(Paths.get(filePath.getAbsolutePath()));
+
+    return result;
+  }
+
+  public long getLastModifiedTime(WrappedFile filePath) throws IOException {
+    return getFileTimeProperty(filePath, LocalFile.LAST_MODIFIED_TIMESTAMP_KEY);
   }
 
   public long getChangedTime(WrappedFile filePath) throws IOException {
-    if (filePath == null) {
-      return -1;
-    }
-    return getChangedTime(Paths.get(filePath.getAbsolutePath()));
+    return getFileTimeProperty(filePath, HeaderAttributeConstants.LAST_CHANGE_TIME);
   }
 
   private long getLastModifiedTime(Path filePath) throws IOException {
@@ -120,18 +138,26 @@ public class LocalFileSystem implements WrappedFileSystem {
       @Override
       public boolean accept(Path entry) throws IOException {
         boolean accept = false;
-        // SDC-3551: Pick up only files with mtime strictly less than scan time.
-        long mtime = getLastModifiedTime(entry);
-        long ctime = getChangedTime(entry);
-        long time = Math.max(mtime, ctime);
+        if (entry != null) {
+          // SDC-3551: Pick up only files with mtime strictly less than scan time.
+          try {
+            long mtime = getLastModifiedTime(entry);
+            long ctime = getChangedTime(entry);
+            long time = Math.max(mtime, ctime);
 
-        if (entry != null && patternMatches(entry.getFileName().toString()) && time < scanTime) {
-          if (startingFile == null || startingFile.toString().isEmpty()) {
-            accept = true;
-          } else {
-            int compares = compare(getFile(entry.toString()), startingFile, useLastModified);
-            accept = (compares == 0 && includeStartingFile) || (compares > 0);
+            if (patternMatches(entry.getFileName().toString()) && time < scanTime) {
+              if (startingFile == null || startingFile.toString().isEmpty()) {
+                accept = true;
+              } else {
+                int compares = compare(getFile(entry.toString()), startingFile, useLastModified);
+                accept = (compares == 0 && includeStartingFile) || (compares > 0);
+              }
+            }
+          } catch (NoSuchFileException ex) {
+            LOG.warn("File might have been deleted or archived when searching for new files.", ex);
+            accept = false;
           }
+
         }
         return accept;
       }
@@ -139,7 +165,14 @@ public class LocalFileSystem implements WrappedFileSystem {
 
     try (DirectoryStream<Path> matchingFile = Files.newDirectoryStream(Paths.get(dirFile.getAbsolutePath()), filter)) {
       for (Path file : matchingFile) {
-        toProcess.add(getFile(file.toString()));
+        try {
+          toProcess.add(getFile(file.toString()));
+        } catch (NoSuchFileException ex) {
+          LOG.warn(
+              "File might have been deleted or archived when creating wrapper for possible new file to be processed.",
+              ex
+          );
+        }
       }
     }
   }
@@ -174,12 +207,12 @@ public class LocalFileSystem implements WrappedFileSystem {
       });
   }
 
-  public WrappedFile getFile(String filePath) {
+  public WrappedFile getFile(String filePath) throws IOException {
     Path path = Paths.get(filePath);
     return new LocalFile(path);
   }
 
-  public WrappedFile getFile(String dirPath, String filePath) {
+  public WrappedFile getFile(String dirPath, String filePath) throws IOException {
     if (isAbsolutePath(dirPath, filePath)) {
       return getFile(filePath);
     }
@@ -226,9 +259,6 @@ public class LocalFileSystem implements WrappedFileSystem {
     // why not just check if the file exists? Well, there is a possibility file gets moved/archived/deleted right after
     // that check. In that case we will still fail. So fail, and recover.
     try {
-      if (useLastModified && !exists(path2)) {
-        return 1;
-      }
       return getComparator(useLastModified).compare(path1, path2);
     } catch (RuntimeException ex) {
       Throwable cause = ex.getCause();
@@ -238,8 +268,7 @@ public class LocalFileSystem implements WrappedFileSystem {
       // Ignore - we just add the new file, since this means this file is indeed newer
       // (else this would have been consumed and archived first)
       if (cause != null && cause instanceof NoSuchFileException) {
-        LOG.debug("Starting file may have already been archived.", cause);
-        return 1;
+        LOG.warn("Starting file may have already been archived.", cause);
       }
 
       LOG.warn("Error while comparing files", ex);
@@ -264,10 +293,6 @@ public class LocalFileSystem implements WrappedFileSystem {
           if (useLastModified) {
             // if comparing with folder last modified timestamp, always return true
             if (file2.toString().isEmpty()) {
-              return 1;
-            }
-
-            if (!exists(file1)) {
               return 1;
             }
 

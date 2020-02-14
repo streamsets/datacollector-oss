@@ -33,6 +33,7 @@ import org.powermock.reflect.Whitebox;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.FileTime;
@@ -70,7 +71,7 @@ public class TestDirectorySpooler {
     contextInPreview = (PushSource.Context) ContextInfoCreator.createSourceContext("s", true, OnRecordError.TO_ERROR, ImmutableList.of("a"));
   }
 
-  private DirectorySpooler.Builder initializeAndGetBuilder() {
+  private DirectorySpooler.Builder initializeAndGetBuilder() throws IOException {
     return new DirectorySpooler.Builder()
         .setContext(context)
         .setWrappedFileSystem(new LocalFileSystem("x[0-9]*.log", GLOB))
@@ -79,7 +80,7 @@ public class TestDirectorySpooler {
   }
 
   @Test(expected = IllegalStateException.class)
-  public void testNoSpoolDirWithoutWaiting() {
+  public void testNoSpoolDirWithoutWaiting() throws IOException {
     DirectorySpooler.Builder builder = initializeAndGetBuilder()
         .setMaxSpoolFiles(1);
     DirectorySpooler spooler = builder.build();

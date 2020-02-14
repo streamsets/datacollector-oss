@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -171,29 +172,41 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
         conf.poolingTimeoutSecs = 1;
       }
 
-      DirectorySpooler.Builder builder = getDirectorySpoolerBuilder()
-          .setWrappedFileSystem(getFs())
-          .setDir(conf.spoolDir)
-          .setFilePattern(conf.filePattern)
-          .setMaxSpoolFiles(conf.maxSpoolFiles)
-          .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()))
-          .waitForPathAppearance(waitForPathToBePresent)
-          .processSubdirectories(conf.processSubdirectories)
-          .setSpoolingPeriodSec(conf.spoolingPeriod);
+      try {
+        DirectorySpooler.Builder builder = getDirectorySpoolerBuilder()
+            .setWrappedFileSystem(getFs())
+            .setDir(conf.spoolDir)
+            .setFilePattern(conf.filePattern)
+            .setMaxSpoolFiles(conf.maxSpoolFiles)
+            .setPostProcessing(DirectorySpooler.FilePostProcessing.valueOf(conf.postProcessing.name()))
+            .waitForPathAppearance(waitForPathToBePresent)
+            .processSubdirectories(conf.processSubdirectories)
+            .setSpoolingPeriodSec(conf.spoolingPeriod);
 
-      if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
-        builder.setArchiveDir(conf.archiveDir);
-        builder.setArchiveRetention(conf.retentionTimeMins);
+        if (conf.postProcessing == PostProcessingOptions.ARCHIVE) {
+          builder.setArchiveDir(conf.archiveDir);
+          builder.setArchiveRetention(conf.retentionTimeMins);
+        }
+        if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
+          builder.setErrorArchiveDir(conf.errorArchiveDir);
+        }
+        builder.setPathMatcherMode(conf.pathMatcherMode);
+        builder.setContext(getContext());
+        this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
+        builder.setUseLastModifiedTimestamp(useLastModified);
+        spooler = builder.build();
+        spooler.init(conf.initialFileToProcess);
+      } catch (IOException e) {
+        issues.add(
+            getContext().createConfigIssue(
+                GROUP_FILE_CONFIG_NAME,
+                SPOOLDIR_CONFIG_BEAN_PREFIX + "spoolDir",
+                Errors.SPOOLDIR_32,
+                conf.filePattern
+            )
+        );
       }
-      if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
-        builder.setErrorArchiveDir(conf.errorArchiveDir);
-      }
-      builder.setPathMatcherMode(conf.pathMatcherMode);
-      builder.setContext(getContext());
-      this.useLastModified = conf.useLastModified == FileOrdering.TIMESTAMP;
-      builder.setUseLastModifiedTimestamp(useLastModified);
-      spooler = builder.build();
-      spooler.init(conf.initialFileToProcess);
+
     }
 
     return issues;
@@ -227,9 +240,17 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
       dir = SpoolDirUtil.truncateGlobPatternDirectory(dir);
     }
 
-    WrappedFile fDir = fs.getFile(dir);
     List<ConfigIssue> issuesToBeAdded = new ArrayList<>();
     boolean isValid = true;
+
+    WrappedFile fDir = null;
+    try {
+      fDir = fs.getFile(dir);
+    } catch (IOException e) {
+      issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_36, dir, e));
+      isValid = false;
+    }
+
     if (!fs.exists(fDir)) {
       issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
       isValid = false;
@@ -273,7 +294,20 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
 
   private void validateInitialFileToProcess(List<ConfigIssue> issues) {
     if (conf.initialFileToProcess != null && !conf.initialFileToProcess.isEmpty()) {
-      WrappedFile file = fs.getFile(conf.initialFileToProcess);
+      WrappedFile file = null;
+      try {
+        file = fs.getFile(conf.initialFileToProcess);
+      } catch (IOException e) {
+        issues.add(
+            getContext().createConfigIssue(
+                GROUP_FILE_CONFIG_NAME,
+                SPOOLDIR_CONFIG_BEAN_PREFIX + "initialFileToProcess",
+                Errors.SPOOLDIR_36,
+                conf.initialFileToProcess,
+                e
+            )
+        );
+      }
 
       if (!fs.patternMatches(file.getFileName())) {
         issues.add(
