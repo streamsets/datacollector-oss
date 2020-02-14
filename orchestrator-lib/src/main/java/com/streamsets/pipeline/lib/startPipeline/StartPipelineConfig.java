@@ -29,8 +29,8 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "http://localhost:18630",
-      label = "Data Collector URL",
-      description = "Data Collector base URL",
+      label = "Execution Engine URL",
+      description = "URL of Data Collector, Data Collector Edge, or Transformer that runs the specified pipelines",
       displayPosition = 10,
       group = "PIPELINE"
   )
