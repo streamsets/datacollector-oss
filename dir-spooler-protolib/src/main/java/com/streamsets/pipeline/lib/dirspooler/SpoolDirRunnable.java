@@ -34,7 +34,6 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.event.FinishedFileEvent;
 import com.streamsets.pipeline.lib.event.NewFileEvent;
-import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -49,6 +48,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
@@ -167,6 +167,9 @@ public class SpoolDirRunnable implements Runnable {
     try {
       if (hasToFetchNextFileFromSpooler(file, offset)) {
         updateGauge(Status.SPOOLING, null);
+        if (currentFile != null) {
+          spooler.removeFileBeingProcessed(currentFile);
+        }
         currentFile = null;
         try {
           WrappedFile nextAvailFile = null;
@@ -177,6 +180,7 @@ public class SpoolDirRunnable implements Runnable {
                   nextAvailFile.getAbsolutePath(),
                   fullPath
               );
+              spooler.removeFileBeingProcessed(nextAvailFile);
             }
             nextAvailFile = spooler.poolForFile(conf.poolingTimeoutSecs, TimeUnit.SECONDS);
           } while (!isFileFromSpoolerEligible(nextAvailFile, fullPath, offset));
@@ -206,10 +210,16 @@ public class SpoolDirRunnable implements Runnable {
             if (file == null) {
               pickFileFromSpooler = true;
             } else if (useLastModified) {
-              WrappedFile fileObject = fs.getFile(spooler.getSpoolDir(), file);
+              try {
+                WrappedFile fileObject = fs.getFile(spooler.getSpoolDir(), file);
                 if (SpoolDirUtil.compareFiles(fs, nextAvailFile, fileObject)) {
                   pickFileFromSpooler = true;
                 }
+              } catch (NoSuchFileException nsfe) {
+                // Error getting file metadata. Probably file does not exist so we can pick file from spooler
+                pickFileFromSpooler = true;
+              }
+
             } else if (processFullPath(nextAvailFile.getAbsolutePath()).compareTo(processFullPath(file)) > 0) {
               pickFileFromSpooler = true;
             }
@@ -290,6 +300,7 @@ public class SpoolDirRunnable implements Runnable {
       }
     }
 
+    // Generate no more data if needed before sending batch as the event is really sent when the batch is sent
     if (shouldSendNoMoreDataEvent) {
       LOG.info("Setting no-more-data for thread {}.", threadNumber);
       spoolDirBaseContext.setNoMoreData(
@@ -328,6 +339,7 @@ public class SpoolDirRunnable implements Runnable {
     }
 
     updateGauge(Status.BATCH_GENERATED, offset);
+
     return newOffset;
   }
 
@@ -466,18 +478,41 @@ public class SpoolDirRunnable implements Runnable {
     return offset;
   }
 
-  private boolean hasToFetchNextFileFromSpooler(String file, String offset) throws IOException {
-    return
-        // we don't have a current file half way processed in the current agent execution
-        currentFile == null ||
-            // we don't have a file half way processed from a previous agent execution via offset tracking
-            file == null ||
-            (useLastModified && SpoolDirUtil.compareFiles(fs, fs.getFile(spooler.getSpoolDir(), file), currentFile)) ||
-            // the current file is lexicographically lesser than the one reported via offset tracking
-            // this can happen if somebody drop
-            (!useLastModified && currentFile.getFileName().compareTo(file) < 0) ||
-            // the current file has been fully processed
-            MINUS_ONE.equals(offset);
+  private boolean hasToFetchNextFileFromSpooler(String file, String offset) {
+    boolean hasToFetch = false;
+    if (currentFile == null || file == null) {
+      hasToFetch = true;
+    }
+
+    if (!hasToFetch) {
+      if (useLastModified) {
+        try {
+          if (SpoolDirUtil.compareFiles(fs, fs.getFile(spooler.getSpoolDir(), file), currentFile)) {
+            hasToFetch = true;
+          } else {
+            if (!fs.exists(fs.getFile(spooler.getSpoolDir(), file))) {
+              // file does not exist so we have to fetch
+              if (!currentFile.getAbsolutePath().equals(file)) {
+                hasToFetch = true;
+              }
+            }
+          }
+        } catch (IOException e) {
+          // File probably exists or there was an issue trying to get file metadata so we have to fetch
+          if (!currentFile.getAbsolutePath().equals(file)) {
+            hasToFetch = true;
+          }
+        }
+      } else {
+        if (currentFile.getFileName().compareTo(file) < 0) {
+          hasToFetch = true;
+        }
+      }
+
+      hasToFetch = hasToFetch || MINUS_ONE.equals(offset);
+    }
+
+    return hasToFetch;
   }
 
   private boolean isFileFromSpoolerEligible(WrappedFile spoolerFile, String offsetFile, String offsetInFile) {
@@ -500,13 +535,31 @@ public class SpoolDirRunnable implements Runnable {
       // check is newer then any other files in the offset
       for (String offsetFileName : offsets.keySet()) {
         if (useLastModified) {
-          if (fs.exists(fs.getFile(spooler.getSpoolDir(), offsetFileName)) &&
-              SpoolDirUtil.compareFiles(
-                  fs,
-                  fs.getFile(spooler.getSpoolDir(), offsetFileName),
-                  spoolerFile
-              )) {
-            LOG.debug("File '{}' is less then offset file {}, ignoring", fileName, offsetFileName);
+          try {
+            if (fs.exists(fs.getFile(spooler.getSpoolDir(), offsetFileName)) &&
+                SpoolDirUtil.compareFiles(
+                    fs,
+                    fs.getFile(spooler.getSpoolDir(), offsetFileName),
+                    spoolerFile
+                )) {
+              LOG.debug("File '{}' is less then offset file {}, ignoring", fileName, offsetFileName);
+              return false;
+            }
+          } catch (NoSuchFileException nsfe) {
+            LOG.warn(
+                "File form saved offsets does not exist. File is: '{}'. It has ben processed by another thread. " +
+                    "Discarding file.",
+                offsetFileName,
+                nsfe
+            );
+            // Just ignore non existing file from saved offsets and process next offset
+          } catch (IOException ex) {
+            LOG.warn(
+                "Error when getting information for saved offset to check if file is newer than current offset saved." +
+                    " Discarding offset: '{}'.",
+                offsetFileName,
+                ex
+            );
             return false;
           }
         } else {
@@ -524,7 +577,12 @@ public class SpoolDirRunnable implements Runnable {
       return true;
     }
     if (useLastModified) {
-      if (SpoolDirUtil.compareFiles(fs, spoolerFile, fs.getFile(offsetFile))) {
+      try {
+        if (SpoolDirUtil.compareFiles(fs, spoolerFile, fs.getFile(offsetFile))) {
+          return true;
+        }
+      } catch (IOException e) {
+        // File is elegible as there was an issue when trying to get file metadata information for offsetFile
         return true;
       }
     } else {

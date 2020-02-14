@@ -53,6 +53,7 @@ public enum Errors implements ErrorCode {
   SPOOLDIR_33("Cannot Serialize Offset: {}"),
   SPOOLDIR_34("Cannot Deserialize Offset: {}"),
   SPOOLDIR_35("Spool Directory Runner Failed. Reason {}"),
+  SPOOLDIR_36("Error when trying to get information for file or directory '{}'. Reason {}")
   ;
 
   private final String msg;

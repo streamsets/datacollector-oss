@@ -25,7 +25,10 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirUtil;
 import com.streamsets.pipeline.lib.dirspooler.WrappedFileSystem;
 import com.streamsets.pipeline.stage.origin.hdfs.spooler.HdfsFileSystem;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,6 +37,9 @@ import java.util.Map;
 import java.util.Set;
 
 public class HdfsSource extends SpoolDirBaseSource {
+
+  private static final Logger LOG = LoggerFactory.getLogger(HdfsSource.class);
+
   public static final String OFFSET_VERSION =
       "$com.streamsets.pipeline.stage.origin.hdfs.HdfsSource.offset.version$";
 
@@ -83,12 +89,22 @@ public class HdfsSource extends SpoolDirBaseSource {
         if (lastSourceFileName != null) {
           if (useLastModified) {
             // return the newest file in the offset
-            if (SpoolDirUtil.compareFiles(
-                fs,
-                fs.getFile(spooler.getSpoolDir(), lastSourceFileName),
-                fs.getFile(spooler.getSpoolDir(), offset.getFile())
-            )) {
-              lastSourceFileName = offset.getFile();
+            try {
+              if (SpoolDirUtil.compareFiles(
+                  fs,
+                  fs.getFile(spooler.getSpoolDir(), lastSourceFileName),
+                  fs.getFile(spooler.getSpoolDir(), offset.getFile())
+              )) {
+                lastSourceFileName = offset.getFile();
+              }
+            } catch (IOException ex) {
+              LOG.debug(
+                  "Error when checking offsets. Discarding errored file. Last Source File Name: '{}. offset file " +
+                      "being compared: '{}'",
+                  lastSourceFileName,
+                  offset.getFile(),
+                  ex
+              );
             }
           } else {
             if (offset.getFile().compareTo(lastSourceFileName) < 0) {
