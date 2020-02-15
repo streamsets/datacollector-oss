@@ -28,6 +28,7 @@ public class ControlHubAuthConfigBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Control Hub User Name",
+      description = "Control Hub user that makes API call",
       displayPosition = 10,
       group = "#0"
   )
@@ -37,6 +38,7 @@ public class ControlHubAuthConfigBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
+      description = "Password of user",
       displayPosition = 20,
       group = "#0"
   )

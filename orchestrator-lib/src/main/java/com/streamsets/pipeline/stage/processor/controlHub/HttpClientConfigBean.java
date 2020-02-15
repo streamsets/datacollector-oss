@@ -39,7 +39,7 @@ public class HttpClientConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Connection Timeout (ms)",
       defaultValue = "0",
-      description = "HTTP connection timeout in milliseconds. Use 0 for no timeout..",
+      description = "HTTP connection timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 120,
       group = "HTTP"
   )
@@ -74,6 +74,7 @@ public class HttpClientConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Proxy",
+      description = "Use an HTTP proxy to connect to the Control Hub API",
       defaultValue = "false",
       displayPosition = 160,
       group = "HTTP"

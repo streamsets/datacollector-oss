@@ -51,7 +51,7 @@ public class ControlHubApiConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Output Field",
-      description = "Field for the result of the HTTP request",
+      description = "Field to store the response",
       displayPosition = 20,
       group = "HTTP"
   )
@@ -62,7 +62,7 @@ public class ControlHubApiConfig {
       required = false,
       type = ConfigDef.Type.MAP,
       label = "Headers",
-      description = "Request headers to include in the request",
+      description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 70,
       elDefs = {RecordEL.class, VaultEL.class},
@@ -75,7 +75,7 @@ public class ControlHubApiConfig {
       type = ConfigDef.Type.MODEL,
       label = "HTTP Method",
       defaultValue = "GET",
-      description = "HTTP method to send",
+      description = "HTTP method for the request",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 80,
@@ -88,7 +88,7 @@ public class ControlHubApiConfig {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "HTTP Method Expression",
-      description = "Expression used to determine the HTTP method to use",
+      description = "Expression that evaluates to a valid HTTP method",
       displayPosition = 90,
       dependsOn = "httpMethod",
       elDefs = RecordEL.class,
@@ -102,7 +102,7 @@ public class ControlHubApiConfig {
       required = false,
       type = ConfigDef.Type.TEXT,
       label = "Request Data",
-      description = "Data that should be included as a part of the request",
+      description = "Data to include with the request",
       displayPosition = 100,
       lines = 2,
       dependsOn = "httpMethod",
@@ -122,7 +122,7 @@ public class ControlHubApiConfig {
       type = ConfigDef.Type.NUMBER,
       label = "Maximum Request Time (sec)",
       defaultValue = "60",
-      description = "Maximum time to wait for each request completion.",
+      description = "Maximum number of seconds to wait for a request to complete",
       displayPosition = 999,
       group = "HTTP"
   )
