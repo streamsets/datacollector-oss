@@ -19,8 +19,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.aws.AwsInstanceType;
-import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 
