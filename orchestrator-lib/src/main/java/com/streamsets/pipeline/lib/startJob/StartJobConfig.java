@@ -32,7 +32,7 @@ public class StartJobConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "https://cloud.streamsets.com",
-      label = "Control Hub Base URL",
+      label = "URL of Control Hub that runs the specified jobs",
       displayPosition = 10,
       group = "JOB"
   )
@@ -42,6 +42,7 @@ public class StartJobConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Job Template",
+      description = "Start one or more instances of a job template in parallel",
       defaultValue = "false",
       displayPosition = 11,
       group = "JOB"
@@ -67,7 +68,7 @@ public class StartJobConfig {
       type = ConfigDef.Type.MODEL,
       label = "Instance Name Suffix",
       defaultValue = "COUNTER",
-      description = "Job Instances name suffix",
+      description = "Method for generating suffix to uniquely name job instances",
       displayPosition = 13,
       group = "JOB",
       dependsOn = "jobTemplate",
@@ -93,6 +94,7 @@ public class StartJobConfig {
       defaultValue = "[{}]",
       type = ConfigDef.Type.TEXT,
       label = "Runtime Parameters for Each Instance",
+      description = "Runtime parameters and values for each job instance",
       displayPosition = 30,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},
@@ -133,8 +135,8 @@ public class StartJobConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Run in Background",
-      description = "Runs the job in the background, allowing multiple instances of the job to run in parallel. " +
-          "When not used, the processor waits until the job is complete before passing the record downstream",
+      description = "Run started jobs in the background and pass the record to the next stage immediately after " +
+          "starting jobs. If not selected, pass the record to the next stage after all started jobs finish.",
       defaultValue = "false",
       displayPosition = 50,
       group = "JOB"
@@ -146,7 +148,7 @@ public class StartJobConfig {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
       label = "Delay Between State Checks",
-      description = "Milliseconds to wait before checking pipeline state",
+      description = "Milliseconds to wait before checking job state",
       displayPosition = 60,
       group = "JOB",
       min = 0,
@@ -160,6 +162,7 @@ public class StartJobConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Control Hub User Name",
+      description = "Control Hub user that runs jobs",
       displayPosition = 71,
       group = "CREDENTIALS"
   )
@@ -169,6 +172,7 @@ public class StartJobConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
+      description = "Password of the user",
       displayPosition = 72,
       group = "CREDENTIALS"
   )
