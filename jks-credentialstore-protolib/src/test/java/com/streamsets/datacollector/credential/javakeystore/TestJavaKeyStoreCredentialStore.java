@@ -189,9 +189,6 @@ public class TestJavaKeyStoreCredentialStore {
 
     Assert.assertTrue(store.init(context).isEmpty());
 
-    //null keystore
-    Assert.assertTrue(store.needsToReloadKeyStore());
-
     //not null keystore file older than loading time
     Mockito.doReturn(Mockito.mock(KeyStore.class)).when(store).getKeyStore();
     Mockito.doReturn(10000L).when(store).getKeystoreTimestamp();

@@ -71,9 +71,9 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
   static final String KEYSTORE_FILE_KEY = "keystore.file";
   static final String KEYSTORE_PASSWORD_KEY = "keystore.storePassword"; // NOSONAR
 
-  static final String SSH_PRIVATE_KEY_SECRET = "defaultPrivateKey";
-  static final String SSH_PRIVATE_KEY_PASSWORD_SECRET = "defaultPrivateKeyPassword";
-  static final String SSH_PUBLIC_KEY_SECRET = "defaultPublicKey";
+  static final String SSH_PRIVATE_KEY_SECRET = "sdc/defaultPrivateKey";
+  static final String SSH_PRIVATE_KEY_PASSWORD_SECRET = "sdc/defaultPrivateKeyPassword";
+  static final String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
 
   static {
     VALID_KEYSTORE_TYPES.add("JCEKS");

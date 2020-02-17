@@ -86,6 +86,7 @@ public class SshTunnelConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
+      defaultValue = "${credential:get('streamsets', 'all','sdc/defaultPrivateKey')}",
       dependencies = {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true")
       },
@@ -100,6 +101,7 @@ public class SshTunnelConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
+      defaultValue = "${credential:get('streamsets', 'all','sdc/defaultPrivateKeyPassword')}",
       dependencies = {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true")
       },
@@ -113,6 +115,7 @@ public class SshTunnelConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
+      defaultValue = "${credential:get('streamsets', 'all','sdc/defaultPublicKey')}",
       dependencies = {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true")
       },
