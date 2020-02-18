@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.ServiceDef;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class ServiceDefinitionExtractor {
 
     ServiceDef def = klass.getAnnotation(ServiceDef.class);
     Class provides = def.provides();
+    String name = getStageName(klass);
     String label = def.label();
     String description = def.description();
     int version = def.version();
@@ -59,11 +61,20 @@ public class ServiceDefinitionExtractor {
 
     StageUpgrader upgrader;
     try {
-      upgrader = def.upgrader().newInstance();
+      if (def.upgraderDef().isEmpty()) {
+        upgrader = def.upgrader().newInstance();
+      } else {
+        upgrader = new SelectorStageUpgrader(
+            name,
+            def.upgrader().newInstance(),
+            klass.getClassLoader().getResource(def.upgraderDef())
+        );
+      }
     } catch (Exception ex) {
       throw new IllegalArgumentException(Utils.format(
-          "Could not instantiate StageUpgrader for ServiceDefinition '{}': {}", def.provides().getCanonicalName(), ex.toString(), ex));
+          "Could not instantiate StageUpgrader for ServiceDefinition '{}': {}", name, ex.toString()), ex);
     }
+
 
     return new ServiceDefinition(
       libraryDef,
@@ -97,4 +108,7 @@ public class ServiceDefinitionExtractor {
     return errors;
   }
 
+  static String getStageName(Class klass) {
+    return klass.getName().replace(".", "_").replace("$", "_");
+  }
 }

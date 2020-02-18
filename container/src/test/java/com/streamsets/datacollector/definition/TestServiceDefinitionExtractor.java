@@ -17,15 +17,20 @@ package com.streamsets.datacollector.definition;
 
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.ServiceDef;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
@@ -114,6 +119,47 @@ public class TestServiceDefinitionExtractor {
     Assert.assertEquals(1, def.getConfigDefinitions().size());
     Assert.assertEquals("amount", def.getConfigDefinitions().get(0).getFieldName());
   }
+
+  @ServiceDef(
+      provides = PrintMoneyService.class,
+      version = 2,
+      upgrader = PrintMoneyServiceUpgrader.class,
+      upgraderDef = "resources/PrintMoneyServiceUpgrader.yaml",
+      label = "Rich 2.0"
+  )
+  @ConfigGroups(Groups.class)
+  public static final class UpgraderPrintMoneyServiceImpl implements Service, PrintMoneyService  {
+
+    @ConfigDef(
+        type = ConfigDef.Type.NUMBER,
+        required = true,
+        group = "FIRST",
+        label = "Amount of money to print"
+    )
+    public long amount;
+
+    @Override
+    public void print() {
+    }
+
+    @Override
+    public List<ConfigIssue> init(Context context) {
+      return null;
+    }
+
+    @Override
+    public void destroy() {
+    }
+  }
+
+  @Test
+  public void testUpgraderSelector() {
+    ServiceDefinition def = ServiceDefinitionExtractor.get().extract(MOCK_LIB_DEF, UpgraderPrintMoneyServiceImpl.class);
+
+    // Assert that a Selector Stage Upgrader has been instantiated instead of a simple legacy upgrader
+    Assert.assertTrue(def.getUpgrader() instanceof SelectorStageUpgrader);
+  }
+
 
   @ServiceDef(
     provides = PrintMoneyService.class,
