@@ -215,7 +215,7 @@ public class TestMultiKafkaSource {
     );
 
     try {
-      sourceRunner.runProduce(new HashMap<>(), 5, callback);
+      sourceRunner.runProduce(new HashMap<>(), 1000, callback);
       int records = callback.waitForAllBatches();
 
       source.await();

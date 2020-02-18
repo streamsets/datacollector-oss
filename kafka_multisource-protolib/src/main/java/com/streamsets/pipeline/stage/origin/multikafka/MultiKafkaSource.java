@@ -148,15 +148,12 @@ public class MultiKafkaSource extends BasePushSource {
                 item.key()
             ));
 
-            if (records.size() >= conf.maxBatchSize) {
-
+            if (records.size() >= batchSize) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
               commitSyncAndProcess(batchContext);
               startTime = System.currentTimeMillis();
-
               recordsProcessed += records.size();
               records.clear();
-
               batchContext = getContext().startBatch();
               errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
             }
@@ -238,7 +235,6 @@ public class MultiKafkaSource extends BasePushSource {
           } catch (Exception e) {
             throw new OnRecordErrorException(record, KafkaErrors.KAFKA_201, partition, offset, e.getMessage(), e);
           }
-
           records.add(record);
           record = parser.parse();
         }
