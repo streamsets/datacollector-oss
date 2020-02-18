@@ -84,7 +84,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
   private long lastBatchStartTimestamp;
   private int batchRecordCount;
 
-  public SqsConsumerWorkerCallable(
+  SqsConsumerWorkerCallable(
       AmazonSQSAsync sqsAsync,
       PushSource.Context context,
       Map<String, String> queueUrlToNamePrefix,
@@ -101,9 +101,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
     this.sqsAsync = sqsAsync;
     this.context = context;
     this.queueUrlToNamePrefix = new HashMap<>();
-    if (queueUrlToNamePrefix != null) {
-      this.queueUrlToNamePrefix.putAll(queueUrlToNamePrefix);
-    }
+    Optional.ofNullable(queueUrlToNamePrefix).ifPresent(this.queueUrlToNamePrefix::putAll);
     this.numMessagesPerRequest = numMessagesPerRequest;
     this.maxBatchWaitTimeMs = maxBatchWaitTimeMs;
     this.maxBatchSize = maxBatchSize;
@@ -122,7 +120,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
     Exception terminatingException = null;
     final AmazonSQSAsync asyncConsumer = sqsAsync;
 
-    final ArrayBlockingQueue<String> urlQueue = new ArrayBlockingQueue(
+    final ArrayBlockingQueue<String> urlQueue = new ArrayBlockingQueue<>(
         queueUrlToNamePrefix.size(),
         false,
         queueUrlToNamePrefix.keySet()
@@ -137,7 +135,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
         if (pollWaitTimeSeconds > 0) {
           receiveRequest.setWaitTimeSeconds(pollWaitTimeSeconds);
         }
-        if (messageAttributeNames.size() > 0) {
+        if (!messageAttributeNames.isEmpty()) {
           receiveRequest.setMessageAttributeNames(messageAttributeNames);
         }
         Future<ReceiveMessageResult> resultFuture = asyncConsumer.receiveMessageAsync(receiveRequest);
@@ -170,7 +168,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
             batchContext.getBatchMaker().addRecord(record);
             commitQueueUrlsToMessages.put(nextQueueUrl, message);
 
-            if (++batchRecordCount > maxBatchSize) {
+            if (++batchRecordCount >= maxBatchSize) {
               cycleBatch();
             }
           } catch (DataParserException e) {
@@ -277,7 +275,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
             DeleteMessageBatchResult deleteResult = deleteResultFuture.get();
             if (deleteResult.getFailed() != null) {
               deleteResult.getFailed().forEach(failed -> LOG.error(
-                  "Failed to delete message ID {} from queue %s with code {}, sender fault {}",
+                  "Failed to delete message ID {} from queue {} with code {}, sender fault {}",
                   failed.getId(),
                   queueUrl,
                   failed.getCode(),
