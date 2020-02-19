@@ -23,6 +23,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class UserLine extends Line {
 
@@ -38,6 +39,8 @@ public abstract class UserLine extends Line {
   private final String mode;
   private final Hasher hasher;
   private String user;
+  private String email;
+  private List<String> groups;
   private String hash;
   private List<String> roles;
 
@@ -48,13 +51,22 @@ public abstract class UserLine extends Line {
     parse(Utils.checkNotNull(value, "value"));
   }
 
-  protected UserLine(String mode, Hasher hasher, String user, String password, List<String> roles) {
+  protected UserLine(
+      String mode,
+      Hasher hasher,
+      String user,
+      String email,
+      List<String> groups,
+      List<String> roles, String password
+  ) {
     super(Type.USER, null);
     this.mode = Utils.checkNotNull(mode, "mode");
     this.hasher = Utils.checkNotNull(hasher, "hasher");
     this.user = Utils.checkNotNull(user, "user");
-    this.hash = hasher.hash(user, Utils.checkNotNull(password, "password"));
+    this.email = email;
+    this.groups = Utils.checkNotNull(groups, "groups");
     this.roles = Utils.checkNotNull(roles, "roles");
+    this.hash = hasher.hash(user, Utils.checkNotNull(password, "password"));
   }
 
   public String getMode() {
@@ -72,7 +84,19 @@ public abstract class UserLine extends Line {
     if (matcher.matches()) {
       user = matcher.group(1);
       hash = matcher.group(2);
-      roles = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(matcher.group(3));
+      List<String> list = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(matcher.group(3));
+      email = list.stream()
+          .filter(e -> e.startsWith("email:"))
+          .findFirst()
+          .map(s -> s.substring("email:".length()))
+          .orElse("");
+      groups = list.stream()
+          .filter(e -> e.startsWith("group:"))
+          .map(g -> g.substring("group:".length()))
+          .collect(Collectors.toList());
+      roles = list.stream()
+          .filter(e -> !(e.startsWith("email:") | e.startsWith("group:")))
+          .collect(Collectors.toList());
     }
   }
 
@@ -104,7 +128,7 @@ public abstract class UserLine extends Line {
 
   public String resetPassword(long validForMillis) {
     String resetValue = UUID.randomUUID().toString() + ":" + (System.currentTimeMillis() + validForMillis);
-    this.hash = getUser() + "_reset_" + hasher.hash(getUser(), resetValue);
+    this.hash = "reset_" + hasher.hash(getUser(), resetValue);
     return resetValue;
   }
 
@@ -117,11 +141,29 @@ public abstract class UserLine extends Line {
     if (expiration < System.currentTimeMillis()) {
       throw new IllegalArgumentException("Password reset expired");
     }
-    String computedHash = getUser() + "_reset_" + hasher.hash(getUser(), resetValue);
+    String computedHash = "reset_" + hasher.hash(getUser(), resetValue);
     if (!computedHash.equals(hash)) {
       throw new IllegalArgumentException("Invalid reset value");
     }
     this.hash = hasher.hash(getUser(), newPassword);
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public UserLine setEmail(String email) {
+    this.email = email;
+    return this;
+  }
+
+  public List<String> getGroups() {
+    return groups;
+  }
+
+  public UserLine setGroups(List<String> groups) {
+    this.groups = groups;
+    return this;
   }
 
   public List<String> getRoles() {
@@ -141,7 +183,16 @@ public abstract class UserLine extends Line {
 
   @Override
   public String getValue() {
-    return String.format("%s: %s:%s,user,%s", getUser(), getMode(), getHash(), roles.stream().collect(Collectors.joining(",")));
+    List<String> realmRoles = Stream.concat(groups.stream().map(g -> "group:" + g), roles.stream())
+        .collect(Collectors.toList());
+    return String.format(
+        "%s: %s:%s,user,%s,%s",
+        getUser(),
+        getMode(),
+        getHash(),
+        "email:" + getEmail(),
+        realmRoles.stream().collect(Collectors.joining(","))
+    );
   }
 
 }

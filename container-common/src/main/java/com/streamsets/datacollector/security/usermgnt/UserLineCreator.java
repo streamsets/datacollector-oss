@@ -19,10 +19,15 @@ import java.util.List;
 
 public interface UserLineCreator {
 
-  UserLine create(String user, String password, List<String> roles);
+  UserLine create(
+      String user,
+      String email,
+      List<String> groups,
+      List<String> roles, String password
+  );
 
   static UserLineCreator getMD5Creator() {
-    return MD5UserLine::new;
+    return (user, email, groups, roles, password) -> new MD5UserLine(user, email, groups, roles, password);
   }
 
 }

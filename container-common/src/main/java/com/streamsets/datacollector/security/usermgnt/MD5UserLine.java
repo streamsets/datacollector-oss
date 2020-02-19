@@ -30,8 +30,13 @@ public class MD5UserLine extends UserLine {
     super(MODE, HASHER, value);
   }
 
-  public MD5UserLine(String user, String password, List<String> roles) {
-    super(MODE, HASHER, user, password, roles);
+  public MD5UserLine(
+      String user,
+      String email,
+      List<String> groups,
+      List<String> roles, String password
+  ) {
+    super(MODE, HASHER, user, email, groups, roles, password);
   }
 
   @Override

@@ -27,7 +27,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.List;
-import java.util.UUID;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -62,8 +62,8 @@ public class FormRealmUsersManager implements Closeable {
     }
   }
 
-  public String create(String user, List<String> roles) {
-    UserLine userLine = userLineCreator.create(user, UUID.randomUUID().toString(), roles);
+  public String create(String user, String email, List<String> groups, List<String> roles) {
+    UserLine userLine = userLineCreator.create(user, email, groups, roles, "dummy");
     String resetPassword = userLine.resetPassword(resetValidityMillis);
     if (realmUsers.add(userLine)) {
       dirty = true;
@@ -71,6 +71,15 @@ public class FormRealmUsersManager implements Closeable {
       resetPassword = null;
     }
     return resetPassword;
+  }
+
+  public User get(String user) {
+    User u = null;
+    UserLine userLine = realmUsers.find(user);
+    if (userLine != null) {
+      u = new User(userLine);
+    }
+    return u;
   }
 
   public String resetPassword(String user) {
@@ -115,16 +124,26 @@ public class FormRealmUsersManager implements Closeable {
     }
   }
 
-  public void update(String user, List<String> roles) {
+  public void update(String user, String email, List<String> groups, List<String> roles) {
     UserLine userLine = realmUsers.find(user);
     if (userLine != null) {
+      userLine.setEmail(email);
+      userLine.setGroups(groups);
       userLine.setRoles(roles);
       dirty = true;
     }
   }
 
-  public List<User> list() {
+  public List<User> listUsers() {
     return realmUsers.list().stream().map(User::new).collect(Collectors.toList());
+  }
+
+  public List<String> listGroups() {
+    return listUsers().stream()
+        .flatMap(u -> u.getGroups().stream())
+        .distinct()
+        .sorted(String::compareTo)
+        .collect(Collectors.toList());
   }
 
 }

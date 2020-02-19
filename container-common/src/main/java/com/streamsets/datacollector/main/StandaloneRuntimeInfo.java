@@ -18,6 +18,8 @@ package com.streamsets.datacollector.main;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.uuid.Generators;
 import com.google.common.io.Files;
+import com.streamsets.datacollector.security.usermgnt.FormRealmUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UserLineCreator;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;

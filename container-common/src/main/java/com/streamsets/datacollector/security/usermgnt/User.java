@@ -28,6 +28,14 @@ public class User {
     return userLine.getUser();
   }
 
+  public String getEmail() {
+    return userLine.getEmail();
+  }
+
+  public List<String> getGroups() {
+    return userLine.getGroups();
+  }
+
   public List<String> getRoles() {
     return userLine.getRoles();
   }

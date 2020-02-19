@@ -30,10 +30,10 @@ public class TestRealmUsers {
       "#\n" +
       "\n" +
       "# FORM authentication, password is same as user name\n" +
-      "admin: MD5:21232f297a57a5a743894a0e4a801fc3,user,admin\n" +
-      "guest: MD5:084e0343a0486ff05530df6c705c8bb4,user,guest\n" +
-      "creator: MD5:ee2433259b0fe399b40e81d2c98a38b6,user,creator\n" +
-      "manager: MD5:1d0258c2440a8d19e716292b231e3190,user,manager\n" +
+      "admin: MD5:21232f297a57a5a743894a0e4a801fc3,user,email:,admin\n" +
+      "guest: MD5:084e0343a0486ff05530df6c705c8bb4,user,email:,guest\n" +
+      "creator: MD5:ee2433259b0fe399b40e81d2c98a38b6,user,email:,group:foo,creator\n" +
+      "manager: MD5:1d0258c2440a8d19e716292b231e3190,user,email:manager@acme,manager\n" +
       "\n" +
       "#\n";
 
@@ -61,7 +61,7 @@ public class TestRealmUsers {
   public void testAddDelete() throws IOException  {
     RealmUsers realmUsers = RealmUsers.parse(new BufferedReader(new StringReader("")));
     Assert.assertEquals(0, realmUsers.list().size());
-    UserLine ul = UserLineCreator.getMD5Creator().create("user", "password", Arrays.asList("r1", "r2"));
+    UserLine ul = UserLineCreator.getMD5Creator().create("user", "email", Arrays.asList("g1", "g2"), Arrays.asList("r1", "r2"), "password");
     realmUsers.add(ul);
     Assert.assertEquals(1, realmUsers.list().size());
     realmUsers.delete("user");

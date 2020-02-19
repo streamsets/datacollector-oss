@@ -25,7 +25,7 @@ public class TestMD5UserLine {
   @Test
   public void testMD5() {
     Assert.assertEquals("^\\s*([\\w@.]*):\\s*MD5:([\\w\\-:]*),user(\\s*$|,.*$)", MD5UserLine.PATTERN.pattern());
-    UserLine ul = new MD5UserLine("USER", "PASSWORD", Arrays.asList("a", "b"));
+    UserLine ul = new MD5UserLine("USER", "EMAIL", Arrays.asList("g1", "g2"), Arrays.asList("r1", "r2"), "PASSWORD");
     Assert.assertEquals(Line.Type.USER, ul.getType());
     Assert.assertEquals("MD5", MD5UserLine.MODE);
     Assert.assertEquals(MD5UserLine.MODE, ul.getMode());

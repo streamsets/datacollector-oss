@@ -52,12 +52,14 @@ public class TestUserLine {
 
   @Test
   public void testNewUserLine() {
-    UserLine ul = new MD5UserLine("USER", "PASSWORD", Arrays.asList("a", "b"));
+    UserLine ul = new MD5UserLine("USER", "EMAIL", Arrays.asList("g1", "g2"), Arrays.asList("r1", "r2"), "PASSWORD");
     Assert.assertEquals(Line.Type.USER, ul.getType());
     Assert.assertEquals("MD5", ul.getMode());
     Assert.assertEquals("USER", ul.getId());
     Assert.assertEquals("USER", ul.getUser());
-    Assert.assertEquals(Arrays.asList("a", "b"), ul.getRoles());
+    Assert.assertEquals("EMAIL", ul.getEmail());
+    Assert.assertEquals(Arrays.asList("g1", "g2"), ul.getGroups());
+    Assert.assertEquals(Arrays.asList("r1", "r2"), ul.getRoles());
     Assert.assertEquals(MD5UserLine.HASHER.hash("USER", "PASSWORD"), ul.getHash());
   }
 

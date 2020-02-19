@@ -39,16 +39,20 @@ public class TestFormRealmUserManager {
   }
 
   @Test
-  public void testReadWrite() throws IOException {
+  public void testCreateGet() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       Assert.assertNotNull(resetPassword);
       return null;
     });
     executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.list().size());
+      User user = mgr.get("u1");
+      Assert.assertEquals("u1", user.getUser());
+      Assert.assertEquals("e1", user.getEmail());
+      Assert.assertEquals(Arrays.asList("g1"), user.getGroups());
+      Assert.assertEquals(Arrays.asList("r1"), user.getRoles());
       return null;
     });
   }
@@ -57,8 +61,8 @@ public class TestFormRealmUserManager {
   public void testPasswordResetOk() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       Assert.assertNotNull(resetPassword);
       resetPassword = mgr.resetPassword("u1");
       mgr.setPasswordFromReset("u1", resetPassword, "password");
@@ -70,8 +74,8 @@ public class TestFormRealmUserManager {
   public void testPasswordResetExpired() throws Exception {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 2);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       try {
         Thread.sleep(3);
       } catch (InterruptedException ex) {
@@ -85,8 +89,8 @@ public class TestFormRealmUserManager {
   public void testPasswordResetInvalidReset() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       mgr.resetPassword("u1");
       mgr.setPasswordFromReset("u1", resetPassword, "password");
       return null;
@@ -97,8 +101,8 @@ public class TestFormRealmUserManager {
   public void testChangePasswordOk() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       Assert.assertNotNull(resetPassword);
       resetPassword = mgr.resetPassword("u1");
       mgr.setPasswordFromReset("u1", resetPassword, "password1");
@@ -111,8 +115,8 @@ public class TestFormRealmUserManager {
   public void testChangePasswordFail() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      String resetPassword = mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      String resetPassword = mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       Assert.assertNotNull(resetPassword);
       resetPassword = mgr.resetPassword("u1");
       mgr.setPasswordFromReset("u1", resetPassword, "password1");
@@ -125,17 +129,17 @@ public class TestFormRealmUserManager {
   public void testDelete() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       return null;
     });
     executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.list().size());
+      Assert.assertEquals(1, mgr.listUsers().size());
       mgr.delete("u1");
       return null;
     });
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
+      Assert.assertEquals(0, mgr.listUsers().size());
       return null;
     });
   }
@@ -144,17 +148,17 @@ public class TestFormRealmUserManager {
   public void testUpdate() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       return null;
     });
     executor.execute(mgr -> {
-      mgr.update("u1", Arrays.asList("r2"));
+      mgr.update("u1", "e2", Arrays.asList("g2"), Arrays.asList("r2"));
       return null;
     });
     executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.list().size());
-      Assert.assertEquals(Arrays.asList("r2"), mgr.list().get(0).getRoles());
+      Assert.assertEquals(1, mgr.listUsers().size());
+      Assert.assertEquals(Arrays.asList("r2"), mgr.listUsers().get(0).getRoles());
       return null;
     });
   }
@@ -163,14 +167,32 @@ public class TestFormRealmUserManager {
   public void testList() throws IOException {
     UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
     executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.list().size());
-      mgr.create("u1", Arrays.asList("r1"));
+      Assert.assertEquals(0, mgr.listUsers().size());
+      mgr.create("u1", "e1", Arrays.asList("g1"), Arrays.asList("r1"));
       return null;
     });
     executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.list().size());
-      Assert.assertEquals("u1", mgr.list().get(0).getUser());
-      Assert.assertEquals(Arrays.asList("r1"), mgr.list().get(0).getRoles());
+      Assert.assertEquals(1, mgr.listUsers().size());
+      Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
+      Assert.assertEquals("e1", mgr.listUsers().get(0).getEmail());
+      Assert.assertEquals(Arrays.asList("g1"), mgr.listUsers().get(0).getGroups());
+      Assert.assertEquals(Arrays.asList("r1"), mgr.listUsers().get(0).getRoles());
+      return null;
+    });
+  }
+
+  @Test
+  public void testGroups() throws IOException {
+    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
+    executor.execute(mgr -> {
+      Assert.assertEquals(0, mgr.listUsers().size());
+      mgr.create("u1", "e1", Arrays.asList("g2"), Arrays.asList("r1"));
+      mgr.create("u2", "e2", Arrays.asList("g2", "g1"), Arrays.asList("r1"));
+      return null;
+    });
+    executor.execute(mgr -> {
+      Assert.assertEquals(2, mgr.listGroups().size());
+      Assert.assertEquals(Arrays.asList("g1", "g2"), mgr.listGroups());
       return null;
     });
   }
