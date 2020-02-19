@@ -93,8 +93,8 @@ public class TestTokenAuthentication {
     File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
       RuntimeInfo.CONFIG_DIR), authenticationType + "-realm.properties");
     writer = new FileWriter(realmFile);
-    writer.write("admin: admin,user,admin\n");
-    writer.write("multiRoleUser: multiRoleUser,user,creator,manager\n");
+    writer.write("admin:   MD5:21232f297a57a5a743894a0e4a801fc3,user,email:,admin\n");
+    writer.write("multiRoleUser:   MD5:21232f297a57a5a743894a0e4a801fc3,user,email:,creator,manager\n");
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
       PosixFilePermission.OWNER_READ,

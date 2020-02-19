@@ -91,12 +91,31 @@ public class TestUserGroupManager {
     conf.save(writer);
     writer.close();
 
-
     File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
-        RuntimeInfo.CONFIG_DIR), authenticationType + "-realm.properties");
+        RuntimeInfo.CONFIG_DIR), "basic-realm.properties");
     writer = new FileWriter(realmFile);
     writer.write("admin: admin,user,admin,group:group1,group:group2\n");
     writer.write("multiRoleUser: multiRoleUser,user,creator,manager,group:group2,group:group3\n");
+    writer.close();
+    Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_WRITE));
+
+    realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
+        RuntimeInfo.CONFIG_DIR), "digest-realm.properties");
+    writer = new FileWriter(realmFile);
+    writer.write("admin: admin,user,admin,group:group1,group:group2\n");
+    writer.write("multiRoleUser: multiRoleUser,user,creator,manager,group:group2,group:group3\n");
+    writer.close();
+    Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+        PosixFilePermission.OWNER_READ,
+        PosixFilePermission.OWNER_WRITE));
+
+    realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
+        RuntimeInfo.CONFIG_DIR),"form-realm.properties");
+    writer = new FileWriter(realmFile);
+    writer.write("admin:   MD5:21232f297a57a5a743894a0e4a801fc3,user,admin,group:group1,group:group2\n");
+    writer.write("multiRoleUser:   MD5:21232f297a57a5a743894a0e4a801fc3,user,admin,creator,manager,group:group2,group:group3\n");
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
         PosixFilePermission.OWNER_READ,

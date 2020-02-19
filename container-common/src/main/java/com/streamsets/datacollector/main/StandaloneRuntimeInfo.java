@@ -21,6 +21,7 @@ import com.google.common.io.Files;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -60,6 +61,22 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
         return StandaloneRuntimeInfo.this.id;
       }
     });
+
+    // to force a completion or rollback of an incomplete user management operation
+    File usersFile = new File(getConfigDir(), "/form-realm.properties");
+    File[] files = usersFile.getParentFile().listFiles((dir, name) -> name.startsWith("form-realm.properties"));
+    if (files != null && files.length > 0) {
+      try (
+          FormRealmUsersManager usersManager = new FormRealmUsersManager(
+              UserLineCreator.getMD5Creator(),
+              usersFile,
+              0
+          )
+      ) {
+      } catch (IOException ex) {
+        throw new RuntimeException(ex);
+      }
+    }
   }
 
   @Override
