@@ -17,7 +17,6 @@ package com.streamsets.datacollector.creation;
 
 import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.DatabricksConfig;
-import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
@@ -238,6 +237,7 @@ public class TestPipelineConfigUpgrader {
 
     if (to == 17) {
       Assert.assertTrue(emrConfigList.contains("useIAMRoles"));
+      Assert.assertTrue(emrConfigList.contains("clusterConfig.callbackUrl"));
     }
   }
 

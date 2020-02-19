@@ -162,4 +162,21 @@ public class ClusterConfig {
   )
   public String yarnKerberosPrincipal = "name@DOMAIN";
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Cluster Callback URL",
+      description = "Optional callback URL for the Spark cluster to use to contact this Transformer instance. " +
+          "Use this format: http://<hostname>:<port>",
+      displayPosition = 20,
+      group = "ADVANCED",
+      dependencies = {
+          @Dependency(
+              configName = "^executionMode",
+              triggeredByValues = {"BATCH", "STREAMING"}
+          )
+      }
+  )
+  public String callbackUrl;
+
 }

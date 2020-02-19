@@ -296,6 +296,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     String amazonEmrConfigPrefix = "transformerEMRConfig.";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
     configs.add(new Config(amazonEmrConfigPrefix + "useIAMRoles", false));
+    configs.add(new Config("clusterConfig.callbackUrl", null));
   }
 
   private void addEmrConfigs(List<Config> configs, String amazonEmrConfigPrefix) {
