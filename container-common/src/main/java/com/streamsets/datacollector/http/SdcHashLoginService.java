@@ -33,7 +33,7 @@ public class SdcHashLoginService extends AbstractLoginService {
   private static final Logger LOG = Log.getLogger(SdcHashLoginService.class);
 
   private String _config;
-  private boolean hotReload = false; // default is not to reload
+  private boolean hotReload = true; // default is not to reload
   private UserStore _userStore;
   private boolean _userStoreAutoCreate = false;
 
