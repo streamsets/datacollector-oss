@@ -18,7 +18,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('DetailController', function (
-    $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal, authService, userRoles
+    $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal, authService, userRoles, configuration
   ) {
     var infoTab = {
       name: 'info',
@@ -141,6 +141,21 @@ angular
             return [infoTab, dataRulesTab, dataDriftRulesTab];
           }
       }
+    };
+
+    /**
+     * Checks if configuration has any advanced issues.
+     *
+     * @param {Object} issues - a list of issues for a single stage
+     * @param {Object} configDefinitions - a list of configuration defintions
+     * @returns {Boolean} - Returns true if any issue is for an advanced configuration
+     */
+    var hasAdvancedConfigurationIssues = function(issues, configDefinitions) {
+      var advancedDefinitionNames = configDefinitions
+        .filter(config => config.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED)
+        .map(config => config.name);
+      var issueConfigNames = issues.map(issue => issue.configName);
+      return issueConfigNames.some(issueName => advancedDefinitionNames.includes(issueName));
     };
 
     angular.extend($scope, {
@@ -300,6 +315,15 @@ angular
       },
 
       /**
+       * Checks if configDefinitions has any configs with ADVANCED displayMode
+       * @param {*} configDefinitions
+       * @returns {Boolean}
+       */
+      hasAdvancedConfig: function(configDefinitions) {
+        return configDefinitions.some(x => x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED);
+      },
+
+      /**
        * Returns true to display icon on tab.
        *
        * @param tab
@@ -452,4 +476,68 @@ angular
       }
     });
 
+    /**
+     * Checks if the active stage has advanced issues
+     * @param stageIssues {Object} an object of lists of issues per stage
+     * @param selectedInstanceName {String} the selected stage
+     * @param commonErrors {Object} the global error object
+     * @param configDefinitions {Object} configuration definitions for the stage
+     */
+    var stageHasAdvancedIssues = function(stageIssues, selectedInstanceName, commonErrors, configDefinitions) {
+      if (selectedInstanceName) {
+        var issues = [];
+        if (stageIssues && stageIssues[selectedInstanceName]) {
+          issues = stageIssues[selectedInstanceName];
+        }
+        var errorIssues = [];
+        var validationIssues = [];
+        if (commonErrors && commonErrors.length && commonErrors[0].stageIssues) {
+          errorIssues = commonErrors[0].stageIssues;
+          if (errorIssues && errorIssues[selectedInstanceName]) {
+            validationIssues = errorIssues[selectedInstanceName];
+          }
+        }
+        var allIssues = [...issues, ...validationIssues];
+        return hasAdvancedConfigurationIssues(
+          allIssues,
+          configDefinitions
+        );
+      }
+    };
+
+    // Force advanced issues to be shown if there are errors
+    $scope.$watchGroup(
+      ['pipelineConfig.issues.stageIssues', 'selectedObject', 'common.errors'],
+      function(newValues, _oldValues, scope) {
+        var stageIssues = newValues[0];
+        var selectedObject = newValues[1];
+        var commonErrors = newValues[2];
+        if (
+          selectedObject.stageName &&
+          selectedObject.instanceName &&
+          scope.detailPaneConfigDefn &&
+          stageHasAdvancedIssues(
+            stageIssues,
+            selectedObject.instanceName,
+            commonErrors,
+            scope.detailPaneConfigDefn.configDefinitions
+          )
+        ) {
+          scope.configHasAdvancedIssues = true;
+          scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+        } else {
+          scope.configHasAdvancedIssues = false;
+        }
+      }
+    );
+
+    $scope.$watch('selectedObject', () => {
+      if (configuration.defaultShowAdvancedConfigs() &&
+          $scope.selectedType == pipelineConstant.STAGE_INSTANCE &&
+          $scope.detailPaneConfigDefn &&
+          $scope.hasAdvancedConfig($scope.detailPaneConfigDefn.configDefinitions) &&
+          !$scope.detailPaneConfig.uiInfo.displayMode) {
+        $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+      }
+    });
   });

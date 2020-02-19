@@ -30,7 +30,7 @@
           <div class="form-group "
                ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: groupNameToLabelMap.name} | orderBy: 'displayPosition'"
-               ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name"
+               ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === groupNameToLabelMap.name && isShownByConfigDisplayMode(configDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)"
                ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"

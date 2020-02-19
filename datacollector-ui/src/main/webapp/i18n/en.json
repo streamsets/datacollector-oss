@@ -393,6 +393,7 @@
       "viewStackTrace": "View Details"
     },
     "detailPane": {
+      "advancedIssuesNeedFix": "Advanced issues must be fixed before advanced options can be hidden",
       "alerts": "Alerts",
       "batchesPerSecond": "( batches / sec )",
       "emailIDs": "Email IDs",

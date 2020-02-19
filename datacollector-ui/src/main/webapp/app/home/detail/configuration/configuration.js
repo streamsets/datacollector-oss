@@ -552,6 +552,17 @@ angular
       },
 
       /**
+       * Checks if a configuration should be shown, based on displayMode and stage settings
+       * @param {String} configurationItemDisplayMode
+       * @param {String} stageDisplayMode
+       * @returns {Boolean}
+       */
+      isShownByConfigDisplayMode: function(configurationItemDisplayMode, stageDisplayMode) {
+        return configurationItemDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_BASIC ||
+          stageDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
+      },
+
+      /**
        * Returns Config Model Object
        *
        * @param stageInstance

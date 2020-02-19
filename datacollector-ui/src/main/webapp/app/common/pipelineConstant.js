@@ -55,6 +55,9 @@ angular.module('dataCollectorApp.common')
     INSTALL_ACTION: 'install',
     UNINSTALL_ACTION: 'uninstall',
 
+    DISPLAY_MODE_BASIC: 'BASIC',
+    DISPLAY_MODE_ADVANCED: 'ADVANCED',
+
     DARWIN_OS: 'darwin',
     LINUX_OS: 'linux',
     WINDOWS_OS: 'windows',

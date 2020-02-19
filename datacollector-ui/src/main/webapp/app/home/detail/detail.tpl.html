@@ -35,6 +35,24 @@
              ng-click="changeStageSelection({selectedObject: stageInstance, type: pipelineConstant.STAGE_INSTANCE})">{{stageInstance.uiInfo.label}}</a>
         </li>
       </ul>
+      <div class="checkbox advanced-options-select"
+        ng-if="selectedType == pipelineConstant.STAGE_INSTANCE
+        && detailPaneConfigDefn
+        && hasAdvancedConfig(detailPaneConfigDefn.configDefinitions)">
+        <label
+          ng-class="{'advanced-issue': configHasAdvancedIssues}"
+          tooltip="{{configHasAdvancedIssues ? ('home.detailPane.advancedIssuesNeedFix' | translate) : ''}}">
+          <input
+            type="checkbox"
+            name="showAdvanced"
+            ng-model="detailPaneConfig.uiInfo.displayMode"
+            ng-true-value="'{{pipelineConstant.DISPLAY_MODE_ADVANCED}}'"
+            ng-false-value="'{{pipelineConstant.DISPLAY_MODE_BASIC}}'"
+            ng-disabled="configHasAdvancedIssues">
+            Show Advanced Options
+          </input>
+        </label>
+      </div>
     </div>
 
 
