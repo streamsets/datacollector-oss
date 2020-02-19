@@ -44,6 +44,7 @@ import java.util.Set;
 public class RestServiceReceiver extends PushHttpReceiver {
 
   public final static String STATUS_CODE_RECORD_HEADER_ATTR_NAME = "responseStatusCode";
+  public final static String RESPONSE_HEADER_ATTR_NAME_PREFIX = "responseHeader_";
   public final static String RAW_DATA_RECORD_HEADER_ATTR_NAME = "rawPayloadRecord";
   final static String EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME = "emptyPayloadRecord";
   private final ResponseConfigBean responseConfig;
@@ -100,15 +101,25 @@ public class RestServiceReceiver extends PushHttpReceiver {
     List<Record> successRecords = new ArrayList<>();
     List<Record> errorRecords = new ArrayList<>();
     for (Record responseRecord : batchContext.getSourceResponseRecords()) {
-      String statusCode = responseRecord.getHeader().getAttribute(STATUS_CODE_RECORD_HEADER_ATTR_NAME);
+      Record.Header header = responseRecord.getHeader();
+      String statusCode = header.getAttribute(STATUS_CODE_RECORD_HEADER_ATTR_NAME);
       if (statusCode != null) {
         statusCodesFromResponse.add(Integer.valueOf(statusCode));
       }
-      if (responseRecord.getHeader().getErrorMessage() == null) {
+      if (header.getErrorMessage() == null) {
         successRecords.add(responseRecord);
       } else {
-        errorMessage = responseRecord.getHeader().getErrorMessage();
+        errorMessage = header.getErrorMessage();
         errorRecords.add(responseRecord);
+      }
+
+      for(String attributeName: header.getAttributeNames()) {
+        if (attributeName.startsWith(RESPONSE_HEADER_ATTR_NAME_PREFIX)) {
+          resp.addHeader(
+              attributeName.replace(RESPONSE_HEADER_ATTR_NAME_PREFIX, ""),
+              header.getAttribute(attributeName)
+          );
+        }
       }
     }
 

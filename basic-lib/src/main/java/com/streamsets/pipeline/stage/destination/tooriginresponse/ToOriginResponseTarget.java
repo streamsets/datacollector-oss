@@ -19,12 +19,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.base.RecordTarget;
 import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
 
+import java.util.Map;
+
 public class ToOriginResponseTarget extends RecordTarget {
 
   private final int statusCode;
+  private final Map<String, String> headers;
 
-  ToOriginResponseTarget(int statusCode) {
+  ToOriginResponseTarget(int statusCode, Map<String, String> headers) {
     this.statusCode = statusCode;
+    this.headers = headers;
   }
 
   @Override
@@ -33,6 +37,10 @@ public class ToOriginResponseTarget extends RecordTarget {
         RestServiceReceiver.STATUS_CODE_RECORD_HEADER_ATTR_NAME,
         String.valueOf(this.statusCode)
     );
+    if (headers != null) {
+      headers.forEach((k, v) ->
+          record.getHeader().setAttribute(RestServiceReceiver.RESPONSE_HEADER_ATTR_NAME_PREFIX + k, v));
+    }
     getContext().toSourceResponse(record);
   }
 

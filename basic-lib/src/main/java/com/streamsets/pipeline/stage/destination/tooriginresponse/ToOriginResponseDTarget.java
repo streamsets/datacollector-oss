@@ -23,9 +23,11 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Send Response to Origin",
     description = "Sends records and the specified status code to a response-enabled origin",
     icon="response.png",
@@ -46,9 +48,18 @@ public class ToOriginResponseDTarget extends DTarget {
   )
   public int statusCode = HttpServletResponse.SC_OK;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      label = "Response Headers",
+      description = "Headers to include in the response",
+      displayPosition = 20
+  )
+  public Map<String, String> headers = new HashMap<>();
+
   @Override
   protected Target createTarget() {
-    return new ToOriginResponseTarget(statusCode);
+    return new ToOriginResponseTarget(statusCode, headers);
   }
 
 }
