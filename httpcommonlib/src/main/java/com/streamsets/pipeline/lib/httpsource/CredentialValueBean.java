@@ -23,23 +23,23 @@ public class CredentialValueBean implements CredentialValue {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
       label = "",
       displayPosition = 20
   )
-  public String appId;
+  public CredentialValue appId;
 
   public CredentialValueBean(String appId){
-    this.appId = appId;
+    this.appId = () -> appId;
   }
 
   public CredentialValueBean(){
-    this.appId = "";
+    this.appId = () -> "";
   }
 
   @Override
   public String get() throws StageException {
-    return appId;
+    return appId.get();
   }
 }
