@@ -133,31 +133,31 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
     return issues;
   }
 
-  protected Context getContext() {
+  Context getContext() {
     return context;
   }
 
-  protected File getKeyStoreFile() {
+  File getKeyStoreFile() {
     return keyStoreFile;
   }
 
-  protected String getKeystoreType() {
+  String getKeystoreType() {
     return keystoreType;
   }
 
-  protected String getKeystorePassword() {
+  String getKeystorePassword() {
     return keystorePassword;
   }
 
-  protected long getKeystoreTimestamp() {
+  long getKeystoreTimestamp() {
     return keystoreTimestamp;
   }
 
-  protected void setKeyStore(KeyStore keyStore) {
+  void setKeyStore(KeyStore keyStore) {
     this.keyStore = keyStore;
   }
 
-  protected KeyStore getKeyStore() {
+  KeyStore getKeyStore() {
     return keyStore;
   }
 
