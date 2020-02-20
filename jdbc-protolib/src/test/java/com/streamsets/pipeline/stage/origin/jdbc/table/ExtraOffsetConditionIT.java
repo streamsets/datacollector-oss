@@ -329,7 +329,7 @@ public class ExtraOffsetConditionIT extends BaseTableJdbcSourceIT {
     for (String partitionColumn : transactionOffsetFields.keySet()) {
       offsetColumns.add(partitionColumn.toUpperCase());
     }
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(tableName)
         .schema(database)
         .overrideDefaultOffsetColumns(true)

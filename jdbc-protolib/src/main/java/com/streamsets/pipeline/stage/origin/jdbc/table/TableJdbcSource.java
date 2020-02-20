@@ -103,7 +103,7 @@ public class TableJdbcSource extends AbstractTableJdbcSource {
   @Override
   protected Map<String, TableContext> listTablesForConfig(PushSource.Context context, List<ConfigIssue> issues, ConnectionManager connectionManager) throws SQLException, StageException {
     Map<String, TableContext> allTableContexts = new HashMap<>();
-    for (TableConfigBean tableConfigBean : tableJdbcConfigBean.tableConfigs) {
+    for (TableConfigBean tableConfigBean : tableJdbcConfigBean.getTableConfigs()) {
       //No duplicates even though a table matches multiple configurations, we will add it only once.
       allTableContexts.putAll(
           tableContextUtil.listTablesForConfig(

@@ -117,7 +117,7 @@ public final class ExceptionIT extends BaseTableJdbcSourceIT {
   @Test
   @Ignore("Investigate/fix sporadic failure (sometimes generates 4 errors intead of expected 4): SDC-6773")
   public void testNumSQLErrors() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .build();

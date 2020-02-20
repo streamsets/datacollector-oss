@@ -22,6 +22,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBeanImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -286,8 +287,8 @@ public class SQLServerCTSourceTestBuilder {
       return this;
     }
 
-    public TableConfigBean build() {
-      TableConfigBean tableConfigBean = new TableConfigBean();
+    public TableConfigBeanImpl build() {
+      TableConfigBeanImpl tableConfigBean = new TableConfigBeanImpl();
       tableConfigBean.schema = schema;
       tableConfigBean.tablePattern = tablePattern;
       tableConfigBean.tableExclusionPattern = tableExclusionPattern;

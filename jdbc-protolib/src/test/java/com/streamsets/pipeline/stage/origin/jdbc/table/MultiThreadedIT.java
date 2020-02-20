@@ -352,7 +352,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSwitchTables() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .maxNumActivePartitions(6)
         .partitioningMode(PartitioningMode.BEST_EFFORT)
@@ -373,7 +373,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testProcessAllRows() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .partitionSize("1000")
@@ -394,7 +394,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSwitchTablesWithNumberOfBatches() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .partitionSize("1000")
@@ -418,7 +418,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   public void testNonIncrementalLoad() throws Exception {
 
     final String nonIncrementalTable = TABLE_NAME_PREFIX + NON_INCREMENTAL_LOAD_TEST_TABLE_NUMBER;
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(nonIncrementalTable)
         .schema(database)
         .partitionSize("1000")
@@ -439,7 +439,7 @@ public class MultiThreadedIT extends BaseTableJdbcSourceIT {
   @Test
   @Ignore("Figure out how to handle max tables (partitions) per thread map now: SDC-6768")
   public void testNumThreadsMoreThanNumTables() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .offsetColumns(Collections.singletonList(OFFSET_FIELD_NAME.toUpperCase()))

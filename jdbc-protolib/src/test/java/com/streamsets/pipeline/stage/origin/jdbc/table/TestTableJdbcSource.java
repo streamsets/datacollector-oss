@@ -109,7 +109,7 @@ public class TestTableJdbcSource {
     final TableConfigBean tableConfig = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder().tablePattern(
         "testTable"
     ).build();
-    assertThat(tableConfig.partitioningMode, equalTo(PartitioningMode.DISABLED));
+    assertThat(tableConfig.getPartitioningMode(), equalTo(PartitioningMode.DISABLED));
   }
 
   @Test

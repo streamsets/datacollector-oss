@@ -152,7 +152,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
       final AtomicInteger totalNoOfRecordsRead
   ) throws Exception {
     int batchSize = (RANDOM.nextInt(5) + 1) * 10;
-    TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(TABLE_NAME)
         .schema(database)
         .build();
@@ -262,7 +262,7 @@ public class DifferentTypesAsOffsetIT extends BaseTableJdbcSourceIT {
     } else {
       initialOffset = expectedRecords.get(batchSize-1).get("/" + offsetFieldName).getValueAsString();
     }
-    TableConfigBean tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean = new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(TABLE_NAME)
         .offsetColumnToInitialOffsetValue(ImmutableMap.of(offsetFieldName.toUpperCase(), initialOffset))
         .schema(database)

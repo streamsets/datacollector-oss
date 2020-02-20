@@ -38,7 +38,7 @@ public class TableJdbcSourceTestBuilder {
   private int maxBatchSize;
   private int maxClobSize;
   private int maxBlobSize;
-  private List<TableConfigBean> tableConfigBeanList;
+  private List<TableConfigBeanImpl> tableConfigBeanList;
   private String timeZoneID;
   private int fetchSize;
   private BatchTableStrategy batchTableStrategy;
@@ -140,12 +140,12 @@ public class TableJdbcSourceTestBuilder {
     return this;
   }
 
-  public TableJdbcSourceTestBuilder tableConfigBeans(List<TableConfigBean> tableConfigBeans) {
+  public TableJdbcSourceTestBuilder tableConfigBeans(List<TableConfigBeanImpl> tableConfigBeans) {
     this.tableConfigBeanList.addAll(tableConfigBeans);
     return this;
   }
 
-  public TableJdbcSourceTestBuilder tableConfigBean(TableConfigBean tableConfigBean) {
+  public TableJdbcSourceTestBuilder tableConfigBean(TableConfigBeanImpl tableConfigBean) {
     this.tableConfigBeanList.add(tableConfigBean);
     return this;
   }
@@ -327,8 +327,8 @@ public class TableJdbcSourceTestBuilder {
       return this;
     }
 
-    public TableConfigBean build() {
-      TableConfigBean tableConfigBean = new TableConfigBean();
+    public TableConfigBeanImpl build() {
+      TableConfigBeanImpl tableConfigBean = new TableConfigBeanImpl();
       tableConfigBean.schema = schema;
       tableConfigBean.tablePattern = tablePattern;
       tableConfigBean.tableExclusionPattern = tableExclusionPattern;

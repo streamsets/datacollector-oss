@@ -20,7 +20,6 @@ import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheLoader;
-import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -45,7 +44,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
-import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBeanImpl;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.StringUtils;
@@ -220,8 +219,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
    * @param issues
    * @param allTableContexts
    * @param qualifiedTableNameToTableConfigIndex the map from qualified table names to corresponding index of the
-   * {@link TableConfigBean} that leds  Once API-138 is complete, the index here can be consulted in order to set the precise list index of the
-   * {@link TableConfigBean} that resulted in the {@link TableContext} having the issue
+   * {@link TableConfigBeanImpl} that leds  Once API-138 is complete, the index here can be consulted in order to set the precise list index of the
+   * {@link TableConfigBeanImpl} that resulted in the {@link TableContext} having the issue
    * @return
    */
   private List<ConfigIssue> validatePartitioningConfigs(

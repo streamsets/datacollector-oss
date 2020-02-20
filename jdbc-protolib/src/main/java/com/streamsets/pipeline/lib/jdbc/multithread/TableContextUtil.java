@@ -36,6 +36,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.CDCTableConfigBea
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBean;
+import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBeanImpl;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcELEvalContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
@@ -223,8 +224,8 @@ public class TableContextUtil {
     Map<String, Integer> columnNameToType = getColumnNameType(connection, schemaName, tableName);
     Map<String, String> offsetColumnToStartOffset = new HashMap<>();
 
-    if (tableConfigBean.overrideDefaultOffsetColumns) {
-      if (tableConfigBean.offsetColumns.isEmpty()) {
+    if (tableConfigBean.isOverrideDefaultOffsetColumns()) {
+      if (tableConfigBean.getOffsetColumns().isEmpty()) {
         issues.add(context.createConfigIssue(
             Groups.TABLE.name(),
             TableJdbcConfigBean.TABLE_CONFIG,
@@ -233,7 +234,7 @@ public class TableContextUtil {
         ));
         return null;
       }
-      for (String overridenPartitionColumn : tableConfigBean.offsetColumns) {
+      for (String overridenPartitionColumn : tableConfigBean.getOffsetColumns()) {
         if (!columnNameToType.containsKey(overridenPartitionColumn)) {
           issues.add(context.createConfigIssue(
               Groups.TABLE.name(),
@@ -248,7 +249,7 @@ public class TableContextUtil {
       }
     } else {
       List<String> primaryKeys = jdbcUtil.getPrimaryKeys(connection, schemaName, tableName);
-      if (primaryKeys.isEmpty() && !tableConfigBean.enableNonIncremental) {
+      if (primaryKeys.isEmpty() && !tableConfigBean.isEnableNonIncremental()) {
         issues.add(context.createConfigIssue(
             Groups.TABLE.name(),
             TableJdbcConfigBean.TABLE_CONFIG,
@@ -264,7 +265,7 @@ public class TableContextUtil {
 
     final Map<String, String> offsetColumnMinValues = new HashMap<>();
     final Map<String, String> offsetColumnMaxValues = new HashMap<>();
-    if (tableConfigBean.partitioningMode != PartitioningMode.DISABLED) {
+    if (tableConfigBean.getPartitioningMode() != PartitioningMode.DISABLED) {
       offsetColumnMinValues.putAll(jdbcUtil.getMinimumOffsetValues(
           vendor,
           connection,
@@ -284,11 +285,11 @@ public class TableContextUtil {
     }
 
     //Initial offset should exist for all partition columns or none at all.
-    if (!tableConfigBean.offsetColumnToInitialOffsetValue.isEmpty()) {
+    if (!tableConfigBean.getOffsetColumnToInitialOffsetValue().isEmpty()) {
       Set<String> missingColumns =
-          Sets.difference(offsetColumnToType.keySet(), tableConfigBean.offsetColumnToInitialOffsetValue.keySet());
+          Sets.difference(offsetColumnToType.keySet(), tableConfigBean.getOffsetColumnToInitialOffsetValue().keySet());
       Set<String> extraColumns =
-          Sets.difference(tableConfigBean.offsetColumnToInitialOffsetValue.keySet(), offsetColumnToType.keySet());
+          Sets.difference(tableConfigBean.getOffsetColumnToInitialOffsetValue().keySet(), offsetColumnToType.keySet());
 
       if (!missingColumns.isEmpty() || !extraColumns.isEmpty()) {
         issues.add(context.createConfigIssue(
@@ -303,8 +304,7 @@ public class TableContextUtil {
 
       populateInitialOffset(
           context,
-          issues,
-          tableConfigBean.offsetColumnToInitialOffsetValue,
+          issues, tableConfigBean.getOffsetColumnToInitialOffsetValue(),
           tableJdbcELEvalContext,
           offsetColumnToStartOffset
       );
@@ -318,7 +318,7 @@ public class TableContextUtil {
     }
 
     final Map<String, String> offsetAdjustments = new HashMap<>();
-    offsetColumnToType.keySet().forEach(c -> offsetAdjustments.put(c, tableConfigBean.partitionSize));
+    offsetColumnToType.keySet().forEach(c -> offsetAdjustments.put(c, tableConfigBean.getPartitionSize()));
 
     return new TableContext(
         vendor,
@@ -330,10 +330,10 @@ public class TableContextUtil {
         offsetAdjustments,
         offsetColumnMinValues,
         offsetColumnMaxValues,
-        tableConfigBean.enableNonIncremental,
-        tableConfigBean.partitioningMode,
-        tableConfigBean.maxNumActivePartitions,
-        tableConfigBean.extraOffsetColumnConditions
+        tableConfigBean.isEnableNonIncremental(),
+        tableConfigBean.getPartitioningMode(),
+        tableConfigBean.getMaxNumActivePartitions(),
+        tableConfigBean.getExtraOffsetColumnConditions()
     );
   }
 
@@ -434,9 +434,9 @@ public class TableContextUtil {
   }
 
   /**
-   * Lists all tables matching the {@link TableConfigBean} and creates a table context for each table.
+   * Lists all tables matching the {@link TableConfigBeanImpl} and creates a table context for each table.
    * @param connection JDBC connection
-   * @param tableConfigBean {@link TableConfigBean}
+   * @param tableConfigBean {@link TableConfigBeanImpl}
    * @return Map of qualified table name to Table Context
    * @throws SQLException If list tables call fails
    * @throws StageException if partition configuration is not correct.
@@ -452,12 +452,15 @@ public class TableContextUtil {
   ) throws SQLException, StageException {
     Map<String, TableContext> tableContextMap = new LinkedHashMap<>();
     Pattern tableExclusion =
-        StringUtils.isEmpty(tableConfigBean.tableExclusionPattern)?
-            null : Pattern.compile(tableConfigBean.tableExclusionPattern);
+        StringUtils.isEmpty(tableConfigBean.getTableExclusionPattern()) ?
+            null : Pattern.compile(tableConfigBean.getTableExclusionPattern());
     Pattern schemaExclusion =
-        StringUtils.isEmpty(tableConfigBean.schemaExclusionPattern)?
-            null : Pattern.compile(tableConfigBean.schemaExclusionPattern);
-    try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection, tableConfigBean.schema, tableConfigBean.tablePattern)) {
+        StringUtils.isEmpty(tableConfigBean.getSchemaExclusionPattern()) ?
+            null : Pattern.compile(tableConfigBean.getSchemaExclusionPattern());
+    try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection,
+        tableConfigBean.getSchema(),
+        tableConfigBean.getTablePattern()
+    )) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);

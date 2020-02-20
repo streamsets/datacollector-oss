@@ -41,7 +41,7 @@ public class TableJdbcConfigBean {
       group = "TABLE"
   )
   @ListBeanModel
-  public List<TableConfigBean> tableConfigs;
+  public List<TableConfigBeanImpl> tableConfigs;
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -173,7 +173,7 @@ public class TableJdbcConfigBean {
   public static final String QUOTE_CHAR = "quoteChar";
 
   public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, List<Stage.ConfigIssue> issues) {
-    if (tableConfigs.isEmpty()) {
+    if (getTableConfigs().isEmpty()) {
       issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
     }
     if (batchTableStrategy == BatchTableStrategy.SWITCH_TABLES && numberOfBatchesFromRs == 0) {
@@ -186,5 +186,9 @@ public class TableJdbcConfigBean {
       );
     }
     return issues;
+  }
+
+  public List<? extends TableConfigBean> getTableConfigs() {
+    return tableConfigs;
   }
 }

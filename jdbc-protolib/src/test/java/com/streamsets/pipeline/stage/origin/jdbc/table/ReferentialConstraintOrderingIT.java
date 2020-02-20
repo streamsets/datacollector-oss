@@ -251,7 +251,7 @@ public class ReferentialConstraintOrderingIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testReferentialOrdering() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .build();

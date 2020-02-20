@@ -76,12 +76,26 @@ public class TableJdbcDSource extends DPushSource {
     return hikariConfigBean;
   }
 
+  /**
+   * Returns the TableJDBC config bean.
+   * <p/>
+   * This method is used to pass the TableJDBC config bean to the underlaying connector.
+   * <p/>
+   * Subclasses may override this method to provide specific vendor configurations.
+   * <p/>
+   * IMPORTANT: when a subclass is overriding this method to return a specialized TableJDBC, the config property
+   * itself in the connector subclass must have the same name as the config property in this class.
+   */
+  protected TableJdbcConfigBean getTableJdbcConfigBean() {
+    return tableJdbcConfigBean;
+  }
+
   @Override
   protected PushSource createPushSource() {
     return new TableJdbcSource(
         getHikariConfigBean(),
         commonSourceConfigBean,
-        tableJdbcConfigBean
+        getTableJdbcConfigBean()
     );
   }
 }

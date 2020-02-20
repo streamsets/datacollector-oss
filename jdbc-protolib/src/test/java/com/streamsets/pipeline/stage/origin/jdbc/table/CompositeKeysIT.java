@@ -119,7 +119,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
     int recordsRead = 0, noOfBatches = 0, totalNoOfRecords = MULTIPLE_INT_COMPOSITE_RECORDS.size();
     Map<String, String> offsets = Collections.emptyMap();
     while (recordsRead < totalNoOfRecords) {
-      TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+      TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
           .tablePattern("%")
           .schema(database)
           .build();
@@ -169,7 +169,7 @@ public class CompositeKeysIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testPartitioningMode() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%")
         .schema(database)
         .partitioningMode(PartitioningMode.REQUIRED)

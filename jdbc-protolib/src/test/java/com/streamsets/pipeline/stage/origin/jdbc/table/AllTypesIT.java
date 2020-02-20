@@ -269,7 +269,7 @@ public class AllTypesIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testDataTypes() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(table)
         .schema(database)
         .build();

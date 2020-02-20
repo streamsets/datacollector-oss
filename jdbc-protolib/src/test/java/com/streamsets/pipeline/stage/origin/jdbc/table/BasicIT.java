@@ -267,7 +267,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testNoTableMatchesTablePatternValidationError() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("NO_TABLE%")
         .schema(database)
         .build();
@@ -284,7 +284,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSingleTableSingleBatch() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS")
         .schema(database)
         .build();
@@ -301,7 +301,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSingleView() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS_VIEW")
         .schema(database)
         .overrideDefaultOffsetColumns(true)
@@ -320,7 +320,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testSingleTableMultipleBatches() throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS")
         .schema(database)
         .build();
@@ -354,11 +354,11 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testMultipleTablesSingleBatch() throws Exception {
-    TableConfigBean tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS")
         .schema(database)
         .build();
-    TableConfigBean tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TENNIS_STARS")
         .schema(database)
         .build();
@@ -392,7 +392,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @Test
   public void testBatchStrategySwitchTables() throws Exception {
     //With a '%_STARS' regex which has to select both tables.
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%_STARS")
         .schema(database)
         .build();
@@ -438,12 +438,12 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testBatchStrategyProcessAllRows() throws Exception {
-    TableConfigBean tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean1 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TENNIS_STARS")
         .schema(database)
         .build();
 
-    TableConfigBean tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean2 =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("CRICKET_STARS")
         .schema(database)
         .build();
@@ -480,7 +480,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   @SuppressWarnings("unchecked")
   private void testMetricsValues(Map<String, String> offsets, String tableName) throws Exception {
     //With a '%' regex which has to select both tables.
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%_STARS")
         .schema(database)
         .build();
@@ -519,7 +519,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testOverridePartitionColumn() throws Exception {
-    TableConfigBean tableConfigBean =
+    TableConfigBeanImpl tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern("TRANSACTION_TABLE")
             .schema(database)
@@ -552,7 +552,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
       List<String> offsetColumnsForThisRun,
       boolean shouldFail
   ) throws Exception {
-    TableConfigBean tableConfigBean =
+    TableConfigBeanImpl tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern(table)
             .schema(database)
@@ -657,7 +657,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testStreamingInsertDuringSourceRun() throws Exception {
-    TableConfigBean tableConfigBean =
+    TableConfigBeanImpl tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern("STREAMING_TABLE")
             .schema(database)
@@ -689,7 +689,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testWrongInitialOffsetError() throws Exception {
-    TableConfigBean tableConfigBean =
+    TableConfigBeanImpl tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern("TRANSACTION_TABLE")
             .schema(database)
@@ -722,7 +722,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testPartitionConfigs() throws Exception {
-    TableConfigBean tableConfigBean =
+    TableConfigBeanImpl tableConfigBean =
         new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
             .tablePattern("CRICKET_STARS")
             .schema(database)
@@ -769,7 +769,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
   }
 
   private void runSourceForInitialOffset(List<Record> expectedRecords, int batchSize, Map<String, String> lastOffsets) throws Exception {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("TENNIS_STARS")
         .schema(database)
         //set initial offset as id 3 (we will read from id 4)
@@ -818,7 +818,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
             )
         )
     );
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern("%_STARS")
         .schema(database)
         .partitioningMode(PartitioningMode.DISABLED)
@@ -925,7 +925,7 @@ public class BasicIT extends BaseTableJdbcSourceIT {
 
   @Test
   public void testQuoting() throws Exception  {
-    TableConfigBean tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
+    TableConfigBeanImpl tableConfigBean =  new TableJdbcSourceTestBuilder.TableConfigBeanTestBuilder()
         .tablePattern(QUOTED_TABLE_NAME_WITHOUT_QUOTES)
         .schema(database)
         .build();
