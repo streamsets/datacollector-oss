@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.service.sshtunnel.DummySshService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,79 +209,80 @@ public class JdbcTarget extends BaseTarget {
     issues = hikariConfigBean.validateConfigs(context, issues);
     errorRecordHandler = new DefaultErrorRecordHandler(context);
 
-    sshTunnelService = getContext().getService(SshTunnelService.class);
+    sshTunnelService = getSSHService();
 
-    if (!hikariConfigBean.isConnectionSecured() && !sshTunnelService.isEnabled()) {
-      issues.add(getContext().createConfigIssue("JDBC", "hikariConfigBean.connectionString", JdbcErrors.JDBC_501));
+    BasicConnectionString.Info
+        info
+        = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
+
+    if (info != null) {
+      // basic connection string format
+      SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
+      Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
+          portMapping
+          = sshTunnelService.start(Collections.singletonList(target));
+      SshTunnelService.HostPort tunnel = portMapping.get(target);
+      info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
+      hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
     } else {
-      BasicConnectionString.Info
-          info
-          = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
+      // complex connection string format, we don't support this right now with SSH tunneling
+      issues.add(getContext().createConfigIssue("JDBC",
+          "hikariConfigBean.connectionString",
+          hikariConfigBean.getNonBasicUrlErrorCode()
+      ));
+    }
 
-      if (info != null) {
-        // basic connection string format
-        SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
-        Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
-            portMapping
-            = sshTunnelService.start(Collections.singletonList(target));
-        SshTunnelService.HostPort tunnel = portMapping.get(target);
-        info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
-        hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
-      } else {
-        // complex connection string format, we don't support this right now with SSH tunneling
-        issues.add(getContext().createConfigIssue("JDBC",
-            "hikariConfigBean.connectionString",
-            hikariConfigBean.getNonBasicUrlErrorCode()
-        ));
-      }
+    if (dynamicSchemaName || dynamicTableName) {
+      schemaTableClassifier = new SchemaTableClassifier(schemaNameTemplate, tableNameTemplate, context);
+    }
 
-      if (dynamicSchemaName || dynamicTableName) {
-        schemaTableClassifier = new SchemaTableClassifier(schemaNameTemplate, tableNameTemplate, context);
-      }
+    ELUtils.validateExpression(schemaNameTemplate,
+        context,
+        Groups.JDBC.getLabel(),
+        JdbcUtil.SCHEMA_NAME,
+        JdbcErrors.JDBC_103,
+        issues
+    );
 
-      ELUtils.validateExpression(schemaNameTemplate,
-          context,
-          Groups.JDBC.getLabel(),
-          JdbcUtil.SCHEMA_NAME,
-          JdbcErrors.JDBC_103,
-          issues
-      );
+    ELUtils.validateExpression(tableNameTemplate,
+        context,
+        Groups.JDBC.getLabel(),
+        JdbcUtil.TABLE_NAME,
+        JdbcErrors.JDBC_26,
+        issues
+    );
 
-      ELUtils.validateExpression(tableNameTemplate,
-          context,
-          Groups.JDBC.getLabel(),
-          JdbcUtil.TABLE_NAME,
-          JdbcErrors.JDBC_26,
-          issues
-      );
-
-      if (issues.isEmpty() && null == dataSource) {
-        try {
-          dataSource = jdbcUtil.createDataSourceForWrite(hikariConfigBean,
-              schemaNameTemplate,
-              tableNameTemplate,
-              caseSensitive,
-              issues,
-              customMappings,
-              context,
-              tableAutoCreate
-          );
-        } catch (StageException e) {
-          LOG.error("Could not connect to data source", e);
-          issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
-        } catch (RuntimeException | SQLException e) {
-          LOG.error("Could not connect to data source", e);
-          issues.add(context.createConfigIssue(
-              Groups.JDBC.name(),
-              CONNECTION_STRING,
-              JdbcErrors.JDBC_00,
-              e.toString()
-          ));
-        }
+    if (issues.isEmpty() && null == dataSource) {
+      try {
+        dataSource = jdbcUtil.createDataSourceForWrite(hikariConfigBean,
+            schemaNameTemplate,
+            tableNameTemplate,
+            caseSensitive,
+            issues,
+            customMappings,
+            context,
+            tableAutoCreate
+        );
+      } catch (StageException e) {
+        LOG.error("Could not connect to data source", e);
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
+      } catch (RuntimeException | SQLException e) {
+        LOG.error("Could not connect to data source", e);
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, e.toString()));
       }
     }
 
     return issues;
+  }
+
+  private SshTunnelService getSSHService() {
+    SshTunnelService declaredSshTunnelService;
+    try {
+      declaredSshTunnelService = getContext().getService(SshTunnelService.class);
+    } catch (RuntimeException e) {
+      declaredSshTunnelService = new DummySshService();
+    }
+    return declaredSshTunnelService;
   }
 
   @Override

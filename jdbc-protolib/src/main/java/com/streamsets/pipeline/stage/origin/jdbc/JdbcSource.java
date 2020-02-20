@@ -42,6 +42,7 @@ import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.service.sshtunnel.DummySshService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -159,81 +160,70 @@ public class JdbcSource extends BaseSource {
     List<ConfigIssue> issues = new ArrayList<>();
     Source.Context context = getContext();
 
-    sshTunnelService = getContext().getService(SshTunnelService.class);
+    sshTunnelService = getSSHService();
 
-    if (!hikariConfigBean.isConnectionSecured() && !sshTunnelService.isEnabled()) {
-      issues.add(getContext().createConfigIssue("JDBC", "hikariConfigBean.connectionString", JdbcErrors.JDBC_501));
+    BasicConnectionString.Info
+        info
+        = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
+
+    if (info != null) {
+      // basic connection string format
+      SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
+      Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
+          portMapping
+          = sshTunnelService.start(Collections.singletonList(target));
+      SshTunnelService.HostPort tunnel = portMapping.get(target);
+      info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
+      hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
     } else {
-      BasicConnectionString.Info
-          info
-          = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
+      // complex connection string format, we don't support this right now with SSH tunneling
+      issues.add(getContext().createConfigIssue("JDBC",
+          "hikariConfigBean.connectionString",
+          hikariConfigBean.getNonBasicUrlErrorCode()
+      ));
+    }
 
-      if (info != null) {
-        // basic connection string format
-        SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
-        Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
-            portMapping
-            = sshTunnelService.start(Collections.singletonList(target));
-        SshTunnelService.HostPort tunnel = portMapping.get(target);
-        info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
-        hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
-      } else {
-        // complex connection string format, we don't support this right now with SSH tunneling
-        issues.add(getContext().createConfigIssue("JDBC",
-            "hikariConfigBean.connectionString",
-            hikariConfigBean.getNonBasicUrlErrorCode()
-        ));
+    errorRecordHandler = new DefaultErrorRecordHandler(context);
+    issues = hikariConfigBean.validateConfigs(context, issues);
+
+    if (queryIntervalMillis < 0) {
+      issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, JdbcErrors.JDBC_27));
+    }
+
+    issues = commonSourceConfigBean.validateConfigs(context, issues);
+
+    // Incremental mode have special requirements for the query form
+    if (isIncrementalMode) {
+      if (StringUtils.isEmpty(offsetColumn)) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), OFFSET_COLUMN, JdbcErrors.JDBC_51, "Can't be empty"));
+      }
+      if (StringUtils.isEmpty(initialOffset)) {
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), INITIAL_OFFSET, JdbcErrors.JDBC_51, "Can't be empty"));
       }
 
-      errorRecordHandler = new DefaultErrorRecordHandler(context);
-      issues = hikariConfigBean.validateConfigs(context, issues);
+      final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
+      Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b)" +
+              ".*\\bORDER BY\\b.*\\b%s\\b.*",
+          formattedOffsetColumn,
+          formattedOffsetColumn
+      ));
 
-      if (queryIntervalMillis < 0) {
-        issues.add(getContext().createConfigIssue(Groups.JDBC.name(), QUERY_INTERVAL_EL, JdbcErrors.JDBC_27));
-      }
-
-      issues = commonSourceConfigBean.validateConfigs(context, issues);
-
-      // Incremental mode have special requirements for the query form
-      if (isIncrementalMode) {
-        if (StringUtils.isEmpty(offsetColumn)) {
-          issues.add(context.createConfigIssue(Groups.JDBC.name(),
-              OFFSET_COLUMN,
-              JdbcErrors.JDBC_51,
-              "Can't be empty"
-          ));
+      if (!disableValidation) {
+        String upperCaseQuery = query.toUpperCase();
+        boolean checkOffsetColumnInWhereOrder = true;
+        if (!upperCaseQuery.contains("WHERE")) {
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "WHERE"));
+          checkOffsetColumnInWhereOrder = false;
         }
-        if (StringUtils.isEmpty(initialOffset)) {
-          issues.add(context.createConfigIssue(Groups.JDBC.name(),
-              INITIAL_OFFSET,
-              JdbcErrors.JDBC_51,
-              "Can't be empty"
-          ));
+        if (!upperCaseQuery.contains("ORDER BY")) {
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "ORDER BY"));
+          checkOffsetColumnInWhereOrder = false;
         }
-
-        final String formattedOffsetColumn = Pattern.quote(offsetColumn.toUpperCase());
-        Pattern offsetColumnInWhereAndOrderByClause = Pattern.compile(String.format("(?s).*\\bWHERE\\b.*(\\b%s\\b)" +
-                ".*\\bORDER BY\\b.*\\b%s\\b.*",
-            formattedOffsetColumn,
-            formattedOffsetColumn
-        ));
-
-        if (!disableValidation) {
-          String upperCaseQuery = query.toUpperCase();
-          boolean checkOffsetColumnInWhereOrder = true;
-          if (!upperCaseQuery.contains("WHERE")) {
-            issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "WHERE"));
-            checkOffsetColumnInWhereOrder = false;
-          }
-          if (!upperCaseQuery.contains("ORDER BY")) {
-            issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_38, "ORDER BY"));
-            checkOffsetColumnInWhereOrder = false;
-          }
-          if (checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
-            issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_29, offsetColumn));
-          }
+        if (checkOffsetColumnInWhereOrder && !offsetColumnInWhereAndOrderByClause.matcher(upperCaseQuery).matches()) {
+          issues.add(context.createConfigIssue(Groups.JDBC.name(), QUERY, JdbcErrors.JDBC_29, offsetColumn));
         }
       }
+    }
 
     if (txnMaxSize < 0) {
       issues.add(context.createConfigIssue(Groups.ADVANCED.name(), TXN_MAX_SIZE, JdbcErrors.JDBC_10, txnMaxSize, 0));
@@ -243,21 +233,21 @@ public class JdbcSource extends BaseSource {
       issues.add(context.createConfigIssue(Groups.ADVANCED.name(), JDBC_NS_HEADER_PREFIX, JdbcErrors.JDBC_15));
     }
 
-      Properties driverProps = new Properties();
-      try {
-        driverProps = hikariConfigBean.getDriverProperties();
-        if (null == dataSource) {
-          dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
-        }
-      } catch (StageException e) {
-        LOG.error(JdbcErrors.JDBC_00.getMessage(), e.toString(), e);
-        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
+    Properties driverProps = new Properties();
+    try {
+      driverProps = hikariConfigBean.getDriverProperties();
+      if (null == dataSource) {
+        dataSource = jdbcUtil.createDataSourceForRead(hikariConfigBean);
       }
+    } catch (StageException e) {
+      LOG.error(JdbcErrors.JDBC_00.getMessage(), e.toString(), e);
+      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, e.getErrorCode(), e.getParams()));
+    }
 
-      // Don't proceed with validation query if there are issues or if validation is disabled
-      if (!issues.isEmpty() || disableValidation) {
-        return issues;
-      }
+    // Don't proceed with validation query if there are issues or if validation is disabled
+    if (!issues.isEmpty() || disableValidation) {
+      return issues;
+    }
 
     try (Connection validationConnection = dataSource.getConnection()) { // NOSONAR
       DatabaseMetaData dbMetadata = validationConnection.getMetaData();
@@ -276,35 +266,44 @@ public class JdbcSource extends BaseSource {
       issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
     }
 
-      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
-      // TODO: add the per-event specific details here.
-      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
-      event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
-      Map<String, String> props = new HashMap<>();
-      props.put("Connection String", hikariConfigBean.getConnectionString());
-      props.put("Offset Column", offsetColumn);
-      props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
-      if (!StringUtils.isEmpty(tableNames)) {
-        event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME,
-            hikariConfigBean.getConnectionString() + " " + tableNames
-        );
-        props.put("Table Names", tableNames);
+    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+    // TODO: add the per-event specific details here.
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
+    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
+    Map<String, String> props = new HashMap<>();
+    props.put("Connection String", hikariConfigBean.getConnectionString());
+    props.put("Offset Column", offsetColumn);
+    props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
+    if (!StringUtils.isEmpty(tableNames)) {
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME,
+          hikariConfigBean.getConnectionString() + " " + tableNames
+      );
+      props.put("Table Names", tableNames);
 
-      } else {
-        event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.getConnectionString());
-
-      }
-
-      for (final String n : driverProps.stringPropertyNames()) {
-        props.put(n, driverProps.getProperty(n));
-      }
-      event.setProperties(props);
-      getContext().publishLineageEvent(event);
-      shouldFire = true;
-      firstTime = true;
+    } else {
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.getConnectionString());
 
     }
+
+    for (final String n : driverProps.stringPropertyNames()) {
+      props.put(n, driverProps.getProperty(n));
+    }
+    event.setProperties(props);
+    getContext().publishLineageEvent(event);
+    shouldFire = true;
+    firstTime = true;
+
     return issues;
+  }
+
+  private SshTunnelService getSSHService() {
+    SshTunnelService declaredSshTunnelService;
+    try {
+      declaredSshTunnelService = getContext().getService(SshTunnelService.class);
+    } catch (RuntimeException e) {
+      declaredSshTunnelService = new DummySshService();
+    }
+    return declaredSshTunnelService;
   }
 
   private void supportsScrollableCursor(

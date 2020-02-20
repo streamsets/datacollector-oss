@@ -15,12 +15,15 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
-import static org.mockito.Mockito.mock;
-
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.postgresql.replication.LogSequenceNumber;
 
 import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
@@ -31,17 +34,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.postgresql.replication.LogSequenceNumber;
-
 public class TestWalRecordFilteringUtils {
 
   private PostgresCDCConfigBean configBean;
-  private HikariPoolConfigBean hikariConfigBean;
-  private String h2ConnectionString = "jdbc:postgresql://localhost:5432/sdctest";
   private String username = "postgres";
   private String password = "postgres";
 
@@ -52,8 +47,8 @@ public class TestWalRecordFilteringUtils {
   private Field baseRecordField;
 
   private void createConfigBeans() {
-    hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.setConnectionString(h2ConnectionString);
+    HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
+    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
     hikariConfigBean.useCredentials = true;
     hikariConfigBean.username = () -> username;
     hikariConfigBean.password = () -> password;

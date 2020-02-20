@@ -16,86 +16,53 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 
-import static org.mockito.Mockito.mock;
-
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.OnRecordError;
-import com.streamsets.pipeline.api.Source;
-import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCWalReceiver;
-import com.zaxxer.hikari.HikariDataSource;
-
-import java.sql.Connection;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class TestJdbcPostgresCDCSource {
 
-  private HikariDataSource dataSource = null;
-  private Connection connection = null;
-  private PostgresCDCConfigBean configBean;
-  private HikariPoolConfigBean hikariConfigBean;
-  private String h2ConnectionString = "jdbc:postgresql://localhost:5432/sdctest";
   private String username = "postgres";
   private String password = "postgres";
-    private PostgresCDCWalReceiver walReceiver;
 
   private void createConfigBeans() {
-    hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.setConnectionString(h2ConnectionString);
+    HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
+    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
     hikariConfigBean.useCredentials = true;
     hikariConfigBean.username = () -> username;
     hikariConfigBean.password = () -> password;
 
-    configBean = new PostgresCDCConfigBean();
+    PostgresCDCConfigBean configBean = new PostgresCDCConfigBean();
     configBean.slot = "slot";
     configBean.minVersion = PgVersionValues.NINEFOUR;
     configBean.queryTimeout = 20;
     configBean.replicationType = "database";
     configBean.pollInterval = 1000;
     configBean.startLSN = "0/0";
-
   }
-
-  private Source.Context context;
-  private Source.Context contextInPreview;
-
 
   @Before
   public void setup() {
-    context = (Source.Context) ContextInfoCreator
-        .createSourceContext("s", false, OnRecordError.TO_ERROR, ImmutableList.of("a"));
-    contextInPreview = (Source.Context) ContextInfoCreator.createSourceContext("s", true, OnRecordError.TO_ERROR,
-        ImmutableList.of("a"));
     createConfigBeans();
-
   }
 
   @Test
-  public void timeStampConv()
-  {
+  public void timeStampConv() {
     String mydate = "2018-07-06 12:57:33.383899-07";
-    if(mydate.length() == 29) {
-      mydate += ":00";
-    }
+    mydate += ":00";
 
-    ZonedDateTime zonedDateTime = ZonedDateTime
-        .parse(mydate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSXXX"));
+    ZonedDateTime.parse(mydate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSSXXX"));
     Assert.assertTrue(true);
 
     mydate = "2018-07-09 10:16:23.815-07";
-    if(mydate.length() == 26) {
-      mydate += ":00";
-      zonedDateTime = ZonedDateTime
-          .parse(mydate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSXXX"));
-      Assert.assertTrue(true);
-    }
+    mydate += ":00";
+    ZonedDateTime.parse(mydate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSXXX"));
+    Assert.assertTrue(true);
   }
 
 }

@@ -73,7 +73,6 @@
       <groupId>com.github.shyiko</groupId>
       <artifactId>mysql-binlog-connector-java</artifactId>
       <version>${mysql-binlog-connector-java.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
         <groupId>com.zaxxer</groupId>

@@ -48,6 +48,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSourc
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBeanImpl;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
+import com.streamsets.service.sshtunnel.DummySshService;
 import com.zaxxer.hikari.HikariDataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -138,45 +139,49 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   @Override
   protected List<Stage.ConfigIssue> init() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
-    sshTunnelService = getContext().getService(SshTunnelService.class);
+    sshTunnelService = getSSHService();
+    BasicConnectionString.Info
+        info
+        = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
 
-    if (!hikariConfigBean.isConnectionSecured() && !sshTunnelService.isEnabled()) {
-      issues.add(getContext().createConfigIssue("JDBC", "hikariConfigBean.connectionString", JdbcErrors.JDBC_501));
+    if (info != null) {
+      // basic connection string format
+      SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
+      Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
+          portMapping
+          = sshTunnelService.start(Collections.singletonList(target));
+      SshTunnelService.HostPort tunnel = portMapping.get(target);
+      info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
+      hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
     } else {
+      // complex connection string format, we don't support this right now with SSH tunneling
+      issues.add(getContext().createConfigIssue("JDBC",
+          "hikariConfigBean.connectionString",
+          hikariConfigBean.getNonBasicUrlErrorCode()
+      ));
+    }
 
-      BasicConnectionString.Info
-          info
-          = getBasicConnectionString().getBasicConnectionInfo(hikariConfigBean.getConnectionString());
+    PushSource.Context context = getContext();
+    issues = hikariConfigBean.validateConfigs(context, issues);
+    issues = commonSourceConfigBean.validateConfigs(context, issues);
 
-      if (info != null) {
-        // basic connection string format
-        SshTunnelService.HostPort target = new SshTunnelService.HostPort(info.getHost(), info.getPort());
-        Map<SshTunnelService.HostPort, SshTunnelService.HostPort>
-            portMapping
-            = sshTunnelService.start(Collections.singletonList(target));
-        SshTunnelService.HostPort tunnel = portMapping.get(target);
-        info = info.changeHostPort(tunnel.getHost(), tunnel.getPort());
-        hikariConfigBean.setConnectionString(getBasicConnectionString().getBasicConnectionUrl(info));
-      } else {
-        // complex connection string format, we don't support this right now with SSH tunneling
-        issues.add(getContext().createConfigIssue("JDBC",
-            "hikariConfigBean.connectionString",
-            hikariConfigBean.getNonBasicUrlErrorCode()
-        ));
-      }
+    validateTableJdbcConfigBean(context, issues);
 
-      PushSource.Context context = getContext();
-      issues = hikariConfigBean.validateConfigs(context, issues);
-      issues = commonSourceConfigBean.validateConfigs(context, issues);
-
-      validateTableJdbcConfigBean(context, issues);
-
-      if (issues.isEmpty()) {
-        checkConnectionAndBootstrap(context, issues);
-      }
+    if (issues.isEmpty()) {
+      checkConnectionAndBootstrap(context, issues);
     }
 
     return issues;
+  }
+
+  private SshTunnelService getSSHService() {
+    SshTunnelService declaredSshTunnelService;
+    try {
+      declaredSshTunnelService = getContext().getService(SshTunnelService.class);
+    } catch (RuntimeException e) {
+      declaredSshTunnelService = new DummySshService();
+    }
+    return declaredSshTunnelService;
   }
 
   protected void checkConnectionAndBootstrap(Stage.Context context, List<ConfigIssue> issues) {

@@ -25,8 +25,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
-import com.streamsets.pipeline.api.service.ServiceDependency;
-import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
@@ -47,8 +45,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     resetOffset = true,
     producesEvents = true,
     eventDefs = {NoMoreDataEvent.class},
-    onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs",
-    services = @ServiceDependency(service = SshTunnelService.class)
+    onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs"
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
@@ -59,7 +56,6 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 })
 public class JdbcDSource extends DSource {
 
-  private static final String PRIMARY_KEY_PLACEHOLDER = "<primaryKey>";
   private static final String SQL_QUERY_DEFAULT = "SELECT * FROM <table_name> WHERE <primaryKey> > ${OFFSET} ORDER BY" +
       " <primaryKey>";
 
@@ -110,7 +106,6 @@ public class JdbcDSource extends DSource {
       required = false,
       type = ConfigDef.Type.STRING,
       label = "Offset Column",
-      defaultValue = PRIMARY_KEY_PLACEHOLDER,
       description = "Column checked to track current offset.",
       displayPosition = 50,
       group = "JDBC"

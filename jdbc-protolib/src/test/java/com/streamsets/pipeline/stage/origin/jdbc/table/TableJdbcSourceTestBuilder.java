@@ -198,7 +198,7 @@ public class TableJdbcSourceTestBuilder {
   public TableJdbcSource build() {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
-    hikariPoolConfigBean.setConnectionString(connectionString);
+    hikariPoolConfigBean.connectionString = connectionString;
     hikariPoolConfigBean.username = () -> username;
     hikariPoolConfigBean.password = () -> password;
     hikariPoolConfigBean.driverClassName = driverClassName;

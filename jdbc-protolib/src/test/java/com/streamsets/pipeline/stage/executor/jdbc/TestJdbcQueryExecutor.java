@@ -181,7 +181,7 @@ public class TestJdbcQueryExecutor {
   JdbcQueryExecutorConfig createJdbcQueryExecutorConfig(){
     JdbcQueryExecutorConfig config = new JdbcQueryExecutorConfig();
     config.hikariConfigBean = new HikariPoolConfigBean();
-    config.getHikariConfigBean().setConnectionString(JDBC_CONNECTION);
+    config.getHikariConfigBean().connectionString = JDBC_CONNECTION;
     config.getHikariConfigBean().useCredentials = true;
     config.getHikariConfigBean().username = () -> JDBC_USER;
     config.getHikariConfigBean().password = () -> JDBC_PASSWD;

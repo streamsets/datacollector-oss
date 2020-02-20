@@ -181,7 +181,6 @@ public class TestJdbcSource {
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = Mockito.mock(HikariPoolConfigBean.class);
-    Mockito.when(bean.isConnectionSecured()).thenReturn(true);
     bean.connectionString = connectionString;
     bean.useCredentials = true;
     bean.username = () -> username;

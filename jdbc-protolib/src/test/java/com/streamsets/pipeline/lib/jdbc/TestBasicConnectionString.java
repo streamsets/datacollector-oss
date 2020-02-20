@@ -26,7 +26,7 @@ public class TestBasicConnectionString {
   private static BasicConnectionString basicConnectionString;
 
   @BeforeClass
-  public static void setUp(){
+  public static void setUp() {
     HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
     basicConnectionString = new BasicConnectionString(hikariPoolConfigBean.getPatterns(),
         hikariPoolConfigBean.getConnectionStringTemplate()
@@ -39,10 +39,6 @@ public class TestBasicConnectionString {
     BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
 
     Assert.assertNotNull(info);
-
-    Assert.assertEquals("somehost", info.getHost());
-    Assert.assertEquals(3306, info.getPort());
-    Assert.assertEquals("/default", info.getTail());
   }
 
   @Test
@@ -51,10 +47,6 @@ public class TestBasicConnectionString {
     BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
 
     Assert.assertNotNull(info);
-
-    Assert.assertEquals("somehost.domain", info.getHost());
-    Assert.assertEquals(3306, info.getPort());
-    Assert.assertEquals("/default", info.getTail());
   }
 
   @Test
@@ -63,10 +55,6 @@ public class TestBasicConnectionString {
     BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
 
     Assert.assertNotNull(info);
-
-    Assert.assertEquals("2001:0db8:85a3:0000:0000:8a2e:0370:7334", info.getHost());
-    Assert.assertEquals(3306, info.getPort());
-    Assert.assertEquals("/default", info.getTail());
   }
 
   @Test
@@ -75,9 +63,76 @@ public class TestBasicConnectionString {
     BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
 
     Assert.assertNotNull(info);
+  }
 
-    Assert.assertEquals("2001:db8:85a3::8a2e:370:7334", info.getHost());
-    Assert.assertEquals(3306, info.getPort());
-    Assert.assertEquals("/default", info.getTail());
+  @Test
+  public void patternVerification_postgreSQL() {
+    String url = "jdbc:postgresql://postgresql_8.0.cluster:5432/default";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_postgreSQL_IPV6() {
+    String url = "jdbc:postgresql://2001:0db8:85a3:0000:0000:8a2e:0370:7334:5432/default";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_sqlServer() {
+    String url = "jdbc:sqlserver://sqlserver_8.0.cluster:1433;DatabaseName=default";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_sqlServer_IPV6() {
+    String url = "jdbc:sqlserver://0:0:0:0:0:0:0:1:1433";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_mysql() {
+    String url = "jdbc:mysql://mysql_8.0.cluster:3306";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_mysql_database() {
+    String url = "jdbc:mysql://mysql_8.0.cluster:3306/default";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_oracle() {
+    String
+        url
+        = "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcps) (HOST=localhost) (PORT=2484)) (CONNECT_DATA= " +
+        "(SID=SDC)))";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
+  }
+
+  @Test
+  public void patternVerification_oracle_secured() {
+    String
+        url
+        = "jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=tcps) (HOST=localhost) (PORT=2484)) (CONNECT_DATA=" +
+        "(SID=SDC)) (SECURITY=(SSL_SERVER_CERT_DN=CN=stf-oracle-11.c9v0wdsbqa7e.us-west-2.rds.amazonaws.com,OU=RDS," +
+        "O=Amazon.com,L=Seattle,ST=Washington,C=US)))";
+    BasicConnectionString.Info info = basicConnectionString.getBasicConnectionInfo(url);
+
+    Assert.assertNotNull(info);
   }
 }

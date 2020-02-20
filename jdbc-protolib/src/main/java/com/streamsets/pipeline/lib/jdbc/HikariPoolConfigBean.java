@@ -44,8 +44,7 @@ import java.util.Set;
 public class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
 
-  private static final String GENERIC_CONNECTION_STRING_TEMPLATE = "jdbc:vendor://%s:%d%s";
-  private static final String PROTOCOL = "jdbc:vendor://";
+  private static final String GENERIC_CONNECTION_STRING_TEMPLATE = "://%s:%d%s";
 
   private static final String CONF_DRIVERS_LOAD = "com.streamsets.pipeline.stage.jdbc.drivers.load";
 
@@ -410,14 +409,7 @@ public class HikariPoolConfigBean {
     }
 
     // 2) Explicitly attempting to load known drivers if the service loading fails again
-    LOG.debug("Loading known JDBC drivers");
-    for(DatabaseVendor vendor: DatabaseVendor.values()) {
-      if(vendor.getDrivers() != null) {
-        for (String driver : vendor.getDrivers()) {
-          ensureJdbcDriverIfNeeded(loadedDrivers, driver);
-        }
-      }
-    }
+    loadVendorDriver(loadedDrivers);
 
     // 3) User can explicitly configure to auto-load given drivers
     LOG.debug("Loading explicitly configured drivers");
@@ -427,7 +419,18 @@ public class HikariPoolConfigBean {
     }
   }
 
-  private void ensureJdbcDriverIfNeeded(Set<String> loadedDrivers, String driver) {
+  protected void loadVendorDriver(Set<String> loadedDrivers) {
+    LOG.debug("Loading known JDBC drivers");
+    for(DatabaseVendor vendor: DatabaseVendor.values()) {
+      if(vendor.getDrivers() != null) {
+        for (String driver : vendor.getDrivers()) {
+          ensureJdbcDriverIfNeeded(loadedDrivers, driver);
+        }
+      }
+    }
+  }
+
+  protected void ensureJdbcDriverIfNeeded(Set<String> loadedDrivers, String driver) {
     try {
       Class klass = Class.forName(driver);
 
@@ -454,10 +457,6 @@ public class HikariPoolConfigBean {
     return connectionString;
   }
 
-  public boolean isConnectionSecured() {
-    return false;
-  }
-
   public DatabaseVendor getVendor() {
     if (connectionString.startsWith("jdbc:oracle:")) {
       return DatabaseVendor.ORACLE;
@@ -475,42 +474,16 @@ public class HikariPoolConfigBean {
   }
 
   public String getConnectionStringTemplate() {
-    return GENERIC_CONNECTION_STRING_TEMPLATE;
+    return getConnectionString().split("://")[0].concat(GENERIC_CONNECTION_STRING_TEMPLATE);
   }
 
   public Set<BasicConnectionString.Pattern> getPatterns() {
     List<BasicConnectionString.Pattern> listOfPatterns = new ArrayList<>();
 
-    for (String pattern : BasicConnectionString.getAllRegex()) {
-      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s):" + "(\\d+)(/.*)*", PROTOCOL, pattern),
-          1,
-          null,
-          5,
-          0,
-          6
-      ));
-      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s):(\\d+)*", PROTOCOL, pattern),
-          1,
-          null,
-          5,
-          0,
-          0
-      ));
-      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s)(/.*)*", PROTOCOL, pattern),
-          1,
-          null,
-          0,
-          3306,
-          5
-      ));
-      listOfPatterns.add(new BasicConnectionString.Pattern(String.format("%s(%s)*", PROTOCOL, pattern),
-          1,
-          null,
-          0,
-          3306,
-          0
-      ));
-    }
+    // As it is the generic JDBC we want to match any connection string
+
+    listOfPatterns.add(new BasicConnectionString.Pattern("((.)*)", 1, null, 0, 1, 0));
+
     return ImmutableSet.copyOf(listOfPatterns);
   }
 
@@ -535,6 +508,7 @@ public class HikariPoolConfigBean {
   }
 
   public void setConnectionString(String connectionString) {
-    this.connectionString = connectionString;
+    // Do nothing, in this case since we are using the generic JDBC we don't want to change the original connection
+    // string, be careful this method should not be used in test but must be used in any new change.
   }
 }
