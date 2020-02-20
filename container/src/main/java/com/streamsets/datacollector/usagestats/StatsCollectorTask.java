@@ -17,7 +17,6 @@ package com.streamsets.datacollector.usagestats;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -25,6 +24,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
@@ -44,12 +44,21 @@ import java.util.concurrent.TimeUnit;
 public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private static final Logger LOG = LoggerFactory.getLogger(StatsCollectorTask.class);
 
-  static final String ROLL_FREQUENCY_CONFIG = "stats.rollFrequency.days";
+  public static final String USAGE_BASE_URL = "usage.reporting.baseUrl";
+  public static final String USAGE_BASE_URL_DEFAULT = ""; //TODO set the default
 
-  private static final int ROLL_FREQUENCY_DEFAULT = 7;
-  private static final int REPORT_STATS_FAILED_COUNT_LIMIT = 5;
-  private static final int REPORT_PERIOD = 60;
-  private static final int EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT = 3;
+  public static final String USAGE_PATH = "usage.reporting.path";
+  public static final String USAGE_PATH_DEFAULT = "/public-rest/v4/usage/datacollector3";
+
+  static final String ROLL_FREQUENCY_CONFIG = "stats.rollFrequency.hours";
+  private static final int ROLL_FREQUENCY_DEFAULT = 1;
+
+  private static final int REPORT_STATS_FAILED_COUNT_LIMIT = 31;
+
+  // How often we report stats intervals, every 24 hrs
+  private static final int REPORT_PERIOD_SECS = 60 * 60 * 24;
+
+  private static final int EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT = 30;
 
   static final String OPT_FILE = "opt-stats.json";
 
@@ -60,9 +69,9 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
+  private final Configuration config;
   private final long rollFrequencyMillis;
   private final SafeScheduledExecutorService executorService;
-  private final SupportBundleManager bundleManager;
   private final File optFile;
   private final File statsFile;
   private boolean opted;
@@ -77,15 +86,14 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      SafeScheduledExecutorService executorService,
-      SupportBundleManager bundleManager
+      SafeScheduledExecutorService executorService
   ) {
     super("StatsCollector");
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
-    rollFrequencyMillis = TimeUnit.DAYS.toMillis(config.get(ROLL_FREQUENCY_CONFIG, ROLL_FREQUENCY_DEFAULT));
+    this.config = config;
+    rollFrequencyMillis = TimeUnit.HOURS.toMillis(config.get(ROLL_FREQUENCY_CONFIG, ROLL_FREQUENCY_DEFAULT));
     this.executorService = executorService;
-    this.bundleManager = bundleManager;
     optFile = new File(runtimeInfo.getDataDir(), OPT_FILE);
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
     reportStatsFailedCount = 0;
@@ -100,11 +108,6 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   @VisibleForTesting
   protected RuntimeInfo getRuntimeInfo() {
     return runtimeInfo;
-  }
-
-  @VisibleForTesting
-  protected SupportBundleManager getBundleManager() {
-    return bundleManager;
   }
 
   @VisibleForTesting
@@ -220,15 +223,9 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       LOG.info("Stats Collection, opted '{}, active '{}'", opted, active);
     }
     // when disabled all persistency/reporting done by the Runnable is a No Op.
-    /*
-     * Disable stats collection thread from being run for now,
-     * since this is closely tied with support bundle upload feature - which is removed - refer SDC-13110
-     * This will be reworked in a future release
-     *
-     * getStatsInfo().startSystem();
-     * getRunnable().run();
-     * future = executorService.scheduleAtFixedRate(getRunnable(), REPORT_PERIOD, REPORT_PERIOD, TimeUnit.SECONDS);
-     */
+    getStatsInfo().startSystem();
+    getRunnable().run();
+    future = executorService.scheduleAtFixedRate(getRunnable(), 60, REPORT_PERIOD_SECS, TimeUnit.SECONDS);
   }
 
   Runnable getRunnable() {
@@ -256,8 +253,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
                 future.cancel(false);
                 future = executorService.scheduleAtFixedRate(
                     getRunnable(),
-                    REPORT_PERIOD,
-                    REPORT_PERIOD,
+                    REPORT_PERIOD_SECS,
+                    REPORT_PERIOD_SECS,
                     TimeUnit.SECONDS
                 );
                 setActive(false);
@@ -268,7 +265,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
                 future = executorService.scheduleAtFixedRate(
                     getRunnable(),
                     delay * 60 * 60 * 24,
-                    REPORT_PERIOD,
+                    REPORT_PERIOD_SECS,
                     TimeUnit.SECONDS
                 );
               }
@@ -281,17 +278,27 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   }
 
   protected boolean reportStats(List<StatsBean> stats) {
-//    try {
-//      getBundleManager().uploadNewBundleFromInstances(
-//        Collections.singletonList(new StatsGenerator(stats)),
-//        BundleType.STATS
-//      );
-//      return true;
-//    } catch (IOException ex) {
-//      LOG.warn("Reporting failed. Error: {}", ex.getMessage(), ex);
-//      return false;
-//    }
-    return false;
+    boolean reported = false;
+    String baseUrlReporting = config.get(USAGE_BASE_URL, USAGE_BASE_URL_DEFAULT);
+    if (baseUrlReporting.isEmpty()) {
+      LOG.debug("Reporting disabled");
+      reported = true;
+    } else {
+      try {
+        String pathReporting = config.get(USAGE_PATH, USAGE_PATH_DEFAULT);
+        RestClient client = RestClient.builder(baseUrlReporting)
+            .json(true)
+            .path(pathReporting)
+            .name(getRuntimeInfo().getId())
+            .build();
+        RestClient.Response response = client.post(stats);
+        reported = response.successful();
+        LOG.debug("Usage reporting HTTP status '{}'", response.getStatus());
+      } catch (Exception ex) {
+        LOG.warn("Usage reporting failed. Error: {}", ex.getMessage(), ex);
+      }
+    }
+    return reported;
   }
 
   protected void saveStats() {
@@ -313,11 +320,11 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   @Override
   protected void stopTask() {
-//    if (getFuture() != null) {
-//      getFuture().cancel(false);
-//    }
-//    getStatsInfo().stopSystem();
-//    getRunnable().run();
+    if (getFuture() != null) {
+      getFuture().cancel(false);
+    }
+    getStatsInfo().stopSystem();
+    getRunnable().run();
     super.stopTask();
   }
 

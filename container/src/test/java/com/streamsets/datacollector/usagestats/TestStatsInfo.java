@@ -233,7 +233,7 @@ public class TestStatsInfo {
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();
     List<StatsBean> collected = new ArrayList<>();
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < StatsInfo.INTERVALS_TO_KEEP; i++) {
       collected.add(new StatsBean());
     }
     si.setCollectedStats(collected);
@@ -241,7 +241,7 @@ public class TestStatsInfo {
     List<StatsBean> got = si.getCollectedStats();
 
     collected.remove(0);
-    got.remove(9);
+    got.remove(StatsInfo.INTERVALS_TO_KEEP - 1);
     Assert.assertEquals(collected, got);
   }
 

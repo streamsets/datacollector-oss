@@ -20,6 +20,7 @@ import java.util.Map;
 
 // stats bean that is send back to StreamSets.
 public class StatsBean {
+  private String sdcId;
   private String version;
   private String dataCollectorVersion;
   private boolean dpmEnabled;
@@ -36,8 +37,9 @@ public class StatsBean {
     stageMilliseconds = new HashMap<>();
   }
 
-  public StatsBean(ActiveStats activeStats) {
+  public StatsBean(String sdcId, ActiveStats activeStats) {
     this();
+    setSdcId(sdcId);
     setVersion(activeStats.getVersion());
     setDataCollectorVersion(activeStats.getDataCollectorVersion());
     setDpmEnabled(activeStats.isDpmEnabled());
@@ -59,6 +61,15 @@ public class StatsBean {
       setRecordsOM(-1); // no records
     }
     setErrorCodes(new HashMap<>(activeStats.getErrorCodes()));
+  }
+
+  public String getSdcId() {
+    return sdcId;
+  }
+
+  public StatsBean setSdcId(String sdcId) {
+    this.sdcId = sdcId;
+    return this;
   }
 
   public String getVersion() {
