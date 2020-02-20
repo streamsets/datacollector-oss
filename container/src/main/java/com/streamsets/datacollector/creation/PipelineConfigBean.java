@@ -58,6 +58,7 @@ import java.util.Map;
     version = PipelineConfigBean.VERSION,
     label = "Pipeline",
     upgrader = PipelineConfigUpgrader.class,
+    upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
 )
 @ConfigGroups(PipelineGroups.class)
