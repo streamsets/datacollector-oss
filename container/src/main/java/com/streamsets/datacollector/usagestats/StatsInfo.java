@@ -30,6 +30,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class StatsInfo {
+  // How many StatsBean intervals are kept, assuming 1hr intervals, 30 days worth of.
+  public static final int INTERVALS_TO_KEEP = 24 * 7 * 30;
   private final ReadWriteLock rwLock;
   private volatile ActiveStats activeStats;
   private List<StatsBean> collectedStats;
@@ -120,8 +122,8 @@ public class StatsInfo {
           setActiveStats(currentActiveStats.roll());
           // setting the end time of the stats we are storing for collection
           currentActiveStats.setEndTime(getActiveStats().getStartTime());
-          getCollectedStats().add(new StatsBean(currentActiveStats));
-          if (getCollectedStats().size() > 10) {
+          getCollectedStats().add(new StatsBean(runtimeInfo.getId(), currentActiveStats));
+          if (getCollectedStats().size() > INTERVALS_TO_KEEP) {
             getCollectedStats().remove(0);
           }
           if (sysChange) {

@@ -39,8 +39,9 @@ public class TestStatsBean {
         new UsageTimer().setName("s2").setAccumulatedTime(2)
     ));
 
-    StatsBean sb = new StatsBean(as);
+    StatsBean sb = new StatsBean("sdcid", as);
 
+    Assert.assertEquals("sdcid", sb.getSdcId());
     Assert.assertEquals("version", sb.getDataCollectorVersion());
     Assert.assertEquals(true, sb.isDpmEnabled());
     Assert.assertEquals(1, sb.getUpTime());

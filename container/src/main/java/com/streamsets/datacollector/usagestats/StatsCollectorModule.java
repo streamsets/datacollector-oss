@@ -42,7 +42,7 @@ public class StatsCollectorModule {
       @Named("runnerExecutor") SafeScheduledExecutorService executorService,
       SupportBundleManager bundleManager
   ) {
-    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, bundleManager);
+    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService);
   }
 
 }
