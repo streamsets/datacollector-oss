@@ -20,6 +20,7 @@ import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
@@ -30,11 +31,11 @@ import java.util.List;
  * This proxy is used to the corresponding credential store when the authorization has to be check (on user pipeline
  * start).
  */
-public class GroupEnforcerCredentialStore implements CredentialStore {
+public class GroupEnforcerCredentialStore<T extends CredentialStore> implements ManagedCredentialStore {
   private String storeId;
-  private final CredentialStore store;
+  private final T store;
 
-  public GroupEnforcerCredentialStore(CredentialStore store) {
+  public GroupEnforcerCredentialStore(T store) {
     Utils.checkNotNull(store, "credentialStore");
     this.store = store;
   }
@@ -53,6 +54,26 @@ public class GroupEnforcerCredentialStore implements CredentialStore {
       throw new StageException(Errors.CREDENTIAL_STORE_001, storeId, group, name);
     }
     return store.get(group, name, credentialStoreOptions);
+  }
+
+  @Override
+  public void store(List<String> groups, String name, String credentialValue) throws StageException {
+    CredentialStoresTask.checkManagedState(store);
+    Preconditions.checkNotNull(name, "name cannot be NULL");
+    ((ManagedCredentialStore)store).store(groups, name, credentialValue);
+  }
+
+  @Override
+  public void delete(String name) throws StageException {
+    CredentialStoresTask.checkManagedState(store);
+    Preconditions.checkNotNull(name, "name cannot be NULL");
+    ((ManagedCredentialStore)store).delete(name);
+  }
+
+  @Override
+  public List<String> getNames() throws StageException {
+    CredentialStoresTask.checkManagedState(store);
+    return ((ManagedCredentialStore)store).getNames();
   }
 
   @Override

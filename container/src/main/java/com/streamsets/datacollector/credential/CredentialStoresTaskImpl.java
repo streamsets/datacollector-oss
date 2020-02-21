@@ -16,12 +16,14 @@
 package com.streamsets.datacollector.credential;
 
 import com.google.common.base.Splitter;
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
@@ -37,6 +39,8 @@ import java.util.Map;
 public class CredentialStoresTaskImpl extends AbstractTask implements CredentialStoresTask {
   private static final Logger LOG = LoggerFactory.getLogger(CredentialStoresTaskImpl.class);
   static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
+  static final String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG = "auto.managed.default.credentialStores";
+  static final String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG_DEFAULT = "false";
 
   private final Configuration configuration;
   protected final StageLibraryTask stageLibraryTask;
@@ -59,10 +63,23 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
   }
 
   @Override
+  public ManagedCredentialStore getDefaultManagedCredentialStore() {
+    String defaultCredentialStore =
+        configuration.get(MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, null);
+    if (!Strings.isNullOrEmpty(defaultCredentialStore)) {
+      return stores.entrySet().stream()
+          .filter(s -> s.getKey().equals(defaultCredentialStore))
+          .map(s -> (ManagedCredentialStore) s.getValue())
+          .findFirst()
+          .orElse(null);
+    }
+    return null;
+  }
+
+  @Override
   public List<CredentialStoreDefinition> getConfiguredStoreDefinititions() {
     return Collections.unmodifiableList(credentialStoreDefinitions);
   }
-
 
   @Override
   protected void initTask() {
@@ -87,6 +104,21 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
           "Vault EL functions are deprecated. CredentialStore '{}' registered as vault EL functions implementation",
           vaultELcredentialStoreId
       );
+    }
+
+    String defaultCredentialStore = configuration.get(MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, null);
+    if (!Strings.isNullOrEmpty(defaultCredentialStore)) {
+      boolean doesManagedCredentialStorePresent = getStores().containsKey(defaultCredentialStore);
+      if (!doesManagedCredentialStorePresent) {
+        LOG.error(
+            "Default Managed Credential Store {} not present in the list of Credential Stores defined",
+            defaultCredentialStore
+        );
+        throw new RuntimeException(Utils.format(
+            "Default Managed Credential Store {} not present in the list of Credential Stores defined",
+            defaultCredentialStore
+        ));
+      }
     }
   }
 
@@ -144,8 +176,8 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
 
       try {
         CredentialStore store = storeDef.getStoreClass().newInstance();
-        store = new GroupEnforcerCredentialStore(store);
-        store = new ClassloaderInContextCredentialStore(storeDef, store);
+        store = new GroupEnforcerCredentialStore<>(store);
+        store = new ClassloaderInContextCredentialStore<>(storeDef, store);
         issues.addAll(store.init(context));
         getStores().put(storeId, store);
         credentialStoreDefinitions.add(storeDef);
@@ -187,6 +219,6 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
         return storeConfig.get("credentialStore." + storeId + ".config." + configName, null);
       }
     };
- }
+  }
 
 }

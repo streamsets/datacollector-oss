@@ -20,11 +20,13 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -34,7 +36,7 @@ import java.util.List;
 public class TestClassloaderInContextCredentialStore {
 
   public static class MyCredentialStore implements CredentialStore {
-    private final ClassLoader expectedClassLoader;
+    final ClassLoader expectedClassLoader;
 
     public MyCredentialStore(ClassLoader expectedClassLoader) {
       this.expectedClassLoader = expectedClassLoader;
@@ -49,7 +51,35 @@ public class TestClassloaderInContextCredentialStore {
     @Override
     public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
       Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
-     return () -> "credential";
+      return () -> "credential";
+    }
+
+    @Override
+    public void destroy() {
+      Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
+    }
+  }
+
+  public static class MyManagedCredentialStore extends MyCredentialStore implements ManagedCredentialStore {
+
+    public MyManagedCredentialStore(ClassLoader expectedClassLoader) {
+      super(expectedClassLoader);
+    }
+
+    @Override
+    public void store(List<String> groups, String name, String credentialValue) throws StageException {
+      Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
+    }
+
+    @Override
+    public void delete(String name) throws StageException {
+      Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
+    }
+
+    @Override
+    public List<String> getNames() throws StageException {
+      Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
+      return ImmutableList.of("credential");
     }
 
     @Override
@@ -82,7 +112,7 @@ public class TestClassloaderInContextCredentialStore {
     CredentialStore store = new MyCredentialStore(cl);
     store = Mockito.spy(store);
 
-    CredentialStore proxyStore = new ClassloaderInContextCredentialStore(storeDef, store);
+    ClassloaderInContextCredentialStore proxyStore = new ClassloaderInContextCredentialStore<>(storeDef, store);
 
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Assert.assertEquals(Collections.emptyList(), proxyStore.init(context));
@@ -91,6 +121,65 @@ public class TestClassloaderInContextCredentialStore {
 
     Assert.assertEquals("credential", proxyStore.get("group", "name", "options").get());
     Mockito.verify(store, Mockito.times(1)).get(Mockito.eq("group"), Mockito.eq("name"), Mockito.eq("options"));
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+
+    try {
+      proxyStore.store(CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, "name", "value");
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+
+    try {
+      proxyStore.delete("name");
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+
+    try {
+      proxyStore.getNames();
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+
+    proxyStore.destroy();
+    Mockito.verify(store, Mockito.times(1)).destroy();
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+  }
+
+  @Test
+  public void testManagedStore() throws StageException {
+    ClassLoader cl = new URLClassLoader(new URL[0], currentClassLoader);
+
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getClassLoader()).thenReturn(cl);
+    CredentialStoreDefinition storeDef = Mockito.mock(CredentialStoreDefinition.class);
+    Mockito.when(storeDef.getStageLibraryDefinition()).thenReturn(libraryDef);
+
+    CredentialStore store = new MyManagedCredentialStore(cl);
+    store = Mockito.spy(store);
+
+    ManagedCredentialStore proxyStore = new ClassloaderInContextCredentialStore<>(storeDef, store);
+
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Assert.assertEquals(Collections.emptyList(), proxyStore.init(context));
+    Mockito.verify(store, Mockito.times(1)).init(Mockito.eq(context));
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+
+    Assert.assertEquals("credential", proxyStore.get("group", "name", "options").get());
+    Mockito.verify(store, Mockito.times(1)).get(Mockito.eq("group"), Mockito.eq("name"), Mockito.eq("options"));
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+
+
+    proxyStore.store(CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, "name", "value");
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+
+    proxyStore.delete("name");
+    Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
+
+    proxyStore.getNames();
     Assert.assertEquals(currentClassLoader, Thread.currentThread().getContextClassLoader());
 
     proxyStore.destroy();

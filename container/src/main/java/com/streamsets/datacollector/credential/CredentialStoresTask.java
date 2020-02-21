@@ -17,13 +17,20 @@ package com.streamsets.datacollector.credential;
 
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
+import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A credential store task is a task supposed to load credential stores configured in datacollector
  */
 public interface CredentialStoresTask extends Task {
+  String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
+  String DEFAULT_SDC_GROUP = "all";
+  List<String> DEFAULT_SDC_GROUP_AS_LIST = Collections.singletonList(DEFAULT_SDC_GROUP);
 
   /**
    * Get a list of configured store definitions
@@ -31,4 +38,16 @@ public interface CredentialStoresTask extends Task {
    */
   List<CredentialStoreDefinition> getConfiguredStoreDefinititions();
 
+  /**
+   * Get default managed credential store
+   */
+  ManagedCredentialStore getDefaultManagedCredentialStore();
+
+  /**
+   * Check whether the credential store class is
+   * @param credentialStore a credential store implementation
+   */
+  static <T extends CredentialStore> void checkManagedState(T credentialStore) {
+    Utils.checkState(ManagedCredentialStore.class.isAssignableFrom(credentialStore.getClass()), "Not a managed credential store");
+  }
 }

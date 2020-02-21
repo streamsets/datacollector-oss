@@ -20,6 +20,7 @@ import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -29,7 +30,7 @@ public class TestGroupEnforcerCredentialStore {
   @Test(expected = RuntimeException.class)
   public void testNoContext() throws StageException {
     CredentialStore store = Mockito.mock(CredentialStore.class);
-    store = new GroupEnforcerCredentialStore(store);
+    store = new GroupEnforcerCredentialStore<>(store);
     store.get("g", "n", "o");
   }
 
@@ -45,7 +46,7 @@ public class TestGroupEnforcerCredentialStore {
   public void testNotEnforced() throws Exception {
     CredentialStore store = Mockito.mock(CredentialStore.class);
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
-    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
+    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore<>(store);
 
     CredentialValue value = GroupsInScope.executeIgnoreGroups(() -> enforcerStore.get("g", "n", "o"));
     Assert.assertEquals(CREDENTIAL_VALUE, value);
@@ -55,7 +56,7 @@ public class TestGroupEnforcerCredentialStore {
   public void testEnforcedOk() throws Exception {
     CredentialStore store = Mockito.mock(CredentialStore.class);
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
-    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
+    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore<>(store);
 
     CredentialValue value = GroupsInScope.execute(ImmutableSet.of("g"), () -> enforcerStore.get("g", "n", "o"));
     Assert.assertEquals(CREDENTIAL_VALUE, value);
@@ -65,9 +66,35 @@ public class TestGroupEnforcerCredentialStore {
   public void testEnforcedFail() throws Throwable {
     CredentialStore store = Mockito.mock(CredentialStore.class);
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
-    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore(store);
+    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore<>(store);
 
     GroupsInScope.execute(ImmutableSet.of("h"), () -> enforcerStore.get("g", "n", "o"));
   }
 
+  @Test
+  public void testNotManagedStore() {
+    CredentialStore store = Mockito.mock(CredentialStore.class);
+    Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
+    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore<>(store);
+    try {
+      enforcerStore.store(CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, "n", "v");
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+
+    try {
+      enforcerStore.delete("n");
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+
+    try {
+      enforcerStore.getNames();
+      Assert.fail();
+    } catch (Exception e) {
+      Assert.assertTrue(e instanceof IllegalStateException);
+    }
+  }
 }

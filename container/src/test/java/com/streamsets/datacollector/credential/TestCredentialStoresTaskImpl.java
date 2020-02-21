@@ -26,10 +26,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -61,6 +63,27 @@ public class TestCredentialStoresTaskImpl {
     @Override
     public void destroy() {
 
+    }
+  }
+
+  @CredentialStoreDef(label = "label", description = "desc")
+  public static class MyManagedCredentialStore extends MyCredentialStore implements ManagedCredentialStore {
+
+    @Override
+    public void store(List<String> groups, String name, String credentialValue) throws StageException {
+    }
+
+    @Override
+    public void delete(String name) throws StageException {
+    }
+
+    @Override
+    public List<String> getNames() throws StageException {
+      return null;
+    }
+
+    @Override
+    public void destroy() {
     }
   }
 
@@ -171,6 +194,55 @@ public class TestCredentialStoresTaskImpl {
     CredentialStore store = DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY);
     Assert.assertNotNull(store);
     storeTask.stopTask();
+  }
+
+  @Test
+  public void testManagedCredentialStoreConfigured() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getName()).thenReturn("lib");
+    CredentialStoreDefinition storeDef =
+        CredentialStoreDefinitionExtractor.get().extract(libraryDef, MyManagedCredentialStore.class);
+
+    Configuration conf = new Configuration();
+    conf.set(CredentialStoresTaskImpl.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, "id");
+    conf.set("credentialStores", "id");
+    conf.set("credentialStore.id.def", libraryDef.getName() + "::" + storeDef.getName());
+    conf.set("credentialStore.id.config.foo", "bar");
+    StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+
+    storeTask.initTask();
+
+    CredentialStore store = storeTask.getStores().get("id");
+    Assert.assertEquals(1, storeTask.getConfiguredStoreDefinititions().size());
+    Assert.assertTrue(store instanceof ClassloaderInContextCredentialStore);
+    Assert.assertTrue(Whitebox.getInternalState(store,"store") instanceof ManagedCredentialStore);
+    storeTask.stopTask();
+  }
+
+  @Test
+  public void testManagedCredentialStoreConfiguredButNotPresent() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getName()).thenReturn("lib");
+    CredentialStoreDefinition storeDef =
+        CredentialStoreDefinitionExtractor.get().extract(libraryDef, MyManagedCredentialStore.class);
+
+    Configuration conf = new Configuration();
+    conf.set(CredentialStoresTaskImpl.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, CredentialStoresTaskImpl.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG_DEFAULT);
+    conf.set("credentialStores", "id");
+    conf.set("credentialStore.id.def", libraryDef.getName() + "::" + storeDef.getName());
+    conf.set("credentialStore.id.config.foo", "bar");
+    StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+
+    try {
+      storeTask.initTask();
+      Assert.fail();
+    } catch (Exception e) {
+      //Expected
+    }
   }
 
 }
