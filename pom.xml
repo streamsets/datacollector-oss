@@ -112,6 +112,7 @@
     <kinesis-lib>kinesis-lib</kinesis-lib>
     <mleap-lib>mleap-lib</mleap-lib>
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
+    <mysql-lib>mysql-lib</mysql-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <orchestrator-lib>orchestrator-lib</orchestrator-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
@@ -291,6 +292,7 @@
     <module>kinesis-lib</module>
     <module>mleap-lib</module>
     <module>mysql-binlog-lib</module>
+    <module>mysql-lib</module>
     <module>omniture-lib</module>
     <module>orchestrator-lib</module>
     <module>rabbitmq-lib</module>
