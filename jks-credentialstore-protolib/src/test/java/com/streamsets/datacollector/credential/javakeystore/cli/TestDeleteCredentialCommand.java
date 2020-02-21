@@ -29,7 +29,7 @@ public class TestDeleteCredentialCommand {
     command.name = "name";
 
     command.execute(store);
-    Mockito.verify(store, Mockito.times(1)).deleteCredential(Mockito.eq("name"));
+    Mockito.verify(store, Mockito.times(1)).delete(Mockito.eq("name"));
     Mockito.verifyNoMoreInteractions(store);
   }
 

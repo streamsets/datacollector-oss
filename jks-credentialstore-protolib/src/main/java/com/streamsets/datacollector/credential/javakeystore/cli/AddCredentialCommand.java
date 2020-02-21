@@ -38,7 +38,7 @@ public class AddCredentialCommand extends AbstractCommand {
 
   @Override
   protected void execute(JavaKeyStoreCredentialStore store) {
-    store.storeCredential(name, credential);
+    store.store(JavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP_AS_LIST, name, credential);
   }
 
 }

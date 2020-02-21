@@ -21,7 +21,6 @@ import org.mockito.Mockito;
 
 public class TestAddCredentialCommand {
 
-
   @Test
   public void testExecute() {
     JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
@@ -30,7 +29,10 @@ public class TestAddCredentialCommand {
     command.credential = "credential";
 
     command.execute(store);
-    Mockito.verify(store, Mockito.times(1)).storeCredential(Mockito.eq("name"), Mockito.eq("credential"));
+    Mockito.verify(
+        store,
+        Mockito.times(1)
+    ).store(Mockito.anyListOf(String.class), Mockito.eq("name"), Mockito.eq("credential"));
     Mockito.verifyNoMoreInteractions(store);
   }
 

@@ -28,7 +28,7 @@ public class TestListCredentialsCommand {
     ListCredentialsCommand command = new ListCredentialsCommand();
 
     command.execute(store);
-    Mockito.verify(store,Mockito.times(1)).getAliases();
+    Mockito.verify(store,Mockito.times(1)).getNames();
     Mockito.verifyNoMoreInteractions(store);
   }
 

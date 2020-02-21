@@ -19,9 +19,9 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.lib.security.SshUtils;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.output.CloseShieldOutputStream;
 import org.slf4j.Logger;
@@ -36,6 +36,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
@@ -65,7 +66,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * via its ID in the configuration.
  */
 @CredentialStoreDef(label = "Java KeyStore")
-public class JavaKeyStoreCredentialStore implements CredentialStore {
+public class JavaKeyStoreCredentialStore implements ManagedCredentialStore {
   private static final Logger LOG = LoggerFactory.getLogger(JavaKeyStoreCredentialStore.class);
   private static final Set<String> VALID_KEYSTORE_TYPES = new HashSet<>();
 
@@ -74,6 +75,10 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
   static final String KEYSTORE_PASSWORD_KEY = "keystore.storePassword"; // NOSONAR
 
   static final String SSH_PRIVATE_KEY_SECRET = "sdc/defaultPrivateKey";
+  public static final String DEFAULT_SDC_GROUP = "all";
+  public static final List<String> DEFAULT_SDC_GROUP_AS_LIST = Collections.singletonList(DEFAULT_SDC_GROUP);
+
+
   static final String SSH_PRIVATE_KEY_PASSWORD_SECRET = "sdc/defaultPrivateKeyPassword";
   static final String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
 
@@ -207,37 +212,28 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
     return System.currentTimeMillis();
   }
 
-  public void storeCredential(String name, String credential) {
+  @Override
+  public void store(List<String> groups, String name, String credentialValue) throws StageException {
     Utils.checkNotNull(name, "name cannot be NULL");
-    Utils.checkNotNull(credential, "credential cannot be NULL");
+    Utils.checkNotNull(credentialValue, "credential cannot be NULL");
     try {
       // the keystore does not check the length of the KEY whe adding a AES key,
       // so we just put the credential as AES key payload.
-      SecretKey secret = new SecretKeySpec(credential.getBytes(StandardCharsets.UTF_8), "AES");
+      SecretKey secret = new SecretKeySpec(credentialValue.getBytes(StandardCharsets.UTF_8), "AES");
       manager.addOrUpdateEntry(name, secret);
     } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
 
-  public void deleteCredential(String name) {
+  @Override
+  public void delete(String name) throws StageException {
     Utils.checkNotNull(name, "name cannot be NULL");
     manager.deleteEntry(name);
   }
 
-  public void generateDefaultSshKeyInfo() {
-    SshUtils.SshKeyInfoBean bean = createSshKeyInfo();
-    storeCredential(SSH_PRIVATE_KEY_SECRET, bean.getPrivateKey());
-    storeCredential(SSH_PRIVATE_KEY_PASSWORD_SECRET, bean.getPassword());
-    storeCredential(SSH_PUBLIC_KEY_SECRET, bean.getPublicKey());
-  }
-
-  @VisibleForTesting
-  SshUtils.SshKeyInfoBean createSshKeyInfo() {
-    return SshUtils.createSshKeyInfoBean(4096, "Default SDC SSH key info");
-  }
-
-  public List<String> getAliases() {
+  @Override
+  public List<String> getNames() throws StageException {
     List<String> aliases = new ArrayList<>();
     try {
       KeyStore keyStore = manager.getKeyStore();
@@ -251,6 +247,19 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
       throw new RuntimeException(ex);
     }
     return aliases;
+  }
+
+
+  public void generateDefaultSshKeyInfo() {
+    SshUtils.SshKeyInfoBean bean = createSshKeyInfo();
+    store(Collections.singletonList(DEFAULT_SDC_GROUP), SSH_PRIVATE_KEY_SECRET, bean.getPrivateKey());
+    store(Collections.singletonList(DEFAULT_SDC_GROUP), SSH_PRIVATE_KEY_PASSWORD_SECRET, bean.getPassword());
+    store(Collections.singletonList(DEFAULT_SDC_GROUP), SSH_PUBLIC_KEY_SECRET, bean.getPublicKey());
+  }
+
+  @VisibleForTesting
+  SshUtils.SshKeyInfoBean createSshKeyInfo() {
+    return SshUtils.createSshKeyInfoBean(4096, "Default SDC SSH key info");
   }
 
 

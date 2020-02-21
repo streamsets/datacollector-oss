@@ -25,7 +25,7 @@ public class ListCredentialsCommand extends AbstractCommand {
   protected void execute(JavaKeyStoreCredentialStore store) {
     System.out.printf("The Java KeyStore '%s' has the following credentials\n", storeId);
     System.out.printf("---------------------------------------------------------------\n");
-    for (String alias : store.getAliases()) {
+    for (String alias : store.getNames()) {
       System.out.printf(" %s\n", alias);
     }
     System.out.printf("---------------------------------------------------------------\n");

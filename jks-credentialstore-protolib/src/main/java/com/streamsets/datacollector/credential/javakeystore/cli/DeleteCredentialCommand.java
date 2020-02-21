@@ -31,7 +31,7 @@ public class DeleteCredentialCommand extends AbstractCommand {
 
   @Override
   protected void execute(JavaKeyStoreCredentialStore store) {
-    store.deleteCredential(name);
+    store.delete(name);
   }
 
 }

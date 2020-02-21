@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.security.KeyStore;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -176,12 +177,12 @@ public class TestJavaKeyStoreCredentialStore {
       //Expected
     }
 
-    Assert.assertTrue(store.getAliases().isEmpty());
-    store.storeCredential("name", "password");
+    Assert.assertTrue(store.getNames().isEmpty());
+    store.store(JavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP_AS_LIST, "name", "password");
     Assert.assertEquals("password", store.get("group", "name", "").get());
-    Assert.assertEquals(1, store.getAliases().size());
-    Assert.assertEquals("name", store.getAliases().get(0));
-    store.deleteCredential("name");
+    Assert.assertEquals(1, store.getNames().size());
+    Assert.assertEquals("name", store.getNames().get(0));
+    store.delete("name");
 
     try {
       store.get("group", "name", "");
@@ -189,7 +190,7 @@ public class TestJavaKeyStoreCredentialStore {
     } catch (StageException ex) {
     }
 
-    Assert.assertTrue(store.getAliases().isEmpty());
+    Assert.assertTrue(store.getNames().isEmpty());
   }
 
   @Test
@@ -261,13 +262,13 @@ public class TestJavaKeyStoreCredentialStore {
     sshKeyInfo.setPublicKey("pub");
     Mockito.doReturn(sshKeyInfo).when(store).createSshKeyInfo();
 
-    Mockito.doNothing().when(store).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
-    Mockito.doNothing().when(store).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
-    Mockito.doNothing().when(store).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
+    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
+    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
+    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
     store.generateDefaultSshKeyInfo();
-    Mockito.verify(store, Mockito.times(1)).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
-    Mockito.verify(store, Mockito.times(1)).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
-    Mockito.verify(store, Mockito.times(1)).storeCredential(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
+    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
+    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
+    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
 
   }
 
