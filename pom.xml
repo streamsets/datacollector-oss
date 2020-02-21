@@ -118,6 +118,7 @@
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
+    <sqlserver-lib>sqlserver-lib</sqlserver-lib>
     <stats-lib>stats-lib</stats-lib>
     <tensorflow-lib>tensorflow-lib</tensorflow-lib>
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
@@ -298,6 +299,7 @@
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
+    <module>sqlserver-lib</module>
     <module>stats-lib</module>
     <module>tensorflow-lib</module>
     <module>vault-credentialstore-lib</module>
