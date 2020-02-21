@@ -454,6 +454,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     }
     if (next != null) {
       LOG.error("Error while attempting to parse file: " + next.getFilePath(), ex);
+      getContext().reportError(ex);
     }
     if (ex instanceof FileNotFoundException) {
       LOG.warn("File: {} was found in listing, but is not downloadable", next != null ? next.getFilePath() : "(null)", ex);
