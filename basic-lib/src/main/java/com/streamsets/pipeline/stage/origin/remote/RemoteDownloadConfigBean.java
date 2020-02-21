@@ -118,6 +118,17 @@ public class RemoteDownloadConfigBean {
   public String initialFileToProcess;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "0",
+      label = "File Processing Delay",
+      description = "Milliseconds to wait before a new file is processed",
+      displayPosition = 60,
+      group = "REMOTE"
+  )
+  public long processingDelay;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "NONE",

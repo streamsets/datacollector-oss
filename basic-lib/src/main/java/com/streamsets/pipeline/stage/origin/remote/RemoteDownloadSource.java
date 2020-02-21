@@ -87,7 +87,6 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   static final String CONTENT_TYPE = "contentType";
   static final String CONTENT_ENCODING = "contentEncoding";
 
-
   private final RemoteDownloadConfigBean conf;
   private final File errorArchive;
   private final byte[] moveBuffer;
@@ -97,13 +96,15 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   private ELVars rateLimitElVars;
   private String archiveDir;
 
-  //By default true so, between pipeline restarts we can always trigger event.
+  // By default true so, between pipeline restarts we can always trigger event.
   private boolean canTriggerNoMoreDataEvent = true;
   private long noMoreDataRecordCount = 0;
   private long noMoreDataErrorCount = 0;
   private long noMoreDataFileCount = 0;
   private long perFileRecordCount = 0;
   private long perFileErrorCount = 0;
+
+  private final FileDelayer fileDelayer;
 
   private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
     @Override
@@ -127,8 +128,9 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   private FileFilter fileFilter;
   private RemoteDownloadSourceDelegate delegate;
 
-  public RemoteDownloadSource(RemoteDownloadConfigBean conf) {
+  public RemoteDownloadSource(RemoteDownloadConfigBean conf, FileDelayer fileDelayer) {
     this.conf = conf;
+    this.fileDelayer = fileDelayer;
     if (conf.errorArchiveDir != null && !conf.errorArchiveDir.isEmpty()) {
       this.errorArchive = new File(conf.errorArchiveDir);
       this.moveBuffer = new byte[64 * 1024];
@@ -242,7 +244,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
     String offset = NOTHING_READ;
     try {
-      Optional<RemoteFile> nextOpt = null;
+      Optional<RemoteFile> nextOpt;
       // Time to read the next file
       if (currentStream == null) {
         nextOpt = getNextFile();
@@ -513,10 +515,15 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   }
 
   private Optional<RemoteFile> getNextFile() throws IOException, StageException {
-    if (fileQueue.isEmpty()) {
+    if (fileQueue.isEmpty() || fileDelayer.isDelayed()) {
+      fileDelayer.setDelayed(false);
       queueFiles();
     }
-    return Optional.fromNullable(fileQueue.pollFirst());
+    Optional<RemoteFile> nextFile = Optional.absent();
+    if (!fileQueue.isEmpty() && fileDelayer.isFileReady(fileQueue.first())) {
+      nextFile = Optional.fromNullable(fileQueue.pollFirst());
+    }
+    return nextFile;
   }
 
   private void queueFiles() throws IOException, StageException {

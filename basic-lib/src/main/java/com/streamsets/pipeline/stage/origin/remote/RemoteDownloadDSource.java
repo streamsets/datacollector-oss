@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.event.FinishedFileEvent;
 import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
+import com.streamsets.pipeline.lib.util.SystemClock;
 
 @StageDef(
     version = 5,
@@ -51,6 +52,9 @@ public class RemoteDownloadDSource extends DSource {
 
   @Override
   protected Source createSource() {
-    return new RemoteDownloadSource(conf);
+    return new RemoteDownloadSource(
+        conf,
+        new FileDelayer(new SystemClock(), conf.processingDelay)
+    );
   }
 }
