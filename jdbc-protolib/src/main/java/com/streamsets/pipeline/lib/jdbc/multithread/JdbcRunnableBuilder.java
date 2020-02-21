@@ -26,18 +26,18 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 import java.util.Map;
 
 public class JdbcRunnableBuilder {
-  private PushSource.Context context;
-  private int threadNumber;
-  private int batchSize;
-  private TableJdbcConfigBean tableJdbcConfigBean;
-  private CommonSourceConfigBean commonSourceConfigBean;
-  private Map<String, String> offsets;
-  private ConnectionManager connectionManager;
-  private MultithreadedTableProvider tableProvider;
-  private CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache;
-  private RateLimiter queryRateLimiter;
-  private boolean isReconnect;
-  private Map<String, SQLServerCDCSource.SourceTableInfo> infoMap;
+  protected PushSource.Context context;
+  protected int threadNumber;
+  protected int batchSize;
+  protected TableJdbcConfigBean tableJdbcConfigBean;
+  protected CommonSourceConfigBean commonSourceConfigBean;
+  protected Map<String, String> offsets;
+  protected ConnectionManager connectionManager;
+  protected MultithreadedTableProvider tableProvider;
+  protected CacheLoader<TableRuntimeContext, TableReadContext> tableReadContextCache;
+  protected RateLimiter queryRateLimiter;
+  protected boolean isReconnect;
+  protected Map<String, SQLServerCDCSource.SourceTableInfo> infoMap;
 
   public JdbcRunnableBuilder() {
   }

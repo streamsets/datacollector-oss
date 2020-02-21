@@ -108,7 +108,7 @@ public class TableContextUtil {
     ))
     .build();
 
-  private JdbcUtil jdbcUtil;
+  protected JdbcUtil jdbcUtil;
 
   public TableContextUtil() {
     this(UtilsProvider.getJdbcUtil());
@@ -122,7 +122,7 @@ public class TableContextUtil {
     return jdbcUtil;
   }
 
-  private Map<String, Integer> getColumnNameType(Connection connection, String schema, String tableName) throws SQLException {
+  protected Map<String, Integer> getColumnNameType(Connection connection, String schema, String tableName) throws SQLException {
     Map<String, Integer> columnNameToType = new LinkedHashMap<>();
     try (ResultSet rs = jdbcUtil.getColumnMetadata(connection, schema, tableName)) {
       while (rs.next()) {
