@@ -15,16 +15,20 @@
  */
 package com.streamsets.datacollector.restapi.rbean.secrets;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
+import com.streamsets.datacollector.restapi.RequiresCredentialsDeployed;
+import com.streamsets.datacollector.restapi.rbean.lang.RDatetime;
+import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.util.AuthzRole;
-import org.glassfish.jersey.media.multipart.FormDataParam;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 
 import javax.annotation.security.RolesAllowed;
+import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -35,12 +39,13 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Path("/v4/secrets")
 @Produces(MediaType.APPLICATION_JSON)
+@RequiresCredentialsDeployed
 public class SecretResource  {
 
   /**
@@ -58,38 +63,73 @@ public class SecretResource  {
    *       * There are no ACLs on secrets
    */
 
+  private ManagedCredentialStore managedCredentialStore;
+
+  @Inject
+  public SecretResource(CredentialStoresTask task) {
+    managedCredentialStore = task.getDefaultManagedCredentialStore();
+  }
+
+  private void checkCredentialStoreSupported() {
+    Preconditions.checkNotNull(managedCredentialStore, "Managed Credential store not configured");
+  }
+
+  private void setVaultAndSecretNameFromCredentialName(RSecret rSecret, String credentialName) {
+    String[] splitByVaultAndSecretName = credentialName.split("/");
+    if (splitByVaultAndSecretName.length == 2) {
+      String vaultName = splitByVaultAndSecretName[0];
+      String secretName = splitByVaultAndSecretName[1];
+      rSecret.setVault(new RString().setValue(vaultName));
+      rSecret.setName(new RString().setValue(secretName));
+    } else {
+      rSecret.setName(new RString().setValue(credentialName));
+    }
+  }
+
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/text/ctx=SecretManage")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   public OkRestResponse<RSecret> createSecret(RestRequest<RSecret> request) {
     RSecret rSecret = request.getData();
+    checkCredentialStoreSupported();
     Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.TEXT,
-        "Cannot create a secret of type: {} through this API", rSecret.getType().getValue());
-    RSecret secret = null; //TODO create secret from text value
-    return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(secret);
+        "Cannot create a secret of type: {} through this API",
+        rSecret.getType().getValue()
+    );
+
+    managedCredentialStore.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
+        rSecret.getVault().getValue() + "/" + rSecret.getName().getValue(),
+        rSecret.getValue().getValue()
+    );
+
+    rSecret.getValue().setScrubbed(true);
+    rSecret.setCreatedOn(new RDatetime(System.currentTimeMillis()));
+    rSecret.setLastModifiedOn(new RDatetime(System.currentTimeMillis()));
+    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
   }
 
-  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
-  @Path("/file/ctx=SecretManage")
-  @POST
-  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @Produces(MediaType.APPLICATION_JSON)
-  public OkRestResponse<RSecret> createFileSecret(
-      @FormDataParam("restRequest") String requestPayload,
-      @FormDataParam("uploadedFile") InputStream upload
-  ) throws IOException {
-    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-        requestPayload,
-        new TypeReference<RestRequest<RSecret>>() {}
-    );
-    RSecret rSecret = restRequest.getData();
-    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-    );
-    RSecret secret = null; //TODO create secret from upload stream
-    return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(secret);
-  }
+//  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
+//  @Path("/file/ctx=SecretManage")
+//  @POST
+//  @Consumes(MediaType.MULTIPART_FORM_DATA)
+//  @Produces(MediaType.APPLICATION_JSON)
+//  public OkRestResponse<RSecret> createFileSecret(
+//      @FormDataParam("restRequest") String requestPayload,
+//      @FormDataParam("uploadedFile") InputStream upload
+//  ) throws IOException {
+//    RestRequest<RSecret> restRequest = RestRequest.getRequest(
+//        requestPayload,
+//        new TypeReference<RestRequest<RSecret>>() {}
+//    );
+//    RSecret rSecret = restRequest.getData();
+//    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
+//        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
+//    );
+//
+//    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
+//  }
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("{secretId}/text/ctx=SecretManage")
@@ -97,49 +137,70 @@ public class SecretResource  {
   @Consumes(MediaType.APPLICATION_JSON)
   public OkRestResponse<RSecret> updateSecret(@PathParam("secretId") String id, RestRequest<RSecret> request) {
     RSecret rSecret = request.getData();
+    checkCredentialStoreSupported();
     Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.TEXT,
         "Cannot create a secret of type: {} through this API", rSecret.getType().getValue());
-    RSecret secret = null; //TODO update secret 'id' from text value
-    return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(secret);
+    managedCredentialStore.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
+        rSecret.getVault().getValue() + "/" + rSecret.getName().getValue(),
+        rSecret.getValue().getValue()
+    );
+    rSecret.setLastModifiedOn(new RDatetime());
+    rSecret.getValue().setScrubbed(true);
+
+    return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
   }
 
-  @RolesAllowed({}) //TODO
-  @Path("{secretId}/file/ctx=SecretManage")
-  @POST
-  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  @Produces(MediaType.APPLICATION_JSON)
-  public OkRestResponse<RSecret> updateFileSecret(
-      @PathParam("secretId") String id,
-      @FormDataParam("restRequest") String requestPayload,
-      @FormDataParam("uploadedFile") InputStream upload
-  ) throws IOException {
-    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-        requestPayload,
-        new TypeReference<RestRequest<RSecret>>() {}
-    );
-    RSecret rSecret = restRequest.getData();
-    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-    );
-    RSecret secret = null; //TODO update secret 'id' from upload stream
-    return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(secret);
-  }
+  //  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
+  //  @Path("{secretId}/file/ctx=SecretManage")
+  //  @POST
+  //  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  //  @Produces(MediaType.APPLICATION_JSON)
+  //  public OkRestResponse<RSecret> updateFileSecret(
+  //      @PathParam("secretId") String id,
+  //      @FormDataParam("restRequest") String requestPayload,
+  //      @FormDataParam("uploadedFile") InputStream upload
+  //  ) throws IOException {
+  //    Preconditions.checkNotNull(managedCredentialStore, "Managed Credential store not configured");
+  //    RestRequest<RSecret> restRequest = RestRequest.getRequest(
+  //        requestPayload,
+  //        new TypeReference<RestRequest<RSecret>>() {}
+  //    );
+  //    RSecret rSecret = restRequest.getData();
+  //    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
+  //        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
+  //    );
+  //    managedCredentialStore.
+  //    rSecret.setCreatedOn(new RDatetime());
+  //    rSecret.setLastModifiedOn(new RDatetime());
+  //    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
+  //  }
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/{secretId}/ctx=SecretManage")
   @DELETE
   @Consumes(MediaType.APPLICATION_JSON)
   public OkRestResponse<RSecret> deleteSecret(@PathParam("secretId") String id) {
-    RSecret secret = null; //TODO delete secret
-    return new OkRestResponse<RSecret>().setData(secret);
+    checkCredentialStoreSupported();
+    managedCredentialStore.delete(id);
+    RSecret rSecret = new RSecret();
+    setVaultAndSecretNameFromCredentialName(rSecret, id);
+    return new OkRestResponse<RSecret>().setData(rSecret);
   }
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
-  @Path("/pageId=SecretListPage")
+  @Path("/ctx=SecretList")
   @GET
   public OkPaginationRestResponse<RSecret> listSecrets(@Context PaginationInfo paginationInfo) {
-    List<RSecret> secrets = null; //TODO
-    secrets.stream().forEach(s -> s.getValue().setScrubbed(true));
+    checkCredentialStoreSupported();
+    List<RSecret> secrets = managedCredentialStore.getNames().stream().map(
+        s -> {
+          RSecret rSecret = new RSecret();
+          setVaultAndSecretNameFromCredentialName(rSecret, s);
+          rSecret.getValue().setScrubbed(true);
+          return rSecret;
+        }
+    ).collect(Collectors.toList());
     return new OkPaginationRestResponse<RSecret>(paginationInfo).setData(secrets);
   }
 
@@ -150,20 +211,10 @@ public class SecretResource  {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public Response getSecretValueReady() {
-    // TODO if anything to do
+    if (managedCredentialStore == null) {
+      return Response.status(Response.Status.NOT_FOUND).build();
+    }
     return Response.ok().build();
   }
-
-  // Used by the S4 Cred Store to get a secret by name
-  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
-  @Path("/get/sdc/{secretId}/ctx=SecretGet")
-  @GET
-  @Produces(MediaType.TEXT_PLAIN)
-  public Response getSecretValue(@PathParam("secretId") String secretId) {
-    RSecret secret = null; //TODO get secret
-    return Response.ok(secret.getValue()).encoding("UTF-8").build();
-  }
-
-
 
 }
