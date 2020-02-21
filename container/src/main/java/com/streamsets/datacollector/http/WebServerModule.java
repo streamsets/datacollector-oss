@@ -21,6 +21,7 @@ import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.ActivationLoader;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -34,6 +35,7 @@ import com.streamsets.datacollector.restapi.configuration.ActivationInjector;
 import com.streamsets.datacollector.restapi.configuration.BlobStoreTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
+import com.streamsets.datacollector.restapi.configuration.CredentialStoreTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.EventHandlerTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.PipelineStoreInjector;
 import com.streamsets.datacollector.restapi.configuration.RestAPIResourceConfig;
@@ -341,6 +343,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(BlobStoreTaskInjector.BLOB_STORE_TASK, blobStoreTask);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideCredentialStoreTask(final CredentialStoresTask credentialStoreTask) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(CredentialStoreTaskInjector.CREDENTIAL_STORE_TASK, credentialStoreTask);
       }
     };
   }
