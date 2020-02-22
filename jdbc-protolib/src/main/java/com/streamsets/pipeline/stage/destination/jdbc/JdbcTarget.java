@@ -262,6 +262,7 @@ public class JdbcTarget extends BaseTarget {
     if (!batch.getRecords().hasNext()) {
       // No records - take the opportunity to clean up the cache so that we don't hold on to memory indefinitely
       cacheCleaner.periodicCleanUp();
+      return;
     }
 
     if (dynamicSchemaName || dynamicTableName)  {
