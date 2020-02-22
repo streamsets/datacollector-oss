@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
@@ -24,6 +25,7 @@ import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.slf4j.Logger;
@@ -40,7 +42,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_14;
 import static com.streamsets.pipeline.lib.operation.OperationType.DELETE_CODE;
@@ -50,6 +51,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcGenericRecordWriter.class);
   private final boolean caseSensitive;
   private final boolean sortedColumns;
+  private final Timer queryTimer;
+  private final Timer commitTimer;
 
   private static final HashFunction columnHashFunction = Hashing.goodFastHash(64);
   private static final Funnel<Map<String, String>> stringMapFunnel = (map, into) -> {
@@ -84,7 +87,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       JdbcRecordReader recordReader,
       boolean caseSensitive,
       List<String> customDataSqlStateCodes,
-      boolean sortedColumns
+      boolean sortedColumns,
+      Context context
   ) throws StageException {
     super(
         connectionString,
@@ -102,6 +106,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     );
     this.caseSensitive = caseSensitive;
     this.sortedColumns = sortedColumns;
+    this.queryTimer = context.createTimer("Query Timer");
+    this.commitTimer = context.createTimer("Commit Timer");
   }
 
   @Override
@@ -157,7 +163,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
       // Check if any records are left in queue unprocessed
       processQueue(queue, errorRecords, connection, prevOpCode, perRecord);
-      connection.commit();
+      try(Timer.Context t = commitTimer.time()) {
+        connection.commit();
+      }
     } catch (SQLException e) {
       handleSqlException(e);
     }
@@ -238,7 +246,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     try {
       if (!perRecord && statement != null) {
         try {
-          statement.executeBatch();
+          try(Timer.Context t = queryTimer.time()) {
+            statement.executeBatch();
+          }
         } catch(SQLException e){
           if (getRollbackOnError()) {
             connection.rollback();
@@ -251,7 +261,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         }
       }
 
-      connection.commit();
+      try(Timer.Context t = commitTimer.time()) {
+        connection.commit();
+      }
     } catch (SQLException e) {
       handleSqlException(e);
     }
@@ -263,7 +275,9 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     if (!perRecord) {
       statement.addBatch();
     } else {
-      statement.executeUpdate();
+      try(Timer.Context t = queryTimer.time()) {
+        statement.executeUpdate();
+      }
     }
   }
 

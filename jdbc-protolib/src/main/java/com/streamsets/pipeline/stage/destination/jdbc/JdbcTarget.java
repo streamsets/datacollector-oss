@@ -102,7 +102,8 @@ public class JdbcTarget extends BaseTarget {
           duplicateKeyAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
           caseSensitive,
-          customDataSqlStateCodes
+          customDataSqlStateCodes,
+          getContext()
       );
     }
   }

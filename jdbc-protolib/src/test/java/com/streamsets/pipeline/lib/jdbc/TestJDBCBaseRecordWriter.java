@@ -18,11 +18,14 @@ package com.streamsets.pipeline.lib.jdbc;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedMap;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -55,6 +58,7 @@ public class TestJDBCBaseRecordWriter {
   private final String username = "sa";
   private final String password = "sa";
   private static final String connectionString = "jdbc:h2:mem:test";
+  private final Stage.Context context = ContextInfoCreator.createTargetContext("a", false, OnRecordError.STOP_PIPELINE);
   private DataSource dataSource;
   private Connection connection;
 
@@ -136,7 +140,8 @@ public class TestJDBCBaseRecordWriter {
         new JdbcRecordReader(),
         caseSensitive,
         Collections.emptyList(),
-        true
+        true,
+        context
     );
 
     try {
@@ -165,7 +170,8 @@ public class TestJDBCBaseRecordWriter {
         new JdbcRecordReader(),
         caseSensitive,
         Collections.emptyList(),
-        true
+        true,
+        context
     );
 
     try {
@@ -206,7 +212,8 @@ public class TestJDBCBaseRecordWriter {
         new JdbcRecordReader(),
         caseSensitive,
         Collections.emptyList(),
-        true
+        true,
+        context
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -282,7 +289,8 @@ public class TestJDBCBaseRecordWriter {
         new JdbcRecordReader(),
         caseSensitive,
         Collections.emptyList(),
-        true
+        true,
+        context
     );
     Record record = RecordCreator.create();
     Map<String, Field> fields = new HashMap<>();
@@ -368,7 +376,8 @@ public class TestJDBCBaseRecordWriter {
         new JdbcRecordReader(),
         false,
         Collections.emptyList(),
-        true
+        true,
+        context
     );
 
     /* isColumnTypeNumeric() - true assertions */

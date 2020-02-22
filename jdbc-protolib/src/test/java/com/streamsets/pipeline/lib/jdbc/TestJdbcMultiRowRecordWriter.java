@@ -19,11 +19,14 @@ package com.streamsets.pipeline.lib.jdbc;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedMap;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -62,6 +65,7 @@ public class TestJdbcMultiRowRecordWriter {
   private static final String connectionString = "jdbc:h2:mem:test";
   private DataSource dataSource;
   private Connection connection;
+  private final Stage.Context context = ContextInfoCreator.createTargetContext("a", false, OnRecordError.STOP_PIPELINE);
 
   private long id;
   private static final Random random = new Random();
@@ -122,7 +126,9 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
+
     );
     List<Record> batch = generateRecords(10);
     writer.writeBatch(batch.iterator());
@@ -152,7 +158,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
     List<Record> batch = generateRecords(10);
     batch.get(0).getHeader().setAttribute(OperationType.SDC_OPERATION_TYPE, "-5");
@@ -186,7 +193,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
     List<Record> batch = generateRecords(10);
 
@@ -211,7 +219,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
 
     Collection<Record> records = generateRecords(10);
@@ -246,7 +255,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
 
     Collection<Record> records = generateRecords(1);
@@ -286,7 +296,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
     // Test Insert query
 
@@ -339,7 +350,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         true,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
 
     // Test Insert query
@@ -407,7 +419,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         caseSensitive,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
     List<Record> batch = ImmutableList.of(insertRecord, updateRecord);
     writer.writeBatch(batch.iterator());
@@ -438,7 +451,8 @@ public class TestJdbcMultiRowRecordWriter {
         null,
         new JdbcRecordReader(),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        context
     );
     List<Record> batch = Collections.singletonList(RecordCreator.create());
     List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());

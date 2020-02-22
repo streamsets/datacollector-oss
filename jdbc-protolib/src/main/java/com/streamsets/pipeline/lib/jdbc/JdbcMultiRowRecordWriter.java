@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc;
 
+import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.hash.Funnel;
@@ -24,6 +25,7 @@ import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.slf4j.Logger;
@@ -55,6 +57,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
   public static final int UNLIMITED_PARAMETERS = -1;
   private final boolean caseSensitive;
   private int maxPrepStmtParameters;
+  private final Timer queryTimer;
+  private final Timer commitTimer;
 
   /**
    * Class constructor
@@ -82,7 +86,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       List<JdbcFieldColumnMapping> generatedColumnMappings,
       JdbcRecordReader recordReader,
       boolean caseSensitive,
-      List<String> customDataSqlStateCodes
+      List<String> customDataSqlStateCodes,
+      Context context
   ) throws StageException {
     super(
         connectionString,
@@ -101,6 +106,8 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     this.maxPrepStmtParameters = maxPrepStmtParameters == UNLIMITED_PARAMETERS ? Integer.MAX_VALUE :
         maxPrepStmtParameters;
     this.caseSensitive = caseSensitive;
+    this.queryTimer = context.createTimer("Query Timer");
+    this.commitTimer = context.createTimer("Commit Timer");
   }
 
   @Override
@@ -160,13 +167,14 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
       // Check if any records are left in queue unprocessed
       processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
-      connection.commit();
+      try(Timer.Context t = commitTimer.time()) {
+        connection.commit();
+      }
     } catch (SQLException e) {
       handleSqlException(e);
     } finally {
       if (connection != null) {
         try {
-          connection.commit();
           connection.close();
         } catch (SQLException e) {
           handleSqlException(e);
@@ -300,7 +308,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Executing query: {}", statement.toString());
       }
-      statement.executeUpdate();
+      try(Timer.Context t = queryTimer.time()) {
+        statement.executeUpdate();
+      }
     } catch (SQLException ex) {
       if (getRollbackOnError()) {
         LOG.debug("Error due to {}. Rollback the batch.", ex.getMessage());

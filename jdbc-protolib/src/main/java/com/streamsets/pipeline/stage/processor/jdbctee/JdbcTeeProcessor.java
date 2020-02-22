@@ -143,7 +143,8 @@ public class JdbcTeeProcessor extends SingleLaneProcessor {
           unsupportedAction,
           JdbcRecordReaderWriterFactory.createRecordReader(changeLogFormat),
           caseSensitive,
-          Collections.emptyList()
+          Collections.emptyList(),
+          getContext()
       );
     }
   }

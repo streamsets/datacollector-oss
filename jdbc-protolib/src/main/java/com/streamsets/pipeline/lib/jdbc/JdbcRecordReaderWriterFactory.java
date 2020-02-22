@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
@@ -42,7 +43,8 @@ public final class JdbcRecordReaderWriterFactory {
       DuplicateKeyAction duplicateKeyAction,
       JdbcRecordReader recordReader,
       boolean caseSensitive,
-      List<String> customDataSqlStateCodes
+      List<String> customDataSqlStateCodes,
+      Context context
   ) throws StageException {
     if (defaultOpCode == OperationType.LOAD_CODE) {
       return new JdbcLoadRecordWriter(
@@ -71,7 +73,8 @@ public final class JdbcRecordReaderWriterFactory {
           unsupportedAction,
           recordReader,
           caseSensitive,
-          customDataSqlStateCodes
+          customDataSqlStateCodes,
+          context
       );
     }
   }
@@ -91,7 +94,8 @@ public final class JdbcRecordReaderWriterFactory {
        UnsupportedOperationAction unsupportedAction,
        JdbcRecordReader recordReader,
        boolean caseSensitive,
-       List<String> customDataSqlStateCodes
+       List<String> customDataSqlStateCodes,
+       Context context
   ) throws StageException {
 
     JdbcRecordWriter recordWriter;
@@ -110,7 +114,8 @@ public final class JdbcRecordReaderWriterFactory {
           generatedColumnMappings,
           recordReader,
           caseSensitive,
-          customDataSqlStateCodes
+          customDataSqlStateCodes,
+          context
       );
     } else {
       recordWriter = new JdbcGenericRecordWriter(
@@ -126,7 +131,8 @@ public final class JdbcRecordReaderWriterFactory {
           recordReader,
           caseSensitive,
           customDataSqlStateCodes,
-          true
+          true,
+          context
       );
     }
     return recordWriter;
