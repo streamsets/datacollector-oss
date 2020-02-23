@@ -542,7 +542,11 @@ public class DirectorySpooler {
   public synchronized WrappedFile poolForFile(long wait, TimeUnit timeUnit) throws InterruptedException {
     Preconditions.checkArgument(wait >= 0, "wait must be zero or greater");
     Preconditions.checkNotNull(timeUnit, "timeUnit cannot be null");
+    long initial = System.currentTimeMillis();
 
+    while (!context.isStopped() && System.currentTimeMillis() - initial < wait && !canPoolFiles()) {
+      Thread.sleep(intervalMillis);
+    }
     if (!canPoolFiles()) {
       return null;
     }
@@ -552,9 +556,6 @@ public class DirectorySpooler {
     WrappedFile next = null;
 
     LOG.debug("Polling for file, waiting '{}' ms", TimeUnit.MILLISECONDS.convert(wait, timeUnit));
-
-    long initial = System.currentTimeMillis();
-
     while (!context.isStopped() && System.currentTimeMillis() - initial < wait && next == null) {
       closeLock.readLock().lock();
       try {
