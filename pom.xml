@@ -114,6 +114,7 @@
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
     <mysql-lib>mysql-lib</mysql-lib>
     <omniture-lib>omniture-lib</omniture-lib>
+    <oracle-lib>oracle-lib</oracle-lib>
     <orchestrator-lib>orchestrator-lib</orchestrator-lib>
     <postgresql-lib>postgresql-lib</postgresql-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
@@ -296,6 +297,7 @@
     <module>mysql-binlog-lib</module>
     <module>mysql-lib</module>
     <module>omniture-lib</module>
+    <module>oracle-lib</module>
     <module>orchestrator-lib</module>
     <module>postgresql-lib</module>
     <module>rabbitmq-lib</module>
