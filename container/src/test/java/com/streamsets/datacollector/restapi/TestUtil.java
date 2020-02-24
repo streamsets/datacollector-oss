@@ -16,10 +16,13 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentDefinition;
 import com.streamsets.datacollector.config.PipelineRulesDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -36,10 +39,14 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
+import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import org.glassfish.hk2.api.Factory;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import javax.inject.Singleton;
 import java.net.URI;
@@ -47,7 +54,10 @@ import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TestUtil {
 
@@ -262,5 +272,82 @@ public class TestUtil {
     public void dispose(UserGroupManager userGroupManager) {
     }
   }
+
+  public static class CredentialStoreTaskTestInjector implements Factory<CredentialStoresTask> {
+
+    static class MyManagedCredentialValue implements CredentialValue {
+      private final String value;
+
+      MyManagedCredentialValue(String value) {
+        this.value = value;
+      }
+
+      @Override
+      public String get() throws StageException {
+        return value;
+      }
+    }
+
+    private static class MyManagedCredentialStore implements ManagedCredentialStore {
+      Map<String, String> credentialStoreMap = new HashMap<>();
+
+      @Override
+      public void store(List<String> groups, String name, String credentialValue) throws StageException {
+        credentialStoreMap.put(name, credentialValue);
+      }
+
+      @Override
+      public void delete(String name) throws StageException {
+        credentialStoreMap.remove(name);
+      }
+
+      @Override
+      public List<String> getNames() throws StageException {
+        return new ArrayList<>(credentialStoreMap.keySet());
+      }
+
+      @Override
+      public List<ConfigIssue> init(Context context) {
+        return Collections.emptyList();
+      }
+
+      @Override
+      public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
+        return new MyManagedCredentialValue(credentialStoreMap.get(name));
+      }
+
+      @Override
+      public void destroy() {
+        credentialStoreMap.clear();
+      }
+    }
+
+    public static final ManagedCredentialStore INSTANCE = new MyManagedCredentialStore();
+
+    @Singleton
+    @Override
+    public CredentialStoresTask provide() {
+      CredentialStoresTask credentialStoresTask = Mockito.mock(CredentialStoresTask.class);
+
+      CredentialStoreDefinition credentialStoreDefinition = Mockito.mock(CredentialStoreDefinition.class);
+      StageLibraryDefinition stageLibraryDefinition = Mockito.mock(StageLibraryDefinition.class);
+      Mockito.when(stageLibraryDefinition.getName()).thenReturn("streamsets");
+      Mockito.when(stageLibraryDefinition.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
+
+      Mockito.when(credentialStoreDefinition.getName()).thenReturn("streamsets");
+      Mockito.when(credentialStoreDefinition.getStageLibraryDefinition()).thenReturn(stageLibraryDefinition);
+      Mockito.doReturn(MyManagedCredentialStore.class).when(credentialStoreDefinition).getStoreClass();
+      Mockito.when(credentialStoresTask.getConfiguredStoreDefinititions()).thenReturn(ImmutableList.of(credentialStoreDefinition));
+      Mockito.when(credentialStoresTask.getDefaultManagedCredentialStore()).thenReturn(INSTANCE);
+
+      return credentialStoresTask;
+    }
+
+    @Override
+    public void dispose(CredentialStoresTask task) {
+
+    }
+  }
+
 
 }

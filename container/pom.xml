@@ -339,6 +339,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.glassfish.jersey.test-framework.providers</groupId>
+      <artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>org.glassfish.jersey.test-framework</groupId>
       <artifactId>jersey-test-framework-core</artifactId>
       <scope>test</scope>
@@ -546,6 +552,7 @@
           <argLine>${surefireArgLine} -javaagent:${project.build.directory}/agents/streamsets-datacollector-bootstrap-${project.version}.jar -Dsun.net.http.allowRestrictedHeaders=true</argLine>
           <systemPropertyVariables>
             <streamsets.test.mode>true</streamsets.test.mode>
+            <jersey.config.test.container.factory>org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory</jersey.config.test.container.factory>
           </systemPropertyVariables>
           <forkCount>1</forkCount>
         </configuration>

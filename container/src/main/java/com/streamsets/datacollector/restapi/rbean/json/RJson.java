@@ -88,6 +88,7 @@ public class RJson {
   public static ObjectMapper configureRJson(ObjectMapper objectMapper) {
     SerializerFactory serializerFactory =
         BeanSerializerFactory.instance.withSerializerModifier(new FlatRBeanSerializerModifier());
+    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     objectMapper.setSerializerFactory(serializerFactory);
     objectMapper.registerModule(createModule());
     return objectMapper;

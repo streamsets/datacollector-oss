@@ -26,6 +26,11 @@ public class OkPaginationRestResponse<R> extends AbstractRestResponse<List<R>, O
 
   private PaginationInfo paginationInfo;
 
+  private OkPaginationRestResponse() {
+    super(TYPE);
+    this.breadcrumbValue = null;
+  }
+
   public OkPaginationRestResponse(PaginationInfo paginationInfo) {
     this(paginationInfo, null);
   }
