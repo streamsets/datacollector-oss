@@ -115,6 +115,7 @@
     <mysql-lib>mysql-lib</mysql-lib>
     <omniture-lib>omniture-lib</omniture-lib>
     <orchestrator-lib>orchestrator-lib</orchestrator-lib>
+    <postgresql-lib>postgresql-lib</postgresql-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
@@ -296,6 +297,7 @@
     <module>mysql-lib</module>
     <module>omniture-lib</module>
     <module>orchestrator-lib</module>
+    <module>postgresql-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
