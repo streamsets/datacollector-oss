@@ -69,11 +69,11 @@ public final class TableReadContext {
     this.vendor = vendor;
     jdbcUtil = UtilsProvider.getJdbcUtil();
     this.query = query;
+    LOGGER.debug("Executing Query :{}", query);
+    LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     ps = connection.prepareStatement(query);
     ps.setFetchSize(fetchSize);
     setPreparedStParameters(paramValuesToSet);
-    LOGGER.debug("Executing Query :{}", query);
-    LOGGER.debug("Parameter Types And Values {}", paramValuesToSet);
     rs = ps.executeQuery();
     resetProcessingMetrics();
     this.neverEvict = neverEvict;

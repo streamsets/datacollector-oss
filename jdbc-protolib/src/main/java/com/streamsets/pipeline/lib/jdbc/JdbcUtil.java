@@ -416,13 +416,14 @@ public class JdbcUtil {
       Collection<String> offsetColumnNames
   ) throws SQLException {
     Map<String, String> minMaxOffsetValues = new HashMap<>();
-    final String qualifiedName = TableContextUtil.getQuotedQualifiedTableName(
+    final String qualifiedTableName = TableContextUtil.getQuotedQualifiedTableName(
         schema,
         tableName,
         quoteChar.getQuoteCharacter()
     );
     for (String offsetColumn : offsetColumnNames) {
-      final String minMaxOffsetQuery = String.format(minMaxQuery, offsetColumn, qualifiedName);
+      final String qualifiedOffsetColumn = TableContextUtil.getQuotedObjectName(offsetColumn, quoteChar.getQuoteCharacter());
+      final String minMaxOffsetQuery = String.format(minMaxQuery, qualifiedOffsetColumn, qualifiedTableName);
       LOG.debug("Issuing min/max offset query: {}", minMaxOffsetQuery);
       try (
         Statement st = connection.createStatement();

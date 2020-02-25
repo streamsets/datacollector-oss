@@ -25,6 +25,7 @@ import java.util.Collections;
 
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -91,5 +92,11 @@ public class TestTableContextUtil {
         Collections.singletonMap(offsetCol, "13999999")
     );
     assertTrue(second);
+  }
+
+  @Test
+  public void testGetQuotedQualifiedTableName() {
+    assertEquals("'s'.'t'", TableContextUtil.getQuotedQualifiedTableName("s", "t", "'"));
+    assertEquals("'t'", TableContextUtil.getQuotedQualifiedTableName(null, "t", "'"));
   }
 }

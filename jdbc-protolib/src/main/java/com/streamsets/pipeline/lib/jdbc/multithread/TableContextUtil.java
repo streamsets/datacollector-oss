@@ -195,9 +195,15 @@ public class TableContextUtil {
    * @return qualified table name if schema is not null and tableName alone if schema is null.
    */
   public static String getQuotedQualifiedTableName(String schema, String tableName, String qC) {
-    String quotedTableName = String.format(OffsetQueryUtil.QUOTED_NAME, qC, tableName, qC);
-    return StringUtils.isEmpty(schema) ?
-        quotedTableName: String.format(OffsetQueryUtil.QUOTED_NAME, qC, schema, qC)  + "." + quotedTableName ;
+    String quotedTableName = getQuotedObjectName(tableName, qC);
+    return StringUtils.isEmpty(schema) ? quotedTableName : getQuotedObjectName(schema, qC) + "." + quotedTableName;
+  }
+
+  /**
+   * Quote given object name (column, table name)
+   */
+  public static String getQuotedObjectName(String objectName, String qC) {
+    return String.format(OffsetQueryUtil.QUOTED_NAME, qC, objectName, qC);
   }
 
   private TableContext createTableContext(
