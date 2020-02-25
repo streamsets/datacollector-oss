@@ -228,6 +228,18 @@ public class MultiKafkaBeanConfig {
   @ValueChooserModel(ValueDeserializerChooserValues.class)
   public Deserializer valueDeserializer = Deserializer.DEFAULT;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Include Timestamps",
+      description = "Includes the timestamps inherited from Kafka in the record header",
+      displayPosition = 130,
+      group = "KAFKA"
+  )
+  public boolean timestampsEnabled;
+
+
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
 
   }

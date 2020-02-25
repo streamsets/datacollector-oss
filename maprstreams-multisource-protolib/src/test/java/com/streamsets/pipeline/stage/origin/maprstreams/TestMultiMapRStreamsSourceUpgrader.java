@@ -76,4 +76,14 @@ public class TestMultiMapRStreamsSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV5ToV6() {
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.timestampsEnabled", false);
+  }
 }
