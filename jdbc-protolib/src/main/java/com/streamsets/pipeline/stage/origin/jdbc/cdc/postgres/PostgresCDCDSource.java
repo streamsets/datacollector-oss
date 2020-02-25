@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.Groups;
 
 @StageDef(
     version = 1,

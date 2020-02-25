@@ -15,22 +15,11 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.DecoderValues;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCSource;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCWalReceiver;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresChangeTypeValues;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRecord;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresWalRunner;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.StartValues;
+
 import java.nio.ByteBuffer;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,13 +28,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.postgresql.replication.LogSequenceNumber;
 
-public class TestJdbcPostgresCDCWalRunner {
+public class TestWalRecordFilteringUtils {
 
   private PostgresCDCConfigBean configBean;
   private HikariPoolConfigBean hikariConfigBean;
@@ -157,7 +147,6 @@ public class TestJdbcPostgresCDCWalRunner {
     TestPgMockCDCRecord testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
         "2018-07-09 10:16:23.815-07", changes);
 
-    PostgresWalRunner pgRunner = new PostgresWalRunner(pgSourceMock);
     //Setting startValue to latest means filter only checks tables, not dates
     configBean.startValue = StartValues.LATEST;
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
@@ -170,7 +159,7 @@ public class TestJdbcPostgresCDCWalRunner {
     Mockito.when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
     Mockito.when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    PostgresWalRecord filteredRecord = WalRecordFilteringUtils.passesTableFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(walRecordMock.getChanges().size(), 3);
     Assert.assertEquals(filteredRecord.getChanges().size(), 2);
   }
@@ -198,26 +187,24 @@ public class TestJdbcPostgresCDCWalRunner {
     TestPgMockCDCRecord testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
         "2018-07-09 10:16:23.815-07", changes);
 
-    PostgresWalRunner pgRunner = new PostgresWalRunner(pgSourceMock);
     //Setting startValue to latest means not checking dates - automatic pass
     configBean.startValue = StartValues.LATEST;
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
     Mockito.when(pgSourceMock.getConfigBean()).thenReturn(configBean);
     Mockito.when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     Mockito.when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
-    Mockito.when(walRecordMock.getBuffer()).thenReturn(ByteBuffer.wrap(new String("test").getBytes()));
+    Mockito.when(walRecordMock.getBuffer()).thenReturn(ByteBuffer.wrap("test".getBytes()));
     Mockito.when(walRecordMock.getLsn()).thenReturn(LogSequenceNumber.valueOf("0/0"));
     Mockito.when(walRecordMock.getXid()).thenReturn("511");
     Mockito.when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
     Mockito.when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    PostgresWalRecord filteredRecord = WalRecordFilteringUtils.passesStartValueFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(walRecordMock.getChanges().size(), 1);
     Assert.assertEquals(filteredRecord.getChanges().size(), 1);
 
     /* TEST - testing recordDate > filterDate so should pass */
 
-    pgRunner = new PostgresWalRunner(pgSourceMock);
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
     Mockito.when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     Mockito.when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
@@ -233,13 +220,12 @@ public class TestJdbcPostgresCDCWalRunner {
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     Mockito.when(pgSourceMock.getZoneId()).thenReturn(zoneId);
 
-    filteredRecord = pgRunner.filter(walRecordMock);
+    filteredRecord = WalRecordFilteringUtils.passesStartValueFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(walRecordMock.getChanges().size(), 1);
     Assert.assertEquals(filteredRecord.getChanges().size(), 1);
 
     /* TEST - testing recordDate < filterDate so should fail */
 
-    pgRunner = new PostgresWalRunner(pgSourceMock);
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
     Mockito.when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     Mockito.when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
@@ -253,7 +239,7 @@ public class TestJdbcPostgresCDCWalRunner {
     Mockito.when(pgSourceMock.getStartDate()).thenReturn(LocalDateTime.parse("2020-01-01 01:00:00",
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
-    filteredRecord = pgRunner.filter(walRecordMock);
+    filteredRecord = WalRecordFilteringUtils.passesStartValueFilter(walRecordMock, pgSourceMock);
     Assert.assertNull(filteredRecord);
   }
 
@@ -298,7 +284,6 @@ public class TestJdbcPostgresCDCWalRunner {
     TestPgMockCDCRecord testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
         "2018-07-09 10:16:23.815-07", changes);
 
-    PostgresWalRunner pgRunner = new PostgresWalRunner(pgSourceMock);
     //Setting startValue to latest means filter only checks tables, not dates
     configBean.startValue = StartValues.LATEST;
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
@@ -312,7 +297,7 @@ public class TestJdbcPostgresCDCWalRunner {
     Mockito.when(walRecordMock.getDecoder()).thenReturn(DecoderValues.WAL2JSON);
     Mockito.when(walRecordMock.getField()).thenReturn(Field.create(testPgMockCDCRecord.getCDCRecord()));
 
-    PostgresWalRecord filteredRecord = pgRunner.filter(walRecordMock);
+    PostgresWalRecord filteredRecord = WalRecordFilteringUtils.passesOperationFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(walRecordMock.getChanges().size(), 3);
     Assert.assertEquals(filteredRecord.getChanges().size(), 3);
 
@@ -327,7 +312,6 @@ public class TestJdbcPostgresCDCWalRunner {
     testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
         "2018-07-09 10:16:23.815-07", changes);
 
-    pgRunner = new PostgresWalRunner(pgSourceMock);
     //Setting startValue to latest means filter only checks tables, not dates
     configBean.startValue = StartValues.LATEST;
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
@@ -337,7 +321,7 @@ public class TestJdbcPostgresCDCWalRunner {
     Mockito.when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
 
 
-    filteredRecord = pgRunner.filter(walRecordMock);
+    filteredRecord = WalRecordFilteringUtils.passesOperationFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(filteredRecord.getLsn(), walRecordMock.getLsn());
     Assert.assertEquals(filteredRecord.getXid(), walRecordMock.getXid());
     Assert.assertEquals(walRecordMock.getChanges().size(), 3);
@@ -354,7 +338,6 @@ public class TestJdbcPostgresCDCWalRunner {
     testPgMockCDCRecord = new TestPgMockCDCRecord("511", "0/0",
         "2018-07-09 10:16:23.815-07", changes);
 
-    pgRunner = new PostgresWalRunner(pgSourceMock);
     //Setting startValue to latest means filter only checks tables, not dates
     configBean.startValue = StartValues.LATEST;
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
@@ -363,7 +346,7 @@ public class TestJdbcPostgresCDCWalRunner {
     Mockito.when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
     Mockito.when(walRecordMock.getChanges()).thenReturn(testPgMockCDCRecord.getCDCRecordChanges());
 
-    filteredRecord = pgRunner.filter(walRecordMock);
+    filteredRecord = WalRecordFilteringUtils.passesOperationFilter(walRecordMock, pgSourceMock);
     Assert.assertEquals(filteredRecord.getLsn(), walRecordMock.getLsn());
     Assert.assertEquals(filteredRecord.getXid(), walRecordMock.getXid());
     Assert.assertEquals(walRecordMock.getChanges().size(), 2);
