@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi.rbean.secrets;
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.restapi.RequiresCredentialsDeployed;
 import com.streamsets.datacollector.restapi.rbean.lang.RDatetime;
@@ -25,7 +26,9 @@ import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
+import com.streamsets.pipeline.api.impl.Utils;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -62,6 +65,8 @@ public class SecretResource  {
    *       * Assuming there is a single vault, 'sdc'
    *       * There are no ACLs on secrets
    */
+
+  public static final String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
 
   private ManagedCredentialStore managedCredentialStore;
 
@@ -202,6 +207,32 @@ public class SecretResource  {
         }
     ).collect(Collectors.toList());
     return new OkPaginationRestResponse<RSecret>(paginationInfo).setData(secrets);
+  }
+
+  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
+  @Path("/sshTunnelPublicKey")
+  @GET
+  @Produces(MediaType.TEXT_PLAIN)
+  public Response getSshTunnelPublicKey() {
+    checkCredentialStoreSupported();
+    CredentialValue publicKeyVal = managedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, SSH_PUBLIC_KEY_SECRET, null);
+    if (publicKeyVal != null) {
+      String publicKey = publicKeyVal.get();
+      if (!Strings.isNullOrEmpty(publicKey)) {
+        return Response.ok(publicKey).build();
+      } else {
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Data Collector's public key is empty").build();
+      }
+    } else {
+      return Response
+          .status(Response.Status.INTERNAL_SERVER_ERROR)
+          .entity(
+              Utils.format(
+                  "Data Collector's managed credential store {} is not seeded with public key," +
+                      " please check the configuration"
+              )
+          ).build();
+    }
   }
 
   // Used by the S4 Cred Store to check if the Secrets App is up and ready.

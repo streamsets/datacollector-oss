@@ -30,6 +30,7 @@ import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfoInjectorBin
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.io.IOUtils;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
@@ -268,6 +269,20 @@ public class TestSecretResource extends JerseyTest {
             )
         )
     );
+  }
+
+  @Test
+  public void getSshTunnelPublicKey() throws Exception {
+    String publicKeyVal = "publicKey";
+    TestUtil.CredentialStoreTaskTestInjector.INSTANCE.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
+        CredentialStoresTask.SSH_PUBLIC_KEY_SECRET,
+        publicKeyVal
+    );
+    Response response = target("/v4/secrets/sshTunnelPublicKey").request().get();
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    InputStream is = (InputStream)response.getEntity();
+    Assert.assertEquals(publicKeyVal, IOUtils.toString(is));
   }
 
   @Test
