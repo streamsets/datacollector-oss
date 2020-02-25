@@ -950,8 +950,19 @@ public class ForceSource extends BaseSource {
       nextSourceOffset = lastSourceOffset;
     }
 
-    if (conf.subscriptionType == SubscriptionType.PUSH_TOPIC && !(recordCreator instanceof PushTopicRecordCreator)) {
-      recordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
+    switch (conf.subscriptionType) {
+      case PUSH_TOPIC:
+        if (!(recordCreator instanceof PushTopicRecordCreator)) {
+          recordCreator = new PushTopicRecordCreator((SobjectRecordCreator)recordCreator);
+          recordCreator.init();
+        }
+        break;
+      case CDC:
+        if (!(recordCreator instanceof ChangeDataCaptureRecordCreator)) {
+          recordCreator = new ChangeDataCaptureRecordCreator(getContext(), conf);
+          recordCreator.init();
+        }
+        break;
     }
 
     if (recordCreator instanceof SobjectRecordCreator) {
