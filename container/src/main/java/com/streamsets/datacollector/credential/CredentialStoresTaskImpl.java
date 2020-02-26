@@ -18,6 +18,7 @@ package com.streamsets.datacollector.credential;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -35,6 +36,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class CredentialStoresTaskImpl extends AbstractTask implements CredentialStoresTask {
   private static final Logger LOG = LoggerFactory.getLogger(CredentialStoresTaskImpl.class);
@@ -45,17 +47,21 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
   private final Configuration configuration;
   protected final StageLibraryTask stageLibraryTask;
   private final Map<String, CredentialStore> stores;
+  private final EventListenerManager eventListenerManager;
   private final List<CredentialStoreDefinition> credentialStoreDefinitions;
 
   @Inject
   public CredentialStoresTaskImpl(
-      Configuration configuration, StageLibraryTask stageLibraryTask
+      Configuration configuration,
+      StageLibraryTask stageLibraryTask,
+      EventListenerManager eventListenerManager
   ) {
     super("CredentialStoresTask");
     this.configuration = configuration;
     this.stageLibraryTask = stageLibraryTask;
     stores = new HashMap<>();
     credentialStoreDefinitions = new ArrayList<>();
+    this.eventListenerManager = eventListenerManager;
   }
 
   Map<String, CredentialStore> getStores() {
@@ -118,6 +124,9 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
             "Default Managed Credential Store {} not present in the list of Credential Stores defined",
             defaultCredentialStore
         ));
+      } else {
+        Optional.ofNullable(getDefaultManagedCredentialStore())
+            .ifPresent(m -> eventListenerManager.addStateEventListener(new PipelineCredentialCleaner(m)));
       }
     }
   }

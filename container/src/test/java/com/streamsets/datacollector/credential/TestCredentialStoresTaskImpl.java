@@ -19,6 +19,8 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
+import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.execution.StateEventListener;
 import com.streamsets.datacollector.security.GroupsInScope;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -29,6 +31,7 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
@@ -40,6 +43,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TestCredentialStoresTaskImpl {
+
+  private EventListenerManager eventListenerManager;
 
   @CredentialStoreDef(label = "label", description = "desc") public static class MyCredentialStore
       implements CredentialStore {
@@ -87,11 +92,16 @@ public class TestCredentialStoresTaskImpl {
     }
   }
 
+  @Before
+  public void setup() {
+    eventListenerManager = Mockito.spy(new EventListenerManager());
+  }
+
   @Test
   public void testLifecycle() {
     Configuration conf = new Configuration();
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
     Map<String, CredentialStore> stores = storeTask.getStores();
     Assert.assertNotNull(stores);
     Assert.assertTrue(stores.isEmpty());
@@ -126,7 +136,7 @@ public class TestCredentialStoresTaskImpl {
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
 
     storeTask.initTask();
 
@@ -155,7 +165,7 @@ public class TestCredentialStoresTaskImpl {
     Configuration conf = new Configuration();
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
 
     CredentialStore.Context context = storeTask.createContext("id", conf);
     Assert.assertEquals("id", context.getId());
@@ -182,14 +192,14 @@ public class TestCredentialStoresTaskImpl {
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
 
     // testing no Vault EL impl registered
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
     storeTask.initTask();
     Assert.assertNull(DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY));
     storeTask.stopTask();
 
     // testing Vault EL impl registered
     conf.set("vaultEL.credentialStore.id", "id");
-    storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
     storeTask.initTask();
     CredentialStore store = DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY);
     Assert.assertNotNull(store);
@@ -210,7 +220,7 @@ public class TestCredentialStoresTaskImpl {
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
 
     storeTask.initTask();
 
@@ -235,7 +245,7 @@ public class TestCredentialStoresTaskImpl {
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
 
     try {
       storeTask.initTask();
@@ -243,6 +253,29 @@ public class TestCredentialStoresTaskImpl {
     } catch (Exception e) {
       //Expected
     }
+  }
+
+  @Test
+  public void testEventStateRegisteredOnManagedCredentialStorePresence() {
+    StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
+    Mockito.when(libraryDef.getName()).thenReturn("lib");
+    CredentialStoreDefinition storeDef =
+        CredentialStoreDefinitionExtractor.get().extract(libraryDef, MyManagedCredentialStore.class);
+
+    Configuration conf = new Configuration();
+    conf.set(CredentialStoresTaskImpl.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, "id");
+    conf.set("credentialStores", "id");
+    conf.set("credentialStore.id.def", libraryDef.getName() + "::" + storeDef.getName());
+    conf.set("credentialStore.id.config.foo", "bar");
+    StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask, eventListenerManager);
+    storeTask.initTask();
+    Mockito.verify(eventListenerManager).addStateEventListener(Mockito.any(PipelineCredentialCleaner.class));
+    Assert.assertEquals(1, eventListenerManager.getStateEventListenerList().size());
+    StateEventListener stateEventListener = eventListenerManager.getStateEventListenerList().get(0);
+    Assert.assertTrue(stateEventListener instanceof PipelineCredentialCleaner);
+    storeTask.stopTask();
   }
 
 }

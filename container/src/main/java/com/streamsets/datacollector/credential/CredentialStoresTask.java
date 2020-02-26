@@ -31,6 +31,7 @@ public interface CredentialStoresTask extends Task {
   String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
   String DEFAULT_SDC_GROUP = "all";
   List<String> DEFAULT_SDC_GROUP_AS_LIST = Collections.singletonList(DEFAULT_SDC_GROUP);
+  String PIPELINE_CREDENTIAL_PREFIX = "PIPELINE_VAULT_";
 
   /**
    * Get a list of configured store definitions

@@ -29,9 +29,7 @@ public class CredentialStoresModule {
 
   @Provides
   @Singleton
-  public CredentialStoresTask provideCredentialStores(
-      CredentialStoresTaskImpl credentialStoresTask
-  ) {
+  public CredentialStoresTask provideCredentialStores(CredentialStoresTaskImpl credentialStoresTask) {
     return credentialStoresTask;
   }
 
