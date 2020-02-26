@@ -202,6 +202,13 @@ public class JdbcUtil {
   public boolean isDataError(List<String> customDataSqlCodes, String connectionString, SQLException ex) {
     String sqlState = Strings.nullToEmpty(ex.getSQLState());
     String errorCode = String.valueOf(ex.getErrorCode());
+
+    while (StringUtils.isEmpty(sqlState) && ex.getNextException() != null) {
+      ex = ex.getNextException();
+      sqlState= Strings.nullToEmpty(ex.getSQLState());
+      errorCode = String.valueOf(ex.getErrorCode());
+    }
+
     if(customDataSqlCodes.contains(sqlState)) {
       return true;
     } else if (sqlState.equals(MYSQL_GENERAL_ERROR) && connectionString.contains(":mysql")) {
@@ -210,21 +217,8 @@ public class JdbcUtil {
       return true;
     } else if (sqlState.length() >= 2 && STANDARD_DATA_ERROR_SQLSTATES.containsKey(sqlState.substring(0, 2))) {
       return true;
-    } else if (connectionString.contains(":db2:") && StringUtils.isEmpty(sqlState)) {
-      // DB2 driver wraps the original SQL Exception and its meaning is lost. This change is so that we can see
-      // the original SQLException that triggered the error
-      SQLException nextException = ex.getNextException();
-      if (nextException != null) {
-        String nextExceptionSqlState = nextException.getSQLState();
-        if (!StringUtils.isEmpty(nextExceptionSqlState)) {
-          for (String s : customDataSqlCodes) {
-            if (nextExceptionSqlState.equals(s.trim())) {
-              return true;
-            }
-          }
-        }
-      }
     }
+
     return false;
   }
 
