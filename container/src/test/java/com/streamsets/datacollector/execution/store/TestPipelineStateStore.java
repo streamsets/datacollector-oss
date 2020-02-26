@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -45,6 +46,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -117,6 +119,12 @@ public class TestPipelineStateStore {
       return new Configuration();
     }
 
+    @Provides
+    @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return Mockito.spy(new EventListenerManager());
+    }
+
     @Provides @Singleton
     public PipelineStateStore providePipelineStateStore(SlaveRuntimeInfo runtimeInfo, Configuration configuration) {
       return new MockFilePipelineStateStore(new FilePipelineStateStore(runtimeInfo, configuration), configuration);
@@ -128,9 +136,10 @@ public class TestPipelineStateStore {
         SlaveRuntimeInfo slaveRuntimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
+        EventListenerManager eventListenerManager,
         LockCache<String> lockCache
     ) {
-      return new FilePipelineStoreTask(slaveRuntimeInfo, stageLibraryTask, pipelineStateStore, lockCache);
+      return new FilePipelineStoreTask(slaveRuntimeInfo, stageLibraryTask, pipelineStateStore, eventListenerManager, lockCache);
     }
   }
 

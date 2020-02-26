@@ -23,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import org.junit.After;
 import org.junit.Before;
@@ -59,7 +60,7 @@ public class TestSlavePipelineStoreExecutionModes {
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-      new SlavePipelineStateStore(), new LockCache<String>());
+      new SlavePipelineStateStore(), new EventListenerManager(), new LockCache<>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());
@@ -74,7 +75,7 @@ public class TestSlavePipelineStoreExecutionModes {
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-      new SlavePipelineStateStore(), new LockCache<String>());
+      new SlavePipelineStateStore(), new EventListenerManager(), new LockCache<>());
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());

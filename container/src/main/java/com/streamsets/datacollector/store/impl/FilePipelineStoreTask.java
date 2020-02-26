@@ -27,6 +27,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineFragmentConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -97,12 +98,17 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
-  private StateEventListener stateEventListener;
+  private EventListenerManager eventListenerManager;
   private final PipelineCreator pipelineCreator;
 
   @Inject
-  public FilePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibrary,
-    PipelineStateStore pipelineStateStore, LockCache<String> lockCache) {
+  public FilePipelineStoreTask(
+      RuntimeInfo runtimeInfo,
+      StageLibraryTask stageLibrary,
+      PipelineStateStore pipelineStateStore,
+      EventListenerManager eventListenerManager,
+      LockCache<String> lockCache
+  ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
     this.runtimeInfo = runtimeInfo;
@@ -116,9 +122,10 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         SCHEMA_VERSION,
         buildInfo.getVersion(),
         runtimeInfo.getId(),
-        () -> getDefaultStatsAggrStageInstance(),
-        () -> getDefaultTestOriginStageInstance()
-        );
+        this::getDefaultStatsAggrStageInstance,
+        this::getDefaultTestOriginStageInstance
+    );
+    this.eventListenerManager = eventListenerManager;
   }
 
   @VisibleForTesting
@@ -127,7 +134,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   }
 
   public void registerStateListener(StateEventListener stateListener) {
-    stateEventListener = stateListener;
+    eventListenerManager.addStateEventListener(stateListener);
   }
 
   @Override
@@ -267,8 +274,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
             currentState.getNextRetryTimeStamp()
         );
         try {
-          if (stateEventListener != null) {
-            stateEventListener.onStateChange(currentState, latestState, "", null, offset);
+          if (eventListenerManager != null) {
+            eventListenerManager.broadcastStateChange(currentState, latestState, null, offset);
           }
         } catch (Exception e) {
           LOG.warn("Cannot set delete event for pipeline");

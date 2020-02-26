@@ -25,7 +25,11 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ThresholdType;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
+import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
@@ -33,6 +37,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
@@ -43,7 +48,9 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import javax.annotation.Nullable;
 import javax.inject.Singleton;
@@ -62,8 +69,9 @@ public class TestFilePipelineStoreTask {
   protected static final String DEFAULT_PIPELINE_DESCRIPTION = "Default Pipeline";
   protected static final String SYSTEM_USER = "system";
   protected PipelineStoreTask store;
+  protected ObjectGraph dagger;
 
-  @dagger.Module(injects = {FilePipelineStoreTask.class, LockCache.class},
+  @dagger.Module(injects = {FilePipelineStoreTask.class, LockCache.class, EventListenerManager.class},
     includes = LockCacheModule.class)
   public static class Module {
     public Module() {
@@ -78,15 +86,20 @@ public class TestFilePipelineStoreTask {
 
     @Provides
     @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return Mockito.spy(new EventListenerManager());
+    }
+
+    @Provides
+    @Singleton
     public StageLibraryTask provideStageLibrary() {
       return MockStages.createStageLibrary();
     }
 
     @Provides
     @Singleton
-    @Nullable
-    public PipelineStateStore providePipelineStateStore() {
-      return null;
+    public PipelineStateStore providePipelineStateStore(RuntimeInfo runtimeInfo) {
+      return Mockito.spy(new FilePipelineStateStore(runtimeInfo, new Configuration()));
     }
 
     @Provides
@@ -95,17 +108,17 @@ public class TestFilePipelineStoreTask {
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
+        EventListenerManager eventListenerManager,
         LockCache<String> lockCache
     ) {
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, lockCache);
+      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, eventListenerManager, lockCache);
     }
   }
 
   @Before
   public void setUp() {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    FilePipelineStoreTask filePipelineStoreTask = dagger.get(FilePipelineStoreTask.class);
-    store = new CachePipelineStoreTask(filePipelineStoreTask, new LockCache<String>());
+    dagger = ObjectGraph.create(new Module());
+    store = dagger.get(FilePipelineStoreTask.class);
   }
 
   @After
@@ -138,7 +151,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(0, store.getPipelines().size());
       store.create("foo", "a","label", "A", false, false, new HashMap<String, Object>());
       Assert.assertEquals(1, store.getPipelines().size());
-      store.save("foo2", "a", "A", "", store.load("a", "0"));
+      store.save("foo2", "a", FilePipelineStoreTask.REV, "A", store.load("a", "0"));
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
       Assert.assertEquals("a", store.getInfo("a").getPipelineId());
       store.delete("a");
@@ -232,7 +245,7 @@ public class TestFilePipelineStoreTask {
       PipelineConfiguration pc0 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc0 = createPipeline(pc0.getUuid());
       Thread.sleep(5);
-      store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc0);
+      store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc0);
       PipelineInfo info2 = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(info1.getCreated(), info2.getCreated());
       Assert.assertEquals(info1.getCreator(), info2.getCreator());
@@ -254,7 +267,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertTrue(pc.getStages().isEmpty());
       UUID uuid = pc.getUuid();
       pc = createPipeline(pc.getUuid());
-      pc = store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc);
       UUID newUuid = pc.getUuid();
       Assert.assertNotEquals(uuid, newUuid);
       PipelineConfiguration pc2 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
@@ -398,7 +411,7 @@ public class TestFilePipelineStoreTask {
       pc.getUiInfo().put("b", "B");
       pc.getStages().get(0).getUiInfo().put("ia", "IA");
       pc.getStages().get(0).getUiInfo().put("ib", "IB");
-      pc = store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc);
 
       // verify uiInfo stays after save
       Assert.assertEquals(2, pc.getUiInfo().size());
@@ -409,7 +422,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals("IB", pc.getStages().get(0).getUiInfo().get("ib"));
 
       // load and verify uiInfo stays
-      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       Assert.assertEquals(2, pc.getUiInfo().size());
       Assert.assertEquals("A", pc.getUiInfo().get("a"));
       Assert.assertEquals("B", pc.getUiInfo().get("b"));
@@ -423,9 +436,9 @@ public class TestFilePipelineStoreTask {
       ((Map)uiInfo.get(":pipeline:")).put("a", "AA");
       ((Map)uiInfo.get("i")).clear();
       ((Map)uiInfo.get("i")).put("ia", "IIAA");
-      store.saveUiInfo(DEFAULT_PIPELINE_NAME, null, uiInfo);
+      store.saveUiInfo(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, uiInfo);
 
-      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       Assert.assertNotNull(pc.getUiInfo());
       Assert.assertEquals(1, pc.getUiInfo().size());
       Assert.assertEquals("AA", pc.getUiInfo().get("a"));
@@ -451,9 +464,9 @@ public class TestFilePipelineStoreTask {
       metadata.put("key1", "value1");
       metadata.put("key2", "value2");
 
-      store.saveMetadata(SYSTEM_USER, DEFAULT_PIPELINE_NAME, null, metadata);
+      store.saveMetadata(SYSTEM_USER, DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, metadata);
 
-      pc = store.load(DEFAULT_PIPELINE_NAME, null);
+      pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       Assert.assertNotNull(pc.getMetadata());
       Assert.assertEquals(2, pc.getMetadata().size());
       Assert.assertEquals("value1", pc.getMetadata().get("key1"));
@@ -467,5 +480,35 @@ public class TestFilePipelineStoreTask {
     }
   }
 
+  @Test
+  public void testDeleteBroadcastState() throws Exception {
+    EventListenerManager eventListenerManager = dagger.get(EventListenerManager.class);
+    try {
+      store.init();
+      String id = UUID.randomUUID().toString();
+      store.create(
+          SYSTEM_USER,
+          id,
+          "label",
+          DEFAULT_PIPELINE_DESCRIPTION,
+          false,
+          false,
+          new HashMap<>()
+      );
 
+      ArgumentCaptor<PipelineState> fromStateArgumentCaptor = ArgumentCaptor.forClass(PipelineState.class);
+      ArgumentCaptor<PipelineState> toStateArgumentCaptor = ArgumentCaptor.forClass(PipelineState.class);
+
+      store.delete(id);
+      Mockito.verify(eventListenerManager).broadcastStateChange(fromStateArgumentCaptor.capture(), toStateArgumentCaptor.capture(), Mockito.any(), Mockito.anyMap());
+      PipelineState fromState = fromStateArgumentCaptor.getValue();
+      PipelineState toState = toStateArgumentCaptor.getValue();
+      Assert.assertEquals(id, fromState.getPipelineId());
+      Assert.assertEquals(id, toState.getPipelineId());
+      Assert.assertEquals(PipelineStatus.EDITED, fromState.getStatus());
+      Assert.assertEquals(PipelineStatus.DELETED, toState.getStatus());
+    } finally {
+      store.stop();
+    }
+  }
 }

@@ -161,7 +161,6 @@ public class RemoteDataCollector implements DataCollector {
   public void init() {
     stateEventListener.init();
     this.manager.addStateEventListener(stateEventListener);
-    this.pipelineStore.registerStateListener(stateEventListener);
   }
 
   @Override

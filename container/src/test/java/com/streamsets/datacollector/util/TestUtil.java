@@ -359,8 +359,19 @@ public class TestUtil {
     }
 
     @Provides @Singleton
-    public PipelineStoreTask providePipelineStore(RuntimeInfo info, StageLibraryTask stageLibraryTask, PipelineStateStore pipelineStateStore) {
-      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(info, stageLibraryTask, pipelineStateStore, new LockCache<String>());
+    public PipelineStoreTask providePipelineStore(
+        RuntimeInfo info,
+        StageLibraryTask stageLibraryTask,
+        EventListenerManager eventListenerManager,
+        PipelineStateStore pipelineStateStore
+    ) {
+      FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
+          info,
+          stageLibraryTask,
+          pipelineStateStore,
+          eventListenerManager,
+          new LockCache<>()
+      );
       pipelineStoreTask.init();
       try {
         //create an invalid pipeline

@@ -101,11 +101,27 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
-    public PipelineStoreTask providePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibraryTask,
-      PipelineStateStore pipelineStateStore) {
+    public EventListenerManager provideEventListenerManager() {
+      return Mockito.spy(new EventListenerManager());
+    }
+
+
+    @Provides
+    @Singleton
+    public PipelineStoreTask providePipelineStoreTask(
+        RuntimeInfo runtimeInfo,
+        StageLibraryTask stageLibraryTask,
+        EventListenerManager eventListenerManager,
+        PipelineStateStore pipelineStateStore
+    ) {
       PipelineStoreTask pipelineStoreTask =
-        new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(runtimeInfo,
-          stageLibraryTask, new FilePipelineStateStore(runtimeInfo, provideConfiguration())));
+        new SlavePipelineStoreTask(
+            new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
+                runtimeInfo,
+                stageLibraryTask,
+                eventListenerManager,
+                new FilePipelineStateStore(runtimeInfo, provideConfiguration()))
+        );
       return pipelineStoreTask;
     }
 
@@ -171,12 +187,6 @@ public class TestSlaveManager {
     public SnapshotStore provideSnapshotStore() {
       return Mockito.mock(SnapshotStore.class);
     }
-
-    @Provides @Singleton
-    public EventListenerManager provideEventListenerManager() {
-      return new EventListenerManager();
-    }
-
   }
 
   private void setUpManager() {

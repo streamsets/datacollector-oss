@@ -15,20 +15,16 @@
  */
 package com.streamsets.datacollector.store.impl;
 
-import org.junit.Before;
-import com.streamsets.datacollector.store.impl.CachePipelineStoreTask;
-import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
-
 import com.streamsets.datacollector.util.LockCache;
-
 import dagger.ObjectGraph;
+import org.junit.Before;
 
 public class TestCachePipelineStoreTask extends TestFilePipelineStoreTask {
 
   @Override
   @Before
   public void setUp() {
-    ObjectGraph dagger = ObjectGraph.create(new Module());
-    store = new CachePipelineStoreTask(dagger.get(FilePipelineStoreTask.class), new LockCache<String>());
+    dagger = ObjectGraph.create(new Module());
+    store = new CachePipelineStoreTask(dagger.get(FilePipelineStoreTask.class), new LockCache<>());
   }
 }

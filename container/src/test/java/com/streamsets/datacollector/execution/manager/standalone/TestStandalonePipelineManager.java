@@ -168,8 +168,13 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public PipelineStoreTask providePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibraryTask,
                                                       PipelineStateStore pipelineStateStore, LockCache<String> lockCache) {
-      FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-        pipelineStateStore, lockCache);
+      FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(
+          runtimeInfo,
+          stageLibraryTask,
+          pipelineStateStore,
+          new EventListenerManager(),
+          lockCache
+      );
       filePipelineStoreTask.init();
       return filePipelineStoreTask;
     }

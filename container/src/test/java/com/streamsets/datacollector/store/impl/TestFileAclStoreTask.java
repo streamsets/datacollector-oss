@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.store.impl;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
@@ -69,6 +70,12 @@ public class TestFileAclStoreTask {
 
     @Provides
     @Singleton
+    public EventListenerManager provideEventListenerManager() {
+      return Mockito.spy(new EventListenerManager());
+    }
+
+    @Provides
+    @Singleton
     public StageLibraryTask provideStageLibrary() {
       return MockStages.createStageLibrary();
     }
@@ -93,9 +100,10 @@ public class TestFileAclStoreTask {
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
+        EventListenerManager eventListenerManager,
         LockCache<String> lockCache
     ) {
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, lockCache);
+      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, eventListenerManager, lockCache);
     }
 
     @Provides
