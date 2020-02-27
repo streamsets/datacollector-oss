@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.http;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.http.AuthenticationType;
 import com.streamsets.pipeline.lib.http.HttpCompressionType;
@@ -28,11 +29,16 @@ import com.streamsets.pipeline.lib.http.logging.JulLogLevelChooserValues;
 import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.logging.VerbosityChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.origin.http.HttpClientSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.glassfish.jersey.client.RequestEntityProcessing;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,10 +51,20 @@ import static org.junit.Assert.fail;
 
 public class TestHttpProcessorUpgrader {
 
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HttpDProcessor.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new HttpClientSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testV1ToV2() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.requestTimeoutMillis", 1000));
     configs.add(new Config("conf.numThreads", 10));
     configs.add(new Config("conf.authType", AuthenticationType.NONE));
@@ -115,8 +131,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV2ToV3() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
 
     upgrader.upgrade("a", "b", "c", 2, 3, configs);
@@ -151,8 +165,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV3ToV4() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.client.requestTimeoutMillis", "1000"));
 
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
@@ -182,8 +194,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV4ToV5() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     configs.add(new Config("conf.dataFormatConfig.schemaInMessage", true));
     configs.add(new Config("conf.dataFormatConfig.avroSchema", null));
 
@@ -226,8 +236,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV5ToV6() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
 
     upgrader.upgrade("a", "b", "c", 5, 6, configs);
@@ -239,8 +247,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV6ToV7() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
 
     upgrader.upgrade("a", "b", "c", 6, 7, configs);
@@ -252,8 +258,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV7ToV8() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
 
     upgrader.upgrade("a", "b", "c", 7, 8, configs);
@@ -274,7 +278,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV9ToV10() throws Exception {
-    List<Config> configs = new ArrayList<>();
     configs.add(new Config("conf.rateLimit", 500));
 
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
@@ -289,8 +292,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV10ToV11() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
     upgrader.upgrade("lib", "stage", "inst", 10, 11, configs);
 
@@ -331,8 +332,6 @@ public class TestHttpProcessorUpgrader {
 
   @Test
   public void testV11ToV12() throws Exception {
-    List<Config> configs = new ArrayList<>();
-
     HttpProcessorUpgrader upgrader = new HttpProcessorUpgrader();
     upgrader.upgrade("lib", "stage", "inst", 11, 12, configs);
 
@@ -341,5 +340,17 @@ public class TestHttpProcessorUpgrader {
         "conf.multipleValuesBehavior",
         MultipleValuesBehavior.FIRST_ONLY
     );
+  }
+
+  @Test
+  public void testV12ToV13() {
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
 }
