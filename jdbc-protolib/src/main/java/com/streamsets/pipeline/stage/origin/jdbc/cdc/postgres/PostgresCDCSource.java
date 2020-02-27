@@ -35,9 +35,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 import org.apache.commons.lang3.StringUtils;
@@ -53,12 +51,10 @@ public class PostgresCDCSource extends BaseSource {
   private static final String HIKARI_CONFIG_PREFIX = "hikariConf.";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
-  private static final int MAX_RECORD_GENERATION_ATTEMPTS = 100;
   private static final String PREFIX = "postgres.cdc.";
   private static final String LSN = PREFIX + "lsn";
   private static final String XID = PREFIX + "xid";
   private static final String TIMESTAMP_HEADER = PREFIX + "timestamp";
-  private static final int MAX_CACHE_SIZE = 100000000;
   private final PostgresCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
   private PostgresCDCWalReceiver walReceiver = null;
@@ -66,7 +62,7 @@ public class PostgresCDCSource extends BaseSource {
   private DateTimeColumnHandler dateTimeColumnHandler;
   private LocalDateTime startDate;
   private ZoneId zoneId;
-
+  private PostgresWalRecord unsentWalRecord;
 
   /*
       The Postgres WAL (Write Ahead Log) uses a XLOG sequence number to
@@ -164,6 +160,23 @@ public class PostgresCDCSource extends BaseSource {
     return issues;
   }
 
+  private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime, boolean isNewRecordNull) {
+    return getContext().isStopped() ||
+        currentBatchSize >= maxBatchSize || // batch is full
+        currentBatchSize > 0 && isNewRecordNull || // newRecordNull = no more data from origin
+        (
+            configBean.maxBatchWaitTime > 0 &&
+            System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime
+        );
+  }
+
+  private PostgresWalRecord getNextRecord() {
+    if(unsentWalRecord == null) {
+      unsentWalRecord = getNextRecordFromStream();
+    }
+    return unsentWalRecord;
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
 
@@ -175,18 +188,24 @@ public class PostgresCDCSource extends BaseSource {
     PostgresWalRecord postgresWalRecord;
     maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     int currentBatchSize = 0;
-    int recordGenerationAttempts = 0;
 
-    while (!getContext().isStopped() &&
-          currentBatchSize < maxBatchSize &&
-          recordGenerationAttempts++ < MAX_RECORD_GENERATION_ATTEMPTS) {
+    long startTime = System.currentTimeMillis();
 
-      LOG.debug("Getting next record from Receiver stream...");
-      postgresWalRecord = getNextRecordFromStream();
+    while (
+        !isBatchDone(
+            currentBatchSize,
+            maxBatchSize,
+            startTime,
+            (postgresWalRecord = getNextRecord()) == null
+        )
+    ) {
+
+      // Current record will be processed
+      unsentWalRecord = null;
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
-        ThreadUtil.sleep(configBean.pollInterval * 1000 / 3);
+        ThreadUtil.sleep(configBean.pollInterval);
         continue;
       }
 
@@ -199,17 +218,16 @@ public class PostgresCDCSource extends BaseSource {
 
       final Record record = processWalRecord(postgresWalRecord);
 
-      if (record != null) {
-        Map<String, String> attributes = new HashMap<>();
-        attributes.put(LSN, recordLsn);
-        attributes.put(XID, postgresWalRecord.getXid());
-        attributes.put(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
-        attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
-        batchMaker.addRecord(record);
-        currentBatchSize++;
-        walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
-        setOffset(recordLsn);
-      }
+      Record.Header header = record.getHeader();
+
+      header.setAttribute(LSN, recordLsn);
+      header.setAttribute(XID, postgresWalRecord.getXid());
+      header.setAttribute(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
+
+      batchMaker.addRecord(record);
+      currentBatchSize++;
+      walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
+      setOffset(recordLsn);
     }
     return getOffset();
   }

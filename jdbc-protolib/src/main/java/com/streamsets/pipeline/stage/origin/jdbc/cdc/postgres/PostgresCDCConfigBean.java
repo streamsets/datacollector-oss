@@ -127,6 +127,18 @@ public class PostgresCDCConfigBean {
   @MultiValueChooserModel(PostgresChangeTypesChooserValues.class)
   public List<PostgresChangeTypeValues> postgresChangeTypes;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      description = "Maximum amount of time to wait for data before sending a partial or empty batch",
+      label = "Batch Wait Time (ms)",
+      defaultValue = "1000",
+      min = 0,
+      group = "CDC",
+      displayPosition = 90
+  )
+  public long maxBatchWaitTime = 0L;
+
   //HIDDEN - only choice supported today
   @ConfigDef(
       required = true,

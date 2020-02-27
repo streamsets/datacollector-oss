@@ -16,5 +16,11 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 1
+    actions: []
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: postgresCDCConfigBean.maxBatchWaitTime
+          value: 1000

@@ -25,16 +25,16 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "PostgreSQL CDC Client",
-    description = "Origin that an read change events from a PostgreSQL Database",
+    description = "Origin that reads change events from a PostgreSQL database",
     icon = "rdbms.png",
     recordsByRef = true,
     producesEvents = true,
     resetOffset = true,
     onlineHelpRefUrl ="index.html?contextID=task_v21_nm4_n2b",
     upgrader = PostgresCDCSourceUpgrader.class,
-    upgraderDef = "upgrader/PostgresCDCDSource.yaml"
+    upgraderDef = "upgrader/PostgresCDCSource.yaml"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
