@@ -51,7 +51,7 @@ import java.util.concurrent.BlockingQueue;
 public abstract class AbstractHttpReceiverServer {
   private static final Logger LOG = LoggerFactory.getLogger(AbstractHttpReceiverServer.class);
 
-  private final HttpConfigs configs;
+  protected final HttpConfigs configs;
 
   protected final BlockingQueue<Exception> errorQueue;
 

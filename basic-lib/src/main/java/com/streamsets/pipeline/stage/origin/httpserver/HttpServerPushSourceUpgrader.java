@@ -56,6 +56,10 @@ public class HttpServerPushSourceUpgrader implements StageUpgrader {
         }
       case 10:
         upgradeFromV10toV11(configs);
+        if(toVersion==11) {
+          break;
+        }
+      case 11:
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));

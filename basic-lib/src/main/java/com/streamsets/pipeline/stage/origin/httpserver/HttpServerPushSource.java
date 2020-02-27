@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.httpserver;
 
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.httpsource.AbstractHttpServerPushSource;
@@ -70,4 +71,8 @@ public class HttpServerPushSource extends AbstractHttpServerPushSource<HttpRecei
     httpConfigs.destroy();
   }
 
+  @Override
+  protected AbstractHttpReceiverServer getHttpReceiver() {
+    return new HttpReceiverServerPush(httpConfigs, getReceiver(), getErrorQueue());
+  }
 }
