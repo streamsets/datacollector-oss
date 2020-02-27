@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.security.usermgnt;
 
+import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -83,55 +84,47 @@ public class FormRealmUsersManager implements Closeable {
   }
 
   public String resetPassword(String user) {
-    String resetPassword = null;
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      resetPassword = userLine.resetPassword(resetValidityMillis);
-      dirty = true;
-    }
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    String resetPassword = userLine.resetPassword(resetValidityMillis);
+    dirty = true;
     return resetPassword;
   }
 
   public void setPasswordFromReset(String user, String resetPassword, String password) {
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      userLine.setPasswordFromReset(resetPassword, password);
-      dirty = true;
-    }
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    userLine.setPasswordFromReset(resetPassword, password);
+    dirty = true;
   }
 
   public void changePassword(String user, String oldPassword, String newPassword) {
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      userLine.setPassword(oldPassword, newPassword);
-      dirty = true;
-    }
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    userLine.setPassword(oldPassword, newPassword);
+    dirty = true;
   }
 
   public boolean verifyPassword(String user, String password) {
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      return userLine.verifyPassword(password);
-    }
-    return false;
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    return userLine.verifyPassword(password);
   }
 
   public void delete(String user) {
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      realmUsers.delete(user);
-      dirty = true;
-    }
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    realmUsers.delete(user);
+    dirty = true;
   }
 
   public void update(String user, String email, List<String> groups, List<String> roles) {
     UserLine userLine = realmUsers.find(user);
-    if (userLine != null) {
-      userLine.setEmail(email);
-      userLine.setGroups(groups);
-      userLine.setRoles(roles);
-      dirty = true;
-    }
+    Preconditions.checkNotNull(userLine, "User does not exist");
+    userLine.setEmail(email);
+    userLine.setGroups(groups);
+    userLine.setRoles(roles);
+    dirty = true;
   }
 
   public List<User> listUsers() {

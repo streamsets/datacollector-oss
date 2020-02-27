@@ -45,6 +45,7 @@ import com.streamsets.datacollector.restapi.configuration.StandAndClusterManager
 import com.streamsets.datacollector.restapi.configuration.StatsCollectorInjector;
 import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
+import com.streamsets.datacollector.restapi.rbean.rest.RestResourceContextFilter;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -270,6 +271,18 @@ public class WebServerModule {
           FilterHolder filter = new FilterHolder(new AlwaysAllRolesFilter());
           context.addFilter(filter, "/*", EnumSet.of(DispatcherType.REQUEST));
         }
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideRestResourceContext() {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        FilterHolder filter = new FilterHolder(new RestResourceContextFilter());
+        context.addFilter(filter, "/rest/*", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(filter, "/public-rest/*", EnumSet.of(DispatcherType.REQUEST));
       }
     };
   }

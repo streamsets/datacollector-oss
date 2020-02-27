@@ -25,6 +25,7 @@ import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
+import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
@@ -49,7 +50,7 @@ import java.util.stream.Collectors;
 @Path("/v4/secrets")
 @Produces(MediaType.APPLICATION_JSON)
 @RequiresCredentialsDeployed
-public class SecretResource  {
+public class SecretResource  extends RestResource {
 
   /**
    * Skeleton for Secrets API for SDC following designer pattern.

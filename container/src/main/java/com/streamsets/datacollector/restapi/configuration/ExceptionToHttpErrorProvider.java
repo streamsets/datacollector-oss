@@ -16,9 +16,13 @@
 package com.streamsets.datacollector.restapi.configuration;
 
 import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
+import com.streamsets.datacollector.restapi.rbean.lang.ErrorMsg;
+import com.streamsets.datacollector.restapi.rbean.rest.ErrorRestResponse;
+import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.ErrorCodeException;
 import com.streamsets.pipeline.api.AntennaDoctorMessage;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.StageException;
 
 import org.slf4j.Logger;
@@ -37,9 +41,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
- * Jersey provider that converts KMS exceptions into detailed HTTP errors.
+ * Jersey provider that converts exceptions into detailed HTTP errors.
  */
 @Provider
 public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> {
@@ -93,12 +98,58 @@ public class ExceptionToHttpErrorProvider implements ExceptionMapper<Exception> 
 
   @Override
   public Response toResponse(Exception ex) {
-    if (ex instanceof WebApplicationException) {
-      return ((WebApplicationException)ex).getResponse();
+    if (RestResource.isRestResource()) {
+      return handleRestResourceException(ex);
     } else {
-      LOG.error("REST API call error: {}", ex.toString(), ex);
-      return createResponse(Status.INTERNAL_SERVER_ERROR, ex);
+      if (ex instanceof WebApplicationException) {
+        return ((WebApplicationException) ex).getResponse();
+      } else {
+        LOG.error("REST API call error: {}", ex.toString(), ex);
+        return createResponse(Status.INTERNAL_SERVER_ERROR, ex);
+      }
     }
+  }
+
+  enum Errors implements ErrorCode {
+    REST_000("Internal Error: {}"),
+    REST_001("Bad Request: {}"),
+    ;
+
+    private String message;
+
+    Errors(String message) {
+      this.message = message;
+    }
+
+    @Override
+    public String getCode() {
+      return name();
+    }
+
+    @Override
+    public String getMessage() {
+      return message;
+    }
+  }
+
+  private Response handleRestResourceException(Exception ex) {
+    ErrorRestResponse restResponse = new ErrorRestResponse();
+    int status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+    if (ex instanceof WebApplicationException) {
+      status = ((WebApplicationException)ex).getResponse().getStatus();
+    } else if (ex instanceof NullPointerException) {
+      status = Response.Status.BAD_REQUEST.getStatusCode();
+      restResponse.addMessage(new ErrorMsg(Errors.REST_001, ex.getMessage()));
+    } else if (ex instanceof IllegalArgumentException) {
+      status = Response.Status.BAD_REQUEST.getStatusCode();
+      restResponse.addMessage(new ErrorMsg(Errors.REST_001, ex.getMessage()));
+    } else if (ex instanceof RuntimeException) {
+      status = Response.Status.INTERNAL_SERVER_ERROR.getStatusCode();
+      restResponse.addMessage(new ErrorMsg(Errors.REST_000, ex.getMessage()));
+    }
+    LOG.error("REST error, URL '{}' httpStatus '{}' : {}", "", status, ex.toString(), ex);
+    restResponse.setHttpStatusCode(status);
+    return Response.status(status).type(MediaType.APPLICATION_JSON).entity(restResponse).build();
   }
 
   private List<AntennaDoctorMessage> runAntennaDoctorIfNeeded(Throwable ex) {

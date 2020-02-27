@@ -25,6 +25,7 @@ import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
+import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RChangePassword;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RResetPasswordLink;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RUser;
@@ -56,7 +57,7 @@ import java.util.stream.Collectors;
 @Path("/v4/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
-public class UserManagementResource {
+public class UserManagementResource extends RestResource {
   private static final long RESET_TOKEN_VALIDITY = TimeUnit.HOURS.toMillis(2);
 
   private final Principal principal;
@@ -127,6 +128,7 @@ public class UserManagementResource {
         user.getGroups().stream().map(g -> g.getValue()).collect(Collectors.toList()),
         user.getRoles().stream().map(r -> r.getValue().toString().toLowerCase()).collect(Collectors.toList())
     ));
+    Preconditions.checkNotNull(resetToken, "User already exists");
     RResetPasswordLink resetLink = createResetPasswordLink(
         user.getId().getValue(),
         !user.getEmail().getValue().isEmpty(),

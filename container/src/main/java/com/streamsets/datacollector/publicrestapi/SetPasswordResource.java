@@ -20,6 +20,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
+import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
 import com.streamsets.datacollector.util.AuthzRole;
 
@@ -36,7 +37,7 @@ import java.io.IOException;
 @Path("/v4/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
-public class SetPasswordResource {
+public class SetPasswordResource extends RestResource {
   private final UserManagementExecutor executor;
 
   @Inject
