@@ -122,42 +122,62 @@
 
 <script type="text/ng-template" id="elCredentialConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8"
-       ng-init="showValue=(!detailPaneConfig.configuration[configIndex].value || detailPaneConfig.configuration[configIndex].value.indexOf('${') === 0)">
+       ng-controller="elCredentialConfigurationController">
 
     <div ui-codemirror
-         ng-if="showValue"
-         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
-         focus-me="{{autoFocusConfigName === configDefinition.name}}"
-         ng-model="detailPaneConfig.configuration[configIndex].value"
-         ui-refresh="refreshCodemirror"
-         ui-codemirror-opts="getCodeMirrorOptions({
-                readOnly: (isPipelineReadOnly || isPipelineRunning),
-                autofocus: autoFocusConfigName === configDefinition.name,
-                extraKeys: {
-                  'Tab': false,
-                  'Enter': common.ignoreCodeMirrorEnterKey,
-                  'Ctrl-Space': 'autocomplete'
-                }
-              }, configDefinition)"
-         codemirror-el
-         field-paths="fieldPaths"
-         d-field-paths="dFieldPaths"
-         data-type="configDefinition.type">
+      ng-if="credentialSettings.showExpression"
+      ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+      focus-me="{{autoFocusConfigName === configDefinition.name}}"
+      ng-model="detailPaneConfig.configuration[configIndex].value"
+      ui-refresh="refreshCodemirror"
+      ui-codemirror-opts="getCodeMirrorOptions({
+            readOnly: (isPipelineReadOnly || isPipelineRunning),
+            autofocus: autoFocusConfigName === configDefinition.name,
+            extraKeys: {
+              'Tab': false,
+              'Enter': common.ignoreCodeMirrorEnterKey,
+              'Ctrl-Space': 'autocomplete'
+            }
+          }, configDefinition)"
+      codemirror-el
+      field-paths="fieldPaths"
+      d-field-paths="dFieldPaths"
+      data-type="configDefinition.type">
     </div>
 
-    <input type="password" class="form-control"
-           ng-if="!showValue"
-           name="{{configDefinition.name}}"
-           focus-me="{{autoFocusConfigName === configDefinition.name}}"
-           ng-readonly="isPipelineReadOnly || isPipelineRunning"
-           ng-model="detailPaneConfig.configuration[configIndex].value"
-           ng-required="configDefinition.required">
-
+    <div ng-class="{'input-group': !credentialSettings.showExpression && credentialSettings.credentialValue}">
+      <input type="{{credentialSettings.showCredential ? 'text' : 'password'}}" class="form-control"
+        ng-if="!credentialSettings.showExpression"
+        name="{{configDefinition.name}}"
+        focus-me="{{autoFocusConfigName === configDefinition.name}}"
+        ng-readonly="isPipelineReadOnly || isPipelineRunning"
+        ng-model="credentialSettings.credentialValue"
+        ng-required="configDefinition.required"
+        placeholder="{{detailPaneConfig.configuration[configIndex].value ? '********' : ''}}">
+      <span class="input-group-btn"
+        ng-if="!credentialSettings.showExpression && credentialSettings.credentialValue">
+        <button class="btn btn-default" type="button"
+          ng-click="saveCredential()"
+          title="Save credential">
+          <i class="glyphicon glyphicon-ok"></i>
+        </button>
+        <button class="btn btn-default" type="button"
+          ng-click="blankCredential()"
+          title="Cancel credential change">
+          <i class="glyphicon glyphicon-remove"></i>
+        </button>
+        <button class="btn btn-default" type="button"
+        ng-click="toggleShowCredential()"
+        title="Toggle showing credential">
+          <i class="{{'glyphicon '  + (credentialSettings.showCredential ? 'glyphicon-eye-close' : 'glyphicon-eye-open')}}"></i>
+        </button>
+      </span>
+    </div>
 
     <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
       <button type="button" class="btn btn-link"
-              ng-click="showValue = !showValue">
-        {{showValue ? ('global.form.hideValue' | translate) : ('global.form.showValue' | translate)}}
+              ng-click="toggleShowExpression()">
+        {{credentialSettings.showExpression ? 'Enter Credential' : 'Enter Expression'}}
       </button>
     </div>
 

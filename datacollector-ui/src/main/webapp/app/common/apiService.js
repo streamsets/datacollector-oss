@@ -1529,5 +1529,30 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    api.secret = {
+      /**
+       * Create new text secret (aka password), return http promise
+       */
+      createOrUpdateTextSecret: function (vaultName, secretName, secretValue) {
+        const url = apiBase + '/secrets/text/ctx=SecretManage';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: {
+            envelopeVersion : '1',
+            data: {
+              vault: vaultName,
+              name: secretName,
+              type: 'TEXT',
+              value: secretValue,
+            }
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      },
+    };
+
     return api;
   });
