@@ -86,6 +86,29 @@ SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
 SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
 SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
 SDC_RESOURCES=${SDC_RESOURCES:=${SDC_HOME}/resources}
+
+# Use the percentage rate of available memory for the heap size if SDC_HEAP_SIZE_PERCENTAGE is
+# specified and the calculated size is greater than 512m but limited by ulimit and cgroup. Note that
+# /proc/meminfo is used to get the available memory which may not be available in some platforms.
+if [[ -n "${SDC_HEAP_SIZE_PERCENTAGE}" ]] && (( SDC_HEAP_SIZE_PERCENTAGE > 0 )) && (( SDC_HEAP_SIZE_PERCENTAGE < 100 )); then
+  SDC_HEAP_SIZE=`awk -v rate="$SDC_HEAP_SIZE_PERCENTAGE" '/^MemAvailable/ {printf("%.0f", $2 / 100 * rate);}' <(cat /proc/meminfo)`
+  if [[ -n "${SDC_HEAP_SIZE}" ]] && (( SDC_HEAP_SIZE > 524288 )); then
+    echo "INFO: Using ${SDC_HEAP_SIZE_PERCENTAGE}% of available memory for Data Collector heap size: ${SDC_HEAP_SIZE}k"
+    # 50% of ulimit virtual memory in kbytes
+    HALF_ULIMIT_SIZE=`awk '{printf("%.0f", $1 / 2)}' <(ulimit -v)`
+    if [[ -n "${HALF_ULIMIT_SIZE}" ]] && ((HALF_ULIMIT_SIZE > 0 )) && ((HALF_ULIMIT_SIZE < SDC_HEAP_SIZE )); then
+      echo "INFO: Overriding the heap size to 50% of ULIMIT virtual memory limit: ${HALF_ULIMIT_SIZE}k"
+      SDC_HEAP_SIZE=${HALF_ULIMIT_SIZE}
+    fi
+    # 50% of cgroup memory limit in kbytes
+    HALF_CGROUP_SIZE=`awk '{printf("%.0f", $1 / 2048)}' <(cat /sys/fs/cgroup/memory/memory.limit_in_bytes)`
+    if [[ -n "${HALF_CGROUP_SIZE}" ]] && (( HALF_CGROUP_SIZE > 0 )) && (( HALF_CGROUP_SIZE < SDC_HEAP_SIZE )); then
+      echo "INFO: Overriding the heap size to 50% of CGROUP memory limit: ${HALF_CGROUP_SIZE}k"
+      SDC_HEAP_SIZE=${HALF_CGROUP_SIZE}
+    fi
+    SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Xmx${SDC_HEAP_SIZE}k -Xms${SDC_HEAP_SIZE}k"
+  fi
+fi
 SDC_JAVA_OPTS=${SDC_JAVA_OPTS:="-Xmx1024m"}
 SDC_MAIN_CLASS=${SDC_MAIN_CLASS:="com.streamsets.datacollector.main.DataCollectorMain"}
 SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:="true"}
