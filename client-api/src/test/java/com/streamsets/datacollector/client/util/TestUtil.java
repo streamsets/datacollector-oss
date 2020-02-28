@@ -20,6 +20,8 @@ import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
+import com.streamsets.datacollector.security.usermgnt.UserLine;
+import com.streamsets.datacollector.security.usermgnt.UserLineCreator;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
@@ -31,6 +33,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
+import java.util.Collections;
 import java.util.UUID;
 
 public class TestUtil {
@@ -52,16 +55,33 @@ public class TestUtil {
       RuntimeInfo.CONFIG_DIR), "sdc.properties"));
     conf.save(writer);
     writer.close();
-
-    if(!authenticationType.equals("none")) {
-      File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
-        RuntimeInfo.CONFIG_DIR), authenticationType + "-realm.properties");
-      writer = new FileWriter(realmFile);
-      writer.write("admin: admin,user,admin\n");
-      writer.close();
-      Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
-        PosixFilePermission.OWNER_READ,
-        PosixFilePermission.OWNER_WRITE));
+    switch (authenticationType) {
+      case "basic":
+      case "digest":
+      case "form":
+        File realmFile = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX +
+            RuntimeInfo.CONFIG_DIR), authenticationType + "-realm.properties");
+        writer = new FileWriter(realmFile);
+        if (!authenticationType.equals("form")) {
+          writer.write("admin: admin,user,admin\n");
+        } else {
+          UserLine line = UserLineCreator.getMD5Creator().create(
+              "admin",
+              "admin",
+              Collections.emptyList(),
+              Collections.singletonList("admin"),
+              "admin"
+          );
+          writer.write(line.getValue());
+        }
+        writer.close();
+        Files.setPosixFilePermissions(realmFile.toPath(), ImmutableSet.of(PosixFilePermission.OWNER_EXECUTE,
+            PosixFilePermission.OWNER_READ,
+            PosixFilePermission.OWNER_WRITE));
+        break;
+      case "none":
+      default:
+        break;
     }
 
     ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
