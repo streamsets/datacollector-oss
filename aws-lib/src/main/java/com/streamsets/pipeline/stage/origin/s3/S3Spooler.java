@@ -252,6 +252,7 @@ public class S3Spooler {
     //    comparing the timestamp on that object
 
     if(s3Offset.getKey() != null && S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
+      LOG.info("Post processing check for {}", s3Offset.getKey());
       //conditions 1, 2 are met. Check for 3 and 4.
       S3ObjectSummary objectSummary = AmazonS3Util.getObjectSummary(s3Client, s3ConfigBean.s3Config.bucket, s3Offset.getKey());
       if(objectSummary != null &&
