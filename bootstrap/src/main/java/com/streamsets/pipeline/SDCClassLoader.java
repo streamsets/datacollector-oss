@@ -320,7 +320,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   protected synchronized Class<?> loadClass(String name, boolean resolve)
     throws ClassNotFoundException {
     if (debug) {
-      System.err.println(getClass().getSimpleName() + " " + getName() + ": Loading class: " + name);
+      System.err.println("Thread " + Thread.currentThread().getId() + ": " + getClass().getSimpleName() + " " +
+          getName() + ": Loading class: " + name);
     }
 
     Class<?> c = findLoadedClass(name);
@@ -333,11 +334,13 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       try {
         c = findClass(name);
         if (debug && c != null) {
-          System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class: " + name + " ");
+          System.err.println("Thread " + Thread.currentThread().getId() + ": " + getClass().getSimpleName() + " " +
+              getName() + ": Loaded class: " + name + " ");
         }
       } catch (ClassNotFoundException e) {
         if (debug) {
-          System.err.println(getClass().getSimpleName() + " " + getName() + ": " + e);
+          System.err.println("Thread " + Thread.currentThread().getId() + ": " + getClass().getSimpleName() + " " +
+              getName() + ": " + e);
         }
         ex = e;
       }
@@ -352,7 +355,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     if (c == null && (isSystemPackage || parentIsAPIClassLoader || !applicationPackage.isApplication(name))) {
       c = parent.loadClass(name);
       if (debug && c != null) {
-        System.err.println(getClass().getSimpleName() + " " + getName() + ": Loaded class from parent: " + name + " ");
+        System.err.println("Thread " + Thread.currentThread().getId() + ": " + getClass().getSimpleName() + " " +
+            getName() + ": Loaded class from parent: " + name + " ");
       }
     }
 
