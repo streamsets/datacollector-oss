@@ -145,7 +145,7 @@
       data-type="configDefinition.type">
     </div>
 
-    <div ng-class="{'input-group': !credentialSettings.showExpression && credentialSettings.credentialValue}">
+    <div ng-class="{'input-group': (!credentialSettings.showExpression && credentialSettings.credentialValue) || credentialSettings.saved}">
       <input type="{{credentialSettings.showCredential ? 'text' : 'password'}}" class="form-control"
         ng-if="!credentialSettings.showExpression"
         name="{{configDefinition.name}}"
@@ -159,18 +159,22 @@
         <button class="btn btn-default" type="button"
           ng-click="saveCredential()"
           title="Save credential">
-          <i class="glyphicon glyphicon-ok"></i>
+          <i class="glyphicon glyphicon-ok confirm-check"></i>
         </button>
         <button class="btn btn-default" type="button"
           ng-click="blankCredential()"
           title="Cancel credential change">
-          <i class="glyphicon glyphicon-remove"></i>
+          <i class="glyphicon glyphicon-remove cancel-x"></i>
         </button>
         <button class="btn btn-default" type="button"
         ng-click="toggleShowCredential()"
         title="Toggle showing credential">
           <i class="{{'glyphicon '  + (credentialSettings.showCredential ? 'glyphicon-eye-close' : 'glyphicon-eye-open')}}"></i>
         </button>
+      </span>
+      <span class="input-group-addon"
+        ng-if="credentialSettings.saved && !(!credentialSettings.showExpression && credentialSettings.credentialValue)">
+        Saved!
       </span>
     </div>
 

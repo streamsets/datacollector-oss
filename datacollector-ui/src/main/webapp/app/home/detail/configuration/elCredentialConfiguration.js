@@ -30,7 +30,8 @@ angular
       credentialSettings: {
         credentialValue: '',
         showCredential: false,
-        showExpression: false
+        showExpression: false,
+        saved: false
       },
 
       // Save a typed in credential to the interal secret store
@@ -49,6 +50,7 @@ angular
         .then((response) => {
           $scope.detailPaneConfig.configuration[$scope.configIndex].value = expression;
           $scope.credentialSettings.credentialValue = '';
+          $scope.credentialSettings.saved = true;
         }).catch((err) => {
           console.error(err);
         });
@@ -56,6 +58,7 @@ angular
 
       toggleShowExpression: function() {
         $scope.credentialSettings.showExpression = !$scope.credentialSettings.showExpression;
+        $scope.credentialSettings.saved = false;
       },
 
       toggleShowCredential: function() {
@@ -64,6 +67,12 @@ angular
 
       blankCredential: function() {
         $scope.credentialSettings.credentialValue = '';
+      }
+    });
+
+    $scope.$watch('credentialSettings.credentialValue', function(newValue, _oldValue, scope) {
+      if (newValue.length > 0) {
+        scope.credentialSettings.saved = false;
       }
     });
   });
