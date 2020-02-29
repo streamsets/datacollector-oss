@@ -44,11 +44,14 @@ public class S3ConnectionSourceConfig extends S3ConnectionBaseConfig {
     Stage.Context context,
     String configPrefix,
     ProxyConfig proxyConfig,
+    boolean prefixHasWildcard,
     List<Stage.ConfigIssue> issues,
     int maxErrorRetries
   ) {
     super.init(context, configPrefix, proxyConfig, issues, maxErrorRetries);
-    validateConnection(context, configPrefix, issues);
+    if (prefixHasWildcard) {
+      validateConnection(context, configPrefix, issues);
+    }
   }
 
   private void validateConnection(

@@ -28,19 +28,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AWSUtil {
+  private static final String WILDCARD_PATTERN = ".*[\\*\\?].*";
   private static final int MILLIS = 1000;
   private AWSUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, boolean allowAnonymous) throws StageException {
     AWSCredentialsProvider credentialsProvider;
     if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
       credentialsProvider = new AWSStaticCredentialsProvider(
           new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
       );
     } else {
-      credentialsProvider = new DefaultAWSCredentialsProviderChain();
+      credentialsProvider = allowAnonymous ?
+          new AwsAllowAnonymousCredentialsProviderChain() :
+          new DefaultAWSCredentialsProviderChain();
     }
     return credentialsProvider;
+  }
+
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+    return getCredentialsProvider(config, false);
   }
 
   public static ClientConfiguration getClientConfiguration(ProxyConfig config) throws StageException {
@@ -122,5 +129,9 @@ public class AWSUtil {
       }
     }
     return prefix;
+  }
+
+  public static boolean containsWildcard(String key) {
+    return key.matches(WILDCARD_PATTERN);
   }
 }
