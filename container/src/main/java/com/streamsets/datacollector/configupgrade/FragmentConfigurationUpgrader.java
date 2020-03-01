@@ -20,13 +20,16 @@ import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.datacollector.validation.ValidationError;
+import com.streamsets.pipeline.api.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FragmentConfigurationUpgrader {
@@ -38,10 +41,11 @@ public class FragmentConfigurationUpgrader {
     return UPGRADER;
   }
 
-  private FragmentConfigurationUpgrader() {
+  protected FragmentConfigurationUpgrader() {
   }
 
   public PipelineFragmentConfiguration upgradeIfNecessary(
+      StageLibraryTask stageLibrary,
       PipelineFragmentConfiguration fragmentConfiguration,
       List<Issue> issues
   ) {
@@ -54,8 +58,10 @@ public class FragmentConfigurationUpgrader {
       fragmentConfiguration = upgradeSchema(fragmentConfiguration, issues);
     }
 
-    if(issues.isEmpty()) {
-      upgrade(fragmentConfiguration, issues);
+    // Upgrading data if needed
+    upgrade = needsUpgrade(stageLibrary, fragmentConfiguration, issues);
+    if (upgrade && issues.isEmpty()) {
+      fragmentConfiguration = upgrade(stageLibrary, fragmentConfiguration, issues);
     }
 
     return (issues.isEmpty()) ? fragmentConfiguration : null;
@@ -95,22 +101,90 @@ public class FragmentConfigurationUpgrader {
     return PipelineBeanCreator.FRAGMENT_DEFINITION;
   }
 
-  private void upgrade(PipelineFragmentConfiguration fragmentConfiguration, List<Issue> issues) {
+  private PipelineFragmentConfiguration upgrade(
+      StageLibraryTask library,
+      PipelineFragmentConfiguration fragmentConfiguration,
+      List<Issue> issues
+  ) {
+    // upgrade pipeline fragment level configs if necessary
     StageConfiguration fragmentConfAsStageConf = PipelineBeanCreator.getPipelineConfAsStageConf(fragmentConfiguration);
     if (PipelineConfigurationUpgrader.needsUpgrade(
-        null,
+        library,
         getFragmentDefinition(),
         fragmentConfAsStageConf,
         issues
     )) {
-      fragmentConfAsStageConf = PipelineConfigurationUpgrader.upgradeIfNeeded(
-          null,
+      PipelineConfigurationUpgrader.upgradeIfNeeded(
+          library,
           getFragmentDefinition(),
           fragmentConfAsStageConf,
           issues
       );
+    }
+
+    List<Issue> ownIssues = new ArrayList<>();
+    List<StageConfiguration> stageInstances = new ArrayList<>();
+
+    // Test origin
+    StageConfiguration testOrigin = fragmentConfiguration.getTestOriginStage();
+    if (testOrigin != null) {
+      testOrigin = PipelineConfigurationUpgrader.upgradeIfNeeded(library, testOrigin, ownIssues);
+    }
+
+    // upgrade stages;
+    for (StageConfiguration stageConf : fragmentConfiguration.getStages()) {
+      stageConf = PipelineConfigurationUpgrader.upgradeIfNeeded(library, stageConf, ownIssues);
+      stageInstances.add(stageConf);
+    }
+
+
+    // if ownIssues > 0 we had an issue upgrading, we wont touch the pipelineConf and return null
+    if (ownIssues.isEmpty()) {
+      fragmentConfiguration.setTestOriginStage(testOrigin);
+      fragmentConfiguration.setStages(stageInstances);
+
+      if (testOrigin != null) {
+        fragmentConfAsStageConf.addConfig(new Config(
+            "testOriginStage",
+            PipelineConfigurationUpgrader.stageToUISelect(testOrigin))
+        );
+      }
+
       fragmentConfiguration.setConfiguration(fragmentConfAsStageConf.getConfiguration());
       fragmentConfiguration.setVersion(fragmentConfAsStageConf.getStageVersion());
+    } else {
+      issues.addAll(ownIssues);
+      fragmentConfiguration = null;
     }
+
+    return fragmentConfiguration;
+  }
+
+  boolean needsUpgrade(
+      StageLibraryTask library,
+      PipelineFragmentConfiguration fragmentConfiguration,
+      List<Issue> issues
+  ) {
+    boolean upgrade;
+
+    // pipeline fragment configurations
+    StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(fragmentConfiguration);
+    upgrade = PipelineConfigurationUpgrader.needsUpgrade(library, getFragmentDefinition(), pipelineConfs, issues);
+
+    // Test origin
+    if (fragmentConfiguration.getTestOriginStage() != null) {
+      upgrade |= PipelineConfigurationUpgrader.needsUpgrade(
+          library,
+          fragmentConfiguration.getTestOriginStage(),
+          issues
+      );
+    }
+
+    // pipeline stages configurations
+    for (StageConfiguration conf : fragmentConfiguration.getStages()) {
+      upgrade |= PipelineConfigurationUpgrader.needsUpgrade(library, conf, issues);
+    }
+
+    return upgrade;
   }
 }

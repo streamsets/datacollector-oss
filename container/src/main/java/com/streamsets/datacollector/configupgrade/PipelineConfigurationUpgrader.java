@@ -89,7 +89,7 @@ public class PipelineConfigurationUpgrader {
     // Upgrading data if needed
     upgrade = needsUpgrade(library, pipelineConf, issues);
     if (upgrade && issues.isEmpty()) {
-      //we try to upgrade only if we have all defs for the pipelineConf
+      // we try to upgrade only if we have all defs for the pipelineConf
       pipelineConf = upgrade(library, pipelineConf, issues);
     }
     return (issues.isEmpty()) ? pipelineConf : null;
@@ -504,7 +504,7 @@ public class PipelineConfigurationUpgrader {
     return pipelineConf;
   }
 
-  private static String stageToUISelect(StageConfiguration stageConf) {
+  static String stageToUISelect(StageConfiguration stageConf) {
     return stageConf.getLibrary() + "::" + stageConf.getStageName() + "::" + stageConf.getStageVersion();
   }
 

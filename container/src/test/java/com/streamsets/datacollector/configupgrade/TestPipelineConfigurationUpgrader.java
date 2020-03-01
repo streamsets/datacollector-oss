@@ -124,9 +124,9 @@ public class TestPipelineConfigurationUpgrader {
   private static final StageDefinition SOURCE1_DEF = StageDefinitionExtractor.get().extract(LIBRARY_DEF,
                                                                                             Source1.class, "");
 
-  private static final StageDefinition SOURCE2_V1_DEF = StageDefinitionExtractor.get().extract(LIBRARY_DEF,
+  static final StageDefinition SOURCE2_V1_DEF = StageDefinitionExtractor.get().extract(LIBRARY_DEF,
                                                                                                Source2.class, "");
-  private static final StageDefinition SOURCE2_V2_DEF;
+  static final StageDefinition SOURCE2_V2_DEF;
 
   private static final ServiceDefinition SERVICE_DEF = ServiceDefinitionExtractor.get().extract(LIBRARY_DEF, RunnableService.class);
 
@@ -135,7 +135,7 @@ public class TestPipelineConfigurationUpgrader {
     Mockito.when(SOURCE2_V2_DEF.getVersion()).thenReturn(2);
   }
 
-  private StageLibraryTask getLibrary(StageDefinition def, ServiceDefinition ...services) {
+  static StageLibraryTask getLibrary(StageDefinition def, ServiceDefinition ...services) {
     StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
     Mockito.when(library.getLegacyStageLibs()).thenReturn(Collections.emptyList());
     Mockito.when(library.getStage(Mockito.anyString(), Mockito.anyString(), Mockito.anyBoolean())).thenReturn(def);

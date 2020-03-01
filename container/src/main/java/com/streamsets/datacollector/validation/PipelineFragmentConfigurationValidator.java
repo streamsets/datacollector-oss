@@ -179,6 +179,7 @@ public class PipelineFragmentConfigurationValidator {
     List<Issue> upgradeIssues = new ArrayList<>();
 
     PipelineFragmentConfiguration fConf = getFragmentUpgrader().upgradeIfNecessary(
+        stageLibrary,
         pipelineFragmentConfiguration,
         upgradeIssues
     );
