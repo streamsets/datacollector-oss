@@ -173,7 +173,7 @@ public class StreamingXmlParser {
         field = parse(xmlEventReader, startE);
 
         if (preserveRootElement) {
-          field = Field.create(Collections.singletonMap(startE.getName().toString(), field));
+          field = Field.create(Collections.singletonMap(getElementName(startE), field));
         }
 
         // the while loop consumes the start element for a record, and the parse method above consumes the end
@@ -358,6 +358,19 @@ public class StreamingXmlParser {
       depthUpdate = -1;
     }
     return depthUpdate;
+  }
+
+  private String getElementName(StartElement element) {
+    QName elementName = element.getName();
+    if (elementName.getPrefix().isEmpty()) {
+      return elementName.getLocalPart();
+    } else {
+      return String.format("%s:%s", element.getName().getPrefix(), element.getName().getLocalPart());
+    }
+  }
+
+  public boolean isPreserveRootElement() {
+    return preserveRootElement;
   }
 
 }

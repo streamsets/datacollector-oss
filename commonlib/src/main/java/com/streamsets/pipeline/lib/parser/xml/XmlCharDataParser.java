@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.xml.StreamingXmlParser;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.MatchResult;
@@ -174,7 +175,18 @@ public class XmlCharDataParser extends AbstractDataParser {
         xpath = xpath.replace(currentPath + fieldIndex, currentPath);
       }
     }
-    return parser.getLastParsedFieldXpathPrefix() + xpath;
+    return addXPathPrefix(xpath);
+  }
+
+  private String addXPathPrefix(String xpath) {
+    String prefix = parser.getLastParsedFieldXpathPrefix();
+    if (parser.isPreserveRootElement() && !prefix.isEmpty()) {
+      // root element has already been included in the xpath and needs to be removed from the prefix
+      String[] parts = prefix.split("/");
+      prefix = parts.length > 2 ?
+          String.join("/", Arrays.copyOfRange(parts, 0, parts.length - 1)) : "";
+    }
+    return prefix.concat(xpath);
   }
 
   @Override
