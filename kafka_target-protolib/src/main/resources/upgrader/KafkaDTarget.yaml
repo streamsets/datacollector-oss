@@ -30,3 +30,14 @@ upgrades:
       - setConfig:
           name: conf.dataGeneratorFormatConfig.basicAuthUserInfoForRegistration
           value: ""
+  - toVersion: 7
+    actions:
+      - setConfig:
+          name: conf.isKafkaKerberosAuthEnabled
+          value: false
+      - setConfig:
+          name: conf.userKeytabPath
+          value: "/etc/keytabs/sdc.keytab"
+      - setConfig:
+          name: conf.userPrincipal
+          value: "user/host@REALM"

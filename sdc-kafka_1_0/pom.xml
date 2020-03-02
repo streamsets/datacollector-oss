@@ -69,6 +69,12 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-sdc-kafka-11</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdc-kafka-09-common</artifactId>
       <version>${project.version}</version>
       <scope>compile</scope>

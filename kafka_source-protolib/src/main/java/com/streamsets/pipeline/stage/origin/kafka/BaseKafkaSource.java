@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
@@ -65,6 +66,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected static final String CONSUMER_GROUP = "consumerGroup";
   protected static final String TOPIC = "topic";
   protected static final String BROKER_LIST = "metadataBrokerList";
+  private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
+      "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
 
   public BaseKafkaSource(KafkaConfigBean conf) {
@@ -126,6 +129,19 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
         getContext()
     );
+
+    // Kerberos auth
+    if (conf.isKafkaKerberosAuthEnabled && kafkaValidationUtil.isKafkaKerberosAuthSupported()) {
+      conf.kafkaConsumerConfigs.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, conf.userKeytabPath, conf.userPrincipal));
+    } else if (conf.isKafkaKerberosAuthEnabled) {
+      issues.add(
+          getContext().createConfigIssue(
+              KafkaDestinationGroups.KAFKA.name(),
+              KAFKA_CONFIG_BEAN_PREFIX + "iskafkaKerberosAuthEnabled",
+              KafkaErrors.KAFKA_12
+          )
+      );
+    }
 
     try {
       int partitionCount = kafkaValidationUtil.getPartitionCount(

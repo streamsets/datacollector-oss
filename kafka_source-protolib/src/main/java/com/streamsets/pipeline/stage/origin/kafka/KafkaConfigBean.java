@@ -249,9 +249,46 @@ public class KafkaConfigBean {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
+      label = "Kafka Kerberos Authentication",
+      description = "Kafka Kerberos Authentication",
+      displayPosition = 125,
+      group = "KAFKA"
+  )
+  public boolean isKafkaKerberosAuthEnabled;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "/etc/keytabs/sdc.keytab",
+      label = "User Keytab Path",
+      description = "User Keytab Path",
+      displayPosition = 130,
+      dependsOn = "isKafkaKerberosAuthEnabled",
+      triggeredByValue = "true",
+      group = "KAFKA"
+  )
+  public String userKeytabPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "user/host@REALM",
+      label = "Principal",
+      description = "Kerberos service principal to use for this stage.",
+      displayPosition = 140,
+      dependsOn = "isKafkaKerberosAuthEnabled",
+      triggeredByValue = "true",
+      group = "KAFKA"
+  )
+  public String userPrincipal;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
       label = "Include Timestamps",
       description = "Includes the timestamps inherited from Kafka in the record header",
-      displayPosition = 130,
+      displayPosition = 150,
       group = "KAFKA"
   )
   public boolean timestampsEnabled;

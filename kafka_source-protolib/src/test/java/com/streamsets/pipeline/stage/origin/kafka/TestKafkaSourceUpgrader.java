@@ -161,4 +161,28 @@ public class TestKafkaSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV10ToV11() {
+    Mockito.doReturn(10).when(context).getFromVersion();
+    Mockito.doReturn(11).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.isKafkaKerberosAuthEnabled",
+        false
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userKeytabPath",
+        "/etc/keytabs/sdc.keytab"
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userPrincipal",
+        "user/host@REALM"
+    );
+  }
 }

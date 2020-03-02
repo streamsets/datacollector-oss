@@ -163,13 +163,50 @@ public class MultiKafkaBeanConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Kafka Kerberos Authentication",
+      description = "Kafka Kerberos Authentication",
+      displayPosition = 105,
+      group = "KAFKA"
+  )
+  public boolean isKafkaKerberosAuthEnabled;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "/etc/keytabs/sdc.keytab",
+      label = "User Keytab Path",
+      description = "User Keytab Path",
+      displayPosition = 110,
+      dependsOn = "isKafkaKerberosAuthEnabled",
+      triggeredByValue = "true",
+      group = "KAFKA"
+  )
+  public String userKeytabPath;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "user/host@REALM",
+      label = "Principal",
+      description = "Kerberos service principal to use for this stage.",
+      displayPosition = 120,
+      dependsOn = "isKafkaKerberosAuthEnabled",
+      triggeredByValue = "true",
+      group = "KAFKA"
+  )
+  public String userPrincipal;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Key Deserializer",
       description = "Method used to deserialize the Kafka message key. Set to Confluent when the Avro schema ID is embedded in each message.",
       defaultValue = "STRING",
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
-      displayPosition = 110,
+      displayPosition = 130,
       group = "KAFKA"
   )
   @ValueChooserModel(KeyDeserializerChooserValues.class)
@@ -181,7 +218,7 @@ public class MultiKafkaBeanConfig {
       label = "Key Capture Mode",
       description = "Controls how the Kafka message key is stored in the record.",
       defaultValue = "NONE",
-      displayPosition = 115,
+      displayPosition = 135,
       group = "KAFKA"
   )
   @ValueChooserModel(KeyCaptureModeChooserValues.class)
@@ -193,7 +230,7 @@ public class MultiKafkaBeanConfig {
       label = "Key Capture Header Attribute",
       description = "Sets the record header attribute name where the message key will be stored.",
       defaultValue = "kafkaMessageKey",
-      displayPosition = 116,
+      displayPosition = 136,
       group = "KAFKA",
       dependsOn = "keyCaptureMode",
       triggeredByValue = {"RECORD_HEADER", "RECORD_HEADER_AND_FIELD"}
@@ -206,7 +243,7 @@ public class MultiKafkaBeanConfig {
       label = "Key Capture Field",
       description = "Sets the record field where the message key will be stored.",
       defaultValue = "/kafkaMessageKey",
-      displayPosition = 117,
+      displayPosition = 137,
       group = "KAFKA",
       dependsOn = "keyCaptureMode",
       triggeredByValue = {"RECORD_FIELD", "RECORD_HEADER_AND_FIELD"}
@@ -222,7 +259,7 @@ public class MultiKafkaBeanConfig {
       defaultValue = "DEFAULT",
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
-      displayPosition = 120,
+      displayPosition = 140,
       group = "KAFKA"
   )
   @ValueChooserModel(ValueDeserializerChooserValues.class)

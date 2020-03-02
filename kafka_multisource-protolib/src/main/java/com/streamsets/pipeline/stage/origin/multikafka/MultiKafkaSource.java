@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
@@ -66,6 +67,8 @@ public class MultiKafkaSource extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(MultiKafkaSource.class);
 
   private static final String MULTI_KAFKA_DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
+  private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
+      "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
   private final MultiKafkaBeanConfig conf;
   private AtomicBoolean shutdownCalled = new AtomicBoolean(false);
@@ -310,6 +313,18 @@ public class MultiKafkaSource extends BasePushSource {
           Groups.KAFKA.name(),
           MULTI_KAFKA_DATA_FORMAT_CONFIG_PREFIX,
           issues
+      );
+    }
+
+    if (conf.isKafkaKerberosAuthEnabled && KafkaConsumerLoader.isKafkaKerberosAuthSupported()) {
+      conf.kafkaOptions.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, conf.userKeytabPath, conf.userPrincipal));
+    } else if (conf.isKafkaKerberosAuthEnabled) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.KAFKA.name(),
+              MULTI_KAFKA_DATA_FORMAT_CONFIG_PREFIX + "iskafkaKerberosAuthEnabled",
+              KafkaErrors.KAFKA_12
+          )
       );
     }
 

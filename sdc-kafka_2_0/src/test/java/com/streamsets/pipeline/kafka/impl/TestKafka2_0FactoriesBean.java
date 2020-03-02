@@ -27,6 +27,6 @@ public class TestKafka2_0FactoriesBean {
     Assert.assertTrue(FactoriesBean.getKafkaConsumerFactory() instanceof Kafka20ConsumerFactory);
     Assert.assertTrue(FactoriesBean.getKafkaProducerFactory() instanceof Kafka20ProducerFactory);
     Assert.assertTrue(FactoriesBean.getKafkaLowLevelConsumerFactory() instanceof Kafka09LowLevelConsumerFactory);
-    Assert.assertTrue(FactoriesBean.getKafkaValidationUtilFactory() instanceof Kafka09ValidationUtilFactory);
+    Assert.assertTrue(FactoriesBean.getKafkaValidationUtilFactory() instanceof Kafka11ValidationUtilFactory);
   }
 }

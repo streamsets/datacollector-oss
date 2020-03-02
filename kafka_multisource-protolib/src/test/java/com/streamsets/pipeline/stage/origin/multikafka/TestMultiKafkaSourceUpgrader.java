@@ -84,5 +84,20 @@ public class TestMultiKafkaSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, "conf.timestampsEnabled", false);
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.isKafkaKerberosAuthEnabled",
+        false
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userKeytabPath",
+        "/etc/keytabs/sdc.keytab"
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userPrincipal",
+        "user/host@REALM"
+    );
   }
 }

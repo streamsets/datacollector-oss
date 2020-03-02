@@ -65,4 +65,6 @@ public interface SdcKafkaValidationUtil {
   public void createTopicIfNotExists(String topic, Map<String, Object> kafkaClientConfigs, String metadataBrokerList)
       throws StageException;
 
+  public boolean isKafkaKerberosAuthSupported();
+
 }

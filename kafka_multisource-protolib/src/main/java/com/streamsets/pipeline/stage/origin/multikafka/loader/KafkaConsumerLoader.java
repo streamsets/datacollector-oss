@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.multikafka.loader;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -26,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
@@ -48,19 +50,49 @@ public abstract class KafkaConsumerLoader {
   @VisibleForTesting
   public static boolean isTest = false;
 
+  private static ServiceLoader<KafkaConsumerLoader> kafkaConsumerLoader = ServiceLoader.load(KafkaConsumerLoader.class);
+
+  private static final Map<String, String[]> loaderHierarchy = ImmutableMap.of(
+      "com.streamsets.pipeline.stage.origin.multikafka.v0_10.loader.Kafka0_10ConsumerLoader",
+      new String[] {"com.streamsets.pipeline.stage.origin.multikafka.v0_11.loader.Kafka0_11ConsumerLoader"}
+  );
+
+  private static boolean isSubclass(String loader, String parent) {
+    String[] children = loaderHierarchy.get(parent);
+    if (children == null) {
+      return false;
+    }
+    for (String child : children) {
+      if (child.equals(loader) || isSubclass(loader, child)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   static {
     int count = 0;
 
     Set<String> loaderClasses = new HashSet<>();
-    for (KafkaConsumerLoader loader : ServiceLoader.load(KafkaConsumerLoader.class)) {
+    for (KafkaConsumerLoader loader : kafkaConsumerLoader) {
       String loaderName = loader.getClass().getName();
-      loaderClasses.add(loaderName);
 
       if (TEST_DELEGATE_NAME.equals(loaderName)) {
         testDelegate = loader;
       } else {
-        count++;
-        delegate = loader;
+        boolean subclass = false;
+        if (delegate == null || isSubclass(loaderName, delegate.getClass().getName())) {
+          if (delegate != null) {
+            loaderClasses.remove(delegate.getClass().getName());
+            count--;
+          }
+          delegate = loader;
+          subclass = true;
+        }
+        if (subclass || !isSubclass(delegate.getClass().getName(), loaderName)) {
+          loaderClasses.add(loaderName);
+          count++;
+        }
       }
     }
 
@@ -108,6 +140,14 @@ public abstract class KafkaConsumerLoader {
       );
       return delegate.createConsumerInternal(properties);
     }
+  }
+
+  protected boolean isKafkaKerberosAuthEnabledSupported() {
+    return false;
+  }
+
+  public static boolean isKafkaKerberosAuthSupported() {
+    return delegate.isKafkaKerberosAuthEnabledSupported();
   }
 
 }

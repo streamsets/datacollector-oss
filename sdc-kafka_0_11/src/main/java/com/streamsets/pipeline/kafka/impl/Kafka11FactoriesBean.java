@@ -30,7 +30,7 @@ public class Kafka11FactoriesBean extends FactoriesBean {
 
   @Override
   public SdcKafkaValidationUtilFactory createSdcKafkaValidationUtilFactory() {
-    return new Kafka09ValidationUtilFactory();
+    return new Kafka11ValidationUtilFactory();
   }
 
   @Override

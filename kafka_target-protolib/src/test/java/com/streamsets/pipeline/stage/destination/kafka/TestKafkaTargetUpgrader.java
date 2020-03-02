@@ -237,4 +237,38 @@ public class TestKafkaTargetUpgrader {
         ""
     );
   }
+
+  @Test
+  public void testUpgradeV6ToV7() throws Exception {
+    List<Config> configs = new ArrayList<>();
+
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/KafkaDTarget.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new KafkaTargetUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(6).when(context).getFromVersion();
+    Mockito.doReturn(7).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.isKafkaKerberosAuthEnabled",
+        false
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userKeytabPath",
+        "/etc/keytabs/sdc.keytab"
+    );
+    UpgraderTestUtils.assertExists(
+        configs,
+        "conf.userPrincipal",
+        "user/host@REALM"
+    );
+  }
 }

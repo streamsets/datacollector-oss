@@ -38,3 +38,14 @@ upgrades:
       - setConfig:
           name: kafkaConfigBean.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 11
+    actions:
+      - setConfig:
+          name: conf.isKafkaKerberosAuthEnabled
+          value: false
+      - setConfig:
+          name: conf.userKeytabPath
+          value: "/etc/keytabs/sdc.keytab"
+      - setConfig:
+          name: conf.userPrincipal
+          value: "user/host@REALM"

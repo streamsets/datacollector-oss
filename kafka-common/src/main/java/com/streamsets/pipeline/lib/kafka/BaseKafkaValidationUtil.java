@@ -124,4 +124,8 @@ public abstract class BaseKafkaValidationUtil implements SdcKafkaValidationUtil 
     return kafkaBrokers;
   }
 
+  public boolean isKafkaKerberosAuthSupported() {
+    return false;
+  };
+
 }

@@ -95,7 +95,7 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
   }
 
   private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
-    //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
+    //The following options, if specified, are ignored : "bootstrap.servers"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
       kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
 

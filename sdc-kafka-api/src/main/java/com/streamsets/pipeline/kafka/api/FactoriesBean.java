@@ -15,13 +15,20 @@
  */
 package com.streamsets.pipeline.kafka.api;
 
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class FactoriesBean {
 
@@ -39,38 +46,62 @@ public abstract class FactoriesBean {
 
   private static FactoriesBean factoriesBean;
 
-  private final static Set<String> subclassNames = ImmutableSet.of(
-    "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.Kafka20FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.MapR52Streams09FactoriesBean",
-    "com.streamsets.pipeline.kafka.impl.MapR61Streams11FactoriesBean"
+  private final static Map<String, String[]> classHierarchy = ImmutableMap.of(
+      "com.streamsets.pipeline.kafka.impl.Kafka09FactoriesBean",
+      new String[] {
+        "com.streamsets.pipeline.kafka.impl.Kafka10FactoriesBean",
+        "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
+        "com.streamsets.pipeline.kafka.impl.MapR52Streams09FactoriesBean",
+        "com.streamsets.pipeline.kafka.impl.MapR61Streams11FactoriesBean"
+      },
+      "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
+      new String[] {
+          "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
+          "com.streamsets.pipeline.kafka.impl.Kafka20FactoriesBean"
+      }
   );
 
-  static {
-    int serviceCount = 0;
-    FactoriesBean subclassBean = null;
-    for (FactoriesBean bean : factoriesBeanLoader) {
-      LOG.info("Found FactoriesBean loader {}", bean.getClass().getName());
-      factoriesBean = bean;
-      serviceCount++;
-
-      if(subclassNames.contains(bean.getClass().getName())) {
-        if(subclassBean != null) {
-          throw new RuntimeException(Utils.format("More then one subclass beans found: {}, {}", subclassBean, bean.getClass().getName()));
-        }
-        subclassBean = bean;
+  private static boolean isSubclass(String bean, String superclass) {
+    String[] subclasses = classHierarchy.get(superclass);
+    if (subclasses == null) {
+      return false;
+    }
+    for (String subclass : subclasses) {
+      if (subclass.equals(bean) || isSubclass(bean, subclass)) {
+        return true;
       }
     }
+    return false;
+  }
 
-    if(subclassBean != null) {
-      factoriesBean = subclassBean;
-      serviceCount--;
+  static {
+
+    int serviceCount = 0;
+    Set<String> loadedBeans = new HashSet<>();
+
+    for (FactoriesBean bean : factoriesBeanLoader) {
+      String beanName = bean.getClass().getName();
+      LOG.info("Found FactoriesBean loader {}", beanName);
+
+      boolean subclass = false;
+      if (factoriesBean == null || isSubclass(beanName, factoriesBean.getClass().getName())) {
+        if (factoriesBean != null) {
+          serviceCount--;
+          loadedBeans.remove(factoriesBean.getClass().getName());
+        }
+        factoriesBean = bean;
+        subclass = true;
+      }
+      if (subclass || !isSubclass(factoriesBean.getClass().getName(), beanName)) {
+        loadedBeans.add(beanName);
+        serviceCount++;
+      }
     }
-
-    if (serviceCount != 1) {
-      throw new RuntimeException(Utils.format("Unexpected number of FactoriesBean: {} instead of 1", serviceCount));
+    if (serviceCount > 1) {
+      throw new RuntimeException(Utils.format("Unexpected number of loaders, found {} instead of 1: {}",
+          serviceCount,
+          StringUtils.join(loadedBeans, ", ")
+      ));
     }
   }
 

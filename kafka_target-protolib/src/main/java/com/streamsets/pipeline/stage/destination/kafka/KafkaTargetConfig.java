@@ -72,6 +72,8 @@ public class KafkaTargetConfig {
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
+      "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
   @ConfigDef(
       required = true,
@@ -244,13 +246,50 @@ public class KafkaTargetConfig {
   )
   public Map<String, String> kafkaProducerConfigs = new HashMap<>();
 
+ @ConfigDef(
+     required = true,
+     type = ConfigDef.Type.BOOLEAN,
+     defaultValue = "false",
+     label = "Kafka Kerberos Authentication",
+     description = "Kafka Kerberos Authentication",
+     displayPosition = 65,
+     group = "#0"
+ )
+ public boolean isKafkaKerberosAuthEnabled;
+
+ @ConfigDef(
+     required = true,
+     type = ConfigDef.Type.STRING,
+     defaultValue = "/etc/keytabs/sdc.keytab",
+     label = "User Keytab Path",
+     description = "User Keytab Path",
+     displayPosition = 70,
+     dependsOn = "isKafkaKerberosAuthEnabled",
+     triggeredByValue = "true",
+     group = "#0"
+ )
+ public String userKeytabPath;
+
+ @ConfigDef(
+     required = true,
+     type = ConfigDef.Type.STRING,
+     defaultValue = "user/host@REALM",
+     label = "Principal",
+     description = "Kerberos service principal to use for this stage.",
+     displayPosition = 80,
+     dependsOn = "isKafkaKerberosAuthEnabled",
+     triggeredByValue = "true",
+     group = "#0"
+ )
+ public String userPrincipal;
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "${avro:decode(record:attribute('avroKeySchema'),base64:decodeBytes(record:attribute('kafkaMessageKey')))}",
       label = "Kafka Message Key",
       description = "The Kafka message key",
-      displayPosition = 70,
+      displayPosition = 90,
       dependsOn = "messageKeyFormat",
       triggeredByValue = "AVRO",
       group = "#0",
@@ -265,7 +304,7 @@ public class KafkaTargetConfig {
       defaultValue = "${record:attribute('kafkaMessageKey')}",
       label = "Kafka Message Key",
       description = "The Kafka message key",
-      displayPosition = 80,
+      displayPosition = 100,
       group = "#0",
       dependsOn = "messageKeyFormat",
       triggeredByValue = "STRING",
@@ -367,6 +406,19 @@ public class KafkaTargetConfig {
         KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
         context
     );
+
+    // Configure Kerberos Authentication
+    if (isKafkaKerberosAuthEnabled && kafkaValidationUtil.isKafkaKerberosAuthSupported()) {
+      kafkaProducerConfigs.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, userKeytabPath, userPrincipal));
+    } else if (isKafkaKerberosAuthEnabled) {
+      issues.add(
+          context.createConfigIssue(
+              KafkaDestinationGroups.KAFKA.name(),
+              KAFKA_CONFIG_BEAN_PREFIX + "iskafkaKerberosAuthEnabled",
+              KafkaErrors.KAFKA_12
+          )
+      );
+    }
 
     //check if the topic contains EL expression with record: functions
     //If yes, then validate the EL expression. Do not validate for existence of topic
