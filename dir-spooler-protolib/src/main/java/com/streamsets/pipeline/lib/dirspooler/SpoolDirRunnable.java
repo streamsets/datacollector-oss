@@ -290,8 +290,8 @@ public class SpoolDirRunnable implements Runnable {
 
         try {
           // then we ask the dirspooler to error handle the failed file
-          spooler.handleCurrentFileAsError();
-
+          spooler.handleFileAsError(currentFile);
+          spooler.removeFileBeingProcessed(currentFile);
         } catch (IOException ex1) {
           throw new StageException(Errors.SPOOLDIR_00, currentFile, ex1.toString(), ex1);
         }
@@ -333,7 +333,7 @@ public class SpoolDirRunnable implements Runnable {
       }
 
       // if this is the end of the file, do post processing
-      if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE)) {
+      if (currentFile != null && newOffset.getOffset().equals(MINUS_ONE) && fs.exists(currentFile)) {
         spooler.doPostProcessing(currentFile);
       }
     }
