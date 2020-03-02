@@ -56,6 +56,22 @@ angular
         });
       },
 
+      expressionValue: function(newValue) {
+        if (arguments.length > 0) {
+          // setter
+          return $scope.detailPaneConfig.configuration[$scope.configIndex].value = newValue;
+        } else {
+          // getter
+          const currentValue = $scope.detailPaneConfig.configuration[$scope.configIndex].value;
+          // Do not return value if using internal credential store
+          if (!currentValue || currentValue.startsWith(`\${credential:get("${STORE}"`)) {
+            return '';
+          } else {
+            return $scope.detailPaneConfig.configuration[$scope.configIndex].value;
+          }
+        }
+      },
+
       toggleShowExpression: function() {
         $scope.credentialSettings.showExpression = !$scope.credentialSettings.showExpression;
         $scope.credentialSettings.saved = false;

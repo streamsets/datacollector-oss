@@ -128,7 +128,8 @@
       ng-if="credentialSettings.showExpression"
       ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
       focus-me="{{autoFocusConfigName === configDefinition.name}}"
-      ng-model="detailPaneConfig.configuration[configIndex].value"
+      ng-model="expressionValue"
+      ng-model-options="{ getterSetter: true }"
       ui-refresh="refreshCodemirror"
       ui-codemirror-opts="getCodeMirrorOptions({
             readOnly: (isPipelineReadOnly || isPipelineRunning),
@@ -182,7 +183,7 @@
     <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
       <button type="button" class="btn btn-link"
               ng-click="toggleShowExpression()">
-        {{credentialSettings.showExpression ? 'Enter Credential' : 'Enter Expression'}}
+        {{credentialSettings.showExpression ? 'Enter Credential' : (expressionValue() ? 'Show Expression' : 'Enter Expression')}}
       </button>
     </div>
 
