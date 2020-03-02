@@ -280,7 +280,6 @@ public class DirectorySpooler {
   private WrappedFile archiveDirPath;
   private WrappedFile errorArchiveDirPath;
   protected PriorityBlockingQueue<WrappedFile> filesQueue;
-  private WrappedFile previousFile;
   private ScheduledExecutorService scheduledExecutor;
   private boolean waitForPathAppearance;
 
@@ -594,7 +593,6 @@ public class DirectorySpooler {
 
         if (next != null) {
           currentFile = next;
-          previousFile = next;
         }
 
         filesQueue.poll();
@@ -611,23 +609,20 @@ public class DirectorySpooler {
     return next;
   }
 
-  public void handleCurrentFileAsError() throws IOException {
-    if (errorArchiveDirPath != null && !context.isPreview() && previousFile != null) {
-      WrappedFile current = previousFile;//spoolDirPath.resolve(previousFile);
-      if (fs.exists(current)) {
-        LOG.error("Archiving file in error '{}' in error archive directory '{}'", previousFile, errorArchiveDirPath);
-        moveIt(current, errorArchiveDirPath);
+  public void handleFileAsError(WrappedFile fileToHandle) throws IOException {
+    if (errorArchiveDirPath != null && !context.isPreview()) {
+      if (fs.exists(fileToHandle)) {
+        LOG.error("Archiving file in error '{}' in error archive directory '{}'", fileToHandle, errorArchiveDirPath);
+        moveIt(fileToHandle, errorArchiveDirPath);
       } else {
         LOG.error(
             "Wanted to archive file in error '{}' in error archive directory '{}' but file does not exist.",
-            previousFile,
+            fileToHandle,
             errorArchiveDirPath
         );
       }
-      // we need to set the currentFile to null because we just moved to error.
-      previousFile = null;
     } else {
-      LOG.error("Leaving file in error '{}' in spool directory", currentFile);
+      LOG.error("Leaving file in error '{}' in spool directory", fileToHandle);
     }
   }
 
