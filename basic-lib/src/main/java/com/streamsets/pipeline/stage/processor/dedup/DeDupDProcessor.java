@@ -41,7 +41,6 @@ import java.util.List;
     onlineHelpRefUrl ="index.html?contextID=task_ikr_c2f_zq"
 )
 @ConfigGroups(Groups.class)
-@HideConfigs(onErrorRecord = true)
 @GenerateResourceBundle
 public class DeDupDProcessor extends DProcessor {
 
