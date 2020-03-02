@@ -67,6 +67,12 @@ angular
 
       blankCredential: function() {
         $scope.credentialSettings.credentialValue = '';
+      },
+
+      onCredentialInputKeyup: function($event) {
+        if($event.key === "Enter") {
+          $scope.saveCredential();
+        }
       }
     });
 

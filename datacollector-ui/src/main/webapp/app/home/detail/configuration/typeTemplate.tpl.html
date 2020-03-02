@@ -152,6 +152,7 @@
         focus-me="{{autoFocusConfigName === configDefinition.name}}"
         ng-readonly="isPipelineReadOnly || isPipelineRunning"
         ng-model="credentialSettings.credentialValue"
+        ng-keyup="onCredentialInputKeyup($event)"
         ng-required="configDefinition.required"
         placeholder="{{detailPaneConfig.configuration[configIndex].value ? '********' : ''}}">
       <span class="input-group-btn"
