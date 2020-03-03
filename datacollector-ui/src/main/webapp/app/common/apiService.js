@@ -41,19 +41,14 @@ angular.module('dataCollectorApp.common')
         if (extraMessage) {
           url += '&extraMessage=' + extraMessage;
         }
-
         if (filterPipeline) {
           url += '&pipeline=' + filterPipeline;
-         }
-
+        }
         if (filterSeverity) {
           url += '&severity=' + filterSeverity;
         }
 
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(url);
       },
 
       /**
@@ -61,26 +56,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getFilesList: function() {
-        var url = apiBase + '/system/logs/files';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getFilesList: () => $http.get(apiBase + '/system/logs/files'),
 
       /**
        * Get Log Config
        * @param def
        * @returns {*}
        */
-      getLogConfig: function(def) {
-        var url = apiBase + '/system/log/config?default=' + def;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getLogConfig: def => $http.get(apiBase + '/system/log/config?default=' + def),
 
       /**
        * Update Log Config
@@ -106,69 +89,32 @@ angular.module('dataCollectorApp.common')
        * Fetches JVM Metrics
        * @returns {*}
        */
-      getJMX : function() {
-        var url = apiBase + '/system/jmx';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
-
+      getJMX: () => $http.get(apiBase + '/system/jmx'),
 
       /**
        * Fetches JVM Thread Dump
        */
-      getThreadDump: function() {
-        var url = apiBase + '/system/threads';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getThreadDump: () => $http.get(apiBase + '/system/threads'),
 
       /**
        * Fetches User Information
        */
-      getUserInfo: function() {
-        var url = apiBase + '/system/info/currentUser';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getUserInfo: () => $http.get(apiBase + '/system/info/currentUser'),
 
       /**
        * Fetches Build Information
        */
-      getBuildInfo: function() {
-        var url = apiBase + '/system/info';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getBuildInfo: () => $http.get(apiBase + '/system/info'),
 
       /**
        * Fetches Remote Server Info
        */
-      getRemoteServerInfo: function() {
-        var url = apiBase + '/system/info/remote';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getRemoteServerInfo: () => $http.get(apiBase + '/system/info/remote'),
 
       /**
        * Fetches SDC ID
        */
-      getSdcId: function() {
-        var url = apiBase + '/system/info/id';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSdcId: () => $http.get(apiBase + '/system/info/id'),
 
       /**
        * Shutdown the Data Collector.
@@ -269,48 +215,24 @@ angular.module('dataCollectorApp.common')
        * Returns SDC Directories
        * @returns {*}
        */
-      getSDCDirectories: function() {
-        var url = apiBase + '/system/directories';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSDCDirectories: () => $http.get(apiBase + '/system/directories'),
 
       /**
        * Returns Server Time
        */
-      getServerTime: function() {
-        var url = apiBase + '/system/info/serverTime';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getServerTime: () => $http.get(apiBase + '/system/info/serverTime'),
 
       /**
        * Returns Groups
        * @returns {*}
        */
-      getGroups: function() {
-        var url = apiBase + '/system/groups';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getGroups: () => $http.get(apiBase + '/system/groups'),
 
       /**
        * Returns Users
        * @returns {*}
        */
-      getUsers: function() {
-        var url = apiBase + '/system/users';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      }
+      getUsers: () => $http.get(apiBase + '/system/users')
 
     };
 
@@ -320,39 +242,21 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getConfiguration: function() {
-        var url = apiBase + '/system/configuration';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getConfiguration: () => $http.get(apiBase + '/system/configuration'),
 
       /**
        * Fetches UI Configuration
        *
        * @returns {*}
        */
-      getUIConfiguration: function() {
-        var url = apiBase + '/system/configuration/ui';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getUIConfiguration: () => $http.get(apiBase + '/system/configuration/ui'),
 
       /**
        * Fetches all configuration definitions of Pipeline and Stage Configuration.
        *
        * @returns {*}
        */
-      getDefinitions: function() {
-        var url = apiBase + '/definitions';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getDefinitions: () => $http.get(apiBase + '/definitions'),
 
       /**
        * Fetches all libraries information from archives/nightly.
@@ -361,15 +265,10 @@ angular.module('dataCollectorApp.common')
        */
       getLibraries: function(repoUrl, installedOnly) {
         var url = apiBase + '/stageLibraries/list?installedOnly=' + !!installedOnly;
-
         if (repoUrl) {
           url += '&repoUrl=' + repoUrl;
         }
-
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(url);
       },
 
       /**
@@ -457,39 +356,21 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelinesCount: function() {
-        var url = apiBase + '/pipelines/count';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelinesCount: () => $http.get(apiBase + '/pipelines/count'),
 
       /**
        * Returns System Pipeline Labels.
        *
        * @returns {*}
        */
-      getSystemPipelineLabels: function() {
-        var url = apiBase + '/pipelines/systemLabels';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSystemPipelineLabels: () => $http.get(apiBase + '/pipelines/systemLabels'),
 
       /**
        * Returns all Pipeline labels.
        *
        * @returns {*}
        */
-      getPipelineLabels: function() {
-        var url = apiBase + '/pipelines/labels';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineLabels: () => $http.get(apiBase + '/pipelines/labels'),
 
       /**
        * Fetches all Pipeline Configuration Info.
@@ -500,37 +381,28 @@ angular.module('dataCollectorApp.common')
         if (!orderBy) {
           orderBy = 'NAME';
         }
-
         if (!order) {
           order = 'ASC';
         }
-
         var url = apiBase + '/pipelines?orderBy=' + orderBy + '&order=' + order;
 
         if (filterText) {
           url += '&filterText=' + filterText;
         }
-
         if (label) {
           url += '&label=' + label;
         }
-
         if (offset !== undefined) {
           url += '&offset=' + offset;
         }
-
         if (len) {
           url += '&len=' + len;
         }
-
         if (includeStatus) {
           url += '&includeStatus=' + includeStatus;
         }
 
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(url);
       },
 
       /**
@@ -539,13 +411,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfig: function(name) {
-        var url = apiBase + '/pipeline/' + name;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineConfig: name => $http.get(apiBase + '/pipeline/' + name),
 
       /**
        * Fetches Pipeline Configuration Information
@@ -553,13 +419,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfigInfo: function(name) {
-        var url = apiBase + '/pipeline/' + name + '?get=info';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineConfigInfo: name => $http.get(apiBase + '/pipeline/' + name + '?get=info'),
 
       /**
        * Sends updated Pipeline configuration to server for update.
@@ -977,26 +837,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getAllPipelineStatus: function() {
-        var url = apiBase + '/pipelines/status';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getAllPipelineStatus: () => $http.get(apiBase + '/pipelines/status'),
 
       /**
        * Fetch the Pipeline Status
        *
        * @returns {*}
        */
-      getPipelineStatus: function(pipelineName, rev) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/status?rev=' + rev;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineStatus: (pipelineName, rev) => $http.get(apiBase + '/pipeline/' + pipelineName + '/status?rev=' + rev),
 
       /**
        * Validate the Pipeline
@@ -1089,26 +937,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelineMetrics: function(pipelineId, rev) {
-        var url = apiBase + '/pipeline/' + pipelineId + '/metrics?rev=' + rev ;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineMetrics: (pipelineId, rev) => $http.get(apiBase + '/pipeline/' + pipelineId + '/metrics?rev=' + rev),
 
       /**
        * Get List of available snapshots.
        *
        * @returns {*}
        */
-      getSnapshotsInfo: function() {
-        var url = apiBase + '/pipelines/snapshots' ;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSnapshotsInfo: () => $http.get(apiBase + '/pipelines/snapshots'),
 
       /**
        * Capture Snapshot of running pipeline.
@@ -1164,13 +1000,7 @@ angular.module('dataCollectorApp.common')
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshotStatus: function(pipelineName, rev, snapshotName) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '/status?rev=' + rev;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSnapshotStatus: (pipelineName, rev, snapshotName) => $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '/status?rev=' + rev),
 
       /**
        * Get captured snapshot for given pipeline name.
@@ -1180,13 +1010,7 @@ angular.module('dataCollectorApp.common')
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshot: function(pipelineName, rev, snapshotName) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSnapshot: (pipelineName, rev, snapshotName) => $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev),
 
       /**
        * Download captured snapshot for given pipeline name.
@@ -1278,10 +1102,7 @@ angular.module('dataCollectorApp.common')
           }
         });
 
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(url);
       },
 
       /**
@@ -1290,13 +1111,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getHistory: function(name) {
-        var url = apiBase + '/pipeline/' + name + '/history';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getHistory: name => $http.get(apiBase + '/pipeline/' + name + '/history'),
 
       /**
        * Clear history of the pipeline
@@ -1364,13 +1179,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getPipelineRules: function(name) {
-        var url;
-
-        url = apiBase + '/pipeline/' + name + '/rules';
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(apiBase + '/pipeline/' + name + '/rules');
       },
 
       /**
@@ -1430,24 +1239,14 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getSampledRecords: function(pipelineName, samplingRuleId, sampleSize) {
-        var url = apiBase + '/pipeline/' + pipelineName + '/sampledRecords?sampleId=' + samplingRuleId +
-          '&sampleSize=' + sampleSize;
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(apiBase + '/pipeline/' + pipelineName + '/sampledRecords?sampleId=' + samplingRuleId +
+          '&sampleSize=' + sampleSize);
       },
 
       /**
        * Get all pipeline alers
        */
-      getAllAlerts: function() {
-        var url = apiBase + '/pipelines/alerts' ;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getAllAlerts: () => $http.get(apiBase + '/pipelines/alerts'),
 
       /**
        * Delete Alert
@@ -1490,11 +1289,7 @@ angular.module('dataCollectorApp.common')
       },
 
       getPipeline: function(remotePipeline) {
-        var url = apiBase + '/controlHub/pipeline/' + remotePipeline.commitId;
-        return $http({
-          method: 'GET',
-          url: url
-        });
+        return $http.get(apiBase + '/controlHub/pipeline/' + remotePipeline.commitId);
       },
 
       getPipelineCommitHistory: function(pipelineId, offset, len, order) {
@@ -1519,13 +1314,7 @@ angular.module('dataCollectorApp.common')
         });
       },
 
-      getRemoteRoles: function() {
-        var url = apiBase + '/controlHub/currentUser';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getRemoteRoles: () => $http.get(apiBase + '/controlHub/currentUser'),
 
       getRemoteUsers: function(offset, len) {
         if (offset === undefined) {
@@ -1571,13 +1360,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfigAcl: function(name) {
-        var url = apiBase + '/acl/' + name;
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelineConfigAcl: name => $http.get(apiBase + '/acl/' + name),
 
       /**
        * Sends updated Pipeline ACL to server for update.
@@ -1600,26 +1383,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelinePermissions: function(pipelineName) {
-        var url = apiBase + '/acl/' + pipelineName + '/permissions';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getPipelinePermissions: pipelineName => $http.get(apiBase + '/acl/' + pipelineName + '/permissions'),
 
       /**
        * Get all Subjects in Pipeline ACL
        *
        * @returns {*}
        */
-      getSubjects: function () {
-        var url = apiBase + '/acl/pipelines/subjects';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSubjects: () => $http.get(apiBase + '/acl/pipelines/subjects'),
 
       /**
        * Update Subjects in Pipeline ACL
@@ -1642,37 +1413,24 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getStats: function() {
-        return $http({
-          method: 'GET',
-          url: apiBase + '/system/stats'
-        });
-      },
+      getStats: () => $http.get(apiBase + '/system/stats'),
 
       /**
        * Set opt in/out status for stats
        *
        * @returns {*}
        */
-      setOptInStatus: function(isOptIn) {
-        return $http({
+      setOptInStatus: isOptIn => $http({
           method: 'POST',
           url: apiBase + '/system/stats?active=' + (!!isOptIn)
-        });
-      },
+      }),
 
       /**
        * Get all support bundle generators
        *
        * @returns {*}
        */
-      getSupportBundleGenerators: function () {
-        var url = apiBase + '/system/bundle/list';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getSupportBundleGenerators: () => $http.get(apiBase + '/system/bundle/list'),
 
       /**
        * Get plain/text URL to download generated bundle file
@@ -1689,13 +1447,7 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      uploadSupportBundle: function (generators) {
-        var url = apiBase + '/system/bundle/upload?generators=';
-        return $http({
-          method: 'GET',
-          url: url + generators.join(',')
-        });
-      }
+      uploadSupportBundle: generators => $http.get(apiBase + '/system/bundle/upload?generators=' + generators.join(','))
     };
 
     api.activation = {
@@ -1704,13 +1456,7 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getActivation: function () {
-        var url = apiBase + '/activation';
-        return $http({
-          method: 'GET',
-          url: url
-        });
-      },
+      getActivation: () => $http.get(apiBase + '/activation'),
 
       /**
        * Uploads the SDC activation key
