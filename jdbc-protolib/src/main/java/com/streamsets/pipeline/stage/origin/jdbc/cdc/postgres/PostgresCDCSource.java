@@ -62,7 +62,6 @@ public class PostgresCDCSource extends BaseSource {
   private DateTimeColumnHandler dateTimeColumnHandler;
   private LocalDateTime startDate;
   private ZoneId zoneId;
-  private PostgresWalRecord unsentWalRecord;
 
   /*
       The Postgres WAL (Write Ahead Log) uses a XLOG sequence number to
@@ -163,18 +162,8 @@ public class PostgresCDCSource extends BaseSource {
   private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime, boolean isNewRecordNull) {
     return getContext().isStopped() ||
         currentBatchSize >= maxBatchSize || // batch is full
-        currentBatchSize > 0 && isNewRecordNull || // newRecordNull = no more data from origin
-        (
-            configBean.maxBatchWaitTime > 0 &&
-            System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime
-        );
-  }
-
-  private PostgresWalRecord getNextRecord() {
-    if(unsentWalRecord == null) {
-      unsentWalRecord = getNextRecordFromStream();
-    }
-    return unsentWalRecord;
+        (currentBatchSize > 0 && isNewRecordNull) || // newRecordNull = no more data from origin
+        System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime;
   }
 
   @Override
@@ -185,7 +174,7 @@ public class PostgresCDCSource extends BaseSource {
       setOffset(StringUtils.trimToEmpty(lastSourceOffset));
     }
 
-    PostgresWalRecord postgresWalRecord;
+    PostgresWalRecord postgresWalRecord = null;
     maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     int currentBatchSize = 0;
 
@@ -196,38 +185,37 @@ public class PostgresCDCSource extends BaseSource {
             currentBatchSize,
             maxBatchSize,
             startTime,
-            (postgresWalRecord = getNextRecord()) == null
+            postgresWalRecord == null
         )
     ) {
 
-      // Current record will be processed
-      unsentWalRecord = null;
+      postgresWalRecord = getNextRecordFromStream();
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
         ThreadUtil.sleep(configBean.pollInterval);
-        continue;
       }
+      else {
+        String recordLsn = postgresWalRecord.getLsn().asString();
+        LOG.debug("Received CDC with LSN {} from stream", recordLsn);
 
-      String recordLsn = postgresWalRecord.getLsn().asString();
-      LOG.debug("Received CDC with LSN {} from stream", recordLsn);
+        if (LOG.isTraceEnabled()) {
+          LOG.trace("Valid CDC: {} ", postgresWalRecord);
+        }
 
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Valid CDC: {} ", postgresWalRecord);
+        final Record record = processWalRecord(postgresWalRecord);
+
+        Record.Header header = record.getHeader();
+
+        header.setAttribute(LSN, recordLsn);
+        header.setAttribute(XID, postgresWalRecord.getXid());
+        header.setAttribute(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
+
+        batchMaker.addRecord(record);
+        currentBatchSize++;
+        walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
+        setOffset(recordLsn);
       }
-
-      final Record record = processWalRecord(postgresWalRecord);
-
-      Record.Header header = record.getHeader();
-
-      header.setAttribute(LSN, recordLsn);
-      header.setAttribute(XID, postgresWalRecord.getXid());
-      header.setAttribute(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
-
-      batchMaker.addRecord(record);
-      currentBatchSize++;
-      walReceiver.setLsnFlushed(postgresWalRecord.getLsn());
-      setOffset(recordLsn);
     }
     return getOffset();
   }
