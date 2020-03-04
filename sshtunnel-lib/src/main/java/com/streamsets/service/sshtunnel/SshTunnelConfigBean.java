@@ -28,6 +28,7 @@ public class SshTunnelConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "SSH Tunneling",
+      description = "Uses SSH tunneling to securely connect to a system through an SSH server",
       displayPosition = 1000,
       group = "SSH_TUNNEL"
   )
@@ -38,6 +39,7 @@ public class SshTunnelConfigBean {
       type = ConfigDef.Type.STRING,
       dependencies = {@Dependency(configName = "sshTunneling", triggeredByValues = "true")},
       label = "SSH Tunnel Host",
+      description = "Host name for the SSH server",
       displayPosition = 1010,
       group = "SSH_TUNNEL"
   )
@@ -49,6 +51,7 @@ public class SshTunnelConfigBean {
       defaultValue = "22",
       dependencies = {@Dependency(configName = "sshTunneling", triggeredByValues = "true")},
       label = "SSH Tunnel Port",
+      description = "Port number for the SSH server",
       displayPosition = 1020,
       group = "SSH_TUNNEL",
       min = 1,
@@ -61,8 +64,10 @@ public class SshTunnelConfigBean {
       type = ConfigDef.Type.STRING,
       dependencies = {@Dependency(configName = "sshTunneling", triggeredByValues = "true")},
       label = "SSH Tunnel Host Fingerprint",
-      description = "To obtain the fingerprint, on a terminal session of the SSH server, run " +
-          "\"for i in /etc/ssh/*.pub; do ssh-keygen -lf $i|awk '{print $2\",\"}'; done;\"",
+      description = "Host key fingerprint used to verify the identity of the SSH server, such as " +
+          "'SHA256:Ab1CdeFg+hIJk2L682MNopOQrSTuv3wxYz3ABcdeFGH'. Multiple fingerprints can be " +
+          "separated by commas. Be sure to read the documentation for instructions on properly " +
+          "generating these fingerprints. Leave blank to establish an SSH connection without any verification.",
       displayPosition = 1030,
       group = "SSH_TUNNEL"
   )
@@ -98,8 +103,8 @@ public class SshTunnelConfigBean {
       dependencies = {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true")
       },
-      label = "SSH Private Key Password",
-      description = "The SSH private key cannot be passwordless",
+      label = "Password of the SSH private key",
+      description = "The SSH private key must have a password",
       displayPosition = 1060,
       group = "SSH_TUNNEL"
   )
@@ -125,7 +130,7 @@ public class SshTunnelConfigBean {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true"),
       },
       label = "SSH Tunnel Ready Timeout (milli-secs)",
-      description = "Time to wait for tunnel to establish",
+      description = "Time to wait for the tunnel to be established before a pipeline error occurs",
       displayPosition = 1080,
       group = "SSH_TUNNEL",
       min = 1
@@ -140,7 +145,8 @@ public class SshTunnelConfigBean {
           @Dependency(configName = "sshTunneling", triggeredByValues = "true"),
       },
       label = "SSH Tunnel Keep Alive (secs)",
-      description = "Set it to 0 to disable it",
+      description = "Send a keep alive signal on this interval to prevent the SSH server from terminating " +
+          "the connection if it is otherwise idle. Set to 0 to disable it.",
       displayPosition = 1090,
       group = "SSH_TUNNEL",
       min = 0
