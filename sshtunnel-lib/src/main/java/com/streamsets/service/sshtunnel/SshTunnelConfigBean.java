@@ -115,7 +115,7 @@ public class SshTunnelConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       upload = ConfigDef.Upload.TEXT,
       defaultValue = "${credential:get('streamsets', 'all','sdc/defaultPublicKey')}",
       dependencies = {
@@ -125,7 +125,7 @@ public class SshTunnelConfigBean {
       displayPosition = 1070,
       group = "SSH_TUNNEL"
   )
-  public String sshPublicKey;
+  public CredentialValue sshPublicKey;
 
   @ConfigDef(
       required = true,
@@ -162,7 +162,7 @@ public class SshTunnelConfigBean {
     return new SshKeyInfoBean()
         .setPrivateKey(sshPrivateKey.get())
         .setPassword(sshPrivateKeyPassword.get())
-        .setPublicKey(sshPublicKey);
+        .setPublicKey(sshPublicKey.get());
   }
 
 }

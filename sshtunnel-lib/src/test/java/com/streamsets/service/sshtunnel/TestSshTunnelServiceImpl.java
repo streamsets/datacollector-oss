@@ -85,7 +85,7 @@ public class TestSshTunnelServiceImpl {
     config.sshHostFingerprints = "f1,f2,";
     config.sshPrivateKey = () -> "priv";
     config.sshPrivateKeyPassword = () -> "pass";
-    config.sshPublicKey = "pub";
+    config.sshPublicKey = () -> "pub";
 
     SshTunnelServiceImpl service = new SshTunnelServiceImpl();
     service = Mockito.spy(service);
