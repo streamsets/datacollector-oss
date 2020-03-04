@@ -15,10 +15,14 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql.schema;
 
+import com.github.shyiko.mysql.binlog.event.deserialization.json.JsonBinary;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Field.Type;
+import com.streamsets.pipeline.stage.origin.mysql.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 /**
  * Mysql types supported by mysql connector.
@@ -168,6 +172,12 @@ public enum MysqlType {
       return stringField(value);
     }
   },
+  JSON("json") {
+    @Override
+    public Field toField(Object value) {
+      return toJsonStringField(value);
+    }
+  },
   UNSUPPORTED("unsupported") {
     @Override
     public Field toField(Object value) {
@@ -186,6 +196,22 @@ public enum MysqlType {
       } else {
         return Field.create(Type.STRING, value.toString());
       }
+    }
+  }
+
+  private static Field toJsonStringField(Object value) {
+    if (value == null) {
+      return Field.create(Type.STRING, null);
+    } else {
+      if (value instanceof byte[]) {
+        try {
+          return Field.create(Type.STRING, JsonBinary.parseAsString((byte[]) value));
+        } catch (IOException e) {
+          LOG.error(Errors.MYSQL_009.getMessage(), e);
+        }
+      }
+      // Will return JSON binary value as string in case it cannot be parsed as JSON
+      return Field.create(Type.STRING, value.toString());
     }
   }
 
