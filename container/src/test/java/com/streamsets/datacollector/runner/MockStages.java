@@ -803,11 +803,11 @@ public class MockStages {
 
       public Builder(ClassLoader cl) {
 
-        ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, "brokerHost", "",
+        ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "brokerHost", "",
           "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), 0, 0,
           "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap(), ConfigDef.DisplayMode.BASIC);
-        ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, "brokerPort", "",
+        ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "brokerPort", "",
           "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), 0, 0,
           "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap(), ConfigDef.DisplayMode.BASIC);
@@ -853,7 +853,7 @@ public class MockStages {
             createFieldDef("multiField", ConfigDef.Type.MODEL, multiFieldModelDef))
           .build();
 
-        ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, "stageRequiredFields",
+        ConfigDefinition stageReqField = new ConfigDefinition("stageRequiredFields", ConfigDef.Type.MODEL, ConfigDef.Upload.NO, "stageRequiredFields",
           "stageRequiredFields", null, false, "groupName", "stageRequiredFieldName", multiFieldModelDef, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -892,7 +892,7 @@ public class MockStages {
           .build();
 
         ConfigDefinition reqField = new ConfigDefinition(
-          "requiredFieldConfName", ConfigDef.Type.STRING, "requiredFieldLabel", "requiredFieldDesc", 10, true,
+          "requiredFieldConfName", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "requiredFieldLabel", "requiredFieldDesc", 10, true,
           "groupName", "requiredFieldFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -905,6 +905,7 @@ public class MockStages {
         ConfigDefinition requiredMapField = new ConfigDefinition(
             "requiredMapFieldConfName",
             ConfigDef.Type.MAP,
+            ConfigDef.Upload.NO,
             "requiredMapFieldLabel",
             "requiredMapFieldDesc",
             new ArrayList<>(),
@@ -934,7 +935,7 @@ public class MockStages {
 
         //error target configurations
         ConfigDefinition errorTargetConf = new ConfigDefinition(
-          "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
+          "errorTargetConfName", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "errorTargetConfLabel", "errorTargetConfDesc",
           "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -969,7 +970,7 @@ public class MockStages {
           .build();
 
         ConfigDefinition depConfDef = new ConfigDefinition(
-          "dependencyConfName", ConfigDef.Type.NUMBER, "dependencyConfLabel", "dependencyConfDesc", 5, true,
+          "dependencyConfName", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "dependencyConfLabel", "dependencyConfDesc", 5, true,
           "groupName", "dependencyConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -980,7 +981,7 @@ public class MockStages {
         triggerValues.add(1);
         triggered.put("dependencyConfName", triggerValues);
         ConfigDefinition triggeredConfDef = new ConfigDefinition(
-          "triggeredConfName", ConfigDef.Type.NUMBER, "triggeredConfLabel", "triggeredConfDesc", 10, true,
+          "triggeredConfName", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "triggeredConfLabel", "triggeredConfDesc", 10, true,
           "groupName", "triggeredConfFieldName", null, "dependencyConfName", triggeredBy, 0,
           Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
           Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, triggered, ConfigDef.DisplayMode.BASIC);
@@ -1016,7 +1017,7 @@ public class MockStages {
           .build();
 
         ConfigDefinition regularConf = new ConfigDefinition(
-          "regularConfName", ConfigDef.Type.NUMBER, "regularConfLabel", "regularConfDesc", 10, true,
+          "regularConfName", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "regularConfLabel", "regularConfDesc", 10, true,
           "groupName", "regularConfFieldName", null, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -1027,7 +1028,7 @@ public class MockStages {
           Collections.<String>emptyList(), null, list, null);
 
         ConfigDefinition complexConf = new ConfigDefinition(
-          "complexConfName", ConfigDef.Type.MODEL, "complexConfLabel", "complexConfDesc", null, true,
+          "complexConfName", ConfigDef.Type.MODEL, ConfigDef.Upload.NO, "complexConfLabel", "complexConfDesc", null, true,
           "groupName", "complexConfFieldName", modelDefinition, "", null, 0, Collections.<ElFunctionDefinition>emptyList(),
           Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
           ConfigDef.Evaluation.IMPLICIT, new HashMap<String, List<Object>>(), ConfigDef.DisplayMode.BASIC);
@@ -1148,18 +1149,18 @@ public class MockStages {
     private static ConfigDefinition createFieldDef(String configName,
                                                    ConfigDef.Type configType,
                                                    ModelDefinition modelDefinition) {
-      return new ConfigDefinition(configName, configType, configName + "Label", configName + "Desc",
+      return new ConfigDefinition(configName, configType, ConfigDef.Upload.NO, configName + "Label", configName + "Desc",
               "", true, "", configName + "FieldName", modelDefinition, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
               Collections.<ElConstantDefinition>emptyList(), 0, 0,
               "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap(), ConfigDef.DisplayMode.BASIC);
     }
 
     public static RawSourceDefinition getRawSourceDefinition() {
-      ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, "brokerHost", "",
+      ConfigDefinition brokerHostConfig = new ConfigDefinition("brokerHost", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "brokerHost", "",
         "", true, "", "brokerHost", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
         Collections.<ElConstantDefinition>emptyList(), 0, 0,
         "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap(), ConfigDef.DisplayMode.BASIC);
-      ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, "brokerPort", "",
+      ConfigDefinition brokerPortConfig = new ConfigDefinition("brokerPort", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "brokerPort", "",
         "", true, "", "brokerPort", null, "", null, 10, Collections.<ElFunctionDefinition>emptyList(),
         Collections.<ElConstantDefinition>emptyList(), 0, 0,
         "", 0, Collections.<Class>emptyList(), ConfigDef.Evaluation.IMPLICIT, Collections.<String, List<Object>>emptyMap(), ConfigDef.DisplayMode.BASIC);
@@ -1172,7 +1173,7 @@ public class MockStages {
     public static StageDefinition getErrorStageDefinition(ClassLoader cl) {
      //error target configurations
       ConfigDefinition errorTargetConf = new ConfigDefinition(
-        "errorTargetConfName", ConfigDef.Type.STRING, "errorTargetConfLabel", "errorTargetConfDesc",
+        "errorTargetConfName", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "errorTargetConfLabel", "errorTargetConfDesc",
         "/SDC_HOME/errorDir", true, "groupName", "errorTargetConfFieldName", null, "", null , 0,
         Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0,
         Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);

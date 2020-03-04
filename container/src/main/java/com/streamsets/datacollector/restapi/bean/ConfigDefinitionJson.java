@@ -41,6 +41,10 @@ public class ConfigDefinitionJson {
     return configDefinition.getType();
   }
 
+  public ConfigDef.Upload getUpload() {
+    return configDefinition.getUpload();
+  }
+
   public String getLabel() {
     return configDefinition.getLabel();
   }

@@ -57,11 +57,30 @@ public class ConfigDefinitionJson   {
     }
   }
 
+  public enum UploadEnum {
+    NO("NO"),
+    TEXT("TEXT"),
+    BASE64("BASE64"),
+    ;
+
+    private String value;
+
+    UploadEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String toString() {
+      return value;
+    }
+  }
+
   public enum DisplayModeEnum {
     BASIC,
     ADVANCED
   }
   private TypeEnum type = null;
+  private UploadEnum upload = null;
   private Object defaultValue = null;
   private String label = null;
   private String mode = null;
@@ -124,6 +143,16 @@ public enum EvaluationEnum {
     this.type = type;
   }
 
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("upload")
+  public UploadEnum getUpload() {
+    return upload;
+  }
+  public void setUpload(UploadEnum upload) {
+    this.upload = upload;
+  }
 
   /**
    **/

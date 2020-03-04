@@ -448,6 +448,7 @@ public abstract class ConfigDefinitionExtractor {
       if (annotation != null) {
         String name = field.getName();
         ConfigDef.Type type = annotation.type();
+        ConfigDef.Upload upload = annotation.upload();
         String label = annotation.label();
         String description = annotation.description();
         Object defaultValue = ConfigValueExtractor.get().extract(field, annotation, contextMsg);
@@ -491,7 +492,7 @@ public abstract class ConfigDefinitionExtractor {
         int lines = annotation.lines();
         ConfigDef.Evaluation evaluation = annotation.evaluation();
 
-        def = new ConfigDefinition(field, configPrefix + name, type, label, description, defaultValue,
+        def = new ConfigDefinition(field, configPrefix + name, type, upload, label, description, defaultValue,
                                    defaultValueFromResource, required, group,
                                    fieldName, model, dependsOn, triggeredByValues, displayPosition,
                                    elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,

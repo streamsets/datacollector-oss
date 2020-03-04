@@ -838,7 +838,8 @@ public class TestConfigDefinitionExtractor {
     @ConfigDef(
         label = "L",
         required = true,
-        type = ConfigDef.Type.CREDENTIAL
+        type = ConfigDef.Type.CREDENTIAL,
+        upload = ConfigDef.Upload.BASE64
     )
     public CredentialValue credential;
 
@@ -849,6 +850,7 @@ public class TestConfigDefinitionExtractor {
     List<ConfigDefinition> defs = ConfigDefinitionExtractor.get().extract(Bean4.class, Collections.<String>emptyList(), "x");
     Assert.assertEquals(1, defs.size());
     ConfigDefinition def = defs.get(0);
+    Assert.assertEquals(ConfigDef.Upload.BASE64, def.getUpload());
     List<ElFunctionDefinition> fDefs = def.getElFunctionDefinitions();
     Set<String> fNames = ImmutableSet.copyOf(Lists.transform(fDefs, input -> input.getName()));
     Assert.assertTrue(fNames.contains("credential:get"));

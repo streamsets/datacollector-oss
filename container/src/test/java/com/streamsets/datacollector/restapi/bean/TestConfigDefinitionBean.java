@@ -54,7 +54,8 @@ public class TestConfigDefinitionBean {
     triggeredBy.add("Y");
     triggeredBy.add("Z");
     com.streamsets.datacollector.config.ConfigDefinition configDefinition =
-      new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
+      new ConfigDefinition("int", ConfigDef.Type.NUMBER, ConfigDef.Upload.TEXT,
+          "l2", "d2", "-1", true, "g", "intVar", modelDefinition, "A",
         triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE
         , "text/plain", 0, Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);
 
@@ -71,6 +72,7 @@ public class TestConfigDefinitionBean {
     Assert.assertEquals(configDefinition.getLabel(), configDefinitionJsonBean.getLabel());
     Assert.assertEquals(configDefinition.getTriggeredByValues(), configDefinitionJsonBean.getTriggeredByValues());
     Assert.assertEquals(configDefinition.getType(), configDefinitionJsonBean.getType());
+    Assert.assertEquals(configDefinition.getUpload(), configDefinitionJsonBean.getUpload());
     Assert.assertEquals(configDefinition.isRequired(), configDefinitionJsonBean.isRequired());
 
   }

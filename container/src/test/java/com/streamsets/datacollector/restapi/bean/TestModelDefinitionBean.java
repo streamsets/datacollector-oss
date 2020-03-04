@@ -54,7 +54,7 @@ public class TestModelDefinitionBean {
     triggeredBy.add("Z");
 
     List< ConfigDefinition > configDefinitions = new ArrayList<>();
-    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, "l2", "d2", "-1", true, "g", "intVar", null, "A",
+    configDefinitions.add(new ConfigDefinition("int", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "l2", "d2", "-1", true, "g", "intVar", null, "A",
       triggeredBy, 0, Collections.<ElFunctionDefinition>emptyList(), Collections.<ElConstantDefinition>emptyList(),
       Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC));
 

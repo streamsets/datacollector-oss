@@ -41,6 +41,7 @@ public class ConfigDefinition {
   private final Field configField;
   private final String name;
   private final ConfigDef.Type type;
+  private final ConfigDef.Upload upload;
   private final String label;
   private final String description;
   private Object defaultValue;
@@ -65,20 +66,21 @@ public class ConfigDefinition {
   private String prefix;
   private ConfigDef.DisplayMode displayMode;
 
-  public ConfigDefinition(String name, ConfigDef.Type type, String label, String description,
+  public ConfigDefinition(String name, ConfigDef.Type type, ConfigDef.Upload upload, String label, String description,
       Object defaultValue,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
       List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
       List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
                           ConfigDef.DisplayMode displayMode) {
-    this(null, name, type, label, description, defaultValue, "",
+    this(null, name, type, upload, label, description, defaultValue, "",
         required, group, fieldName,
         model, dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
         elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap, displayMode);
   }
 
-  public ConfigDefinition(Field configField, String name, ConfigDef.Type type, String label, String description,
+  public ConfigDefinition(Field configField, String name, ConfigDef.Type type, ConfigDef.Upload upload,
+                          String label, String description,
       Object defaultValue, String defaultValueFromResource,
       boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
       List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
@@ -88,6 +90,7 @@ public class ConfigDefinition {
     this.configField = configField;
     this.name = name;
     this.type = type;
+    this.upload = upload;
     this.label = label;
     this.description = description;
     this.defaultValue = defaultValue;
@@ -219,6 +222,10 @@ public class ConfigDefinition {
 
   public ConfigDef.Type getType() {
     return type;
+  }
+
+  public ConfigDef.Upload getUpload() {
+    return upload;
   }
 
   public String getLabel() {
@@ -364,7 +371,7 @@ public class ConfigDefinition {
       }
     }
 
-    return new ConfigDefinition(getConfigField(), getName(), getType(), label, description, getDefaultValue(),
+    return new ConfigDefinition(getConfigField(), getName(), getType(), getUpload(), label, description, getDefaultValue(),
                                 "", isRequired(), getGroup(), getFieldName(), model,
                                 getDependsOn(), getTriggeredByValues(), getDisplayPosition(),
                                 getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),

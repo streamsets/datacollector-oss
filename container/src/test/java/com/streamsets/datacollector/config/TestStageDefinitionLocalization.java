@@ -47,7 +47,8 @@ public class TestStageDefinitionLocalization {
   @SuppressWarnings("unchecked")
   private StageDefinition createStageDefinition() {
     List<ConfigDefinition> configs = new ArrayList<>();
-    configs.add(new ConfigDefinition("c1", ConfigDef.Type.STRING, "Config1Label", "Config1Description", "default",
+    configs.add(new ConfigDefinition("c1", ConfigDef.Type.STRING,
+        ConfigDef.Upload.NO, "Config1Label", "Config1Description", "default",
                                      true, "GROUP", "c1", null, null, null, 0,
                                      Collections.<ElFunctionDefinition>emptyList(),
                                      Collections.<ElConstantDefinition>emptyList(),
@@ -55,7 +56,7 @@ public class TestStageDefinitionLocalization {
       Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC));
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, OptionsChooserValues.class.getName(),
                                                 ImmutableList.of("OPTION"), ImmutableList.of("Option"), null,  null, null);
-    configs.add(new ConfigDefinition("c2", ConfigDef.Type.MODEL, "Config2Label", "Config2Description", "default",
+    configs.add(new ConfigDefinition("c2", ConfigDef.Type.MODEL, ConfigDef.Upload.NO, "Config2Label", "Config2Description", "default",
                                      true, "GROUP", "c2", model, null, null, 0,
                                      Collections.<ElFunctionDefinition>emptyList(),
                                      Collections.<ElConstantDefinition>emptyList(),
