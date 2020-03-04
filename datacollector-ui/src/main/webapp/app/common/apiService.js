@@ -1552,6 +1552,11 @@ angular.module('dataCollectorApp.common')
           }
         });
       },
+
+      /**
+       * Returns 200 if available, 404 if not
+       */
+      checkSecretsAvailability: () => $http.get(apiBase + '/secrets/get')
     };
 
     return api;
