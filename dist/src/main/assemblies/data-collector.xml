@@ -610,6 +610,8 @@
       <scope>compile</scope>
       <includes>
         <include>com.streamsets:streamsets-datacollector-api</include>
+        <include>org.slf4j:slf4j-log4j12</include>
+        <include>log4j:log4j</include>
         <include>org.slf4j:jul-to-slf4j</include>
       </includes>
     </dependencySet>
