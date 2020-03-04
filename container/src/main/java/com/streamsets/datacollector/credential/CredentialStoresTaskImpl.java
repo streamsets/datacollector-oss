@@ -41,7 +41,6 @@ import java.util.Optional;
 public class CredentialStoresTaskImpl extends AbstractTask implements CredentialStoresTask {
   private static final Logger LOG = LoggerFactory.getLogger(CredentialStoresTaskImpl.class);
   static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
-  static final String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG = "auto.managed.default.credentialStores";
   static final String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG_DEFAULT = "false";
 
   private final Configuration configuration;

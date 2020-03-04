@@ -28,6 +28,8 @@ import java.util.List;
  * A credential store task is a task supposed to load credential stores configured in datacollector
  */
 public interface CredentialStoresTask extends Task {
+  String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG = "auto.managed.default.credentialStores";
+
   String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
   String DEFAULT_SDC_GROUP = "all";
   List<String> DEFAULT_SDC_GROUP_AS_LIST = Collections.singletonList(DEFAULT_SDC_GROUP);

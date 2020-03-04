@@ -23,9 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.io.BaseEncoding;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ModelDefinition;
-import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.config.PipelineDefinition;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.ServiceConfiguration;
@@ -44,8 +42,8 @@ import com.streamsets.datacollector.restapi.bean.PipelineFragmentEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -247,151 +245,6 @@ public class PipelineConfigurationUtil {
     return new Config(configDefinition.getName(), configDefinition.getDefaultValue());
   }
 
-  public static void stripPipelineConfigPlainCredentials(
-      PipelineConfiguration pipelineConfiguration,
-      StageLibraryTask stageLibrary
-  ) {
-    // pipeline configs
-    PipelineDefinition pipelineDefinition = stageLibrary.getPipeline();
-    List<Config> newConfigs = stripConfigPlainCredentials(
-        pipelineConfiguration.getConfiguration(),
-        getMapOfConfigDefinitions(pipelineDefinition.getConfigDefinitions())
-    );
-    pipelineConfiguration.getConfiguration().clear();
-    pipelineConfiguration.getConfiguration().addAll(newConfigs);
-
-    // stages configs
-    pipelineConfiguration.getStages().forEach(stageInstances ->
-        stripStageConfigPlainCredentials(stageInstances, stageLibrary));
-
-    // special stage - error stage
-    if (pipelineConfiguration.getErrorStage() != null) {
-      stripStageConfigPlainCredentials(pipelineConfiguration.getErrorStage(), stageLibrary);
-    }
-
-    // special stage - stats aggr stage
-    if (pipelineConfiguration.getStatsAggregatorStage() != null) {
-      stripStageConfigPlainCredentials(pipelineConfiguration.getStatsAggregatorStage(), stageLibrary);
-    }
-
-    // special stage - test origin
-    if (pipelineConfiguration.getTestOriginStage() != null) {
-      stripStageConfigPlainCredentials(pipelineConfiguration.getTestOriginStage(), stageLibrary);
-    }
-
-    // special stage - start event
-    if (!pipelineConfiguration.getStartEventStages().isEmpty()) {
-      stripStageConfigPlainCredentials(pipelineConfiguration.getStartEventStages().get(0), stageLibrary);
-    }
-
-    // special stage - stop event
-    if (!pipelineConfiguration.getStopEventStages().isEmpty()) {
-      stripStageConfigPlainCredentials(pipelineConfiguration.getStopEventStages().get(0), stageLibrary);
-    }
-  }
-
-  private static void stripStageConfigPlainCredentials(
-      StageConfiguration stageInstance,
-      StageLibraryTask stageLibrary
-  ) {
-    StageDefinition stageDefinition = stageLibrary.getStage(
-        stageInstance.getLibrary(),
-        stageInstance.getStageName(),
-        false
-    );
-    if (stageDefinition != null) {
-      List<Config> newStageConfigs = stripConfigPlainCredentials(
-          stageInstance.getConfiguration(),
-          getMapOfConfigDefinitions(stageDefinition.getConfigDefinitions())
-      );
-      stageInstance.setConfig(newStageConfigs);
-
-      // Handle Services
-      if (CollectionUtils.isNotEmpty(stageDefinition.getServices())) {
-        List<ServiceDefinition> serviceDefinitions = stageLibrary.getServiceDefinitions();
-        for(ServiceDependencyDefinition serviceDependencyDefinition: stageDefinition.getServices()) {
-          ServiceDefinition serviceDefinition = serviceDefinitions.stream()
-              .filter(s -> s.getProvides().equals(serviceDependencyDefinition.getServiceClass()))
-              .findAny()
-              .orElse(null);
-          ServiceConfiguration serviceConfiguration = stageInstance.getServices().stream()
-              .filter(s -> s.getService().equals(serviceDependencyDefinition.getServiceClass()))
-              .findAny()
-              .orElse(null);
-
-          if (serviceDefinition != null && serviceConfiguration != null) {
-            List<Config> newServiceConfigs = stripConfigPlainCredentials(
-                serviceConfiguration.getConfiguration(),
-                getMapOfConfigDefinitions(serviceDefinition.getConfigDefinitions())
-            );
-            serviceConfiguration.setConfig(newServiceConfigs);
-          }
-        }
-      }
-    }
-  }
-
-  private static List<Config> stripConfigPlainCredentials(
-      List<Config> configList,
-      Map<String, ConfigDefinition> configDefinitionMap
-  ) {
-    Map<String, Config> replacementConfigMap = new HashMap<>();
-    configList.forEach(config -> {
-      if (configDefinitionMap.containsKey(config.getName())) {
-        ConfigDefinition configDefinition = configDefinitionMap.get(config.getName());
-        if (configDefinition.getType().equals(ConfigDef.Type.CREDENTIAL) && !ElUtil.isElString(config.getValue())) {
-          replacementConfigMap.put(config.getName(), new Config(config.getName(), ""));
-        } else if (configDefinition.getModel() != null &&
-            configDefinition.getModel().getModelType().equals(ModelType.LIST_BEAN)) {
-
-          Map<String, ConfigDefinition> listBeanConfigDefinitionMap =
-              getMapOfConfigDefinitions(configDefinition.getModel().getConfigDefinitions());
-          if (config.getValue() != null) {
-            if (config.getValue() instanceof List) {
-              // list of hash maps
-              List<Map<String, Object>> maps = (List<Map<String, Object>>) config.getValue();
-              for (Map<String, Object> map : maps) {
-                stripListBeanConfigPlainCredentials(listBeanConfigDefinitionMap, map);
-              }
-            } else if (config.getValue() instanceof Map) {
-              Map<String, Object> listBeanConfigValue = (Map<String, Object>) config.getValue();
-              stripListBeanConfigPlainCredentials(listBeanConfigDefinitionMap, listBeanConfigValue);
-            }
-          }
-        }
-      }
-    });
-    return createWithNewConfigs(configList, replacementConfigMap);
-  }
-
-  private static void stripListBeanConfigPlainCredentials(
-      Map<String, ConfigDefinition> listBeanConfigDefinitionMap,
-      Map<String, Object> listBeanConfigValue
-  ) {
-    for (Map.Entry<String, Object> entry : listBeanConfigValue.entrySet()) {
-      String configName = entry.getKey();
-      Object value = entry.getValue();
-      ConfigDefinition listBeanConfigDefinition = listBeanConfigDefinitionMap.get(configName);
-      if (listBeanConfigDefinition.getType().equals(ConfigDef.Type.CREDENTIAL) &&
-          !ElUtil.isElString(value)) {
-        entry.setValue("");
-      }
-    }
-  }
-
-  private static Map<String, ConfigDefinition> getMapOfConfigDefinitions(List<ConfigDefinition> configDefinitions) {
-    Map<String, ConfigDefinition> configDefinitionMap = new HashMap<>();
-    configDefinitions.forEach(c -> configDefinitionMap.put(c.getName(), c));
-    return configDefinitionMap;
-  }
-
-  private static List<Config> createWithNewConfigs(List<Config> configs, Map<String, Config> replacementConfigMap) {
-    List<Config> newConfigurations = new ArrayList<>();
-    for (Config candidate : configs) {
-      newConfigurations.add(replacementConfigMap.getOrDefault(candidate.getName(), candidate));
-    }
-    return newConfigurations;
-  }
 
   public static PipelineEnvelopeJson getPipelineEnvelope(
       StageLibraryTask stageLibrary,
@@ -401,7 +254,8 @@ public class PipelineConfigurationUtil {
       boolean includePlainTextCredentials
   ) {
     if (!includePlainTextCredentials) {
-      PipelineConfigurationUtil.stripPipelineConfigPlainCredentials(pipelineConfig, stageLibrary);
+      PipelineCredentialHandler.getPlainTextScrubber(stageLibrary)
+          .handlePipelineConfigCredentials(pipelineConfig);
     }
     PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));

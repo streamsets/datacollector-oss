@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.creation;
+package com.streamsets.datacollector.util.credential;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -23,12 +23,19 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.creation.PipelineBean;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.creation.PipelineStageBeans;
+import com.streamsets.datacollector.creation.ServiceConfigurationBuilder;
+import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.credential.CredentialEL;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
-import com.streamsets.datacollector.util.PipelineConfigurationUtil;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -51,8 +58,8 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.BaseTarget;
-import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.interceptor.BaseInterceptor;
 import com.streamsets.pipeline.api.interceptor.Interceptor;
 import com.streamsets.pipeline.api.interceptor.InterceptorCreator;
@@ -73,37 +80,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
-@SuppressWarnings("unchecked")
-public class TestStrippingPlainCredentials {
-
-  @Before
-  public void setup() {
-    CredentialStore cs = new CredentialStore() {
-      @Override
-      public List<ConfigIssue> init(Context context) {
-        return null;
-      }
-
-      @Override
-      public CredentialValue get(String group, String name, String credentialStoreOptions) {
-        return () -> "secret";
-      }
-
-      @Override
-      public void destroy() {
-
-      }
-    };
-    CredentialEL.setCredentialStores(org.testcontainers.shaded.com.google.common.collect.ImmutableMap.of("cs", cs));
-  }
-
-  @After
-  public void cleanup() {
-    CredentialEL.setCredentialStores(null);
-  }
-
+public class TestPipelineCredentialHandler {
   public enum E { A, B }
 
   public static class SubBean {
@@ -417,8 +397,72 @@ public class TestStrippingPlainCredentials {
     }
   }
 
-  @Test
-  public void testStripPipelineConfigPlainCredentials() throws StageException {
+
+  static class MyManagedCredentialValue implements CredentialValue {
+    private final String value;
+
+    MyManagedCredentialValue(String value) {
+      this.value = value;
+    }
+
+    @Override
+    public String get() throws StageException {
+      return value;
+    }
+  }
+
+  static class MyManagedCredentialStore implements ManagedCredentialStore {
+    private final Map<String, String> credentialStoreMap = new HashMap<>();
+
+    @Override
+    public void store(List<String> groups, String name, String credentialValue) throws StageException {
+      credentialStoreMap.put(name, credentialValue);
+    }
+
+    @Override
+    public void delete(String name) throws StageException {
+      credentialStoreMap.remove(name);
+    }
+
+    @Override
+    public List<String> getNames() throws StageException {
+      return new ArrayList<>(credentialStoreMap.keySet());
+    }
+
+    @Override
+    public List<ConfigIssue> init(Context context) {
+      return Collections.emptyList();
+    }
+
+    @Override
+    public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
+      return new MyManagedCredentialValue(credentialStoreMap.get(name));
+    }
+
+    @Override
+    public void destroy() {
+      credentialStoreMap.clear();
+    }
+  }
+
+  private MyManagedCredentialStore myManagedCredentialStore;
+  private StageLibraryTask stageLibraryTask;
+  private CredentialStoresTask credentialStoresTask;
+  private com.streamsets.datacollector.util.Configuration configuration;
+  private PipelineCredentialHandler pipelineCredentialHandler;
+
+  @Before
+  public void init() {
+    myManagedCredentialStore = Mockito.spy(new MyManagedCredentialStore());
+
+    configuration = Mockito.mock(com.streamsets.datacollector.util.Configuration.class);
+    credentialStoresTask = Mockito.mock(CredentialStoresTask.class);
+
+    Mockito.when(credentialStoresTask.getDefaultManagedCredentialStore()).thenReturn(myManagedCredentialStore);
+    Mockito.when(
+        configuration.get(Mockito.eq(CredentialStoresTask.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG), Mockito.anyString())
+    ).thenReturn("streamsets");
+    CredentialEL.setCredentialStores(ImmutableMap.of("streamsets", myManagedCredentialStore, "cs", myManagedCredentialStore));
     StageLibraryDefinition libraryDef = Mockito.mock(StageLibraryDefinition.class);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
     StageDefinition sourceDef = StageDefinitionExtractor.get().extract(libraryDef, MySource.class, "");
@@ -427,20 +471,258 @@ public class TestStrippingPlainCredentials {
     StageDefinition errorStageDef = StageDefinitionExtractor.get().extract(libraryDef, ErrorMyTarget.class, "");
     StageDefinition aggStageDef = StageDefinitionExtractor.get().extract(libraryDef, AggregatingMyTarget.class, "");
     ServiceDefinition serviceDef = ServiceDefinitionExtractor.get().extract(libraryDef, CoolService.class);
-    StageLibraryTask library = Mockito.mock(StageLibraryTask.class);
-    Mockito.when(library.getPipeline()).thenReturn(PipelineDefinition.getPipelineDef());
-    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
+    stageLibraryTask = Mockito.mock(StageLibraryTask.class);
+    Mockito.when(stageLibraryTask.getPipeline()).thenReturn(PipelineDefinition.getPipelineDef());
+    Mockito.when(stageLibraryTask.getStage(Mockito.eq("default"), Mockito.eq("s"), Mockito.eq(false)))
         .thenReturn(sourceDef);
-    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("t"), Mockito.eq(false)))
+    Mockito.when(stageLibraryTask.getStage(Mockito.eq("default"), Mockito.eq("t"), Mockito.eq(false)))
         .thenReturn(targetDef);
-    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("e"), Mockito.eq(false)))
+    Mockito.when(stageLibraryTask.getStage(Mockito.eq("default"), Mockito.eq("e"), Mockito.eq(false)))
         .thenReturn(errorStageDef);
-    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("a"), Mockito.eq(false)))
+    Mockito.when(stageLibraryTask.getStage(Mockito.eq("default"), Mockito.eq("a"), Mockito.eq(false)))
         .thenReturn(aggStageDef);
-    Mockito.when(library.getStage(Mockito.eq("default"), Mockito.eq("lifecycle"), Mockito.eq(false)))
+    Mockito.when(stageLibraryTask.getStage(Mockito.eq("default"), Mockito.eq("lifecycle"), Mockito.eq(false)))
         .thenReturn(lifecycleTargetDef);
     Mockito.when(libraryDef.getClassLoader()).thenReturn(Thread.currentThread().getContextClassLoader());
-    Mockito.when(library.getServiceDefinition(Mockito.eq(Runnable.class), Mockito.anyBoolean())).thenReturn(serviceDef);
+    Mockito.when(stageLibraryTask.getServiceDefinition(Mockito.eq(Runnable.class), Mockito.anyBoolean())).thenReturn(serviceDef);
+
+  }
+
+  @After
+  public void destroy() {
+    CredentialEL.setCredentialStores(null);
+    myManagedCredentialStore.destroy();
+  }
+
+  @Test
+  public void testDecryptPlainTextCredentials() throws StageException {
+    final String PIPELINE_ID = "pipelineId";
+    final String AMAZON_ACCESS_KEY = "_amazonEMRConfig.accessKey";
+    final String SOURCE_PASSWORD = "/si_password1";
+    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si_complexField[0][password1]";
+    final List<String> CONFIGS_TO_HANDLE =
+        ImmutableList.of(AMAZON_ACCESS_KEY, SOURCE_PASSWORD, SOURCE_COMPLEX_FIELD_PASSWORD);
+    CONFIGS_TO_HANDLE.forEach(c ->
+        myManagedCredentialStore.store(
+            CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
+            CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + c,
+            "secret"
+        )
+    );
+    pipelineCredentialHandler = PipelineCredentialHandler.getDecrypter(stageLibraryTask, credentialStoresTask, configuration);
+
+    List<Map<String, Object>> constants = new ArrayList<>();
+    Map<String, Object> constantValue = new LinkedHashMap<>();
+    constantValue.put("key", "MEMORY_LIMIT");
+    constantValue.put("value", 1000);
+    constants.add(constantValue);
+    List<Config> pipelineConfigs = ImmutableList.of(
+        new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
+        new Config("constants", constants),
+        new Config("amazonEMRConfig.accessKey",
+            "${credential:get('streamsets','all','" +   CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY + "')}" ),
+        new Config("amazonEMRConfig.secretKey", "secretKey plain text")
+    );
+
+    Map<String, Object> complexFieldValue = new HashMap<>();
+    complexFieldValue.put("beanInt", 4);
+    complexFieldValue.put("password1", "${credential:get('streamsets','all','" +   CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_PASSWORD + "')}");
+    complexFieldValue.put("password2", "${'a'}");
+    complexFieldValue.put("password3", "b");
+
+    StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
+        .withConfig(
+            new Config("list", ImmutableList.of("S")),
+            new Config("password1",
+                "${credential:get('streamsets','all','" +   CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_COMPLEX_FIELD_PASSWORD + "')}"
+            ),
+            new Config("password2", "${'a'}"),
+            new Config("password3", "b"),
+            new Config("complexField", ImmutableList.of(complexFieldValue))
+        )
+        .build();
+    StageConfiguration targetConf = new StageConfigurationBuilder("si", "t")
+        .withConfig(new Config("list", ImmutableList.of("T")))
+        .withServices(new ServiceConfigurationBuilder()
+            .withService(Runnable.class)
+            .build())
+        .build();
+    StageConfiguration errorStageConf = new StageConfigurationBuilder("ei", "e")
+        .withConfig(new Config("list", ImmutableList.of("E")))
+        .build();
+    StageConfiguration aggStageConf = new StageConfigurationBuilder("ai", "a")
+        .withConfig(new Config("list", ImmutableList.of("A")))
+        .build();
+    StageConfiguration startConf = new StageConfigurationBuilder("start", "lifecycle")
+        .withConfig(new Config("list", ImmutableList.of("start-list")))
+        .build();
+    StageConfiguration stopConf = new StageConfigurationBuilder("stop", "lifecycle")
+        .withConfig(new Config("list", ImmutableList.of("stop-list")))
+        .build();
+
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        PIPELINE_ID,
+        UUID.randomUUID(),
+        "label",
+        "D",
+        pipelineConfigs,
+        Collections.emptyMap(),
+        ImmutableList.of(sourceConf, targetConf),
+        errorStageConf,
+        aggStageConf,
+        ImmutableList.of(startConf),
+        ImmutableList.of(stopConf)
+    );
+
+    pipelineCredentialHandler.handlePipelineConfigCredentials(pipelineConf);
+
+    //Check the config values
+    pipelineConf.getConfiguration().forEach(c -> {
+      if (c.getName().equals("amazonEMRConfig.accessKey")) {
+        Assert.assertEquals("secret", c.getValue());
+      }
+    });
+
+    Optional<StageConfiguration> sourceConfig =
+        pipelineConf.getStages().stream().filter(stageConfiguration -> stageConfiguration.getInstanceName().equals("si")).findFirst();
+    Assert.assertTrue(sourceConfig.isPresent());
+    sourceConfig.ifPresent(s -> {
+      s.getConfiguration().forEach(c -> {
+        if (c.getName().equals("password1")) {
+          Assert.assertEquals("secret", c.getValue());
+        } else if (c.getName().equals("complexField")) {
+          List<Map<String, Object>> complexFieldList = (List<Map<String, Object>>) c.getValue();
+          Map<String, Object> complexField = complexFieldList.get(0);
+          Object complexPasswordFieldValue = complexField.get("password1");
+          Assert.assertEquals("secret", complexPasswordFieldValue);
+        }
+      });
+    });
+  }
+
+  @Test
+  public void testAutoEncryptingCredentials() {
+    final String PIPELINE_ID = "pipelineId";
+    final String AMAZON_ACCESS_KEY = "_amazonEMRConfig.accessKey";
+    final String AMAZON_SECRET_KEY = "_amazonEMRConfig.secretKey";
+
+    final String SOURCE_PASSWORD = "/si_password1";
+    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si_complexField[0][password1]";
+
+    pipelineCredentialHandler = PipelineCredentialHandler.getEncrypter(stageLibraryTask, credentialStoresTask, configuration);
+
+    List<Map<String, Object>> constants = new ArrayList<>();
+    Map<String, Object> constantValue = new LinkedHashMap<>();
+    constantValue.put("key", "MEMORY_LIMIT");
+    constantValue.put("value", 1000);
+    constants.add(constantValue);
+    List<Config> pipelineConfigs = ImmutableList.of(
+        new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
+        new Config("constants", constants),
+        new Config("amazonEMRConfig.accessKey", "accessKey plain text"),
+        new Config("amazonEMRConfig.secretKey", "secretKey plain text")
+    );
+
+    Map<String, Object> complexFieldValue = new HashMap<>();
+    complexFieldValue.put("beanInt", 4);
+    complexFieldValue.put("password1", "complex field password1 plain text");
+    complexFieldValue.put("password2", "${'a'}");
+    complexFieldValue.put("password3", "b");
+
+    StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
+        .withConfig(
+            new Config("list", ImmutableList.of("S")),
+            new Config("password1", "password1 plain text"),
+            new Config("password2", "${'a'}"),
+            new Config("password3", "b"),
+            new Config("complexField", ImmutableList.of(complexFieldValue))
+        )
+        .build();
+    StageConfiguration targetConf = new StageConfigurationBuilder("si", "t")
+        .withConfig(new Config("list", ImmutableList.of("T")))
+        .withServices(new ServiceConfigurationBuilder()
+            .withService(Runnable.class)
+            .build())
+        .build();
+    StageConfiguration errorStageConf = new StageConfigurationBuilder("ei", "e")
+        .withConfig(new Config("list", ImmutableList.of("E")))
+        .build();
+    StageConfiguration aggStageConf = new StageConfigurationBuilder("ai", "a")
+        .withConfig(new Config("list", ImmutableList.of("A")))
+        .build();
+    StageConfiguration startConf = new StageConfigurationBuilder("start", "lifecycle")
+        .withConfig(new Config("list", ImmutableList.of("start-list")))
+        .build();
+    StageConfiguration stopConf = new StageConfigurationBuilder("stop", "lifecycle")
+        .withConfig(new Config("list", ImmutableList.of("stop-list")))
+        .build();
+
+    PipelineConfiguration pipelineConf = new PipelineConfiguration(
+        1,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        "D",
+        pipelineConfigs,
+        Collections.emptyMap(),
+        ImmutableList.of(sourceConf, targetConf),
+        errorStageConf,
+        aggStageConf,
+        ImmutableList.of(startConf),
+        ImmutableList.of(stopConf)
+    );
+    pipelineCredentialHandler.handlePipelineConfigCredentials(pipelineConf);
+
+    //check configs and credential store
+    pipelineConf.getConfiguration().forEach(c -> {
+      if (c.getName().equals("amazonEMRConfig.accessKey")) {
+        Assert.assertEquals("${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY + "')}", c.getValue());
+        myManagedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY, "accessKey plain text");
+      } else if (c.getName().equals("amazonEMRConfig.secretKey")) {
+        Assert.assertEquals("${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_SECRET_KEY + "')}", c.getValue());
+        myManagedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_SECRET_KEY, "secretKey plain text");
+      }
+    });
+
+    Optional<StageConfiguration> sourceConfig =
+        pipelineConf.getStages().stream().filter(stageConfiguration -> stageConfiguration.getInstanceName().equals("si")).findFirst();
+    Assert.assertTrue(sourceConfig.isPresent());
+    sourceConfig.ifPresent(s -> {
+      s.getConfiguration().forEach(c -> {
+        if (c.getName().equals("password1")) {
+          Assert.assertEquals(
+              "${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_PASSWORD + "')}",
+              c.getValue()
+          );
+          myManagedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_PASSWORD, "password1 plain text");
+        } else if (c.getName().equals("complexField")) {
+          List<Map<String, Object>> complexFieldList = (List<Map<String, Object>>) c.getValue();
+          Map<String, Object> complexField = complexFieldList.get(0);
+          Object complexPasswordFieldValue = complexField.get("password1");
+          Assert.assertEquals(
+              "${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_COMPLEX_FIELD_PASSWORD + "')}",
+              complexPasswordFieldValue
+          );
+          Assert.assertEquals(
+              "complex field password1 plain text",
+              myManagedCredentialStore.get(
+                  CredentialStoresTask.DEFAULT_SDC_GROUP,
+                  CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + SOURCE_COMPLEX_FIELD_PASSWORD,
+                  ""
+              ).get()
+          );
+        }
+      });
+    });
+  }
+
+  @Test
+  public void testStripPipelineConfigPlainCredentials() throws StageException {
+    myManagedCredentialStore.store(CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, "g", "secret");
+    pipelineCredentialHandler = PipelineCredentialHandler.getPlainTextScrubber(stageLibraryTask);
 
     List<Map<String, Object>> constants = new ArrayList<>();
     Map<String, Object> constantValue = new LinkedHashMap<>();
@@ -504,12 +786,10 @@ public class TestStrippingPlainCredentials {
         ImmutableList.of(stopConf)
     );
 
-
-    PipelineConfigurationUtil.stripPipelineConfigPlainCredentials(pipelineConf, library);
-
+    pipelineCredentialHandler.handlePipelineConfigCredentials(pipelineConf);
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, issues);
 
     Assert.assertNotNull(bean);
 
@@ -521,7 +801,7 @@ public class TestStrippingPlainCredentials {
 
     // Origin
     Assert.assertNotNull(bean.getOrigin());
-    MySource source = (MySource) bean.getOrigin().getStage();
+    TestPipelineCredentialHandler.MySource source = (TestPipelineCredentialHandler.MySource) bean.getOrigin().getStage();
     Assert.assertEquals(ImmutableList.of("S"), source.list);
     // test credentials config value
     Assert.assertEquals("secret", source.password1.get());
@@ -539,30 +819,30 @@ public class TestStrippingPlainCredentials {
     PipelineStageBeans stages = bean.getPipelineStageBeans();
     Assert.assertEquals(1, stages.getStages().size());
     StageBean targetBean = stages.getStages().get(0);
-    MyTarget target = (MyTarget)targetBean.getStage();
+    TestPipelineCredentialHandler.MyTarget target = (TestPipelineCredentialHandler.MyTarget)targetBean.getStage();
     Assert.assertEquals(ImmutableList.of("T"), target.list);
     Assert.assertEquals(1, targetBean.getServices().size());
 
     // Aggregating stage
-    AggregatingMyTarget aggregatingStage = (AggregatingMyTarget) bean.getStatsAggregatorStage().getStage();
+    TestPipelineCredentialHandler.AggregatingMyTarget aggregatingStage = (TestPipelineCredentialHandler.AggregatingMyTarget) bean.getStatsAggregatorStage().getStage();
     Assert.assertEquals(ImmutableList.of("A"), aggregatingStage.list);
 
     // error stage
-    ErrorMyTarget errorStage = (ErrorMyTarget) bean.getErrorStage().getStage();
+    TestPipelineCredentialHandler.ErrorMyTarget errorStage = (TestPipelineCredentialHandler.ErrorMyTarget) bean.getErrorStage().getStage();
     Assert.assertEquals(ImmutableList.of("E"), errorStage.list);
 
     // Lifecycle events
     Assert.assertEquals(1, bean.getStartEventStages().size());
-    LifecycleEventMyTarget startStage = (LifecycleEventMyTarget)bean.getStartEventStages().get(0).getStage();
+    TestPipelineCredentialHandler.LifecycleEventMyTarget startStage = (TestPipelineCredentialHandler.LifecycleEventMyTarget)bean.getStartEventStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("start-list"), startStage.list);
     Assert.assertEquals(1, bean.getStopEventStages().size());
-    LifecycleEventMyTarget stopStage = (LifecycleEventMyTarget)bean.getStopEventStages().get(0).getStage();
+    TestPipelineCredentialHandler.LifecycleEventMyTarget stopStage = (TestPipelineCredentialHandler.LifecycleEventMyTarget)bean.getStopEventStages().get(0).getStage();
     Assert.assertEquals(ImmutableList.of("stop-list"), stopStage.list);
 
     // pass runtime parameters
     Map<String, Object> runtimeParameters = ImmutableMap.of("MEMORY_LIMIT", 2000);
     issues = new ArrayList<>();
-    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues, runtimeParameters);
+    bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, issues, runtimeParameters);
     Assert.assertNotNull(bean);
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
@@ -570,7 +850,7 @@ public class TestStrippingPlainCredentials {
     // Verify duplicate stage bean
     issues = new ArrayList<>();
     PipelineStageBeans duplicate = PipelineBeanCreator.get().duplicatePipelineStageBeans(
-        library,
+        stageLibraryTask,
         bean.getPipelineStageBeans(),
         null,
         Collections.emptyMap(),
@@ -579,7 +859,7 @@ public class TestStrippingPlainCredentials {
     Assert.assertNotNull(duplicate);
     Assert.assertEquals(1, duplicate.size());
     targetBean = stages.getStages().get(0);
-    target = (MyTarget)targetBean.getStage();
+    target = (TestPipelineCredentialHandler.MyTarget)targetBean.getStage();
     Assert.assertEquals(ImmutableList.of("T"), target.list);
     Assert.assertEquals(1, targetBean.getServices().size());
   }
