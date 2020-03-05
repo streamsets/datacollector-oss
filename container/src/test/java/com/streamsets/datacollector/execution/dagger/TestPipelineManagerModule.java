@@ -100,7 +100,7 @@ public class TestPipelineManagerModule {
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());
     assertNull(pipelineManager.getPreviewer(previewer.getId()));
 
-    pipelineStoreTask.save("user", pc.getInfo().getPipelineId(), "0", "description", pc);
+    pipelineStoreTask.save("user", pc.getInfo().getPipelineId(), "0", "description", pc, false);
 
     //create Runner
     Runner runner = pipelineManager.getRunner(pc.getInfo().getPipelineId(), "0");
@@ -144,7 +144,7 @@ public class TestPipelineManagerModule {
     }
 
     try {
-      pipelineStoreTask.save("user", "p1", "0", "description", Mockito.mock(PipelineConfiguration.class));
+      pipelineStoreTask.save("user", "p1", "0", "description", Mockito.mock(PipelineConfiguration.class), false);
       Assert.fail("Expected UnsupportedOperationException");
     } catch (UnsupportedOperationException e) {
 

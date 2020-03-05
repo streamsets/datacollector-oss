@@ -138,9 +138,9 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
 
   @Override
   public PipelineConfiguration save(String user, String name, String tag, String tagDescription,
-    PipelineConfiguration pipeline) throws PipelineException {
+    PipelineConfiguration pipeline, boolean encryptCredentials) throws PipelineException {
     synchronized (lockCache.getLock(name)) {
-      PipelineConfiguration pipelineConf = pipelineStore.save(user, name, tag, tagDescription, pipeline);
+      PipelineConfiguration pipelineConf = pipelineStore.save(user, name, tag, tagDescription, pipeline, encryptCredentials);
       pipelineInfoMap.put(name, pipelineConf.getInfo());
       return pipelineConf;
     }

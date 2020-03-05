@@ -71,7 +71,7 @@ public class SlavePipelineStoreTask  implements PipelineStoreTask {
 
   @Override
   public PipelineConfiguration save(String name, String user, String tag, String tagDescription,
-    PipelineConfiguration pipeline) throws PipelineStoreException {
+    PipelineConfiguration pipeline, boolean encryptCredentials) throws PipelineStoreException {
     throw new UnsupportedOperationException();
   }
 

@@ -53,7 +53,8 @@ public interface PipelineStoreTask extends Task {
       String name,
       String tag,
       String tagDescription,
-      PipelineConfiguration pipeline
+      PipelineConfiguration pipeline,
+      boolean encryptCredentials
   ) throws PipelineException;
 
   PipelineConfiguration load(String name, String tagOrRev) throws PipelineException;

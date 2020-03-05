@@ -132,10 +132,11 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       String name,
       String tag,
       String tagDescription,
-      PipelineConfiguration pipeline
+      PipelineConfiguration pipeline,
+      boolean encryptCredentials
   ) throws PipelineException {
     aclStore.validateWritePermission(name, currentUser);
-    return pipelineStore.save(user, name, tag, tagDescription, pipeline);
+    return pipelineStore.save(user, name, tag, tagDescription, pipeline, encryptCredentials);
   }
 
   @Override

@@ -28,6 +28,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.Permission;
@@ -103,7 +104,8 @@ public class TestFileAclStoreTask {
         EventListenerManager eventListenerManager,
         LockCache<String> lockCache
     ) {
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, eventListenerManager, lockCache);
+      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
+          eventListenerManager, lockCache, Mockito.mock(PipelineCredentialHandler.class));
     }
 
     @Provides

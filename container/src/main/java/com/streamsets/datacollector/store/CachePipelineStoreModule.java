@@ -17,16 +17,20 @@ package com.streamsets.datacollector.store;
 
 import com.streamsets.datacollector.credential.CredentialStoresModule;
 import com.streamsets.datacollector.execution.executor.ExecutorModule;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStoreModule;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.stagelibrary.StageLibraryModule;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.impl.CachePipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.usagestats.StatsCollectorModule;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import dagger.Module;
 import dagger.Provides;
 
@@ -46,6 +50,19 @@ import javax.inject.Singleton;
     }
 )
 public class CachePipelineStoreModule {
+
+  @Provides
+  public PipelineCredentialHandler provideEncryptingPipelineCredentialsHandler(
+      StageLibraryTask stageLibraryTask,
+      CredentialStoresTask credentialStoresTask,
+      Configuration configuration
+  ) {
+    return PipelineCredentialHandler.getEncrypter(
+        stageLibraryTask,
+        credentialStoresTask,
+        configuration
+    );
+  }
 
   @Provides
   @Singleton

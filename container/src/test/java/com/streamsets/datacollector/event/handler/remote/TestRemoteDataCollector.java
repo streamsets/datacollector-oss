@@ -77,6 +77,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -897,7 +898,8 @@ public class TestRemoteDataCollector {
         String name,
         String tag,
         String tagDescription,
-        PipelineConfiguration pipeline
+        PipelineConfiguration pipeline,
+        boolean encryptCredentials
     ) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return null;
@@ -1119,6 +1121,47 @@ public class TestRemoteDataCollector {
     acl.setResourceId(name);
     dataCollector.syncAcl(acl);
     Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq(name), Mockito.eq(acl));
+  }
+
+  @Test
+  public void testEncryptCredentialsEnabledOnSave() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
+    PipelineStoreTask pipelineStoreTask = Mockito.spy(new MockPipelineStoreTask());
+    RemoteDataCollector dataCollector = new RemoteDataCollector(
+        new Configuration(),
+        new MockManager(),
+        pipelineStoreTask,
+        new MockPipelineStateStore(),
+        aclStoreTask,
+        new RemoteStateEventListener(new Configuration()),
+        runtimeInfo,
+        Mockito.mock(AclCacheHelper.class),
+        Mockito.mock(StageLibraryTask.class),
+        Mockito.mock(BlobStoreTask.class),
+        new SafeScheduledExecutorService(1, "supportBundleExecutor")
+    );
+    File testFolder = tempFolder.newFolder();
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
+    Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "foo", "0").toPath());
+    dataCollector.savePipeline("user",
+        "foo",
+        "0",
+        "",
+        new SourceOffset(),
+        Mockito.mock(PipelineConfiguration.class),
+        null,
+        new Acl(),
+        Collections.emptyMap()
+    );
+    Mockito.verify(pipelineStoreTask).save(
+        Mockito.eq("user"),
+        Mockito.eq("foo"),
+        Mockito.anyString(),
+        Mockito.anyString(),
+        Mockito.any(PipelineConfiguration.class),
+        Mockito.eq(true)
+    );
   }
 
   @Test

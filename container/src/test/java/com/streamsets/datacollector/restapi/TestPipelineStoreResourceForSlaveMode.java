@@ -161,8 +161,9 @@ public class TestPipelineStoreResourceForSlaveMode extends JerseyTest {
         Mockito.doThrow(new PipelineStoreException(ContainerError.CONTAINER_0200, "xyz"))
             .when(pipelineStore).delete("xyz");
         Mockito.when(pipelineStore.save(
-            Matchers.anyString(), Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
-            (com.streamsets.datacollector.config.PipelineConfiguration)Matchers.any())).thenReturn(
+            Matchers.anyString(), Matchers.anyString(), Matchers.anyString(),
+            Matchers.anyString(), Matchers.any(), Matchers.anyBoolean())
+        ).thenReturn(
           MockStages.createPipelineConfigurationSourceProcessorTarget());
 
         List<MetricsRuleDefinitionJson> metricsRuleDefinitionJsons = new ArrayList<>();

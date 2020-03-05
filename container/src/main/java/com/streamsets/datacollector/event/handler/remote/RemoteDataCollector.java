@@ -253,7 +253,8 @@ public class RemoteDataCollector implements DataCollector {
             pipelineConfiguration
         );
         PipelineConfiguration validatedPipelineConfig = validator.validate();
-        pipelineStore.save(user, name, rev, description, validatedPipelineConfig);
+        //By default encrypt credentials from Remote data collector
+        pipelineStore.save(user, name, rev, description, validatedPipelineConfig, true);
         pipelineStore.storeRules(name, rev, ruleDefinitions, false);
         if (acl != null) { // can be null for old dpm or when DPM jobs have no acl
           aclStoreTask.saveAcl(name, acl);

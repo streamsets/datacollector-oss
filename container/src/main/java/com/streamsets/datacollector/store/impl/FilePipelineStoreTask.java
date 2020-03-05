@@ -55,6 +55,7 @@ import com.streamsets.datacollector.util.LogUtil;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.impl.PipelineUtils;
@@ -100,6 +101,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
   private EventListenerManager eventListenerManager;
   private final PipelineCreator pipelineCreator;
+  private final PipelineCredentialHandler encryptingCredentialHandler;
 
   @Inject
   public FilePipelineStoreTask(
@@ -107,7 +109,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       StageLibraryTask stageLibrary,
       PipelineStateStore pipelineStateStore,
       EventListenerManager eventListenerManager,
-      LockCache<String> lockCache
+      LockCache<String> lockCache,
+      PipelineCredentialHandler encryptingCredentialHandler
   ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
@@ -126,6 +129,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         this::getDefaultTestOriginStageInstance
     );
     this.eventListenerManager = eventListenerManager;
+    this.encryptingCredentialHandler = encryptingCredentialHandler;
   }
 
   @VisibleForTesting
@@ -333,7 +337,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       String name,
       String tag,
       String tagDescription,
-      PipelineConfiguration pipeline
+      PipelineConfiguration pipeline,
+      boolean encryptCredentials
   ) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (!hasPipeline(name)) {
@@ -363,6 +368,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           buildInfo.getVersion(),
           runtimeInfo.getId()
       );
+      if (encryptCredentials) {
+        encryptingCredentialHandler.handlePipelineConfigCredentials(pipeline);
+      }
       try (
           OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
           OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name))

@@ -15,26 +15,49 @@
  */
 package com.streamsets.datacollector.store;
 
+import com.streamsets.datacollector.credential.CredentialStoresModule;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
 import com.streamsets.datacollector.main.SlaveRuntimeModule;
 import com.streamsets.datacollector.stagelibrary.SlaveStageLibraryModule;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCacheModule;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import dagger.Module;
 import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = PipelineStoreTask.class, library = true, includes = {SlaveRuntimeModule.class, SlaveStageLibraryModule
-    .class, SlavePipelineStateStoreModule.class, LockCacheModule.class})
+@Module(injects = PipelineStoreTask.class, library = true, includes = {
+    SlaveRuntimeModule.class,
+    SlaveStageLibraryModule.class,
+    SlavePipelineStateStoreModule.class,
+    LockCacheModule.class,
+    CredentialStoresModule.class
+})
 public class SlavePipelineStoreModule {
 
   @Provides
   @Singleton
   public PipelineStoreTask provideStore(FilePipelineStoreTask filePipelineStoreTask) {
     return new SlavePipelineStoreTask(filePipelineStoreTask);
+  }
+
+  @Provides
+  public PipelineCredentialHandler provideEncryptingPipelineCredentialsHandler(
+      StageLibraryTask stageLibraryTask,
+      CredentialStoresTask credentialStoresTask,
+      Configuration configuration
+  ) {
+    return PipelineCredentialHandler.getEncrypter(
+        stageLibraryTask,
+        credentialStoresTask,
+        configuration
+    );
   }
 
 }

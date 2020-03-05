@@ -54,6 +54,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
@@ -157,6 +158,15 @@ public class TestStandalonePipelineManager {
       return runtimeInfo;
     }
 
+    @Provides
+    public PipelineCredentialHandler provideEncryptingPipelineCredentialsHandler(
+        StageLibraryTask stageLibraryTask,
+        CredentialStoresTask credentialStoresTask,
+        Configuration configuration
+    ) {
+      return PipelineCredentialHandler.getEncrypter(stageLibraryTask, credentialStoresTask, configuration);
+    }
+
     @Provides @Singleton
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
@@ -166,14 +176,20 @@ public class TestStandalonePipelineManager {
     }
 
     @Provides @Singleton
-    public PipelineStoreTask providePipelineStoreTask(RuntimeInfo runtimeInfo, StageLibraryTask stageLibraryTask,
-                                                      PipelineStateStore pipelineStateStore, LockCache<String> lockCache) {
+    public PipelineStoreTask providePipelineStoreTask(
+        RuntimeInfo runtimeInfo,
+        StageLibraryTask stageLibraryTask,
+        PipelineStateStore pipelineStateStore,
+        LockCache<String> lockCache,
+        PipelineCredentialHandler pipelineCredentialsHandler
+    ) {
       FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(
           runtimeInfo,
           stageLibraryTask,
           pipelineStateStore,
           new EventListenerManager(),
-          lockCache
+          lockCache,
+          pipelineCredentialsHandler
       );
       filePipelineStoreTask.init();
       return filePipelineStoreTask;

@@ -71,6 +71,7 @@ import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.usagestats.StatsCollector;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -370,7 +371,8 @@ public class TestUtil {
           stageLibraryTask,
           pipelineStateStore,
           eventListenerManager,
-          new LockCache<>()
+          new LockCache<>(),
+          Mockito.mock(PipelineCredentialHandler.class)
       );
       pipelineStoreTask.init();
       try {
@@ -399,7 +401,7 @@ public class TestUtil {
           pipelineConf.setStatsAggregatorStage(mockPipelineConf.getStatsAggregatorStage());
           pipelineConf.getConfiguration().add(new Config("executionMode", ExecutionMode.STANDALONE.name()));
           pipelineConf.getConfiguration().add(new Config("retryAttempts", 3));
-          pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description", pipelineConf);
+          pipelineStoreTask.save("admin", MY_PIPELINE, ZERO_REV, "description", pipelineConf, false);
 
           // create a DataRuleDefinition for one of the stages
           DataRuleDefinition dataRuleDefinition =
@@ -434,7 +436,7 @@ public class TestUtil {
           pipelineConf.getConfiguration().add(new Config("executionMode",
             ExecutionMode.STANDALONE.name()));
           pipelineStoreTask.save("admin2", MY_SECOND_PIPELINE, ZERO_REV, "description"
-            , pipelineConf);
+            , pipelineConf, false);
         }
 
         if(!pipelineStoreTask.hasPipeline(HIGHER_VERSION_PIPELINE)) {
@@ -446,7 +448,7 @@ public class TestUtil {
             ExecutionMode.STANDALONE.name()));
           mockPipelineConf.setUuid(pipelineConfiguration.getUuid());
           pipelineStoreTask.save("admin2", HIGHER_VERSION_PIPELINE, ZERO_REV, "description"
-            , mockPipelineConf);
+            , mockPipelineConf, false);
         }
 
         if(!pipelineStoreTask.hasPipeline(PIPELINE_WITH_EMAIL)) {
@@ -463,7 +465,7 @@ public class TestUtil {
           pipelineConf.getConfiguration().add(new Config("notifyOnTermination", true));
           pipelineConf.getConfiguration().add(new Config("emailIDs", Arrays.asList("foo", "bar")));
           pipelineStoreTask.save("admin2", PIPELINE_WITH_EMAIL, ZERO_REV, "description"
-            , pipelineConf);
+            , pipelineConf, false);
         }
 
       } catch (PipelineStoreException e) {

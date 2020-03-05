@@ -42,6 +42,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.After;
@@ -50,9 +51,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 
-import javax.annotation.Nullable;
 import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,8 +70,15 @@ public class TestFilePipelineStoreTask {
   protected PipelineStoreTask store;
   protected ObjectGraph dagger;
 
-  @dagger.Module(injects = {FilePipelineStoreTask.class, LockCache.class, EventListenerManager.class},
-    includes = LockCacheModule.class)
+  @dagger.Module(
+      injects = {
+          FilePipelineStoreTask.class,
+          LockCache.class,
+          EventListenerManager.class,
+          PipelineCredentialHandler.class
+      },
+      includes = LockCacheModule.class
+  )
   public static class Module {
     public Module() {
     }
@@ -104,14 +110,22 @@ public class TestFilePipelineStoreTask {
 
     @Provides
     @Singleton
+    public PipelineCredentialHandler provideEncryptingCredentialsHandler() {
+      return Mockito.mock(PipelineCredentialHandler.class);
+    }
+
+    @Provides
+    @Singleton
     public FilePipelineStoreTask providePipelineStoreTask(
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
         EventListenerManager eventListenerManager,
-        LockCache<String> lockCache
+        LockCache<String> lockCache,
+        PipelineCredentialHandler encryptingCredentialsHandler
     ) {
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore, eventListenerManager, lockCache);
+      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
+          eventListenerManager, lockCache, encryptingCredentialsHandler);
     }
   }
 
@@ -151,7 +165,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(0, store.getPipelines().size());
       store.create("foo", "a","label", "A", false, false, new HashMap<String, Object>());
       Assert.assertEquals(1, store.getPipelines().size());
-      store.save("foo2", "a", FilePipelineStoreTask.REV, "A", store.load("a", "0"));
+      store.save("foo2", "a", FilePipelineStoreTask.REV, "A", store.load("a", "0"), false);
       assertEquals("foo2", store.getPipelines().get(0).getLastModifier());
       Assert.assertEquals("a", store.getInfo("a").getPipelineId());
       store.delete("a");
@@ -188,7 +202,7 @@ public class TestFilePipelineStoreTask {
       store.init();
       createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
-      store.save("foo", "a", null, null, pc);
+      store.save("foo", "a", null, null, pc, false);
     } finally {
       store.stop();
     }
@@ -201,7 +215,7 @@ public class TestFilePipelineStoreTask {
       createDefaultPipeline(store);
       PipelineConfiguration pc = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc.setUuid(UUID.randomUUID());
-      store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc);
+      store.save("foo", DEFAULT_PIPELINE_NAME, null, null, pc, false);
     } finally {
       store.stop();
     }
@@ -245,7 +259,7 @@ public class TestFilePipelineStoreTask {
       PipelineConfiguration pc0 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
       pc0 = createPipeline(pc0.getUuid());
       Thread.sleep(5);
-      store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc0);
+      store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc0, false);
       PipelineInfo info2 = store.getInfo(DEFAULT_PIPELINE_NAME);
       Assert.assertEquals(info1.getCreated(), info2.getCreated());
       Assert.assertEquals(info1.getCreator(), info2.getCreator());
@@ -253,6 +267,23 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(info1.getLastRev(), info2.getLastRev());
       Assert.assertEquals("foo", info2.getLastModifier());
       Assert.assertTrue(info2.getLastModified().getTime() > info1.getLastModified().getTime());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testSaveWithEncryptCredentials() throws Exception {
+    try {
+      store.init();
+      PipelineCredentialHandler encryptingCredentialsHandler = dagger.get(PipelineCredentialHandler.class);
+      Mockito.doNothing().when(encryptingCredentialsHandler)
+          .handlePipelineConfigCredentials(Mockito.any(PipelineConfiguration.class));
+      createDefaultPipeline(store);
+      PipelineConfiguration pc0 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+      Thread.sleep(5);
+      store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc0, true);
+      Mockito.verify(encryptingCredentialsHandler).handlePipelineConfigCredentials(Mockito.eq(pc0));
     } finally {
       store.stop();
     }
@@ -267,7 +298,7 @@ public class TestFilePipelineStoreTask {
       Assert.assertTrue(pc.getStages().isEmpty());
       UUID uuid = pc.getUuid();
       pc = createPipeline(pc.getUuid());
-      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc);
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc, false);
       UUID newUuid = pc.getUuid();
       Assert.assertNotEquals(uuid, newUuid);
       PipelineConfiguration pc2 = store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
@@ -411,7 +442,7 @@ public class TestFilePipelineStoreTask {
       pc.getUiInfo().put("b", "B");
       pc.getStages().get(0).getUiInfo().put("ia", "IA");
       pc.getStages().get(0).getUiInfo().put("ib", "IB");
-      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc);
+      pc = store.save("foo", DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV, null, pc, false);
 
       // verify uiInfo stays after save
       Assert.assertEquals(2, pc.getUiInfo().size());

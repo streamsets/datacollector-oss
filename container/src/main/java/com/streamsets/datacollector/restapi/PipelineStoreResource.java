@@ -33,6 +33,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -60,6 +61,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
@@ -197,9 +199,11 @@ public class PipelineStoreResource {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineStoreResource.class);
 
   private final RuntimeInfo runtimeInfo;
+  private final Configuration configuration;
   private final Manager manager;
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
+  private final CredentialStoresTask credentialStoresTask;
   private final URI uri;
   private final String user;
 
@@ -208,8 +212,10 @@ public class PipelineStoreResource {
       URI uri,
       Principal principal,
       StageLibraryTask stageLibrary,
+      CredentialStoresTask credentialStoresTask,
       PipelineStoreTask store,
       RuntimeInfo runtimeInfo,
+      Configuration configuration,
       Manager manager,
       UserGroupManager userGroupManager,
       AclStoreTask aclStore
@@ -217,7 +223,9 @@ public class PipelineStoreResource {
     this.uri = uri;
     this.user = principal.getName();
     this.stageLibrary = stageLibrary;
+    this.credentialStoresTask = credentialStoresTask;
     this.runtimeInfo = runtimeInfo;
+    this.configuration = configuration;
     this.manager = manager;
 
     UserJson currentUser;
@@ -554,6 +562,7 @@ public class PipelineStoreResource {
   })
   public Response importPipelines(
       @FormDataParam("file") InputStream uploadedInputStream,
+      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials,
       @Context SecurityContext context
   ) throws IOException {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -576,7 +585,8 @@ public class PipelineStoreResource {
                 true,
                 envelope,
                 false,
-                false
+                false,
+                encryptCredentials
             );
             successEntities.add(envelope.getPipelineConfig().getInfo());
           } catch (Exception ex) {
@@ -723,7 +733,8 @@ public class PipelineStoreResource {
             pipelineConfig.getPipelineId(),
             pipelineConfig.getInfo().getLastRev(),
             pipelineConfig.getDescription(),
-            pipelineConfig
+            pipelineConfig,
+            true
         );
       }
     } else if (pipelineType.equals(STREAMING_MODE)) {
@@ -734,7 +745,8 @@ public class PipelineStoreResource {
             pipelineConfig.getPipelineId(),
             pipelineConfig.getInfo().getLastRev(),
             pipelineConfig.getDescription(),
-            pipelineConfig
+            pipelineConfig,
+            true
         );
       }
     } else if (pipelineType.equals(MICROSERVICE)) {
@@ -758,7 +770,8 @@ public class PipelineStoreResource {
               pipelineConfig.getPipelineId(),
               pipelineConfig.getInfo().getLastRev(),
               microServiceTemplate.getDescription(),
-              microServiceTemplate
+              microServiceTemplate,
+              true
           );
         } else {
           microServiceTemplate.setInfo(pipelineConfig.getInfo());
@@ -958,6 +971,7 @@ public class PipelineStoreResource {
       @PathParam("pipelineId") String name,
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("description") String description,
+      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials,
       @ApiParam(name="pipeline", required = true) PipelineConfigurationJson pipeline
   ) throws PipelineException {
     if (store.isRemotePipeline(name, rev)) {
@@ -968,7 +982,7 @@ public class PipelineStoreResource {
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
     pipelineConfig = validator.validate();
-    pipelineConfig = store.save(user, name, rev, description, pipelineConfig);
+    pipelineConfig = store.save(user, name, rev, description, pipelineConfig, encryptCredentials);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }
 
@@ -1134,6 +1148,7 @@ public class PipelineStoreResource {
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
+      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -1144,7 +1159,8 @@ public class PipelineStoreResource {
         autoGeneratePipelineId,
         pipelineEnvelope,
         draft,
-        includeLibraryDefinitions
+        includeLibraryDefinitions,
+        encryptCredentials
     );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
@@ -1166,7 +1182,8 @@ public class PipelineStoreResource {
       @QueryParam("overwrite") @DefaultValue("false") boolean overwrite,
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
-      @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions
+      @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
+      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials
   ) throws PipelineException, IOException {
     RestAPIUtils.injectPipelineInMDC("*");
     PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelopeFromFromUrl(pipelineHttpUrl);
@@ -1177,7 +1194,8 @@ public class PipelineStoreResource {
         autoGeneratePipelineId,
         pipelineEnvelope,
         draft,
-        includeLibraryDefinitions
+        includeLibraryDefinitions,
+        encryptCredentials
     );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
@@ -1232,7 +1250,8 @@ public class PipelineStoreResource {
       boolean autoGeneratePipelineId,
       PipelineEnvelopeJson pipelineEnvelope,
       boolean draft,
-      boolean includeLibraryDefinitions
+      boolean includeLibraryDefinitions,
+      boolean encryptCredentials
   ) throws PipelineException {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
@@ -1267,7 +1286,7 @@ public class PipelineStoreResource {
         name = PipelineConfigurationUtil.generatePipelineId(label);
       }
       newPipelineConfig = store.create(user, name, label, pipelineConfig.getDescription(), false, draft,
-          new HashMap<String, Object>()
+          new HashMap<>()
       );
     }
 
@@ -1277,7 +1296,7 @@ public class PipelineStoreResource {
       pipelineConfig.setTitle(label);
       pipelineConfig.setUuid(newPipelineConfig.getUuid());
       pipelineConfig.setPipelineId(newPipelineConfig.getPipelineId());
-      pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig);
+      pipelineConfig = store.save(user, name, rev, pipelineConfig.getDescription(), pipelineConfig, encryptCredentials);
     }
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
@@ -1393,7 +1412,7 @@ public class PipelineStoreResource {
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipelineId,
             pipelineConfig);
         pipelineConfig = validator.validate();
-        store.save(user, pipelineId, "0", pipelineConfig.getDescription(), pipelineConfig);
+        store.save(user, pipelineId, "0", pipelineConfig.getDescription(), pipelineConfig, false);
         successEntities.add(pipelineId);
 
       } catch (Exception ex) {
@@ -1519,7 +1538,8 @@ public class PipelineStoreResource {
               pipelineConfig.getPipelineId(),
               pipelineInfo.getLastRev(),
               pipelineConfig.getDescription(),
-              pipelineConfig
+              pipelineConfig,
+              false
           );
 
           successEntities.add(BeanHelper.wrapPipelineInfo(pipelineConfig.getInfo()));

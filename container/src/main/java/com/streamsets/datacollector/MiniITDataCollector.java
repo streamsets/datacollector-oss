@@ -85,7 +85,7 @@ public class MiniITDataCollector implements DataCollector {
     PipelineConfigurationValidator validator =
       new PipelineConfigurationValidator(stageLibrary, pipelineName, realPipelineConfig);
     realPipelineConfig = validator.validate();
-    realPipelineConfig = store.save(user, pipelineName, tag, desc, realPipelineConfig);
+    realPipelineConfig = store.save(user, pipelineName, tag, desc, realPipelineConfig, false);
   }
 
   @Override
