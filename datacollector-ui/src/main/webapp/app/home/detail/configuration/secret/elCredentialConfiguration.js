@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-const PIPELINE_VAULT_PREFIX = 'PIPELINE_VAULT_';
-const SECRET_SEPARATOR = '__';
-const USER_GROUP = 'all';
-const SEPARATOR = '/';
-
 // Controller for entering credentials
 angular
   .module('dataCollectorApp.home')
   .controller('elCredentialConfigurationController', function (
-    $scope, api
+    $scope, api, secretUtil
   ) {
     angular.extend($scope, {
       credentialSettings: {
@@ -42,17 +37,24 @@ angular
         if (credentialValue.length < 1) {
           return;
         }
-        let vaultName = `${PIPELINE_VAULT_PREFIX}${$scope.pipelineConfig.pipelineId}`;
-        let secretName = `${$scope.selectedObject.instanceName}${SECRET_SEPARATOR}${$scope.configDefinition.name}`;
-        let expression = `\${credential:get("${$scope.credentialSettings.store}", "${USER_GROUP}", "${vaultName}${SEPARATOR}${secretName}")}`;
+        const {vaultName, secretName, expression} = secretUtil.getStandardExpression(
+          $scope.pipelineConfig.pipelineId,
+          $scope.selectedObject.instanceName,
+          $scope.configDefinition.name,
+          $scope.credentialSettings.store
+        );
         api.secret.createOrUpdateTextSecret(
           vaultName,
           secretName,
           credentialValue)
         .then((response) => {
-          $scope.detailPaneConfig.configuration[$scope.configIndex].value = expression;
-          $scope.credentialSettings.credentialValue = '';
-          $scope.credentialSettings.saved = true;
+          if (response.status >=200 && response.status < 300) {
+            $scope.detailPaneConfig.configuration[$scope.configIndex].value = expression;
+            $scope.credentialSettings.credentialValue = '';
+            $scope.credentialSettings.saved = true;
+          } else {
+            console.error('Could not save credential', response);
+          }
         }).catch((err) => {
           console.error(err);
         });
@@ -66,7 +68,7 @@ angular
           // getter
           const currentValue = $scope.detailPaneConfig.configuration[$scope.configIndex].value;
           // Do not return value if using internal credential store
-          if (!currentValue || currentValue.startsWith(`\${credential:get("${$scope.credentialSettings.store}"`)) {
+          if (!currentValue || secretUtil.isInternalSecret(currentValue, $scope.credentialSettings.store)) {
             return '';
           } else {
             return $scope.detailPaneConfig.configuration[$scope.configIndex].value;
@@ -94,15 +96,6 @@ angular
       }
     });
 
-    const useOldCredentials = () => {
-      $scope.credentialSettings.useInternalSecrets = false;
-      // Set the field to show the value if it is a credential function
-      $scope.credentialSettings.showValue = (
-        !$scope.detailPaneConfig.configuration[$scope.configIndex].value || 
-        $scope.detailPaneConfig.configuration[$scope.configIndex].value.indexOf('${')
-        ) === 0;
-    };
-
     $scope.$watch('credentialSettings.credentialValue', function(newValue, _oldValue, scope) {
       if (newValue.length > 0) {
         scope.credentialSettings.saved = false;
@@ -115,10 +108,10 @@ angular
           $scope.credentialSettings.useInternalSecrets = true;
           $scope.credentialSettings.store = res.data;
         } else {
-          useOldCredentials();
+          secretUtil.useOldCredentials($scope);
         }
       }, err => {
-        useOldCredentials();
+        secretUtil.useOldCredentials($scope);
       });
     };
   });

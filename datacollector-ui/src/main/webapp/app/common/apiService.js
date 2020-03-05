@@ -1554,6 +1554,24 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
+       * Create new file secret, return http promise
+       */
+      createOrUpdateFileSecret: function (vaultName, secretName, secretFile) {
+        const url = apiBase + '/secrets/file/ctx=SecretManage';
+        let formData = new FormData();
+        formData.append('vault', vaultName);
+        formData.append('name', secretName);
+        formData.append('uploadedFile', secretFile);
+        return $http.post(url, formData, {
+          // assign content-type as undefined, the browser
+          // will assign the correct boundary for us
+          headers: { 'Content-Type': undefined},
+          // prevents serializing payload
+          transformRequest: angular.identity
+        });
+      },
+
+      /**
        * Returns 200 if available, 404 if not
        */
       checkSecretsAvailability: () => $http.get(apiBase + '/secrets/get')

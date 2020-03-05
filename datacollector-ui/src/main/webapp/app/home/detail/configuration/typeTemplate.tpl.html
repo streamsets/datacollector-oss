@@ -121,11 +121,27 @@
 </script>
 
 <script type="text/ng-template" id="elCredentialConfigurationTemplate">
-  <div class="controls col-lg-7 col-md-8"
-       ng-controller="elCredentialConfigurationController">
+  <div class="controls col-lg-7 col-md-8">
+    <div ng-switch="configDefinition.upload">
+
+      <div ng-switch-when="TEXT">
+        <!-- When configDefinition.upload==='TEXT', that means a text-based file can be uploaded -->
+        <ng-include src="'elSecretFileConfigurationTemplate'"></ng-include>
+      </div>
+
+      <div ng-switch-default>
+        <ng-include src="'elCredentialTextConfigurationTemplate'"></ng-include>
+      </div>
+    </div>
+    <ng-include src="'configurationIssuesTemplate'"></ng-include>
+  </div>
+</script>
+
+<script type="text/ng-template" id="elCredentialTextConfigurationTemplate">
+  <div ng-controller="elCredentialConfigurationController">
     <div ng-if="!credentialSettings.useInternalSecrets">
       <div ui-codemirror
-         ng-if="credentialSettings.showValue"
+        ng-if="credentialSettings.showValue"
         ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
         focus-me="{{autoFocusConfigName === configDefinition.name}}"
         ng-model="detailPaneConfig.configuration[configIndex].value"
@@ -232,7 +248,51 @@
         </button>
       </div>
     </div>
-    <ng-include src="'configurationIssuesTemplate'"></ng-include>
+  </div>
+</script>
+
+<script type="text/ng-template" id="elSecretFileConfigurationTemplate">
+  <div ng-controller="elSecretFileConfigurationController"
+      class="secret-file-configuration">
+    <div ui-codemirror
+      ng-if="credentialSettings.showExpression || !credentialSettings.useInternalSecrets"
+      ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
+      focus-me="{{autoFocusConfigName === configDefinition.name}}"
+      ng-model="expressionValue"
+      ng-model-options="{ getterSetter: true }"
+      ui-refresh="refreshCodemirror"
+      ui-codemirror-opts="getCodeMirrorOptions({
+            readOnly: (isPipelineReadOnly || isPipelineRunning),
+            autofocus: autoFocusConfigName === configDefinition.name,
+            extraKeys: {
+              'Tab': false,
+              'Enter': common.ignoreCodeMirrorEnterKey,
+              'Ctrl-Space': 'autocomplete'
+            }
+          }, configDefinition)"
+      codemirror-el
+      field-paths="fieldPaths"
+      d-field-paths="dFieldPaths"
+      data-type="configDefinition.type">
+    </div>
+
+    <div class="input-group" ng-if="!credentialSettings.showExpression && credentialSettings.useInternalSecrets">
+      <span class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="credentialSettings.uploadFile" readonly>
+          </span>
+      </span>
+      <input type="text" class="form-control" readonly ng-model="credentialSettings.uploadFile.name"
+            placeholder="{{isUsingInternalPrivateKey() ? 'Using default private key' : ('home.import.fileUploadPlaceholder' | translate)}}">
+    </div>
+
+    <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
+      <button type="button" class="btn btn-link"
+              ng-if="credentialSettings.useInternalSecrets"
+              ng-click="toggleShowExpression()">
+        {{credentialSettings.showExpression ? 'Enter Credential' : (expressionValue() ? 'Show Expression' : 'Enter Expression')}}
+      </button>
+    </div>
   </div>
 </script>
 

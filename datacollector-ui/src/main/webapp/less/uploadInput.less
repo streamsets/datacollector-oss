@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,10 +14,31 @@
  * limitations under the License.
  */
 
-/**
- * Import Modal dialog
- */
+ .file-upload-mixin() {
 
-.import-modal-form {
-  .file-upload-mixin();
+  .btn-file {
+    position: relative;
+    overflow: hidden;
+
+    input[type=file] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      background: white;
+      cursor: inherit;
+      display: block;
+    }
+  }
+
+  input[readonly] {
+    background-color: white !important;
+    cursor: text !important;
+  }
 }
