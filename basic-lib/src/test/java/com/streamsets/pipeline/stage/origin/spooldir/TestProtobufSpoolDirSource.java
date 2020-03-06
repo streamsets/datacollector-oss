@@ -56,7 +56,7 @@ public class TestProtobufSpoolDirSource {
     conf.spoolDir = new File(TEST_PROTOBUF_FILE).getParent();
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "*.ser";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;

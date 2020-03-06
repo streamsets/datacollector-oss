@@ -71,7 +71,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     conf.spoolDir = dir;
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "file-[0-9].csv";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -227,7 +227,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     conf.spoolDir = dir;
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "file-[0-9].json";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -268,7 +268,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     conf.spoolDir = dir;
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "file-[0-9].csv";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;

@@ -169,7 +169,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
 
     if (issues.isEmpty()) {
       if (getContext().isPreview()) {
-        conf.poolingTimeoutSecs = 1;
+        conf.poolingTimeoutSecs = 5;
       }
 
       try {

@@ -215,7 +215,7 @@ public class TestSpoolDirWithCompression {
     conf.spoolDir = testDir.getAbsolutePath();
     conf.batchSize = 1000;
     conf.overrunLimit = 65;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "logArchive*.zip";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -239,7 +239,7 @@ public class TestSpoolDirWithCompression {
     conf.spoolDir = testDir.getAbsolutePath();
     conf.batchSize = 1000;
     conf.overrunLimit = 65;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "logArchive*.tar.gz";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -264,7 +264,7 @@ public class TestSpoolDirWithCompression {
     conf.spoolDir = testDir.getAbsolutePath();
     conf.batchSize = 1000;
     conf.overrunLimit = 65;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "testAvro*.tar.gz";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -287,7 +287,7 @@ public class TestSpoolDirWithCompression {
     conf.spoolDir = testDir.getAbsolutePath();
     conf.batchSize = 1000;
     conf.overrunLimit = 65;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "testFile*.bz2";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;

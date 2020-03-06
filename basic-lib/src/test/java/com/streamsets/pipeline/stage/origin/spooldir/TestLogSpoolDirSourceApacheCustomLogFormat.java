@@ -79,7 +79,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     conf.overrunLimit = 100;
     conf.spoolDir = createTestDir();
     conf.batchSize = 10;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "file-[0-9].log";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
@@ -297,7 +297,7 @@ public class TestLogSpoolDirSourceApacheCustomLogFormat {
     conf.overrunLimit = 100;
     conf.spoolDir = createTestDir();
     conf.batchSize = 10;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "file-[0-9].log";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;

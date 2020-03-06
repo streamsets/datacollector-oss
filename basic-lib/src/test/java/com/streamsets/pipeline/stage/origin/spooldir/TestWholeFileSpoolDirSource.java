@@ -68,7 +68,7 @@ public class TestWholeFileSpoolDirSource {
     conf.spoolDir = testDir;
     conf.batchSize = 10;
     conf.overrunLimit = 100;
-    conf.poolingTimeoutSecs = 1;
+    conf.poolingTimeoutSecs = 10;
     conf.filePattern = "*";
     conf.pathMatcherMode = PathMatcherMode.GLOB;
     conf.maxSpoolFiles = 10;
