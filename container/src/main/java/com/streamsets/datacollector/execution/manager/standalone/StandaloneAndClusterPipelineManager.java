@@ -31,6 +31,7 @@ import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.execution.StatsCollectorPreviewer;
 import com.streamsets.datacollector.execution.StatsCollectorRunner;
 import com.streamsets.datacollector.execution.manager.PipelineManagerException;
 import com.streamsets.datacollector.execution.manager.PreviewerProvider;
@@ -139,6 +140,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         afterActionsFunction,
         remote
     );
+    previewer = new StatsCollectorPreviewer(previewer, statsCollector);
     previewerCache.put(previewer.getId(), previewer);
     return previewer;
   }

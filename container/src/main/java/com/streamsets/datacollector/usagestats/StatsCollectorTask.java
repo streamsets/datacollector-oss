@@ -360,6 +360,16 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   }
 
   @Override
+  public void createPipeline(String pipelineId) {
+    getStatsInfo().createPipeline(pipelineId);
+  }
+
+  @Override
+  public void previewPipeline(String pipelineId) {
+    getStatsInfo().previewPipeline(pipelineId);
+  }
+
+  @Override
   public void startPipeline(PipelineConfiguration pipeline) {
     getStatsInfo().startPipeline(pipeline);
   }
