@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
@@ -45,6 +46,9 @@ public class ActiveStats {
   private Map<String, UsageTimer> stages;
   private AtomicLong recordCount;
   private Map<String, Long> errorCodes;
+  private Map<String, FirstPipelineUse> createToPreview;
+  private Map<String, FirstPipelineUse> createToRun;
+
 
   public ActiveStats() {
     startTime = System.currentTimeMillis();
@@ -54,6 +58,8 @@ public class ActiveStats {
     recordCount = new AtomicLong();
     dataCollectorVersion = "";
     errorCodes = new HashMap<>();
+    createToPreview = new ConcurrentHashMap<>();
+    createToRun = new ConcurrentHashMap<>();
   }
 
   public String getVersion() {
@@ -161,23 +167,54 @@ public class ActiveStats {
     return Collections.unmodifiableMap(errorCodes);
   }
 
+
+  public Map<String, FirstPipelineUse> getCreateToPreview() {
+    return createToPreview;
+  }
+
+  public ActiveStats setCreateToPreview(Map<String, FirstPipelineUse> createToPreview) {
+    this.createToPreview = new ConcurrentHashMap<>();
+    createToPreview.entrySet().stream().forEach(e -> this.createToPreview.put(e.getKey(), (FirstPipelineUse) e.getValue().clone()));
+    return this;
+  }
+
+  public Map<String, FirstPipelineUse> getCreateToRun() {
+    return createToRun;
+  }
+
+  public ActiveStats setCreateToRun(Map<String, FirstPipelineUse> createToRun) {
+    this.createToRun = new ConcurrentHashMap<>();
+    createToRun.entrySet().stream().forEach(e -> this.createToRun.put(e.getKey(), (FirstPipelineUse) e.getValue().clone()));
+    return this;
+  }
+
   public ActiveStats createPipeline(String pipelineId) {
-    //TODO
-    System.out.println("##### CREATE PIPELINE " + pipelineId);
+    long now = System.currentTimeMillis();
+    createToPreview.put(pipelineId, new FirstPipelineUse().setCreatedOn(now));
+    createToRun.put(pipelineId, new FirstPipelineUse().setCreatedOn(now));
     return this;
   }
 
   public ActiveStats previewPipeline(String pipelineId) {
-    //TODO
-    System.out.println("##### PREVIEW PIPELINE " + pipelineId);
+    FirstPipelineUse created = createToPreview.get(pipelineId);
+    if (created != null) {
+      if (created.getFirstUseOn() == -1) {
+        created.setFirstUseOn(System.currentTimeMillis());
+      }
+    }
     return this;
   }
 
   public ActiveStats startPipeline(PipelineConfiguration pipeline) {
-    //TODO
-    System.out.println("##### START PIPELINE " + pipeline.getPipelineId());
-
     LOG.debug("Starting UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
+    FirstPipelineUse created = createToRun.get(pipeline.getPipelineId());
+    if (created != null) {
+      if (created.getFirstUseOn() == -1) {
+        created.setFirstUseOn(System.currentTimeMillis());
+        created.setStageCount(pipeline.getStages().size());
+      }
+    }
+
     // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
     if (pipelines.computeIfAbsent(
         pipeline.getPipelineId(),
@@ -232,6 +269,15 @@ public class ActiveStats {
     return this;
   }
 
+  Map<String, FirstPipelineUse> removeUsedAndExpired(Map<String, FirstPipelineUse> map, long expiredTime) {
+    return map.entrySet()
+        .stream()
+        .filter(e -> e.getValue().getFirstUseOn() == -1 && e.getValue().getCreatedOn() > expiredTime)
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (f1, f2) -> {
+          throw new UnsupportedOperationException();
+        }, ConcurrentHashMap::new));
+  }
+
   // returns fresh bean with same UsageTimers just reset to zero accumulated time to be used as the new live stats
   public ActiveStats roll() {
     long now = System.currentTimeMillis();
@@ -246,6 +292,9 @@ public class ActiveStats {
                                    .filter(timer -> timer.getMultiplier() > 0)
                                    .map(UsageTimer::roll)
                                    .collect(Collectors.toList()));
+    long expiredTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
+    statsBean.setCreateToPreview(removeUsedAndExpired(getCreateToPreview(), expiredTime));
+    statsBean.setCreateToRun(removeUsedAndExpired(getCreateToRun(), expiredTime));
     return statsBean;
   }
 
@@ -259,6 +308,8 @@ public class ActiveStats {
                                             .setRecordCount(getRecordCount());
     snapshot.setPipelines(getPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
     snapshot.setStages(getStages().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
+    snapshot.setCreateToPreview(getCreateToPreview());
+    snapshot.setCreateToRun(getCreateToRun());
     return snapshot;
   }
 

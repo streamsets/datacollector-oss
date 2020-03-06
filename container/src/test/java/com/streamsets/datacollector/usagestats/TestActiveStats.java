@@ -15,12 +15,16 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
+
+import java.util.List;
+import java.util.Map;
 
 public class TestActiveStats {
 
@@ -33,6 +37,8 @@ public class TestActiveStats {
     Assert.assertNotNull(as.getUpTime());
     Assert.assertNotNull(as.getPipelines());
     Assert.assertNotNull(as.getStages());
+    Assert.assertNotNull(as.getCreateToPreview());
+    Assert.assertNotNull(as.getCreateToRun());
   }
 
   @Test
@@ -42,6 +48,67 @@ public class TestActiveStats {
     as.setPipelines(ImmutableList.of(ut));
     Assert.assertEquals(1, as.getPipelines().size());
     Assert.assertEquals(ut, as.getPipelines().get(0));
+  }
+
+  @Test
+  public void testSetCreateToPreview() {
+    ActiveStats as = new ActiveStats();
+    Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
+    as.setCreateToPreview(map);
+    Assert.assertEquals(1, as.getCreateToPreview().size());
+    Assert.assertEquals(2, as.getCreateToPreview().get("p1").getTimeToFirstUse());
+  }
+
+  @Test
+  public void testSetCreateToRun() {
+    ActiveStats as = new ActiveStats();
+    Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
+    as.setCreateToRun(map);
+    Assert.assertEquals(1, as.getCreateToRun().size());
+    Assert.assertEquals(2, as.getCreateToRun().get("p1").getTimeToFirstUse());
+  }
+
+  @Test
+  public void testCreatePipeline() {
+    ActiveStats as = new ActiveStats();
+    as.createPipeline("p1");
+    Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
+    Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
+    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getTimeToFirstUse());
+    Assert.assertEquals(0, as.getCreateToPreview().get("p1").getStageCount());
+    Assert.assertEquals(-1, as.getCreateToRun().get("p1").getTimeToFirstUse());
+    Assert.assertEquals(0, as.getCreateToRun().get("p1").getStageCount());
+  }
+
+  @Test
+  public void testPreviewPipeline() {
+    ActiveStats as = new ActiveStats();
+    as.createPipeline("p1");
+    as.previewPipeline("p1");
+    Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
+    Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
+    Assert.assertTrue(as.getCreateToPreview().get("p1").getTimeToFirstUse() >= 0);
+    Assert.assertEquals(0, as.getCreateToPreview().get("p1").getStageCount());
+    Assert.assertEquals(-1, as.getCreateToRun().get("p1").getTimeToFirstUse());
+    Assert.assertEquals(0, as.getCreateToRun().get("p1").getStageCount());
+  }
+
+  @Test
+  public void testRunPipeline() {
+    ActiveStats as = new ActiveStats();
+    as.createPipeline("p1");
+    PipelineConfiguration pipelineConfiguration = Mockito.mock(PipelineConfiguration.class);
+    Mockito.when(pipelineConfiguration.getPipelineId()).thenReturn("p1");
+    StageConfiguration stageConfiguration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(stageConfiguration.getLibrary()).thenReturn("l");
+    Mockito.when(stageConfiguration.getStageName()).thenReturn("n");
+    Mockito.when(pipelineConfiguration.getStages()).thenReturn((List)ImmutableList.of(stageConfiguration));
+    as.startPipeline(pipelineConfiguration);
+    Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
+    Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
+    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getTimeToFirstUse());
+    Assert.assertTrue(as.getCreateToRun().get("p1").getTimeToFirstUse() >= 0);
+    Assert.assertEquals(1, as.getCreateToRun().get("p1").getStageCount());
   }
 
   @Test
@@ -198,4 +265,17 @@ public class TestActiveStats {
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
   }
 
+  @Test
+  public void testRemoveUsedAndExpiredFirstPipelineUse() {
+    ActiveStats as = new ActiveStats();
+    Map map = ImmutableMap.of(
+        "p1", new FirstPipelineUse().setCreatedOn(100).setFirstUseOn(200),
+        "p2", new FirstPipelineUse().setCreatedOn(200),
+        "p3", new FirstPipelineUse().setCreatedOn(300)
+        );
+
+    map = as.removeUsedAndExpired(map, 250);
+    Assert.assertEquals(1, map.size());
+    Assert.assertTrue(map.containsKey("p3"));
+  }
 }

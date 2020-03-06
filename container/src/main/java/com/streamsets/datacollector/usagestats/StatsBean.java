@@ -15,8 +15,12 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // stats bean that is send back to StreamSets.
 public class StatsBean {
@@ -32,6 +36,8 @@ public class StatsBean {
   private Map<String, Long> stageMilliseconds;
   private long recordsOM;
   private Map<String, Long> errorCodes;
+  private List<FirstPipelineUse> createToPreview;
+  private List<FirstPipelineUse> createToRun;
 
   public StatsBean() {
     stageMilliseconds = new HashMap<>();
@@ -61,6 +67,17 @@ public class StatsBean {
       setRecordsOM(-1); // no records
     }
     setErrorCodes(new HashMap<>(activeStats.getErrorCodes()));
+    createToPreview = getFirstUse(activeStats.getCreateToPreview());
+    createToRun = getFirstUse(activeStats.getCreateToRun());
+  }
+
+  @NotNull
+  List<FirstPipelineUse> getFirstUse(Map<String, FirstPipelineUse> map) {
+    return map.entrySet()
+        .stream()
+        .filter(e -> e.getValue().getFirstUseOn() > 0)
+        .map(e -> e.getValue())
+        .collect(Collectors.toList());
   }
 
   public String getSdcId() {
@@ -158,5 +175,23 @@ public class StatsBean {
 
   public void setErrorCodes(Map<String, Long> errorCodes) {
     this.errorCodes = errorCodes;
+  }
+
+  public List<FirstPipelineUse> getCreateToPreview() {
+    return createToPreview;
+  }
+
+  public StatsBean setCreateToPreview(List<FirstPipelineUse> createToPreview) {
+    this.createToPreview = createToPreview;
+    return this;
+  }
+
+  public List<FirstPipelineUse> getCreateToRun() {
+    return createToRun;
+  }
+
+  public StatsBean setCreateToRun(List<FirstPipelineUse> createToRun) {
+    this.createToRun = createToRun;
+    return this;
   }
 }
