@@ -16,11 +16,8 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.ErrorCode;
-
-import java.util.List;
 
 /**
  * Task that handles stats collection for the data collector
@@ -47,6 +44,20 @@ public interface StatsCollector extends Task {
    * @param active true opts IN, false opts OUT.
    */
   void setActive(boolean active);
+
+  /**
+   * Tracks pipeline creation.
+   *
+   * @param pipelineId pipeline configuration to gather pipeline info for stats.
+   */
+  void createPipeline(String pipelineId);
+
+  /**
+   * Tracks pipeline previews.
+   *
+   * @param pipelineId pipeline configuration to gather pipeline info for stats.
+   */
+  void previewPipeline(String pipelineId);
 
   /**
    * Starts tracking stats for a pipeline when a pipeline starts.

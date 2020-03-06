@@ -161,7 +161,22 @@ public class ActiveStats {
     return Collections.unmodifiableMap(errorCodes);
   }
 
+  public ActiveStats createPipeline(String pipelineId) {
+    //TODO
+    System.out.println("##### CREATE PIPELINE " + pipelineId);
+    return this;
+  }
+
+  public ActiveStats previewPipeline(String pipelineId) {
+    //TODO
+    System.out.println("##### PREVIEW PIPELINE " + pipelineId);
+    return this;
+  }
+
   public ActiveStats startPipeline(PipelineConfiguration pipeline) {
+    //TODO
+    System.out.println("##### START PIPELINE " + pipeline.getPipelineId());
+
     LOG.debug("Starting UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
     // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
     if (pipelines.computeIfAbsent(

@@ -16,12 +16,15 @@
 package com.streamsets.datacollector.store;
 
 import com.streamsets.datacollector.credential.CredentialStoresModule;
+import com.streamsets.datacollector.execution.executor.ExecutorModule;
 import com.streamsets.datacollector.execution.store.CachePipelineStateStoreModule;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.stagelibrary.StageLibraryModule;
 import com.streamsets.datacollector.store.impl.CachePipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 
+import com.streamsets.datacollector.usagestats.StatsCollector;
+import com.streamsets.datacollector.usagestats.StatsCollectorModule;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import dagger.Module;
@@ -29,14 +32,29 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = PipelineStoreTask.class, library = true, includes = {RuntimeModule.class, StageLibraryModule.class,
-  CachePipelineStateStoreModule.class, LockCacheModule.class, CredentialStoresModule.class})
+@Module(
+    injects = PipelineStoreTask.class,
+    library = true,
+    includes = {
+        RuntimeModule.class,
+        ExecutorModule.class,
+        StageLibraryModule.class,
+        CachePipelineStateStoreModule.class,
+        LockCacheModule.class,
+        CredentialStoresModule.class,
+        StatsCollectorModule.class
+    }
+)
 public class CachePipelineStoreModule {
 
   @Provides
   @Singleton
-  public PipelineStoreTask provideStore(FilePipelineStoreTask store, LockCache<String> lockCache) {
-    return new CachePipelineStoreTask(store, lockCache);
+  public PipelineStoreTask provideStore(
+      FilePipelineStoreTask store,
+      LockCache<String> lockCache,
+      StatsCollector statsCollector
+  ) {
+    return new StatsCollectorPipelineStoreTask(new CachePipelineStoreTask(store, lockCache), statsCollector);
   }
 
 }

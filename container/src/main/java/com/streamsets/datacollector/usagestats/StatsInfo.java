@@ -76,6 +76,14 @@ public class StatsInfo {
     doWithLock(() -> getActiveStats().stopSystem(), false);
   }
 
+  public void createPipeline(String pipelineId) {
+    doWithLock(() -> getActiveStats().createPipeline(pipelineId), false);
+  }
+
+  public void previewPipeline(String pipelineId) {
+    doWithLock(() -> getActiveStats().previewPipeline(pipelineId), false);
+  }
+
   public void startPipeline(PipelineConfiguration pipeline) {
     doWithLock(() -> getActiveStats().startPipeline(pipeline), false);
   }
