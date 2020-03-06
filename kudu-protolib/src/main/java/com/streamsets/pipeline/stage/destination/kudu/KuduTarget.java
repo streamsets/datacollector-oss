@@ -514,7 +514,7 @@ public class KuduTarget extends BaseTarget {
             errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_08, rowKey));
           } else if (error.getErrorStatus().isNotFound()) {
             // Row key not found error, mostly for update and delete operations.
-            errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_15, rowKey));
+            errorRecordHandler.onError(new OnRecordErrorException(errorRecord, Errors.KUDU_15, rowKey, tableName));
           } else {
             // Failure is most likely caused by setting, network, or corrupted table.
             // Worth throwing StageException.

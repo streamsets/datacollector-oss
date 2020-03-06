@@ -34,7 +34,7 @@ public enum Errors implements ErrorCode {
   KUDU_12("Invalid table name template expression '{}': {}"),
   KUDU_13("Operation not supported: {}"),
   KUDU_14("Unknown action for unsupported operation: {}"),
-  KUDU_15("Row key '{}' not found"),
+  KUDU_15("Row key '{}' not found for table '{}'"),
 
   KUDU_30("Column mappings must be specified for lookup processor"),
   KUDU_31("No rows found"),
