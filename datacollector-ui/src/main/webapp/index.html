@@ -234,6 +234,8 @@
               </a>
             </li>
 
+            <li role="presentation" class="divider"></li>
+
             <li ng-if="isAuthorized([userRoles.admin]) && !common.remoteServerInfo.registrationStatus">
               <a href="javascript:;" ng-click="common.onEnableDPMClick()">
                 <i class="fa fa-file-text"></i>
@@ -261,6 +263,8 @@
                 <span translate="global.menu.admin.restart">Restart</span>
               </a>
             </li>
+
+            <li role="presentation" class="divider"></li>
 
             <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isDPMEnabled && common.authenticationType !== 'none'">
               <a href="collector/usersAndGroups">
