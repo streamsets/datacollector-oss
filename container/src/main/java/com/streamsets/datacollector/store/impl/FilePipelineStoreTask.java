@@ -62,16 +62,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.CopyOption;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -213,28 +210,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineConfiguration pipeline = pipelineCreator.create(user, pipelineId, pipelineTitle, description, new Date());
 
       if (!draft) {
-        try {
-          File tempInfoFile = File.createTempFile("sdc-" + buildInfo.getVersion() + "-info-file-create", null);
-          File tempPipelineFile = File.createTempFile("sdc-" + buildInfo.getVersion() + "-pipeline-file-create", null);
-          try (
-              OutputStream tempInfoFileOutputStream = Files.newOutputStream(tempInfoFile.toPath());
-              OutputStream tempPipelineFileOutputStream = Files.newOutputStream(tempPipelineFile.toPath())
-          ) {
-            json.writeValue(tempInfoFileOutputStream, BeanHelper.wrapPipelineInfo(pipeline.getInfo()));
-            json.writeValue(tempPipelineFileOutputStream, BeanHelper.wrapPipelineConfiguration(pipeline));
-            Files.move(
-                tempInfoFile.toPath(),
-                getInfoFile(pipelineId),
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.ATOMIC_MOVE
-            );
-            Files.move(
-                tempPipelineFile.toPath(),
-                getPipelineFile(pipelineId),
-                StandardCopyOption.REPLACE_EXISTING,
-                StandardCopyOption.ATOMIC_MOVE
-            );
-          }
+        try (
+            OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
+            OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId))
+        ){
+          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipeline.getInfo()));
+          json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
         } catch (Exception ex) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
         }
