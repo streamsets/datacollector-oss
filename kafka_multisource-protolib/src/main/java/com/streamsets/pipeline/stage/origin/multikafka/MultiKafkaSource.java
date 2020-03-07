@@ -115,7 +115,7 @@ public class MultiKafkaSource extends BasePushSource {
 
       LOG.debug("Starting poll loop in thread: {}", Thread.currentThread().getName());
 
-      LOG.info("Minimum Kafka consumer Poll interval is set to: {}, MIN_CONSUMER_POLLING_INTERVAL_MS");
+      LOG.info("Minimum Kafka consumer Poll interval is set to: {}", MIN_CONSUMER_POLLING_INTERVAL_MS);
       try {
         consumer.subscribe(topicList);
         // protected loop. want it to finish completely, or not start at all.
@@ -140,14 +140,27 @@ public class MultiKafkaSource extends BasePushSource {
 
           for (ConsumerRecord<String, byte[]> item : messages) {
 
+            // We still support Kafka 0.9 that doesn't have support for timestamp. Thus this code simply calls those
+            // methods in a safe manner and fills defaults in case that those methods do not exists. This fragment can
+            // be dropped (or this patch reverted) when we drop support for Kafka 0.9.
+            long timestamp;
+            String timestampType;
+            try {
+              timestamp = item.timestamp();
+              timestampType = item.timestampType().name;
+            } catch (NoSuchMethodError _) {
+              timestamp = -1;
+              timestampType = "";
+            }
+
             records.addAll(createRecord(errorRecordHandler,
                 item.topic(),
                 item.partition(),
                 item.offset(),
                 item.value(),
                 item.key(),
-                item.timestamp(),
-                item.timestampType().name()
+                timestamp,
+                timestampType
             ));
 
             if (records.size() >= batchSize) {
