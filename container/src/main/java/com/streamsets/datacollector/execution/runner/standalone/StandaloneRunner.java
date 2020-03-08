@@ -918,16 +918,22 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
       int batches,
       int batchSize
   ) throws PipelineException, StageException {
+    // Method startPipeline() have already try-catch that is handling state transitions
+    startPipeline(context);
+
+    // Method captureSnapshot() doesn't have proper try-catch for state transitions (since it generally doesn't make
+    // sense there) and thus we do the state transitions here.
     try {
-      startPipeline(context);
       captureSnapshot(context.getUser(), snapshotName, snapshotLabel, batches, batchSize, false);
-      LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
-      if (!pipelineRunnable.isStopped()) {
-        pipelineRunnable.run();
-      }
     } catch (Exception e) {
       LOG.error("Can't start and get snapshot for pipeline {}: {}", getName(), e.toString(), e);
+      validateAndSetStateTransition(context.getUser(), PipelineStatus.START_ERROR, e.toString(), null);
       throw e;
+    }
+
+    LOG.debug("Starting the runnable for pipeline {} {}", getName(), getRev());
+    if (!pipelineRunnable.isStopped()) {
+      pipelineRunnable.run();
     }
   }
 
