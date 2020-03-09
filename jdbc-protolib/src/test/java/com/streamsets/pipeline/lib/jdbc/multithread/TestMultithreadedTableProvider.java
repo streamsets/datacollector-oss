@@ -253,7 +253,7 @@ public class TestMultithreadedTableProvider extends BaseMultithreadedTableProvid
       // since we're not using a runner, just treat the partition's member variable for
       // starting position offsets as the runner's stored offsets, since for our purposes
       // in this test, it will work the same
-      final Map<String, String> partStartingOffsets = part.getStartingPartitionOffsets();
+      final Map<String, String> partStartingOffsets = part.getPartitionOffsetStart();
       final String offsetRepresentation = OffsetQueryUtil.getSourceKeyOffsetsRepresentation(partStartingOffsets);
       currentOffsets.put(part.getOffsetKey(), offsetRepresentation);
     }

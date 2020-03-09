@@ -295,7 +295,8 @@ public class TableContextUtil {
         return null;
       }
 
-      populateInitialOffset(
+      // Read configured Initial Offset values from config and populate TableContext.offsetColumnToStartOffset
+      populateInitialOffsetfromConfig(
           context,
           issues,
           tableConfigBean.offsetColumnToInitialOffsetValue,
@@ -335,7 +336,7 @@ public class TableContextUtil {
    * Evaluate ELs in Initial offsets as needed and populate the final String representation of initial offsets
    * in {@param offsetColumnToStartOffset}
    */
-  private void populateInitialOffset(
+  private void populateInitialOffsetfromConfig(
       PushSource.Context context,
       List<Stage.ConfigIssue> issues,
       Map<String, String> configuredColumnToInitialOffset,
@@ -767,6 +768,39 @@ public class TableContextUtil {
     }
 
     throw new IllegalStateException(Utils.format("Unsupported type: {}", offsetJdbcType));
+  }
+
+
+  /**
+   * Given 2 maps of type <columnName, offsetValue> - one for input and one to compare input with,
+   * Compare and update the inputMap with either the minimum or maximum value for each columnType,
+   * based on comparisonType
+   *
+   * @param tableContext the {@link TableContext} instance to look up offset column data from
+   * @param inputMap input Offset Map to compare and modify
+   * @param compareMap map to compare with
+   * @param comparisonType Whether to update input Map with min or max of values between input Map and compared Map
+   * @return modified Input Offset Map
+   */
+  public static void updateOffsetMapwithMinMax(
+      TableContext tableContext,
+      Map<String, String> inputMap,
+      Map<String,String> compareMap,
+      OffsetComparisonType comparisonType
+  ) {
+    inputMap.replaceAll(
+      (columnName, inputValue) -> {
+        String comparedValue = compareMap.get(columnName);
+        int greaterOrNot = TableContextUtil.compareOffsetValues(tableContext,
+            columnName,
+            inputValue,
+            comparedValue);
+
+        if (comparisonType == OffsetComparisonType.MAXIMUM)
+          return (greaterOrNot <= 0) ? comparedValue : inputValue;
+
+        return (greaterOrNot <= 0) ? inputValue : comparedValue;
+      });
   }
 
   public static String generateNextPartitionOffset(

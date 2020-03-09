@@ -51,8 +51,8 @@ public class TableRuntimeContext {
   private final boolean partitioned;
   private final boolean usingNonIncrementalLoad;
   private final int partitionSequence;
-  private final Map<String, String> startingPartitionOffsets = new HashMap<>();
-  private final Map<String, String> maxPartitionOffsets = new HashMap<>();
+  private final Map<String, String> partitionOffsetStart = new HashMap<>();
+  private final Map<String, String> partitionOffsetEnd = new HashMap<>();
 
   private final Map<String, String> initialStoredOffsets = new HashMap<>();
 
@@ -104,16 +104,14 @@ public class TableRuntimeContext {
       boolean usingNonIncrementalLoad,
       boolean partitioned,
       int partitionSequence,
-      Map<String, String> startingPartitionOffsets,
-      Map<String, String> maxPartitionOffsets
+      Map<String, String> partitionOffsetStart,
+      Map<String, String> partitionOffsetEnd
   ) {
     this(
         sourceTableContext,
         usingNonIncrementalLoad,
         partitioned,
-        partitionSequence,
-        startingPartitionOffsets,
-        maxPartitionOffsets,
+        partitionSequence, partitionOffsetStart, partitionOffsetEnd,
         null
     );
   }
@@ -123,8 +121,8 @@ public class TableRuntimeContext {
       boolean usingNonIncrementalLoad,
       boolean partitioned,
       int partitionSequence,
-      Map<String, String> startingPartitionOffsets,
-      Map<String, String> maxPartitionOffsets,
+      Map<String, String> partitionOffsetStart,
+      Map<String, String> partitionOffsetEnd,
       Map<String, String> initialStoredOffsets
   ) {
     Utils.checkNotNull(sourceTableContext, "sourceTableContext");
@@ -132,25 +130,56 @@ public class TableRuntimeContext {
     this.partitioned = partitioned;
     this.usingNonIncrementalLoad = usingNonIncrementalLoad;
     this.partitionSequence = partitionSequence;
-    if (startingPartitionOffsets != null) {
-      this.startingPartitionOffsets.putAll(startingPartitionOffsets);
+
+    if (partitionOffsetStart != null) {
+      this.partitionOffsetStart.putAll(partitionOffsetStart);
     }
-    if (maxPartitionOffsets != null) {
-      this.maxPartitionOffsets.putAll(maxPartitionOffsets);
+    if (partitionOffsetEnd != null) {
+      this.partitionOffsetEnd.putAll(partitionOffsetEnd);
     }
     if (initialStoredOffsets != null) {
       this.initialStoredOffsets.putAll(initialStoredOffsets);
     }
 
     final Map<String, String> minOffsetValues = sourceTableContext.getOffsetColumnToMinValues();
-    if (partitionSequence == 1 && this.startingPartitionOffsets.isEmpty() && !minOffsetValues.isEmpty()) {
-      // we can use the min values to populate the starting and max partition offsets
 
-      this.startingPartitionOffsets.putAll(minOffsetValues);
-      this.startingPartitionOffsets.forEach((col, offset) -> this.maxPartitionOffsets.put(
-          col,
-          TableContextUtil.generateNextPartitionOffset(sourceTableContext, col, offset)
-      ));
+    if (partitionSequence == 1) {
+      /*
+      * For the the 1st partition of a partitionable table
+      *
+      * set the min and max offset values for each of the offset columns in the partition as follows:
+      * min offset in partition for column = MAX (specified offset value for column by user in config,
+      *                                           min value for that column as read my min query)
+      *
+      * max offset in partition for column = min offset calculated above + partitionSize.
+      *
+      * This requires some elucidation
+      * For e.g, say a column "date_created" is set as offset column
+      * Say user has set initial offset fo date_created = 0 (Jan 1, 1970)
+      * and min query for date_created returns 1557396489000 (May 5, 2019)
+      * In this case, set the partitionOffsetStart for date_created column as 1557396489000 instead of 0,
+      * so as to not spend time looping over empty partitions
+      */
+
+        if (!minOffsetValues.isEmpty()) {
+          if (this.partitionOffsetStart.isEmpty()) {
+            this.partitionOffsetStart.putAll(minOffsetValues);
+          } else {
+            // Update this.partitionOffsetStart
+            TableContextUtil.updateOffsetMapwithMinMax(
+                sourceTableContext,
+                this.partitionOffsetStart,
+                minOffsetValues,
+                OffsetComparisonType.MAXIMUM
+            );
+          }
+          // Set the partition end offset values.
+          // For partitionSequence = 1, always run a bounded query. i.e offsetColumn > ? and offsetColumn < ?
+          this.partitionOffsetStart.forEach((col, offset) -> this.partitionOffsetEnd.put(
+              col,
+              TableContextUtil.generateNextPartitionOffset(sourceTableContext, col, offset)
+          ));
+        }
     }
 
     if (LOG.isDebugEnabled()) {
@@ -158,8 +187,8 @@ public class TableRuntimeContext {
           "Table {} partition sequence {} created with offsets from {} to {}",
           sourceTableContext.getQualifiedName(),
           partitionSequence,
-          startingPartitionOffsets,
-          maxPartitionOffsets
+          this.partitionOffsetStart,
+          this.partitionOffsetEnd
       );
     }
   }
@@ -186,12 +215,12 @@ public class TableRuntimeContext {
     return partitionSequence;
   }
 
-  public Map<String, String> getStartingPartitionOffsets() {
-    return startingPartitionOffsets != null ? Collections.unmodifiableMap(startingPartitionOffsets) : null;
+  public Map<String, String> getPartitionOffsetStart() {
+    return partitionOffsetStart != null ? Collections.unmodifiableMap(partitionOffsetStart) : null;
   }
 
-  public Map<String, String> getMaxPartitionOffsets() {
-    return maxPartitionOffsets != null ? Collections.unmodifiableMap(maxPartitionOffsets) : null;
+  public Map<String, String> getPartitionOffsetEnd() {
+    return partitionOffsetEnd != null ? Collections.unmodifiableMap(partitionOffsetEnd) : null;
   }
 
   public Map<String, String> getInitialStoredOffsets() {
@@ -434,13 +463,13 @@ public class TableRuntimeContext {
     appendOffsetTerm(
         sb,
         PARTITION_START_OFFSETS_KEY,
-        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(startingPartitionOffsets),
+        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(partitionOffsetStart),
         false
     );
     appendOffsetTerm(
         sb,
         PARTITION_MAX_OFFSETS_KEY,
-        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(maxPartitionOffsets),
+        OffsetQueryUtil.getSourceKeyOffsetsRepresentation(partitionOffsetEnd),
         false
     );
     appendOffsetTerm(
@@ -458,7 +487,7 @@ public class TableRuntimeContext {
     }
 
     final Set<String> offsetColumns = lastPartition.getSourceTableContext().getOffsetColumns();
-    final Map<String, String> startingPartitionOffsets = lastPartition.getStartingPartitionOffsets();
+    final Map<String, String> startingPartitionOffsets = lastPartition.getPartitionOffsetStart();
 
     if (startingPartitionOffsets.size() < offsetColumns.size()) {
       // we have not yet captured an offset for every offset columns
@@ -477,7 +506,7 @@ public class TableRuntimeContext {
 
     final int newPartitionSequence = lastPartition.partitionSequence > 0 ? lastPartition.partitionSequence + 1 : 1;
 
-    lastPartition.startingPartitionOffsets.forEach(
+    lastPartition.partitionOffsetStart.forEach(
         (col, off) -> {
           String basedOnStartOffset = lastPartition.generateNextPartitionOffset(col, off);
           nextStartingOffsets.put(col, basedOnStartOffset);
@@ -526,6 +555,16 @@ public class TableRuntimeContext {
             sourceTableContext,
             that.sourceTableContext
         );
+  }
+
+  @Override
+  public String toString() {
+    return  String.format("tableName = %s, partitionSequence = %s, partitionOffsetStart = %s, partitionOffsetEnd = %s",
+        sourceTableContext.getQualifiedName(),
+        this.partitionSequence,
+        this.partitionOffsetStart,
+        this.partitionOffsetEnd
+    );
   }
 
   @Override
