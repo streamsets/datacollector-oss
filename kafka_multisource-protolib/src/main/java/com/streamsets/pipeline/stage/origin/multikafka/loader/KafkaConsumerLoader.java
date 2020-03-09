@@ -142,12 +142,4 @@ public abstract class KafkaConsumerLoader {
     }
   }
 
-  protected boolean isKafkaKerberosAuthEnabledSupported() {
-    return false;
-  }
-
-  public static boolean isKafkaKerberosAuthSupported() {
-    return delegate.isKafkaKerberosAuthEnabledSupported();
-  }
-
 }

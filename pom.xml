@@ -188,7 +188,6 @@
     <module>kafka_multisource-protolib</module>
     <module>kafka_multisource-0_9-protolib</module>
     <module>kafka_multisource-0_10-protolib</module>
-    <module>kafka_multisource-0_11-protolib</module>
     <module>kafka_target-protolib</module>
     <module>maprstreams-common</module>
     <module>maprstreams-target-protolib</module>

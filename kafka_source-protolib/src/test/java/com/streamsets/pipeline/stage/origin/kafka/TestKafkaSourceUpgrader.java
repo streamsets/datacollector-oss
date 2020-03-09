@@ -171,17 +171,17 @@ public class TestKafkaSourceUpgrader {
 
     UpgraderTestUtils.assertExists(
         configs,
-        "conf.isKafkaKerberosAuthEnabled",
+        "kafkaConfigBean.provideKeytab",
         false
     );
     UpgraderTestUtils.assertExists(
         configs,
-        "conf.userKeytabPath",
-        "/etc/keytabs/sdc.keytab"
+        "kafkaConfigBean.userKeytab",
+        ""
     );
     UpgraderTestUtils.assertExists(
         configs,
-        "conf.userPrincipal",
+        "kafkaConfigBean.userPrincipal",
         "user/host@REALM"
     );
   }

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.lib.kafka;
 
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import org.apache.zookeeper.common.PathUtils;
 import org.slf4j.Logger;
@@ -124,7 +125,20 @@ public abstract class BaseKafkaValidationUtil implements SdcKafkaValidationUtil 
     return kafkaBrokers;
   }
 
-  public boolean isKafkaKerberosAuthSupported() {
+  public boolean isProvideKeytabAllowed(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    if (!isProvideKeytabSupported()) {
+      issues.add(
+          context.createConfigIssue(
+              KafkaDestinationGroups.KAFKA.name(),
+              "provideKeytab",
+              KafkaErrors.KAFKA_12
+          )
+      );
+    }
+    return isProvideKeytabSupported();
+  }
+
+  protected boolean isProvideKeytabSupported() {
     return false;
   };
 

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
@@ -93,6 +94,9 @@ public class TestMultiKafkaSource {
     List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
+
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
     PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source).addOutputLane("lane")
@@ -132,6 +136,9 @@ public class TestMultiKafkaSource {
         .thenReturn(consumerRecords1)
         .thenReturn(consumerRecords2)
         .thenReturn(emptyRecords);
+
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -201,6 +208,9 @@ public class TestMultiKafkaSource {
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
+
     conf.topicList = topicNames;
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
@@ -237,6 +247,9 @@ public class TestMultiKafkaSource {
     Mockito
         .when(mockConsumer.poll(Mockito.anyInt()))
         .thenThrow(new IllegalStateException());
+
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -291,6 +304,9 @@ public class TestMultiKafkaSource {
 
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
+
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
 
     conf.topicList = topicNames;
 
@@ -405,6 +421,9 @@ public class TestMultiKafkaSource {
 
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
+
+    conf.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.userKeytab.get()).thenReturn("");
 
     conf.topicList = topicNames;
 

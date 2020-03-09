@@ -27,7 +27,7 @@ public class KafkaValidationUtil11 extends KafkaValidationUtil09 implements SdcK
   }
 
   @Override
-  public boolean isKafkaKerberosAuthSupported() {
+  protected boolean isProvideKeytabSupported() {
     return true;
   }
 

@@ -44,11 +44,11 @@ upgrades:
           name: conf.timestampsEnabled
           value: false
       - setConfig:
-          name: conf.isKafkaKerberosAuthEnabled
+          name: conf.provideKeytab
           value: false
       - setConfig:
-          name: conf.userKeytabPath
-          value: "/etc/keytabs/sdc.keytab"
+          name: conf.userKeytab
+          value: ""
       - setConfig:
           name: conf.userPrincipal
           value: "user/host@REALM"

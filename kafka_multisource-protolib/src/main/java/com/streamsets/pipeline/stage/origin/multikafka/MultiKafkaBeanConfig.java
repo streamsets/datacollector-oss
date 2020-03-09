@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
@@ -165,25 +166,26 @@ public class MultiKafkaBeanConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      label = "Kafka Kerberos Authentication",
-      description = "Kafka Kerberos Authentication",
+      label = "Provide Keytab",
+      description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
       displayPosition = 105,
       group = "KAFKA"
   )
-  public boolean isKafkaKerberosAuthEnabled;
+  public boolean provideKeytab;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "/etc/keytabs/sdc.keytab",
-      label = "User Keytab Path",
-      description = "User Keytab Path",
+      type = ConfigDef.Type.CREDENTIAL,
+      defaultValue = "",
+      label = "Keytab",
+      description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 encoded keytab from a credential store.",
       displayPosition = 110,
-      dependsOn = "isKafkaKerberosAuthEnabled",
+      dependsOn = "provideKeytab",
       triggeredByValue = "true",
-      group = "KAFKA"
+      group = "KAFKA",
+      upload = ConfigDef.Upload.BASE64
   )
-  public String userKeytabPath;
+  public CredentialValue userKeytab;
 
   @ConfigDef(
       required = true,
@@ -192,7 +194,7 @@ public class MultiKafkaBeanConfig {
       label = "Principal",
       description = "Kerberos service principal to use for this stage.",
       displayPosition = 120,
-      dependsOn = "isKafkaKerberosAuthEnabled",
+      dependsOn = "provideKeytab",
       triggeredByValue = "true",
       group = "KAFKA"
   )

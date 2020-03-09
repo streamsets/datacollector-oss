@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.ConsumerFactorySettings;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumer;
 import com.streamsets.pipeline.kafka.api.SdcKafkaConsumerFactory;
@@ -33,6 +32,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
+import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -66,8 +66,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected static final String CONSUMER_GROUP = "consumerGroup";
   protected static final String TOPIC = "topic";
   protected static final String BROKER_LIST = "metadataBrokerList";
-  private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
-      "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
+  private static String keytabFileName;
 
 
   public BaseKafkaSource(KafkaConfigBean conf) {
@@ -130,16 +129,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext()
     );
 
-    // Kerberos auth
-    if (conf.isKafkaKerberosAuthEnabled && kafkaValidationUtil.isKafkaKerberosAuthSupported()) {
-      conf.kafkaConsumerConfigs.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, conf.userKeytabPath, conf.userPrincipal));
-    } else if (conf.isKafkaKerberosAuthEnabled) {
-      issues.add(
-          getContext().createConfigIssue(
-              KafkaDestinationGroups.KAFKA.name(),
-              KAFKA_CONFIG_BEAN_PREFIX + "iskafkaKerberosAuthEnabled",
-              KafkaErrors.KAFKA_12
-          )
+    if (conf.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
+      keytabFileName = KafkaKerberosUtil.saveUserKeytab(
+          conf.userKeytab.get(),
+          conf.userPrincipal,
+          conf.kafkaConsumerConfigs,
+          issues,
+          getContext()
       );
     }
 
@@ -329,5 +325,10 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       }
     }
     return records;
+  }
+
+  @Override
+  public void destroy() {
+    KafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
   }
 }

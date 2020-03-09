@@ -298,7 +298,7 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-kafka_multisource-0_11-protolib</artifactId>
+        <artifactId>streamsets-datacollector-kafka_multisource-0_10-protolib</artifactId>
         <scope>compile</scope>
       </dependency>
 

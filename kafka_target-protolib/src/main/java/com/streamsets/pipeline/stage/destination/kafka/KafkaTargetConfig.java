@@ -19,11 +19,11 @@ import com.google.common.base.Joiner;
 import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -43,7 +43,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.sdk.ElUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
@@ -72,8 +72,6 @@ public class KafkaTargetConfig {
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
-  private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
-      "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
   @ConfigDef(
       required = true,
@@ -250,25 +248,26 @@ public class KafkaTargetConfig {
      required = true,
      type = ConfigDef.Type.BOOLEAN,
      defaultValue = "false",
-     label = "Kafka Kerberos Authentication",
-     description = "Kafka Kerberos Authentication",
+     label = "Provide Keytab",
+     description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
      displayPosition = 65,
      group = "#0"
  )
- public boolean isKafkaKerberosAuthEnabled;
+ public boolean provideKeytab;
 
  @ConfigDef(
      required = true,
-     type = ConfigDef.Type.STRING,
-     defaultValue = "/etc/keytabs/sdc.keytab",
-     label = "User Keytab Path",
-     description = "User Keytab Path",
+     type = ConfigDef.Type.CREDENTIAL,
+     defaultValue = "",
+     label = "Keytab",
+     description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 keytab from a credential store.",
      displayPosition = 70,
-     dependsOn = "isKafkaKerberosAuthEnabled",
+     dependsOn = "provideKeytab",
      triggeredByValue = "true",
-     group = "#0"
+     group = "#0",
+     upload = ConfigDef.Upload.BASE64
  )
- public String userKeytabPath;
+ public CredentialValue userKeytab;
 
  @ConfigDef(
      required = true,
@@ -277,7 +276,7 @@ public class KafkaTargetConfig {
      label = "Principal",
      description = "Kerberos service principal to use for this stage.",
      displayPosition = 80,
-     dependsOn = "isKafkaKerberosAuthEnabled",
+     dependsOn = "provideKeytab",
      triggeredByValue = "true",
      group = "#0"
  )
@@ -335,6 +334,7 @@ public class KafkaTargetConfig {
   private int messageSendMaxRetries;
   // holds the value of 'retry.backoff.ms' supplied by the user or the default value
   private long retryBackoffMs;
+  private String keytabFileName;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     init(context, this.dataFormat, false, issues);
@@ -407,16 +407,13 @@ public class KafkaTargetConfig {
         context
     );
 
-    // Configure Kerberos Authentication
-    if (isKafkaKerberosAuthEnabled && kafkaValidationUtil.isKafkaKerberosAuthSupported()) {
-      kafkaProducerConfigs.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, userKeytabPath, userPrincipal));
-    } else if (isKafkaKerberosAuthEnabled) {
-      issues.add(
-          context.createConfigIssue(
-              KafkaDestinationGroups.KAFKA.name(),
-              KAFKA_CONFIG_BEAN_PREFIX + "iskafkaKerberosAuthEnabled",
-              KafkaErrors.KAFKA_12
-          )
+    if (provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
+      keytabFileName = KafkaKerberosUtil.saveUserKeytab(
+          userKeytab.get(),
+          userPrincipal,
+          kafkaProducerConfigs,
+          issues,
+          context
       );
     }
 
@@ -560,6 +557,11 @@ public class KafkaTargetConfig {
     if(kafkaProducer != null) {
       kafkaProducer.destroy();
     }
+  }
+
+  public void destroy(Stage.Context context) {
+    KafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, context);
+    destroy();
   }
 
   private void validatePartitionExpression(Stage.Context context, List<Stage.ConfigIssue> issues) {
