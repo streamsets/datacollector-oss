@@ -627,6 +627,8 @@ public class PipelineStoreResource {
           RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, "0");
           PipelineEnvelopeJson pipelineEnvelope = PipelineConfigurationUtil.getPipelineEnvelope(
               stageLibrary,
+              credentialStoresTask,
+              configuration,
               pipelineConfig,
               ruleDefinitions,
               includeLibraryDefinitions,
@@ -837,6 +839,8 @@ public class PipelineStoreResource {
       return Response.created(UriBuilder.fromUri(uri).path(pipelineId).build())
           .entity(PipelineConfigurationUtil.getPipelineEnvelope(
               stageLibrary,
+              credentialStoresTask,
+              configuration,
               pipelineConfig,
               ruleDefinitions,
               false,
@@ -1114,6 +1118,8 @@ public class PipelineStoreResource {
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     PipelineEnvelopeJson pipelineEnvelope = PipelineConfigurationUtil.getPipelineEnvelope(
         stageLibrary,
+        credentialStoresTask,
+        configuration,
         pipelineConfig,
         ruleDefinitions,
         includeLibraryDefinitions,
@@ -1314,6 +1320,8 @@ public class PipelineStoreResource {
 
     return PipelineConfigurationUtil.getPipelineEnvelope(
         stageLibrary,
+        credentialStoresTask,
+        configuration,
         pipelineConfig,
         ruleDefinitions,
         includeLibraryDefinitions,

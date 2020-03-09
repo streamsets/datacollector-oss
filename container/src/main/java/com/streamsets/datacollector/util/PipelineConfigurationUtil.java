@@ -31,6 +31,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.ServiceDependencyDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
@@ -245,18 +246,24 @@ public class PipelineConfigurationUtil {
     return new Config(configDefinition.getName(), configDefinition.getDefaultValue());
   }
 
-
   public static PipelineEnvelopeJson getPipelineEnvelope(
       StageLibraryTask stageLibrary,
+      CredentialStoresTask credentialStoresTask,
+      Configuration configuration,
       PipelineConfiguration pipelineConfig,
       RuleDefinitions ruleDefinitions,
       boolean includeLibraryDefinitions,
       boolean includePlainTextCredentials
   ) {
+    //Always auto decrypt credentials stored by managed store
+    PipelineCredentialHandler.getDecrypter(stageLibrary, credentialStoresTask, configuration)
+        .handlePipelineConfigCredentials(pipelineConfig);
+
     if (!includePlainTextCredentials) {
       PipelineCredentialHandler.getPlainTextScrubber(stageLibrary)
           .handlePipelineConfigCredentials(pipelineConfig);
     }
+
     PipelineEnvelopeJson pipelineEnvelope = new PipelineEnvelopeJson();
     pipelineEnvelope.setPipelineConfig(BeanHelper.wrapPipelineConfiguration(pipelineConfig));
     pipelineEnvelope.setPipelineRules(BeanHelper.wrapRuleDefinitions(ruleDefinitions));

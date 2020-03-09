@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -63,6 +64,8 @@ public class ControlHubResource {
 
   private final PipelineStoreTask store;
   private final StageLibraryTask stageLibrary;
+  private final CredentialStoresTask credentialStoresTask;
+  private final Configuration config;
   private final String controlHubBaseUrl;
   private final RuntimeInfo runtimeInfo;
   private final String user;
@@ -72,11 +75,14 @@ public class ControlHubResource {
       Configuration config,
       RuntimeInfo runtimeInfo,
       StageLibraryTask stageLibrary,
+      CredentialStoresTask credentialStoresTask,
       PipelineStoreTask store,
       Principal principal
   ) {
+    this.config = config;
     this.runtimeInfo = runtimeInfo;
     this.stageLibrary = stageLibrary;
+    this.credentialStoresTask = credentialStoresTask;
     this.store = store;
     this.controlHubBaseUrl = RemoteSSOService.getValidURL(config.get(
         RemoteSSOService.DPM_BASE_URL_CONFIG,
@@ -115,6 +121,8 @@ public class ControlHubResource {
     RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, "0");
     PipelineEnvelopeJson pipelineEnvelopeJson = PipelineConfigurationUtil.getPipelineEnvelope(
         stageLibrary,
+        credentialStoresTask,
+        config,
         pipelineConfiguration,
         ruleDefinitions,
         true,
