@@ -1574,7 +1574,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Returns 200 if available, 404 if not
        */
-      checkSecretsAvailability: () => $http.get(apiBase + '/secrets/get')
+      checkSecretsAvailability: () => $http.get(apiBase + '/secrets/get'),
+
+      /**
+       * Gets the default ssh public key
+       */
+      getSSHPublicKey: () => $http.get(apiBase + '/secrets/sshTunnelPublicKey')
     };
 
     return api;

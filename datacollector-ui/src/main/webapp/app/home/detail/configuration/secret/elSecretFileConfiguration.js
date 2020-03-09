@@ -26,7 +26,9 @@ angular
         showExpression: false,
         useInternalSecrets: true,
         uploadFile: {},
-        store: 'streamsets'
+        store: 'streamsets',
+        sshPublicKey: null,
+        sdcId: ''
       },
 
       expressionValue: function(newValue) {
@@ -55,6 +57,46 @@ angular
 
       isUsingInternalPrivateKey: function() {
         return $scope.detailPaneConfig.configuration[$scope.configIndex].value === "${credential:get('streamsets', 'all','sdc/defaultPrivateKey')}";
+      },
+
+      isUsingInternalPublicKey: function() {
+        return $scope.detailPaneConfig.configuration[$scope.configIndex].value === "${credential:get('streamsets', 'all','sdc/defaultPublicKey')}";
+      },
+
+      copySshPubKey: () => {
+        const text = $scope.credentialSettings.sshPublicKey;
+        // Based on https://github.com/NG-ZORRO/ng-zorro-antd/blob/master/components/core/services/nz-copy-to-clipboard.service.ts
+        let copyTextArea = document.createElement('textarea');
+        copyTextArea.style.all = 'unset';
+        copyTextArea.style.position = 'fixed';
+        copyTextArea.style.top = '0';
+        copyTextArea.style.clip = 'rect(0, 0, 0, 0)';
+        copyTextArea.style.whiteSpace = 'pre';
+        copyTextArea.style.webkitUserSelect = 'text';
+        copyTextArea.style.MozUserSelect = 'text';
+        copyTextArea.style.msUserSelect = 'text';
+        copyTextArea.style.userSelect = 'text';
+        document.body.appendChild(copyTextArea);
+        copyTextArea.value = text;
+        copyTextArea.select();
+
+        const successful = document.execCommand('copy');
+        if (successful) {
+          $rootScope.common.infoList = [{message: 'SSH Public Key copied to the clipboard'}];
+        }
+      },
+
+      downloadSshPubKey: () => {
+        const text = $scope.credentialSettings.sshPublicKey;
+        const sdcId = $scope.credentialSettings.sdcId;
+        const dataStr = `data:text/text;charset=utf-8,${text}`;
+        const exportName = `streamsets_${sdcId}_key.pub`;
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute('href', dataStr);
+        downloadAnchorNode.setAttribute('download', exportName);
+        document.body.appendChild(downloadAnchorNode); // required for firefox
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
       }
     });
 
@@ -105,22 +147,50 @@ angular
         }
     });
 
+    /**
+     * Checks if the uiInfo has a filename for this configuration
+     * @param {Object} uiInfo
+     * @param {String} configDefName
+     */
+    const hasFileNameForThisConfig = (uiInfo, configDefName) =>
+      uiInfo && uiInfo.fileHints && uiInfo.fileHints[configDefName];
+
+    const isUsingDefaultSshPublicKey = () => {
+      return ($scope.configDefinition.name === 'sshTunnelConfig.sshPublicKey' &&
+        $scope.detailPaneConfig.configuration[$scope.configIndex].value ===
+          "${credential:get('streamsets', 'all','sdc/defaultPublicKey')}");
+    };
+
     this.$onInit = () => {
+      const secretIsInternal = secretUtil.isInternalSecret(
+        $scope.detailPaneConfig.configuration[$scope.configIndex].value,
+        $scope.credentialSettings.store
+      );
+
       // Set shown file name if one was previously uploaded
       const uiInfo = $scope.selectedObject.uiInfo;
-      if (secretUtil.isInternalSecret($scope.detailPaneConfig.configuration[$scope.configIndex].value, $scope.credentialSettings.store) &&
-          uiInfo && uiInfo.fileHints && uiInfo.fileHints[$scope.configDefinition.name]) {
+      const configDefName = $scope.configDefinition.name;
+      if (secretIsInternal &&
+          hasFileNameForThisConfig(uiInfo, configDefName)) {
         $scope.credentialSettings.uploadFile.name = uiInfo.fileHints[$scope.configDefinition.name];
       }
 
+      // Show the expression if it is not internal
+      $scope.credentialSettings.showExpression = !secretIsInternal;
+
       api.secret.checkSecretsAvailability().then(res => {
-        if (res.status === 200) {
-          $scope.credentialSettings.useInternalSecrets = true;
-        } else {
-          secretUtil.useOldCredentials($scope);
+        $scope.credentialSettings.useInternalSecrets = true;
+        if (isUsingDefaultSshPublicKey()) {
+          api.secret.getSSHPublicKey().then(res => {
+            $scope.credentialSettings.sshPublicKey = res.data;
+            api.admin.getSdcId().then(res => {
+              $scope.credentialSettings.sdcId = res.data.id;
+            });
+          }).catch(err => {
+            console.error(err);
+          });
         }
-      }, err => {
-        // This is needed due to SDC-13714, but is still a good default once that is fixed
+      }).catch(err => {
         secretUtil.useOldCredentials($scope);
       });
     };

@@ -276,21 +276,44 @@
       data-type="configDefinition.type">
     </div>
 
-    <div class="input-group" ng-if="!credentialSettings.showExpression && credentialSettings.useInternalSecrets">
-      <span class="input-group-btn">
+    <div ng-if="!credentialSettings.showExpression && credentialSettings.useInternalSecrets">
+
+      <div class="input-group" ng-if="configDefinition.name === 'sshTunnelConfig.sshPublicKey' && isUsingInternalPublicKey()">
+        <div class="input-group-btn">
           <span class="btn btn-primary btn-file">
-              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="credentialSettings.uploadFile" readonly>
+              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="credentialSettings.uploadFile">
           </span>
-      </span>
-      <input type="text" class="form-control" readonly ng-model="credentialSettings.uploadFile.name"
-            placeholder="{{isUsingInternalPrivateKey() ? 'Using default private key' : ('home.import.fileUploadPlaceholder' | translate)}}">
+        </div>
+        <input type="text" readonly class="form-control" value="{{ credentialSettings.sshPublicKey }}">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="button" tooltip="Download" tooltip-append-to-body="true" tooltip-popup-delay="500"
+              ng-click="downloadSshPubKey()">
+            <i class="glyphicon glyphicon-download-alt"></i>
+          </button>
+          <button class="btn btn-default" type="button" tooltip="Copy" tooltip-append-to-body="true" tooltip-popup-delay="500"
+              ng-click="copySshPubKey()">
+            <i class="glyphicon glyphicon-copy"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="input-group" ng-if="configDefinition.name !== 'sshTunnelConfig.sshPublicKey' || !isUsingInternalPublicKey()">
+        <div class="input-group-btn">
+          <span class="btn btn-primary btn-file">
+              {{'home.import.browse' | translate}}&hellip; <input type="file" fileread="credentialSettings.uploadFile">
+          </span>
+        </div>
+        <input type="text" class="form-control" readonly ng-model="credentialSettings.uploadFile.name"
+              placeholder="{{isUsingInternalPrivateKey() ? 'Using default private key' : ('home.import.fileUploadPlaceholder' | translate)}}">
+      </div>
+
     </div>
 
     <div class="pull-right field-selector-btn" ng-hide="isPipelineReadOnly || isPipelineRunning">
       <button type="button" class="btn btn-link"
               ng-if="credentialSettings.useInternalSecrets"
               ng-click="toggleShowExpression()">
-        {{credentialSettings.showExpression ? 'Enter Credential' : (expressionValue() ? 'Show Expression' : 'Enter Expression')}}
+        {{credentialSettings.showExpression ? 'Upload File' : (expressionValue() ? 'Show Expression' : 'Enter Expression')}}
       </button>
     </div>
   </div>

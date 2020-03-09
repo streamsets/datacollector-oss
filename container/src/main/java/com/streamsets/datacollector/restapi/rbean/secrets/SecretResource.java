@@ -245,7 +245,7 @@ public class SecretResource  extends RestResource {
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/sshTunnelPublicKey")
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.TEXT_PLAIN)
   public Response getSshTunnelPublicKey() {
     checkCredentialStoreSupported();
     CredentialValue publicKeyVal = managedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, SSH_PUBLIC_KEY_SECRET, null);
