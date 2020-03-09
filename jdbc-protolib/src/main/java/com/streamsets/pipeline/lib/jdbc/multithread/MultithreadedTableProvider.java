@@ -210,7 +210,7 @@ public final class MultithreadedTableProvider {
             newPartitionSequence
         );
 
-        lastPartition.getStartingPartitionOffsets().forEach(
+        lastPartition.getPartitionOffsetStart().forEach(
             (col, off) -> {
               String basedOnStartOffset = lastPartition.generateNextPartitionOffset(col, off);
               nextStartingOffsets.put(col, basedOnStartOffset);
@@ -219,7 +219,7 @@ public final class MultithreadedTableProvider {
 
       } else if (partitioningTurnedOn) {
 
-        lastPartition.getStartingPartitionOffsets().forEach(
+        lastPartition.getPartitionOffsetStart().forEach(
             (col, off) -> {
               String basedOnStoredOffset = lastPartition.getInitialStoredOffsets().get(col);
               nextStartingOffsets.put(col, basedOnStoredOffset);
@@ -311,7 +311,7 @@ public final class MultithreadedTableProvider {
               offsets.get(partition.getOffsetKey())
           );
 
-          final Map<String, String> startOffsets = partition.getStartingPartitionOffsets();
+          final Map<String, String> startOffsets = partition.getPartitionOffsetStart();
           for (Map.Entry<String, String> storedOffsetEntry : storedOffsets.entrySet()) {
             String offsetCol = storedOffsetEntry.getKey();
             String storedOffsetVal = storedOffsetEntry.getValue();
@@ -470,7 +470,7 @@ public final class MultithreadedTableProvider {
 
     final boolean maxOffsetValuesPassed = TableContextUtil.allOffsetsBeyondMaxValues(
         tableContext,
-        partition.getStartingPartitionOffsets()
+        partition.getPartitionOffsetStart()
     );
 
     final int maxPartitionWithData = getMaxPartitionWithData(tableContext);
@@ -561,7 +561,7 @@ public final class MultithreadedTableProvider {
               >= (maxNumActivePartitions(sourceTableContext) - 1)
               && TableContextUtil.allOffsetsBeyondMaxValues(
                   sourceTableContext,
-                  partition.getStartingPartitionOffsets()
+                  partition.getPartitionOffsetStart()
               )
               ;
           if (!activeContextIter.hasNext() && thisPartition.isMarkedNoMoreData()
@@ -634,8 +634,8 @@ public final class MultithreadedTableProvider {
             "Offsets for table '{}' partition {}: start=({}), max=({})",
             tableContext.getQualifiedName(),
             runtimeContext.getPartitionSequence(),
-            runtimeContext.getStartingPartitionOffsets(),
-            runtimeContext.getMaxPartitionOffsets()
+            runtimeContext.getPartitionOffsetStart(),
+            runtimeContext.getPartitionOffsetEnd()
         );
       }
     } else {
@@ -646,7 +646,7 @@ public final class MultithreadedTableProvider {
             lastContext.getPartitionSequence(),
             getCurrentThreadName(),
             tableContext.getQualifiedName(),
-            lastContext.getStartingPartitionOffsets(),
+            lastContext.getPartitionOffsetStart(),
             tableContext.getOffsetColumns()
         );
       }
@@ -660,9 +660,9 @@ public final class MultithreadedTableProvider {
 
     String tableName = sourceContext.getQualifiedName();
     LOG.trace(
-        "Thread '{}' has released ownership for table '{}'",
+        "Thread '{}' has released ownership for partition '{}'",
         getCurrentThreadName(),
-        tableRuntimeContext.getDescription()
+        tableRuntimeContext
     );
 
     //Remove the last element (because we put the current processing element at the tail of dequeue)

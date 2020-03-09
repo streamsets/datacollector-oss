@@ -174,29 +174,21 @@ public final class OffsetQueryUtil {
     Map<String, String> storedTableToOffset = getColumnsToOffsetMapFromOffsetFormat(lastOffset);
     final boolean noStoredOffsets = storedTableToOffset.isEmpty();
 
-    //Determines whether an initial offset is specified in the config and there is no stored offset.
-    boolean isOffsetOverriden = tableContext.isOffsetOverriden() && noStoredOffsets;
-
     OffsetComparison minComparison = OffsetComparison.GREATER_THAN;
     Map<String, String> offset = null;
-    if (isOffsetOverriden) {
-      //Use the offset in the configuration
-      offset = tableContext.getOffsetColumnToStartOffset();
-    } else if (tableRuntimeContext.isPartitioned() && noStoredOffsets) {
-      // use partitioned starting offsets
-      offset = tableRuntimeContext.getStartingPartitionOffsets();
-      minComparison = OffsetComparison.GREATER_THAN_OR_EQUALS;
+
+    if (noStoredOffsets) {
+      offset = tableRuntimeContext.getPartitionOffsetStart();
+      if (tableRuntimeContext.isPartitioned()) {
+        minComparison = OffsetComparison.GREATER_THAN_OR_EQUALS;
+      }
     } else {
-      // if offset is available
-      // get the stored offset (which is of the form partitionName=value) and strip off 'offsetColumns=' prefix
-      // else null
-      // offset = storedOffsets;
       offset = storedTableToOffset;
     }
 
     Map<String, String> maxOffsets = new HashMap<>();
     if (tableRuntimeContext.isPartitioned()) {
-      maxOffsets.putAll(tableRuntimeContext.getMaxPartitionOffsets());
+      maxOffsets.putAll(tableRuntimeContext.getPartitionOffsetEnd());
     }
 
     List<String> finalAndConditions = new ArrayList<>();

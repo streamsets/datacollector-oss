@@ -128,28 +128,28 @@ public abstract class BaseMultithreadedTableProviderTest {
     if (partitioned) {
       if (expectOffsets) {
         if (expectedMinOffsets != null) {
-          assertThat(part.getStartingPartitionOffsets(), equalTo(expectedMinOffsets));
+          assertThat(part.getPartitionOffsetStart(), equalTo(expectedMinOffsets));
         } else {
           int expectedMinOffset = (part.getPartitionSequence() - 1) * Integer.parseInt(partitionSize);
-          assertThat(part.getStartingPartitionOffsets().size(), equalTo(1));
-          assertThat(part.getStartingPartitionOffsets(), hasKey(offsetColumn));
-          assertThat(part.getStartingPartitionOffsets().get(offsetColumn), equalTo(String.valueOf(expectedMinOffset)));
+          assertThat(part.getPartitionOffsetStart().size(), equalTo(1));
+          assertThat(part.getPartitionOffsetStart(), hasKey(offsetColumn));
+          assertThat(part.getPartitionOffsetStart().get(offsetColumn), equalTo(String.valueOf(expectedMinOffset)));
         }
 
         if (expectedMaxOffsets != null) {
-          assertThat(part.getMaxPartitionOffsets(), equalTo(expectedMaxOffsets));
+          assertThat(part.getPartitionOffsetEnd(), equalTo(expectedMaxOffsets));
         } else {
           int expectedMaxOffset = part.getPartitionSequence() * Integer.parseInt(partitionSize);
-          assertThat(part.getMaxPartitionOffsets().size(), equalTo(1));
-          assertThat(part.getMaxPartitionOffsets(), hasKey(offsetColumn));
-          assertThat(part.getMaxPartitionOffsets().get(offsetColumn), equalTo(String.valueOf(expectedMaxOffset)));
+          assertThat(part.getPartitionOffsetEnd().size(), equalTo(1));
+          assertThat(part.getPartitionOffsetEnd(), hasKey(offsetColumn));
+          assertThat(part.getPartitionOffsetEnd().get(offsetColumn), equalTo(String.valueOf(expectedMaxOffset)));
         }
       }
     } else {
       if (expectOffsets) {
-        assertThat(part.getStartingPartitionOffsets().size(), equalTo(1));
-        assertThat(part.getStartingPartitionOffsets(), hasKey(offsetColumn));
-        assertThat(part.getMaxPartitionOffsets().size(), equalTo(0));
+        assertThat(part.getPartitionOffsetStart().size(), equalTo(1));
+        assertThat(part.getPartitionOffsetStart(), hasKey(offsetColumn));
+        assertThat(part.getPartitionOffsetEnd().size(), equalTo(0));
       }
     }
 
@@ -244,7 +244,7 @@ public abstract class BaseMultithreadedTableProviderTest {
           schemaName,
           tableName,
           Maps.newLinkedHashMap(Collections.singletonMap(offsetColName, type)),
-          Collections.singletonMap(offsetColName, null),
+          Collections.emptyMap(),
           Collections.singletonMap(offsetColName, String.valueOf(partitionSize)),
           Collections.singletonMap(offsetColName, "0"),
           Collections.emptyMap(),
