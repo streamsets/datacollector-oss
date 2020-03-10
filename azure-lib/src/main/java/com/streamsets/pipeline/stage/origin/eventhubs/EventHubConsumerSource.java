@@ -117,7 +117,7 @@ public class EventHubConsumerSource implements PushSource, IEventProcessorFactor
           .setSasKeyName(commonConf.sasKeyName);
 
       String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" +
-          consumerConfigBean.storageAccountName + ";AccountKey=" + consumerConfigBean.storageAccountKey;
+          consumerConfigBean.storageAccountName + ";AccountKey=" + consumerConfigBean.storageAccountKey.get();
 
       for (int i = 0; i < consumerConfigBean.maxThreads; i++) {
         EventProcessorHost eventProcessorHost = new EventProcessorHost(
