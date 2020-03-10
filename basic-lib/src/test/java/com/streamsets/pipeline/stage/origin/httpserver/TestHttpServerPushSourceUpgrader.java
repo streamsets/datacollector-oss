@@ -31,6 +31,7 @@ import org.mockito.Mockito;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TestHttpServerPushSourceUpgrader {
 
@@ -60,14 +61,14 @@ public class TestHttpServerPushSourceUpgrader {
     HttpServerPushSourceUpgrader upgrader = new HttpServerPushSourceUpgrader();
     List<Config> configs = new ArrayList<>();
     String idValue = "idFooo";
-    configs.add(new Config("httpConfigs.appId", (CredentialValue) () -> idValue));
+    configs.add(new Config("httpConfigs.appId", idValue));
     upgrader.upgrade("", "", "", 10, 11, configs);
     UpgraderTestUtils.assertNoneExist(configs,"httpConfigs.appId");
     UpgraderTestUtils.assertAllExist(configs, "httpConfigs.appIds");
     Config configWithName = UpgraderUtils.getConfigWithName(configs, "httpConfigs.appIds");
-    List<CredentialValueBean> listCredentials = (List<CredentialValueBean>) configWithName.getValue();
+    List<Map<String,Object>> listCredentials = (List<Map<String,Object>>) configWithName.getValue();
     Assert.assertEquals(listCredentials.size(), 1);
-    Assert.assertEquals(listCredentials.get(0).get().equals(idValue), true);
+    Assert.assertEquals(listCredentials.get(0).get("appId").equals(idValue), true);
   }
 
   @Test
