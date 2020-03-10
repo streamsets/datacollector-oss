@@ -22,6 +22,7 @@ import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.codahale.metrics.Meter;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -259,7 +260,7 @@ public class S3Spooler {
     //    uploads another object with the same name. We can avoid post processing it without producing records by
     //    comparing the timestamp on that object
 
-    if(s3Offset.getKey() != null && S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
+    if(!Strings.isNullOrEmpty(s3Offset.getKey()) && S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
       LOG.info("Post processing check for {}", s3Offset.getKey());
       //conditions 1, 2 are met. Check for 3 and 4.
       ObjectMetadata metadata = s3Client.getObjectMetadata(s3ConfigBean.s3Config.bucket, s3Offset.getKey());
