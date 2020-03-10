@@ -19,6 +19,7 @@ package com.streamsets.datacollector.credential.aws.secrets.manager;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.secretsmanager.caching.SecretCache;
 import com.amazonaws.secretsmanager.caching.SecretCacheConfiguration;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,14 +75,7 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
     }
 
     String accessKey = context.getConfig(AWS_ACCESS_KEY_PROP);
-    if (accessKey == null || accessKey.isEmpty()) {
-      issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_00, AWS_ACCESS_KEY_PROP));
-    }
-
     String secretKey = context.getConfig(AWS_SECRET_KEY_PROP);
-    if (secretKey == null || secretKey.isEmpty()) {
-      issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_00, AWS_SECRET_KEY_PROP));
-    }
 
     String cacheSizeStr = context.getConfig(CACHE_MAX_SIZE_PROP);
     int cacheSize = (cacheSizeStr != null)
@@ -109,6 +104,14 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
     return issues;
   }
 
+  public static AWSCredentialsProvider getCredentialsProvider(String accessKey, String secretKey) throws StageException {
+    if (!StringUtils.isEmpty(accessKey) && !StringUtils.isEmpty(secretKey)) {
+      return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
+    } else {
+      return new DefaultAWSCredentialsProviderChain();
+    }
+  }
+
   protected SecretCache createSecretCache(
       String awsAccessKey,
       String awsSecretKey,
@@ -116,8 +119,7 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
       int cacheSize,
       long cacheTTL
   ) {
-    AWSCredentialsProvider credentials = new AWSStaticCredentialsProvider(
-        new BasicAWSCredentials(awsAccessKey, awsSecretKey));
+    AWSCredentialsProvider credentials = getCredentialsProvider(awsAccessKey, awsSecretKey);
     AWSSecretsManagerClientBuilder clientBuilder = AWSSecretsManagerClientBuilder
         .standard()
         .withRegion(region)

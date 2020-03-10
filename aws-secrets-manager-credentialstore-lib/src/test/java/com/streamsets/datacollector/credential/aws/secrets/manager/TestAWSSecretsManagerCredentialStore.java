@@ -42,12 +42,10 @@ public class TestAWSSecretsManagerCredentialStore {
 
     AWSSecretsManagerCredentialStore secretManager = new AWSSecretsManagerCredentialStore();
     List<CredentialStore.ConfigIssue> issues = secretManager.init(context);
-    Assert.assertEquals(3, issues.size());
+    Assert.assertEquals(1, issues.size());
 
     for (String prop : new String[]{
-        AWSSecretsManagerCredentialStore.AWS_REGION_PROP,
-        AWSSecretsManagerCredentialStore.AWS_ACCESS_KEY_PROP,
-        AWSSecretsManagerCredentialStore.AWS_SECRET_KEY_PROP
+        AWSSecretsManagerCredentialStore.AWS_REGION_PROP
     }) {
       Mockito.verify(context, Mockito.times(1)).createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_00, prop);
     }
