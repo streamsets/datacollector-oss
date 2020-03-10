@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
@@ -266,7 +267,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
               throw new IllegalStateException("Unknown multiple value behavior: " + conf.multipleValuesBehavior);
           }
         }
-      } catch (ExecutionException e) {
+      } catch (ExecutionException|UncheckedExecutionException e) {
         Throwables.propagateIfPossible(e.getCause(), StageException.class);
         Throwables.propagateIfPossible(e.getCause(), OnRecordErrorException.class);
         throw new IllegalStateException(e); // The cache loader shouldn't throw anything that isn't a StageException.
