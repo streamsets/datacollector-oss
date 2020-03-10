@@ -62,7 +62,6 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.nio.file.Files;
-import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -229,7 +228,6 @@ public class OracleCDCSource extends BaseSource {
   private boolean useLocalBuffering;
 
   private Gauge<Map<String, Object>> delay;
-  private CallableStatement startLogMnrSCNToDate;
 
   private static final String CONFIG_PROPERTY = "com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle.addrecordstoqueue";
   private static final boolean CONFIG_PROPERTY_DEFAULT_VALUE = false;
@@ -273,7 +271,7 @@ public class OracleCDCSource extends BaseSource {
   private volatile boolean generationStarted = false;
   private final boolean shouldTrackDDL;
 
-  private String logMinerProcedure;
+  private LogMinerSession logMinerSession;
   private ErrorRecordHandler errorRecordHandler;
   private boolean containerized = false;
 
@@ -281,9 +279,6 @@ public class OracleCDCSource extends BaseSource {
   private Connection connection = null;
   private PreparedStatement getOldestSCN;
   private PreparedStatement getLatestSCN;
-  private CallableStatement startLogMnrForCommitSCN;
-  private CallableStatement startLogMnrForData;
-  private CallableStatement endLogMnr;
   private PreparedStatement dateStatement;
   private PreparedStatement tsStatement;
   private PreparedStatement numericFormat;
@@ -419,7 +414,7 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
-  private void startGeneratorThread(String lastSourceOffset) throws StageException, SQLException {
+  private void startGeneratorThread(String lastSourceOffset) throws StageException {
     Offset offset = null;
     LocalDateTime startTimestamp;
     try {
@@ -451,11 +446,9 @@ public class OracleCDCSource extends BaseSource {
           offset = new Offset(version, startDate, ZERO, 0,"");
         } else {
           BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
-          startLogMnrSCNToDate.setBigDecimal(1, startCommitSCN);
           final LocalDateTime start = getDateForSCN(startCommitSCN);
           LocalDateTime endTime = getEndTimeForStartTime(start);
-          startLogMnrSCNToDate.setString(2, endTime.format(dateTimeColumnHandler.dateFormatter));
-          startLogMnrSCNToDate.execute();
+          logMinerSession.start(startCommitSCN, endTime);
           offset = new Offset(version, start, startCommitSCN.toPlainString(), 0, "");
         }
       }
@@ -476,13 +469,24 @@ public class OracleCDCSource extends BaseSource {
     });
   }
 
+  /**
+   * Prepare and configure a new LogMinerSession object according to the stage configuration.
+   * To start the LogMiner session with the returned object, use the {@link LogMinerSession#start} functions.
+   */
+  private LogMinerSession prepareLogMinerSession() {
+    return new LogMinerSession.Builder(connection)
+        .setDDLDictTracking(shouldTrackDDL)
+        .setCommittedDataOnly(!useLocalBuffering)
+        .setDictionarySource(configBean.dictionary)
+        .build();
+  }
+
   @NotNull
   private LocalDateTime adjustStartTimeAndStartLogMnr(LocalDateTime startDate) throws SQLException, StageException {
     startDate = adjustStartTime(startDate);
-    LocalDateTime endTime = getEndTimeForStartTime(startDate);
-    startLogMinerUsingGivenDates(startDate.format(dateTimeColumnHandler.dateFormatter),
-        endTime.format(dateTimeColumnHandler.dateFormatter));
-    LOG.debug(START_TIME_END_TIME, startDate, endTime);
+    LocalDateTime endDate = getEndTimeForStartTime(startDate);
+    startLogMinerUsingGivenDates(startDate, endDate);
+    LOG.debug(START_TIME_END_TIME, startDate, endDate);
     return startDate;
   }
 
@@ -497,6 +501,7 @@ public class OracleCDCSource extends BaseSource {
       }
       connection = dataSource.getConnection();
       connection.setAutoCommit(false);
+      logMinerSession = prepareLogMinerSession();
       initializeStatements();
       initializeLogMnrStatements();
       alterSession();
@@ -819,7 +824,7 @@ public class OracleCDCSource extends BaseSource {
           LOG.warn("Error while attempting to close SQL statements", ex);
         }
         try {
-          endLogMnr.execute();
+          logMinerSession.close();
         } catch (SQLException ex) {
           LOG.warn("Error while trying to close logminer session", ex);
         }
@@ -832,10 +837,7 @@ public class OracleCDCSource extends BaseSource {
             endTime = getEndTimeForStartTime(startTime);
           }
           sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
-          startLogMinerUsingGivenDates(
-              startTime.format(dateTimeColumnHandler.dateFormatter),
-              endTime.format(dateTimeColumnHandler.dateFormatter)
-          );
+          startLogMinerUsingGivenDates(startTime, endTime);
         } catch (SQLException ex) {
           LOG.error("Error while attempting to start LogMiner", ex);
           addToStageExceptionsQueue(new StageException(JDBC_52, ex));
@@ -1016,6 +1018,7 @@ public class OracleCDCSource extends BaseSource {
   private long localDateTimeToEpoch(LocalDateTime date) {
     return date.atZone(zoneId).toEpochSecond();
   }
+
   private int addRecordsToQueueOLD(
       LocalDateTime commitTimestamp,
       String commitScn,
@@ -1096,12 +1099,7 @@ public class OracleCDCSource extends BaseSource {
     return seq;
   }
 
-  private int addRecordsToQueue(
-      LocalDateTime commitTimestamp,
-      String commitScn,
-      String xid
-  ) throws InterruptedException {
-
+  private int addRecordsToQueue(LocalDateTime commitTimestamp, String commitScn, String xid) {
     TransactionIdKey key = new TransactionIdKey(xid);
     int seq = 0;
 
@@ -1288,37 +1286,34 @@ public class OracleCDCSource extends BaseSource {
 
   private void startLogMinerUsingGivenSCNs(BigDecimal oldestSCN, BigDecimal endSCN) throws SQLException {
     try {
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(TRYING_TO_START_LOG_MINER_WITH_START_SCN_AND_END_SCN,
-            oldestSCN.toPlainString(), endSCN.toPlainString());
-      }
-      startLogMnrForCommitSCN.setBigDecimal(1, oldestSCN);
-      startLogMnrForCommitSCN.setBigDecimal(2, endSCN);
-      startLogMnrForCommitSCN.execute();
-      if (LOG.isDebugEnabled()) {
-        LOG.debug(STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN,
-            oldestSCN.toPlainString(), endSCN.toPlainString());
-      }
+      LOG.debug(TRYING_TO_START_LOG_MINER_WITH_START_SCN_AND_END_SCN,
+          oldestSCN.toPlainString(), endSCN.toPlainString());
+      logMinerSession.start(oldestSCN, endSCN);
+      LOG.debug(STARTED_LOG_MINER_WITH_START_SCN_AND_END_SCN,
+          oldestSCN.toPlainString(), endSCN.toPlainString());
+
     } catch (SQLException ex) {
       LOG.debug("SQLException while starting LogMiner", ex);
       throw ex;
     }
   }
 
-  private void startLogMinerUsingGivenDates(String startDate, String endDate) throws SQLException, StageException {
+  private void startLogMinerUsingGivenDates(LocalDateTime startDate, LocalDateTime endDate) throws SQLException,
+      StageException {
     try {
       startLogMnrForRedoDict();
-      LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, startDate, endDate);
-      startLogMnrForData.setString(1, startDate);
-      startLogMnrForData.setString(2, endDate);
-      startLogMnrForData.execute();
+      LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE,
+          startDate.format(dateTimeColumnHandler.dateFormatter),
+          endDate.format(dateTimeColumnHandler.dateFormatter)
+      );
+      logMinerSession.start(startDate, endDate);
+
     } catch (SQLException ex) {
       LOG.debug("SQLException while starting LogMiner", ex);
       resetConnectionsQuietly();
       throw ex;
     }
   }
-
 
   @Override
   public List<ConfigIssue> init() {
@@ -1330,6 +1325,7 @@ public class OracleCDCSource extends BaseSource {
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     useLocalBuffering = !getContext().isPreview() && configBean.bufferLocally;
+
     if (!hikariConfigBean.driverClassName.isEmpty()) {
       try {
         Class.forName(hikariConfigBean.driverClassName);
@@ -1355,6 +1351,10 @@ public class OracleCDCSource extends BaseSource {
         return issues;
       }
     }
+
+    // This must be invoked after configuring some stage attributes and the database connection. Check the
+    // prepareLogMinerSession implementation.
+    logMinerSession = prepareLogMinerSession();
 
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
     String container = configBean.pdb;
@@ -1498,22 +1498,6 @@ public class OracleCDCSource extends BaseSource {
       );
       return issues;
     }
-
-    final String ddlTracking = shouldTrackDDL ? " + DBMS_LOGMNR.DDL_DICT_TRACKING" : "";
-
-    final String readCommitted = useLocalBuffering ? "" : "+ DBMS_LOGMNR.COMMITTED_DATA_ONLY";
-
-    this.logMinerProcedure = "BEGIN"
-        + " DBMS_LOGMNR.START_LOGMNR("
-        + " {},"
-        + " {},"
-        + " OPTIONS => DBMS_LOGMNR." + configBean.dictionary.name()
-        + "          + DBMS_LOGMNR.CONTINUOUS_MINE"
-        + readCommitted
-        + "          + DBMS_LOGMNR.NO_SQL_DELIMITER"
-        + ddlTracking
-        + ");"
-        + " END;";
 
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
@@ -1671,9 +1655,7 @@ public class OracleCDCSource extends BaseSource {
       try {
         // Start LogMinor with current time - duration
         LOG.info(TRYING_TO_START_LOG_MINER_WITH_START_DATE_AND_END_DATE, start, end);
-        startLogMnrForData.setString(1, start);
-        startLogMnrForData.setString(2, end);
-        startLogMnrForData.execute();
+        logMinerSession.start(startTime, currentTime);
         return;
       } catch (SQLException e) {
         LOG.debug("Unable to use start time {} and end time {} to start a LogMiner: {}", start, end, e);
@@ -1718,13 +1700,6 @@ public class OracleCDCSource extends BaseSource {
 
   private void initializeLogMnrStatements() throws SQLException {
     selectFromLogMnrContents = getSelectChangesStatement();
-    startLogMnrForCommitSCN = connection.prepareCall(
-        Utils.format(logMinerProcedure, "STARTSCN => ?", "ENDSCN => ?"));
-    startLogMnrForData = connection.prepareCall(
-        Utils.format(logMinerProcedure, "STARTTIME => ?", "ENDTIME => ?"));
-    startLogMnrSCNToDate = connection.prepareCall(
-        Utils.format(logMinerProcedure, "STARTSCN => ?", "ENDTIME => ?"));
-    endLogMnr = connection.prepareCall("BEGIN DBMS_LOGMNR.END_LOGMNR; END;");
     getTimestampsFromLogMnrContents = connection.prepareStatement(GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS);
     LOG.debug(REDO_SELECT_QUERY, selectString);
   }
@@ -1871,8 +1846,9 @@ public class OracleCDCSource extends BaseSource {
     }
 
     try {
-      if (endLogMnr != null && !endLogMnr.isClosed())
-        endLogMnr.execute();
+      if (logMinerSession != null) {
+        logMinerSession.close();
+      }
     } catch (SQLException ex) {
       LOG.warn("Error while stopping LogMiner", ex);
     }
