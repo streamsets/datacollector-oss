@@ -26,7 +26,9 @@ import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgradeUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HttpServerPushSourceUpgrader implements StageUpgrader {
 
@@ -66,10 +68,10 @@ public class HttpServerPushSourceUpgrader implements StageUpgrader {
   private void upgradeFromV10toV11(List<Config> configs) {
     Config appIdConfig = UpgraderUtils.getAndRemoveConfigWithName(configs,"httpConfigs.appId");
     if(appIdConfig != null) {
-      CredentialValue credentialValue = (CredentialValue) appIdConfig.getValue();
-      List<CredentialValueBean> credentialValueBeanList = new ArrayList<>(
-          Arrays.asList(new CredentialValueBean(credentialValue.get()))
-      );
+      List<Map<String,Object>> credentialValueBeanList = new ArrayList<>();
+      Map<String,Object> mapCredentialValueBean = new HashMap<>();
+      mapCredentialValueBean.put("appId",appIdConfig.getValue());
+      credentialValueBeanList.add(mapCredentialValueBean);
       configs.add(new Config("httpConfigs.appIds", credentialValueBeanList));
     }
   }
