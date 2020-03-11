@@ -19,7 +19,6 @@ import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
-import com.streamsets.datacollector.restapi.rbean.lang.REnum;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
@@ -126,7 +125,7 @@ public class UserManagementResource extends RestResource {
         user.getId().getValue(),
         user.getEmail().getValue(),
         user.getGroups().stream().map(g -> g.getValue()).collect(Collectors.toList()),
-        user.getRoles().stream().map(r -> r.getValue().toString().toLowerCase()).collect(Collectors.toList())
+        user.getRoles().stream().map(r -> r.getValue()).collect(Collectors.toList())
     ));
     Preconditions.checkNotNull(resetToken, "User already exists");
     RResetPasswordLink resetLink = createResetPasswordLink(
@@ -149,7 +148,7 @@ public class UserManagementResource extends RestResource {
         .collect(Collectors.toList());
     List<String> roles = user.getRoles()
         .stream()
-        .map(r -> r.getValue().toString().toLowerCase())
+        .map(r -> r.getValue())
         .collect(Collectors.toList());
     executor.execute(mgr -> {
           mgr.update(user.getId().getValue(), user.getEmail().getValue(), groups, roles);
@@ -191,10 +190,10 @@ public class UserManagementResource extends RestResource {
           .map(r -> new RString(r))
           .collect(Collectors.toList());
       user.setGroups(rGroups);
-      List<REnum<RUser.Role>> rRoles = u.getRoles()
+      List<RString> rRoles = u.getRoles()
           .stream()
           .filter(r -> isValidRole(r))
-          .map(r -> new REnum<>(RUser.Role.valueOf(r.toUpperCase())))
+          .map(r -> new RString(r))
           .collect(Collectors.toList());
       user.setRoles(rRoles);
       return user;

@@ -67,7 +67,7 @@ public class TestUserManagementResource {
     user.getId().setValue("u1");
     user.getEmail().setValue("e1");
     user.setGroups(Arrays.asList(new RString("g1")));
-    user.setRoles(Arrays.asList(new REnum<>(RUser.Role.ADMIN)));
+    user.setRoles(Arrays.asList(new RString("admin")));
     RestRequest<RUser> request = new RestRequest<>();
     request.setData(user);
 
@@ -101,7 +101,7 @@ public class TestUserManagementResource {
     user.getId().setValue("u1");
     user.getEmail().setValue("e2");
     user.setGroups(Arrays.asList(new RString("g2")));
-    user.setRoles(Arrays.asList(new REnum<>(RUser.Role.CREATOR)));
+    user.setRoles(Arrays.asList(new RString("creator")));
     RestRequest<RUser> request = new RestRequest<>();
     request.setData(user);
 
@@ -110,7 +110,7 @@ public class TestUserManagementResource {
     Assert.assertEquals(OkRestResponse.HTTP_OK, response.getHttpStatusCode());
 
     Assert.assertEquals("u1", response.getData().getId().getValue());
-    Assert.assertEquals(Arrays.asList(new REnum<>(RUser.Role.CREATOR)), response.getData().getRoles());
+    Assert.assertEquals(Arrays.asList(new RString("creator")), response.getData().getRoles());
 
     executor.execute(mgr -> {
       Assert.assertEquals(1, mgr.listUsers().size());
@@ -162,11 +162,10 @@ public class TestUserManagementResource {
     Assert.assertEquals("u1", user.getId().getValue());
     Assert.assertEquals("email", user.getEmail().getValue());
     Assert.assertEquals(Arrays.asList(new RString("g1")), user.getGroups());
-    Assert.assertEquals(Arrays.asList(
-        new REnum<>(RUser.Role.ADMIN),
-        new REnum<>(RUser.Role.CREATOR),
-        new REnum<>(RUser.Role.MANAGER),
-        new REnum<>(RUser.Role.GUEST)
+    Assert.assertEquals(Arrays.asList(new RString("admin"),
+        new RString("creator"),
+        new RString("manager"),
+        new RString("guest")
     ), user.getRoles());
   }
 
