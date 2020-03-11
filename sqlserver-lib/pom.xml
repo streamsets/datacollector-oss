@@ -43,7 +43,6 @@
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>mssql-jdbc</artifactId>
       <version>${microsoft-jdbc.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>

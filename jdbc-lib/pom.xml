@@ -31,6 +31,11 @@
   <description>StreamSets Data Collector JDBC Lib</description>
   <name>StreamSets Data Collector JDBC Lib</name>
 
+  <properties>
+    <mssql.version>7.2.2.jre8</mssql.version>
+    <postgresql.version>42.2.2</postgresql.version>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -38,6 +43,16 @@
       <version>${project.version}</version>
       <scope>compile</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${postgresql.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.microsoft.sqlserver</groupId>
+      <artifactId>mssql-jdbc</artifactId>
+      <version>${mssql.version}</version>
+    </dependency>
+  </dependencies>
 </project>
