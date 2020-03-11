@@ -46,6 +46,7 @@ public class DataStore {
   private Closeable stream;
   private boolean forWrite;
   private boolean isClosed;
+  private boolean isRecovered;
 
   /**
    * Lock with counter so that we know how many threads are using the lock.
@@ -93,6 +94,10 @@ public class DataStore {
 
   public File getFile() {
     return file.toFile();
+  }
+
+  public boolean isRecovered() {
+    return isRecovered;
   }
 
   public void close() throws IOException {
@@ -314,6 +319,7 @@ public class DataStore {
       Files.delete(fileOld);
       LOG.trace("Committing write, deleting '{}'", fileOld);
     }
+    isRecovered = false;
     LOG.trace("Committed");
   }
 
@@ -332,6 +338,7 @@ public class DataStore {
           Files.delete(fileOld);
           LOG.warn("File '{}', deleted during verification", fileOld);
         }
+        isRecovered = true;
         LOG.warn("File '{}', committed during verification", file);
       } else if (Files.exists(fileTmp)) {
         LOG.warn("File '{}', write incomplete while writing, rolling back", file);
@@ -344,6 +351,7 @@ public class DataStore {
         Files.delete(fileTmp);
         Files.move(fileOld, file);
         LOG.warn("File '{}', rolled back during verification", file);
+        isRecovered = true;
       } else if (Files.exists(fileOld)) {
         if (Files.exists(file)) {
           LOG.warn("Both file {} and old file '{}' exists, deleting old file during verification", file, fileOld);
@@ -351,6 +359,7 @@ public class DataStore {
         } else {
           Files.move(fileOld, file);
           LOG.warn("File '{}', rolled back during verification", file);
+          isRecovered = true;
         }
       }
     } else {

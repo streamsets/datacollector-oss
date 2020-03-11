@@ -192,6 +192,7 @@ public class TestDataStore {
     } finally {
       ds.close();
     }
+    Assert.assertTrue(ds.isRecovered());
   }
 
   @Test
@@ -207,6 +208,7 @@ public class TestDataStore {
     } finally {
       ds.close();
     }
+    Assert.assertTrue(ds.isRecovered());
   }
 
   @Test
@@ -224,6 +226,7 @@ public class TestDataStore {
     } finally {
       ds.close();
     }
+    Assert.assertTrue(ds.isRecovered());
   }
 
   @Test
@@ -241,6 +244,7 @@ public class TestDataStore {
     } finally {
       ds.close();
     }
+    Assert.assertTrue(ds.isRecovered());
   }
 
   @Test(expected = IOException.class)
@@ -254,6 +258,7 @@ public class TestDataStore {
       readViaStore(ds);
     } finally {
       ds.close();
+      Assert.assertFalse(ds.isRecovered());
     }
   }
 
@@ -268,6 +273,7 @@ public class TestDataStore {
       readViaStore(ds);
     } finally {
       ds.close();
+      Assert.assertFalse(ds.isRecovered());
     }
   }
 
@@ -281,6 +287,7 @@ public class TestDataStore {
       readViaStore(ds);
     } finally {
       ds.close();
+      Assert.assertFalse(ds.isRecovered());
     }
   }
 
@@ -296,6 +303,7 @@ public class TestDataStore {
       readViaStore(ds);
     } finally {
       ds.close();
+      Assert.assertFalse(ds.isRecovered());
     }
   }
 
@@ -314,6 +322,7 @@ public class TestDataStore {
     }
     Assert.assertTrue(Files.exists(file.getAbsoluteFile().toPath()));
     Assert.assertTrue(!Files.exists(oldFile.getAbsoluteFile().toPath()));
+    Assert.assertFalse(ds.isRecovered());
   }
 
 }
