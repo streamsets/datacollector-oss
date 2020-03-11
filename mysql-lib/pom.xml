@@ -33,6 +33,8 @@
   <properties>
     <mysql-binlog-connector-java.version>0.13.0</mysql-binlog-connector-java.version>
     <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
+    <guava.version>18.0</guava.version>
+    <joda.version>2.8</joda.version>
   </properties>
 
 
