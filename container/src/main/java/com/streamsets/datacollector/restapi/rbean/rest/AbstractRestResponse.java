@@ -24,6 +24,7 @@ public abstract class AbstractRestResponse<B, R extends AbstractRestResponse> ex
   public static final String ENVELOPE_VERSION = "1";
   public static final int HTTP_OK = 200;
   public static final int HTTP_CREATED = 201;
+  public static final int HTTP_NO_CONTENT = 204;
 
   private final String type;
   private int httpStatusCode = HTTP_OK;

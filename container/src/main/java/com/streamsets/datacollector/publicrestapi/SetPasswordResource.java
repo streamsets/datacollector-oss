@@ -62,7 +62,7 @@ public class SetPasswordResource extends RestResource {
           return null;
         }
     );
-    return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_OK);
+    return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_NO_CONTENT);
   }
 
 }

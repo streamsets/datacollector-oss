@@ -66,7 +66,7 @@ public class TestSetPasswordResource {
     RestRequest<RSetPassword> request = new RestRequest<>();
     request.setData(setPassword);
     OkRestResponse<Void> response = resource.setPassword(request);
-    Assert.assertEquals(OkRestResponse.HTTP_OK, response.getHttpStatusCode());
+    Assert.assertEquals(OkRestResponse.HTTP_NO_CONTENT, response.getHttpStatusCode());
 
     executor.execute(mgr -> {
       Assert.assertTrue(mgr.verifyPassword("u1", "pass"));

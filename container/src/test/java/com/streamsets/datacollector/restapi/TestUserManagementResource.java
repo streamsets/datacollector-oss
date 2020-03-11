@@ -190,7 +190,7 @@ public class TestUserManagementResource {
 
     OkRestResponse<Void> response = resource.changePassword("u1", request);
     Assert.assertNotNull(response);
-    Assert.assertEquals(OkRestResponse.HTTP_OK, response.getHttpStatusCode());
+    Assert.assertEquals(OkRestResponse.HTTP_NO_CONTENT, response.getHttpStatusCode());
 
     executor.execute(mgr -> {
       mgr.verifyPassword("u1", "PASSWORD");
