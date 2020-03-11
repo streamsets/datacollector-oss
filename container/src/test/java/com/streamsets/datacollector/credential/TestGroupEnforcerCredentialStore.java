@@ -72,6 +72,14 @@ public class TestGroupEnforcerCredentialStore {
   }
 
   @Test
+  public void testEnforcedPassForAllGroup() throws Throwable {
+    CredentialStore store = Mockito.mock(CredentialStore.class);
+    Mockito.when(store.get(Mockito.eq("all"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);
+    GroupEnforcerCredentialStore enforcerStore = new GroupEnforcerCredentialStore<>(store);
+    GroupsInScope.execute(ImmutableSet.of("h"), () -> enforcerStore.get("all", "n", "o"));
+  }
+
+  @Test
   public void testNotManagedStore() {
     CredentialStore store = Mockito.mock(CredentialStore.class);
     Mockito.when(store.get(Mockito.eq("g"), Mockito.eq("n"), Mockito.eq("o"))).thenReturn(CREDENTIAL_VALUE);

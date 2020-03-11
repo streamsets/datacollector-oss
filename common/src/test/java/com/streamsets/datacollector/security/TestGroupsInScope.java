@@ -41,4 +41,13 @@ public class TestGroupsInScope {
     GroupsInScope.isUserGroupInScope("g");
   }
 
+
+  @Test
+  public void testAllGroup() throws Exception {
+    GroupsInScope.execute(ImmutableSet.of(), () -> {
+      Assert.assertTrue(GroupsInScope.isUserGroupInScope("all"));
+      return null;
+    });
+  }
+
 }

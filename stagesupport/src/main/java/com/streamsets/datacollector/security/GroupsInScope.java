@@ -23,6 +23,7 @@ import java.util.concurrent.Callable;
 
 public class GroupsInScope {
   private static final Set<String> BYPASS_GROUPS = new HashSet<>();
+  private static final String ALL_GROUP = "all";
   private static final ThreadLocal<Set<String>> GROUPS_IN_SCOPE_TL = new ThreadLocal<>();
 
 
@@ -47,7 +48,7 @@ public class GroupsInScope {
   public static boolean isUserGroupInScope(String userGroup) {
     Utils.checkNotNull(userGroup, "userGroup");
     Utils.checkState(GROUPS_IN_SCOPE_TL.get() != null, "Not in UserGroupScope scope");
-    return (GROUPS_IN_SCOPE_TL.get() == BYPASS_GROUPS) || GROUPS_IN_SCOPE_TL.get().contains(userGroup);
+    return (GROUPS_IN_SCOPE_TL.get() == BYPASS_GROUPS) || userGroup.equals(ALL_GROUP) || GROUPS_IN_SCOPE_TL.get().contains(userGroup);
   }
 
 }
