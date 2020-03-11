@@ -39,6 +39,7 @@ import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.io.EncoderFactory;
 import org.apache.avro.util.Utf8;
 import org.codehaus.jackson.JsonNode;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,8 +168,8 @@ public class AvroTypeUtil {
           if (logicalType != null && !logicalType.isEmpty()) {
             switch (logicalType) {
               case LOGICAL_TYPE_DECIMAL:
-                int scale = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
-                int precision = unionTypes.get(1).getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
+                int scale = getJsonPropSafely(unionTypes.get(1), LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+                int precision = getJsonPropSafely(unionTypes.get(1), LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
                 returnField.setAttribute(HeaderAttributeConstants.ATTR_SCALE, String.valueOf(scale));
                 returnField.setAttribute(HeaderAttributeConstants.ATTR_PRECISION, String.valueOf(precision));
             }
@@ -203,8 +204,8 @@ public class AvroTypeUtil {
           if(schema.getType() != Schema.Type.BYTES) {
             throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
           }
-          int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
-          int precision = schema.getJsonProp(LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
+          int scale = getJsonPropSafely(schema, LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+          int precision = getJsonPropSafely(schema, LOGICAL_TYPE_ATTR_PRECISION).getIntValue();
           if (value instanceof ByteBuffer) {
             byte[] decimalBytes = ((ByteBuffer)value).array();
             value = bigDecimalFromBytes(decimalBytes, scale);
@@ -405,7 +406,7 @@ public class AvroTypeUtil {
             if (schema.getType() != Schema.Type.BYTES) {
               throw new IllegalStateException("Unexpected physical type for logical decimal type: " + schema.getType());
             }
-            int scale = schema.getJsonProp(LOGICAL_TYPE_ATTR_SCALE).getIntValue();
+            int scale = getJsonPropSafely(schema, LOGICAL_TYPE_ATTR_SCALE).getIntValue();
             return ByteBuffer.wrap(field.getValueAsDecimal().setScale(scale).unscaledValue().toByteArray());
           case LOGICAL_TYPE_DATE:
             if (schema.getType() != Schema.Type.INT) {
@@ -586,6 +587,15 @@ public class AvroTypeUtil {
           );
     }
     return obj;
+  }
+
+  @NotNull
+  private static JsonNode getJsonPropSafely(Schema schema, String property) {
+    JsonNode node = schema.getJsonProp(property);
+    if (node == null) {
+      throw new IllegalStateException("Missing required property '" + property + "'");
+    }
+    return node;
   }
 
   private static Field.Type getFieldType(Schema schema) {

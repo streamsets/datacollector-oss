@@ -250,6 +250,14 @@ public class TestAvroTypeUtil {
     makeBadType(Field.create("notDecimal"), record, avroSchema);
   }
 
+  @Test(expected = IllegalStateException.class)
+  public void testCreateDecimalFieldInvalidSpec() throws Exception {
+    String schema = "{\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\"}";
+    Schema avroSchema = new Schema.Parser().parse(schema);
+    Record record = RecordCreator.create();
+    AvroTypeUtil.avroToSdcField(record, avroSchema, BigDecimal.valueOf(1.5), false);
+  }
+
   @Test
   public void testToAndFromAvroDecimal() throws Exception {
     String schema = "{\"name\": \"name\", \"type\": \"bytes\", \"logicalType\": \"decimal\", \"precision\": 2, \"scale\": 1}";
