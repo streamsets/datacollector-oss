@@ -26,6 +26,8 @@ public enum Errors implements ErrorCode {
   REDIS_03("Cannot parse record from message '{}': {}"),
   REDIS_04("Missing Channels or Pattern"),
   REDIS_05("Timed out while trying to connect to {}"),
+  REDIS_06("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+
   ;
   private final String msg;
 

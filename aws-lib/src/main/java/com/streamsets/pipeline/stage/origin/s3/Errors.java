@@ -40,6 +40,7 @@ public enum Errors implements ErrorCode {
   S3_SPOOLDIR_24("Unable to move object, reason : {}"),
   S3_SPOOLDIR_25("Unable to get object content, reason : {}"),
   S3_SPOOLDIR_26("S3 runner failed. Reason {}"),
+  S3_SPOOLDIR_27("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

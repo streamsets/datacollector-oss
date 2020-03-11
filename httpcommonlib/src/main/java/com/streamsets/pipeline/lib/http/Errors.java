@@ -55,6 +55,7 @@ public enum Errors implements ErrorCode {
   HTTP_32("Error executing request: {}"),
   HTTP_33("Null authorization token - checked for '{}', '{}' and '{}'"),
   HTTP_34("Received no entity in the HTTP message body."),
+  HTTP_35("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
 
   // HTTP Target
   HTTP_40("Error sending resource. Status: {} Reason: {}"),

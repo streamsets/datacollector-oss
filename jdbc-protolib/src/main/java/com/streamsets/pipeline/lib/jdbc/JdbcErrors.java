@@ -151,6 +151,7 @@ public enum JdbcErrors implements ErrorCode {
 
   JDBC_500("The JDBC URL must be 'jdbc:<vendor>://<HOST>[:<PORT>][/<DB>]...'"),
   JDBC_501("Connection must be secured, either by SSL encryption or SSH Tunneling"),
+  JDBC_502("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

@@ -72,6 +72,8 @@ public class OmnitureSource extends BaseSource {
   private BlockingQueue<String> entityQueue;
   private OmniturePollingConsumer httpConsumer;
 
+  private boolean checkBatchSize = true;
+
   /**
    * Constructor for authenticated clients. Requires only the resource URL.
    * @param config Configuration for Omniture API requests
@@ -175,6 +177,12 @@ public class OmnitureSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(batchSize, maxBatchSize);
+    if (checkBatchSize && batchSize > maxBatchSize) {
+      getContext().reportError(Errors.OMNITURE_05, maxBatchSize);
+      checkBatchSize = false;
+    }
+
+
     while ((((System.currentTimeMillis() - start) < maxBatchWaitTime))
         && (entityQueue.size() < chunksToFetch)) {
       try {

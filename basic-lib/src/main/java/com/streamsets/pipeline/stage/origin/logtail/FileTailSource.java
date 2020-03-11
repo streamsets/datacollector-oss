@@ -70,6 +70,8 @@ public class FileTailSource extends BaseSource {
   private final FileTailConfigBean conf;
   private final int scanIntervalSecs;
 
+  private boolean checkBatchSize = true;
+
   public FileTailSource(FileTailConfigBean conf) {
     this(conf, 20);
   }
@@ -395,7 +397,12 @@ public class FileTailSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
     long startTime = System.currentTimeMillis();
+
     maxBatchSize = Math.min(conf.batchSize, maxBatchSize);
+    if (checkBatchSize && conf.batchSize > maxBatchSize) {
+      getContext().reportError(Errors.TAIL_30, maxBatchSize);
+      checkBatchSize = false;
+    }
 
     // deserializing offsets of all directories
     Map<String, String> offsetMap = deserializeOffsetMap(lastSourceOffset);

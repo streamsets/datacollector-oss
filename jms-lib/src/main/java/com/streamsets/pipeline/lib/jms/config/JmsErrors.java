@@ -41,6 +41,9 @@ public enum JmsErrors implements ErrorCode {
   JMS_20("After error '{}' parsing message, another error '{}' was encountered while trying to serialize message '{}' of container '{}'"),
   JMS_21("Cannot parse record from message '{}': {}"),
   JMS_22("Unsupported charset '{}'"),
+
+  // Configuration issues
+  JMS_30("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
   private final String msg;
 

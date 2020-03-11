@@ -246,10 +246,15 @@ public class PubSubSource extends BasePushSource {
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
 
+    int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
+    if (conf.basic.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.PUBSUB_10, maxBatchSize);
+    }
+
     for (int i = 0; i < conf.maxThreads; i++) {
       MessageProcessor messageProcessor = new MessageProcessorImpl(
           getContext(),
-          Math.min(maxBatchSize, conf.basic.maxBatchSize),
+          batchSize,
           conf.basic.maxWaitTime,
           parserFactory,
           workQueue

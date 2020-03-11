@@ -38,6 +38,7 @@ public enum MySQLBinLogErrors implements ErrorCode {
   MYSQL_BIN_LOG_015("Error creating include tables filter: {}"),
   MYSQL_BIN_LOG_016("Error creating ignore tables filter: {}"),
   MYSQL_BIN_LOG_017("Error disconnecting from MySql"),
+  MYSQL_BIN_LOG_018("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

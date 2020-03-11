@@ -106,6 +106,8 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
   private final FileDelayer fileDelayer;
 
+  private boolean checkBatchSize = true;
+
   private final NavigableSet<RemoteFile> fileQueue = new TreeSet<>(new Comparator<RemoteFile>() {
     @Override
     public int compare(RemoteFile f1, RemoteFile f2) {
@@ -219,6 +221,11 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // This method returns NOTHING_READ when only no events have ever been read
     final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
+    if (checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.REMOTE_DOWNLOAD_09, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     // currentOffset is null when we've just started and we haven't processed any files yet.
     // currentOffset can also be null in the case where we had a problem creating the offset for the first file had (in
     // which case lastSourceOffset would be MINUS_ONE) and we've already dealt with it.

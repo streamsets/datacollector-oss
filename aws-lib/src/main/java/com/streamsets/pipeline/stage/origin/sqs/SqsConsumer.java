@@ -180,6 +180,11 @@ public class SqsConsumer extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     try {
+      int batchSize = Math.min(conf.maxBatchSize, maxBatchSize);
+      if (conf.maxBatchSize > maxBatchSize) {
+        getContext().reportError(Errors.SQS_12, maxBatchSize);
+      }
+
       final int numThreads = getNumberOfThreads();
       executorService = new SafeScheduledExecutorService(numThreads, SQS_THREAD_PREFIX);
 
@@ -200,7 +205,7 @@ public class SqsConsumer extends BasePushSource {
               threadQueueUrlsToNames,
               conf.numberOfMessagesPerRequest,
               conf.maxBatchTimeMs,
-              conf.maxBatchSize,
+              batchSize,
               conf.region.getId(),
               conf.sqsAttributesOption,
               new DefaultErrorRecordHandler(getContext(), (ToErrorContext) getContext()),

@@ -28,6 +28,7 @@ public enum Errors implements ErrorCode {
   MYSQL_007("Ignore tables format error: {}"),
   MYSQL_008("Include tables format error: {}"),
   MYSQL_009("Couldn't parse JSON column value: {}"),
+  MYSQL_010("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
   private final String msg;
 

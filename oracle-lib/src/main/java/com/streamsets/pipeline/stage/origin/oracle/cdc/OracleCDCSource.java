@@ -114,6 +114,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_47;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_48;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_49;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_50;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_502;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_52;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_54;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_81;
@@ -317,6 +318,8 @@ public class OracleCDCSource extends BaseSource {
 
   private final JdbcUtil jdbcUtil;
 
+  private boolean checkBatchSize = true;
+
   public OracleCDCSource(HikariPoolConfigBean hikariConf, OracleCDCConfigBean oracleCDCConfigBean) {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
     this.configBean = oracleCDCConfigBean;
@@ -330,6 +333,11 @@ public class OracleCDCSource extends BaseSource {
       dummyRecord = getContext().createRecord("DUMMY");
     }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
+      getContext().reportError(JDBC_502, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     int recordGenerationAttempts = 0;
     boolean recordsProduced = false;
     String nextOffset = StringUtils.trimToEmpty(lastSourceOffset);

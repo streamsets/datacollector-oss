@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.streamsets.pipeline.stage.bigquery.lib.Errors.BIGQUERY_05;
+import static com.streamsets.pipeline.stage.bigquery.lib.Errors.BIGQUERY_19;
 
 public class BigQuerySource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(BigQuerySource.class);
@@ -49,6 +50,7 @@ public class BigQuerySource extends BaseSource {
   private TableResult result;
   private Schema schema;
   private int totalCount;
+  private boolean checkBatchSize = true;
 
   public BigQuerySource(BigQuerySourceConfig conf) {
     this.conf = conf;
@@ -89,6 +91,10 @@ public class BigQuerySource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceOffset = lastSourceOffset;
     long pageSize = (long) Math.min(conf.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+      getContext().reportError(BIGQUERY_19, maxBatchSize);
+      checkBatchSize = false;
+    }
 
     if (result == null) {
       QueryJobConfiguration queryRequest = QueryJobConfiguration.newBuilder(conf.query)

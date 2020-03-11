@@ -54,6 +54,8 @@ public class MongoDBSource extends AbstractMongoDBSource {
   private long errorRecordsSinceLastNMREvent = 0;
   private final SimpleDateFormat dateFormatter = new SimpleDateFormat(TIMESTAMP_FORMAT);
 
+  private boolean checkBatchSize = true;
+
   public MongoDBSource(MongoSourceConfigBean configBean) {
     super(configBean);
   }
@@ -105,7 +107,13 @@ public class MongoDBSource extends AbstractMongoDBSource {
     long batchWaitTime = System.currentTimeMillis() + (configBean.maxBatchWaitTime * 1000);
 
     try {
-      while (numRecords < Math.min(configBean.batchSize, maxBatchSize) && System.currentTimeMillis() < batchWaitTime) {
+      int batchSize = Math.min(configBean.batchSize, maxBatchSize);
+      if (checkBatchSize && configBean.batchSize > maxBatchSize) {
+        getContext().reportError(Errors.MONGODB_43, maxBatchSize);
+        checkBatchSize = false;
+      }
+
+      while (numRecords < batchSize && System.currentTimeMillis() < batchWaitTime) {
         LOG.trace("Trying to get next doc from cursor");
         Document doc = cursor.tryNext();
         if (null == doc) {

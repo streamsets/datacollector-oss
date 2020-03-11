@@ -47,6 +47,7 @@ public class UDPSource extends BaseSource {
   private UDPConsumingServer udpServer;
   private ErrorRecordHandler errorRecordHandler;
   private BlockingQueue<ParseResult> incomingQueue;
+  private boolean checkBatchSize = true;
 
   public UDPSource(UDPSourceConfigBean conf) {
     this.conf = conf;
@@ -101,7 +102,13 @@ public class UDPSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     Utils.checkNotNull(udpServer, "UDP server is null");
     Utils.checkNotNull(incomingQueue, "Incoming queue is null");
+
     maxBatchSize = Math.min(conf.batchSize, maxBatchSize);
+    if (checkBatchSize && conf.batchSize > maxBatchSize) {
+      getContext().reportError(Errors.UDP_09, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     final long startingRecordCount = recordCount;
     long remainingTime = conf.maxWaitTime;
     for (int i = 0; i < maxBatchSize; i++) {

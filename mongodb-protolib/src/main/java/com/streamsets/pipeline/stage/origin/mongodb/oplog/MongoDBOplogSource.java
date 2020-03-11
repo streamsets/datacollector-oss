@@ -66,6 +66,8 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
   private int lastOffsetTsSeconds;
   private int lastOffsetTsOrdinal;
 
+  private boolean checkBatchSize = true;
+
   public MongoDBOplogSource(MongoSourceConfigBean configBean, MongoDBOplogSourceConfigBean mongoDBOplogSourceConfigBean) {
     super(configBean);
     this.mongoDBOplogSourceConfigBean = mongoDBOplogSourceConfigBean;
@@ -101,6 +103,11 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(maxBatchSize, configBean.batchSize);
+    if (checkBatchSize && configBean.batchSize > maxBatchSize) {
+      getContext().reportError(Errors.MONGODB_43, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     long batchWaitTime = System.currentTimeMillis() + (configBean.maxBatchWaitTime * 1000);
     int numOfRecordsProduced = 0;
     initStateIfNeeded(lastSourceOffset, batchSize);

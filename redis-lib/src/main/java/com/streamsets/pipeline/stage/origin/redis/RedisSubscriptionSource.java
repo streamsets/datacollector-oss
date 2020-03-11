@@ -31,6 +31,7 @@ public class RedisSubscriptionSource extends BaseRedisSource {
   private Thread subscribeThread;
   private Thread psubscribeThread;
   private RedisListener redisListener;
+  private boolean checkBatchSize = true;
 
   /**
    * Creates a new instance of redis source.
@@ -102,6 +103,10 @@ public class RedisSubscriptionSource extends BaseRedisSource {
     int recordCounter = 0;
     long startTime = System.currentTimeMillis();
     int maxRecords = Math.min(maxBatchSize, conf.maxBatchSize);
+    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.REDIS_06, maxBatchSize);
+      checkBatchSize = false;
+    }
 
     while (recordCounter < maxRecords && (startTime + conf.maxWaitTime) > System.currentTimeMillis()) {
       String message = buffer.poll();

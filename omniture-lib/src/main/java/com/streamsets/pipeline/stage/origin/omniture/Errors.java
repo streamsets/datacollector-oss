@@ -25,7 +25,7 @@ public enum Errors implements ErrorCode {
   OMNITURE_02("Error while fetching report ID {}: {}"),
   OMNITURE_03("Report Description is not valid JSON"),
   OMNITURE_04("Can't resolve credential {}: {}"),
-
+  OMNITURE_05("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

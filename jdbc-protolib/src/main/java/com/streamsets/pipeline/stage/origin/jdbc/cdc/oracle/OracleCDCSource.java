@@ -121,6 +121,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_84;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_85;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_86;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_87;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_502;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.COMMIT_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DDL_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DELETE_CODE;
@@ -234,6 +235,8 @@ public class OracleCDCSource extends BaseSource {
   private static final boolean CONFIG_PROPERTY_DEFAULT_VALUE = false;
   private boolean useNewAddRecordsToQueue;
 
+  private boolean checkBatchSize = true;
+
   private enum DDL_EVENT {
     CREATE,
     ALTER,
@@ -310,6 +313,11 @@ public class OracleCDCSource extends BaseSource {
       dummyRecord = getContext().createRecord("DUMMY");
     }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
+      getContext().reportError(JDBC_502, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     int recordGenerationAttempts = 0;
     boolean recordsProduced = false;
     String nextOffset = StringUtils.trimToEmpty(lastSourceOffset);

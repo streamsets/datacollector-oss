@@ -114,6 +114,8 @@ public class JdbcSource extends BaseSource {
   private final JdbcUtil jdbcUtil;
   private SshTunnelService sshTunnelService;
 
+  private boolean checkBatchSize = true;
+
   public JdbcSource(
       boolean isIncrementalMode,
       String query,
@@ -371,6 +373,11 @@ public class JdbcSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && commonSourceConfigBean.maxBatchSize > maxBatchSize) {
+      getContext().reportError(JdbcErrors.JDBC_502, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     String nextSourceOffset = lastSourceOffset == null ? initialOffset : lastSourceOffset;
 
     long now = System.currentTimeMillis();

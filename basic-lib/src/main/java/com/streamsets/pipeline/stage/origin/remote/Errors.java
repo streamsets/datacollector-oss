@@ -29,6 +29,7 @@ public enum Errors implements ErrorCode {
   REMOTE_DOWNLOAD_06("Initial file '{}' is invalid: {}"),
   REMOTE_DOWNLOAD_07("Archive directory cannot be empty"),
   REMOTE_DOWNLOAD_08("Problem setting archive directory: {}"),
+  REMOTE_DOWNLOAD_09("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

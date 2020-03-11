@@ -41,6 +41,8 @@ public enum Errors implements ErrorCode {
   TAIL_12("Cannot parse record '{}': {}"),
   TAIL_13("Could not serialize offset: {}"),
   TAIL_14("Could not get file start/end events: {}"),
+
+  TAIL_30("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

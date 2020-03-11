@@ -123,6 +123,9 @@ public class ElasticsearchSource extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     batchSize = Math.min(conf.maxBatchSize, maxBatchSize);
+    if (conf.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.ELASTICSEARCH_35, maxBatchSize);
+    }
 
     ExecutorService executor = Executors.newFixedThreadPool(getNumberOfThreads());
     CompletionService<Void> completionService = new ExecutorCompletionService<>(executor);

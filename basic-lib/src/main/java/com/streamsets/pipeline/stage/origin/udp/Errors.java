@@ -30,6 +30,7 @@ public enum Errors implements ErrorCode {
   UDP_06("collectd Auth File '{}' not found"),
   UDP_07("Insufficient permissions to listen on privileged port {}"),
   UDP_08("Multithreaded UDP server is not available on your platform."),
+  UDP_09("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;

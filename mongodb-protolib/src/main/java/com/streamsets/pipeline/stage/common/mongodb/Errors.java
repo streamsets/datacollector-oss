@@ -53,6 +53,7 @@ public enum Errors implements ErrorCode {
   MONGODB_40("No results for query: '{}'"),
   MONGODB_41("Missing filters: SDC Field to Document Field Mapping needs to be provided."),
   MONGODB_42("Record does not contain values to perform lookup"),
+  MONGODB_43("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
 
   ;
   private final String msg;

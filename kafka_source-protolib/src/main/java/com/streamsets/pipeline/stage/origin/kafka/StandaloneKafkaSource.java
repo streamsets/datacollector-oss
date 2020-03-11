@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.kafka.api.MessageAndOffset;
 import com.streamsets.pipeline.kafka.api.MessageAndOffsetWithTimestamp;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,8 @@ import java.util.List;
 
 public class StandaloneKafkaSource extends BaseKafkaSource {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneKafkaSource.class);
+
+  private boolean checkBatchSize = true;
 
   public StandaloneKafkaSource(KafkaConfigBean conf) {
     super(conf);
@@ -68,6 +71,11 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
     int batchSize = conf.maxBatchSize > maxBatchSize ? maxBatchSize : conf.maxBatchSize;
+    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+      getContext().reportError(KafkaErrors.KAFKA_78, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     long startTime = System.currentTimeMillis();
     while (recordCounter < batchSize && (startTime + conf.maxWaitTime) > System.currentTimeMillis()) {
       MessageAndOffset message = kafkaConsumer.read();

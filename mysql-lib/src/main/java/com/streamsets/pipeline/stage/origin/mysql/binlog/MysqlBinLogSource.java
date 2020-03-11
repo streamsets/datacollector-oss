@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.lib.jdbc.BasicConnectionString;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.config.MySQLBinLogGroups;
 import com.streamsets.pipeline.stage.config.MysqlBinLogSourceConfig;
@@ -97,6 +98,7 @@ public abstract class MysqlBinLogSource extends BaseSource {
   private SshTunnelService sshTunnelService;
   private SshTunnelService.HostPort sshTunnel;
   private JdbcUtil jdbcUtil = new JdbcUtil();
+  private boolean checkBatchSize = true;
 
   private MysqlBinLogSourceConfig config;
 
@@ -296,6 +298,11 @@ public abstract class MysqlBinLogSource extends BaseSource {
 
     int recordCounter = 0;
     int batchSize = config.maxBatchSize > maxBatchSize ? maxBatchSize : config.maxBatchSize;
+    if (checkBatchSize && config.maxBatchSize > maxBatchSize) {
+      getContext().reportError(MySQLBinLogErrors.MYSQL_BIN_LOG_018, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     long startTime = System.currentTimeMillis();
 
     while (recordCounter < batchSize && (startTime + config.maxWaitTime) > System.currentTimeMillis()) {

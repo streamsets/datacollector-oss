@@ -57,6 +57,8 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
   private DataParserFactory parserFactory;
   private String lastSourceOffset = "";
 
+  private boolean checkBatchSize = true;
+
   public RabbitSource(RabbitSourceConfigBean conf) {
     this.conf = conf;
   }
@@ -116,6 +118,11 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
 
     long maxTime = System.currentTimeMillis() + conf.basicConfig.maxWaitTime;
     int maxRecords = Math.min(maxBatchSize, conf.basicConfig.maxBatchSize);
+    if (checkBatchSize && conf.basicConfig.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.RABBITMQ_11, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     int numRecords = 0;
     String nextSourceOffset = lastSourceOffset;
     while (System.currentTimeMillis() < maxTime && numRecords < maxRecords) {

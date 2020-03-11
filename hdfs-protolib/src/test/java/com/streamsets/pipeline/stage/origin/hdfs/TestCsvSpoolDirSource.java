@@ -101,7 +101,8 @@ public class TestCsvSpoolDirSource extends BaseTestCsvSpoolDirSource {
       CsvRecordType csvRecordType,
       String filePath,
       String pattern,
-      PostProcessingOptions postProcessing) {
+      PostProcessingOptions postProcessing,
+      int batchSize) {
 
     SpoolDirConfigBean conf = CsvSpoolDirSourceTestUtil.getConf(
         mode,
@@ -116,7 +117,8 @@ public class TestCsvSpoolDirSource extends BaseTestCsvSpoolDirSource {
         csvRecordType,
         filePath,
         pattern,
-        postProcessing
+        postProcessing,
+        batchSize
     );
 
     this.spoolDir = conf.spoolDir;

@@ -113,7 +113,8 @@ public class CsvSpoolDirSourceTestUtil {
       CsvRecordType csvRecordType,
       String filePath,
       String pattern,
-      PostProcessingOptions postProcessing
+      PostProcessingOptions postProcessing,
+      int batchSize
   ) {
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
     dataFormatConfig.charset = "UTF-8";
@@ -140,6 +141,7 @@ public class CsvSpoolDirSourceTestUtil {
         .filePattern(Strings.isNullOrEmpty(pattern) ? "file-[0-9].log" : pattern)
         .postProcessing(postProcessing)
         .archiveDir(createTestDir())
+        .batchSize(batchSize)
         .getConf();
   }
 }

@@ -36,10 +36,10 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.dirspooler.FileOrdering;
 import com.streamsets.pipeline.lib.dirspooler.Offset;
 import com.streamsets.pipeline.lib.dirspooler.PathMatcherMode;
+import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
-import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -1027,4 +1027,71 @@ public class TestSpoolDirSource {
     }
   }
 
+  @Test
+  public void testBatchSizeLargerThanMax() throws Exception {
+    final int maxBatchSize = 5;
+    final String MINUS_ONE_JSON = "-1\"}";
+    final String EXPECTED_ERROR = "SPOOLDIR_37 - " +
+        "Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: 5";
+
+    File spoolDir = new File("target", UUID.randomUUID().toString());
+    spoolDir.mkdir();
+
+    SpoolDirConfigBean conf = new SpoolDirConfigBean();
+    conf.dataFormat = DataFormat.TEXT;
+    conf.spoolDir = spoolDir.getAbsolutePath();
+    conf.batchSize = maxBatchSize + 1; // use a batch size greater than maxBatchSize
+    conf.overrunLimit = 100;
+    conf.poolingTimeoutSecs = 10;
+    conf.filePattern = "file-[0-9].log";
+    conf.pathMatcherMode = PathMatcherMode.GLOB;
+    conf.maxSpoolFiles = 10;
+    conf.initialFileToProcess = "file-0.log";
+    conf.dataFormatConfig.compression = Compression.NONE;
+    conf.dataFormatConfig.filePatternInArchive = "*";
+    conf.dataFormatConfig.csvHeader = CsvHeader.WITH_HEADER;
+    conf.postProcessing = PostProcessingOptions.NONE;
+    conf.retentionTimeMins = 10;
+    conf.allowLateDirectory = false;
+    conf.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;
+    conf.dataFormatConfig.onParseError = OnParseError.ERROR;
+
+    List<String> messages = new ArrayList<>();
+    for (int i = 0; i < 10; i++) messages. add("MESSAGE " + i);
+    FileOutputStream outputStream = new FileOutputStream(new File(conf.spoolDir, "file-0.log"));
+    IOUtils.writeLines(messages, "\n", outputStream);
+    outputStream.close();
+
+    SpoolDirSource source = new SpoolDirSource(conf);
+    PushSourceRunner runner = new PushSourceRunner.Builder(SpoolDirDSource.class, source)
+        .setOnRecordError(OnRecordError.TO_ERROR)
+        .addOutputLane("lane")
+        .build();
+    AtomicInteger batchCount = new AtomicInteger();
+
+    runner.runInit();
+    try {
+      runner.runProduce(new HashMap<>(), maxBatchSize, output -> {
+        List<Record> records = output.getRecords().get("lane");
+        int produceNum = batchCount.getAndIncrement();
+
+        // expect 3rd batch to be offset -1, otherwise check max 5 batches to make sure we stop the runner
+        if (!output.getNewOffset().endsWith(MINUS_ONE_JSON) && produceNum < 5) {
+          Assert.assertNotNull(records);
+          Assert.assertEquals(maxBatchSize, records.size());
+          Assert.assertEquals(1, runner.getErrors().size());
+          Assert.assertEquals(EXPECTED_ERROR, runner.getErrors().get(0));
+        } else {
+          runner.setStop();
+        }
+      });
+
+      runner.waitOnProduce();
+      Assert.assertEquals(3, batchCount.get());
+
+    } finally {
+      source.destroy();
+      runner.runDestroy();
+    }
+  }
 }

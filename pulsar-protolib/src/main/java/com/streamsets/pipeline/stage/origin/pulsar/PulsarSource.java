@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.base.Errors;
+import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,7 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
   private final PulsarMessageConsumerFactory pulsarMessageConsumerFactory;
   private final PulsarMessageConverter pulsarMessageConverter;
   private PulsarMessageConsumer pulsarMessageConsumer;
+  private boolean checkBatchSize = true;
 
   public PulsarSource(
       BasicConfig basicConfig,
@@ -78,6 +81,11 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(basicConfig.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && basicConfig.maxBatchSize > maxBatchSize) {
+      getContext().reportError(PulsarErrors.PULSAR_18, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     pulsarMessageConsumer.take(batchMaker, getContext(), batchSize);
     return "";
 

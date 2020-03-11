@@ -49,6 +49,7 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   private InitialContext initialContext;
   private ConnectionFactory connectionFactory;
   private long messagesConsumed;
+  private boolean checkBatchSize = true;
 
   public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, JmsSourceConfig jmsConfig,
                    JmsMessageConsumerFactory jmsMessageConsumerFactory,
@@ -118,6 +119,11 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(basicConfig.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && basicConfig.maxBatchSize > maxBatchSize) {
+      getContext().reportError(JmsErrors.JMS_30, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     messagesConsumed += jmsMessageConsumer.take(batchMaker, getContext(), batchSize, messagesConsumed);
     return Utils.format("{}::{}", jmsConfig.destinationName, messagesConsumed);
   }

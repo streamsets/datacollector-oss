@@ -39,7 +39,9 @@ public enum PulsarErrors implements ErrorCode {
   PULSAR_14("Client certificate file not found at specified location. Relative path is '{}' and full path is '{}'"),
   PULSAR_15("Client key file path cannot be null nor empty"),
   PULSAR_16("Client key file not found at specified location. Relative path is '{}' and full path is '{}'"),
-  PULSAR_17("Specified authentication is not supported: {}");
+  PULSAR_17("Specified authentication is not supported: {}"),
+  PULSAR_18("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  ;
 
 
   private final String msg;

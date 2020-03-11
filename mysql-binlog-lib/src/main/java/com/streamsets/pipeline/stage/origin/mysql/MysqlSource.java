@@ -62,6 +62,8 @@ public abstract class MysqlSource extends BaseSource {
   private int port;
   private long serverId;
 
+  private boolean checkBatchSize = true;
+
   private final BlockingQueue<ServerException> serverErrors = new LinkedBlockingQueue<>();
 
   private final RecordConverter recordConverter = new RecordConverter(new RecordFactory() {
@@ -150,7 +152,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (HikariPool.PoolInitializationException e) {
       LOG.error("Error connecting to MySql: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), null, Errors.MYSQL_003, e.getMessage(), e
+          Groups.MYSQL.name(), null, Errors.MYSQL_010, e.getMessage(), e
       ));
     }
     return issues;
@@ -214,6 +216,12 @@ public abstract class MysqlSource extends BaseSource {
 
     int recordCounter = 0;
     int batchSize = getConfig().maxBatchSize > maxBatchSize ? maxBatchSize : getConfig().maxBatchSize;
+    if (checkBatchSize && getConfig().maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.MYSQL_010, maxBatchSize);
+      checkBatchSize = false;
+    }
+
+
     long startTime = System.currentTimeMillis();
     while (recordCounter < batchSize && (startTime + getConfig().maxWaitTime) > System.currentTimeMillis()) {
       long timeLeft = getConfig().maxWaitTime - (System.currentTimeMillis() - startTime);

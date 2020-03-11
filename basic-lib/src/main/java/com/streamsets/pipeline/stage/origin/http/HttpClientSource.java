@@ -139,6 +139,8 @@ public class HttpClientSource extends BaseSource {
   private int lastStatus = 0;
   private int retryCount = 0;
 
+  private boolean checkBatchSize = true;
+
   private Map<Integer, HttpResponseActionConfigBean> statusToActionConfigs = new HashMap<>();
   private HttpResponseActionConfigBean timeoutActionConfig;
   private final HttpClientCommon clientCommon;
@@ -282,6 +284,11 @@ public class HttpClientSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
+    if (checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
+      getContext().reportError(Errors.HTTP_35, maxBatchSize);
+      checkBatchSize = false;
+    }
+
     Optional<String> newSourceOffset = Optional.empty();
     recordCount = 0;
 

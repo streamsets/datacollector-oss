@@ -26,6 +26,7 @@ public enum Errors implements ErrorCode {
   GCS_04("Error evaluating EL. Reason {}"),
   GCS_05("Object Name Suffix contains '/' or starts with '.'"),
   GCS_06("Error handling failed for {}.Reason: {}"),
+  GCS_07("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ;
 
   private final String msg;
