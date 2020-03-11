@@ -79,6 +79,8 @@ public class RestAPIResourceConfig extends ResourceConfig {
     register(ApiListingResource.class);
     register(SwaggerSerializers.class);
 
+    register(RestResponseFilter.class);
+
     //Configure and Initialize Swagger
     BeanConfig beanConfig = new BeanConfig();
     beanConfig.setVersion("1.0.0");
