@@ -41,7 +41,6 @@ public class FileUserGroupManager implements UserGroupManager {
   private Map<String, UserJson> usersMap;
   private List<UserJson> userList;
   private List<String> groupList;
-  private volatile boolean initialized = false;
 
   @Override
   public void setLoginService(LoginService loginService) {
@@ -69,18 +68,11 @@ public class FileUserGroupManager implements UserGroupManager {
     return usersMap.get(principal.getName());
   }
 
-  private void initialize() {
-    if (!initialized) {
-      synchronized (this) {
-        if (!initialized) {
-          try {
-            fetchUserAndGroupList();
-          } catch (IOException e) {
-            LOG.warn(Utils.format("Exception when fetching users and groups: {}", e.getMessage()));
-          }
-          initialized = true;
-        }
-      }
+  private synchronized void initialize() {
+    try {
+      fetchUserAndGroupList();
+    } catch (IOException e) {
+      LOG.warn(Utils.format("Exception when fetching users and groups: {}", e.getMessage()));
     }
   }
 
@@ -114,7 +106,9 @@ public class FileUserGroupManager implements UserGroupManager {
               if (!groupList.contains(groupName)) {
                 groupList.add(groupName);
               }
-            } else if (!roles.contains(principal.getName()) && !USER_ROLE.equals(principal.getName())) {
+            } else if (!roles.contains(principal.getName()) &&
+                !USER_ROLE.equals(principal.getName()) &&
+                !principal.getName().startsWith("email:")) {
               roles.add(principal.getName());
             }
           }
