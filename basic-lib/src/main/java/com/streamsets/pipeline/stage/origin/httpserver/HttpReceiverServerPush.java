@@ -16,11 +16,9 @@
 package com.streamsets.pipeline.stage.origin.httpserver;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.http.HttpReceiverServer;
-import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
 import com.streamsets.pipeline.lib.httpsource.CredentialValueUserPassBean;
 import com.streamsets.pipeline.lib.httpsource.HttpSourceConfigs;
 import org.apache.commons.lang.StringUtils;
@@ -28,15 +26,15 @@ import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
 import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.security.SpnegoLoginService;
 import org.eclipse.jetty.security.UserStore;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
+import org.eclipse.jetty.security.authentication.SpnegoAuthenticator;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Password;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 
 public class HttpReceiverServerPush extends HttpReceiverServer {
@@ -48,16 +46,41 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
   @Override
   public void addReceiverServlet(Stage.Context context, ServletContextHandler contextHandler) {
     super.addReceiverServlet(context, contextHandler);
-    SecurityHandler securityHandler = getBasicAuthHandler();
-    if(securityHandler!=null)
+    HttpSourceConfigs httpSourceConfigs = (HttpSourceConfigs) configs;
+    SecurityHandler securityHandler =
+        httpSourceConfigs.spnegoConfigBean.isSpnegoEnabled() ? getSpnegoAuthHandler(httpSourceConfigs) :
+            httpSourceConfigs.tlsConfigBean.isEnabled() ? getBasicAuthHandler(httpSourceConfigs) : null;
+    if(securityHandler!=null) {
       contextHandler.setSecurityHandler(securityHandler);
-
+    }
   }
 
-  private SecurityHandler getBasicAuthHandler() {
+  private SecurityHandler getSpnegoAuthHandler(HttpSourceConfigs httpCourceConf) {
+    String domainRealm = httpCourceConf.spnegoConfigBean.getKerberosRealm();
 
-    if(configs instanceof HttpSourceConfigs && ((HttpSourceConfigs) configs).tlsConfigBean.tlsEnabled){
-      HttpSourceConfigs httpCourceConf = (HttpSourceConfigs)configs;
+    Constraint constraint = new Constraint();
+    constraint.setName(Constraint.__SPNEGO_AUTH);
+    constraint.setRoles(new String[]{domainRealm});
+    constraint.setAuthenticate(true);
+
+    ConstraintMapping cm = new ConstraintMapping();
+    cm.setConstraint(constraint);
+    cm.setPathSpec("/*");
+
+    SpnegoLoginService loginService = new SpnegoLoginService();
+    loginService.setConfig(httpCourceConf.spnegoConfigBean.getSpnegoPropertiesFilePath());
+    loginService.setName(domainRealm);
+
+    ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
+    csh.setAuthenticator(new SpnegoAuthenticator());
+    csh.setLoginService(loginService);
+    csh.setConstraintMappings(new ConstraintMapping[]{cm});
+    csh.setRealmName(domainRealm);
+
+    return csh;
+  }
+
+  private SecurityHandler getBasicAuthHandler(HttpSourceConfigs httpCourceConf) {
       List<CredentialValueUserPassBean> basicAuthUsers = httpCourceConf.getBasicAuthUsers();
 
       HashLoginService loginService = new HashLoginService();
@@ -72,8 +95,9 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
           empty = false;
         }
       }
-      if(empty)
+      if(empty) {
         return null;
+      }
 
       loginService.setUserStore(userStore);
 
@@ -90,7 +114,5 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
       handler.setLoginService(loginService);
 
       return handler;
-    }
-    return null;
   }
 }

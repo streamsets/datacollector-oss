@@ -28,7 +28,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.origin.httpserver.Groups;
-import com.streamsets.pipeline.stage.origin.httpserver.HttpServerPushSource;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.origin.lib.FlowFileDataFormatChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.FlowFileVersion;
@@ -104,7 +103,7 @@ public class NiFiHttpServerDPushSource extends DPushSource {
         dataFormatConfig,
         flowFileVersion
     );
-    return new HttpServerPushSource(httpConfigs, maxRequestSizeMB, DataFormat.FLOWFILE, outerConfig);
+    return new HttpServerPushSourceNiFi(httpConfigs, maxRequestSizeMB, DataFormat.FLOWFILE, outerConfig);
   }
 
 }

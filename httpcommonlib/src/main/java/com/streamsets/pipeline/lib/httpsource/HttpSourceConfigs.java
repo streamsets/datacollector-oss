@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.httpsource;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 
 import java.util.ArrayList;
@@ -23,6 +24,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class HttpSourceConfigs extends CommonHttpConfigs{
+
+
+  @ConfigDefBean(groups = "HTTP")
+  public KerberosHttpSourceConfigs spnegoConfigBean = new KerberosHttpSourceConfigs();
 
   @ConfigDef(
       required = false,
@@ -65,6 +70,10 @@ public class HttpSourceConfigs extends CommonHttpConfigs{
 
   public List<CredentialValueUserPassBean> getBasicAuthUsers(){
     return basicAuthUsers;
+  }
+
+  public KerberosHttpSourceConfigs getSpnegoConfigBean() {
+    return spnegoConfigBean;
   }
 
 }
