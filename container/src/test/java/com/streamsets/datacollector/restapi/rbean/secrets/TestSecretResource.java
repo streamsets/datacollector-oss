@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.TestUtil;
+import com.streamsets.datacollector.restapi.configuration.ExceptionToHttpErrorProvider;
 import com.streamsets.datacollector.restapi.rbean.json.RJson;
 import com.streamsets.datacollector.restapi.rbean.lang.REnum;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
@@ -28,10 +29,15 @@ import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfoInjectorBinder;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.IOUtils;
+import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.test.DeploymentContext;
@@ -49,9 +55,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -72,14 +82,33 @@ public class TestSecretResource extends JerseyTest {
   private static class SecretResourceTestConfig extends ResourceConfig {
     SecretResourceTestConfig() {
       register(new PaginationInfoInjectorBinder());
+      register(MultiPartFeature.class);
       register(SecretResource.class);
+      register(new ExceptionToHttpErrorProvider());
       register(new AbstractBinder() {
         @Override
         protected void configure() {
           bindFactory(TestUtil.CredentialStoreTaskTestInjector.class).to(CredentialStoresTask.class);
+          bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
         }
       });
       register(JacksonObjectMapperResolver.class);
+    }
+  }
+
+
+  private static class ConfigurationTestInjector implements Factory<Configuration> {
+    @Override
+    public Configuration provide() {
+      Configuration configuration = new Configuration();
+      configuration.set(CredentialStoresTask.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, "streamsets");
+      configuration.set(SecretResource.MAX_FILE_SIZE_KB_LIMIT, SecretResource.MAX_FILE_SIZE_KB_LIMIT_DEFAULT);
+      return configuration;
+    }
+
+    @Override
+    public void dispose(Configuration configuration) {
+
     }
   }
 
@@ -141,6 +170,107 @@ public class TestSecretResource extends JerseyTest {
   }
 
   @Test
+  public void createFileSecret() throws Exception {
+    String pipelineId = "PIPELINE_VAULT_pipelineId";
+    String secretName = "stage_id_config1";
+    String secretValue = "secret";
+
+    RSecret rSecret = new RSecret();
+    rSecret.setVault(new RString(pipelineId));
+    rSecret.setName(new RString(secretName));
+    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
+
+    RestRequest<RSecret> restRequest = new RestRequest<>();
+    restRequest.setData(rSecret);
+
+    Path tempFile = Files.createTempFile("secret.txt", ".crt");
+
+    try {
+      try (FileWriter f = new FileWriter(tempFile.toFile().getAbsolutePath())) {
+        f.write(secretValue);
+      }
+
+      FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
+      FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
+          ObjectMapperFactory.get().writeValueAsString(restRequest),
+          MediaType.APPLICATION_JSON_TYPE
+      ).bodyPart(fileDataBodyPart);
+
+      Response response = target("/v4/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request().post(
+          Entity.entity(multipart, multipart.getMediaType()));
+
+      Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+      InputStream responseEntity = (InputStream) response.getEntity();
+
+      OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get()
+          .readValue(responseEntity, new TypeReference<OkRestResponse<RSecret>>() {});
+
+      rSecret = secretResponse.getData();
+      Assert.assertNotNull(rSecret);
+      Assert.assertEquals(pipelineId, rSecret.getVault().getValue());
+      Assert.assertEquals(secretName, rSecret.getName().getValue());
+
+      Assert.assertTrue(TestUtil.CredentialStoreTaskTestInjector.INSTANCE.getNames().contains(pipelineId + "/" + secretName));
+      CredentialValue value = TestUtil.CredentialStoreTaskTestInjector.INSTANCE.get("",
+          pipelineId + "/" + secretName,
+          ""
+      );
+      Assert.assertEquals(IOUtils.toString(new FileReader(tempFile.toFile())), value.get());
+    } finally {
+      Files.delete(tempFile);
+    }
+  }
+
+  @Test
+  public void createFileSecretFileSizeExceeded() throws Exception {
+    String pipelineId = "PIPELINE_VAULT_pipelineId";
+    String secretName = "stage_id_config1";
+    String secretValue = "secret";
+
+    long maxBytesAllowedInFile = SecretResource.MAX_FILE_SIZE_KB_LIMIT_DEFAULT * 1024L;
+
+    RSecret rSecret = new RSecret();
+    rSecret.setVault(new RString(pipelineId));
+    rSecret.setName(new RString(secretName));
+    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
+
+    RestRequest<RSecret> restRequest = new RestRequest<>();
+    restRequest.setData(rSecret);
+
+    Path tempFile = Files.createTempFile("secret.txt", ".crt");
+
+    try {
+      try (FileWriter f = new FileWriter(tempFile.toFile().getAbsolutePath())) {
+        int numberOfBytesWritten = 0;
+        while (numberOfBytesWritten <= maxBytesAllowedInFile + 1) {
+          f.write(secretValue);
+          numberOfBytesWritten += secretValue.getBytes().length;
+        }
+      }
+
+      FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
+      FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
+          ObjectMapperFactory.get().writeValueAsString(restRequest),
+          MediaType.APPLICATION_JSON_TYPE
+      ).bodyPart(fileDataBodyPart);
+
+      Response response = target("/v4/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request()
+          .post(Entity.entity(multipart, multipart.getMediaType()));
+
+      Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+      Assert.assertFalse(
+          TestUtil.CredentialStoreTaskTestInjector.INSTANCE.getNames().contains(pipelineId + "/" + secretName)
+      );
+    } finally {
+      Files.delete(tempFile);
+    }
+  }
+
+
+  @Test
   public void updateSecret() throws Exception {
     String pipelineId = "PIPELINE_VAULT_pipelineId";
     String secretName = "stage_id_config1";
@@ -189,7 +319,128 @@ public class TestSecretResource extends JerseyTest {
         ""
     );
     Assert.assertEquals(changedSecretValue, value.get());
+
   }
+
+  @Test
+  public void updateFileSecret() throws Exception {
+    String pipelineId = "PIPELINE_VAULT_pipelineId";
+    String secretName = "stage_id_config1";
+    String secretValue = "secretValue";
+    TestUtil.CredentialStoreTaskTestInjector.INSTANCE.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, pipelineId + "/" + secretName,
+        secretValue
+    );
+    String changedSecretValue = "changedSecretValue";
+
+    String secretPath = pipelineId + "/" + secretName;
+
+    RSecret rSecret = new RSecret();
+    rSecret.setVault(new RString(pipelineId));
+    rSecret.setName(new RString(secretName));
+    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
+
+    RestRequest<RSecret> restRequest = new RestRequest<>();
+    restRequest.setData(rSecret);
+
+    Path tempFile = Files.createTempFile("secret.txt", ".crt");
+
+    try {
+      try (FileWriter f = new FileWriter(tempFile.toFile().getAbsolutePath())) {
+        f.write(changedSecretValue);
+      }
+
+      FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
+      FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
+          ObjectMapperFactory.get().writeValueAsString(restRequest),
+          MediaType.APPLICATION_JSON_TYPE
+      ).bodyPart(fileDataBodyPart);
+
+      Response response = target(Utils.format("/v4/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())))
+          .register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
+
+      Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+
+      InputStream responseEntity = (InputStream) response.getEntity();
+
+      OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get()
+          .readValue(responseEntity, new TypeReference<OkRestResponse<RSecret>>() {});
+
+      rSecret = secretResponse.getData();
+      Assert.assertNotNull(rSecret);
+      Assert.assertEquals(pipelineId, rSecret.getVault().getValue());
+      Assert.assertEquals(secretName, rSecret.getName().getValue());
+
+      Assert.assertTrue(TestUtil.CredentialStoreTaskTestInjector.INSTANCE.getNames().contains(pipelineId + "/" + secretName));
+      CredentialValue changedValue = TestUtil.CredentialStoreTaskTestInjector.INSTANCE.get("",
+          pipelineId + "/" + secretName,
+          ""
+      );
+      Assert.assertEquals(IOUtils.toString(new FileReader(tempFile.toFile())), changedValue.get());
+      Assert.assertEquals(changedSecretValue, changedValue.get());
+    } finally {
+      Files.delete(tempFile);
+    }
+  }
+
+  @Test
+  public void updateFileSecretFileSizeExceeded() throws Exception {
+    String pipelineId = "PIPELINE_VAULT_pipelineId";
+    String secretName = "stage_id_config1";
+    String secretValue = "secretValue";
+    TestUtil.CredentialStoreTaskTestInjector.INSTANCE.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, pipelineId + "/" + secretName,
+        secretValue
+    );
+    String changedSecretValue = "changedSecretValue";
+
+    String secretPath = pipelineId + "/" + secretName;
+
+    RSecret rSecret = new RSecret();
+    rSecret.setVault(new RString(pipelineId));
+    rSecret.setName(new RString(secretName));
+    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
+
+    RestRequest<RSecret> restRequest = new RestRequest<>();
+    restRequest.setData(rSecret);
+
+    Path tempFile = Files.createTempFile("secret.txt", ".crt");
+    long maxBytesAllowedInFile = SecretResource.MAX_FILE_SIZE_KB_LIMIT_DEFAULT * 1024L;
+    try {
+      try (FileWriter f = new FileWriter(tempFile.toFile().getAbsolutePath())) {
+        int numberOfBytesWritten = 0;
+        while (numberOfBytesWritten <= maxBytesAllowedInFile + 1) {
+          f.write(secretValue);
+          numberOfBytesWritten += secretValue.getBytes().length;
+        }
+      }
+
+      FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
+      FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
+          ObjectMapperFactory.get().writeValueAsString(restRequest),
+          MediaType.APPLICATION_JSON_TYPE
+      ).bodyPart(fileDataBodyPart);
+
+      Response response = target(Utils.format("/v4/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())))
+          .register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
+
+      Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
+
+      //Max sure the old value is not changed
+      Assert.assertTrue(TestUtil.CredentialStoreTaskTestInjector.INSTANCE.getNames().contains(pipelineId + "/" + secretName));
+      CredentialValue value = TestUtil.CredentialStoreTaskTestInjector.INSTANCE.get(
+          "",
+          pipelineId + "/" + secretName,
+          ""
+      );
+      Assert.assertEquals(secretValue, value.get());
+    } finally {
+      Files.delete(tempFile);
+    }
+  }
+
 
   @Test
   public void deleteSecret() throws Exception {

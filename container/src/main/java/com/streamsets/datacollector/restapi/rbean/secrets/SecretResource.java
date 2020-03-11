@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.restapi.rbean.secrets;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -27,9 +28,13 @@ import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.io.LimitedInputStream;
+import org.apache.commons.io.IOUtils;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -43,7 +48,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Collections;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,12 +74,20 @@ public class SecretResource  extends RestResource {
    */
 
   public static final String SSH_PUBLIC_KEY_SECRET = "sdc/defaultPublicKey";
+  public static final String MAX_FILE_SIZE_KB_LIMIT = "auto.managed.default.credentialStoreFileSizeLimitKB";
+  public static final long MAX_FILE_SIZE_KB_LIMIT_DEFAULT = 16;
+  public static final String FILE_SIZE_LIMIT_EXCEEDED_ERROR_TEMPLATE = "File Size limit exceeded the allowed limit of {} bytes";
 
-  private ManagedCredentialStore managedCredentialStore;
+
+  private final ManagedCredentialStore managedCredentialStore;
+  private final String managedCredentialStoreName;
+  private final long maxFileSizeLimitBytes;
 
   @Inject
-  public SecretResource(CredentialStoresTask task) {
-    managedCredentialStore = task.getDefaultManagedCredentialStore();
+  public SecretResource(CredentialStoresTask task, Configuration configuration) {
+    this.managedCredentialStore = task.getDefaultManagedCredentialStore();
+    this.managedCredentialStoreName = configuration.get(CredentialStoresTask.MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG, "");
+    this.maxFileSizeLimitBytes = configuration.get(MAX_FILE_SIZE_KB_LIMIT, MAX_FILE_SIZE_KB_LIMIT_DEFAULT) * 1024L;
   }
 
   private void checkCredentialStoreSupported() {
@@ -90,6 +104,23 @@ public class SecretResource  extends RestResource {
     } else {
       rSecret.setName(new RString().setValue(credentialName));
     }
+  }
+
+  private void handleFileUpload(InputStream upload, RSecret rSecret) throws IOException {
+    String secret = IOUtils.toString(new LimitedInputStream(upload, maxFileSizeLimitBytes) {
+
+      @Override
+      protected void handleReadOnLimitExceeded() throws IOException {
+        throw new IllegalArgumentException(
+            Utils.format(FILE_SIZE_LIMIT_EXCEEDED_ERROR_TEMPLATE, maxFileSizeLimitBytes)
+        );
+      }
+    });
+    managedCredentialStore.store(
+        CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
+        rSecret.getVault().getValue() + "/" + rSecret.getName().getValue(),
+        secret
+    );
   }
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
@@ -116,26 +147,32 @@ public class SecretResource  extends RestResource {
     return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
   }
 
-//  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
-//  @Path("/file/ctx=SecretManage")
-//  @POST
-//  @Consumes(MediaType.MULTIPART_FORM_DATA)
-//  @Produces(MediaType.APPLICATION_JSON)
-//  public OkRestResponse<RSecret> createFileSecret(
-//      @FormDataParam("restRequest") String requestPayload,
-//      @FormDataParam("uploadedFile") InputStream upload
-//  ) throws IOException {
-//    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-//        requestPayload,
-//        new TypeReference<RestRequest<RSecret>>() {}
-//    );
-//    RSecret rSecret = restRequest.getData();
-//    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-//        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-//    );
-//
-//    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
-//  }
+  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
+  @Path("/file/ctx=SecretManage")
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.APPLICATION_JSON)
+  public OkRestResponse<RSecret> createFileSecret(
+      @FormDataParam("restRequest") String requestPayload,
+      @FormDataParam("uploadedFile") InputStream upload
+  ) throws IOException {
+    checkCredentialStoreSupported();
+    RestRequest<RSecret> restRequest = RestRequest.getRequest(
+        requestPayload,
+        new TypeReference<RestRequest<RSecret>>() {}
+    );
+    RSecret rSecret = restRequest.getData();
+    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
+        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
+    );
+
+    handleFileUpload(upload, rSecret);
+    rSecret.setCreatedOn(new RDatetime());
+    rSecret.setLastModifiedOn(new RDatetime());
+
+    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
+  }
+
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("{secretId}/text/ctx=SecretManage")
@@ -157,30 +194,30 @@ public class SecretResource  extends RestResource {
     return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
   }
 
-  //  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
-  //  @Path("{secretId}/file/ctx=SecretManage")
-  //  @POST
-  //  @Consumes(MediaType.MULTIPART_FORM_DATA)
-  //  @Produces(MediaType.APPLICATION_JSON)
-  //  public OkRestResponse<RSecret> updateFileSecret(
-  //      @PathParam("secretId") String id,
-  //      @FormDataParam("restRequest") String requestPayload,
-  //      @FormDataParam("uploadedFile") InputStream upload
-  //  ) throws IOException {
-  //    Preconditions.checkNotNull(managedCredentialStore, "Managed Credential store not configured");
-  //    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-  //        requestPayload,
-  //        new TypeReference<RestRequest<RSecret>>() {}
-  //    );
-  //    RSecret rSecret = restRequest.getData();
-  //    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-  //        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-  //    );
-  //    managedCredentialStore.
-  //    rSecret.setCreatedOn(new RDatetime());
-  //    rSecret.setLastModifiedOn(new RDatetime());
-  //    return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
-  //  }
+  @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
+  @Path("{secretId}/file/ctx=SecretManage")
+  @POST
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Produces(MediaType.APPLICATION_JSON)
+  public OkRestResponse<RSecret> updateFileSecret(
+      @PathParam("secretId") String id,
+      @FormDataParam("restRequest") String requestPayload,
+      @FormDataParam("uploadedFile") InputStream upload
+  ) throws IOException {
+    checkCredentialStoreSupported();
+    RestRequest<RSecret> restRequest = RestRequest.getRequest(
+        requestPayload,
+        new TypeReference<RestRequest<RSecret>>() {}
+    );
+    RSecret rSecret = restRequest.getData();
+    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
+        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
+    );
+
+    handleFileUpload(upload, rSecret);
+    rSecret.setLastModifiedOn(new RDatetime());
+    return new OkRestResponse<RSecret>().setData(rSecret);
+  }
 
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/{secretId}/ctx=SecretManage")
@@ -236,7 +273,7 @@ public class SecretResource  extends RestResource {
     }
   }
 
-  // Used by the S4 Cred Store to check if the Secrets App is up and ready.
+  // Used by the Streamsets Cred Store to check if the managed credential store is ready.
   // The value is not used, only the 200 OK matters
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/get")
@@ -244,9 +281,9 @@ public class SecretResource  extends RestResource {
   @Produces(MediaType.TEXT_PLAIN)
   public Response getSecretValueReady() {
     if (managedCredentialStore == null) {
-      return Response.status(Response.Status.NOT_FOUND).build();
+      return Response.status(Response.Status.NOT_IMPLEMENTED).entity("Error: Not implemented").build();
     }
-    return Response.ok().build();
+    return Response.ok().entity(managedCredentialStoreName).build();
   }
 
 }
