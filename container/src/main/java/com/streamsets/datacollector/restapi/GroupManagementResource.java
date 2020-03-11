@@ -35,7 +35,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v4/groups")
+@Path("/v1/usermanagement/groups")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class GroupManagementResource {

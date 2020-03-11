@@ -54,7 +54,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Path("/v4/users")
+@Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserManagementResource extends RestResource {

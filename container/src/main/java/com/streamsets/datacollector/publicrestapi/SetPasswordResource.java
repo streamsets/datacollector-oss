@@ -34,7 +34,7 @@ import javax.ws.rs.core.MediaType;
 import java.io.File;
 import java.io.IOException;
 
-@Path("/v4/users")
+@Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class SetPasswordResource extends RestResource {
