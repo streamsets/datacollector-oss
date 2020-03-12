@@ -112,7 +112,7 @@ public class TestSecretResource extends JerseyTest {
     RestRequest<RSecret> restRequest = new RestRequest<>();
     restRequest.setData(rSecret);
 
-    Response response = target("/v4/secrets/text/ctx=SecretManage")
+    Response response = target("/v1/secrets/text/ctx=SecretManage")
         .request()
         .post(Entity.entity(ObjectMapperFactory.get().writeValueAsString(restRequest), MediaType.APPLICATION_JSON_TYPE));
 
@@ -161,7 +161,7 @@ public class TestSecretResource extends JerseyTest {
 
     Response response = target(
         Utils.format(
-            "/v4/secrets/{}/text/ctx=SecretManage",
+            "/v1/secrets/{}/text/ctx=SecretManage",
             URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())
         )
     ).request()
@@ -202,7 +202,7 @@ public class TestSecretResource extends JerseyTest {
 
     Response response = target(
         Utils.format(
-            "/v4/secrets/{}/ctx=SecretManage",
+            "/v1/secrets/{}/ctx=SecretManage",
             URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())
         )
     ).request().delete();
@@ -232,7 +232,7 @@ public class TestSecretResource extends JerseyTest {
 
     TestUtil.CredentialStoreTaskTestInjector.INSTANCE.store(CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST, secret, "secret");
 
-    Response response = target("/v4/secrets/ctx=SecretList")
+    Response response = target("/v1/secrets/ctx=SecretList")
         .queryParam(PaginationInfoInjectorBinder.ORDER_BY_PARAM, "")
         .queryParam(PaginationInfoInjectorBinder.OFFSET_PARAM, "0")
         .queryParam(PaginationInfoInjectorBinder.LEN_PARAM, "-1")
@@ -278,7 +278,7 @@ public class TestSecretResource extends JerseyTest {
         CredentialStoresTask.SSH_PUBLIC_KEY_SECRET,
         publicKeyVal
     );
-    Response response = target("/v4/secrets/sshTunnelPublicKey").request().get();
+    Response response = target("/v1/secrets/sshTunnelPublicKey").request().get();
     Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     InputStream is = (InputStream)response.getEntity();
     Assert.assertEquals(publicKeyVal, IOUtils.toString(is));
@@ -286,7 +286,7 @@ public class TestSecretResource extends JerseyTest {
 
   @Test
   public void getSecretValueReady() {
-    Response response = target("/v4/secrets/get").request().get();
+    Response response = target("/v1/secrets/get").request().get();
     Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
   }
 }

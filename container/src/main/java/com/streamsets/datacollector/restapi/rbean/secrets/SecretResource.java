@@ -47,7 +47,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Path("/v4/secrets")
+@Path("/v1/secrets")
 @Produces(MediaType.APPLICATION_JSON)
 @RequiresCredentialsDeployed
 public class SecretResource  extends RestResource {
@@ -213,7 +213,7 @@ public class SecretResource  extends RestResource {
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/sshTunnelPublicKey")
   @GET
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
   public Response getSshTunnelPublicKey() {
     checkCredentialStoreSupported();
     CredentialValue publicKeyVal = managedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, SSH_PUBLIC_KEY_SECRET, null);
