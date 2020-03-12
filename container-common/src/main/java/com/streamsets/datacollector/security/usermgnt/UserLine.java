@@ -128,7 +128,8 @@ public abstract class UserLine extends Line {
 
   public String resetPassword(long validForMillis) {
     String resetValue = UUID.randomUUID().toString() + ":" + (System.currentTimeMillis() + validForMillis);
-    this.hash = "reset_" + hasher.hash(getUser(), resetValue);
+    //double hashing to avoid login with the reset token
+    this.hash = hasher.hash(getUser(), hasher.hash(getUser(), resetValue));
     return resetValue;
   }
 
@@ -141,7 +142,7 @@ public abstract class UserLine extends Line {
     if (expiration < System.currentTimeMillis()) {
       throw new IllegalArgumentException("Password reset expired");
     }
-    String computedHash = "reset_" + hasher.hash(getUser(), resetValue);
+    String computedHash = hasher.hash(getUser(), hasher.hash(getUser(), resetValue));
     if (!computedHash.equals(hash)) {
       throw new IllegalArgumentException("Invalid reset value");
     }
