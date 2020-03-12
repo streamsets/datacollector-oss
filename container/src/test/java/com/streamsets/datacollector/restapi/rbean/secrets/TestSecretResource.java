@@ -22,7 +22,6 @@ import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.TestUtil;
 import com.streamsets.datacollector.restapi.configuration.ExceptionToHttpErrorProvider;
-import com.streamsets.datacollector.restapi.rbean.json.RJson;
 import com.streamsets.datacollector.restapi.rbean.lang.REnum;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
@@ -175,13 +174,6 @@ public class TestSecretResource extends JerseyTest {
     String secretName = "stage_id_config1";
     String secretValue = "secret";
 
-    RSecret rSecret = new RSecret();
-    rSecret.setVault(new RString(pipelineId));
-    rSecret.setName(new RString(secretName));
-    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
-
-    RestRequest<RSecret> restRequest = new RestRequest<>();
-    restRequest.setData(rSecret);
 
     Path tempFile = Files.createTempFile("secret.txt", ".crt");
 
@@ -192,12 +184,12 @@ public class TestSecretResource extends JerseyTest {
 
       FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
       FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
-          ObjectMapperFactory.get().writeValueAsString(restRequest),
-          MediaType.APPLICATION_JSON_TYPE
-      ).bodyPart(fileDataBodyPart);
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
+          .field("vault", pipelineId, MediaType.APPLICATION_JSON_TYPE)
+          .field("name", secretName, MediaType.APPLICATION_JSON_TYPE)
+          .bodyPart(fileDataBodyPart);
 
-      Response response = target("/v4/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request().post(
+      Response response = target("/v1/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request().post(
           Entity.entity(multipart, multipart.getMediaType()));
 
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
@@ -207,7 +199,7 @@ public class TestSecretResource extends JerseyTest {
       OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get()
           .readValue(responseEntity, new TypeReference<OkRestResponse<RSecret>>() {});
 
-      rSecret = secretResponse.getData();
+      RSecret rSecret = secretResponse.getData();
       Assert.assertNotNull(rSecret);
       Assert.assertEquals(pipelineId, rSecret.getVault().getValue());
       Assert.assertEquals(secretName, rSecret.getName().getValue());
@@ -231,14 +223,6 @@ public class TestSecretResource extends JerseyTest {
 
     long maxBytesAllowedInFile = SecretResource.MAX_FILE_SIZE_KB_LIMIT_DEFAULT * 1024L;
 
-    RSecret rSecret = new RSecret();
-    rSecret.setVault(new RString(pipelineId));
-    rSecret.setName(new RString(secretName));
-    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
-
-    RestRequest<RSecret> restRequest = new RestRequest<>();
-    restRequest.setData(rSecret);
-
     Path tempFile = Files.createTempFile("secret.txt", ".crt");
 
     try {
@@ -252,12 +236,12 @@ public class TestSecretResource extends JerseyTest {
 
       FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
       FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
-          ObjectMapperFactory.get().writeValueAsString(restRequest),
-          MediaType.APPLICATION_JSON_TYPE
-      ).bodyPart(fileDataBodyPart);
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
+          .field("vault", pipelineId, MediaType.APPLICATION_JSON_TYPE)
+          .field("name", secretName, MediaType.APPLICATION_JSON_TYPE)
+          .bodyPart(fileDataBodyPart);
 
-      Response response = target("/v4/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request()
+      Response response = target("/v1/secrets/file/ctx=SecretManage").register(MultiPartFeature.class).request()
           .post(Entity.entity(multipart, multipart.getMediaType()));
 
       Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
@@ -335,14 +319,6 @@ public class TestSecretResource extends JerseyTest {
 
     String secretPath = pipelineId + "/" + secretName;
 
-    RSecret rSecret = new RSecret();
-    rSecret.setVault(new RString(pipelineId));
-    rSecret.setName(new RString(secretName));
-    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
-
-    RestRequest<RSecret> restRequest = new RestRequest<>();
-    restRequest.setData(rSecret);
-
     Path tempFile = Files.createTempFile("secret.txt", ".crt");
 
     try {
@@ -352,13 +328,15 @@ public class TestSecretResource extends JerseyTest {
 
       FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
       FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
-          ObjectMapperFactory.get().writeValueAsString(restRequest),
-          MediaType.APPLICATION_JSON_TYPE
-      ).bodyPart(fileDataBodyPart);
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
+          .field("vault", pipelineId, MediaType.APPLICATION_JSON_TYPE)
+          .field("name", secretName, MediaType.APPLICATION_JSON_TYPE)
+          .bodyPart(fileDataBodyPart);
 
-      Response response = target(Utils.format("/v4/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())))
-          .register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
+
+      Response response = target(
+          Utils.format("/v1/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name()))
+      ).register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
 
       Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
 
@@ -367,7 +345,7 @@ public class TestSecretResource extends JerseyTest {
       OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get()
           .readValue(responseEntity, new TypeReference<OkRestResponse<RSecret>>() {});
 
-      rSecret = secretResponse.getData();
+      RSecret rSecret = secretResponse.getData();
       Assert.assertNotNull(rSecret);
       Assert.assertEquals(pipelineId, rSecret.getVault().getValue());
       Assert.assertEquals(secretName, rSecret.getName().getValue());
@@ -397,13 +375,6 @@ public class TestSecretResource extends JerseyTest {
 
     String secretPath = pipelineId + "/" + secretName;
 
-    RSecret rSecret = new RSecret();
-    rSecret.setVault(new RString(pipelineId));
-    rSecret.setName(new RString(secretName));
-    rSecret.setType(new REnum<SecretType>().setValue(SecretType.FILE));
-
-    RestRequest<RSecret> restRequest = new RestRequest<>();
-    restRequest.setData(rSecret);
 
     Path tempFile = Files.createTempFile("secret.txt", ".crt");
     long maxBytesAllowedInFile = SecretResource.MAX_FILE_SIZE_KB_LIMIT_DEFAULT * 1024L;
@@ -411,20 +382,22 @@ public class TestSecretResource extends JerseyTest {
       try (FileWriter f = new FileWriter(tempFile.toFile().getAbsolutePath())) {
         int numberOfBytesWritten = 0;
         while (numberOfBytesWritten <= maxBytesAllowedInFile + 1) {
-          f.write(secretValue);
+          f.write(changedSecretValue);
           numberOfBytesWritten += secretValue.getBytes().length;
         }
       }
 
       FileDataBodyPart fileDataBodyPart = new FileDataBodyPart("uploadedFile", tempFile.toFile());
       FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.field("restRequest",
-          ObjectMapperFactory.get().writeValueAsString(restRequest),
-          MediaType.APPLICATION_JSON_TYPE
-      ).bodyPart(fileDataBodyPart);
 
-      Response response = target(Utils.format("/v4/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name())))
-          .register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
+      final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart
+          .field("vault", pipelineId, MediaType.APPLICATION_JSON_TYPE)
+          .field("name", secretName, MediaType.APPLICATION_JSON_TYPE)
+          .bodyPart(fileDataBodyPart);
+
+      Response response = target(
+          Utils.format("/v1/secrets/{}/file/ctx=SecretManage", URLEncoder.encode(secretPath, StandardCharsets.UTF_8.name()))
+      ).register(MultiPartFeature.class).request().post(Entity.entity(multipart, multipart.getMediaType()));
 
       Assert.assertEquals(Response.Status.BAD_REQUEST.getStatusCode(), response.getStatus());
 

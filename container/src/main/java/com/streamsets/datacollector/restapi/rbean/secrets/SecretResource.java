@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.restapi.rbean.secrets;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -94,7 +93,7 @@ public class SecretResource  extends RestResource {
     Preconditions.checkNotNull(managedCredentialStore, "Managed Credential store not configured");
   }
 
-  private void setVaultAndSecretNameFromCredentialName(RSecret rSecret, String credentialName) {
+  private void setVaultAndSecretNameFromCredentialName(String credentialName, RSecret rSecret) {
     String[] splitByVaultAndSecretName = credentialName.split("/");
     if (splitByVaultAndSecretName.length == 2) {
       String vaultName = splitByVaultAndSecretName[0];
@@ -106,7 +105,7 @@ public class SecretResource  extends RestResource {
     }
   }
 
-  private void handleFileUpload(InputStream upload, RSecret rSecret) throws IOException {
+  private void handleFileUpload(String secretName, InputStream upload) throws IOException {
     String secret = IOUtils.toString(new LimitedInputStream(upload, maxFileSizeLimitBytes) {
 
       @Override
@@ -118,7 +117,7 @@ public class SecretResource  extends RestResource {
     });
     managedCredentialStore.store(
         CredentialStoresTask.DEFAULT_SDC_GROUP_AS_LIST,
-        rSecret.getVault().getValue() + "/" + rSecret.getName().getValue(),
+        secretName,
         secret
     );
   }
@@ -153,23 +152,21 @@ public class SecretResource  extends RestResource {
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
   public OkRestResponse<RSecret> createFileSecret(
-      @FormDataParam("restRequest") String requestPayload,
+      @FormDataParam("vault") String vault,
+      @FormDataParam("name") String name,
       @FormDataParam("uploadedFile") InputStream upload
   ) throws IOException {
     checkCredentialStoreSupported();
-    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-        requestPayload,
-        new TypeReference<RestRequest<RSecret>>() {}
-    );
-    RSecret rSecret = restRequest.getData();
-    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-    );
+    Preconditions.checkNotNull(vault, "Vault cannot be null");
+    Preconditions.checkNotNull(name, "Secret Name cannot be null");
 
-    handleFileUpload(upload, rSecret);
-    rSecret.setCreatedOn(new RDatetime());
-    rSecret.setLastModifiedOn(new RDatetime());
+    String secretName = vault + "/" + name;
 
+    handleFileUpload(secretName, upload);
+    RSecret rSecret = new RSecret();
+    rSecret.setCreatedOn(new RDatetime(System.currentTimeMillis()));
+    rSecret.setLastModifiedOn(new RDatetime(System.currentTimeMillis()));
+    setVaultAndSecretNameFromCredentialName(secretName, rSecret);
     return new OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
   }
 
@@ -188,7 +185,7 @@ public class SecretResource  extends RestResource {
         rSecret.getVault().getValue() + "/" + rSecret.getName().getValue(),
         rSecret.getValue().getValue()
     );
-    rSecret.setLastModifiedOn(new RDatetime());
+    rSecret.setLastModifiedOn(new RDatetime(System.currentTimeMillis()));
     rSecret.getValue().setScrubbed(true);
 
     return new  OkRestResponse<RSecret>().setHttpStatusCode(OkRestResponse.HTTP_CREATED).setData(rSecret);
@@ -200,22 +197,20 @@ public class SecretResource  extends RestResource {
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
   public OkRestResponse<RSecret> updateFileSecret(
-      @PathParam("secretId") String id,
-      @FormDataParam("restRequest") String requestPayload,
+      @FormDataParam("vault") String vault,
+      @FormDataParam("name") String name,
       @FormDataParam("uploadedFile") InputStream upload
   ) throws IOException {
     checkCredentialStoreSupported();
-    RestRequest<RSecret> restRequest = RestRequest.getRequest(
-        requestPayload,
-        new TypeReference<RestRequest<RSecret>>() {}
-    );
-    RSecret rSecret = restRequest.getData();
-    Preconditions.checkArgument(rSecret.getType().getValue() == SecretType.FILE,
-        "Cannot upload a secret of type: {} through this API", rSecret.getType().getValue()
-    );
+    Preconditions.checkNotNull(vault, "Vault cannot be null");
+    Preconditions.checkNotNull(name, "Secret Name cannot be null");
 
-    handleFileUpload(upload, rSecret);
-    rSecret.setLastModifiedOn(new RDatetime());
+    String secretName = vault + "/" + name;
+
+    handleFileUpload(secretName, upload);
+    RSecret rSecret = new RSecret();
+    setVaultAndSecretNameFromCredentialName(secretName, rSecret);
+    rSecret.setLastModifiedOn(new RDatetime(System.currentTimeMillis()));
     return new OkRestResponse<RSecret>().setData(rSecret);
   }
 
@@ -227,7 +222,7 @@ public class SecretResource  extends RestResource {
     checkCredentialStoreSupported();
     managedCredentialStore.delete(id);
     RSecret rSecret = new RSecret();
-    setVaultAndSecretNameFromCredentialName(rSecret, id);
+    setVaultAndSecretNameFromCredentialName(id, rSecret);
     return new OkRestResponse<RSecret>().setData(rSecret);
   }
 
@@ -239,7 +234,7 @@ public class SecretResource  extends RestResource {
     List<RSecret> secrets = managedCredentialStore.getNames().stream().map(
         s -> {
           RSecret rSecret = new RSecret();
-          setVaultAndSecretNameFromCredentialName(rSecret, s);
+          setVaultAndSecretNameFromCredentialName(s, rSecret);
           rSecret.getValue().setScrubbed(true);
           return rSecret;
         }
