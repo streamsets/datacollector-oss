@@ -24,7 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class RestRequest<T> {
-  private String envelopeVersion;
+  public static final String ENVELOPE_VERSION = "1";
+
+  private String envelopeVersion = ENVELOPE_VERSION;
   private T data;
 
   public RestRequest() {
