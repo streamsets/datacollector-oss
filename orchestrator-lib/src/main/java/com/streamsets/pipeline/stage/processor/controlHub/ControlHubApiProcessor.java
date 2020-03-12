@@ -22,9 +22,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -48,6 +51,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -61,6 +66,7 @@ import java.util.concurrent.TimeoutException;
 public class ControlHubApiProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(ControlHubApiProcessor.class);
+  private static final String BASE_URL_CONFIG_NAME = "baseUrl";
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
   private static final String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
   private static final String X_SS_REST_CALL = "X-SS-REST-CALL";
@@ -73,6 +79,9 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
 
   private ELVars bodyVars;
   private ELEval bodyEval;
+
+  private ELVars baseUrlVars;
+  private ELEval baseUrlEval;
 
   private class HeadersAndBody {
     final MultivaluedMap<String, Object> resolvedHeaders;
@@ -118,6 +127,9 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
     httpClientCommon.init(issues, getContext());
 
     bodyVars = getContext().createELVars();
+    bodyEval = getContext().createELEval(BASE_URL_CONFIG_NAME);
+
+    bodyVars = getContext().createELVars();
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
@@ -151,7 +163,7 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       Record record = records.next();
-      String resolvedUrl = httpClientCommon.getResolvedUrl(conf.baseUrl, record);
+      String resolvedUrl = getResolvedUrl(conf.baseUrl, record);
       String userAuthToken = getUserAuthToken(resolvedUrl);
 
       WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
@@ -338,6 +350,14 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
         response.close();
       }
     }
+  }
+
+  public String getResolvedUrl(String baseUrl, Record record) throws ELEvalException {
+    RecordEL.setRecordInContext(baseUrlVars, record);
+    TimeEL.setCalendarInContext(baseUrlVars, Calendar.getInstance());
+    TimeNowEL.setTimeNowInContext(baseUrlVars, new Date());
+
+    return baseUrlEval.eval(baseUrlVars, baseUrl, String.class);
   }
 
 }
