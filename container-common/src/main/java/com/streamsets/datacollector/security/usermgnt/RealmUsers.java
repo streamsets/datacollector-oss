@@ -22,9 +22,11 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class RealmUsers {
+  static final Pattern ESCAPED_PATTERN = Pattern.compile("\\\\([:= ])");
   private final List<Line> lines;
 
   private RealmUsers(List<Line> lines) {
@@ -36,6 +38,8 @@ public class RealmUsers {
     List<Line> lines = new ArrayList<>();
     String str = reader.readLine();
     while (str != null) {
+      // handle escaped characters from some property file serializers
+      str = ESCAPED_PATTERN.matcher(str).replaceAll("$1");
       Line line;
       if (EmptyLine.PATTERN.matcher(str).matches()) {
         line = new EmptyLine();

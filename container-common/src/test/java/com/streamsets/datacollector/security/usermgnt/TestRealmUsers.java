@@ -34,18 +34,21 @@ public class TestRealmUsers {
       "guest: MD5:084e0343a0486ff05530df6c705c8bb4,user,email:,guest\n" +
       "creator: MD5:ee2433259b0fe399b40e81d2c98a38b6,user,email:,group:foo,creator\n" +
       "manager: MD5:1d0258c2440a8d19e716292b231e3190,user,email:manager@acme,manager\n" +
+      "escaped: MD5\\:1d0258c2440a8d19e716292b231e3190,user,email\\:escaped@example.com,guest\n" +
       "\n" +
       "#\n";
 
   @Test
   public void testParse() throws IOException  {
     RealmUsers realmUsers = RealmUsers.parse(new BufferedReader(new StringReader(REALM_DATA)));
-    Assert.assertEquals(4, realmUsers.list().size());
+    Assert.assertEquals(5, realmUsers.list().size());
     Assert.assertNotNull(realmUsers.find("admin"));
     Assert.assertNotNull(realmUsers.find("guest"));
     Assert.assertNotNull(realmUsers.find("creator"));
     Assert.assertNotNull(realmUsers.find("manager"));
+    Assert.assertNotNull(realmUsers.find("escaped"));
     Assert.assertEquals(Arrays.asList("manager"), realmUsers.find("manager").getRoles());
+    Assert.assertEquals("escaped@example.com", realmUsers.find("escaped").getEmail());
   }
 
   @Test
@@ -54,7 +57,7 @@ public class TestRealmUsers {
     StringWriter writer = new StringWriter();
     realmUsers.write(writer);
     writer.close();
-    Assert.assertEquals(REALM_DATA, writer.toString());
+    Assert.assertEquals(RealmUsers.ESCAPED_PATTERN.matcher(REALM_DATA).replaceAll("$1"), writer.toString());
   }
 
   @Test
