@@ -16,12 +16,11 @@
 package com.streamsets.datacollector.publicrestapi;
 
 import com.google.common.base.Preconditions;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.AuthzRole;
 
 import javax.annotation.security.PermitAll;
@@ -31,19 +30,17 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
 import java.io.IOException;
 
 @Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class SetPasswordResource extends RestResource {
-  private final UserManagementExecutor executor;
+  private final UsersManager usersManager;
 
   @Inject
-  public SetPasswordResource(RuntimeInfo runtimeInfo) {
-    File usersFile = new File(runtimeInfo.getConfigDir(), "/form-realm.properties");
-    executor = new UserManagementExecutor(usersFile, 0); // resetValidity not used here
+  public SetPasswordResource(UsersManager usersManager) {
+    this.usersManager = usersManager;
   }
 
   @Path("/setPassword")
@@ -53,14 +50,10 @@ public class SetPasswordResource extends RestResource {
     Preconditions.checkArgument(request != null, "Missing payload");
     RSetPassword setPassword = request.getData();
     Preconditions.checkArgument(setPassword != null, "Missing setPassword");
-    executor.execute(mgr -> {
-          mgr.setPasswordFromReset(
+    usersManager.setPasswordFromReset(
               setPassword.getId().getValue(),
               setPassword.getResetToken().getValue(),
               setPassword.getPassword().getValue()
-          );
-          return null;
-        }
     );
     return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_NO_CONTENT);
   }

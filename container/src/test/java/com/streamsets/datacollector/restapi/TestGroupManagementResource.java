@@ -15,16 +15,15 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,30 +32,27 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class TestGroupManagementResource {
-  private RuntimeInfo runtimeInfo;
+  private UsersManager usersManager;
   private File usersFile;
 
   @Before
   public void before() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(dir.getAbsolutePath());
 
     usersFile = new File(dir, "/form-realm.properties");
     try (Writer writer = new FileWriter(usersFile)) {
     }
+    usersManager = new TrxUsersManager(usersFile);
   }
 
   @Test
   public void testList() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
 
-    GroupManagementResource resource = new GroupManagementResource(runtimeInfo);
+    mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
+
+    GroupManagementResource resource = new GroupManagementResource(usersManager);
 
     OkPaginationRestResponse<RString> response = resource.list(new PaginationInfo());
     Assert.assertNotNull(response);

@@ -15,15 +15,14 @@
  */
 package com.streamsets.datacollector.publicrestapi;
 
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,33 +31,32 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class TestSetPasswordResource {
-  private RuntimeInfo runtimeInfo;
+  private UsersManager usersManager;
   private File usersFile;
 
   @Before
   public void before() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(dir.getAbsolutePath());
 
     usersFile = new File(dir, "/form-realm.properties");
     try (Writer writer = new FileWriter(usersFile)) {
     }
+    usersManager = new TrxUsersManager(usersFile);
   }
 
   @Test
   public void testSetPassword() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
 
-    String resetToken = executor.execute(mgr -> mgr.create(
+    String resetToken = mgr.create(
         "u1",
         "email",
         Arrays.asList("g1"),
         Arrays.asList("creator")
-    ));
+    );
 
-    SetPasswordResource resource = new SetPasswordResource(runtimeInfo);
+    SetPasswordResource resource = new SetPasswordResource(usersManager);
     RSetPassword setPassword = new RSetPassword();
     setPassword.getId().setValue("u1");
     setPassword.getResetToken().setValue(resetToken);
@@ -68,9 +66,6 @@ public class TestSetPasswordResource {
     OkRestResponse<Void> response = resource.setPassword(request);
     Assert.assertEquals(OkRestResponse.HTTP_NO_CONTENT, response.getHttpStatusCode());
 
-    executor.execute(mgr -> {
-      Assert.assertTrue(mgr.verifyPassword("u1", "pass"));
-      return null;
-    });
+    Assert.assertTrue(mgr.verifyPassword("u1", "pass"));
   }
 }

@@ -45,7 +45,9 @@ import com.streamsets.datacollector.restapi.configuration.StandAndClusterManager
 import com.streamsets.datacollector.restapi.configuration.StatsCollectorInjector;
 import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
+import com.streamsets.datacollector.restapi.configuration.UsersManagerInjector;
 import com.streamsets.datacollector.restapi.rbean.rest.RestResourceContextFilter;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -440,13 +442,22 @@ public class WebServerModule {
     };
   }
 
-
   @Provides(type = Type.SET)
   ContextConfigurator provideUserGroupManager(final UserGroupManager userGroupManager) {
     return new ContextConfigurator() {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(UserGroupManagerInjector.USER_GROUP_MANAGER, userGroupManager);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideUsersManager(final UsersManager usersManager) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(UsersManagerInjector.USERS_MANAGER, usersManager);
       }
     };
   }

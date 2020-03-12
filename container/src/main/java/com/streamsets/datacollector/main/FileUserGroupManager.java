@@ -15,13 +15,10 @@
  */
 package com.streamsets.datacollector.main;
 
-import com.streamsets.datacollector.http.SdcHashLoginService;
 import com.streamsets.datacollector.restapi.bean.UserJson;
-import com.streamsets.datacollector.security.usermgnt.FormRealmUsersManager;
 import com.streamsets.datacollector.security.usermgnt.User;
-import com.streamsets.datacollector.security.usermgnt.UserLineCreator;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import org.eclipse.jetty.security.LoginService;
-import org.eclipse.jetty.util.resource.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,49 +32,52 @@ import java.util.stream.Collectors;
 
 public class FileUserGroupManager implements UserGroupManager {
   private static final Logger LOG = LoggerFactory.getLogger(FileUserGroupManager.class);
-  private SdcHashLoginService hashLoginService;
 
+  private final UsersManager usersManager;
 
-  FormRealmUsersManager usersManager = null;
+  public FileUserGroupManager(UsersManager usersManager) {
+    this.usersManager = usersManager;
+  }
 
   @Override
-  public void setLoginService(LoginService loginService) {
-    hashLoginService = (SdcHashLoginService) loginService;
-  }
+  public void setLoginService(LoginService loginService) {}
 
   @Override
   public void setRoleMapping(Map<String, Set<String>> roleMapping) {}
 
-  FormRealmUsersManager getUsersManager() {
-    FormRealmUsersManager usersManager = null;
-    try {
-      Resource resource = hashLoginService.getResolvedConfigResource();
-      if (hashLoginService != null && resource.exists()) {
-        usersManager = new FormRealmUsersManager(UserLineCreator.getMD5Creator(), resource.getFile(), 0);
-      }
-    } catch (IOException ex) {
-
-    }
+  UsersManager getUsersManager() {
     return usersManager;
   }
 
   @Override
   public List<UserJson> getUsers() {
-    FormRealmUsersManager mgr = getUsersManager();
-    return (mgr == null) ? Collections.emptyList() :
-        mgr.listUsers().stream().map(u -> toUserJson(u)).collect(Collectors.toList());
+    UsersManager mgr = getUsersManager();
+    try {
+      return (mgr == null) ? Collections.emptyList() :
+          mgr.listUsers().stream().map(u -> toUserJson(u)).collect(Collectors.toList());
+    } catch (IOException ex) {
+      throw new RuntimeException("Cannot happen: " + ex, ex);
+    }
   }
 
   @Override
   public List<String> getGroups() {
-    FormRealmUsersManager mgr = getUsersManager();
+    UsersManager mgr = getUsersManager();
+    try {
     return (mgr == null) ? Collections.emptyList() : mgr.listGroups();
+    } catch (IOException ex) {
+      throw new RuntimeException("Cannot happen: " + ex, ex);
+    }
   }
 
   @Override
   public UserJson getUser(Principal principal) {
-    FormRealmUsersManager mgr = getUsersManager();
+    UsersManager mgr = getUsersManager();
+    try {
     return (mgr == null) ? null : toUserJson(mgr.get(principal.getName()));
+    } catch (IOException ex) {
+      throw new RuntimeException("Cannot happen: " + ex, ex);
+    }
   }
 
   UserJson toUserJson(User user) {

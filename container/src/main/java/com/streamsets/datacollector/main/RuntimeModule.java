@@ -20,6 +20,10 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.metrics.MetricsModule;
+import com.streamsets.datacollector.restapi.UserManagementResource;
+import com.streamsets.datacollector.security.usermgnt.NoOpUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
@@ -29,16 +33,22 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@Module(library = true, injects = {
-    BuildInfo.class,
-    RuntimeInfo.class,
-    Configuration.class,
-    EventListenerManager.class,
-    UserGroupManager.class
-}, includes = MetricsModule.class)
+@Module(
+    library = true,
+    injects = {
+        BuildInfo.class,
+        RuntimeInfo.class,
+        Configuration.class,
+        EventListenerManager.class,
+        UsersManager.class,
+        UserGroupManager.class
+    },
+    includes = MetricsModule.class
+)
 public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   private static String productName = RuntimeInfo.SDC_PRODUCT;
@@ -92,14 +102,19 @@ public class RuntimeModule {
   }
 
   @Provides @Singleton
-  public UserGroupManager provideUserGroupManager(Configuration configuration) {
+  public UsersManager provideUsersManager(RuntimeInfo runtimeInfo, Configuration configuration) {
+    return RuntimeModuleUtils.provideUsersManager(runtimeInfo, configuration);
+  }
+
+  @Provides @Singleton
+  public UserGroupManager provideUserGroupManager(Configuration configuration, UsersManager usersManager) {
     String loginModule = configuration.get(
         WebServerTask.HTTP_AUTHENTICATION_LOGIN_MODULE,
         WebServerTask.HTTP_AUTHENTICATION_LOGIN_MODULE_DEFAULT
     );
     switch (loginModule) {
       case WebServerTask.FILE:
-        return new FileUserGroupManager();
+        return new FileUserGroupManager(usersManager);
       case WebServerTask.LDAP:
         return new LdapUserGroupManager();
       default:

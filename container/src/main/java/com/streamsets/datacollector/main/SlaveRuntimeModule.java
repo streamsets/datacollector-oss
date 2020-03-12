@@ -22,6 +22,8 @@ import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.metrics.MetricsModule;
+import com.streamsets.datacollector.restapi.UserManagementResource;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -37,8 +39,18 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-@Module(library = true, injects = {BuildInfo.class, RuntimeInfo.class, Configuration.class, EventListenerManager
-    .class}, includes = MetricsModule.class)
+@Module(
+    library = true,
+    injects = {
+        BuildInfo.class,
+        RuntimeInfo.class,
+        Configuration.class,
+        EventListenerManager.class,
+        UsersManager.class,
+        UserGroupManager.class
+    },
+    includes = MetricsModule.class
+)
 public class SlaveRuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(SlaveRuntimeModule.class);
   public static final String SDC_PROPERTY_PREFIX = "sdc";
@@ -105,8 +117,13 @@ public class SlaveRuntimeModule {
   }
 
   @Provides @Singleton
-  public UserGroupManager provideUserGroupManager() {
-    return new FileUserGroupManager();
+  public UsersManager provideUsersManager(RuntimeInfo runtimeInfo, Configuration configuration) {
+    return RuntimeModuleUtils.provideUsersManager(runtimeInfo, configuration);
+  }
+
+  @Provides @Singleton
+  public UserGroupManager provideUserGroupManager(UsersManager usersManager) {
+    return new FileUserGroupManager(usersManager);
   }
 
 }

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 /**
  * It must always be used in a try (FormRealmUsersManager mgr = ...) {...} block
  */
-public class FormRealmUsersManager implements Closeable {
+public class FormRealmUsersManager implements UsersManager, Closeable {
   private final UserLineCreator userLineCreator;
   private final long resetValidityMillis;
   private final DataStore dataStore;
@@ -63,6 +63,7 @@ public class FormRealmUsersManager implements Closeable {
     }
   }
 
+  @Override
   public String create(String user, String email, List<String> groups, List<String> roles) {
     UserLine userLine = userLineCreator.create(user, email, groups, roles, "dummy");
     String resetPassword = userLine.resetPassword(resetValidityMillis);
@@ -74,6 +75,7 @@ public class FormRealmUsersManager implements Closeable {
     return resetPassword;
   }
 
+  @Override
   public User get(String user) {
     User u = null;
     UserLine userLine = realmUsers.find(user);
@@ -83,6 +85,7 @@ public class FormRealmUsersManager implements Closeable {
     return u;
   }
 
+  @Override
   public String resetPassword(String user) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
@@ -91,6 +94,7 @@ public class FormRealmUsersManager implements Closeable {
     return resetPassword;
   }
 
+  @Override
   public void setPasswordFromReset(String user, String resetPassword, String password) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
@@ -98,6 +102,7 @@ public class FormRealmUsersManager implements Closeable {
     dirty = true;
   }
 
+  @Override
   public void changePassword(String user, String oldPassword, String newPassword) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
@@ -105,12 +110,14 @@ public class FormRealmUsersManager implements Closeable {
     dirty = true;
   }
 
+  @Override
   public boolean verifyPassword(String user, String password) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
     return userLine.verifyPassword(password);
   }
 
+  @Override
   public void delete(String user) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
@@ -118,6 +125,7 @@ public class FormRealmUsersManager implements Closeable {
     dirty = true;
   }
 
+  @Override
   public void update(String user, String email, List<String> groups, List<String> roles) {
     UserLine userLine = realmUsers.find(user);
     Preconditions.checkNotNull(userLine, "User does not exist");
@@ -127,10 +135,12 @@ public class FormRealmUsersManager implements Closeable {
     dirty = true;
   }
 
+  @Override
   public List<User> listUsers() {
     return realmUsers.list().stream().map(User::new).collect(Collectors.toList());
   }
 
+  @Override
   public List<String> listGroups() {
     return listUsers().stream()
         .flatMap(u -> u.getGroups().stream())

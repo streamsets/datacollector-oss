@@ -23,6 +23,8 @@ import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -49,9 +51,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -106,6 +110,10 @@ public class TestWebServerTaskHttpHttps {
         return "appAuthToken";
       }
     };
+    File file = new File("target", UUID.randomUUID().toString());
+    try (Writer writer = new FileWriter(file)) {
+    }
+    UsersManager usersManager = new TrxUsersManager(file);
     runtimeInfo.setDPMEnabled(isDPMEnabled);
     Set<ContextConfigurator> configurators = new HashSet<>();
     configurators.add(new ContextConfigurator() {
@@ -122,7 +130,7 @@ public class TestWebServerTaskHttpHttps {
         new NopActivation(),
         configurators,
         webAppProviders,
-        new FileUserGroupManager()
+        new FileUserGroupManager(usersManager)
     );
   }
 

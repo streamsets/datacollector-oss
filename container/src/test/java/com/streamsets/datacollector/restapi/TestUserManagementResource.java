@@ -17,9 +17,7 @@ package com.streamsets.datacollector.restapi;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
-import com.streamsets.datacollector.restapi.rbean.lang.REnum;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
@@ -28,11 +26,11 @@ import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RChangePassword;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RResetPasswordLink;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RUser;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -43,25 +41,24 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestUserManagementResource {
-  private RuntimeInfo runtimeInfo;
+  private UsersManager usersManager;
   private File usersFile;
 
   @Before
   public void before() throws Exception {
     File dir = new File("target", UUID.randomUUID().toString());
     Assert.assertTrue(dir.mkdirs());
-    runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getConfigDir()).thenReturn(dir.getAbsolutePath());
 
     usersFile = new File(dir, "/form-realm.properties");
     try (Writer writer = new FileWriter(usersFile)) {
     }
+    usersManager = new TrxUsersManager(usersFile);
   }
 
   @Test
   public void testCreate() throws Exception {
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, null);
+    UserManagementResource resource = new UserManagementResource(usersManager, null);
 
     RUser user = new RUser();
     user.getId().setValue("u1");
@@ -75,27 +72,21 @@ public class TestUserManagementResource {
     Assert.assertNotNull(response);
     Assert.assertEquals(OkRestResponse.HTTP_CREATED, response.getHttpStatusCode());
 
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
 
-    executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.listUsers().size());
-      Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
-      Assert.assertEquals("e1", mgr.listUsers().get(0).getEmail());
-      Assert.assertEquals(Arrays.asList("g1"), mgr.listUsers().get(0).getGroups());
-      Assert.assertEquals(Arrays.asList("admin"), mgr.listUsers().get(0).getRoles());
-      return null;
-    });
+    Assert.assertEquals(1, mgr.listUsers().size());
+    Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
+    Assert.assertEquals("e1", mgr.listUsers().get(0).getEmail());
+    Assert.assertEquals(Arrays.asList("g1"), mgr.listUsers().get(0).getGroups());
+    Assert.assertEquals(Arrays.asList("admin"), mgr.listUsers().get(0).getRoles());
   }
 
   @Test
   public void testUpdate() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
+    mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, null);
+    UserManagementResource resource = new UserManagementResource(usersManager, null);
 
     RUser user = new RUser();
     user.getId().setValue("u1");
@@ -112,45 +103,33 @@ public class TestUserManagementResource {
     Assert.assertEquals("u1", response.getData().getId().getValue());
     Assert.assertEquals(Arrays.asList(new RString("creator")), response.getData().getRoles());
 
-    executor.execute(mgr -> {
-      Assert.assertEquals(1, mgr.listUsers().size());
-      Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
-      Assert.assertEquals("e2", mgr.listUsers().get(0).getEmail());
-      Assert.assertEquals(Arrays.asList("g2"), mgr.listUsers().get(0).getGroups());
-      Assert.assertEquals(Arrays.asList("creator"), mgr.listUsers().get(0).getRoles());
-      return null;
-    });
+    Assert.assertEquals(1, mgr.listUsers().size());
+    Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
+    Assert.assertEquals("e2", mgr.listUsers().get(0).getEmail());
+    Assert.assertEquals(Arrays.asList("g2"), mgr.listUsers().get(0).getGroups());
+    Assert.assertEquals(Arrays.asList("creator"), mgr.listUsers().get(0).getRoles());
   }
 
   @Test
   public void testDelete() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
+    mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, null);
+    UserManagementResource resource = new UserManagementResource(usersManager, null);
 
     OkRestResponse<Void> response = resource.delete("u1");
     Assert.assertNotNull(response);
     Assert.assertEquals(OkRestResponse.HTTP_OK, response.getHttpStatusCode());
 
-    executor.execute(mgr -> {
-      Assert.assertEquals(0, mgr.listUsers().size());
-      return null;
-    });
+    Assert.assertEquals(0, mgr.listUsers().size());
   }
 
   @Test
   public void testList() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
+    mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, null);
+    UserManagementResource resource = new UserManagementResource(usersManager, null);
 
     OkPaginationRestResponse<RUser> response = resource.list(new PaginationInfo());
     Assert.assertNotNull(response);
@@ -171,14 +150,12 @@ public class TestUserManagementResource {
 
   @Test
   public void testChangePassword() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
-      mgr.setPasswordFromReset("u1", resetToken, "password");
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, () -> "u1");
+    String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
+    mgr.setPasswordFromReset("u1", resetToken, "password");
+
+    UserManagementResource resource = new UserManagementResource(usersManager, () -> "u1");
 
     RChangePassword changePassword = new RChangePassword();
     changePassword.getId().setValue("u1");
@@ -192,22 +169,16 @@ public class TestUserManagementResource {
     Assert.assertNotNull(response);
     Assert.assertEquals(OkRestResponse.HTTP_NO_CONTENT, response.getHttpStatusCode());
 
-    executor.execute(mgr -> {
-      mgr.verifyPassword("u1", "PASSWORD");
-      return null;
-    });
+    mgr.verifyPassword("u1", "PASSWORD");
   }
 
   @Test
   public void testResetPassword() throws Exception {
-    UserManagementExecutor executor = new UserManagementExecutor(usersFile, 10000);
-    executor.execute(mgr -> {
-      String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
-      mgr.setPasswordFromReset("u1", resetToken, "password");
-      return null;
-    });
+    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
+    String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
+    mgr.setPasswordFromReset("u1", resetToken, "password");
 
-    UserManagementResource resource = new UserManagementResource(runtimeInfo, () -> "u1");
+    UserManagementResource resource = new UserManagementResource(usersManager, () -> "u1");
 
     OkRestResponse<RResetPasswordLink> response = resource.resetPassword("u1");
     Assert.assertNotNull(response);
@@ -230,10 +201,7 @@ public class TestUserManagementResource {
     Assert.assertEquals("", setPassword.getPassword().getValue());
     Assert.assertNotNull(setPassword.getResetToken().getValue());
 
-    executor.execute(mgr -> {
-      mgr.setPasswordFromReset("u1", setPassword.getResetToken().getValue(), "PASSWORD");
-      return null;
-    });
+    mgr.setPasswordFromReset("u1", setPassword.getResetToken().getValue(), "PASSWORD");
   }
 
 

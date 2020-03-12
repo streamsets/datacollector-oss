@@ -15,12 +15,11 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.OkRestResponse;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfo;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.AuthzRole;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,7 +29,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,22 +37,20 @@ import java.util.stream.Collectors;
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class GroupManagementResource {
-
-  private final UserManagementExecutor executor;
+  private final UsersManager usersManager;
 
   @Inject
-  public GroupManagementResource(RuntimeInfo runtimeInfo) {
-    File usersFile = new File(runtimeInfo.getConfigDir(), "/form-realm.properties");
-    executor = new UserManagementExecutor(usersFile, 0);
+  public GroupManagementResource(UsersManager usersManager) {
+    this.usersManager = usersManager;
   }
 
   @GET
   public OkPaginationRestResponse<RString> list(@Context PaginationInfo paginationInfo) throws IOException {
     paginationInfo = (paginationInfo != null) ? paginationInfo : new PaginationInfo();
-    List<RString> groups = executor.execute(mgr -> mgr.listGroups()
+    List<RString> groups = usersManager.listGroups()
         .stream()
         .map(RString::new)
-        .collect(Collectors.toList()));
+        .collect(Collectors.toList());
     return new OkPaginationRestResponse<RString>(paginationInfo).setHttpStatusCode(OkRestResponse.HTTP_OK)
         .setData(groups);
   }

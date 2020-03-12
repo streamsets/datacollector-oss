@@ -18,12 +18,10 @@ package com.streamsets.datacollector.main;
 import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.uuid.Generators;
 import com.google.common.io.Files;
-import com.streamsets.datacollector.security.usermgnt.FormRealmUsersManager;
-import com.streamsets.datacollector.security.usermgnt.UserLineCreator;
+import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -68,13 +66,8 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
     File usersFile = new File(getConfigDir(), "/form-realm.properties");
     File[] files = usersFile.getParentFile().listFiles((dir, name) -> name.startsWith("form-realm.properties"));
     if (files != null && files.length > 0) {
-      try (
-          FormRealmUsersManager usersManager = new FormRealmUsersManager(
-              UserLineCreator.getMD5Creator(),
-              usersFile,
-              0
-          )
-      ) {
+      try {
+        new TrxUsersManager(usersFile);
       } catch (IOException ex) {
         throw new RuntimeException(ex);
       }

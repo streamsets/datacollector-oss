@@ -17,7 +17,6 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
-import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.publicrestapi.usermgnt.RSetPassword;
 import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.rest.OkPaginationRestResponse;
@@ -29,7 +28,7 @@ import com.streamsets.datacollector.restapi.rbean.usermgnt.RChangePassword;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RResetPasswordLink;
 import com.streamsets.datacollector.restapi.rbean.usermgnt.RUser;
 import com.streamsets.datacollector.security.usermgnt.User;
-import com.streamsets.datacollector.security.usermgnt.UserManagementExecutor;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.AuthzRole;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,29 +44,25 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import java.io.File;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
 public class UserManagementResource extends RestResource {
-  private static final long RESET_TOKEN_VALIDITY = TimeUnit.HOURS.toMillis(2);
-
   private final Principal principal;
-  private final UserManagementExecutor executor;
+  private final UsersManager usersManager;
 
   @Inject
-  public UserManagementResource(RuntimeInfo runtimeInfo, Principal principal) {
+  public UserManagementResource(UsersManager usersManager, Principal principal) {
     this.principal = principal;
-    File usersFile = new File(runtimeInfo.getConfigDir(), "/form-realm.properties");
-    executor = new UserManagementExecutor(usersFile, RESET_TOKEN_VALIDITY);
+    this.usersManager = usersManager;
   }
+
 
   private RUser getUser(RestRequest<RUser> request) {
     Preconditions.checkArgument(request != null, "Missing payload");
@@ -98,7 +93,7 @@ public class UserManagementResource extends RestResource {
 
     RResetPasswordLink resetLink = new RResetPasswordLink();
     if (hasEmail && smtpServerConfigured) {
-      User user = executor.execute(mgr -> mgr.get(id));
+      User user = usersManager.get(id);
       if (user != null) {
         String email = null; //TODO
         if (email != null) {
@@ -121,12 +116,12 @@ public class UserManagementResource extends RestResource {
   @Consumes(MediaType.APPLICATION_JSON)
   public OkRestResponse<RResetPasswordLink> create(RestRequest<RUser> request) throws IOException {
     RUser user = getUser(request);
-    String resetToken = executor.execute(mgr -> mgr.create(
+    String resetToken = usersManager.create(
         user.getId().getValue(),
         user.getEmail().getValue(),
         user.getGroups().stream().map(g -> g.getValue()).collect(Collectors.toList()),
         user.getRoles().stream().map(r -> r.getValue()).collect(Collectors.toList())
-    ));
+    );
     Preconditions.checkNotNull(resetToken, "User already exists");
     RResetPasswordLink resetLink = createResetPasswordLink(
         user.getId().getValue(),
@@ -150,22 +145,14 @@ public class UserManagementResource extends RestResource {
         .stream()
         .map(r -> r.getValue())
         .collect(Collectors.toList());
-    executor.execute(mgr -> {
-          mgr.update(user.getId().getValue(), user.getEmail().getValue(), groups, roles);
-          return null;
-        }
-    );
+    usersManager.update(user.getId().getValue(), user.getEmail().getValue(), groups, roles);
     return new OkRestResponse<RUser>().setHttpStatusCode(OkRestResponse.HTTP_OK).setData(user);
   }
 
   @Path("/{id}")
   @DELETE
   public OkRestResponse<Void> delete(@PathParam("id") String id) throws IOException {
-    executor.execute(mgr -> {
-          mgr.delete(id);
-          return null;
-        }
-    );
+    usersManager.delete(id);
     return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_OK);
   }
 
@@ -181,7 +168,7 @@ public class UserManagementResource extends RestResource {
   @GET
   public OkPaginationRestResponse<RUser> list(@Context PaginationInfo paginationInfo) throws IOException {
     paginationInfo = (paginationInfo != null) ? paginationInfo : new PaginationInfo();
-    List<RUser> users = executor.execute(mgr -> mgr.listUsers().stream().map(u -> {
+    List<RUser> users = usersManager.listUsers().stream().map(u -> {
       RUser user = new RUser();
       user.getId().setValue(u.getUser());
       user.getEmail().setValue(u.getEmail());
@@ -197,7 +184,7 @@ public class UserManagementResource extends RestResource {
           .collect(Collectors.toList());
       user.setRoles(rRoles);
       return user;
-    }).collect(Collectors.toList()));
+    }).collect(Collectors.toList());
 
     return new OkPaginationRestResponse<RUser>(paginationInfo).setHttpStatusCode(OkRestResponse.HTTP_OK).setData(users);
   }
@@ -214,16 +201,11 @@ public class UserManagementResource extends RestResource {
         principal.getName().equals(changePassword.getId().getValue()),
         "Payload user ID does not match current user ID"
     );
-    executor.execute(mgr -> {
-          mgr.changePassword(
+    usersManager.changePassword(
               changePassword.getId().getValue(),
               changePassword.getOldPassword().getValue(),
               changePassword.getNewPassword().getValue()
-          );
-          return null;
-        }
     );
-
     return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_NO_CONTENT);
   }
 
@@ -231,9 +213,9 @@ public class UserManagementResource extends RestResource {
   @Path("/{id}/resetPassword")
   @POST
   public OkRestResponse<RResetPasswordLink> resetPassword(@PathParam("id") String id) throws IOException {
-    User user = executor.execute(mgr -> mgr.get(id));
+    User user = usersManager.get(id);
     Preconditions.checkNotNull(user, "user not found");
-    String resetToken = executor.execute(mgr -> mgr.resetPassword(id));
+    String resetToken = usersManager.resetPassword(id);
     RResetPasswordLink resetLink = createResetPasswordLink(id, !user.getEmail().isEmpty(), resetToken);
     return new OkRestResponse<RResetPasswordLink>().setHttpStatusCode(OkRestResponse.HTTP_OK).setData(resetLink);
   }

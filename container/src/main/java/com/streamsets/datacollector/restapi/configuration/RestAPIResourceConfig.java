@@ -27,6 +27,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.rbean.rest.PaginationInfoInjectorBinder;
+import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -66,6 +67,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(CredentialStoreTaskInjector.class).to(CredentialStoresTask.class);
 
         bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
+        bindFactory(UsersManagerInjector.class).to(UsersManager.class);
         bindFactory(ActivationInjector.class).to(Activation.class);
       }
     });
