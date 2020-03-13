@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -228,11 +228,64 @@ angular.module('dataCollectorApp.common')
        */
       getGroups: () => $http.get(apiBase + '/system/groups'),
 
-      /**
-       * Returns Users
-       * @returns {*}
+      /* - User list (old API)
+        returns [{
+          "name": "admin",
+          "roles": ["admin"],
+          "groups": ["all"]
+        },...]
+      */
+      getUsers: () => $http.get(apiBase + '/system/users'),
+
+      /* - User list (new API)
+        returns {
+          "type" : "PAGINATED_DATA",
+          "httpStatusCode" : 200,
+          "data" : [ {
+            "id" : "admin",
+            "email" : "",
+            "groups" : ["all"],
+            "roles" : ["admin"]
+          },...],
+          "breadcrumbValue" : null,
+          "paginationInfo" : {...},
+          "envelopeVersion" : "1"
+          }
        */
-      getUsers: () => $http.get(apiBase + '/system/users')
+      getUsers2: () => $http.get(apiBase + '/usermanagement/users'),
+
+      deleteUser: id => $http.delete(apiBase + '/usermanagement/users/' + id),
+
+      updateUser: user => $http.post(apiBase + '/usermanagement/users/' + user.id, {
+        data: user,
+        envelopeVersion: "1"
+      }),
+
+      insertUser: user => $http.post(apiBase + '/usermanagement/users/', {
+        data: user,
+        envelopeVersion: "1"
+      }),
+
+      changeUserPassword: (id, oldPwd, newPwd) => $http.post(
+        apiBase + '/usermanagement/users/' + id + '/changePassword',
+        {
+          data: {
+            id: id,
+            oldPassword: oldPwd,
+            newPassword: newPwd
+          },
+          envelopeVersion: "1"
+        }
+      ),
+
+      setUserPassword: (id, token, pwd) => $http.post(apiBase + '/usermanagement/users/setPassword', {
+        data: {
+          id: id,
+          resetToken: token,
+          password: pwd
+        },
+        envelopeVersion: "1"
+      }),
 
     };
 
