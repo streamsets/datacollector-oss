@@ -18,10 +18,12 @@ package com.streamsets.pipeline.stage.origin.multikafka;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -30,7 +32,6 @@ import com.streamsets.pipeline.api.lineage.LineageEvent;
 import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
@@ -82,6 +83,41 @@ public class MultiKafkaSource extends BasePushSource {
     batchSize = conf.maxBatchSize;
   }
 
+  /**
+   * Wrapper around DefaultErrorRecordHandler that can count number of passed error records as that is relevant to the
+   * logic we have in this origin.
+   */
+  public static class CountingDefaultErrorRecordHandler implements ErrorRecordHandler {
+
+    private final ErrorRecordHandler delegate;
+    private int errorRecordCount = 0;
+
+    public CountingDefaultErrorRecordHandler(Stage.Context context, ToErrorContext toError) {
+      this.delegate = new DefaultErrorRecordHandler(context, toError);
+    }
+
+    public int getErrorRecordCount() {
+      return errorRecordCount;
+    }
+
+    @Override
+    public void onError(ErrorCode errorCode, Object... params) throws StageException {
+      delegate.onError(errorCode, params);
+    }
+
+    @Override
+    public void onError(OnRecordErrorException error) throws StageException {
+      errorRecordCount++;
+      delegate.onError(error);
+    }
+
+    @Override
+    public void onError(List<Record> batch, StageException error) throws StageException {
+      errorRecordCount += batch.size();
+      delegate.onError(batch, error);
+    }
+  }
+
   public class MultiTopicCallable implements Callable<Long> {
 
     // keep it same as BaseKafkaConsumer09.CONSUMER_POLLING_WINDOW_MS for now
@@ -110,7 +146,7 @@ public class MultiKafkaSource extends BasePushSource {
       long messagesProcessed = 0;
       long recordsProcessed = 0;
       BatchContext batchContext = null;
-      ErrorRecordHandler errorRecordHandler = null;
+      CountingDefaultErrorRecordHandler errorRecordHandler = null;
 
       // wait until all threads are spun up before processing
       LOG.debug("Thread {} waiting on other consumer threads to start up", Thread.currentThread().getName());
@@ -138,7 +174,7 @@ public class MultiKafkaSource extends BasePushSource {
 
             // start a new batch, get a new error record handler for batch.
             batchContext = getContext().startBatch();
-            errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
+            errorRecordHandler = new CountingDefaultErrorRecordHandler(getContext(), batchContext);
           }
 
           for (ConsumerRecord<String, byte[]> item : messages) {
@@ -173,7 +209,7 @@ public class MultiKafkaSource extends BasePushSource {
               recordsProcessed += records.size();
               records.clear();
               batchContext = getContext().startBatch();
-              errorRecordHandler = new DefaultErrorRecordHandler(getContext(), batchContext);
+              errorRecordHandler = new CountingDefaultErrorRecordHandler(getContext(), batchContext);
             }
           }
 
@@ -183,9 +219,11 @@ public class MultiKafkaSource extends BasePushSource {
           // Transmit remaining when batchWaitTime expired
           if (pollInterval <= MIN_CONSUMER_POLLING_INTERVAL_MS) {
             startTime = System.currentTimeMillis();
-            if (!records.isEmpty()) {
+            if (!records.isEmpty() || errorRecordHandler.getErrorRecordCount() > 0) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
               commitSyncAndProcess(batchContext);
+              batchContext = getContext().startBatch();
+              errorRecordHandler = new CountingDefaultErrorRecordHandler(getContext(), batchContext);
               recordsProcessed += records.size();
               records.clear();
             }
