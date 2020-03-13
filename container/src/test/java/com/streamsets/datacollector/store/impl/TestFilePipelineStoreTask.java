@@ -41,6 +41,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
+import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import dagger.ObjectGraph;
@@ -53,6 +54,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import javax.inject.Singleton;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -72,6 +78,7 @@ public class TestFilePipelineStoreTask {
 
   @dagger.Module(
       injects = {
+          RuntimeInfo.class,
           FilePipelineStoreTask.class,
           LockCache.class,
           EventListenerManager.class,
@@ -542,4 +549,241 @@ public class TestFilePipelineStoreTask {
       store.stop();
     }
   }
+
+  @Test
+  public void testCreateDeleteAndGetInfo() throws PipelineException, IOException {
+    try {
+      store.init();
+      createDefaultPipeline(store);
+      PipelineInfo infoBeforeDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      Path pipelineDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      String pipelineDirPath = pipelineDir.toAbsolutePath().toString();
+      File infoFile = new File(pipelineDirPath.endsWith("/")
+                               ? pipelineDirPath + DEFAULT_PIPELINE_NAME + "/info.json"
+                               : pipelineDirPath + "/" + DEFAULT_PIPELINE_NAME + "/info.json");
+      Assert.assertTrue(infoFile.exists());
+      Files.delete(infoFile.toPath());
+
+      PipelineInfo infoAfterDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      Assert.assertEquals(infoBeforeDelete.getPipelineId(), infoAfterDelete.getPipelineId());
+      Assert.assertEquals(infoBeforeDelete.getTitle(), infoAfterDelete.getTitle());
+      Assert.assertEquals(infoBeforeDelete.getDescription(), infoAfterDelete.getDescription());
+      Assert.assertEquals(infoBeforeDelete.getCreated(), infoAfterDelete.getCreated());
+      Assert.assertEquals(infoBeforeDelete.getLastModified(), infoAfterDelete.getLastModified());
+      Assert.assertEquals(infoBeforeDelete.getCreator(), infoAfterDelete.getCreator());
+      Assert.assertEquals(infoBeforeDelete.getLastModifier(), infoAfterDelete.getLastModifier());
+      Assert.assertEquals(infoBeforeDelete.getLastRev(), infoAfterDelete.getLastRev());
+      Assert.assertEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(infoBeforeDelete.isValid(), infoAfterDelete.isValid());
+      Assert.assertEquals(infoBeforeDelete.getMetadata(), infoAfterDelete.getMetadata());
+      Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
+      Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testCreateDeleteSaveAndGetInfo() throws PipelineException, IOException {
+    try {
+      store.init();
+      PipelineConfiguration pipelineConfig = store.create(
+          SYSTEM_USER,
+          DEFAULT_PIPELINE_NAME,
+          "label",
+          DEFAULT_PIPELINE_DESCRIPTION,
+          false,
+          false,
+          new HashMap<String, Object>());
+      PipelineInfo infoBeforeDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      Path pipelineDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      String pipelineDirPath = pipelineDir.toAbsolutePath().toString();
+      File infoFile = new File(pipelineDirPath.endsWith("/")
+                               ? pipelineDirPath + DEFAULT_PIPELINE_NAME + "/info.json"
+                               : pipelineDirPath + "/" + DEFAULT_PIPELINE_NAME + "/info.json");
+      Assert.assertTrue(infoFile.exists());
+      Files.delete(infoFile.toPath());
+
+      PipelineConfiguration pipelineConfigurationAfterSave = store.save(
+          "otherUser",
+          DEFAULT_PIPELINE_NAME,
+          FilePipelineStoreTask.REV,
+          null,
+          pipelineConfig,
+          false
+      );
+
+      PipelineInfo infoAfterDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      Assert.assertEquals(infoBeforeDelete.getPipelineId(), infoAfterDelete.getPipelineId());
+      Assert.assertEquals(infoBeforeDelete.getTitle(), infoAfterDelete.getTitle());
+      Assert.assertEquals(infoBeforeDelete.getDescription(), infoAfterDelete.getDescription());
+      Assert.assertEquals(infoBeforeDelete.getCreated(), infoAfterDelete.getCreated());
+      Assert.assertNotEquals(infoBeforeDelete.getLastModified(), infoAfterDelete.getLastModified());
+      Assert.assertEquals(infoBeforeDelete.getCreator(), infoAfterDelete.getCreator());
+      Assert.assertEquals(SYSTEM_USER, infoBeforeDelete.getLastModifier());
+      Assert.assertEquals("otherUser", infoAfterDelete.getLastModifier());
+      Assert.assertEquals(infoBeforeDelete.getLastRev(), infoAfterDelete.getLastRev());
+      Assert.assertNotEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(pipelineConfig.getUuid(), pipelineConfigurationAfterSave.getUuid());
+      Assert.assertEquals(pipelineConfigurationAfterSave.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertNotEquals(infoBeforeDelete.isValid(), infoAfterDelete.isValid());
+      Assert.assertEquals(infoBeforeDelete.getMetadata(), infoAfterDelete.getMetadata());
+      Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
+      Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testCreateDeleteLoadAndGetInfo() throws PipelineException, IOException {
+    try {
+      store.init();
+      PipelineConfiguration pipelineConfig = store.create(
+          SYSTEM_USER,
+          DEFAULT_PIPELINE_NAME,
+          "label",
+          DEFAULT_PIPELINE_DESCRIPTION,
+          false,
+          false,
+          new HashMap<String, Object>());
+      PipelineInfo infoBeforeDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      Path pipelineDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      String pipelineDirPath = pipelineDir.toAbsolutePath().toString();
+      File infoFile = new File(pipelineDirPath.endsWith("/")
+                               ? pipelineDirPath + DEFAULT_PIPELINE_NAME + "/info.json"
+                               : pipelineDirPath + "/" + DEFAULT_PIPELINE_NAME + "/info.json");
+      Assert.assertTrue(infoFile.exists());
+      Files.delete(infoFile.toPath());
+
+      store.load(DEFAULT_PIPELINE_NAME, FilePipelineStoreTask.REV);
+
+      PipelineInfo infoAfterDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      Assert.assertEquals(infoBeforeDelete.getPipelineId(), infoAfterDelete.getPipelineId());
+      Assert.assertEquals(infoBeforeDelete.getTitle(), infoAfterDelete.getTitle());
+      Assert.assertEquals(infoBeforeDelete.getDescription(), infoAfterDelete.getDescription());
+      Assert.assertEquals(infoBeforeDelete.getCreated(), infoAfterDelete.getCreated());
+      Assert.assertEquals(infoBeforeDelete.getLastModified(), infoAfterDelete.getLastModified());
+      Assert.assertEquals(infoBeforeDelete.getCreator(), infoAfterDelete.getCreator());
+      Assert.assertEquals(infoBeforeDelete.getLastModifier(), infoAfterDelete.getLastModifier());
+      Assert.assertEquals(infoBeforeDelete.getLastRev(), infoAfterDelete.getLastRev());
+      Assert.assertEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(infoBeforeDelete.isValid(), infoAfterDelete.isValid());
+      Assert.assertEquals(infoBeforeDelete.getMetadata(), infoAfterDelete.getMetadata());
+      Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
+      Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testCreateDeleteGetPipelinesAndGetInfo() throws PipelineException, IOException {
+    try {
+      store.init();
+      PipelineConfiguration pipelineConfig = store.create(
+          SYSTEM_USER,
+          DEFAULT_PIPELINE_NAME,
+          "label",
+          DEFAULT_PIPELINE_DESCRIPTION,
+          false,
+          false,
+          new HashMap<String, Object>());
+      PipelineInfo infoBeforeDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      Path pipelineDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      String pipelineDirPath = pipelineDir.toAbsolutePath().toString();
+      File infoFile = new File(pipelineDirPath.endsWith("/")
+                               ? pipelineDirPath + DEFAULT_PIPELINE_NAME + "/info.json"
+                               : pipelineDirPath + "/" + DEFAULT_PIPELINE_NAME + "/info.json");
+      Assert.assertTrue(infoFile.exists());
+      Files.delete(infoFile.toPath());
+
+      List<PipelineInfo> pipelineInfoList = store.getPipelines();
+      Assert.assertEquals(1, pipelineInfoList.size());
+      PipelineInfo infoAfterDelete = pipelineInfoList.get(0);
+
+      Assert.assertEquals(infoBeforeDelete.getPipelineId(), infoAfterDelete.getPipelineId());
+      Assert.assertEquals(infoBeforeDelete.getTitle(), infoAfterDelete.getTitle());
+      Assert.assertEquals(infoBeforeDelete.getDescription(), infoAfterDelete.getDescription());
+      Assert.assertEquals(infoBeforeDelete.getCreated(), infoAfterDelete.getCreated());
+      Assert.assertEquals(infoBeforeDelete.getLastModified(), infoAfterDelete.getLastModified());
+      Assert.assertEquals(infoBeforeDelete.getCreator(), infoAfterDelete.getCreator());
+      Assert.assertEquals(infoBeforeDelete.getLastModifier(), infoAfterDelete.getLastModifier());
+      Assert.assertEquals(infoBeforeDelete.getLastRev(), infoAfterDelete.getLastRev());
+      Assert.assertEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(infoBeforeDelete.isValid(), infoAfterDelete.isValid());
+      Assert.assertEquals(infoBeforeDelete.getMetadata(), infoAfterDelete.getMetadata());
+      Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
+      Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testCreateDeleteSaveMetadataAndGetInfo() throws PipelineException, IOException {
+    try {
+      store.init();
+      PipelineConfiguration pipelineConfig = store.create(
+          SYSTEM_USER,
+          DEFAULT_PIPELINE_NAME,
+          "label",
+          DEFAULT_PIPELINE_DESCRIPTION,
+          false,
+          false,
+          new HashMap<String, Object>());
+      PipelineInfo infoBeforeDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
+      Path pipelineDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+      String pipelineDirPath = pipelineDir.toAbsolutePath().toString();
+      File infoFile = new File(pipelineDirPath.endsWith("/")
+                               ? pipelineDirPath + DEFAULT_PIPELINE_NAME + "/info.json"
+                               : pipelineDirPath + "/" + DEFAULT_PIPELINE_NAME + "/info.json");
+      Assert.assertTrue(infoFile.exists());
+      Files.delete(infoFile.toPath());
+
+      PipelineConfiguration pipelineConfigAfterSave = store.saveMetadata(
+          "otherUser",
+          DEFAULT_PIPELINE_NAME,
+          FilePipelineStoreTask.REV,
+          Collections.emptyMap()
+      );
+
+      PipelineInfo infoAfterDelete = store.getInfo(DEFAULT_PIPELINE_NAME);
+
+      Assert.assertEquals(infoBeforeDelete.getPipelineId(), infoAfterDelete.getPipelineId());
+      Assert.assertEquals(infoBeforeDelete.getTitle(), infoAfterDelete.getTitle());
+      Assert.assertEquals(infoBeforeDelete.getDescription(), infoAfterDelete.getDescription());
+      Assert.assertEquals(infoBeforeDelete.getCreated(), infoAfterDelete.getCreated());
+      Assert.assertNotEquals(infoBeforeDelete.getLastModified(), infoAfterDelete.getLastModified());
+      Assert.assertEquals(infoBeforeDelete.getCreator(), infoAfterDelete.getCreator());
+      Assert.assertEquals(SYSTEM_USER, infoBeforeDelete.getLastModifier());
+      Assert.assertEquals("otherUser", infoAfterDelete.getLastModifier());
+      Assert.assertEquals(infoBeforeDelete.getLastRev(), infoAfterDelete.getLastRev());
+      Assert.assertEquals(infoBeforeDelete.getUuid(), infoAfterDelete.getUuid());
+      Assert.assertEquals(infoBeforeDelete.isValid(), infoAfterDelete.isValid());
+      Assert.assertNotEquals(infoBeforeDelete.getMetadata(), infoAfterDelete.getMetadata());
+      Assert.assertNull(infoBeforeDelete.getMetadata());
+      Assert.assertEquals(0, infoAfterDelete.getMetadata().size());
+      Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
+      Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+
 }

@@ -221,14 +221,22 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineConfiguration pipeline = pipelineCreator.create(user, pipelineId, pipelineTitle, description, new Date());
 
       if (!draft) {
+        DataStore dataStorePipeline = new DataStore(getPipelineFile(pipelineId).toFile());
+        DataStore dataStoreInfo = new DataStore(getInfoFile(pipelineId).toFile());
         try (
-            OutputStream infoFile = Files.newOutputStream(getInfoFile(pipelineId));
-            OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(pipelineId))
+            OutputStream pipelineFile = dataStorePipeline.getOutputStream();
+            OutputStream infoFile = dataStoreInfo.getOutputStream()
         ){
-          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipeline.getInfo()));
+          // it is important to always modify pipeline.json before modifying info.json in order for recovery to work
           json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
+          dataStorePipeline.commit(pipelineFile);
+          json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipeline.getInfo()));
+          dataStoreInfo.commit(infoFile);
         } catch (Exception ex) {
           throw new PipelineStoreException(ContainerError.CONTAINER_0202, pipelineId, ex.toString(), ex);
+        } finally {
+          dataStorePipeline.release();
+          dataStoreInfo.release();
         }
         if (pipelineStateStore != null) {
           pipelineStateStore.edited(user, pipelineId, REV, ExecutionMode.STANDALONE, isRemote, metadata);
@@ -306,7 +314,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
     for (String name : fileNames) {
       PipelineInfoJson pipelineInfoJsonBean;
-      try (InputStream infoFile = Files.newInputStream(getInfoFile(name))){
+      DataStore dataStoreInfo = new DataStore(getInfoFile(name).toFile());
+      syncPipelineWithPipelineInfoIfNeeded(dataStoreInfo, name);
+      try (InputStream infoFile = dataStoreInfo.getInputStream()){
         pipelineInfoJsonBean = json.readValue(infoFile, PipelineInfoJson.class);
       } catch (IOException e) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, e);
@@ -316,13 +326,51 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     return Collections.unmodifiableList(pipelineInfoList);
   }
 
+  private void syncPipelineWithPipelineInfoIfNeeded(DataStore dataStoreInfo, String name)
+      throws PipelineStoreException {
+    try {
+      boolean syncNeeded = false;
+      if (!dataStoreInfo.exists()) {
+        syncNeeded = true;
+      } else {
+        try (InputStream infoFile = dataStoreInfo.getInputStream()) {
+          if (dataStoreInfo.isRecovered()) {
+            syncNeeded = true;
+          }
+        }
+      }
+      if (syncNeeded) {
+        syncPipelineWithPipelineInfo(name);
+      }
+    } catch (IOException e) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, e);
+    }
+  }
+
+  private void syncPipelineWithPipelineInfo(String name) throws IOException {
+    DataStore dataStorePipeline = new DataStore(getPipelineFile(name).toFile());
+    try (InputStream pipelineFile = dataStorePipeline.getInputStream()) {
+      PipelineConfigurationJson pipelineConfigBean =
+          json.readValue(pipelineFile, PipelineConfigurationJson.class);
+      DataStore dataStoreInfo = new DataStore(getInfoFile(name).toFile());
+      try (OutputStream infoFile = dataStoreInfo.getOutputStream()) {
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(pipelineConfigBean.getInfo().getPipelineInfo()));
+        dataStoreInfo.commit(infoFile);
+      } finally {
+        dataStoreInfo.release();
+      }
+    }
+  }
+
   @Override
   public PipelineInfo getInfo(String name) throws PipelineStoreException {
     synchronized (lockCache.getLock(name)) {
       if (!hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      try (InputStream infoFile = Files.newInputStream(getInfoFile(name))) {
+      DataStore dataStoreInfo = new DataStore(getInfoFile(name).toFile());
+      syncPipelineWithPipelineInfoIfNeeded(dataStoreInfo, name);
+      try (InputStream infoFile = dataStoreInfo.getInputStream()) {
         PipelineInfoJson pipelineInfoJsonBean = json.readValue(infoFile, PipelineInfoJson.class);
         return pipelineInfoJsonBean.getPipelineInfo();
       } catch (Exception ex) {
@@ -371,13 +419,18 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (encryptCredentials) {
         encryptingCredentialHandler.handlePipelineConfigCredentials(pipeline);
       }
+      DataStore dataStorePipeline = new DataStore(getPipelineFile(name).toFile());
+      DataStore dataStoreInfo = new DataStore(getInfoFile(name).toFile());
       try (
-          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
-          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name))
+          OutputStream pipelineFile = dataStorePipeline.getOutputStream();
+          OutputStream infoFile = dataStoreInfo.getOutputStream()
         ){
         pipeline.setUuid(uuid);
-        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+        pipeline.setInfo(info);
         json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(pipeline));
+        dataStorePipeline.commit(pipelineFile);
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(info));
+        dataStoreInfo.commit(infoFile);
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
           PipelineBeanCreator.get().create(pipeline, errors, null);
@@ -396,6 +449,9 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
       } catch (Exception ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.toString(), ex);
+      } finally {
+        dataStorePipeline.release();
+        dataStoreInfo.release();
       }
       pipeline.setPipelineInfo(info);
       return pipeline;
@@ -417,8 +473,22 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       if (!hasPipeline(name)) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
       }
-      try (InputStream pipelineFile = Files.newInputStream(getPipelineFile(name))) {
-        PipelineInfo info = getInfo(name);
+      DataStore dataStorePipeline = new DataStore(getPipelineFile(name).toFile());
+      try {
+        boolean syncNeeded = false;
+        try (InputStream pipelineFile = dataStorePipeline.getInputStream()) {
+          if (dataStorePipeline.isRecovered()) {
+            syncNeeded = true;
+          }
+        }
+        if (syncNeeded) {
+          syncPipelineWithPipelineInfo(name);
+        }
+      } catch (IOException ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0206, name, ex.toString(), ex);
+      }
+      PipelineInfo info = getInfo(name);
+      try (InputStream pipelineFile = dataStorePipeline.getInputStream()) {
         PipelineConfigurationJson pipelineConfigBean =
           json.readValue(pipelineFile, PipelineConfigurationJson.class);
         PipelineConfiguration pipeline = pipelineConfigBean.getPipelineConfiguration();
@@ -592,14 +662,21 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       savedPipeline.setMetadata(metadata);
       savedPipeline.setPipelineInfo(updatedInfo);
 
+      DataStore dataStorePipeline = new DataStore(getPipelineFile(name).toFile());
+      DataStore dataStoreInfo = new DataStore(getInfoFile(name).toFile());
       try (
-          OutputStream infoFile = Files.newOutputStream(getInfoFile(name));
-          OutputStream pipelineFile = Files.newOutputStream(getPipelineFile(name))
+          OutputStream pipelineFile = dataStorePipeline.getOutputStream();
+          OutputStream infoFile = dataStoreInfo.getOutputStream()
       ) {
-        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(updatedInfo));
         json.writeValue(pipelineFile, BeanHelper.wrapPipelineConfiguration(savedPipeline));
+        dataStorePipeline.commit(pipelineFile);
+        json.writeValue(infoFile, BeanHelper.wrapPipelineInfo(updatedInfo));
+        dataStoreInfo.commit(infoFile);
       } catch (Exception ex) {
         throw new PipelineStoreException(ContainerError.CONTAINER_0204, name, ex.toString(), ex);
+      } finally {
+        dataStorePipeline.release();
+        dataStoreInfo.release();
       }
       return savedPipeline;
     }
