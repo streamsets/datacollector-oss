@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -27,6 +29,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +39,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
@@ -43,9 +49,23 @@ import java.util.concurrent.TimeUnit;
 
 public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private static final Logger LOG = LoggerFactory.getLogger(StatsCollectorTask.class);
+  private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.get();
 
-  public static final String USAGE_BASE_URL = "usage.reporting.baseUrl";
-  public static final String USAGE_BASE_URL_DEFAULT = ""; //TODO set the default
+  public static final String GET_TELEMETRY_URL_ENDPOINT = "usage.reporting.getTelemetryUrlEndpoint";
+  public static final String GET_TELEMETRY_URL_ENDPOINT_DEFAULT = "https://telemetry.streamsets.com/getTelemetryUrl";
+  /** Tells getTelemetryUrl endpoint to use the test bucket **/
+  public static final String TELEMETRY_USE_TEST_BUCKET = "usage.reporting.getTelemetryUrlEndpoint.useTestBucket";
+  public static final boolean TELEMETRY_USE_TEST_BUCKET_DEFAULT = false;
+  @VisibleForTesting
+  static final String GET_TELEMETRY_URL_ARG_CLIENT_ID = "client_id";
+  @VisibleForTesting
+  static final String GET_TELEMETRY_URL_ARG_EXTENSION = "extension";
+  @VisibleForTesting
+  static final String GET_TELEMETRY_URL_ARG_EXTENSION_JSON = "json";
+  @VisibleForTesting
+  static final String GET_TELEMETRY_URL_ARG_TEST_BUCKET = "test_bucket";
+  @VisibleForTesting
+  static final String TELEMETRY_URL_KEY = "url";
 
   public static final String USAGE_PATH = "usage.reporting.path";
   public static final String USAGE_PATH_DEFAULT = "/public-rest/v4/usage/datacollector3";
@@ -279,26 +299,87 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
 
   protected boolean reportStats(List<StatsBean> stats) {
     boolean reported = false;
-    String baseUrlReporting = config.get(USAGE_BASE_URL, USAGE_BASE_URL_DEFAULT);
-    if (baseUrlReporting.isEmpty()) {
-      LOG.debug("Reporting disabled");
-      reported = true;
-    } else {
+    String getTelemetryUrlEndpoint = config.get(GET_TELEMETRY_URL_ENDPOINT, GET_TELEMETRY_URL_ENDPOINT_DEFAULT);
+    if (getTelemetryUrlEndpoint.startsWith("http")) {
       try {
-        String pathReporting = config.get(USAGE_PATH, USAGE_PATH_DEFAULT);
-        RestClient client = RestClient.builder(baseUrlReporting)
+        // RestClient adds a trailing slash to the "baseUrl", so we have to split it up just to avoid that
+        URL getTelemetryUrl = new URL(getTelemetryUrlEndpoint);
+        String baseUrl = getTelemetryUrlEndpoint.substring(
+            0,
+            getTelemetryUrlEndpoint.length() - getTelemetryUrl.getPath().length());
+        RestClient client = RestClient.builder(baseUrl)
             .json(true)
-            .path(pathReporting)
             .name(getRuntimeInfo().getId())
+            .path(getTelemetryUrl.getPath())
             .build();
-        RestClient.Response response = client.post(stats);
-        reported = response.successful();
-        LOG.debug("Usage reporting HTTP status '{}'", response.getStatus());
+        ImmutableMap.Builder<String, String> argsMapBuilder = ImmutableMap.builder();
+        argsMapBuilder.put(GET_TELEMETRY_URL_ARG_CLIENT_ID, getRuntimeInfo().getId());
+        argsMapBuilder.put(GET_TELEMETRY_URL_ARG_EXTENSION, GET_TELEMETRY_URL_ARG_EXTENSION_JSON);
+        if (config.get(TELEMETRY_USE_TEST_BUCKET, TELEMETRY_USE_TEST_BUCKET_DEFAULT)) {
+          argsMapBuilder.put(GET_TELEMETRY_URL_ARG_TEST_BUCKET, "True"); // any non-empty string is treated as true
+        }
+        RestClient.Response response = postToGetTelemetryUrl(client, argsMapBuilder.build());
+        if (response.successful()) {
+          Map<String, String> responseData = response.getData(new TypeReference<Map<String, String>>(){});
+          String uploadUrlString = responseData.get(TELEMETRY_URL_KEY);
+          if (null != uploadUrlString) {
+            reported = uploadToUrl(stats, uploadUrlString);
+          } else {
+            LOG.warn("Unable to get telemetry URL from endpoint {}, url missing from responseData {}",
+                getTelemetryUrlEndpoint,
+                responseData);
+          }
+        } else {
+          LOG.warn("Unable to get telemetry URL from endpoint {}, response code: {}",
+              getTelemetryUrlEndpoint,
+              response.getStatus());
+        }
       } catch (Exception ex) {
         LOG.warn("Usage reporting failed. Error: {}", ex.getMessage(), ex);
       }
+    } else {
+      LOG.debug("Reporting disabled");
+      reported = true;
     }
     return reported;
+  }
+
+  // This is mostly here for mocking in tests
+  @VisibleForTesting
+  protected RestClient.Response postToGetTelemetryUrl(RestClient client, Object data) throws IOException {
+    return client.post(data);
+  }
+
+  private boolean uploadToUrl(List<StatsBean> stats, String uploadUrlString) throws IOException {
+    boolean reported = false;
+    LOG.debug("Uploading {} stats to url {}", stats.size(), uploadUrlString);
+    URL uploadUrl = new URL(uploadUrlString);
+    // Avoid RestClient since sometimes extra headers cause a problem with signed URLs
+    HttpURLConnection connection = getHttpURLConnection(uploadUrl);
+    connection.setDoInput(true);
+    connection.setDoOutput(true);
+    connection.setRequestMethod("PUT");
+    OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
+    OBJECT_MAPPER.writeValue(out, stats);
+    out.close();
+    int responseCode = connection.getResponseCode();
+    if (responseCode == HttpURLConnection.HTTP_OK) {
+      reported = true;
+    } else {
+      LOG.warn("Failed to upload to url {} with code {} and message: {} and stream: {}",
+          uploadUrlString,
+          responseCode,
+          connection.getResponseMessage(),
+          IOUtils.toString(connection.getInputStream()));
+      connection.getInputStream().close();
+    }
+    return reported;
+  }
+
+  // This is just so it can be mocked
+  @VisibleForTesting
+  protected HttpURLConnection getHttpURLConnection(URL uploadUrl) throws IOException {
+    return (HttpURLConnection) uploadUrl.openConnection();
   }
 
   protected void saveStats() {
