@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,8 +39,18 @@
   }
   .list-content {
     .list-group-item {
+      position: relative;
       border-left: 0;
       border-right: 0;
+
+      &:hover{
+        &:not(:first-child) {
+          box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+        }
+        .list-actions {
+          display: block;
+        }
+      }
 
       &.active-info {
         color: #31708f;
@@ -56,6 +66,21 @@
       &:last-child {
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
+      }
+
+      .list-actions {
+        display: none;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        > i {
+          padding: 5px;
+          color: #333;
+          cursor: pointer;
+          &:hover {
+            color: black;
+          }
+        }
       }
 
       .header {
