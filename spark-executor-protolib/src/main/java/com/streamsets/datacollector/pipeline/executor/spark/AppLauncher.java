@@ -18,9 +18,9 @@ package com.streamsets.datacollector.pipeline.executor.spark;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.el.ELEvalException;
+import org.apache.spark.launcher.SparkAppHandle;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Base interface for launching Spark applications on different cluster managers.
@@ -34,9 +34,10 @@ public interface AppLauncher {
   List<Stage.ConfigIssue> init(Stage.Context context, SparkExecutorConfigBean configs);
 
   /**
-   * Launches an application and returns an appId if the underlying system provides it
+   * Launches an application and returns a spark Handle for client code to track application status
+   * @return
    */
-  Optional<String> launchApp(Record record) //NOSONAR
+  SparkAppHandle launchApp(Record record) //NOSONAR
       throws ApplicationLaunchFailureException, ELEvalException;
 
   /**

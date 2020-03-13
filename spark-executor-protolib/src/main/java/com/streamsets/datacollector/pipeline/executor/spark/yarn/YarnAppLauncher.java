@@ -210,7 +210,7 @@ public class YarnAppLauncher implements AppLauncher {
   }
 
   @Override
-  public Optional<String> launchApp(Record record)
+  public SparkAppHandle launchApp(Record record)
       throws ApplicationLaunchFailureException, ELEvalException {
 
     SparkLauncher launcher = getLauncher();
@@ -264,7 +264,7 @@ public class YarnAppLauncher implements AppLauncher {
 
     try {
       final SparkAppHandle handle = launcher.startApplication(new AppListener());
-      return Optional.ofNullable(handle.getAppId());
+      return handle;
     } catch (IOException ex) {
       latch.countDown();
       throw new ApplicationLaunchFailureException(ex);
@@ -272,6 +272,7 @@ public class YarnAppLauncher implements AppLauncher {
       latch.countDown();
       throw ex;
     }
+
   }
 
   /**

@@ -258,13 +258,27 @@ public class YarnConfigBean {
   public long waitTimeout;
 
   @ConfigDef(
+      type = ConfigDef.Type.NUMBER,
+      required = true,
+      defaultValue = "0",
+      min = 0,
+      max = 20,
+      label = "Spark App Submission Time (s)",
+      description = "Time to wait for the Spark app to be submitted successfully. Note that this cause batch delay" +
+          "Enter 0 to not wait for app submission. May cause appId to not be updated",
+      group = "APPLICATION",
+      displayPosition = 110
+  )
+  public long submitTimeout;
+
+  @ConfigDef(
       type = ConfigDef.Type.BOOLEAN,
       required = true,
       defaultValue = "false",
       label = "Enable Verbose Logging",
       description = "Enable only for testing, as a lot of additional log data is written to sdc.log",
       group = "APPLICATION",
-      displayPosition = 110
+      displayPosition = 120
   )
   public boolean verbose;
 

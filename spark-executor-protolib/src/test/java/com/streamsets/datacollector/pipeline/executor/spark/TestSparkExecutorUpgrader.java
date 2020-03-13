@@ -18,9 +18,13 @@ package com.streamsets.datacollector.pipeline.executor.spark;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +55,24 @@ public class TestSparkExecutorUpgrader {
     Assert.assertEquals(2, upgraded.size());
     Assert.assertTrue(upgraded.contains(configToRetain1));
     Assert.assertTrue(upgraded.contains(ConfigToRetain2));
+
+  }
+
+  @Test
+  public void testV2toV3() throws StageException {
+    List<Config> configs = new ArrayList<>();
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SparkDExecutor.yaml");
+
+    StageUpgrader upgrader = new SelectorStageUpgrader("stage", new SparkExecutorUpgrader(), yamlResource);
+
+    StageUpgrader.Context  context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+    //conf.yarnConfigBean.submitTimeout
+    UpgraderTestUtils.assertExists(configs, "conf.yarnConfigBean.submitTimeout", "0");
+
 
   }
 
