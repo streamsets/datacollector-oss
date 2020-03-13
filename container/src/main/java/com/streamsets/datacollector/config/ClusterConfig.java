@@ -168,7 +168,7 @@ public class ClusterConfig {
       label = "Cluster Callback URL",
       description = "Optional callback URL for the Spark cluster to use to contact this Transformer instance. " +
           "Use this format: http://<hostname>:<port>",
-      displayPosition = 20,
+      displayPosition = 5,
       group = "ADVANCED",
       dependencies = {
           @Dependency(
