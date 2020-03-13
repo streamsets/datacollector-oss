@@ -32,7 +32,6 @@ import java.util.Arrays;
 import java.util.UUID;
 
 public class TestGroupManagementResource {
-  private UsersManager usersManager;
   private File usersFile;
 
   @Before
@@ -43,7 +42,6 @@ public class TestGroupManagementResource {
     usersFile = new File(dir, "/form-realm.properties");
     try (Writer writer = new FileWriter(usersFile)) {
     }
-    usersManager = new TrxUsersManager(usersFile);
   }
 
   @Test
@@ -52,12 +50,12 @@ public class TestGroupManagementResource {
 
     mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
 
-    GroupManagementResource resource = new GroupManagementResource(usersManager);
+    GroupManagementResource resource = new GroupManagementResource(mgr);
 
     OkPaginationRestResponse<RString> response = resource.list(new PaginationInfo());
     Assert.assertNotNull(response);
     Assert.assertEquals(OkRestResponse.HTTP_OK, response.getHttpStatusCode());
-    Assert.assertEquals(Arrays.asList(new RString("g1")), response.getData());
+    Assert.assertEquals(Arrays.asList(new RString("all"), new RString("g1")), response.getData());
   }
 
 }

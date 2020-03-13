@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class TestUserManagementResource {
-  private UsersManager usersManager;
   private File usersFile;
 
   @Before
@@ -52,13 +51,13 @@ public class TestUserManagementResource {
     usersFile = new File(dir, "/form-realm.properties");
     try (Writer writer = new FileWriter(usersFile)) {
     }
-    usersManager = new TrxUsersManager(usersFile);
   }
 
   @Test
   public void testCreate() throws Exception {
+    UsersManager mgr = new TrxUsersManager(usersFile);
 
-    UserManagementResource resource = new UserManagementResource(usersManager, null);
+    UserManagementResource resource = new UserManagementResource(mgr, null);
 
     RUser user = new RUser();
     user.getId().setValue("u1");
@@ -72,12 +71,12 @@ public class TestUserManagementResource {
     Assert.assertNotNull(response);
     Assert.assertEquals(OkRestResponse.HTTP_CREATED, response.getHttpStatusCode());
 
-    UsersManager mgr = new TrxUsersManager(usersFile, 10000);
+    mgr = new TrxUsersManager(usersFile, 10000);
 
     Assert.assertEquals(1, mgr.listUsers().size());
     Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
     Assert.assertEquals("e1", mgr.listUsers().get(0).getEmail());
-    Assert.assertEquals(Arrays.asList("g1"), mgr.listUsers().get(0).getGroups());
+    Assert.assertEquals(Arrays.asList("all", "g1"), mgr.listUsers().get(0).getGroups());
     Assert.assertEquals(Arrays.asList("admin"), mgr.listUsers().get(0).getRoles());
   }
 
@@ -86,7 +85,7 @@ public class TestUserManagementResource {
     UsersManager mgr = new TrxUsersManager(usersFile, 10000);
     mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
 
-    UserManagementResource resource = new UserManagementResource(usersManager, null);
+    UserManagementResource resource = new UserManagementResource(mgr, null);
 
     RUser user = new RUser();
     user.getId().setValue("u1");
@@ -106,7 +105,7 @@ public class TestUserManagementResource {
     Assert.assertEquals(1, mgr.listUsers().size());
     Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
     Assert.assertEquals("e2", mgr.listUsers().get(0).getEmail());
-    Assert.assertEquals(Arrays.asList("g2"), mgr.listUsers().get(0).getGroups());
+    Assert.assertEquals(Arrays.asList("all", "g2"), mgr.listUsers().get(0).getGroups());
     Assert.assertEquals(Arrays.asList("creator"), mgr.listUsers().get(0).getRoles());
   }
 
@@ -115,7 +114,7 @@ public class TestUserManagementResource {
     UsersManager mgr = new TrxUsersManager(usersFile, 10000);
     mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
 
-    UserManagementResource resource = new UserManagementResource(usersManager, null);
+    UserManagementResource resource = new UserManagementResource(mgr, null);
 
     OkRestResponse<Void> response = resource.delete("u1");
     Assert.assertNotNull(response);
@@ -129,7 +128,7 @@ public class TestUserManagementResource {
     UsersManager mgr = new TrxUsersManager(usersFile, 10000);
     mgr.create("u1", "email", Arrays.asList("g1"),Arrays.asList("admin", "creator", "manager", "guest"));
 
-    UserManagementResource resource = new UserManagementResource(usersManager, null);
+    UserManagementResource resource = new UserManagementResource(mgr, null);
 
     OkPaginationRestResponse<RUser> response = resource.list(new PaginationInfo());
     Assert.assertNotNull(response);
@@ -140,7 +139,7 @@ public class TestUserManagementResource {
     RUser user = users.get(0);
     Assert.assertEquals("u1", user.getId().getValue());
     Assert.assertEquals("email", user.getEmail().getValue());
-    Assert.assertEquals(Arrays.asList(new RString("g1")), user.getGroups());
+    Assert.assertEquals(Arrays.asList(new RString("all"), new RString("g1")), user.getGroups());
     Assert.assertEquals(Arrays.asList(new RString("admin"),
         new RString("creator"),
         new RString("manager"),
@@ -155,7 +154,7 @@ public class TestUserManagementResource {
     String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
     mgr.setPasswordFromReset("u1", resetToken, "password");
 
-    UserManagementResource resource = new UserManagementResource(usersManager, () -> "u1");
+    UserManagementResource resource = new UserManagementResource(mgr, () -> "u1");
 
     RChangePassword changePassword = new RChangePassword();
     changePassword.getId().setValue("u1");
@@ -178,7 +177,7 @@ public class TestUserManagementResource {
     String resetToken = mgr.create("u1", "email", Arrays.asList("g1"), Arrays.asList("admin"));
     mgr.setPasswordFromReset("u1", resetToken, "password");
 
-    UserManagementResource resource = new UserManagementResource(usersManager, () -> "u1");
+    UserManagementResource resource = new UserManagementResource(mgr, () -> "u1");
 
     OkRestResponse<RResetPasswordLink> response = resource.resetPassword("u1");
     Assert.assertNotNull(response);

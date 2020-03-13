@@ -45,6 +45,8 @@ public class RuntimeModuleUtils {
             throw new RuntimeException(ex.toString(), ex);
           }
           break;
+        case "none":
+          break;
         default:
           throw new RuntimeException(Utils.format("Invalid Authentication Login Module '{}', must be one of '{}'",
               auth, WebServerTask.LOGIN_MODULES));

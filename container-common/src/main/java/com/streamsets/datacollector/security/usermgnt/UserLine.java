@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.security.usermgnt;
 
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.List;
@@ -33,7 +34,8 @@ public abstract class UserLine extends Line {
 
   protected static String getUserLineRegex(String mode) {
     Utils.checkNotNull(mode, "mode");
-    return "^\\s*([\\w@.]*):\\s*" + mode + ":([\\w\\-:]*),user(\\s*$|,.*$)";
+    mode = (mode.isEmpty()) ? "" : mode + ":"; // to handle ClearUserLine
+    return "^\\s*([\\w@.]*):\\s*" + mode + "([\\w\\-:]*),user(\\s*$|,.*$)";
   }
 
   private final String mode;
@@ -94,6 +96,7 @@ public abstract class UserLine extends Line {
           .filter(e -> e.startsWith("group:"))
           .map(g -> g.substring("group:".length()))
           .collect(Collectors.toList());
+      groups = ImmutableList.<String>builder().add("all").addAll(groups).build();
       roles = list.stream()
           .filter(e -> !(e.startsWith("email:") | e.startsWith("group:")))
           .collect(Collectors.toList());
@@ -163,7 +166,7 @@ public abstract class UserLine extends Line {
   }
 
   public UserLine setGroups(List<String> groups) {
-    this.groups = groups;
+    this.groups = groups.stream().filter(g -> !g.equals("all")).collect(Collectors.toList());
     return this;
   }
 
@@ -184,7 +187,10 @@ public abstract class UserLine extends Line {
 
   @Override
   public String getValue() {
-    List<String> realmRoles = Stream.concat(groups.stream().map(g -> "group:" + g), roles.stream())
+    List<String> realmRoles = Stream.concat(
+        groups.stream().filter(g -> !g.equals("all")).map(g -> "group:" + g),
+        roles.stream()
+    )
         .collect(Collectors.toList());
     return String.format(
         "%s: %s:%s,user,%s,%s",

@@ -47,7 +47,7 @@ public class TestTrxUsersManager {
     User user = mgr.get("u1");
     Assert.assertEquals("u1", user.getUser());
     Assert.assertEquals("e1", user.getEmail());
-    Assert.assertEquals(Arrays.asList("g1"), user.getGroups());
+    Assert.assertEquals(Arrays.asList("all", "g1"), user.getGroups());
     Assert.assertEquals(Arrays.asList("r1"), user.getRoles());
   }
 
@@ -132,7 +132,7 @@ public class TestTrxUsersManager {
     Assert.assertEquals(1, mgr.listUsers().size());
     Assert.assertEquals("u1", mgr.listUsers().get(0).getUser());
     Assert.assertEquals("e1", mgr.listUsers().get(0).getEmail());
-    Assert.assertEquals(Arrays.asList("g1"), mgr.listUsers().get(0).getGroups());
+    Assert.assertEquals(Arrays.asList("all", "g1"), mgr.listUsers().get(0).getGroups());
     Assert.assertEquals(Arrays.asList("r1"), mgr.listUsers().get(0).getRoles());
   }
 
@@ -142,8 +142,7 @@ public class TestTrxUsersManager {
     Assert.assertEquals(0, mgr.listUsers().size());
     mgr.create("u1", "e1", Arrays.asList("g2"), Arrays.asList("r1"));
     mgr.create("u2", "e2", Arrays.asList("g2", "g1"), Arrays.asList("r1"));
-    Assert.assertEquals(2, mgr.listGroups().size());
-    Assert.assertEquals(Arrays.asList("g1", "g2"), mgr.listGroups());
+    Assert.assertEquals(Arrays.asList("all", "g1", "g2"), mgr.listGroups());
   }
 
 }

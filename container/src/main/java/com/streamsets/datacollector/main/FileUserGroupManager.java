@@ -81,10 +81,13 @@ public class FileUserGroupManager implements UserGroupManager {
   }
 
   UserJson toUserJson(User user) {
-    UserJson userJson = new UserJson();
-    userJson.setName(user.getUser());
-    userJson.setGroups(user.getGroups());
-    userJson.setRoles(user.getRoles());
+    UserJson userJson = null;
+    if (user != null) {
+      userJson = new UserJson();
+      userJson.setName(user.getUser());
+      userJson.setGroups(user.getGroups());
+      userJson.setRoles(user.getRoles());
+    }
     return userJson;
   }
 

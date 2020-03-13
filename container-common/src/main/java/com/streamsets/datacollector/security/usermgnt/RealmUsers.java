@@ -47,6 +47,8 @@ public class RealmUsers {
         line = new CommentLine(str);
       } else if (MD5UserLine.PATTERN.matcher(str).matches()) {
         line = new MD5UserLine(str);
+      } else if (ClearUserLine.PATTERN.matcher(str).matches()) {
+        line = new ClearUserLine(str);
       } else {
         throw new IOException("Invalid Realm file line: " + str);
       }
