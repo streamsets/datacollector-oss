@@ -49,27 +49,32 @@ public class PaginationInfoInjectorBinder extends AbstractBinder {
 
     @Inject
     public PaginationInfoInjector(HttpServletRequest request) {
-      Map<String, String[]> parameterMap = request.getParameterMap();
-      String[] values = parameterMap.get(ORDER_BY_PARAM);
-      String orderByData = (values == null) ? "" : values[0];
-
+      String orderByData = "";
+      long offset = 0;
+      long len = -1;
       Map<String, String[]> filterByData = new HashMap<>();
-      for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
-        String paramName = entry.getKey();
-        if (paramName.startsWith(FILTER_BY_PARAM_PREFIX)) {
-          String name = paramName.substring(FILTER_BY_PARAM_PREFIX.length());
-          filterByData.put(name, entry.getValue());
+      if (request != null) {
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        String[] values = parameterMap.get(ORDER_BY_PARAM);
+        orderByData = (values == null) ? "" : values[0];
+
+
+        for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
+          String paramName = entry.getKey();
+          if (paramName.startsWith(FILTER_BY_PARAM_PREFIX)) {
+            String name = paramName.substring(FILTER_BY_PARAM_PREFIX.length());
+            filterByData.put(name, entry.getValue());
+          }
         }
+
+        values = parameterMap.get(OFFSET_PARAM);
+        String value = (values == null) ? null : values[0];
+        offset = getNumber(value, 0, "offset", request);
+
+        values = parameterMap.get(LEN_PARAM);
+        value = (values == null) ? null : values[0];
+        len = getNumber(value, -1, "len", request);
       }
-
-      values = parameterMap.get(OFFSET_PARAM);
-      String value = (values == null) ? null : values[0];
-      long offset = getNumber(value, 0, "offset", request);
-
-      values = parameterMap.get(LEN_PARAM);
-      value = (values == null) ? null : values[0];
-      long len = getNumber(value, -1, "len", request);
-
       paginationInfo = new PaginationInfo();
       paginationInfo.setOrderBy(Splitter.on(",").trimResults().omitEmptyStrings().splitToList(orderByData));
       paginationInfo.setFilterBy(filterByData);
