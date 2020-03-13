@@ -1,0 +1,118 @@
+<form class="users-form" role="form" autocomplete="off" ng-submit="save()">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="cancel()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">{{modalTitle}}</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <div>
+
+      <div class="form-group">
+        <label class="control-label">User ID</label>
+        <input type="text"
+            autocomplete="off"
+            ng-disabled="{{ isCreateInProgress || !isNew }}"
+            autofocus
+            class="form-control"
+            required
+            ng-model="userModel.id">
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">email</label>
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-envelope"></i>
+          </span>
+          <input type="email"
+              ng-disabled="isCreateInProgress"
+              name="name"
+              class="form-control"
+              required
+              title="Example: user@company.com"
+              pattern="^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$"
+              ng-model="userModel.email">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Roles</label>
+        <div class="roles">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="admin" ng-model="userModel.admin">
+            <label class="form-check-label" for="admin">
+              Admin
+            </label>
+            <i class="glyphicon glyphicon-question-sign"
+                tooltip-placement="bottom"
+                tooltip="Perform any Data Collector task."
+                tooltip-popup-delay="500"></i>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="manager" ng-model="userModel.manager">
+            <label class="form-check-label" for="manager">
+              Manager
+            </label>
+            <i class="glyphicon glyphicon-question-sign"
+                tooltip-placement="bottom"
+                tooltip="Start and stop pipelines, monitor pipelines, configure and reset alerts. Take, review, and manage snapshots."
+                tooltip-popup-delay="500"></i>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="creator" ng-model="userModel.creator">
+            <label class="form-check-label" for="creator">
+              Creator
+            </label>
+            <i class="glyphicon glyphicon-question-sign"
+                tooltip-placement="bottom"
+                tooltip="Create and configure pipelines and alerts, preview data, and monitor the pipeline. Import pipelines."
+                tooltip-popup-delay="500"></i>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="guest" ng-model="userModel.guest">
+            <label class="form-check-label" for="guest">
+              Guest
+            </label>
+            <i class="glyphicon glyphicon-question-sign"
+                tooltip-placement="bottom"
+                tooltip="View pipelines and alerts, and general monitoring information. Export a pipeline."
+                tooltip-popup-delay="500"></i>
+          </div>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="form-group">
+        <label class="control-label">Groups</label>
+        <ui-select multiple tagging tagging-label="(enter new group)" ng-model="userModel.groups" theme="bootstrap" close-on-select="false">
+          <ui-select-match class="ui-select-match" placeholder="Select groups...">{{$item}}</ui-select-match>
+          <ui-select-choices class="ui-select-choices" repeat="group in groupsList | filter:$select.search">
+            {{group}}
+          </ui-select-choices>
+        </ui-select>
+      </div>
+
+    </div>
+
+    <div>
+      <div ng-repeat="errorMessage in createResponse.errorMessages" class="alert alert-danger alert-dismissible" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isCreateInProgress"
+            translate="global.form.cancel">Cancel</button>
+
+    <button type="submit" class="btn btn-primary" ng-if="!isCreateInProgress">Save</button>
+
+    <button class="btn btn-primary" ng-if="isCreateInProgress" disabled>Saving...</button>
+
+  </div>
+</form>
