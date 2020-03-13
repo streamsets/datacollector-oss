@@ -17,6 +17,7 @@ package com.streamsets.datacollector.restapi.rbean.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.rbean.lang.NotificationMsg;
 import com.streamsets.datacollector.restapi.rbean.lang.RBean;
 import com.streamsets.datacollector.restapi.rbean.lang.RDate;
@@ -144,7 +145,7 @@ public class TestRBeanSerializationDeserialization {
 
   @Test
   public void testSerializationDeserialization() throws IOException {
-    ObjectMapper mapper = RJson.getObjectMapper();
+    ObjectMapper mapper = ObjectMapperFactory.get();
 
     RBean1 bean = new RBean1();
     bean.setId(new RString().setValue("id"));
@@ -176,7 +177,7 @@ public class TestRBeanSerializationDeserialization {
 
   @Test
   public void testSerializationMessages() throws IOException {
-    ObjectMapper mapper = RJson.getObjectMapper();
+    ObjectMapper mapper = ObjectMapperFactory.get();
 
     RBean1 bean = new RBean1();
     bean.setId(new RString().setValue("id").addMessage(new NotificationMsg(Errors.X)).setAlt("ID"));

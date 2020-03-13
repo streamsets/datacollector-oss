@@ -120,7 +120,7 @@ public class TestSecretResource extends JerseyTest {
 
     InputStream responseEntity = (InputStream) response.getEntity();
 
-    OkRestResponse<RSecret> secretResponse = RJson.getObjectMapper().readValue(
+    OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get().readValue(
         responseEntity,
         new TypeReference<OkRestResponse<RSecret>>() {}
     );
@@ -171,7 +171,7 @@ public class TestSecretResource extends JerseyTest {
 
     InputStream responseEntity = (InputStream) response.getEntity();
 
-    OkRestResponse<RSecret> secretResponse = RJson.getObjectMapper().readValue(
+    OkRestResponse<RSecret> secretResponse = ObjectMapperFactory.get().readValue(
         responseEntity,
         new TypeReference<OkRestResponse<RSecret>>() {}
     );
@@ -189,7 +189,6 @@ public class TestSecretResource extends JerseyTest {
         ""
     );
     Assert.assertEquals(changedSecretValue, value.get());
-
   }
 
   @Test
@@ -243,7 +242,7 @@ public class TestSecretResource extends JerseyTest {
     Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     InputStream responseEntity = (InputStream) response.getEntity();
 
-    OkPaginationRestResponse<RSecret> secrets = RJson.getObjectMapper().readValue(
+    OkPaginationRestResponse<RSecret> secrets = ObjectMapperFactory.get().readValue(
         responseEntity,
         new TypeReference<OkPaginationRestResponse<RSecret>>() {}
     );

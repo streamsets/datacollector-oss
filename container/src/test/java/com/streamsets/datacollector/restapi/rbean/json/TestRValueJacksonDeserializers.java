@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi.rbean.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.rbean.lang.NotificationMsg;
 import com.streamsets.datacollector.restapi.rbean.lang.RBean;
 import com.streamsets.datacollector.restapi.rbean.lang.RBoolean;
@@ -41,7 +42,7 @@ public class TestRValueJacksonDeserializers {
 
   @Test
   public void testSerializer() throws IOException {
-    ObjectMapper mapper = RJson.getObjectMapper();
+    ObjectMapper mapper = ObjectMapperFactory.get();
     RString r = new RString("hello").addMessage(new NotificationMsg(TestRBeanSerializationDeserialization.Errors.X));
     String json = mapper.writeValueAsString(r);
     String value = mapper.readValue(json, String.class);
@@ -55,7 +56,7 @@ public class TestRValueJacksonDeserializers {
 
   @Test
   public void testDeserializer() throws IOException {
-    ObjectMapper mapper = RJson.getObjectMapper();
+    ObjectMapper mapper = ObjectMapperFactory.get();
 
     // the easiest way to test the deserializer is to make it deserialize.
 
@@ -137,7 +138,7 @@ public class TestRValueJacksonDeserializers {
 
   @Test
   public void testEnumDeser() throws Exception {
-    ObjectMapper mapper = RJson.getObjectMapper();
+    ObjectMapper mapper = ObjectMapperFactory.get();
 
     MyRBean bean = new MyRBean();
     bean.setId(new RString().setValue("id"));

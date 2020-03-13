@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi.rbean.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.rbean.json.RJson;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.jetbrains.annotations.NotNull;
@@ -73,7 +74,7 @@ public class RestRequest<T> {
    */
   public static <T> RestRequest<T> getRequest(@NotNull String restRequest, TypeReference<RestRequest<T>> typeReference)
       throws IOException {
-    RestRequest<T> request = RJson.getObjectMapper().readValue(restRequest, typeReference);
+    RestRequest<T> request = ObjectMapperFactory.get().readValue(restRequest, typeReference);
     Utils.checkArgument(request != null, "There is no RestRequest payload");
     Utils.checkArgument(request.getData() != null, "RestRequest does not contain any data");
     return request;

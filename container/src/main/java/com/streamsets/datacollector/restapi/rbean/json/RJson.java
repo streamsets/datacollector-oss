@@ -15,17 +15,10 @@
  */
 package com.streamsets.datacollector.restapi.rbean.json;
 
-import com.codahale.metrics.MetricFilter;
-import com.codahale.metrics.json.MetricsModule;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.BeanSerializerFactory;
-import com.fasterxml.jackson.databind.ser.SerializerFactory;
 import com.streamsets.datacollector.restapi.rbean.lang.BaseMsg;
 import com.streamsets.datacollector.restapi.rbean.lang.RBoolean;
 import com.streamsets.datacollector.restapi.rbean.lang.RChar;
@@ -40,8 +33,6 @@ import com.streamsets.datacollector.restapi.rbean.lang.RText;
 import com.streamsets.datacollector.restapi.rbean.lang.RTime;
 import com.streamsets.datacollector.restapi.rbean.lang.RValue;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * To remove support for NESTED JSON format get rid of the OBJECT_MAPPER as well as the REST_OBJECT_MAPPER_TL
  * and the doFlatJson() logic. Also, remove the NESTED JSON format support from the RValueJacksonSerializer and
@@ -50,23 +41,17 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unchecked")
 public class RJson {
 
-  private static final ObjectMapper OBJECT_MAPPER_FLAT;
 
-  private static ObjectMapper createObjectMapper() {
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.configure(JsonGenerator.Feature.AUTO_CLOSE_TARGET, false);
-    objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    objectMapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-    objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    objectMapper.enable(DeserializationFeature.USE_LONG_FOR_INTS);
-    objectMapper.registerModule(new MetricsModule(TimeUnit.SECONDS, TimeUnit.SECONDS, false, MetricFilter.ALL));
-    return objectMapper;
+  private static class RJsonModule extends SimpleModule {
+    @Override
+    public void setupModule(SetupContext context) {
+      context.addBeanSerializerModifier(new FlatRBeanSerializerModifier());
+      super.setupModule(context);
+    }
   }
 
   private static Module createModule() {
-    SimpleModule module = new SimpleModule();
-
+    SimpleModule module = new RJsonModule();
     module.addSerializer(RValue.class, new RValueJacksonSerializer());
 
     module.addDeserializer(RBoolean.class, new RBooleanJacksonDeserializer());
@@ -86,20 +71,10 @@ public class RJson {
   }
 
   public static ObjectMapper configureRJson(ObjectMapper objectMapper) {
-    SerializerFactory serializerFactory =
-        BeanSerializerFactory.instance.withSerializerModifier(new FlatRBeanSerializerModifier());
     objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-    objectMapper.setSerializerFactory(serializerFactory);
     objectMapper.registerModule(createModule());
     return objectMapper;
   }
 
-  static {
-    OBJECT_MAPPER_FLAT = configureRJson(createObjectMapper());
-  }
-
-  public static ObjectMapper getObjectMapper() {
-    return OBJECT_MAPPER_FLAT;
-  }
 
 }

@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 import com.fasterxml.jackson.databind.ser.impl.ObjectIdWriter;
 import com.fasterxml.jackson.databind.ser.std.BeanSerializerBase;
 import com.streamsets.datacollector.restapi.rbean.lang.RBean;
+import com.streamsets.datacollector.restapi.rbean.lang.RType;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,7 +72,6 @@ public class FlatRBeanSerializerModifier extends BeanSerializerModifier {
         } finally {
           CONTEXT_DATA_TL.get().pop();
         }
-
       } else {
         jgen.writeStartObject();
         serializeFields(bean, jgen, provider);
@@ -101,7 +101,8 @@ public class FlatRBeanSerializerModifier extends BeanSerializerModifier {
       BeanDescription beanDesc,
       JsonSerializer<?> serializer
   ) {
-    if (serializer instanceof BeanSerializerBase) {
+    // Only use the serializer for any subclasses of RType
+    if (RType.class.isAssignableFrom(beanDesc.getBeanClass()) && serializer instanceof BeanSerializerBase) {
       return new RBeanContextData((BeanSerializerBase) serializer);
     }
     return serializer;
