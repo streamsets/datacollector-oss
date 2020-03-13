@@ -17,26 +17,51 @@ package com.streamsets.datacollector.json;
 
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.metrics.ExtendedMeter;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.math.BigDecimal;
 
 public class TestObjectMapperFactory {
 
   @Test
-  public void testMetricsSerializers() throws Exception {
-    MetricRegistry m = new MetricRegistry();
-    m.timer("a");
-    m.meter("b");
-    m.histogram("c");
-    m.counter("d");
-    Assert.assertEquals(1, m.getCounters().size());
-    Assert.assertEquals(1, m.getMeters().size());
-    Assert.assertEquals(1, m.getHistograms().size());
-    Assert.assertEquals(1, m.getCounters().size());
+  public void testMetricsSerializersNotOverriden() throws Exception {
+    MetricRegistry metricsRegistry = new MetricRegistry();
+    metricsRegistry.timer("a");
+    metricsRegistry.meter("b");
+    metricsRegistry.histogram("c");
+    metricsRegistry.counter("d");
+    Assert.assertEquals(1, metricsRegistry.getCounters().size());
+    Assert.assertEquals(1, metricsRegistry.getMeters().size());
+    Assert.assertEquals(1, metricsRegistry.getHistograms().size());
+    Assert.assertEquals(1, metricsRegistry.getCounters().size());
 
     Assert.assertEquals(
-        MetricsObjectMapperFactory.getOneLine().writeValueAsString(m),
-        ObjectMapperFactory.getOneLine().writeValueAsString(m)
+        MetricsObjectMapperFactory.getOneLine().writeValueAsString(metricsRegistry),
+        ObjectMapperFactory.getOneLine().writeValueAsString(metricsRegistry)
+    );
+
+    Assert.assertArrayEquals(
+        MetricsObjectMapperFactory.getOneLine().writeValueAsBytes(metricsRegistry),
+        ObjectMapperFactory.getOneLine().writeValueAsBytes(metricsRegistry)
+    );
+
+    BigDecimal b = new BigDecimal("5.20");
+    Assert.assertArrayEquals(
+        MetricsObjectMapperFactory.getOneLine().writeValueAsBytes(b),
+        ObjectMapperFactory.get().writeValueAsBytes(b)
+    );
+
+    ExtendedMeter extendedMeter = new ExtendedMeter();
+    Assert.assertEquals(
+        MetricsObjectMapperFactory.getOneLine().writeValueAsString(extendedMeter),
+        ObjectMapperFactory.getOneLine().writeValueAsString(extendedMeter)
+    );
+
+    Assert.assertArrayEquals(
+        MetricsObjectMapperFactory.getOneLine().writeValueAsBytes(extendedMeter),
+        ObjectMapperFactory.getOneLine().writeValueAsBytes(extendedMeter)
     );
 
   }
