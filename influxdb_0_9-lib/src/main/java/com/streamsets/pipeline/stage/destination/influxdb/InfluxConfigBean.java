@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.influxdb;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import org.influxdb.InfluxDB;
 
 public class InfluxConfigBean {
@@ -34,21 +35,21 @@ public class InfluxConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 20,
       group = "#0"
   )
-  public String username = "";
+  public CredentialValue username = () -> "";
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 30,
       group = "#0"
   )
-  public String password = ""; // NOSONAR
+  public CredentialValue password = () -> ""; // NOSONAR
 
   @ConfigDef(
       required = true,

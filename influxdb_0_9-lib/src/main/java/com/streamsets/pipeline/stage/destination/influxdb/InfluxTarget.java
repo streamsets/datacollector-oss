@@ -68,7 +68,7 @@ public class InfluxTarget extends BaseTarget {
   }
 
   private InfluxDB getClient(InfluxConfigBean conf) {
-    return InfluxDBFactory.connect(conf.url, conf.username, conf.password);
+    return InfluxDBFactory.connect(conf.url, conf.username.get(), conf.password.get());
   }
 
   private RecordConverter createRecordConverter(RecordConverterType recordConverterType) throws StageException {

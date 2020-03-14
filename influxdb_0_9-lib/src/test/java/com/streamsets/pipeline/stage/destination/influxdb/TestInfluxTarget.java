@@ -128,8 +128,8 @@ public class TestInfluxTarget {
     InfluxConfigBean conf = new InfluxConfigBean();
     conf.url = "http://localhost:8086";
     conf.dbName = "test";
-    conf.username = "test";
-    conf.password = "test";
+    conf.username = () -> "test";
+    conf.password = () -> "test";
     conf.recordConverterType = RecordConverterType.COLLECTD;
     return conf;
   }
