@@ -13,29 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.parser.binary;
+package com.streamsets.pipeline.lib.io;
+
+import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
 /**
  * Copied from Google Guava for compatibility with versions <14.0
+ * Added an addition capability to take action on when read is called after limit is reached
+ *
  *
  * {@link https://github.com/google/guava/blob/master/guava/src/com/google/common/io/ByteStreams.java}
  */
-final class LimitedInputStream extends FilterInputStream {
+public class LimitedInputStream extends FilterInputStream {
 
   private long left;
   private long mark = -1;
 
-  LimitedInputStream(InputStream in, long limit) {
+  public LimitedInputStream(InputStream in, long limit) {
     super(in);
-    checkNotNull(in);
-    checkArgument(limit >= 0, "limit must be non-negative");
+    Utils.checkNotNull(in, "Input Stream cannot be null");
+    Utils.checkArgument(limit >= 0, "limit must be non-negative");
     left = limit;
   }
 
@@ -54,6 +55,7 @@ final class LimitedInputStream extends FilterInputStream {
   @Override
   public int read() throws IOException {
     if (left == 0) {
+      handleReadOnLimitExceeded();
       return -1;
     }
 
@@ -67,6 +69,7 @@ final class LimitedInputStream extends FilterInputStream {
   @Override
   public int read(byte[] b, int off, int len) throws IOException {
     if (left == 0) {
+      handleReadOnLimitExceeded();
       return -1;
     }
 
@@ -97,5 +100,14 @@ final class LimitedInputStream extends FilterInputStream {
     long skipped = in.skip(n);
     left -= skipped;
     return skipped;
+  }
+
+  /**
+   * Determines the action to be taken on when {@link #read()} or {@link #read(byte[])} or {@link #read(byte[])}
+   * is called after reaching the read limit from the {@link InputStream}
+   * @throws IOException Exception to be thrown condition if method is overriden
+   */
+  protected void handleReadOnLimitExceeded() throws IOException {
+    //NOOP by default
   }
 }

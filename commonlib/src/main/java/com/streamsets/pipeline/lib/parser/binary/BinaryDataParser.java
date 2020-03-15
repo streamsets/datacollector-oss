@@ -19,6 +19,7 @@ import com.google.common.io.ByteStreams;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.ProtoConfigurableEntity;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.lib.io.LimitedInputStream;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 
