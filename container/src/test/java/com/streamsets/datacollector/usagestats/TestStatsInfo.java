@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -115,8 +116,8 @@ public class TestStatsInfo {
   public void testRollIfNeededNoExistingStats() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
 
     StatsInfo si = new StatsInfo();
@@ -139,13 +140,17 @@ public class TestStatsInfo {
   public void testRollIfNeededVersionChange() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
     si.getActiveStats().setDataCollectorVersion("v0");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
@@ -156,16 +161,69 @@ public class TestStatsInfo {
   }
 
   @Test
+  public void testRollIfNeededBuildRepoShaChange() {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
+
+    StatsInfo si = new StatsInfo();
+    si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
+    si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha2");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
+    si.getActiveStats().setStartTime(System.currentTimeMillis());
+
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
+    Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+
+    Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
+    Assert.assertEquals(1, si.getCollectedStats().size());
+  }
+
+  @Test
+  public void testRollIfNeededBuildExtraInfoChange() {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
+
+    StatsInfo si = new StatsInfo();
+    si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "B")).when(si).getExtraInfo();
+
+    si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
+    si.getActiveStats().setStartTime(System.currentTimeMillis());
+
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
+    Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+
+    Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
+    Assert.assertEquals(1, si.getCollectedStats().size());
+  }
+
+  @Test
   public void testRollIfNeededDpmEnabledChange() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
     si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
 
@@ -181,13 +239,18 @@ public class TestStatsInfo {
   public void testRollIfNeededRollFrequencyPassed() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
     si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
 
@@ -202,13 +265,18 @@ public class TestStatsInfo {
   public void testRollIfNeededRollNoRoll() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
     si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();
@@ -222,13 +290,18 @@ public class TestStatsInfo {
   public void testRollIfNeededRollDiscardOldestCollectedStats() {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
 
     StatsInfo si = new StatsInfo();
     si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
     si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();

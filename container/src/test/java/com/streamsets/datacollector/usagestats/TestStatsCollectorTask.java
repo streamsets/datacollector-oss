@@ -452,6 +452,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -472,6 +473,8 @@ public class TestStatsCollectorTask {
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
       statsInfo.getActiveStats().setDataCollectorVersion("v0");
+      statsInfo.getActiveStats().setBuildRepoSha("sha1");
+      statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
       statsInfo.getCollectedStats().add(new StatsBean());
       ObjectMapperFactory.get().writeValue(os, statsInfo);
     }
@@ -625,6 +628,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -645,6 +649,8 @@ public class TestStatsCollectorTask {
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
       statsInfo.getActiveStats().setDataCollectorVersion("v1");
+      statsInfo.getActiveStats().setBuildRepoSha("sha1");
+      statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
       ObjectMapperFactory.get().writeValue(os, statsInfo);
     }
 
@@ -665,6 +671,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -685,6 +692,8 @@ public class TestStatsCollectorTask {
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
       statsInfo.getActiveStats().setDataCollectorVersion("v1");
+      statsInfo.getActiveStats().setBuildRepoSha("sha1");
+      statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
       ObjectMapperFactory.get().writeValue(os, statsInfo);
       statsInfo.getCollectedStats().add(new StatsBean());
     }

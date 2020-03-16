@@ -40,6 +40,8 @@ public class ActiveStats {
   private long startTime;
   private long endTime;
   private String dataCollectorVersion;
+  private String buildRepoSha;
+  private Map<String, String> extraInfo;
   private boolean dpmEnabled;
   private UsageTimer upTime;
   private Map<String, UsageTimer> pipelines;
@@ -94,6 +96,24 @@ public class ActiveStats {
 
   public ActiveStats setDataCollectorVersion(String version) {
     this.dataCollectorVersion = version;
+    return this;
+  }
+
+  public String getBuildRepoSha() {
+    return buildRepoSha;
+  }
+
+  public ActiveStats setBuildRepoSha(String buildRepoSha) {
+    this.buildRepoSha = buildRepoSha;
+    return this;
+  }
+
+  public Map<String, String> getExtraInfo() {
+    return extraInfo;
+  }
+
+  public ActiveStats setExtraInfo(Map<String, String> extraInfo) {
+    this.extraInfo = extraInfo;
     return this;
   }
 
@@ -284,6 +304,8 @@ public class ActiveStats {
     setEndTime(now);
     ActiveStats statsBean = new ActiveStats().setStartTime(now)
                                              .setDataCollectorVersion(getDataCollectorVersion())
+                                             .setBuildRepoSha(getBuildRepoSha())
+                                             .setExtraInfo(getExtraInfo())
                                              .setDpmEnabled(isDpmEnabled())
                                              .setErrorCodes(errorCodes)
                                              .setUpTime(getUpTime().roll());
@@ -302,6 +324,8 @@ public class ActiveStats {
   public ActiveStats snapshot() {
     ActiveStats snapshot = new ActiveStats().setStartTime(getStartTime())
                                             .setDataCollectorVersion(getDataCollectorVersion())
+                                            .setBuildRepoSha(getBuildRepoSha())
+                                            .setExtraInfo(getExtraInfo())
                                             .setDpmEnabled(isDpmEnabled())
                                             .setErrorCodes(errorCodes)
                                             .setUpTime(getUpTime().snapshot())

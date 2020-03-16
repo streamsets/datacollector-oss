@@ -157,6 +157,10 @@ public class TestActiveStats {
   @Test
   public void testRoll() throws Exception {
     ActiveStats as = new ActiveStats();
+    as.setDataCollectorVersion("v1");
+    as.setBuildRepoSha("sha1");
+    as.setExtraInfo(ImmutableMap.of("a", "A"));
+    as.setDpmEnabled(true);
 
     as.startSystem();
 
@@ -175,6 +179,11 @@ public class TestActiveStats {
     long now = System.currentTimeMillis();
     ActiveStats roll = as.roll();
 
+    Assert.assertEquals("v1", as.getDataCollectorVersion());
+    Assert.assertEquals("sha1", as.getBuildRepoSha());
+    Assert.assertEquals(ImmutableMap.of("a", "A"), as.getExtraInfo());
+    Assert.assertEquals(true, as.isDpmEnabled());
+
     Assert.assertTrue(as.getEndTime() >= now);
     Assert.assertEquals(0, as.getUpTime().getMultiplier());
     Assert.assertEquals(0, as.getPipelines().get(0).getMultiplier());
@@ -192,7 +201,10 @@ public class TestActiveStats {
   @Test
   public void testSnapshot() throws Exception {
     ActiveStats as = new ActiveStats();
-
+    as.setDataCollectorVersion("v1");
+    as.setBuildRepoSha("sha1");
+    as.setDpmEnabled(true);
+    as.setExtraInfo(ImmutableMap.of("a", "A"));
     as.startSystem();
     long startTime = as.getStartTime();
 
@@ -208,6 +220,11 @@ public class TestActiveStats {
     as.incrementRecordCount(1);
 
     ActiveStats snapshot = as.snapshot();
+
+    Assert.assertEquals("v1", as.getDataCollectorVersion());
+    Assert.assertEquals("sha1", as.getBuildRepoSha());
+    Assert.assertEquals(ImmutableMap.of("a", "A"), as.getExtraInfo());
+    Assert.assertEquals(true, as.isDpmEnabled());
 
     Assert.assertEquals(startTime, as.getStartTime());
     Assert.assertEquals(0, as.getEndTime());
