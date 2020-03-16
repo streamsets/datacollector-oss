@@ -45,10 +45,28 @@ public class PaginationInfoInjectorBinder extends AbstractBinder {
 
   public static class PaginationInfoInjector implements Factory<PaginationInfo> {
 
-    private PaginationInfo paginationInfo;
+    private final HttpServletRequest request;
 
     @Inject
     public PaginationInfoInjector(HttpServletRequest request) {
+      this.request = request;
+    }
+
+    private long getNumber(String value, long defaultValue, String param, HttpServletRequest request) {
+      if (value != null) {
+        try {
+          return Long.parseLong(value.trim());
+        } catch (NumberFormatException ex) {
+          LOG.warn("Could not parse '{}' from '{}', error: {}", param, request.getRequestURL() + "?" + request.getQueryString(), ex);
+          return defaultValue;
+        }
+      } else {
+        return defaultValue;
+      }
+    }
+
+    @Override
+    public PaginationInfo provide() {
       String orderByData = "";
       long offset = 0;
       long len = -1;
@@ -75,29 +93,12 @@ public class PaginationInfoInjectorBinder extends AbstractBinder {
         value = (values == null) ? null : values[0];
         len = getNumber(value, -1, "len", request);
       }
-      paginationInfo = new PaginationInfo();
+      PaginationInfo paginationInfo = new PaginationInfo();
       paginationInfo.setOrderBy(Splitter.on(",").trimResults().omitEmptyStrings().splitToList(orderByData));
       paginationInfo.setFilterBy(filterByData);
       paginationInfo.setOffset(offset);
       paginationInfo.setLen(len);
       paginationInfo.setTotal(-1);
-    }
-
-    protected long getNumber(String value, long defaultValue, String param, HttpServletRequest request) {
-      if (value != null) {
-        try {
-          return Long.parseLong(value.trim());
-        } catch (NumberFormatException ex) {
-          LOG.warn("Could not parse '{}' from '{}', error: {}", param, request.getRequestURL() + "?" + request.getQueryString(), ex);
-          return defaultValue;
-        }
-      } else {
-        return defaultValue;
-      }
-    }
-
-    @Override
-    public PaginationInfo provide() {
       return paginationInfo;
     }
 
@@ -107,5 +108,4 @@ public class PaginationInfoInjectorBinder extends AbstractBinder {
     }
 
   }
-
 }
