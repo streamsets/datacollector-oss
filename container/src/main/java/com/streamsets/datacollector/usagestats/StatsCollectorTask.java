@@ -23,6 +23,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -52,6 +53,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.get();
 
   public static final String GET_TELEMETRY_URL_ENDPOINT = "usage.reporting.getTelemetryUrlEndpoint";
+  /** Override to collect telemetry even for -SNAPSHOT versioned builds **/
+  public static final String TELEMETRY_FOR_SNAPSHOT_BUILDS = "usage.reporting.getTelemetryUrlEndpoint.collectSnapshotBuilds";
   public static final String GET_TELEMETRY_URL_ENDPOINT_DEFAULT = "https://telemetry.streamsets.com/getTelemetryUrl";
   /** Tells getTelemetryUrl endpoint to use the test bucket **/
   public static final String TELEMETRY_USE_TEST_BUCKET = "usage.reporting.getTelemetryUrlEndpoint.useTestBucket";
@@ -300,7 +303,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   protected boolean reportStats(List<StatsBean> stats) {
     boolean reported = false;
     String getTelemetryUrlEndpoint = config.get(GET_TELEMETRY_URL_ENDPOINT, GET_TELEMETRY_URL_ENDPOINT_DEFAULT);
-    if (getTelemetryUrlEndpoint.startsWith("http")) {
+    if (isTelemetryEnabled(getTelemetryUrlEndpoint)) {
       try {
         // RestClient adds a trailing slash to the "baseUrl", so we have to split it up just to avoid that
         URL getTelemetryUrl = new URL(getTelemetryUrlEndpoint);
@@ -342,6 +345,18 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       reported = true;
     }
     return reported;
+  }
+
+  private boolean isTelemetryEnabled(String getTelemetryUrlEndpoint) {
+    if (!getTelemetryUrlEndpoint.startsWith("http")) {
+      // not configured with valid url
+      return false;
+    }
+    if (buildInfo.getVersion().endsWith("-SNAPSHOT") && !config.get(TELEMETRY_FOR_SNAPSHOT_BUILDS, false)) {
+      // don't collect for development builds
+      return false;
+    }
+    return true;
   }
 
   // This is mostly here for mocking in tests

@@ -793,6 +793,64 @@ public class TestStatsCollectorTask {
     Assert.assertEquals(5, uploadedStats.get(0).getActivePipelines());
   }
 
+  @Test
+  public void testSkipSnapshotTelemetry() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1-SNAPSHOT");
+
+    String sdcId = "0123456789-0123456789-0123456789";
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+
+    List<StatsBean> stats = ImmutableList.of(new StatsBean());
+    stats.get(0).setActivePipelines(5);
+
+    Assert.assertTrue(task.reportStats(stats));
+
+    Mockito.verify(task, Mockito.never()).postToGetTelemetryUrl(
+        Mockito.any(),
+        Mockito.any());
+    Mockito.verify(task, Mockito.never()).getHttpURLConnection(Mockito.any());
+  }
+
+  @Test
+  public void testEnableSnapshotTelemetry() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1-SNAPSHOT");
+
+    String sdcId = "0123456789-0123456789-0123456789";
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+    config.set(StatsCollectorTask.TELEMETRY_FOR_SNAPSHOT_BUILDS, true);
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+
+    List<StatsBean> stats = ImmutableList.of(new StatsBean());
+
+    Assert.assertTrue(task.reportStats(stats));
+
+    Mockito.verify(task).postToGetTelemetryUrl(
+        Mockito.any(),
+        Mockito.any());
+    Mockito.verify(task).getHttpURLConnection(Mockito.any());
+  }
+
   private static final Logger LOG = LoggerFactory.getLogger(TestStatsCollectorTask.class);
 
   public static final class UsageServlet extends HttpServlet {
@@ -858,12 +916,15 @@ public class TestStatsCollectorTask {
     try {
       server.start();
 
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       Mockito.when(runtimeInfo.getId()).thenReturn(UUID.randomUUID().toString());
 
       Configuration config = new Configuration();
 
-      StatsCollectorTask collector = mockStatsCollectorTask(null, runtimeInfo, config, null);
+      StatsCollectorTask collector = mockStatsCollectorTask(buildInfo, runtimeInfo, config, null);
 
       List<StatsBean> list = Arrays.asList(new StatsBean());
 
