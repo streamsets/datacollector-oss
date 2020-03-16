@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,7 +42,6 @@ angular.module('dataCollectorApp')
     });
 
     $translateProvider.preferredLanguage('en');
-
     $translateProvider.useCookieStorage();
     $translateProvider.useSanitizeValueStrategy('sanitizeParameters');
 
@@ -291,6 +290,18 @@ angular.module('dataCollectorApp')
       },
 
       /**
+       * Open the Change Password Modal Dialog
+       */
+      changePassword: function() {
+        $modal.open({
+          templateUrl: 'app/home/usersAndGroups/changePassword/changePassword.tpl.html',
+          controller: 'ChangePasswordModalInstanceController',
+          size: 'sm',
+          backdrop: 'static',
+        });
+      },
+
+      /**
        * Logout header link command handler
        */
       logout: function() {
@@ -449,7 +460,6 @@ angular.module('dataCollectorApp')
           });
         }
 
-
         api.pipelineAgent.deleteAlert(triggeredAlert.pipelineName, triggeredAlert.ruleDefinition.id)
           .then(function() {
 
@@ -522,7 +532,6 @@ angular.module('dataCollectorApp')
       }
     };
 
-
     api.admin.getServerTime().then(function(res) {
       if (res && res.data) {
         var serverTime = res.data.serverTime,
@@ -581,8 +590,6 @@ angular.module('dataCollectorApp')
         $rootScope.isAdmin = authService.isRemoteUserOrgAdmin() || authService.isAuthorized([userRoles.admin]);
         $rootScope.isAuthorized = authService.isAuthorized;
         $rootScope.common.isUserAdmin = authService.isUserAdmin();
-
-
 
         $rootScope.common.authenticationType = configuration.getAuthenticationType();
         $rootScope.common.isDPMEnabled = configuration.isDPMEnabled();

@@ -337,6 +337,15 @@
             <li role="presentation" class="divider"></li>
 
             <li ng-if="common.authenticationType === 'form' || common.isDPMEnabled">
+              <a href="javascript:;" ng-click="common.changePassword()">
+                <span class="glyphicon glyphicon-key"></span>
+                Change Password
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li ng-if="common.authenticationType === 'form' || common.isDPMEnabled">
               <a href="javascript:;" ng-click="common.logout()">
                 <span class="glyphicon glyphicon-log-out"></span>
                 <span translate="global.menu.account.logout">Logout</span>
