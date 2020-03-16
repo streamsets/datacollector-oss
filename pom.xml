@@ -587,6 +587,7 @@
         <mapr_6_1-mep6-lib>mapr_6_1-mep6-lib</mapr_6_1-mep6-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
+        <mongodb_4-lib>mongodb_4-lib</mongodb_4-lib>
         <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
       </properties>
       <modules>
@@ -677,6 +678,7 @@
         <module>mapr_6_1-mep6-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
+        <module>mongodb_4-lib</module>
         <module>databricks-ml_2-lib</module>
       </modules>
     </profile>
@@ -721,7 +723,7 @@
         <mapr_6_1-lib>mapr_6_1-lib</mapr_6_1-lib>
         <mapr_6_1-mep6-lib>mapr_6_1-mep6-lib</mapr_6_1-mep6-lib>
         <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
-        <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
+        <mongodb_4-lib>mongodb_4-lib</mongodb_4-lib>
         <azure-lib>azure_lib</azure-lib>
         <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
       </properties>
@@ -757,7 +759,7 @@
         <module>mapr_6_1-lib</module>
         <module>mapr_6_1-mep6-lib</module>
         <module>mapr_spark_2_1_mep_3_0-lib</module>
-        <module>mongodb_3-lib</module>
+        <module>mongodb_4-lib</module>
         <module>databricks-ml_2-lib</module>
       </modules>
     </profile>
