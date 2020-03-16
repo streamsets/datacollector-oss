@@ -14,7 +14,8 @@
     </tab>
 
     <tab ng-repeat="groupNameToLabelMap in configGroupTabs"
-         disable="!isStageGroupVisible(detailPaneConfig, detailPaneConfigDefn, detailPaneServices, groupNameToLabelMap.name)"
+         ng-if="isStageGroupVisible(detailPaneConfigDefn, detailPaneServices, detailPaneConfig.uiInfo.displayMode, groupNameToLabelMap.name)"
+         disable="!isStageGroupEnabled(detailPaneConfig, detailPaneConfigDefn, detailPaneServices, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active"
          select="onTabSelect(groupNameToLabelMap)">
       <tab-heading>

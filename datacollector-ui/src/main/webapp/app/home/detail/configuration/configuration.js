@@ -653,24 +653,72 @@ angular
 
 
       /**
+       * Returns true if at least one config is enabled in given group.
+       *
+       * @param stageInstance
+       * @param configDefinitions
+       * @param groupName
+       * @param displayMode Current display mode of stage
+       * @returns {*}
+       */
+      isGroupEnabled: function(stageInstance, configDefinitions, groupName) {
+        var enabled = false;
+
+        angular.forEach(configDefinitions, function(configDefinition) {
+          if (configDefinition.group === groupName &&
+              $scope.verifyDependsOnMap(stageInstance, configDefinition)) {
+            enabled = true;
+          }
+        });
+
+        return enabled;
+      },
+
+      /**
        * Returns true if at least one config is visible in given group.
        *
        * @param stageInstance
        * @param configDefinitions
        * @param groupName
+       * @param displayMode Current display mode of stage
        * @returns {*}
        */
-      isGroupVisible: function(stageInstance, configDefinitions, groupName) {
+      isGroupVisible: function(configDefinitions, displayMode, groupName) {
         var visible = false;
 
         angular.forEach(configDefinitions, function(configDefinition) {
           if (configDefinition.group === groupName &&
-            ($scope.verifyDependsOnMap(stageInstance, configDefinition))) {
+              $scope.isShownByConfigDisplayMode(configDefinition.displayMode, displayMode)) {
             visible = true;
           }
         });
 
         return visible;
+      },
+
+      /**
+       * Returns true if at least one config is enabled in given group. This will calculate
+       * what is enabled in the main stage configuration and all declared services.
+       *
+       * @param stageInstance
+       * @param stageDefinition
+       * @param services
+       * @param groupName
+       * @returns {*}
+       */
+      isStageGroupEnabled: function(stageInstance, stageDefinition, services, groupName) {
+        // First see if this tab is enabled in normal stage configurations
+        if(this.isGroupEnabled(stageInstance, stageDefinition.configDefinitions, groupName)) {
+          return true;
+        }
+
+        var enabled = false;
+        angular.forEach(services, function(service) {
+          if($scope.isGroupEnabled(service.config, service.definition.configDefinitions, groupName)) {
+            enabled = true;
+          }
+        });
+        return enabled;
       },
 
       /**
@@ -683,15 +731,15 @@ angular
        * @param groupName
        * @returns {*}
        */
-      isStageGroupVisible: function(stageInstance, stageDefinition, services, groupName) {
+      isStageGroupVisible: function(stageDefinition, services, displayMode, groupName) {
         // First see if this tab is visible in normal stage configurations
-        if(this.isGroupVisible(stageInstance, stageDefinition.configDefinitions, groupName)) {
+        if(this.isGroupVisible(stageDefinition.configDefinitions, displayMode, groupName)) {
           return true;
         }
 
         var visible = false;
         angular.forEach(services, function(service) {
-          if($scope.isGroupVisible(service.config, service.definition.configDefinitions, groupName)) {
+          if($scope.isGroupVisible(service.definition.configDefinitions, displayMode, groupName)) {
             visible = true;
           }
         });
