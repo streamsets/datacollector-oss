@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.lib.hive;
 import com.codahale.metrics.Meter;
 import com.codahale.metrics.Timer;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Maps;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -483,7 +484,14 @@ public final class HiveQueryExecutor {
       partitionTypeInfo = new LinkedHashMap<>(temporaryMap);
     }
 
-    return Pair.of(columnTypeInfo, partitionTypeInfo);
+    // At this point columnTypeInfo field, depending on hive version,
+    // can potentially contain column names + partition names
+    // Before returning, make sure that you dont double count partition information in column information
+    // Meaning, return a pair like so .. Pair<strictly column information, strictly partition information>
+    Map<String, HiveTypeInfo> strictlyColumnInfo = Maps.difference(columnTypeInfo, partitionTypeInfo)
+        .entriesOnlyOnLeft();
+
+    return Pair.of(new LinkedHashMap<>(strictlyColumnInfo), partitionTypeInfo);
   }
 
   /**
