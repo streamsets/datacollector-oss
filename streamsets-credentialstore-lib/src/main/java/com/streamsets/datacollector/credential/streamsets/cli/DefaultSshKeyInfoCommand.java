@@ -13,16 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.credential.javakeystore.cli;
+package com.streamsets.datacollector.credential.streamsets.cli;
 
-import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
+import com.streamsets.datacollector.credential.streamsets.StreamsetsCredentialStore;
 import io.airlift.airline.Command;
 
 @Command(name = "generateSshKeyInfo", description = "Generates default SSH Key info for the SDC")
-public class DefaultSshKeyInfoCommand extends AbstractCommand {
+public class DefaultSshKeyInfoCommand extends AbstractStreamsetsCommand {
 
   @Override
-  protected void execute(JavaKeyStoreCredentialStore store) {
+  protected void execute(StreamsetsCredentialStore store) {
     store.generateDefaultSshKeyInfo();
   }
 

@@ -38,8 +38,7 @@ public class JavaKeystoreCredentialStoreCli {
             Help.class,
             ListCredentialsCommand.class,
             AddCredentialCommand.class,
-            DeleteCredentialCommand.class,
-            DefaultSshKeyInfoCommand.class
+            DeleteCredentialCommand.class
         );
 
     try {

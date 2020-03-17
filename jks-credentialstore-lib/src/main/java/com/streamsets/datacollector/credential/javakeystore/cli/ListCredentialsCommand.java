@@ -17,21 +17,18 @@ package com.streamsets.datacollector.credential.javakeystore.cli;
 
 import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
 import io.airlift.airline.Command;
-import io.airlift.airline.Option;
 
-@Command(name = "delete", description = "Delete a credential from the Java Keystore Credential Store")
-public class DeleteCredentialCommand extends AbstractCommand {
-
-  @Option(
-      name = {"-n", "--name"},
-      description = "Credential name",
-      required = true
-  )
-  public String name;
+@Command(name = "list", description = "List credentials in the Java Keystore Credential Store")
+public class ListCredentialsCommand extends AbstractJKSCommand {
 
   @Override
   protected void execute(JavaKeyStoreCredentialStore store) {
-    store.delete(name);
+    System.out.printf("The Java KeyStore '%s' has the following credentials\n", storeId);
+    System.out.printf("---------------------------------------------------------------\n");
+    for (String alias : store.getNames()) {
+      System.out.printf(" %s\n", alias);
+    }
+    System.out.printf("---------------------------------------------------------------\n");
   }
 
 }

@@ -17,18 +17,28 @@ package com.streamsets.datacollector.credential.javakeystore.cli;
 
 import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
 import io.airlift.airline.Command;
+import io.airlift.airline.Option;
 
-@Command(name = "list", description = "List credentials in the Java Keystore Credential Store")
-public class ListCredentialsCommand extends AbstractCommand {
+@Command(name = "add", description = "Add a credential to the Java Keystore Credential Store")
+public class AddCredentialCommand extends AbstractJKSCommand {
+
+  @Option(
+      name = {"-n", "--name"},
+      description = "Credential name",
+      required = true
+  )
+  public String name;
+
+  @Option(
+      name = {"-c", "--credential"},
+      description = "Credential (the password to store)",
+      required = true
+  )
+  public String credential;
 
   @Override
   protected void execute(JavaKeyStoreCredentialStore store) {
-    System.out.printf("The Java KeyStore '%s' has the following credentials\n", storeId);
-    System.out.printf("---------------------------------------------------------------\n");
-    for (String alias : store.getNames()) {
-      System.out.printf(" %s\n", alias);
-    }
-    System.out.printf("---------------------------------------------------------------\n");
+    store.store(JavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP_AS_LIST, name, credential);
   }
 
 }

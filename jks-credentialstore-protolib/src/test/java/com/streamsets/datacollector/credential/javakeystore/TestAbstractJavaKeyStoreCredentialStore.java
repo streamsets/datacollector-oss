@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.credential.javakeystore;
 
-import com.streamsets.lib.security.SshUtils;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import org.junit.After;
@@ -32,8 +31,10 @@ import java.security.KeyStore;
 import java.util.Properties;
 import java.util.UUID;
 
-public class TestJavaKeyStoreCredentialStore {
+public abstract class TestAbstractJavaKeyStoreCredentialStore<T extends AbstractJavaKeyStoreCredentialStore> {
   private File testDir;
+  protected T store;
+  protected AbstractJavaKeyStoreCredentialStore.JKSManager jksManager;
 
   @Before
   public void setup() throws Exception {
@@ -56,21 +57,13 @@ public class TestJavaKeyStoreCredentialStore {
 
   @Test
   public void testInitOk() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JCEKS");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JCEKS");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
 
     KeyStore keyStore = Mockito.mock(KeyStore.class);
-    Mockito.doReturn(null).when(jksManager).getEntry(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET));
-    Mockito.doNothing().when(store).generateDefaultSshKeyInfo();
     Mockito.doReturn(keyStore).when(jksManager).loadKeyStore();
 
     Assert.assertTrue(store.init(context).isEmpty());
@@ -83,87 +76,57 @@ public class TestJavaKeyStoreCredentialStore {
 
   @Test
   public void testInitOkAbsolutePath() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JCEKS");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("/file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JCEKS");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("/file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
 
     KeyStore keyStore = Mockito.mock(KeyStore.class);
-    Mockito.doReturn(null).when(jksManager).getEntry(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET));
-    Mockito.doNothing().when(store).generateDefaultSshKeyInfo();
     Mockito.doReturn(keyStore).when(jksManager).loadKeyStore();
 
     Assert.assertTrue(store.init(context).isEmpty());
     Assert.assertEquals(new File( "/file"), store.getKeyStoreFile());
-    Mockito.verify(store, Mockito.times(1)).generateDefaultSshKeyInfo();
   }
 
   @Test
   public void testInitOkRelativePath() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
     Mockito.when(context.getStreamSetsConfigDir()).thenReturn(testDir.getAbsolutePath());
 
     KeyStore keyStore = Mockito.mock(KeyStore.class);
     Mockito.doReturn(keyStore).when(jksManager).loadKeyStore();
 
-    Mockito.doReturn(null).when(jksManager).getEntry(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET));
-    Mockito.doNothing().when(store).generateDefaultSshKeyInfo();
-
     Assert.assertTrue(store.init(context).isEmpty());
     Assert.assertEquals(new File( testDir,"file"), store.getKeyStoreFile());
-    Mockito.verify(store, Mockito.times(1)).generateDefaultSshKeyInfo();
   }
 
   @Test
   public void testInitInvalidKeystoreType() {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
+    AbstractJavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
     Whitebox.setInternalState(store, "manager", jksManager);
     Mockito.doReturn(jksManager).when(store).createManager();
 
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JKS");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("JKS");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
 
     Assert.assertEquals(1, store.init(context).size());
   }
 
   @Test
   public void testStoreGetDeleteList() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
-    Mockito.doReturn(null).when(jksManager).getEntry(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET));
-    Mockito.doNothing().when(store).generateDefaultSshKeyInfo();
-
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
 
     //forcing a reload not to use the cached keystore for this test
     Mockito.doReturn(true).when(jksManager).needsToReloadKeyStore();
@@ -178,7 +141,7 @@ public class TestJavaKeyStoreCredentialStore {
     }
 
     Assert.assertTrue(store.getNames().isEmpty());
-    store.store(JavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP_AS_LIST, "name", "password");
+    store.store(AbstractJavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP_AS_LIST, "name", "password");
     Assert.assertEquals("password", store.get("group", "name", "").get());
     Assert.assertEquals(1, store.getNames().size());
     Assert.assertEquals("name", store.getNames().get(0));
@@ -195,20 +158,11 @@ public class TestJavaKeyStoreCredentialStore {
 
   @Test
   public void testNeedsToReloadKeyStore() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
-    Mockito.doReturn(null).when(jksManager).getEntry(Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET));
-    Mockito.doNothing().when(store).generateDefaultSshKeyInfo();
-
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
     Mockito.when(context.getId()).thenReturn("id");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
-    Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
 
     Assert.assertTrue(store.init(context).isEmpty());
 
@@ -246,30 +200,6 @@ public class TestJavaKeyStoreCredentialStore {
     Mockito.when(file.lastModified()).thenReturn(10001L);
     Mockito.doReturn(20002L).when(store).now();
     Assert.assertTrue(jksManager.needsToReloadKeyStore());
-  }
-
-  @Test
-  public void testGenerateDefaultSshKeyInfo() throws Exception {
-    JavaKeyStoreCredentialStore store = new JavaKeyStoreCredentialStore();
-    store = Mockito.spy(store);
-    JavaKeyStoreCredentialStore.JKSManager jksManager = Mockito.spy(store.new JKSManager());
-    Whitebox.setInternalState(store, "manager", jksManager);
-    Mockito.doReturn(jksManager).when(store).createManager();
-
-    SshUtils.SshKeyInfoBean sshKeyInfo = new SshUtils.SshKeyInfoBean();
-    sshKeyInfo.setPrivateKey("priv");
-    sshKeyInfo.setPassword("pass");
-    sshKeyInfo.setPublicKey("pub");
-    Mockito.doReturn(sshKeyInfo).when(store).createSshKeyInfo();
-
-    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
-    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
-    Mockito.doNothing().when(store).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
-    store.generateDefaultSshKeyInfo();
-    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_SECRET), Mockito.eq("priv"));
-    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PRIVATE_KEY_PASSWORD_SECRET), Mockito.eq("pass"));
-    Mockito.verify(store, Mockito.times(1)).store(Mockito.anyListOf(String.class), Mockito.eq(JavaKeyStoreCredentialStore.SSH_PUBLIC_KEY_SECRET), Mockito.eq("pub"));
-
   }
 
 }

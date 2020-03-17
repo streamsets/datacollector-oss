@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.credential.javakeystore.cli;
+package com.streamsets.datacollector.credential.streamsets.cli;
 
-import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
+import com.streamsets.datacollector.credential.streamsets.StreamsetsCredentialStore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -23,7 +23,7 @@ public class TestDefaultSshKeyInfoCommand {
 
   @Test
   public void testExecute() {
-    JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
+    StreamsetsCredentialStore store = Mockito.mock(StreamsetsCredentialStore.class);
     DefaultSshKeyInfoCommand command = new DefaultSshKeyInfoCommand();
 
     command.execute(store);

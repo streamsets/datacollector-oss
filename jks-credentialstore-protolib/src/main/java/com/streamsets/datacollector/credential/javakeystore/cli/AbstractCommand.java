@@ -17,7 +17,7 @@ package com.streamsets.datacollector.credential.javakeystore.cli;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
-import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
+import com.streamsets.datacollector.credential.javakeystore.AbstractJavaKeyStoreCredentialStore;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialStore;
@@ -30,7 +30,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 
-public abstract class AbstractCommand implements Runnable {
+public abstract class AbstractCommand<T extends AbstractJavaKeyStoreCredentialStore> implements Runnable {
 
   @Option(
       name = {"-i", "--id"},
@@ -102,14 +102,9 @@ public abstract class AbstractCommand implements Runnable {
     return conf;
   }
 
-  @VisibleForTesting
-  protected JavaKeyStoreCredentialStore createStore() {
-    return new JavaKeyStoreCredentialStore();
-  }
-
   @Override
   public void run() {
-    JavaKeyStoreCredentialStore store = createStore();
+    T store = createStore();
     try {
       String product = getProductName();
       String systemPropertyName = String.format("%s.conf.dir", product);
@@ -134,6 +129,9 @@ public abstract class AbstractCommand implements Runnable {
     }
   }
 
-  protected abstract void execute(JavaKeyStoreCredentialStore store);
+  @VisibleForTesting
+  protected abstract T createStore();
+
+  protected abstract void execute(T store);
 
 }

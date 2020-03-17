@@ -13,18 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.credential.javakeystore;
+package com.streamsets.datacollector.credential.streamsets;
 
 import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
-  JKS_CRED_STORE_000("Missing configuration '{}'"),
-  JKS_CRED_STORE_001("File '{}' does not exist"),
-  JKS_CRED_STORE_002("Invalid KeyStore type '{}'"),
-  JKS_CRED_STORE_003("Credential '{}' not found"),
-  JKS_CRED_STORE_004("Credential '{}' could not be retrieved: {}"),
-  JKS_CRED_STORE_005("Error initializing Credential Store. Reason : {}"),
-
+  STREAMSETS_CRED_STORE_001("Credential '{}' could not be retrieved: {}"),
   ;
 
   private final String message;

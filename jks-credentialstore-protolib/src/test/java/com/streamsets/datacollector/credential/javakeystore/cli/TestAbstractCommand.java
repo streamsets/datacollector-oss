@@ -16,8 +16,8 @@
 package com.streamsets.datacollector.credential.javakeystore.cli;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.credential.javakeystore.AbstractJavaKeyStoreCredentialStore;
 import com.streamsets.datacollector.credential.javakeystore.Errors;
-import com.streamsets.datacollector.credential.javakeystore.JavaKeyStoreCredentialStore;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import org.junit.After;
@@ -38,9 +38,11 @@ import java.util.Properties;
 import java.util.UUID;
 
 @RunWith(Parameterized.class)
-public class TestAbstractCommand {
+public abstract class TestAbstractCommand<T extends AbstractJavaKeyStoreCredentialStore> {
   private final String productName;
   private String confDir;
+  protected AbstractCommand<T> command;
+  protected T store;
 
   public TestAbstractCommand(String productName) {
     this.productName = productName;
@@ -80,12 +82,6 @@ public class TestAbstractCommand {
   public void testCreateContext() {
     Configuration configuration = new Configuration();
     configuration.set("credentialStore.id.config.foo", "bar");
-    AbstractCommand command = new AbstractCommand() {
-      @Override
-      protected void execute(JavaKeyStoreCredentialStore store) {
-
-      }
-    };
     command.productName = productName;
     command.storeId = "id";
     CredentialStore.Context context = command.createContext(configuration, confDir);
@@ -97,12 +93,6 @@ public class TestAbstractCommand {
 
   @Test
   public void testLoadConfiguration() {
-    AbstractCommand command = new AbstractCommand() {
-      @Override
-      protected void execute(JavaKeyStoreCredentialStore store) {
-
-      }
-    };
     command.productName = productName;
     command.storeId = "id";
     Configuration configuration = command.loadConfiguration(productName, confDir);
@@ -110,22 +100,12 @@ public class TestAbstractCommand {
     Assert.assertNull(configuration.get("foo", null));
   }
 
-  public static class DummyCommand extends AbstractCommand {
-    @Override
-    protected void execute(JavaKeyStoreCredentialStore store) {
-
-    }
-  }
 
   @Test
   public void testRunOK() {
-    AbstractCommand command = new DummyCommand();
     command.productName = productName;
     command.storeId = "id";
 
-    command = Mockito.spy(command);
-
-    JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
     Mockito.doReturn(store).when(command).createStore();
     Configuration configuration = new Configuration();
     Mockito.doReturn(configuration).when(command).loadConfiguration(productName, confDir);
@@ -141,13 +121,9 @@ public class TestAbstractCommand {
 
   @Test
   public void testRunInitFail() {
-    AbstractCommand command = new DummyCommand();
     command.productName = productName;
     command.storeId = "id";
 
-    command = Mockito.spy(command);
-
-    JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
     Mockito.doReturn(store).when(command).createStore();
     Configuration configuration = new Configuration();
     Mockito.doReturn(configuration).when(command).loadConfiguration(productName, confDir);
