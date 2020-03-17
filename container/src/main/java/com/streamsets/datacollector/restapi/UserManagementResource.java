@@ -210,6 +210,10 @@ public class UserManagementResource extends RestResource {
         principal.getName().equals(changePassword.getId().getValue()),
         "Payload user ID does not match current user ID"
     );
+    Preconditions.checkArgument(
+        principal.getName().equals(id),
+        "User ID in URL does not match current user ID"
+    );
     usersManager.changePassword(
               changePassword.getId().getValue(),
               changePassword.getOldPassword().getValue(),

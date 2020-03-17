@@ -114,8 +114,7 @@ public abstract class UserLine extends Line {
   public UserLine setPassword(String oldPassword, String newPassword) {
     Utils.checkNotNull(oldPassword, "oldPassword");
     Utils.checkNotNull(newPassword, "newPassword");
-    String oldHash = hasher.hash(getUser(), oldPassword);
-    if (oldHash.equals(hash)) {
+    if (verifyPassword(oldPassword)) {
       hash = hasher.hash(getUser(), newPassword);
     } else {
       throw new IllegalArgumentException("Invalid old password");
@@ -126,7 +125,7 @@ public abstract class UserLine extends Line {
   public boolean verifyPassword(String password) {
     Utils.checkNotNull(password, "password");
     String computedHash = hasher.hash(getUser(), password);
-    return computedHash.equals(hash);
+    return computedHash.equalsIgnoreCase(hash);  // we are comparing HEX values
   }
 
   public String resetPassword(long validForMillis) {
