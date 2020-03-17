@@ -158,6 +158,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     super.initTask();
 
     statsInfo =  new StatsInfo();
+    statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo());
 
     if (runtimeInfo.isClusterSlave()) {
       opted = true;

@@ -29,14 +29,9 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -57,8 +52,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -95,7 +90,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     Assert.assertEquals(buildInfo, task.getBuildInfo());
 
@@ -112,6 +107,7 @@ public class TestStatsCollectorTask {
     File testDir = createTestDir();
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -121,7 +117,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     Mockito.when(runtimeInfo.isClusterSlave()).thenReturn(true);
 
@@ -139,6 +135,7 @@ public class TestStatsCollectorTask {
     File testDir = createTestDir();
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -183,6 +180,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -211,6 +209,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -239,6 +238,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -270,6 +270,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -299,6 +300,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -327,6 +329,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -356,6 +359,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -385,6 +389,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -415,6 +420,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -464,7 +470,7 @@ public class TestStatsCollectorTask {
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -472,6 +478,7 @@ public class TestStatsCollectorTask {
 
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
+      statsInfo.getActiveStats().setSdcId("id");
       statsInfo.getActiveStats().setDataCollectorVersion("v0");
       statsInfo.getActiveStats().setBuildRepoSha("sha1");
       statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
@@ -516,7 +523,7 @@ public class TestStatsCollectorTask {
     );
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(StatsCollectorTask.STATS_ACTIVE_KEY, true));
@@ -640,7 +647,7 @@ public class TestStatsCollectorTask {
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -648,6 +655,7 @@ public class TestStatsCollectorTask {
 
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
+      statsInfo.getActiveStats().setSdcId("id");
       statsInfo.getActiveStats().setDataCollectorVersion("v1");
       statsInfo.getActiveStats().setBuildRepoSha("sha1");
       statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
@@ -683,7 +691,7 @@ public class TestStatsCollectorTask {
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -691,6 +699,7 @@ public class TestStatsCollectorTask {
 
     try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
       StatsInfo statsInfo = new StatsInfo();
+      statsInfo.getActiveStats().setSdcId("id");
       statsInfo.getActiveStats().setDataCollectorVersion("v1");
       statsInfo.getActiveStats().setBuildRepoSha("sha1");
       statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
@@ -727,6 +736,7 @@ public class TestStatsCollectorTask {
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
@@ -736,7 +746,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, false));
@@ -781,7 +791,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
     stats.get(0).setActivePipelines(5);
@@ -818,7 +828,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
     stats.get(0).setActivePipelines(5);
@@ -848,7 +858,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler);
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
 
@@ -933,7 +943,7 @@ public class TestStatsCollectorTask {
 
       Configuration config = new Configuration();
 
-      StatsCollectorTask collector = mockStatsCollectorTask(buildInfo, runtimeInfo, config, null);
+      StatsCollectorTask collector = mockStatsCollectorTask(buildInfo, runtimeInfo, config, null, true);
 
       List<StatsBean> list = Arrays.asList(new StatsBean());
 
@@ -948,7 +958,9 @@ public class TestStatsCollectorTask {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      SafeScheduledExecutorService executorService) {
+      SafeScheduledExecutorService executorService,
+      boolean postTelemetrySuccess
+  ) {
     StatsCollectorTask spy = Mockito.spy(new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService));
 
     // to test real interactions, comment out starting from here, change StatsCollectorTask.TELEMETRY_USE_TEST_BUCKET_DEFAULT to true, and run testReportStats
@@ -956,7 +968,7 @@ public class TestStatsCollectorTask {
     try {
       RestClient.Response getUrlResponse = Mockito.mock(RestClient.Response.class);
       Mockito.doReturn(getUrlResponse).when(spy).postToGetTelemetryUrl(Mockito.any(), Mockito.any());
-      Mockito.when(getUrlResponse.successful()).thenReturn(true);
+      Mockito.when(getUrlResponse.successful()).thenReturn(postTelemetrySuccess);
       Mockito.when(getUrlResponse.getData(Mockito.any(TypeReference.class))).thenReturn(ImmutableMap.of(
           StatsCollectorTask.TELEMETRY_URL_KEY, POST_TELEMETRY_URL
       ));
@@ -986,11 +998,69 @@ public class TestStatsCollectorTask {
       Configuration config,
       SafeScheduledExecutorService executorService) {
 
-    StatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService);
+    StatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, true);
 
     runnable = Mockito.mock(Runnable.class);
     Mockito.doReturn(runnable).when(spy).getRunnable();
 
     return spy;
   }
+
+
+  @Test
+  public void testRunnableRollingNotPublishing() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id");
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+
+    try (OutputStream os = new FileOutputStream(task.getOptFile())) {
+      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
+    }
+
+    try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
+      StatsInfo statsInfo = new StatsInfo();
+      statsInfo.getActiveStats().setSdcId("id");
+      statsInfo.getActiveStats().setDataCollectorVersion("v1");
+      statsInfo.getActiveStats().setBuildRepoSha("sha1");
+      statsInfo.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
+      ObjectMapperFactory.get().writeValue(os, statsInfo);
+    }
+
+    task.init();
+
+    Assert.assertTrue(task.isOpted());
+    Assert.assertTrue(task.isActive());
+
+    //verifying we rolled the read stats
+    Assert.assertEquals("v1", task.getStatsInfo().getActiveStats().getDataCollectorVersion());
+
+    try (InputStream is = new FileInputStream(task.getStatsFile())) {
+      StatsInfo statsInfo = ObjectMapperFactory.get().readValue(is, StatsInfo.class);
+      Assert.assertEquals(Collections.emptyMap(), statsInfo.getExtraInfo());
+      Assert.assertEquals(1, statsInfo.getCollectedStats().size());
+      Assert.assertEquals("id",
+          statsInfo.getCollectedStats().get(0).getSdcId());
+      Assert.assertEquals("v1",
+          statsInfo.getCollectedStats().get(0).getDataCollectorVersion());
+      Assert.assertEquals("sha1",
+          statsInfo.getCollectedStats().get(0).getBuildRepoSha());
+      Assert.assertEquals(ImmutableMap.of("a", "A"),
+          statsInfo.getCollectedStats().get(0).getExtraInfo());
+    }
+    task.stop();
+
+  }
+
 }
