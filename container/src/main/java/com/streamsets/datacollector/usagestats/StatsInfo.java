@@ -33,6 +33,7 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class StatsInfo {
+  public static final String SDC_ID = "sdcId";
   public static final String DATA_COLLECTOR_VERSION = "dataCollectorVersion";
   public static final String BUILD_REPO_SHA = "buildRepoSha";
   public static final String DPM_ENABLED = "dpmEnabled";
@@ -124,6 +125,7 @@ public class StatsInfo {
   // if any of the system info changes, it triggers a stats roll.
   Map<String, Object> getCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
     return ImmutableMap.of(
+        SDC_ID, runtimeInfo.getId(),
         DATA_COLLECTOR_VERSION, buildInfo.getVersion(),
         BUILD_REPO_SHA, buildInfo.getBuiltRepoSha(),
         DPM_ENABLED, runtimeInfo.isDPMEnabled(),
@@ -131,8 +133,14 @@ public class StatsInfo {
     );
   }
 
+  void setCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo) {
+    Map<String, Object> currentSystemInfo = getCurrentSystemInfo(buildInfo, runtimeInfo);
+    setSystemInfo(currentSystemInfo, getActiveStats());
+  }
+
   Map<String, Object> getSystemInfo(ActiveStats stats) {
     return ImmutableMap.of(
+        SDC_ID, stats.getSdcId(),
         DATA_COLLECTOR_VERSION, stats.getDataCollectorVersion(),
         BUILD_REPO_SHA, stats.getBuildRepoSha(),
         DPM_ENABLED, stats.isDpmEnabled(),
@@ -141,6 +149,7 @@ public class StatsInfo {
   }
 
   void setSystemInfo(Map<String, Object> info, ActiveStats stats) {
+    stats.setSdcId((String) info.get(SDC_ID));
     stats.setDataCollectorVersion((String) info.get(DATA_COLLECTOR_VERSION));
     stats.setBuildRepoSha((String) info.get(BUILD_REPO_SHA));
     stats.setDpmEnabled((Boolean) info.get(DPM_ENABLED));

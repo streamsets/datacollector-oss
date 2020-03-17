@@ -27,6 +27,8 @@ public class StatsBean {
   private String sdcId;
   private String version;
   private String dataCollectorVersion;
+  private String buildRepoSha;
+  private Map<String, String> extraInfo;
   private boolean dpmEnabled;
   private long startTime;
   private long endTime;
@@ -48,6 +50,8 @@ public class StatsBean {
     setSdcId(sdcId);
     setVersion(activeStats.getVersion());
     setDataCollectorVersion(activeStats.getDataCollectorVersion());
+    setBuildRepoSha(activeStats.getBuildRepoSha());
+    setExtraInfo(activeStats.getExtraInfo());
     setDpmEnabled(activeStats.isDpmEnabled());
     setStartTime(activeStats.getStartTime());
     setEndTime(activeStats.getEndTime());
@@ -103,6 +107,24 @@ public class StatsBean {
 
   public void setDataCollectorVersion(String version) {
     this.dataCollectorVersion = version;
+  }
+
+  public String getBuildRepoSha() {
+    return buildRepoSha;
+  }
+
+  public StatsBean setBuildRepoSha(String buildRepoSha) {
+    this.buildRepoSha = buildRepoSha;
+    return this;
+  }
+
+  public Map<String, String> getExtraInfo() {
+    return extraInfo;
+  }
+
+  public StatsBean setExtraInfo(Map<String, String> extraInfo) {
+    this.extraInfo = extraInfo;
+    return this;
   }
 
   public boolean isDpmEnabled() {

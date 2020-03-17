@@ -39,6 +39,7 @@ public class ActiveStats {
 
   private long startTime;
   private long endTime;
+  private String sdcId;
   private String dataCollectorVersion;
   private String buildRepoSha;
   private Map<String, String> extraInfo;
@@ -62,6 +63,15 @@ public class ActiveStats {
     errorCodes = new HashMap<>();
     createToPreview = new ConcurrentHashMap<>();
     createToRun = new ConcurrentHashMap<>();
+  }
+
+  public String getSdcId() {
+    return sdcId;
+  }
+
+  public ActiveStats setSdcId(String sdcId) {
+    this.sdcId = sdcId;
+    return this;
   }
 
   public String getVersion() {
@@ -302,7 +312,8 @@ public class ActiveStats {
   public ActiveStats roll() {
     long now = System.currentTimeMillis();
     setEndTime(now);
-    ActiveStats statsBean = new ActiveStats().setStartTime(now)
+    ActiveStats statsBean = new ActiveStats().setSdcId(getSdcId())
+                                             .setStartTime(now)
                                              .setDataCollectorVersion(getDataCollectorVersion())
                                              .setBuildRepoSha(getBuildRepoSha())
                                              .setExtraInfo(getExtraInfo())
@@ -322,7 +333,8 @@ public class ActiveStats {
 
   // returns a snapshot for persistency
   public ActiveStats snapshot() {
-    ActiveStats snapshot = new ActiveStats().setStartTime(getStartTime())
+    ActiveStats snapshot = new ActiveStats().setSdcId(getSdcId())
+                                            .setStartTime(getStartTime())
                                             .setDataCollectorVersion(getDataCollectorVersion())
                                             .setBuildRepoSha(getBuildRepoSha())
                                             .setExtraInfo(getExtraInfo())
