@@ -95,13 +95,15 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
     Record record = context.createRecord(tableRuntimeContext.getQualifiedName() + ":" + offsetValue);
     record.set(Field.createListMap(fields));
 
-    //Set Column Headers
-    jdbcUtil.setColumnSpecificHeaders(
-        record,
-        Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
-        md,
-        JDBC_NAMESPACE_HEADER
-    );
+    if (tableJdbcConfigBean.createJDBCHeaders) {
+      //Set Column Headers
+      jdbcUtil.setColumnSpecificHeaders(
+          record,
+          Collections.singleton(tableRuntimeContext.getSourceTableContext().getTableName()),
+          md,
+          JDBC_NAMESPACE_HEADER
+      );
+    }
 
     record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableRuntimeContext.getDescription());
     record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));

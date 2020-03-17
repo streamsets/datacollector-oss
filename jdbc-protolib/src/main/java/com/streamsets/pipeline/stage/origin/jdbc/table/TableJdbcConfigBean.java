@@ -144,11 +144,23 @@ public class TableJdbcConfigBean {
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Create JDBC Header Attributes",
+      description = "Generates record header attributes that provide additional details about source data, such as the original data type or source table name.",
+      defaultValue = "true",
+      displayPosition = 220,
+      group = "ADVANCED"
+  )
+  public boolean createJDBCHeaders = true;
+
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "On Unknown Type",
       description = "Action that should be performed when an unknown type is detected in the result set.",
       defaultValue = "STOP_PIPELINE",
-      displayPosition = 220,
+      displayPosition = 230,
       group = "ADVANCED"
   )
   @ValueChooserModel(UnknownTypeActionChooserValues.class)

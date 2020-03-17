@@ -71,6 +71,9 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
       case 6:
         removeDriverClassNameAndTestQuery(configs);
         break;
+      case 7:
+        // handled by YAML upgrader
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }

@@ -20,9 +20,14 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -38,6 +43,18 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
 public class TestTableJdbcSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/TableJdbcDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new TableJdbcSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testUpgradeV1ToV2() throws Exception {
@@ -210,6 +227,18 @@ public class TestTableJdbcSourceUpgrader {
     Assert.assertTrue(upgradedConfigs.stream()
         .filter(config -> config.getName().equals("commonSourceConfigBean.queriesPerSecond"))
         .allMatch(config -> ((String) config.getValue()).startsWith("3.14285")));
+  }
+
+  @Test
+  public void testUpgradeV7ToV8() {
+    Mockito.doReturn(7).when(context).getFromVersion();
+    Mockito.doReturn(8).when(context).getToVersion();
+
+    String dataFormatPrefix = "tableJdbcConfigBean.";
+    configs.add(new Config(dataFormatPrefix + "createJDBCHeaders", true));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "createJDBCHeaders", true);
   }
 
   private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {
