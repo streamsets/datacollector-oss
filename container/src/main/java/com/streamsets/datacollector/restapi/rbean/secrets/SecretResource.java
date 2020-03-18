@@ -32,6 +32,9 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.io.LimitedInputStream;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -50,11 +53,13 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Path("/v1/secrets")
 @Produces(MediaType.APPLICATION_JSON)
 @RequiresCredentialsDeployed
+@Api(value = "secrets")
 public class SecretResource  extends RestResource {
 
   /**
@@ -126,6 +131,7 @@ public class SecretResource  extends RestResource {
   @Path("/text/ctx=SecretManage")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Creates Text Secret", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RSecret> createSecret(RestRequest<RSecret> request) {
     RSecret rSecret = request.getData();
     checkCredentialStoreSupported();
@@ -151,6 +157,7 @@ public class SecretResource  extends RestResource {
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Creates File Secret", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RSecret> createFileSecret(
       @FormDataParam("vault") String vault,
       @FormDataParam("name") String name,
@@ -175,6 +182,7 @@ public class SecretResource  extends RestResource {
   @Path("{secretId}/text/ctx=SecretManage")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Updates Text Secret", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RSecret> updateSecret(@PathParam("secretId") String id, RestRequest<RSecret> request) {
     RSecret rSecret = request.getData();
     checkCredentialStoreSupported();
@@ -196,6 +204,7 @@ public class SecretResource  extends RestResource {
   @POST
   @Consumes(MediaType.MULTIPART_FORM_DATA)
   @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Updates File Secret", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RSecret> updateFileSecret(
       @FormDataParam("vault") String vault,
       @FormDataParam("name") String name,
@@ -218,6 +227,7 @@ public class SecretResource  extends RestResource {
   @Path("/{secretId}/ctx=SecretManage")
   @DELETE
   @Consumes(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Deletes Secret", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RSecret> deleteSecret(@PathParam("secretId") String id) {
     checkCredentialStoreSupported();
     managedCredentialStore.delete(id);
@@ -229,6 +239,7 @@ public class SecretResource  extends RestResource {
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/ctx=SecretList")
   @GET
+  @ApiOperation(value = "Lists Secret", authorizations = @Authorization(value = "basic"))
   public OkPaginationRestResponse<RSecret> listSecrets(@Context PaginationInfo paginationInfo) {
     checkCredentialStoreSupported();
     List<RSecret> secrets = managedCredentialStore.getNames().stream().map(
@@ -245,7 +256,8 @@ public class SecretResource  extends RestResource {
   @RolesAllowed({AuthzRole.CREATOR, AuthzRole.ADMIN})
   @Path("/sshTunnelPublicKey")
   @GET
-  @Produces(MediaType.TEXT_PLAIN)
+  @Produces(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Get Default SSH Tunnel Public Key", response = String.class, authorizations = @Authorization(value = "basic"))
   public Response getSshTunnelPublicKey() {
     checkCredentialStoreSupported();
     CredentialValue publicKeyVal = managedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, SSH_PUBLIC_KEY_SECRET, null);
@@ -274,6 +286,7 @@ public class SecretResource  extends RestResource {
   @Path("/get")
   @GET
   @Produces(MediaType.TEXT_PLAIN)
+  @ApiOperation(value = "Checks whether managed secret store is ready", response = String.class, authorizations = @Authorization(value = "basic"))
   public Response getSecretValueReady() {
     if (managedCredentialStore == null) {
       return Response.status(Response.Status.NOT_IMPLEMENTED).entity("Error: Not implemented").build();
