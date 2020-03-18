@@ -40,10 +40,10 @@ angular
           })
           .catch(function(res) {
             $scope.operationInProgress = false;
-            let errorMessages = ['Error'];
+            var errorMessages = ['Error'];
             if(res.data) {
               if(res.data.type==='ERROR') {
-                errorMessages = res.data.messages.map(obj => obj.message);
+                errorMessages = res.data.messages.map(function(obj) {return obj.message;});
               } else {
                 errorMessages = [res.data];
               }
@@ -55,7 +55,7 @@ angular
       },
 
       checkValues: function() {
-        const oldPwd = $scope.userModel.oldPwd,
+        var oldPwd = $scope.userModel.oldPwd,
               newPwd = $scope.userModel.newPwd,
               newPwdVerif = $scope.userModel.newPwdVerif;
 

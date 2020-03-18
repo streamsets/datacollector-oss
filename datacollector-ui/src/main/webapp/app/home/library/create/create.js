@@ -62,7 +62,7 @@ angular
       },
 
       refreshResults : function ($select){
-        let search = $select.search,
+        var search = $select.search,
           list = angular.copy($scope.pipelineLabels);
         //remove last user input
         list = list.filter(function(item) {

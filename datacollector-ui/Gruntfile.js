@@ -439,7 +439,7 @@ module.exports = function(grunt) {
         sub: true,
         boss: true,
         eqnull: true,
-        esnext: true,
+        esversion: 5,
         debug: false,
         loopfunc: true,
         reporterOutput: ""

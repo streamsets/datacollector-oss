@@ -19,26 +19,26 @@
   */
 angular.module('dataCollectorApp.common')
   .factory('secretUtil', function() {
-    let secretUtil = {};
+    var secretUtil = {};
 
-    const PIPELINE_VAULT_PREFIX = 'PIPELINE_VAULT_';
-    const SECRET_SEPARATOR = '__';
-    const USER_GROUP = 'all';
-    const SEPARATOR = '/';
+    var PIPELINE_VAULT_PREFIX = 'PIPELINE_VAULT_';
+    var SECRET_SEPARATOR = '_';
+    var USER_GROUP = 'all';
+    var SEPARATOR = '/';
 
     /**
      * Checks if the credential EL is for the interal secret storage
      */
-    secretUtil.isInternalSecret = (credentialEL, store) => {
-      return credentialEL.startsWith(`\${credential:get("${store}"`) ||
-        credentialEL.startsWith(`\${credential:get('${store}'`);
+    secretUtil.isInternalSecret = function(credentialEL, store) {
+      return credentialEL.startsWith('\${credential:get("' + store +'"') ||
+        credentialEL.startsWith('\${credential:get(\'' + store +'\'');
     };
 
     /**
      * Updates scope.credentialSettings fields useInternalSecrets and showValue
      * to use old values before we added internal secret storage
      */
-    secretUtil.useOldCredentials = (scope) => {
+    secretUtil.useOldCredentials = function(scope) {
       scope.credentialSettings.useInternalSecrets = false;
       // Set the field to show the value if it is a credential function
       scope.credentialSettings.showValue = (
@@ -50,13 +50,12 @@ angular.module('dataCollectorApp.common')
     /**
      * Gets the standard expression for a saved internal secret, plus the vaultName and secretName
      */
-    secretUtil.getStandardExpression = (pipelineId, objectInstanceName, configDefName, store) => {
-      const vaultName = `${PIPELINE_VAULT_PREFIX}${pipelineId}`;
-      const secretName =
-        `${objectInstanceName}${SECRET_SEPARATOR}${configDefName}`;
-      const expression =
-        `\${credential:get('${store}', '${USER_GROUP}', '${vaultName}${SEPARATOR}${secretName}')}`;
-      return {vaultName, secretName, expression};
+    secretUtil.getStandardExpression = function(pipelineId, objectInstanceName, configDefName, store) {
+      var vaultName = PIPELINE_VAULT_PREFIX + pipelineId;
+      var secretName = objectInstanceName + SECRET_SEPARATOR + configDefName;
+      var expression =
+        "\${credential:get('" + store + "', '" + USER_GROUP + "', '" + vaultName + SEPARATOR + secretName + "')}";
+      return {vaultName: vaultName, secretName: secretName, expression: expression};
     };
 
     return secretUtil;

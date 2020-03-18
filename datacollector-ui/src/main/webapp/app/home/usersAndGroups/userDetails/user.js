@@ -28,7 +28,7 @@ angular
         groups: ['all']
       },
 
-      init: () => {
+      init: function() {
         if(isNew) {
           $scope.modalTitle = 'Create User';
         } else {
@@ -37,14 +37,14 @@ angular
           $scope.userModel.id = user.id;
           $scope.userModel.email = user.email;
           $scope.userModel.groups = user.groups;
-          user.roles.forEach(role => {
+          user.roles.forEach(function(role) {
             $scope.userModel[role] = user.roles.includes(role);
           });
         }
       },
 
       save: function() {
-        const allRoles = [ 'admin', 'manager', 'creator', 'guest'];
+        var allRoles = [ 'admin', 'manager', 'creator', 'guest'];
         $scope.operationInProgress = true;
 
         // - make user object for API from user model
@@ -54,7 +54,7 @@ angular
           groups: $scope.userModel.groups,
           roles: [],
         };
-        allRoles.forEach(role => {
+        allRoles.forEach(function(role) {
           if($scope.userModel[role]) {
             myUser.roles.push(role);
           }

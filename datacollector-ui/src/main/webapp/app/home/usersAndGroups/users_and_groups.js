@@ -32,7 +32,7 @@ angular
       });
   }])
   .controller('UsersAndGroupsController', function ($scope, $rootScope, api, $modal, $q) {
-    const userRolesMap = {
+    var userRolesMap = {
       admin: 'Admin',
       manager: 'Manager',
       creator: 'Creator',
@@ -42,40 +42,50 @@ angular
       fetching: false,
       userList: [],
 
-      getUserIdx: userName => $scope.userList.findIndex(user => user.id === userName),
+      getUserIdx: function(userName) {
+        return $scope.userList.findIndex(function(user) {
+          return user.id === userName;
+        });
+      },
 
-      getUserByIdx: idx => $scope.userList[idx],
+      getUserByIdx: function(idx) {return $scope.userList[idx];},
 
-      getRoles: user => user.roles.map(role => userRolesMap[role]).join(', '),
+      getRoles: function(user) {
+        return user.roles.map(function(role) {
+          return userRolesMap[role];
+        }).join(', ');
+      },
 
-      showError: message => {
+      showError: function(message) {
         $rootScope.common.errors = [message];
       },
 
-      openUserModal: (user, isNew) => $modal.open({
-        templateUrl: 'app/home/usersAndGroups/userDetails/user.tpl.html',
-        controller: 'UserModalController',
-        backdrop: 'static',
-        resolve: {
-          user: () => user,
-          isNew: () => isNew,
-          groupsList: () => $scope.groupList
-        }
-      }),
+      openUserModal: function(user, isNew) {
+        return $modal.open({
+          templateUrl: 'app/home/usersAndGroups/userDetails/user.tpl.html',
+          controller: 'UserModalController',
+          backdrop: 'static',
+          resolve: {
+            user: function() {return user;},
+            isNew: function() {return isNew;},
+            groupsList: function() {return $scope.groupList;}
+          }
+        });
+      },
 
       onAddUserClick: function() {
-        const modalInstance = this.openUserModal({}, true);
-        modalInstance.result.then(newUser => {
+        var modalInstance = this.openUserModal({}, true);
+        modalInstance.result.then(function(newUser) {
           getUsersAndGroups();
         }, function () {
         });
       },
 
       onEditUserClick: function(userName) {
-        const idx = this.getUserIdx(userName);
+        var idx = this.getUserIdx(userName);
         if(idx > -1) {
-          const user = this.getUserByIdx(idx);
-          const modalInstance = this.openUserModal(user, false);
+          var user = this.getUserByIdx(idx);
+          var modalInstance = this.openUserModal(user, false);
           modalInstance.result.then(function(editedUser) {
             $scope.userList[idx] = editedUser;
             getUsersAndGroups();
@@ -88,16 +98,16 @@ angular
       },
 
       onDeleteUserClick: function(userName) {
-        const modalInstance = $modal.open({
+        var modalInstance = $modal.open({
           templateUrl: 'app/home/usersAndGroups/delete/delete.tpl.html',
           controller: 'DeleteModalController',
           backdrop: 'static',
           resolve: {
-            userName: () => userName,
+            userName: function() {return userName;},
           }
         });
-        modalInstance.result.then(() => {
-          const idx = this.getUserIdx(userName);
+        modalInstance.result.then(function() {
+          var idx = this.getUserIdx(userName);
           $scope.userList.splice(idx, 1);
           //getUsersAndGroups();
         }, function () {
@@ -117,8 +127,8 @@ angular
           // - list of groups
           $scope.groupList = res[0].data;
           // - list of users
-          $scope.userList = res[1].data.data.sort((a, b) => a.id.localeCompare(b.id));
-          $scope.userList.forEach(user => user.groups = user.groups.sort());
+          $scope.userList = res[1].data.data.sort(function(a, b) {return a.id.localeCompare(b.id);});
+          $scope.userList.forEach(function(user) {user.groups = user.groups.sort();});
         },
         function (res) {
           $rootScope.common.errors = [res.data];

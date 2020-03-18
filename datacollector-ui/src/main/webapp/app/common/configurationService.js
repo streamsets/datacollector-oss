@@ -39,7 +39,7 @@ angular.module('dataCollectorApp.common')
     var SUPPORT_BUNDLE_ENABLED = 'bundle.upload.enabled';
     var DPM_LABELS ='dpm.remote.control.job.labels';
     var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
-    const UI_DEFAULT_CONFIGURATION_VIEW = 'ui.default.configuration.view';
+    var UI_DEFAULT_CONFIGURATION_VIEW = 'ui.default.configuration.view';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -315,7 +315,7 @@ angular.module('dataCollectorApp.common')
      * Returns ui.default.configuration.view converted to a boolean
      * @returns {Boolean}
      */
-    this.defaultShowAdvancedConfigs = () => {
+    this.defaultShowAdvancedConfigs = function() {
       if (self.config && self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== undefined) {
         return self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== 'BASIC';
       }

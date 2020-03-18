@@ -152,10 +152,10 @@ angular
      */
     var hasAdvancedConfigurationIssues = function(issues, configDefinitions) {
       var advancedDefinitionNames = configDefinitions
-        .filter(config => config.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED)
-        .map(config => config.name);
-      var issueConfigNames = issues.map(issue => issue.configName);
-      return issueConfigNames.some(issueName => advancedDefinitionNames.includes(issueName));
+        .filter(function(config) {return config.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;})
+        .map(function(config) {return config.name;});
+      var issueConfigNames = issues.map(function(issue) {return issue.configName;});
+      return issueConfigNames.some(function(issueName) {return advancedDefinitionNames.includes(issueName);});
     };
 
     angular.extend($scope, {
@@ -320,7 +320,9 @@ angular
        * @returns {Boolean}
        */
       hasAdvancedConfig: function(configDefinitions) {
-        return configDefinitions.some(x => x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED);
+        return configDefinitions.some(function (x) {
+          return x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
+        });
       },
 
       /**
@@ -497,7 +499,7 @@ angular
             validationIssues = errorIssues[selectedInstanceName];
           }
         }
-        var allIssues = [...issues, ...validationIssues];
+        var allIssues = issues.concat(validationIssues);
         return hasAdvancedConfigurationIssues(
           allIssues,
           configDefinitions
@@ -531,7 +533,7 @@ angular
       }
     );
 
-    $scope.$watch('selectedObject', () => {
+    $scope.$watch('selectedObject', function() {
       if (configuration.defaultShowAdvancedConfigs() &&
           $scope.selectedType == pipelineConstant.STAGE_INSTANCE &&
           $scope.detailPaneConfigDefn &&

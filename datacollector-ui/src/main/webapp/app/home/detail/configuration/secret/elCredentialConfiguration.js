@@ -33,21 +33,24 @@ angular
 
       // Save a typed in credential to the interal secret store
       saveCredential: function() {
-        const credentialValue = $scope.credentialSettings.credentialValue;
+        var credentialValue = $scope.credentialSettings.credentialValue;
         if (credentialValue.length < 1) {
           return;
         }
-        const {vaultName, secretName, expression} = secretUtil.getStandardExpression(
+        var vaultSecretExpression = secretUtil.getStandardExpression(
           $scope.pipelineConfig.pipelineId,
           $scope.selectedObject.instanceName,
           $scope.configDefinition.name,
           $scope.credentialSettings.store
         );
+        var vaultName = vaultSecretExpression.vaultName;
+        var secretName = vaultSecretExpression.secretName;
+        var expression = vaultSecretExpression.expression;
         api.secret.createOrUpdateTextSecret(
           vaultName,
           secretName,
           credentialValue)
-        .then((response) => {
+        .then(function(response) {
           if (response.status >=200 && response.status < 300) {
             $scope.detailPaneConfig.configuration[$scope.configIndex].value = expression;
             $scope.credentialSettings.credentialValue = '';
@@ -55,7 +58,7 @@ angular
           } else {
             console.error('Could not save credential', response);
           }
-        }).catch((err) => {
+        }).catch(function (err) {
           console.error(err);
         });
       },
@@ -66,7 +69,7 @@ angular
           return $scope.detailPaneConfig.configuration[$scope.configIndex].value = newValue;
         } else {
           // getter
-          const currentValue = $scope.detailPaneConfig.configuration[$scope.configIndex].value;
+          var currentValue = $scope.detailPaneConfig.configuration[$scope.configIndex].value;
           // Do not return value if using internal credential store
           if (!currentValue || secretUtil.isInternalSecret(currentValue, $scope.credentialSettings.store)) {
             return '';
@@ -102,15 +105,15 @@ angular
       }
     });
 
-    this.$onInit = () => {
-      api.secret.checkSecretsAvailability().then(res => {
+    this.$onInit = function() {
+      api.secret.checkSecretsAvailability().then(function(res) {
         if (res.status === 200) {
           $scope.credentialSettings.useInternalSecrets = true;
           $scope.credentialSettings.store = res.data;
         } else {
           secretUtil.useOldCredentials($scope);
         }
-      }, err => {
+      }, function(err) {
         secretUtil.useOldCredentials($scope);
       });
     };

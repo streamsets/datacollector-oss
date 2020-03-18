@@ -56,14 +56,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getFilesList: () => $http.get(apiBase + '/system/logs/files'),
+      getFilesList: function() {return $http.get(apiBase + '/system/logs/files');},
 
       /**
        * Get Log Config
        * @param def
        * @returns {*}
        */
-      getLogConfig: def => $http.get(apiBase + '/system/log/config?default=' + def),
+      getLogConfig: function(def) {return $http.get(apiBase + '/system/log/config?default=' + def);},
 
       /**
        * Update Log Config
@@ -89,32 +89,32 @@ angular.module('dataCollectorApp.common')
        * Fetches JVM Metrics
        * @returns {*}
        */
-      getJMX: () => $http.get(apiBase + '/system/jmx'),
+      getJMX: function() {return $http.get(apiBase + '/system/jmx');},
 
       /**
        * Fetches JVM Thread Dump
        */
-      getThreadDump: () => $http.get(apiBase + '/system/threads'),
+      getThreadDump: function() {return $http.get(apiBase + '/system/threads');},
 
       /**
        * Fetches User Information
        */
-      getUserInfo: () => $http.get(apiBase + '/system/info/currentUser'),
+      getUserInfo: function() {return $http.get(apiBase + '/system/info/currentUser');},
 
       /**
        * Fetches Build Information
        */
-      getBuildInfo: () => $http.get(apiBase + '/system/info'),
+      getBuildInfo: function() {return $http.get(apiBase + '/system/info');},
 
       /**
        * Fetches Remote Server Info
        */
-      getRemoteServerInfo: () => $http.get(apiBase + '/system/info/remote'),
+      getRemoteServerInfo: function() {return $http.get(apiBase + '/system/info/remote');},
 
       /**
        * Fetches SDC ID
        */
-      getSdcId: () => $http.get(apiBase + '/system/info/id'),
+      getSdcId: function() {return $http.get(apiBase + '/system/info/id');},
 
       /**
        * Shutdown the Data Collector.
@@ -215,18 +215,18 @@ angular.module('dataCollectorApp.common')
        * Returns SDC Directories
        * @returns {*}
        */
-      getSDCDirectories: () => $http.get(apiBase + '/system/directories'),
+      getSDCDirectories: function() {return $http.get(apiBase + '/system/directories');},
 
       /**
        * Returns Server Time
        */
-      getServerTime: () => $http.get(apiBase + '/system/info/serverTime'),
+      getServerTime: function() {return $http.get(apiBase + '/system/info/serverTime');},
 
       /**
        * Returns Groups
        * @returns {*}
        */
-      getGroups: () => $http.get(apiBase + '/system/groups'),
+      getGroups: function() {return $http.get(apiBase + '/system/groups');},
 
       /* - User list (old API)
         returns [{
@@ -235,7 +235,7 @@ angular.module('dataCollectorApp.common')
           "groups": ["all"]
         },...]
       */
-      getUsers: () => $http.get(apiBase + '/system/users'),
+      getUsers: function() {return $http.get(apiBase + '/system/users');},
 
       /* - User list (new API)
         returns {
@@ -252,21 +252,21 @@ angular.module('dataCollectorApp.common')
           "envelopeVersion" : "1"
           }
        */
-      getUsers2: () => $http.get(apiBase + '/usermanagement/users'),
+      getUsers2: function() {return $http.get(apiBase + '/usermanagement/users');},
 
-      deleteUser: id => $http.delete(apiBase + '/usermanagement/users/' + id),
+      deleteUser: function(id) {return $http.delete(apiBase + '/usermanagement/users/' + id);},
 
-      updateUser: user => $http.post(apiBase + '/usermanagement/users/' + user.id, {
+      updateUser: function(user) {return $http.post(apiBase + '/usermanagement/users/' + user.id, {
         data: user,
         envelopeVersion: "1"
-      }),
+      });},
 
-      insertUser: user => $http.post(apiBase + '/usermanagement/users/', {
+      insertUser: function(user) {return $http.post(apiBase + '/usermanagement/users/', {
         data: user,
         envelopeVersion: "1"
-      }),
+      });},
 
-      changeUserPassword: (id, oldPwd, newPwd) => $http.post(
+      changeUserPassword: function(id, oldPwd, newPwd) {return $http.post(
         apiBase + '/usermanagement/users/' + id + '/changePassword',
         {
           data: {
@@ -276,16 +276,16 @@ angular.module('dataCollectorApp.common')
           },
           envelopeVersion: "1"
         }
-      ),
+      );},
 
-      setUserPassword: (id, token, pwd) => $http.post(apiBase + '/usermanagement/users/setPassword', {
+      setUserPassword: function(id, token, pwd) {return $http.post(apiBase + '/usermanagement/users/setPassword', {
         data: {
           id: id,
           resetToken: token,
           password: pwd
         },
         envelopeVersion: "1"
-      }),
+      });},
 
     };
 
@@ -295,21 +295,21 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getConfiguration: () => $http.get(apiBase + '/system/configuration'),
+      getConfiguration: function() {return $http.get(apiBase + '/system/configuration');},
 
       /**
        * Fetches UI Configuration
        *
        * @returns {*}
        */
-      getUIConfiguration: () => $http.get(apiBase + '/system/configuration/ui'),
+      getUIConfiguration: function() {return $http.get(apiBase + '/system/configuration/ui');},
 
       /**
        * Fetches all configuration definitions of Pipeline and Stage Configuration.
        *
        * @returns {*}
        */
-      getDefinitions: () => $http.get(apiBase + '/definitions'),
+      getDefinitions: function() {return $http.get(apiBase + '/definitions');},
 
       /**
        * Fetches all libraries information from archives/nightly.
@@ -409,21 +409,21 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelinesCount: () => $http.get(apiBase + '/pipelines/count'),
+      getPipelinesCount: function() {return $http.get(apiBase + '/pipelines/count');},
 
       /**
        * Returns System Pipeline Labels.
        *
        * @returns {*}
        */
-      getSystemPipelineLabels: () => $http.get(apiBase + '/pipelines/systemLabels'),
+      getSystemPipelineLabels: function() {return $http.get(apiBase + '/pipelines/systemLabels');},
 
       /**
        * Returns all Pipeline labels.
        *
        * @returns {*}
        */
-      getPipelineLabels: () => $http.get(apiBase + '/pipelines/labels'),
+      getPipelineLabels: function() {return $http.get(apiBase + '/pipelines/labels');},
 
       /**
        * Fetches all Pipeline Configuration Info.
@@ -464,7 +464,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfig: name => $http.get(apiBase + '/pipeline/' + name),
+      getPipelineConfig: function(name) {return $http.get(apiBase + '/pipeline/' + name);},
 
       /**
        * Fetches Pipeline Configuration Information
@@ -472,7 +472,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfigInfo: name => $http.get(apiBase + '/pipeline/' + name + '?get=info'),
+      getPipelineConfigInfo: function(name) {return $http.get(apiBase + '/pipeline/' + name + '?get=info');},
 
       /**
        * Sends updated Pipeline configuration to server for update.
@@ -890,14 +890,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getAllPipelineStatus: () => $http.get(apiBase + '/pipelines/status'),
+      getAllPipelineStatus: function() {return $http.get(apiBase + '/pipelines/status');},
 
       /**
        * Fetch the Pipeline Status
        *
        * @returns {*}
        */
-      getPipelineStatus: (pipelineName, rev) => $http.get(apiBase + '/pipeline/' + pipelineName + '/status?rev=' + rev),
+      getPipelineStatus: function(pipelineName, rev) {return $http.get(apiBase + '/pipeline/' + pipelineName + '/status?rev=' + rev);},
 
       /**
        * Validate the Pipeline
@@ -990,14 +990,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelineMetrics: (pipelineId, rev) => $http.get(apiBase + '/pipeline/' + pipelineId + '/metrics?rev=' + rev),
+      getPipelineMetrics: function(pipelineId, rev) {return $http.get(apiBase + '/pipeline/' + pipelineId + '/metrics?rev=' + rev);},
 
       /**
        * Get List of available snapshots.
        *
        * @returns {*}
        */
-      getSnapshotsInfo: () => $http.get(apiBase + '/pipelines/snapshots'),
+      getSnapshotsInfo: function() {return $http.get(apiBase + '/pipelines/snapshots');},
 
       /**
        * Capture Snapshot of running pipeline.
@@ -1053,7 +1053,7 @@ angular.module('dataCollectorApp.common')
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshotStatus: (pipelineName, rev, snapshotName) => $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '/status?rev=' + rev),
+      getSnapshotStatus: function(pipelineName, rev, snapshotName) {return $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '/status?rev=' + rev);},
 
       /**
        * Get captured snapshot for given pipeline name.
@@ -1063,7 +1063,7 @@ angular.module('dataCollectorApp.common')
        * @param snapshotName
        * @returns {*}
        */
-      getSnapshot: (pipelineName, rev, snapshotName) => $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev),
+      getSnapshot: function(pipelineName, rev, snapshotName) {return $http.get(apiBase + '/pipeline/' + pipelineName + '/snapshot/' + snapshotName + '?rev=' + rev);},
 
       /**
        * Download captured snapshot for given pipeline name.
@@ -1164,7 +1164,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getHistory: name => $http.get(apiBase + '/pipeline/' + name + '/history'),
+      getHistory: function(name) {return $http.get(apiBase + '/pipeline/' + name + '/history');},
 
       /**
        * Clear history of the pipeline
@@ -1299,7 +1299,7 @@ angular.module('dataCollectorApp.common')
       /**
        * Get all pipeline alers
        */
-      getAllAlerts: () => $http.get(apiBase + '/pipelines/alerts'),
+      getAllAlerts: function() {return $http.get(apiBase + '/pipelines/alerts');},
 
       /**
        * Delete Alert
@@ -1367,7 +1367,7 @@ angular.module('dataCollectorApp.common')
         });
       },
 
-      getRemoteRoles: () => $http.get(apiBase + '/controlHub/currentUser'),
+      getRemoteRoles: function() {return $http.get(apiBase + '/controlHub/currentUser');},
 
       getRemoteUsers: function(offset, len) {
         if (offset === undefined) {
@@ -1413,7 +1413,7 @@ angular.module('dataCollectorApp.common')
        * @param name
        * @returns {*}
        */
-      getPipelineConfigAcl: name => $http.get(apiBase + '/acl/' + name),
+      getPipelineConfigAcl: function(name) {return $http.get(apiBase + '/acl/' + name);},
 
       /**
        * Sends updated Pipeline ACL to server for update.
@@ -1436,14 +1436,14 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getPipelinePermissions: pipelineName => $http.get(apiBase + '/acl/' + pipelineName + '/permissions'),
+      getPipelinePermissions: function(pipelineName) {return $http.get(apiBase + '/acl/' + pipelineName + '/permissions');},
 
       /**
        * Get all Subjects in Pipeline ACL
        *
        * @returns {*}
        */
-      getSubjects: () => $http.get(apiBase + '/acl/pipelines/subjects'),
+      getSubjects: function() {return $http.get(apiBase + '/acl/pipelines/subjects');},
 
       /**
        * Update Subjects in Pipeline ACL
@@ -1466,24 +1466,24 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getStats: () => $http.get(apiBase + '/system/stats'),
+      getStats: function() {return $http.get(apiBase + '/system/stats');},
 
       /**
        * Set opt in/out status for stats
        *
        * @returns {*}
        */
-      setOptInStatus: isOptIn => $http({
+      setOptInStatus: function(isOptIn) {return $http({
           method: 'POST',
           url: apiBase + '/system/stats?active=' + (!!isOptIn)
-      }),
+      });},
 
       /**
        * Get all support bundle generators
        *
        * @returns {*}
        */
-      getSupportBundleGenerators: () => $http.get(apiBase + '/system/bundle/list'),
+      getSupportBundleGenerators: function() {return $http.get(apiBase + '/system/bundle/list');},
 
       /**
        * Get plain/text URL to download generated bundle file
@@ -1500,7 +1500,7 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      uploadSupportBundle: generators => $http.get(apiBase + '/system/bundle/upload?generators=' + generators.join(','))
+      uploadSupportBundle: function(generators) {return $http.get(apiBase + '/system/bundle/upload?generators=' + generators.join(','));}
     };
 
     api.activation = {
@@ -1509,7 +1509,7 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getActivation: () => $http.get(apiBase + '/activation'),
+      getActivation: function() {return $http.get(apiBase + '/activation');},
 
       /**
        * Uploads the SDC activation key
@@ -1534,7 +1534,7 @@ angular.module('dataCollectorApp.common')
        * Create new text secret (aka password), return http promise
        */
       createOrUpdateTextSecret: function (vaultName, secretName, secretValue) {
-        const url = apiBase + '/secrets/text/ctx=SecretManage';
+        var url = apiBase + '/secrets/text/ctx=SecretManage';
         return $http({
           method: 'POST',
           url: url,
@@ -1557,8 +1557,8 @@ angular.module('dataCollectorApp.common')
        * Create new file secret, return http promise
        */
       createOrUpdateFileSecret: function (vaultName, secretName, secretFile) {
-        const url = apiBase + '/secrets/file/ctx=SecretManage';
-        let formData = new FormData();
+        var url = apiBase + '/secrets/file/ctx=SecretManage';
+        var formData = new FormData();
         formData.append('vault', vaultName);
         formData.append('name', secretName);
         formData.append('uploadedFile', secretFile);
@@ -1574,12 +1574,12 @@ angular.module('dataCollectorApp.common')
       /**
        * Returns 200 if available, 404 if not
        */
-      checkSecretsAvailability: () => $http.get(apiBase + '/secrets/get'),
+      checkSecretsAvailability: function() {return $http.get(apiBase + '/secrets/get');},
 
       /**
        * Gets the default ssh public key
        */
-      getSSHPublicKey: () => $http.get(apiBase + '/secrets/sshTunnelPublicKey')
+      getSSHPublicKey: function() {return $http.get(apiBase + '/secrets/sshTunnelPublicKey');}
     };
 
     return api;

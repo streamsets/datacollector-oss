@@ -926,7 +926,7 @@ angular
 
       // set flag for value or param (used for checkbox and lists)
       if ($scope.detailPaneConfig.configuration) {
-        $scope.detailPaneConfig.configuration.forEach(c => {
+        $scope.detailPaneConfig.configuration.forEach(function(c) {
           $scope.fieldHash[c.name] = c;
           if(c.value && typeof c.value === 'string' && c.value.startsWith('${')){
             $scope.fieldParamHash[c.name] = true;
