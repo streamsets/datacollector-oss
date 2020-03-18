@@ -43,7 +43,6 @@ import com.streamsets.pipeline.stage.origin.mysql.binlog.MysqlBinLogSource;
     "config.connectionString",
     "config.useCredentials",
     "config.driverProperties",
-    "config.maximumPoolSize",
     "config.minIdle",
     "config.idleTimeout",
     "config.maxLifetime",
