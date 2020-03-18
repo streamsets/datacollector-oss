@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.streamsets.datacollector.restapi.rbean.json.swagger.RJsonModelConverter;
 import com.streamsets.datacollector.restapi.rbean.lang.BaseMsg;
 import com.streamsets.datacollector.restapi.rbean.lang.RBoolean;
 import com.streamsets.datacollector.restapi.rbean.lang.RChar;
@@ -32,6 +33,7 @@ import com.streamsets.datacollector.restapi.rbean.lang.RString;
 import com.streamsets.datacollector.restapi.rbean.lang.RText;
 import com.streamsets.datacollector.restapi.rbean.lang.RTime;
 import com.streamsets.datacollector.restapi.rbean.lang.RValue;
+import io.swagger.converter.ModelConverters;
 
 /**
  * To remove support for NESTED JSON format get rid of the OBJECT_MAPPER as well as the REST_OBJECT_MAPPER_TL
@@ -76,5 +78,9 @@ public class RJson {
     return objectMapper;
   }
 
+  public static void configureRJsonForSwagger(ObjectMapper objectMapper) {
+    configureRJson(objectMapper);
+    ModelConverters.getInstance().addConverter(new RJsonModelConverter(objectMapper));
+  }
 
 }

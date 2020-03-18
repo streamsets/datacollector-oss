@@ -46,6 +46,7 @@ import com.streamsets.datacollector.restapi.configuration.StatsCollectorInjector
 import com.streamsets.datacollector.restapi.configuration.SupportBundleInjector;
 import com.streamsets.datacollector.restapi.configuration.UserGroupManagerInjector;
 import com.streamsets.datacollector.restapi.configuration.UsersManagerInjector;
+import com.streamsets.datacollector.restapi.rbean.json.RJson;
 import com.streamsets.datacollector.restapi.rbean.rest.RestResourceContextFilter;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -60,6 +61,7 @@ import com.streamsets.pipeline.http.MDCFilter;
 import dagger.Module;
 import dagger.Provides;
 import dagger.Provides.Type;
+import io.swagger.util.Json;
 import org.eclipse.jetty.server.handler.gzip.GzipHandler;
 import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.FilterHolder;
@@ -302,6 +304,8 @@ public class WebServerModule {
         );
         protectedRest.setInitParameter(ServletProperties.JAXRS_APPLICATION_CLASS, RestAPIResourceConfig.class.getName());
         context.addServlet(protectedRest, "/rest/*");
+
+        RJson.configureRJsonForSwagger(Json.mapper());
 
         // REST API that it does not require authentication
         ServletHolder publicRest = new ServletHolder(new ServletContainer());
