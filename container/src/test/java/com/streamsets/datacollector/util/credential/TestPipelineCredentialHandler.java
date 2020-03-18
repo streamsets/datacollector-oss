@@ -497,9 +497,9 @@ public class TestPipelineCredentialHandler {
   @Test
   public void testDecryptPlainTextCredentials() throws StageException {
     final String PIPELINE_ID = "pipelineId";
-    final String AMAZON_ACCESS_KEY = "_amazonEMRConfig.accessKey";
-    final String SOURCE_PASSWORD = "/si_password1";
-    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si_complexField[0][password1]";
+    final String AMAZON_ACCESS_KEY = "__amazonEMRConfig.accessKey";
+    final String SOURCE_PASSWORD = "/si__password1";
+    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si__complexField[0][password1]";
     final List<String> CONFIGS_TO_HANDLE =
         ImmutableList.of(AMAZON_ACCESS_KEY, SOURCE_PASSWORD, SOURCE_COMPLEX_FIELD_PASSWORD);
     CONFIGS_TO_HANDLE.forEach(c ->
@@ -605,11 +605,11 @@ public class TestPipelineCredentialHandler {
   @Test
   public void testAutoEncryptingCredentials() {
     final String PIPELINE_ID = "pipelineId";
-    final String AMAZON_ACCESS_KEY = "_amazonEMRConfig.accessKey";
-    final String AMAZON_SECRET_KEY = "_amazonEMRConfig.secretKey";
+    final String AMAZON_ACCESS_KEY = "__amazonEMRConfig.accessKey";
+    final String AMAZON_SECRET_KEY = "__amazonEMRConfig.secretKey";
 
-    final String SOURCE_PASSWORD = "/si_password1";
-    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si_complexField[0][password1]";
+    final String SOURCE_PASSWORD = "/si__password1";
+    final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si__complexField[0][password1]";
 
     pipelineCredentialHandler = PipelineCredentialHandler.getEncrypter(stageLibraryTask, credentialStoresTask, configuration);
 

@@ -71,7 +71,7 @@ public class PipelineCredentialHandler {
       secretName = secretName + "/" + stageId;
     }
     if (!Strings.isNullOrEmpty(configPath)) {
-      secretName = secretName + "_" + configPath;
+      secretName = secretName + "__" + configPath;
     }
     return secretName;
   }
