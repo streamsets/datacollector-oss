@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -139,13 +140,13 @@ public class StatsInfo {
   }
 
   Map<String, Object> getSystemInfo(ActiveStats stats) {
-    return ImmutableMap.of(
-        SDC_ID, stats.getSdcId(),
-        DATA_COLLECTOR_VERSION, stats.getDataCollectorVersion(),
-        BUILD_REPO_SHA, stats.getBuildRepoSha(),
-        DPM_ENABLED, stats.isDpmEnabled(),
-        EXTRA_INFO, stats.getExtraInfo()
-    );
+    ImmutableMap.Builder<String, Object> systemInfoBuilder = new ImmutableMap.Builder<>();
+    Optional.ofNullable(stats.getSdcId()).ifPresent(s -> systemInfoBuilder.put(SDC_ID, s));
+    Optional.ofNullable(stats.getDataCollectorVersion()).ifPresent(s -> systemInfoBuilder.put(DATA_COLLECTOR_VERSION, s));
+    Optional.ofNullable(stats.getBuildRepoSha()).ifPresent(s -> systemInfoBuilder.put(BUILD_REPO_SHA, s));
+    Optional.ofNullable(stats.getExtraInfo()).ifPresent(s -> systemInfoBuilder.put(EXTRA_INFO, s));
+    systemInfoBuilder.put(DPM_ENABLED, stats.isDpmEnabled());
+    return systemInfoBuilder.build();
   }
 
   void setSystemInfo(Map<String, Object> info, ActiveStats stats) {
