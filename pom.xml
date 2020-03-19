@@ -72,7 +72,6 @@
     <cyberark-credentialstore-lib>cyberark-credentialstore-lib</cyberark-credentialstore-lib>
     <dev-lib>dev-lib</dev-lib>
     <dataformats-lib>dataformats-lib</dataformats-lib>
-    <sshtunnel-lib>sshtunnel-lib</sshtunnel-lib>
     <google-cloud-lib>google-cloud-lib</google-cloud-lib>
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
     <jks-credentialstore-lib>jks-credentialstore-lib</jks-credentialstore-lib>
@@ -250,7 +249,6 @@
     <module>cyberark-credentialstore-lib</module>
     <module>dev-lib</module>
     <module>dataformats-lib</module>
-    <module>sshtunnel-lib</module>
     <module>google-cloud-lib</module>
     <module>influxdb_0_9-lib</module>
     <module>jks-credentialstore-lib</module>
