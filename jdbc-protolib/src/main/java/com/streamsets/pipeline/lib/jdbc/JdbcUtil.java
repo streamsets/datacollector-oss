@@ -527,6 +527,7 @@ public class JdbcUtil {
   ) throws SQLException {
     Record.Header header = record.getHeader();
     Set<String> tableNames = new HashSet<>();
+
     for (int i=1; i<=metaData.getColumnCount(); i++) {
       header.setAttribute(jdbcNameSpacePrefix + metaData.getColumnLabel(i) + ".jdbcType", String.valueOf(metaData.getColumnType(i)));
 

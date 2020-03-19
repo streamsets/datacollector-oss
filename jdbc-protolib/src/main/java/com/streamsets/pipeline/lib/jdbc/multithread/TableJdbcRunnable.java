@@ -103,10 +103,9 @@ public final class TableJdbcRunnable extends JdbcBaseRunnable {
           md,
           JDBC_NAMESPACE_HEADER
       );
+      record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableRuntimeContext.getDescription());
+      record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));
     }
-
-    record.getHeader().setAttribute(PARTITION_ATTRIBUTE, tableRuntimeContext.getDescription());
-    record.getHeader().setAttribute(THREAD_NUMBER_ATTRIBUTE, String.valueOf(threadNumber));
 
     int columns = rs.getMetaData().getColumnCount();
     if (fields.size() != columns) {
