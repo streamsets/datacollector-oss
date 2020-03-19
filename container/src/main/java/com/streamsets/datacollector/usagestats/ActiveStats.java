@@ -40,6 +40,7 @@ public class ActiveStats {
   private long startTime;
   private long endTime;
   private String sdcId;
+  private String productName;
   private String dataCollectorVersion;
   private String buildRepoSha;
   private Map<String, String> extraInfo;
@@ -71,6 +72,15 @@ public class ActiveStats {
 
   public ActiveStats setSdcId(String sdcId) {
     this.sdcId = sdcId;
+    return this;
+  }
+
+  public String getProductName() {
+    return productName;
+  }
+
+  public ActiveStats setProductName(String productName) {
+    this.productName = productName;
     return this;
   }
 
@@ -313,6 +323,7 @@ public class ActiveStats {
     long now = System.currentTimeMillis();
     setEndTime(now);
     ActiveStats statsBean = new ActiveStats().setSdcId(getSdcId())
+                                             .setProductName(getProductName())
                                              .setStartTime(now)
                                              .setDataCollectorVersion(getDataCollectorVersion())
                                              .setBuildRepoSha(getBuildRepoSha())
@@ -334,6 +345,7 @@ public class ActiveStats {
   // returns a snapshot for persistency
   public ActiveStats snapshot() {
     ActiveStats snapshot = new ActiveStats().setSdcId(getSdcId())
+                                            .setProductName(getProductName())
                                             .setStartTime(getStartTime())
                                             .setDataCollectorVersion(getDataCollectorVersion())
                                             .setBuildRepoSha(getBuildRepoSha())

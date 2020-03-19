@@ -40,7 +40,7 @@ public class StatsCollectorModule {
       Configuration config,
       @Named("runnerExecutor") SafeScheduledExecutorService executorService
   ) {
-    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService);
+    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, new SysInfo(runtimeInfo));
   }
 
 }
