@@ -63,9 +63,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import static org.mockito.Mockito.when;
+
 public class TestStatsCollectorTask {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+  private static final Map<String, String> DEFAULT_SYS_INFO_MAP = ImmutableMap.of("cloudProvider", SysInfo.UNKNOWN);
   private static String POST_TELEMETRY_URL = "https://fake-url.com/post/telemetry/here";
 
   private Runnable runnable;
@@ -83,9 +86,7 @@ public class TestStatsCollectorTask {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
     config.set(StatsCollectorTask.ROLL_PERIOD_CONFIG, 1);
@@ -111,9 +112,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -139,9 +138,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -184,9 +181,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -213,9 +208,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -242,9 +235,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -274,9 +265,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -304,9 +293,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -333,9 +320,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -363,9 +348,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -393,9 +376,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -424,9 +405,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -462,9 +441,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -509,9 +486,7 @@ public class TestStatsCollectorTask {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -639,9 +614,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -683,9 +656,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -740,9 +711,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -785,9 +754,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
 
     String sdcId = "0123456789-0123456789-0123456789";
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
 
     Configuration config = new Configuration();
 
@@ -822,9 +789,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1-SNAPSHOT");
 
     String sdcId = "0123456789-0123456789-0123456789";
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
 
     Configuration config = new Configuration();
 
@@ -851,9 +816,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1-SNAPSHOT");
 
     String sdcId = "0123456789-0123456789-0123456789";
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
 
     Configuration config = new Configuration();
     config.set(StatsCollectorTask.TELEMETRY_FOR_SNAPSHOT_BUILDS, true);
@@ -1016,8 +979,7 @@ public class TestStatsCollectorTask {
       BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
       Mockito.when(buildInfo.getVersion()).thenReturn("v1");
 
-      RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-      Mockito.when(runtimeInfo.getId()).thenReturn(UUID.randomUUID().toString());
+      RuntimeInfo runtimeInfo = mockRuntimeInfo(UUID.randomUUID().toString(), null);
 
       Configuration config = new Configuration();
 
@@ -1039,7 +1001,9 @@ public class TestStatsCollectorTask {
       SafeScheduledExecutorService executorService,
       boolean postTelemetrySuccess
   ) {
-    StatsCollectorTask spy = Mockito.spy(new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService));
+    SysInfo sysInfo = Mockito.mock(SysInfo.class);
+    Mockito.when(sysInfo.toMap()).thenReturn(DEFAULT_SYS_INFO_MAP);
+    StatsCollectorTask spy = Mockito.spy(new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo));
 
     // to test real interactions, comment out starting from here, change StatsCollectorTask.TELEMETRY_USE_TEST_BUCKET_DEFAULT to true, and run testReportStats
     // This will put a real file into the S3 bucket customer-support-bundles-test that you can verify.
@@ -1070,21 +1034,6 @@ public class TestStatsCollectorTask {
     return spy;
   }
 
-  private StatsCollectorTask mockStatsCollectorTaskAndRunnable(
-      BuildInfo buildInfo,
-      RuntimeInfo runtimeInfo,
-      Configuration config,
-      SafeScheduledExecutorService executorService) {
-
-    StatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, true);
-
-    runnable = Mockito.mock(Runnable.class);
-    Mockito.doReturn(runnable).when(spy).getRunnable();
-
-    return spy;
-  }
-
-
   @Test
   public void testRunnableRollingNotPublishing() throws Exception {
     File testDir = createTestDir();
@@ -1093,9 +1042,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn("id");
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
@@ -1126,7 +1073,7 @@ public class TestStatsCollectorTask {
 
     try (InputStream is = new FileInputStream(task.getStatsFile())) {
       StatsInfo statsInfo = ObjectMapperFactory.get().readValue(is, StatsInfo.class);
-      Assert.assertEquals(Collections.emptyMap(), statsInfo.getExtraInfo());
+      Assert.assertEquals(DEFAULT_SYS_INFO_MAP, statsInfo.getExtraInfo(task.getSysInfo()));
       Assert.assertEquals(1, statsInfo.getCollectedStats().size());
       Assert.assertEquals("id",
           statsInfo.getCollectedStats().get(0).getSdcId());
@@ -1141,4 +1088,29 @@ public class TestStatsCollectorTask {
 
   }
 
+  private RuntimeInfo mockRuntimeInfo(String sdcId, File dataDir) {
+    RuntimeInfo ret = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(ret.getId()).thenReturn(sdcId);
+    Mockito.when(ret.getProductName()).thenReturn(RuntimeInfo.SDC_PRODUCT);
+    if (dataDir != null) {
+      Mockito.when(ret.getDataDir()).thenReturn(dataDir.getAbsolutePath());
+    }
+    when(ret.getLibexecDir()).thenReturn(
+        System.getenv("PWD").replace("container/src/main/.*","") + "/dist/src/main/libexec");
+    return ret;
+  }
+
+  private StatsCollectorTask mockStatsCollectorTaskAndRunnable(
+      BuildInfo buildInfo,
+      RuntimeInfo runtimeInfo,
+      Configuration config,
+      SafeScheduledExecutorService executorService) {
+
+    StatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, true);
+
+    runnable = Mockito.mock(Runnable.class);
+    Mockito.doReturn(runnable).when(spy).getRunnable();
+
+    return spy;
+  }
 }

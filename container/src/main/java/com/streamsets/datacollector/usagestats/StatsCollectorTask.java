@@ -103,6 +103,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private final SafeScheduledExecutorService executorService;
   private final File optFile;
   private final File statsFile;
+  private final SysInfo sysInfo;
   private boolean opted;
   private volatile boolean active;
   private long lastReport;
@@ -115,7 +116,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      SafeScheduledExecutorService executorService
+      SafeScheduledExecutorService executorService,
+      SysInfo sysInfo
   ) {
     super("StatsCollector");
     this.buildInfo = buildInfo;
@@ -130,6 +132,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
     reportStatsFailedCount = 0;
     extendedReportStatsFailedCount = 0;
+    this.sysInfo = sysInfo;
   }
 
   @VisibleForTesting
@@ -152,6 +155,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     return statsFile;
   }
 
+  protected SysInfo getSysInfo() { return sysInfo; }
+
   @VisibleForTesting
   protected long getRollFrequencyMillis() {
     return rollFrequencyMillis;
@@ -167,7 +172,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     super.initTask();
 
     statsInfo =  new StatsInfo();
-    statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo());
+    statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo(), getSysInfo());
 
     if (runtimeInfo.isClusterSlave()) {
       opted = true;
@@ -271,7 +276,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   Runnable getRunnable() {
     return () -> {
       if (active) {
-        if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getRollFrequencyMillis())) {
+        if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis())) {
           LOG.debug("Stats collection data rolled");
         }
         long defaultReportPeriod =  getReportPeriodSeconds();

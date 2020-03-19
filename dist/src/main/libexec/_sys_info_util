@@ -1,0 +1,369 @@
+#!/bin/bash
+
+#
+# Copyright 2020 StreamSets Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# set -x
+
+PRG="${0}"
+
+while [ -h "$PRG" ]; do
+  ls=$(ls -ld "$PRG")
+  link=$(expr "$ls" : '.*-> \(.*\)$')
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=$(dirname "$PRG")/"$link"
+  fi
+done
+
+prg_dir="$(dirname "${PRG}")"
+
+source "$prg_dir/sdcd-env.sh"
+
+# key inputs from env
+SDC_DATA="${SDC_DATA:-/var/lib/sdc}"
+cloud_provider="${CLD_PROVIDER}"
+
+# constants
+cloud_provider_azure="azure"
+# gcp="gcp" # TODO
+cloud_provider_aws="aws"
+# oci="oci" # TODO
+cloud_provider_unknown="UNKNOWN"
+
+fetch_error="<FETCH_ERROR>"
+
+# other configurable constants
+
+# it can take up to 30 seconds for metadata endpoints to become available, so best if CLD_PROVIDER is set
+metadata_wait="${SDC_SYS_INFO_UTIL_METADATA_WAIT:-30}"
+poll_period="${SDC_SYS_INFO_UTIL_POLL_PERIOD:-1}"
+azure_meta_api_version="${SDC_SYS_INFO_AZURE_META_API_VERSION:-"2019-08-15"}"
+aws_meta_api_version="${SDC_SYS_INFO_AWS_META_API_VERSION:-"2019-10-01"}"
+cloud_provider_cache_file="${SDC_SYS_INFO_UTIL_CLOUD_PLATFORM_CACHE_FILE:-"$SDC_DATA/.cloud_provider_cache"}"
+if [[ ! -w "$(dirname "$cloud_provider_cache_file")" ]] ; then
+  # use /tmp as fallback. Less good since on machine reboot you have to go through detection again.
+  cloud_provider_cache_file="$(dirname "$(mktemp -u)")/.sdc_cloud_provider_cache"
+fi
+
+# overrides for testing
+curl_cmd="${SDC_SYS_INFO_CURL_TEST_OVERRIDE-"$(command -v curl)"}"
+
+log_error() {
+  >&2 echo ERROR: "$@"
+}
+
+curl() {
+  $curl_cmd "$@"
+}
+
+load_cached_cloud_provider() {
+  local cloud_provider_cache_file_dir="$(dirname "$cloud_provider_cache_file")"
+  if ! [[ -w "$cloud_provider_cache_file" || -d "$cloud_provider_cache_file_dir" && -w "$cloud_provider_cache_file_dir" ]] ; then
+    log_error Cloud detection may be slower because cannot write to cloud provider cache file: "$cloud_provider_cache_file"
+  fi
+
+  local old_cloud_provider="$cloud_provider"
+  local cached_ip
+  if [[ -s "$cloud_provider_cache_file" ]] ; then
+    cloud_provider=$(head -n 1 "$cloud_provider_cache_file")
+    cached_ip=$(tail -n 1 "$cloud_provider_cache_file")
+  else
+    return
+  fi
+
+  # check if ip address changed, and invalidate the cache if so
+  if [[ "$cached_ip" != "$(get_private_ip)" ]] ; then
+    cloud_provider="$old_cloud_provider"
+    rm "$cloud_provider_cache_file"
+  fi
+}
+
+get_cloud_provider() {
+  # similar to determine_cloud_provider, but limits stdout to the actual platform
+  if determine_cloud_provider 1>&2 ; then
+    echo "$cloud_provider"
+  else
+    return 1
+  fi
+}
+
+determine_cloud_provider() {
+  if [[ -n "$cloud_provider" ]] ; then
+    echo "cloud_provider is $cloud_provider"
+    return 0
+  fi
+
+  load_cached_cloud_provider
+  if [[ -n "$cloud_provider" ]] ; then
+    echo "cloud_provider is $cloud_provider"
+    return 0
+  fi
+
+  # quick EC2 check, doesn't work reliably on newer instances though
+  if [ -f /sys/hypervisor/uuid ]; then
+    if [ "$(head -c 3 /sys/hypervisor/uuid)" == "ec2" ]; then
+      cloud_provider="$cloud_provider_aws"
+      echo "cloud_provider is $cloud_provider"
+      return 0
+    fi
+  fi
+
+  # slow checks
+  >&2 echo "Warning: Falling back to slower checks for cloud platform, may take up to $metadata_wait seconds"
+  >&2 echo "avoid this by setting CLD_PROVIDER=$cloud_provider_azure|$cloud_provider_aws|$cloud_provider_unknown" # TODO add more
+  tmp_dir=$(mktemp -d -t sdc-detect-cloud-provider-XXXXXXXXXX)
+  get_azure_private_ip 2>/dev/null > "$tmp_dir/azureResult" &
+  get_aws_private_ip 2>/dev/null > "$tmp_dir/awsResult" &
+
+  local private_ip
+  # Poll and wait to see if any files get written
+  local deadline=$((SECONDS + metadata_wait))
+  while ((SECONDS < deadline))
+  do
+    if [[ -s "$tmp_dir/azureResult" ]]; then
+      cloud_provider="$cloud_provider_azure"
+      private_ip="$(cat "$tmp_dir/azureResult")"
+      break
+    elif [[ -s "$tmp_dir/awsResult" ]]; then
+      cloud_provider="$cloud_provider_aws"
+      private_ip="$(cat "$tmp_dir/awsResult")"
+      break
+    fi
+    sleep "$poll_period"
+  done
+
+  if [[ -z "$cloud_provider" ]]; then
+    cloud_provider="$cloud_provider_unknown"
+    private_ip="$(get_private_ip)"
+  fi
+
+  echo "cloud_provider is $cloud_provider"
+  rm -r "$tmp_dir"
+  echo "$cloud_provider" > "$cloud_provider_cache_file"
+  echo "$private_ip" >> "$cloud_provider_cache_file"
+
+  return 0
+}
+
+get_cloud_metadata() {
+  determine_cloud_provider > /dev/null
+  case "$cloud_provider" in
+    "$cloud_provider_azure")
+      get_azure_metadata
+      return
+      ;;
+    "$cloud_provider_aws")
+      get_aws_metadata
+      return
+      ;;
+    *)
+      log_error "No cloud metadata for cloud provider: $cloud_provider"
+      return
+      ;;
+  esac
+}
+
+get_azure_metadata() {
+  curl --silent --connect-timeout "$metadata_wait" -H Metadata:true "http://169.254.169.254/metadata/instance?api-version=$azure_meta_api_version"
+}
+
+get_aws_metadata() {
+  # token api doesn't seem to work with an explicit version, so we use latest
+  local token="$(curl --silent -X PUT -H "X-aws-ec2-metadata-token-ttl-seconds: 21600" "http://169.254.169.254/latest/api/token")"
+  local items="$(curl --silent -H "X-aws-ec2-metadata-token: $token" http://169.254.169.254/"$aws_meta_api_version"/meta-data)"
+
+  local pathPrefix=""
+  local padding="  "
+
+  printf '{\n'
+  process_aws_metadata_items "$token" "$pathPrefix" "$items" "$padding"
+  printf '\n}\n'
+}
+
+process_aws_metadata_items() {
+  local token="$1"
+  local pathPrefix="$2"
+  local items="$3"
+  local padding="$4"
+
+  if [[ "$items" == "$fetch_error" ]] ; then
+    printf '%s"<FETCH_ERROR>":"<FETCH_ERROR>"' "$padding"
+    return 1
+  fi
+
+  local first=true
+  local i
+  for i in $items ; do
+    if [[ "$first" == false ]] ; then
+      printf ',\n'
+    else
+      first=false
+    fi
+    # filter out sensitive stuff, don't even fetch it. More complete filtering expected on client side.
+    if echo "$i" | grep -q -i -E 'key|secret|password|credential' ; then
+      printf '%s"%s":"%s"' "$padding" "$i" '**REDACTED**'
+    elif [[ "$i" == */ ]] ; then
+      # ending in / means there are child endpoints, so we need to recurse
+      # remove trailling slash to form key
+      local key="${i%?}"
+      printf '%s"%s":{\n' "$padding" "$key"
+      process_aws_metadata_items "$token" "${pathPrefix}${i}" "$(query_aws_metadata "$token" "${pathPrefix}${i}")" "$padding  "
+      printf '\n%s}' "$padding"
+    else
+      # some kind of value, sometimes it is legal json and we can just emit it (with bad padding but oh well)
+      local value="$(query_aws_metadata "$token" "${pathPrefix}${i}")"
+      if ! is_valid_json "$value" ; then
+        value="$(escape_json_value "$value")"
+      else
+        # fix padding by replacing newline w/ newline + padding
+        value="${value//$'\n'/$'\n'${padding}}"
+      fi
+      printf '%s"%s":%s' "$padding" "$i" "$value"
+    fi
+  done
+}
+
+query_aws_metadata() {
+  local token="$1"
+  local path="$2"
+  if ! curl --silent --fail -H "X-aws-ec2-metadata-token: $token" http://169.254.169.254/"$aws_meta_api_version"/meta-data/"$path" ; then
+    printf '%s' "$fetch_error"
+    return 1
+  fi
+}
+
+is_valid_json() {
+  if ! command -v python 2>&1 1>/dev/null ; then
+    log_error python not installed, json detection in sys_info will not work
+    return 1
+  fi
+  printf '%s' "$1" | python -c "import sys,json;json.loads(sys.stdin.read());" 2>/dev/null
+}
+
+escape_json_value() {
+  if ! command -v python 2>&1 1>/dev/null ; then
+    log_error python not installed, json escaping may not work reliably
+    # remove newlines and escape double quotes. Doesn't handle already-escaped double quotes properly...but better than nothing
+    printf '"%s "' "$(printf '%s' "$1" | tr -d '\n' | sed 's/"/\\"/g')"
+  fi
+  printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
+}
+
+get_public_ip() {
+  determine_cloud_provider > /dev/null
+  case "$cloud_provider" in
+    "$cloud_provider_aws")
+      get_aws_public_ip
+      return
+      ;;
+    "$cloud_provider_azure")
+      get_azure_public_ip
+      return
+      ;;
+    *)
+      get_fallback_public_ip
+      return
+      ;;
+  esac
+}
+
+get_aws_public_ip() {
+  # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
+  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/$aws_meta_api_version/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
+    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/public-ipv4
+}
+
+get_azure_public_ip() {
+  local ip="$(curl -s --connect-timeout "$metadata_wait" -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/publicIpAddress?api-version=$azure_meta_api_version&format=text")"
+  if [[ -z "$ip" ]] ; then
+    # sometimes azure returns empty string for public IP
+    get_fallback_public_ip
+  else
+    echo "$ip"
+  fi
+}
+
+get_fallback_public_ip() {
+  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1
+}
+
+get_private_ip() {
+  determine_cloud_provider > /dev/null
+  case "$cloud_provider" in
+    "$cloud_provider_azure")
+      get_azure_private_ip
+      return
+      ;;
+    "$cloud_provider_aws")
+      get_aws_private_ip
+      return
+      ;;
+    *)
+      get_fallback_private_ip
+      return
+      ;;
+  esac
+}
+
+get_azure_private_ip() {
+  curl -s --connect-timeout "$metadata_wait" -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/privateIpAddress?api-version=$azure_meta_api_version&format=text"
+}
+
+get_aws_private_ip() {
+  # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
+  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/$aws_meta_api_version/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
+    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/local-ipv4
+}
+
+get_fallback_private_ip() {
+  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1
+}
+
+usage() {
+  echo "Usage: $0 get_cloud_provider|get_cloud_metadata|get_private_ip|get_public_ip"
+}
+
+case $1 in
+  get_cloud_provider)
+    shift
+    get_cloud_provider
+    ;;
+  get_cloud_metadata)
+    shift
+    get_cloud_metadata
+    ;;
+  get_private_ip)
+    shift
+    get_private_ip
+    ;;
+  get_public_ip)
+    shift
+    get_public_ip
+    ;;
+  "")
+    usage
+    ;;
+  usage)
+    usage
+    ;;
+  *)
+    log_error Unknown operation: "$1"
+    usage
+    exit 1
+    ;;
+esac

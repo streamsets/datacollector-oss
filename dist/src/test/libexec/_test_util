@@ -1,0 +1,135 @@
+#!/bin/bash
+
+#
+# Copyright 2020 StreamSets Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# set -x
+
+PRG="${0}"
+
+while [ -h "$PRG" ]; do
+  ls=$(ls -ld "$PRG")
+  link=$(expr "$ls" : '.*-> \(.*\)$')
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=$(dirname "$PRG")/"$link"
+  fi
+done
+
+# get absolute path
+PRG_DIR="$(cd "$(dirname "$PRG")"; pwd)"
+libexec_main_dir="$PRG_DIR/../../main/libexec"
+base_target_dir="$(echo "$PRG_DIR" | sed 's|/src/test/.*||' )/target/"
+if [[ ! -d "$base_target_dir" ]] ; then
+  mkdir base_target_dir
+fi
+# get absolute path and make subdir for this test
+target_dir="$base_target_dir/$(basename "$PRG")"
+
+found_errors=0
+assertions_passed=0
+
+log_error() {
+  >&2 echo ERROR: "$@"
+  found_errors=$((found_errors + 1))
+}
+
+# safety check since it is common to call rm on this
+if ! expr "$target_dir" : '/..*/target' > /dev/null; then
+  log_error "Could not resolve proper target_dir, aborting. Value was '$target_dir'"
+  exit 1
+fi
+
+mkdir -p "$target_dir"
+
+assert_file_contains() {
+  if [[ $# -lt 2 ]] || [[ $# -gt 3 ]]; then
+    log_error assert_file_contains takes arguments: FILE REGEX [INVERT]
+    return 1
+  fi
+  file="$1"
+  regex="$2"
+  invert="${3:-false}"
+  grep -q -E "$regex" "$file"
+  found=$?
+  if { [[ $invert == "false" ]] && [[ $found -eq 0 ]] ; } || { [[ $invert != "false" ]] && [[ $found -ne 0 ]] ; }; then
+    assertions_passed=$((assertions_passed + 1))
+    return 0
+  elif [[ $invert == "false" ]]; then
+    log_error "$regex not found in $file"
+    echo "===contents of $file==="
+    cat "$file"
+    echo "===end contents of $file==="
+    return 1
+  else
+    log_error "$regex unassertedly found in $file"
+    echo "===contents of $file==="
+    cat "$file"
+    echo "===end contents of $file==="
+    return 1
+  fi
+}
+
+assert_file_not_contains() {
+  assert_file_contains "$1" "$2" invertCheck
+}
+
+assert_matches() {
+  assert "$1 - regex <$2> didn't match <$3>" /bin/bash -c 'echo "'"$3"'" | grep -q -E '"'$2'"
+}
+
+assert_equals() {
+  assert "$1 - expected <$2> but got <$3>" equals "$2" "$3"
+}
+
+equals() {
+  if [[ "$1" == "$2" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+assert() {
+  message="$1"
+  shift
+  "$@"
+  if [[ $? -eq 0 ]] ; then
+    assertions_passed=$((assertions_passed + 1))
+  else
+    log_error "$message"
+  fi
+}
+
+assert_not() {
+  message="$1"
+  shift
+  # send stderr to stdout so can suppress expected errors by calling with >/dev/null, but without suppressing assertions
+  "$@" 2>&1
+  if [[ $? -ne 0 ]] ; then
+    assertions_passed=$((assertions_passed + 1))
+  else
+    log_error "$message"
+  fi
+}
+
+end_test() {
+  echo Passed $assertions_passed assertions
+  echo Found $found_errors errors
+
+  exit $found_errors
+}

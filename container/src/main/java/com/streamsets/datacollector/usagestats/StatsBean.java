@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 // stats bean that is send back to StreamSets.
 public class StatsBean {
   private String sdcId;
+  private String productName;
   private String version;
   private String dataCollectorVersion;
   private String buildRepoSha;
@@ -48,6 +49,7 @@ public class StatsBean {
   public StatsBean(String sdcId, ActiveStats activeStats) {
     this();
     setSdcId(sdcId);
+    setProductName(activeStats.getProductName());
     setVersion(activeStats.getVersion());
     setDataCollectorVersion(activeStats.getDataCollectorVersion());
     setBuildRepoSha(activeStats.getBuildRepoSha());
@@ -90,6 +92,13 @@ public class StatsBean {
 
   public StatsBean setSdcId(String sdcId) {
     this.sdcId = sdcId;
+    return this;
+  }
+
+  public String getProductName() { return productName; }
+
+  public StatsBean setProductName(String productName) {
+    this.productName = productName;
     return this;
   }
 

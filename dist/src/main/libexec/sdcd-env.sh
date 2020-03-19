@@ -30,7 +30,7 @@ export SDC_GROUP=sdc
 
 # directory where the data collector will store pipelines and their runtime information
 #
-export SDC_DATA=/var/lib/sdc
+export SDC_DATA=${SDC_DATA:-/var/lib/sdc}
 
 # directory where the data collector will read pipeline resource files from
 #
@@ -42,7 +42,7 @@ export SDC_LOG=/var/log/sdc
 
 # directory where the data collector will read its configuration
 #
-export SDC_CONF=/etc/sdc
+export SDC_CONF=${SDC_CONF:-/etc/sdc}
 
 # Includes the JARs in extra lib in the root classloader, this is required to support
 # Snappy compression in Cassandra
