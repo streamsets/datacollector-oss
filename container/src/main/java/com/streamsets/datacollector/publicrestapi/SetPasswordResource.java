@@ -22,6 +22,8 @@ import com.streamsets.datacollector.restapi.rbean.rest.RestRequest;
 import com.streamsets.datacollector.restapi.rbean.rest.RestResource;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.AuthzRole;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -35,6 +37,7 @@ import java.io.IOException;
 @Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
+@Api(value = "usermanagement")
 public class SetPasswordResource extends RestResource {
   private final UsersManager usersManager;
 
@@ -46,6 +49,7 @@ public class SetPasswordResource extends RestResource {
   @Path("/setPassword")
   @PermitAll
   @POST
+  @ApiOperation(value = "Set Password for User")
   public OkRestResponse<Void> setPassword(RestRequest<RSetPassword> request) throws IOException {
     Preconditions.checkArgument(request != null, "Missing payload");
     RSetPassword setPassword = request.getData();

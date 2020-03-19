@@ -30,6 +30,9 @@ import com.streamsets.datacollector.restapi.rbean.usermgnt.RUser;
 import com.streamsets.datacollector.security.usermgnt.User;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.AuthzRole;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.security.PermitAll;
@@ -53,6 +56,7 @@ import java.util.stream.Collectors;
 @Path("/v1/usermanagement/users")
 @RolesAllowed(AuthzRole.ADMIN)
 @Produces(MediaType.APPLICATION_JSON)
+@Api(value = "usermanagement")
 public class UserManagementResource extends RestResource {
   private final Principal principal;
   private final UsersManager usersManager;
@@ -114,6 +118,7 @@ public class UserManagementResource extends RestResource {
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Creates User", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RResetPasswordLink> create(RestRequest<RUser> request) throws IOException {
     RUser user = getUser(request);
     String resetToken = usersManager.create(
@@ -134,6 +139,7 @@ public class UserManagementResource extends RestResource {
   @Path("/{id}")
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
+  @ApiOperation(value = "Update User", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RUser> update(@PathParam("id") String id, RestRequest<RUser> request) throws IOException {
     RUser user = getUser(request);
     Preconditions.checkArgument(id.equals(user.getId().getValue()), "Payload user ID does not match ID in URL");
@@ -151,6 +157,7 @@ public class UserManagementResource extends RestResource {
 
   @Path("/{id}")
   @DELETE
+  @ApiOperation(value = "Delete User", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<Void> delete(@PathParam("id") String id) throws IOException {
     usersManager.delete(id);
     return new OkRestResponse<Void>().setHttpStatusCode(OkRestResponse.HTTP_OK);
@@ -166,6 +173,7 @@ public class UserManagementResource extends RestResource {
   }
 
   @GET
+  @ApiOperation(value = "List Users", authorizations = @Authorization(value = "basic"))
   public OkPaginationRestResponse<RUser> list(@Context PaginationInfo paginationInfo) throws IOException {
     paginationInfo = (paginationInfo != null) ? paginationInfo : new PaginationInfo();
     List<RUser> users = usersManager.listUsers().stream().map(u -> {
@@ -192,6 +200,7 @@ public class UserManagementResource extends RestResource {
   @Path("/{id}/changePassword")
   @PermitAll
   @POST
+  @ApiOperation(value = "Change Password for User", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<Void> changePassword(@PathParam("id") String id, RestRequest<RChangePassword> request)
       throws IOException {
     Preconditions.checkArgument(request != null, "Missing payload");
@@ -212,6 +221,7 @@ public class UserManagementResource extends RestResource {
 
   @Path("/{id}/resetPassword")
   @POST
+  @ApiOperation(value = "Reset Password for User", authorizations = @Authorization(value = "basic"))
   public OkRestResponse<RResetPasswordLink> resetPassword(@PathParam("id") String id) throws IOException {
     User user = usersManager.get(id);
     Preconditions.checkNotNull(user, "user not found");
