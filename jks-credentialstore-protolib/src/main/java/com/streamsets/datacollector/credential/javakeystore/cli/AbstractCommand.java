@@ -57,7 +57,7 @@ public abstract class AbstractCommand implements Runnable {
     return productName;
   }
 
-  protected CredentialStore.Context createContext(Configuration configuration) {
+  protected CredentialStore.Context createContext(Configuration configuration, String confDir) {
     return new CredentialStore.Context() {
       @Override
       public String getId() {
@@ -78,14 +78,15 @@ public abstract class AbstractCommand implements Runnable {
       public String getConfig(String configName) {
         return configuration.get("credentialStore." + storeId + ".config." + configName, null);
       }
+
+      @Override
+      public String getStreamSetsConfigDir() {
+        return confDir;
+      }
     };
   }
 
-  protected Configuration loadConfiguration() {
-    final String product = getProductName();
-    final String confDir = String.format("%s.conf.dir", product);
-    String dirName = System.getProperty(confDir);
-    Preconditions.checkNotNull(dirName, String.format("%s system property not defined", confDir));
+  protected Configuration loadConfiguration(String product, String dirName) {
     File dir = new File(dirName).getAbsoluteFile();
     Preconditions.checkState(dir.exists(), Utils.format("Directory '{}' does not exist", dir));
     Configuration.setFileRefsBaseDir(new File(dirName));
@@ -110,8 +111,12 @@ public abstract class AbstractCommand implements Runnable {
   public void run() {
     JavaKeyStoreCredentialStore store = createStore();
     try {
-      Configuration configuration = loadConfiguration();
-      List<CredentialStore.ConfigIssue> issues = store.init(createContext(configuration));
+      String product = getProductName();
+      String systemPropertyName = String.format("%s.conf.dir", product);
+      String confDir = System.getProperty(systemPropertyName);
+      Preconditions.checkNotNull(confDir, String.format("%s system property not defined", systemPropertyName));
+      Configuration configuration = loadConfiguration(product, confDir);
+      List<CredentialStore.ConfigIssue> issues = store.init(createContext(configuration, confDir));
       if (issues.isEmpty()) {
         execute(store);
       } else {

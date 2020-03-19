@@ -40,6 +40,8 @@ import java.util.UUID;
 @RunWith(Parameterized.class)
 public class TestAbstractCommand {
   private final String productName;
+  private String confDir;
+
   public TestAbstractCommand(String productName) {
     this.productName = productName;
   }
@@ -64,7 +66,8 @@ public class TestAbstractCommand {
     try (OutputStream os = new FileOutputStream(new File(dir, String.format("%s.properties", productName)))) {
       properties.store(os, "");
     }
-    System.setProperty(String.format("%s.conf.dir", productName), dir.getAbsolutePath());
+    confDir = dir.getAbsolutePath();
+    System.setProperty(String.format("%s.conf.dir", productName), confDir);
   }
 
   @After
@@ -85,7 +88,7 @@ public class TestAbstractCommand {
     };
     command.productName = productName;
     command.storeId = "id";
-    CredentialStore.Context context = command.createContext(configuration);
+    CredentialStore.Context context = command.createContext(configuration, confDir);
 
     Assert.assertEquals("id", context.getId());
     Assert.assertEquals("bar", context.getConfig("foo"));
@@ -102,7 +105,7 @@ public class TestAbstractCommand {
     };
     command.productName = productName;
     command.storeId = "id";
-    Configuration configuration = command.loadConfiguration();
+    Configuration configuration = command.loadConfiguration(productName, confDir);
     Assert.assertEquals(3, configuration.getValues().size());
     Assert.assertNull(configuration.get("foo", null));
   }
@@ -125,9 +128,9 @@ public class TestAbstractCommand {
     JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
     Mockito.doReturn(store).when(command).createStore();
     Configuration configuration = new Configuration();
-    Mockito.doReturn(configuration).when(command).loadConfiguration();
+    Mockito.doReturn(configuration).when(command).loadConfiguration(productName, confDir);
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
-    Mockito.doReturn(context).when(command).createContext(Mockito.eq(configuration));
+    Mockito.doReturn(context).when(command).createContext(Mockito.eq(configuration), Mockito.eq(confDir));
     Mockito.when(store.init(Mockito.eq(context))).thenReturn(Collections.emptyList());
 
     command.run();
@@ -147,9 +150,9 @@ public class TestAbstractCommand {
     JavaKeyStoreCredentialStore store = Mockito.mock(JavaKeyStoreCredentialStore.class);
     Mockito.doReturn(store).when(command).createStore();
     Configuration configuration = new Configuration();
-    Mockito.doReturn(configuration).when(command).loadConfiguration();
+    Mockito.doReturn(configuration).when(command).loadConfiguration(productName, confDir);
     CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
-    Mockito.doReturn(context).when(command).createContext(Mockito.eq(configuration));
+    Mockito.doReturn(context).when(command).createContext(Mockito.eq(configuration), Mockito.eq(confDir));
     Mockito.when(store.init(Mockito.eq(context))).thenReturn(ImmutableList.of(Mockito.mock(CredentialStore.ConfigIssue.class)));
 
     try {

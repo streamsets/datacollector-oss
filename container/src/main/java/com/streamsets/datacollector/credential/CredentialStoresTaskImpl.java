@@ -19,6 +19,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.execution.EventListenerManager;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -43,6 +44,7 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
   static final String VAULT_CREDENTIAL_STORE_KEY = "com.streamsets.datacollector.vaultELs.credentialStore";
   static final String MANAGED_DEFAULT_CREDENTIAL_STORE_CONFIG_DEFAULT = "false";
 
+  private final RuntimeInfo runtimeInfo;
   private final Configuration configuration;
   protected final StageLibraryTask stageLibraryTask;
   private final Map<String, CredentialStore> stores;
@@ -51,11 +53,13 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
 
   @Inject
   public CredentialStoresTaskImpl(
+      RuntimeInfo runtimeInfo,
       Configuration configuration,
       StageLibraryTask stageLibraryTask,
       EventListenerManager eventListenerManager
   ) {
     super("CredentialStoresTask");
+    this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.stageLibraryTask = stageLibraryTask;
     stores = new HashMap<>();
@@ -225,6 +229,11 @@ public class CredentialStoresTaskImpl extends AbstractTask implements Credential
       @Override
       public String getConfig(String configName) {
         return storeConfig.get("credentialStore." + storeId + ".config." + configName, null);
+      }
+
+      @Override
+      public String getStreamSetsConfigDir() {
+        return runtimeInfo.getConfigDir();
       }
     };
   }

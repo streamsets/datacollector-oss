@@ -127,6 +127,11 @@ public class TestWebServicesFetcher {
       public String getConfig(String s) {
         return properties.getProperty(s);
       }
+
+      @Override
+      public String getStreamSetsConfigDir() {
+        return null;
+      }
     };
     return new Configuration(context);
   }
