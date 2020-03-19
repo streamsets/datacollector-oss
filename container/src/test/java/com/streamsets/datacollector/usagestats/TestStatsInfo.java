@@ -22,6 +22,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
@@ -358,5 +359,38 @@ public class TestStatsInfo {
     got.remove(StatsInfo.INTERVALS_TO_KEEP - 1);
     Assert.assertEquals(collected, got);
   }
+
+  @Test
+  public void testRollIfNeededSystemInfoVariablesNull() {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn("id2");
+    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
+
+    for (String fieldToNull : ImmutableList.of("sdcId", "buildRepoSha", "extraInfo")) {
+      StatsInfo si = new StatsInfo();
+      si = Mockito.spy(si);
+      Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo();
+
+      si.getActiveStats().setSdcId("id2");
+      si.getActiveStats().setDataCollectorVersion("v1");
+      si.getActiveStats().setBuildRepoSha("sha1");
+      si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
+      si.getActiveStats().setStartTime(System.currentTimeMillis());
+
+      Whitebox.setInternalState(si.getActiveStats(), fieldToNull, null);
+      Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, 10000));
+      Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+
+      Assert.assertEquals("id2", si.getActiveStats().getSdcId());
+      Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
+      Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
+      Assert.assertEquals(ImmutableMap.of("a", "A"), si.getActiveStats().getExtraInfo());
+      Assert.assertEquals(1, si.getCollectedStats().size());
+    }
+  }
+
 
 }
