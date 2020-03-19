@@ -102,6 +102,7 @@ public class TestJavaKeyStoreCredentialStore {
     Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
     Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
     Mockito.when(context.getConfig(Mockito.eq(JavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getStreamSetsConfigDir()).thenReturn(testDir.getAbsolutePath());
 
     KeyStore keyStore = Mockito.mock(KeyStore.class);
     Mockito.doReturn(keyStore).when(store).loadKeyStore();

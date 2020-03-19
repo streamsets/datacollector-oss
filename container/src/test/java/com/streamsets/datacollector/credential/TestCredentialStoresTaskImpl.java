@@ -68,7 +68,7 @@ public class TestCredentialStoresTaskImpl {
   public void testLifecycle() {
     Configuration conf = new Configuration();
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(null, conf, libraryTask);
     Map<String, CredentialStore> stores = storeTask.getStores();
     Assert.assertNotNull(stores);
     Assert.assertTrue(stores.isEmpty());
@@ -103,7 +103,7 @@ public class TestCredentialStoresTaskImpl {
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(null, conf, libraryTask);
 
     storeTask.initTask();
 
@@ -132,7 +132,7 @@ public class TestCredentialStoresTaskImpl {
     Configuration conf = new Configuration();
     conf.set("credentialStore.id.config.foo", "bar");
     StageLibraryTask libraryTask = Mockito.mock(StageLibraryTask.class);
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(null, conf, libraryTask);
 
     CredentialStore.Context context = storeTask.createContext("id", conf);
     Assert.assertEquals("id", context.getId());
@@ -159,14 +159,14 @@ public class TestCredentialStoresTaskImpl {
     Mockito.when(libraryTask.getCredentialStoreDefinitions()).thenReturn(ImmutableList.of(storeDef));
 
     // testing no Vault EL impl registered
-    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    CredentialStoresTaskImpl storeTask = new CredentialStoresTaskImpl(null, conf, libraryTask);
     storeTask.initTask();
     Assert.assertNull(DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY));
     storeTask.stopTask();
 
     // testing Vault EL impl registered
     conf.set("vaultEL.credentialStore.id", "id");
-    storeTask = new CredentialStoresTaskImpl(conf, libraryTask);
+    storeTask = new CredentialStoresTaskImpl(null, conf, libraryTask);
     storeTask.initTask();
     CredentialStore store = DataCollectorServices.instance().get(CredentialStoresTaskImpl.VAULT_CREDENTIAL_STORE_KEY);
     Assert.assertNotNull(store);

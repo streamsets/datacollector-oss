@@ -101,7 +101,7 @@ public class JavaKeyStoreCredentialStore implements CredentialStore {
     } else {
       keyStoreFile = new File(fileName);
       if (!keyStoreFile.isAbsolute()) {
-        keyStoreFile = new File(System.getProperty("sdc.conf.dir"), fileName);
+        keyStoreFile = new File(context.getStreamSetsConfigDir(), fileName);
       }
     }
 
