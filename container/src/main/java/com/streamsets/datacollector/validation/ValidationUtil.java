@@ -986,12 +986,15 @@ public class ValidationUtil {
   }
 
   private static boolean validatePath(ConfigDefinition confDef, IssueCreator issueCreator, List<Issue> issues, String fieldPath) {
-    if (CONTAINS_EXPRESSION_PATTERN.matcher(fieldPath).matches()) {
-      return true; // don't try and validate expressions statically
-    }
     try {
+      if(fieldPath == null) {
+        return false;
+      }
+      if (CONTAINS_EXPRESSION_PATTERN.matcher(fieldPath).matches()) {
+        return true; // don't try and validate expressions statically
+      }
       PathElement.parse(fieldPath, true);
-    } catch (IllegalArgumentException e) {
+    } catch(Exception e) {
       issues.add(
               issueCreator.create(
                       confDef.getGroup(),
