@@ -19,7 +19,9 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
   CREDENTIAL_STORE_000("Could not initialize: {}"),
-  CREDENTIAL_STORE_001("Store ID '{}', user does not belong to group '{}', cannot access credential '{}'")
+  CREDENTIAL_STORE_001("Store ID '{}', user does not belong to group '{}', cannot access credential '{}'"),
+  CREDENTIAL_STORE_002("Group {} does not have access rights to credential {} from store {}"),
+  CREDENTIAL_STORE_003("Unable to obtain group access entry for credential {} in store {}")
   ;
 
   private final String message;

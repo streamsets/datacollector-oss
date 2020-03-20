@@ -23,7 +23,10 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.credential.ManagedCredentialStore;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * CredentialStore proxy that enforces group belonging.
@@ -35,6 +38,8 @@ public class GroupEnforcerCredentialStore<T extends CredentialStore> implements 
   private String storeId;
   private final T store;
 
+  private boolean enforceEntryGroup;
+
   public GroupEnforcerCredentialStore(T store) {
     Utils.checkNotNull(store, "credentialStore");
     this.store = store;
@@ -43,6 +48,7 @@ public class GroupEnforcerCredentialStore<T extends CredentialStore> implements 
   @Override
   public List<ConfigIssue> init(Context context) {
     storeId = context.getId();
+    this.enforceEntryGroup = Boolean.parseBoolean(context.getConfig("enforceEntryGroup"));
     return store.init(context);
   }
 
@@ -52,6 +58,9 @@ public class GroupEnforcerCredentialStore<T extends CredentialStore> implements 
     Preconditions.checkNotNull(name, "name cannot be NULL");
     if (!GroupsInScope.isUserGroupInScope(group)) {
       throw new StageException(Errors.CREDENTIAL_STORE_001, storeId, group, name);
+    }
+    if (enforceEntryGroup && !hasGroupAccess(group, name, credentialStoreOptions)) {
+      throw new StageException(Errors.CREDENTIAL_STORE_002, group, name, storeId);
     }
     return store.get(group, name, credentialStoreOptions);
   }
@@ -79,6 +88,20 @@ public class GroupEnforcerCredentialStore<T extends CredentialStore> implements 
   @Override
   public void destroy() {
     store.destroy();
+  }
+
+  private boolean hasGroupAccess(String group, String name, String credentialStoreOptions) {
+    CredentialValue entryGroups;
+    try {
+      entryGroups = store.get(group, name + ".groups", credentialStoreOptions);
+    } catch (StageException ex) {
+      throw new StageException(Errors.CREDENTIAL_STORE_003, name, storeId);
+    }
+    Set<String> entryGroupSet = Arrays.stream(entryGroups.get().split(","))
+        .map(String::trim)
+        .filter(s -> !s.isEmpty())
+        .collect(Collectors.toSet());
+    return entryGroupSet.contains(group);
   }
 
 }
