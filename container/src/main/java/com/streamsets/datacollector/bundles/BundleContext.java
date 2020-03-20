@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 
 /**
@@ -63,4 +64,9 @@ public interface BundleContext {
    * Returns blob store instance.
    */
   public BlobStoreTask getBlobStore();
+
+  /**
+   * Returns stats collector task
+   */
+  public StatsCollector getStatsCollector();
 }

@@ -82,7 +82,7 @@ public class BundleContentGeneratorDefinition {
     try {
       return getKlass().newInstance();
     } catch (Exception ex) {
-      LOG.warn("Could not create instance for generator '{}', error: {}", getKlass().getName(), ex);
+      LOG.warn("Could not create instance for generator '{}', error: {}", getKlass().getName(), ex.toString(), ex);
       return (context, writer) -> {};
     }
   }

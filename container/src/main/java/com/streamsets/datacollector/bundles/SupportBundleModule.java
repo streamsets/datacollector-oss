@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
@@ -46,7 +47,8 @@ public class SupportBundleModule {
     SnapshotStore snapshotStore,
     BlobStoreTask blobStore,
     RuntimeInfo runtimeInfo,
-    BuildInfo buildInfo
+    BuildInfo buildInfo,
+    StatsCollector statsCollector
   ) {
     return new SupportBundleManager(
       executor,
@@ -56,7 +58,8 @@ public class SupportBundleModule {
       snapshotStore,
       blobStore,
       runtimeInfo,
-      buildInfo
+      buildInfo,
+      statsCollector
     );
   }
 

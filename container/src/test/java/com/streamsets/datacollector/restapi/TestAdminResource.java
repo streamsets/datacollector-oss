@@ -25,6 +25,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DPMInfoJson;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.glassfish.hk2.api.Factory;
@@ -136,6 +137,7 @@ public class TestAdminResource extends JerseyTest {
       BlobStoreTask blobStore = mock(BlobStoreTask.class);
       RuntimeInfo runtimeInfo = mock(RuntimeInfo.class);
       BuildInfo buildInfo = mock(BuildInfo.class);
+      StatsCollector statsCollector = mock(StatsCollector.class);
       return new SupportBundleManager(
         service,
         configuration,
@@ -144,7 +146,8 @@ public class TestAdminResource extends JerseyTest {
         snapshotStore,
         blobStore,
         runtimeInfo,
-        buildInfo
+        buildInfo,
+        statsCollector
       );
     }
 

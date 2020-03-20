@@ -27,6 +27,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
@@ -53,7 +54,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -87,12 +87,12 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   private final BlobStoreTask blobStore;
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
+  private final StatsCollector statsCollector;
 
   /**
    * List describing auto discovered content generators.
    */
   private List<BundleContentGeneratorDefinition> definitions;
-  private Map<String, BundleContentGeneratorDefinition> definitionMap;
 
   /**
    * Redactor to remove sensitive data.
@@ -108,7 +108,8 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     SnapshotStore snapshotStore,
     BlobStoreTask blobStore,
     RuntimeInfo runtimeInfo,
-    BuildInfo buildInfo
+    BuildInfo buildInfo,
+    StatsCollector statsCollector
   ) {
     super("Support Bundle Manager");
     this.executor = executor;
@@ -119,6 +120,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     this.blobStore = blobStore;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
+    this.statsCollector = statsCollector;
   }
 
   @Override
@@ -166,11 +168,6 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
     definitions = builder.build();
 
-    definitionMap = new HashMap<>();
-    for (BundleContentGeneratorDefinition definition : definitions) {
-      definitionMap.put(definition.getId(), definition);
-    }
-
     // Create shared instance of redactor
     try {
       redactor = StringRedactor.createFromJsonFile(runtimeInfo.getConfigDir() + "/" + Constants.REDACTOR_CONFIG);
@@ -190,24 +187,15 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   /**
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
-  public SupportBundle generateNewBundle(List<String> generators, BundleType bundleType) throws IOException {
-    List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generators);
-    return generateNewBundleFromInstances(defs.stream().map(BundleContentGeneratorDefinition::createInstance).collect(Collectors.toList()), bundleType);
-  }
+  public SupportBundle generateNewBundle(List<String> generatorNames, BundleType bundleType) throws IOException {
+    List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generatorNames);
 
-  /**
-   * Return InputStream from which a new generated resource bundle can be retrieved.
-   */
-  public SupportBundle generateNewBundleFromInstances(
-    List<BundleContentGenerator> generators,
-    BundleType bundleType
-  ) throws IOException {
     PipedInputStream inputStream = new PipedInputStream();
     PipedOutputStream outputStream = new PipedOutputStream();
     inputStream.connect(outputStream);
     ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
-    executor.submit(() -> generateNewBundleInternal(generators, bundleType, zipOutputStream));
+    executor.submit(() -> generateNewBundleInternal(defs, bundleType, zipOutputStream));
 
     String bundleName = generateBundleName(bundleType);
     String bundleKey = generateBundleDate(bundleType) + "/" + bundleName;
@@ -217,27 +205,6 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       bundleName,
       inputStream
     );
-  }
-
-
-  /**
-   * This method will read from the input stream until the whole buffer is loaded up with actual bytes or end of stream
-   * has been reached. Hence it will return buffer.length of all executions except the last two - one to the last call
-   * will return less then buffer.length (reminder of the data) and returns -1 on any subsequent calls.
-   */
-  private int readFully(InputStream inputStream, byte []buffer) throws IOException {
-    int readBytes = 0;
-
-    while(readBytes < buffer.length) {
-      int loaded = inputStream.read(buffer, readBytes, buffer.length - readBytes);
-      if(loaded == -1) {
-        return readBytes == 0 ? -1 : readBytes;
-      }
-
-      readBytes += loaded;
-    }
-
-    return readBytes;
   }
 
   private String getCustomerId() {
@@ -294,7 +261,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   }
 
   private void generateNewBundleInternal(
-      List<BundleContentGenerator> generators,
+      List<BundleContentGeneratorDefinition> generatorDefinitions,
       BundleType bundleType,
       ZipOutputStream zipStream
   ) {
@@ -303,8 +270,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       Properties failedGenerators = new Properties();
 
       // Let each individual content generator run to generate it's content
-      for(BundleContentGenerator generator : generators) {
-        BundleContentGeneratorDefinition definition = definitionMap.get(generator.getClass().getSimpleName());
+      for(BundleContentGeneratorDefinition definition : generatorDefinitions) {
         BundleWriterImpl writer = new BundleWriterImpl(
           definition.getKlass().getName(),
           redactor,
@@ -312,6 +278,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
         );
 
         try {
+          BundleContentGenerator generator = definition.createInstance();
           LOG.debug("Generating content with {} generator", definition.getKlass().getName());
           generator.generateContent(this, writer);
           runGenerators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
@@ -396,6 +363,11 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   @Override
   public BlobStoreTask getBlobStore() {
     return blobStore;
+  }
+
+  @Override
+  public StatsCollector getStatsCollector() {
+    return statsCollector;
   }
 
   private static class BundleWriterImpl implements BundleWriter {

@@ -23,6 +23,7 @@ import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.io.IOUtils;
@@ -66,6 +67,7 @@ public class TestSupportBundleManager {
     PipelineStateStore stateStore = mock(PipelineStateStore.class);
     SnapshotStore snapshotStore = mock(SnapshotStore.class);
     BlobStoreTask blobStore = mock(BlobStoreTask.class);
+    StatsCollector statsCollector = mock(StatsCollector.class);
 
     manager = new SupportBundleManager(
       new SafeScheduledExecutorService(1, "supportBundleExecutor"),
@@ -75,7 +77,8 @@ public class TestSupportBundleManager {
       snapshotStore,
       blobStore,
       runtimeInfo,
-      buildInfo
+      buildInfo,
+      statsCollector
     );
 
     // Initialize manager to load all content generators
