@@ -37,6 +37,13 @@ import java.util.Set;
 public class ActivationAuthenticator implements Authenticator {
   private final Authenticator authenticator;
   private final Activation activation;
+  static final Set<String> TRIAL_ALLOWED_ROLES = ImmutableSet.of(
+      "user",
+      AuthzRole.GUEST,
+      AuthzRole.GUEST_REMOTE
+  );
+  static final Set<String> NO_TRIAL_ALLOWED_ROLES = ImmutableSet.of("user");
+
 
   public ActivationAuthenticator(Authenticator authenticator, Activation activation) {
     Utils.checkNotNull(authenticator, "authenticator");
@@ -66,8 +73,13 @@ public class ActivationAuthenticator implements Authenticator {
   ) throws ServerAuthException {
     Authentication authentication = authenticator.validateRequest(request, response, mandatory);
     if (authentication instanceof Authentication.User) {
-      if (activation.isEnabled() && !activation.getInfo().isValid()) {
-        authentication = createExpiredActivationUser((Authentication.User) authentication);
+      Activation.Info activationInfo = activation.getInfo();
+      if (activation.isEnabled() && !activationInfo.isValid()) {
+        boolean hasTrial = activationInfo.getExpiration() > 0;
+        authentication = new ExpiredActivationUser(
+            (Authentication.User) authentication,
+            hasTrial ? TRIAL_ALLOWED_ROLES : NO_TRIAL_ALLOWED_ROLES
+        );
       }
     }
     return authentication;
@@ -80,18 +92,14 @@ public class ActivationAuthenticator implements Authenticator {
     return authenticator.secureResponse(request, response, mandatory, validatedUser);
   }
 
-  private static final Set<String> ALLOWED_ROLES = ImmutableSet.of("user", AuthzRole.GUEST, AuthzRole.GUEST_REMOTE);
-
-  protected Authentication.User createExpiredActivationUser(Authentication.User user) {
-    return new ExpiredActivationUser(user);
-  }
-
-  protected class ExpiredActivationUser implements Authentication.User {
+  static class ExpiredActivationUser implements Authentication.User {
 
     private final Authentication.User user;
+    private final Set<String> allowedRoles;
 
-    public ExpiredActivationUser(User user) {
+    public ExpiredActivationUser(User user, Set<String> allowedRoles) {
       this.user = user;
+      this.allowedRoles = allowedRoles;
     }
 
     @Override
@@ -122,7 +130,7 @@ public class ActivationAuthenticator implements Authenticator {
 
     @Override
     public boolean isUserInRole(UserIdentity.Scope scope, String role) {
-      if (ALLOWED_ROLES.contains(role)) {
+      if (allowedRoles.contains(role)) {
         return true;
       } else if (AuthzRole.ADMIN_ACTIVATION.equals(role) &&
                  (user.isUserInRole(scope, AuthzRole.ADMIN) ||
