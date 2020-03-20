@@ -53,6 +53,7 @@ public interface Activation {
 
     /**
      * Returns the expiration of this activation key in epoch millis.
+     * -1 for unlimited and 0 for not available (no trial).
      *
      * @return the expiration of this activation key in epoch millis.
      */

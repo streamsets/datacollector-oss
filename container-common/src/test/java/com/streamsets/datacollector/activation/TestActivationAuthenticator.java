@@ -94,11 +94,7 @@ public class TestActivationAuthenticator {
   }
 
   @Test
-  public void testExpiredActivationUser() {
-    Authenticator auth = Mockito.mock(Authenticator.class);
-    Activation activation = Mockito.mock(Activation.class);
-    ActivationAuthenticator activationAuth = new ActivationAuthenticator(auth, activation);
-
+  public void testExpiredActivationUserWithTrial() {
     Authentication.User authUser = Mockito.mock(Authentication.User.class);
     Subject subject = new Subject();
     Principal principal = Mockito.mock(Principal.class);
@@ -106,7 +102,10 @@ public class TestActivationAuthenticator {
     Mockito.when(userIdentity.getSubject()).thenReturn(subject);
     Mockito.when(userIdentity.getUserPrincipal()).thenReturn(principal);
     Mockito.when(authUser.getUserIdentity()).thenReturn(userIdentity);
-    Authentication.User expiredAuthUser = activationAuth.createExpiredActivationUser(authUser);
+    Authentication.User expiredAuthUser = new ActivationAuthenticator.ExpiredActivationUser(
+        authUser,
+        ActivationAuthenticator.TRIAL_ALLOWED_ROLES
+    );
 
     Mockito.when(authUser.getAuthMethod()).thenReturn("foo");
     Assert.assertEquals("foo", expiredAuthUser.getAuthMethod());
@@ -145,7 +144,10 @@ public class TestActivationAuthenticator {
     Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
 
     // verify UserIdentity.isUserInRole() delegation to ExpiredActivationUser.isUserInRole()
-    expiredAuthUser = activationAuth.createExpiredActivationUser(authUser);
+    expiredAuthUser = new ActivationAuthenticator.ExpiredActivationUser(
+        authUser,
+        ActivationAuthenticator.TRIAL_ALLOWED_ROLES
+    );
     expiredAuthUser = Mockito.spy(expiredAuthUser);
     userIdentity = expiredAuthUser.getUserIdentity();
     UserIdentity.Scope scope = Mockito.mock(UserIdentity.Scope.class);
@@ -153,4 +155,65 @@ public class TestActivationAuthenticator {
     Mockito.verify(expiredAuthUser, Mockito.times(1)).isUserInRole(Mockito.eq(scope), Mockito.eq(AuthzRole.GUEST));
   }
 
+  @Test
+  public void testExpiredActivationUserWithNoTrial() {
+    Authentication.User authUser = Mockito.mock(Authentication.User.class);
+    Subject subject = new Subject();
+    Principal principal = Mockito.mock(Principal.class);
+    UserIdentity userIdentity = Mockito.mock(UserIdentity.class);
+    Mockito.when(userIdentity.getSubject()).thenReturn(subject);
+    Mockito.when(userIdentity.getUserPrincipal()).thenReturn(principal);
+    Mockito.when(authUser.getUserIdentity()).thenReturn(userIdentity);
+    Authentication.User expiredAuthUser = new ActivationAuthenticator.ExpiredActivationUser(
+        authUser,
+        ActivationAuthenticator.NO_TRIAL_ALLOWED_ROLES
+    );
+
+    Mockito.when(authUser.getAuthMethod()).thenReturn("foo");
+    Assert.assertEquals("foo", expiredAuthUser.getAuthMethod());
+    Mockito.verify(authUser, Mockito.times(1)).getAuthMethod();
+
+    // Call to expiredAuthUser calls Jetty logout implementation that takes (null) request
+    expiredAuthUser.logout();
+    Mockito.verify(authUser, Mockito.times(1)).logout(null);
+
+    // non admin user
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
+
+    // admin user
+    Mockito.when(authUser.isUserInRole(Mockito.eq(null), Mockito.eq(AuthzRole.ADMIN))).thenReturn(true);
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_REMOTE));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
+
+    // remote admin user
+    Mockito.when(authUser.isUserInRole(Mockito.eq(null), Mockito.eq(AuthzRole.ADMIN_REMOTE))).thenReturn(true);
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, "user"));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.GUEST_REMOTE));
+    Assert.assertTrue(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_ACTIVATION));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, AuthzRole.ADMIN_REMOTE));
+    Assert.assertFalse(expiredAuthUser.isUserInRole(null, "foo"));
+
+    // verify UserIdentity.isUserInRole() delegation to ExpiredActivationUser.isUserInRole()
+    expiredAuthUser = new ActivationAuthenticator.ExpiredActivationUser(
+        authUser,
+        ActivationAuthenticator.NO_TRIAL_ALLOWED_ROLES
+    );
+    expiredAuthUser = Mockito.spy(expiredAuthUser);
+    userIdentity = expiredAuthUser.getUserIdentity();
+    UserIdentity.Scope scope = Mockito.mock(UserIdentity.Scope.class);
+    Assert.assertFalse(userIdentity.isUserInRole(AuthzRole.GUEST,scope));
+    Mockito.verify(expiredAuthUser, Mockito.times(1)).isUserInRole(Mockito.eq(scope), Mockito.eq(AuthzRole.GUEST));
+  }
 }
