@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageType;
 import org.apache.commons.collections.CollectionUtils;
+import org.jparsec.internal.util.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +50,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("Duplicates")
 public class PipelineFragmentConfigurationValidator {
@@ -235,7 +237,8 @@ public class PipelineFragmentConfigurationValidator {
                   ValidationError.VALIDATION_0071,
                   stageDef.getLabel(),
                   stageDef.getLibraryLabel(),
-                  executionMode.getLabel()
+                  executionMode.getLabel(),
+                  stageDef.getExecutionModes().stream().map(ExecutionMode::getLabel).collect(Collectors.joining(", "))
               )
           );
         } else {
@@ -244,7 +247,8 @@ public class PipelineFragmentConfigurationValidator {
                   ValidationError.VALIDATION_0071,
                   stageDef.getLabel(),
                   stageDef.getLibraryLabel(),
-                  executionMode.getLabel()
+                  executionMode.getLabel(),
+                  stageDef.getExecutionModes().stream().map(ExecutionMode::getLabel).collect(Collectors.joining(", "))
               )
           );
         }
@@ -293,7 +297,8 @@ public class PipelineFragmentConfigurationValidator {
                   ValidationError.VALIDATION_0300,
                   stageDef.getLabel(),
                   stageDef.getLibraryLabel(),
-                  clusterType.getLabel()
+                  clusterType.getLabel(),
+                  Strings.join(", ", stageLibraryDef.getClusterTypes().stream().map(SparkClusterType::getLabel).toArray())
               )
           );
         } else {
@@ -302,7 +307,8 @@ public class PipelineFragmentConfigurationValidator {
                   ValidationError.VALIDATION_0300,
                   stageDef.getLabel(),
                   stageDef.getLibraryLabel(),
-                  clusterType.getLabel()
+                  clusterType.getLabel(),
+                  Strings.join(", ", stageLibraryDef.getClusterTypes().stream().map(SparkClusterType::getLabel).toArray())
               )
           );
         }

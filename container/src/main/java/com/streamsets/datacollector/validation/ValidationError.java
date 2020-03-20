@@ -90,7 +90,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0061("Define the directory for error record files"),
 
   VALIDATION_0070("Pipeline does not define its execution mode"),
-  VALIDATION_0071("Stage '{}' from '{}' library does not support '{}' execution mode"),
+  VALIDATION_0071("Stage '{}' from '{}' library does not support '{}' execution mode, supported modes: {}"),
   VALIDATION_0072("Data Collector is in standalone mode, cannot run pipeline cluster mode"),
   VALIDATION_0073("Data Collector is in cluster mode, cannot run pipeline standalone mode"),
   VALIDATION_0074("Origin '{}' of type '{}' is not bisectable, and can't be used for Advanced Error Handling"),
@@ -119,7 +119,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0200("Invalid services declaration, expected definition for '{}', but got '{}'"),
 
   // cluster config validations
-  VALIDATION_0300("Stage '{}' using the '{}' stage library cannot be used with the '{}' cluster manager type"),
+  VALIDATION_0300("Stage '{}' using the '{}' stage library cannot be used with the '{}' cluster manager type. Supported modes: {}"),
   VALIDATION_0301("Cannot specify keytab if Kerberos is disabled via the {} configuration property"),
   VALIDATION_0302("Specified path {} was relative{}. Keytab path must be absolute. "),
   VALIDATION_0303("No file was found at {}; please double check the keytab path{}"),
