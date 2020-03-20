@@ -23,7 +23,7 @@ import com.streamsets.pipeline.api.Label;
 public enum Groups implements Label {
     GCS("GCS"),
     DATA_FORMAT("Data Format"),
-    CREDENTIALS("CREDENTIALS");
+    CREDENTIALS("Credentials");
 
     private final String label;
 
