@@ -15,14 +15,12 @@
  */
 package com.streamsets.datacollector.usagestats;
 
-import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.bundles.BundleContentGenerator;
 import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
 
 import java.io.IOException;
-import java.util.List;
 
 @BundleContentGeneratorDef(
     name = "Stats",
@@ -31,16 +29,12 @@ import java.util.List;
     enabledByDefault = false
 )
 public class StatsGenerator implements BundleContentGenerator {
-  private final List<StatsBean> stats;
-
-  public StatsGenerator(List<StatsBean> stats) {
-    Preconditions.checkNotNull(stats, "stats cannot be NULL");
-    this.stats = stats;
+  public StatsGenerator() {
   }
 
   @Override
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
-    writer.writeJson("sdc-stats.json", stats);
+    writer.writeJson("sdc-stats.json", context.getStatsCollector().getStatsInfo().snapshot().getCollectedStats());
   }
 
 }
