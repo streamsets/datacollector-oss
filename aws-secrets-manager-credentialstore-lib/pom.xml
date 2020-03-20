@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.14.0</version>
+    <version>3.14.1-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-aws-secrets-manager-credentialstore-lib</artifactId>
-  <version>3.14.0</version>
+  <version>3.14.1-SNAPSHOT</version>
   <description>StreamSets Data Collector AWS Secrets Manager 1.0.0 Lib</description>
   <name>StreamSets Data Collector AWS Secrets Manager 1.0.0 Lib</name>
   <packaging>jar</packaging>

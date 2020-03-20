@@ -22,13 +22,13 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.14.0</version>
+    <version>3.14.1-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
   <artifactId>streamsets-datacollector-orchestrator-lib</artifactId>
-  <version>3.14.0</version>
+  <version>3.14.1-SNAPSHOT</version>
   <description>Orchestrator Enterprise Connectors Lib</description>
   <name>Orchestrator Enterprise Connectors Lib</name>
   <packaging>jar</packaging>
