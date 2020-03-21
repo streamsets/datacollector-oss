@@ -42,13 +42,20 @@ angular
       fetching: false,
       userList: [],
 
-      getUserIdx: function(userName) {
+      getUserIdx: function(userId) {
         return $scope.userList.findIndex(function(user) {
-          return user.id === userName;
+          return user.id === userId;
         });
       },
 
-      getUserByIdx: function(idx) {return $scope.userList[idx];},
+      getUserByIdx: function(idx) {
+        return $scope.userList[idx];
+      },
+
+      getUserById: function(userId) {
+        var idx = $scope.getUserIdx(userId);
+        return $scope.getUserByIdx(idx);
+      },
 
       getRoles: function(user) {
         return user.roles.map(function(role) {
@@ -74,46 +81,61 @@ angular
         });
       },
 
+      isLastAdmin: function(userId) {
+        var user = $scope.getUserById(userId);
+        if(user.roles.indexOf('admin') > -1) {
+          var adminCount = 0;
+          $scope.userList.forEach(function(user) {
+            if(user.roles.indexOf('admin') > -1) {
+              adminCount++;
+            }
+          });
+          return adminCount === 1;
+        }
+        return false;
+      },
+
       onAddUserClick: function() {
-        var modalInstance = this.openUserModal({}, true);
+        var modalInstance = $scope.openUserModal({}, true);
         modalInstance.result.then(function(newUser) {
           getUsersAndGroups();
         }, function () {
         });
       },
 
-      onEditUserClick: function(userName) {
-        var idx = this.getUserIdx(userName);
+      onEditUserClick: function(userId) {
+        var idx = $scope.getUserIdx(userId);
         if(idx > -1) {
-          var user = this.getUserByIdx(idx);
-          var modalInstance = this.openUserModal(user, false);
+          var user = $scope.getUserByIdx(idx);
+          var modalInstance = $scope.openUserModal(user, false);
           modalInstance.result.then(function(editedUser) {
             $scope.userList[idx] = editedUser;
             getUsersAndGroups();
           }, function () {
           });
-
         } else {
-          this.showError('User not found "' + userName + '".');
+          $scope.showError('User not found "' + userId + '".');
         }
       },
 
-      onDeleteUserClick: function(userName) {
+      onDeleteUserClick: function(userId) {
+        var isLastAdmin = $scope.isLastAdmin(userId);
         var modalInstance = $modal.open({
           templateUrl: 'app/home/usersAndGroups/delete/delete.tpl.html',
           controller: 'DeleteModalController',
           backdrop: 'static',
           resolve: {
-            userName: function() {return userName;},
+            userId: function() {return userId;},
+            isLastAdmin: function() {return isLastAdmin;}
           }
         });
         modalInstance.result.then(function() {
-          var idx = this.getUserIdx(userName);
+          var idx = $scope.getUserIdx(userId);
           $scope.userList.splice(idx, 1);
           //getUsersAndGroups();
         }, function () {
         });
-      },
+      }
 
     });
 

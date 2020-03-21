@@ -64,6 +64,7 @@ angular
         // - REST call to insert or update the user
         api.admin[isNew ? 'insertUser' : 'updateUser'](myUser)
           .then(function(res) {
+            $scope.myUser = myUser;
             if(isNew) {
               $scope.emailSent = res.data.data.sentByEmail;
               $scope.linkSetPassword = res.data.data.link;
@@ -79,8 +80,12 @@ angular
           });
       },
 
-      cancel: function() {
-        $modalInstance.dismiss('cancel');
+      close: function(user) {
+        if(user) {
+          $modalInstance.close(user);
+        } else {
+          $modalInstance.dismiss('cancel');
+        }
       },
 
     });

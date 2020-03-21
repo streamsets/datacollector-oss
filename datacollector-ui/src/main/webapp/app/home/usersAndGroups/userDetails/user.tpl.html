@@ -116,11 +116,11 @@
 
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isCreateInProgress && !showConfirmation"
+    <button type="reset" class="btn btn-default" ng-click="close()" ng-if="!isCreateInProgress && !showConfirmation"
             translate="global.form.cancel">Cancel</button>
     <button type="submit" class="btn btn-primary" ng-if="!isCreateInProgress && !showConfirmation">Save</button>
     <button class="btn btn-primary" ng-if="isCreateInProgress" disabled>Saving...</button>
-    <button type="reset" class="btn btn-primary" ng-click="cancel()" ng-if="showConfirmation">OK</button>
+    <button type="reset" class="btn btn-primary" ng-click="close(myUser)" ng-if="showConfirmation">OK</button>
 
   </div>
 </form>

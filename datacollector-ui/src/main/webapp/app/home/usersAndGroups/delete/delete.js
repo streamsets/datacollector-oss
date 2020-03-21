@@ -19,16 +19,17 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DeleteModalController', function ($scope, $modalInstance, userName, api) {
+  .controller('DeleteModalController', function ($scope, $modalInstance, userId, isLastAdmin, api) {
     angular.extend($scope, {
-      userName: userName,
+      userId: userId,
+      isLastAdmin: isLastAdmin,
       operationInProgress: false,
 
       yes: function() {
         $scope.operationInProgress = true;
-        api.admin.deleteUser(userName)
+        api.admin.deleteUser(userId)
           .then(function() {
-            $modalInstance.close(userName);
+            $modalInstance.close(userId);
           })
           .catch(function(res) {
             $scope.operationInProgress = false;

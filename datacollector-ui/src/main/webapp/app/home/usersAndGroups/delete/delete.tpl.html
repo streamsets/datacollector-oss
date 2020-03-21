@@ -9,13 +9,17 @@
 
   <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-  <p>Are you sure you want to delete the user "{{userName}}"?</p>
+  <div ng-if="isLastAdmin">
+    <p class="invalid">"{{userId}}" is the only Administrator.</p>
+    <p>If you really want to delete this administrator, you must create another one first.</p>
+  </div>
+
+  <p ng-if="!isLastAdmin">Are you sure you want to delete the user "{{userId}}"?</p>
 
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-default" ng-click="no()" ng-if="!operationInProgress"
-          translate="global.form.no">No</button>
-  <button type="button" class="btn btn-primary" ng-click="yes()" ng-if="!operationInProgress"
+  <button type="button" class="btn btn-default" ng-click="no()" ng-if="!operationInProgress">{{isLastAdmin ? 'Close' : 'No'}}</button>
+  <button type="button" class="btn btn-primary" ng-click="yes()" ng-if="!(isLastAdmin || operationInProgress)"
           translate="global.form.yes">Yes</button>
   <button type="submit" class="btn btn-primary" ng-if="operationInProgress" disabled
           translate="global.form.deleting">Deleting...</button>
