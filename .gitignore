@@ -43,3 +43,4 @@ container/runInfo
 container/var
 datacollector-ui/package-lock.json
 .python-version
+.java-version
