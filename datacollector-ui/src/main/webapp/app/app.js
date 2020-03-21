@@ -62,7 +62,8 @@ angular.module('dataCollectorApp')
             window.location.reload();
           } else if ((rejection.status === 0 || rejection.status === -1 ||
               (rejection.data && (typeof rejection.data.indexOf === 'function') &&
-                rejection.data.indexOf('login.html') !== -1))
+                (rejection.data.indexOf('login.html') !== -1 ||
+                rejection.data.indexOf('resetPassword.html') !== -1)))
           )  {
             // check if the error is related to remote service
             if (rejection.config && rejection.config.headers && rejection.config.headers['X-SS-User-Auth-Token']) {
