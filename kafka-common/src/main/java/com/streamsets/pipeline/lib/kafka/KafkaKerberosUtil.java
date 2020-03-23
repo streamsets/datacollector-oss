@@ -37,6 +37,7 @@ public class KafkaKerberosUtil {
 
   private static final String KAFKA_KEYTAB_LOCATION_KEY = "kafka.keytab.location";
   private static  final String KAFKA_DEFAULT_KEYTAB_LOCATION = "/tmp/sdc";
+  private static final String KAFKA_KEYTAB_SUBDIR = "kafka-keytabs";
   private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
       "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
@@ -48,13 +49,13 @@ public class KafkaKerberosUtil {
       Stage.Context context
   ) {
     String keytabDir = context.getConfiguration().get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION);
-    Path keytabDirPath = Paths.get(keytabDir);
     String keytabFileName = UUID.randomUUID().toString();
-    if (!createKeytabDirIfNeeded(keytabDirPath.toFile())) {
+    Path keytabSubdirPath = Paths.get(keytabDir).resolve(KAFKA_KEYTAB_SUBDIR);
+    if (!Files.exists(keytabSubdirPath) && !createAndRestrictKeytabSubdirIfNeeded(keytabSubdirPath.toFile())) {
       addSaveException(issues, context);
     } else {
       try {
-        Path keytabPath = keytabDirPath.resolve(keytabFileName);
+        Path keytabPath = keytabSubdirPath.resolve(keytabFileName);
         if (!Files.exists(keytabPath) && !keytabPath.toFile().createNewFile()) {
           LOG.debug("");
         }
@@ -69,17 +70,20 @@ public class KafkaKerberosUtil {
     return keytabFileName;
   }
 
-  private static synchronized boolean createKeytabDirIfNeeded(File keytabDir) {
-    boolean created = keytabDir.exists();
+  private static synchronized boolean createAndRestrictKeytabSubdirIfNeeded(File keytabSubdir) {
+    boolean created = keytabSubdir.exists();
     if (!created) {
-      created = keytabDir.mkdirs();
+      created = keytabSubdir.mkdirs();
+      if (created) {
+        created = keytabSubdir.setReadable(false, false);
+      }
     }
     return created;
   }
 
   public static void deleteUserKeytabIfExists(String keytabFileName, Stage.Context context) {
     String keytabDir = context.getConfiguration().get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION);
-    Path keytabDirPath = Paths.get(keytabDir);
+    Path keytabDirPath = Paths.get(keytabDir).resolve(KAFKA_KEYTAB_SUBDIR);
     if (Files.exists(keytabDirPath)) {
       Path keytabPath = keytabDirPath.resolve(keytabFileName);
       if (Files.exists(keytabPath) && !keytabPath.toFile().delete()) {

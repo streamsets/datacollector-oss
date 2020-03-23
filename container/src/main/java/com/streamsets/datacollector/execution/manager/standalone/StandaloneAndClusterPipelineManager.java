@@ -61,6 +61,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -102,6 +104,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private final long runnerExpiryInitialDelay;
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
+  private static final String KAFKA_KEYTAB_LOCATION_KEY = "stage.conf_kafka.keytab.location";
+  private static final String KAFKA_KEYTAB_LOCATION_DEFAULT = "/tmp/sdc";
+  private static final String KAFKA_KEYTAB_DIR = "kafka-keytabs";
+
 
   public StandaloneAndClusterPipelineManager(ObjectGraph objectGraph) {
     super(PIPELINE_MANAGER);
@@ -364,6 +370,61 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   @Override
+  protected void initTask() {
+    cleanUpKafkaKeytabDir();
+    createAndRestrictKafkaKeytabDir();
+  }
+
+  private File getKafkaKeytabDir() {
+    String kafkaKeytabDirPath = configuration.get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_KEYTAB_LOCATION_DEFAULT);
+    return Paths.get(kafkaKeytabDirPath).resolve(KAFKA_KEYTAB_DIR).toFile();
+  }
+
+  private void cleanUpKafkaKeytabDir() {
+    File kafkaKeytabDir = getKafkaKeytabDir();
+    if (kafkaKeytabDir.exists()) {
+      if (kafkaKeytabDir.isDirectory()) {
+        boolean canRead = kafkaKeytabDir.canRead();
+        if (!canRead) {
+          canRead = kafkaKeytabDir.setReadable(true, false);
+        }
+        if (canRead) {
+          deleteFileOrDirectory(kafkaKeytabDir);
+        } else {
+          LOG.warn("Insufficient permissions on {} to delete its contents", kafkaKeytabDir.getName());
+        }
+      } else {
+        if (!kafkaKeytabDir.delete()) {
+          LOG.warn("Failed to delete file {}, it should be a directory for Kafka Keytabs", kafkaKeytabDir.getName());
+        }
+      }
+    }
+  }
+
+  private void deleteFileOrDirectory(File fileOrDirectory) {
+    if (fileOrDirectory.isDirectory()) {
+      File[] fileList = fileOrDirectory.listFiles();
+      if (fileList != null) {
+        for (File file : fileList) {
+          deleteFileOrDirectory(file);
+        }
+      }
+    }
+    if (!fileOrDirectory.delete()) {
+      LOG.warn("Failed to delete file or directory {}", fileOrDirectory.getName());
+    }
+  }
+
+  private void createAndRestrictKafkaKeytabDir() {
+    File kafkaKeytabDir = getKafkaKeytabDir();
+    boolean created = kafkaKeytabDir.exists() || kafkaKeytabDir.mkdirs();
+    if (!created || !kafkaKeytabDir.setReadable(false, false)) {
+      LOG.warn("Failed to create directory {} with restricted read permissions", kafkaKeytabDir.getName());
+      throw new RuntimeException("Can't start SDC without creating secure directory for Kafka Keytabs");
+    }
+  }
+
+  @Override
   public void stopTask() {
     if(runnerCache != null) {
       for (RunnerInfo runnerInfo : runnerCache.asMap().values()) {
@@ -393,6 +454,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     if(runnerExpiryFuture != null) {
       runnerExpiryFuture.cancel(true);
     }
+    cleanUpKafkaKeytabDir();
     LOG.info("Stopped Production Pipeline Manager");
   }
 
