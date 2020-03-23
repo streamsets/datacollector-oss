@@ -17,7 +17,7 @@
 // Controller for Usage Statistics Modal Dialog.
 angular
   .module('dataCollectorApp')
-  .controller('StatsOptInController', function ($scope, $modalInstance,  api) {
+  .controller('StatsOptInController', function ($scope, $modalInstance, api, configuration) {
     angular.extend($scope, {
       isLoading: true,
       currentStatus: undefined,
@@ -27,10 +27,29 @@ angular
       },
 
       save: function() {
-        api.system.setOptInStatus($scope.currentStatus.active)
-          .then(function() {
+        api.admin.getSdcId().then(function(res) {
+          var sdcId = res.data.id;
+          var newStatus = $scope.currentStatus.active;
+          if (!newStatus) {
+            // Must send this event before updating status
+            $scope.common.trackEvent(
+              'tracking',
+              'opt out',
+              sdcId
+            );
+          }
+          configuration.setAnalyticsEnabled(newStatus);
+          api.system.setOptInStatus(newStatus).then(function() {
+            if (newStatus) {
+              $scope.common.trackEvent(
+                'tracking',
+                'opt in',
+                sdcId
+              );
+            }
             $modalInstance.close();
           });
+        });
       }
     });
 

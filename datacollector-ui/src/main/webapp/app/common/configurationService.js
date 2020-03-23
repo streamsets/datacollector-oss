@@ -17,7 +17,7 @@
  * Service for providing access to the Configuration from dist/src/main/etc/pipeline.properties.
  */
 angular.module('dataCollectorApp.common')
-  .service('configuration', function($rootScope, api, $q) {
+  .service('configuration', function($rootScope, api, $q, Analytics) {
     var self = this;
     var UI_HEADER_TITLE = 'ui.header.title';
     var REFRESH_INTERVAL = 'ui.refresh.interval.ms';
@@ -134,6 +134,20 @@ angular.module('dataCollectorApp.common')
         return self.stats.active;
       }
       return false;
+    };
+
+    /**
+     * Set stats.active flag value
+     * @param {boolean} enabled
+     */
+    this.setAnalyticsEnabled = function(enabled) {
+      if (self.stats) {
+        self.stats.active = enabled;
+        if (enabled) {
+          // This may throw a warning to the console if it is already set
+          Analytics.createAnalyticsScriptTag();
+        }
+      }
     };
 
     /**
