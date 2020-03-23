@@ -344,6 +344,9 @@ angular.module('dataCollectorApp')
         });
       },
 
+      /**
+       * Opens the registration modal
+       */
       showRegistrationModal: function() {
         $modal.open({
           templateUrl: 'app/help/register/registerModal.tpl.html',
@@ -559,6 +562,7 @@ angular.module('dataCollectorApp')
             $rootScope.common.infoList = [{
               message: 'Activation key expired, you need to get a new one from StreamSets'
             }];
+            $rootScope.common.showRegistrationModal();
           } else if (difDays < 30) {
             $rootScope.common.infoList = [{
               message: 'Activation key expires in ' + difDays + '  days'

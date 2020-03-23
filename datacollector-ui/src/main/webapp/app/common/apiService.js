@@ -1701,6 +1701,22 @@ angular.module('dataCollectorApp.common')
     api.activation = {
       /**
        * Returns SDC activation information
+       * 
+       * Response shape: 
+         {
+          "info" : {
+            "type" : "rsa-signed",
+            "firstUse" : 1584580807579,
+            "userInfo" : "n/a",
+            "sdcId" : "c50a96bb-697f-11ea-8a0c-9dcc684d15db",
+            "validSdcIds" : [ "c50a96bb-697f-11ea-8a0c-9dcc684d15db" ],
+            "additionalInfo" : { },
+            "valid" : false,
+            "expiration" : 1584580807579
+          },
+          "type" : "rsa-signed",
+          "enabled" : true
+        }
        *
        * @returns {*}
        */
@@ -1727,6 +1743,100 @@ angular.module('dataCollectorApp.common')
             'Content-Type': 'text/plain'
           }
         });
+      }
+    };
+
+    api.secret = {
+      /**
+       * Create new text secret (aka password), return http promise
+       */
+      createOrUpdateTextSecret: function (vaultName, secretName, secretValue) {
+        var url = apiBase + '/secrets/text/ctx=SecretManage';
+        return $http({
+          method: 'POST',
+          url: url,
+          data: {
+            envelopeVersion : '1',
+            data: {
+              vault: vaultName,
+              name: secretName,
+              type: 'TEXT',
+              value: secretValue,
+            }
+          },
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      },
+
+      /**
+       * Create new file secret, return http promise
+       */
+      createOrUpdateFileSecret: function (vaultName, secretName, secretFile) {
+        var url = apiBase + '/secrets/file/ctx=SecretManage';
+        var formData = new FormData();
+        formData.append('vault', vaultName);
+        formData.append('name', secretName);
+        formData.append('uploadedFile', secretFile);
+        return $http.post(url, formData, {
+          // assign content-type as undefined, the browser
+          // will assign the correct boundary for us
+          headers: { 'Content-Type': undefined},
+          // prevents serializing payload
+          transformRequest: angular.identity
+        });
+      },
+
+      /**
+       * Returns 200 if available, 404 if not
+       */
+      checkSecretsAvailability: function() {return $http.get(apiBase + '/secrets/get');},
+
+      /**
+       * Gets the default ssh public key
+       */
+      getSSHPublicKey: function() {return $http.get(apiBase + '/secrets/sshTunnelPublicKey');}
+    };
+
+    /**
+     * Sends registration to external server
+     */
+    api.externalRegistration = {
+      sendRegistration: function(
+        registrationURL, firstName, lastName, companyName, email, 
+        role, country, postalCode, sdcId, productVersion, 
+        activationUrl
+        ) {
+        if (!registrationURL) {
+          throw Error('missing registrationURL');
+        }
+        postalCode = postalCode || '';
+        
+        var registrationObject = {
+          firstName: firstName,
+          lastName: lastName,
+          company: companyName,
+          email: email,
+          role: role,
+          country: country,
+          postalCode: postalCode,
+          id: sdcId,
+          type: 'DATA_COLLECTOR',
+          version: productVersion,
+          activationUrl: activationUrl
+        };
+
+        return $http.post(
+          registrationURL,
+          registrationObject, {
+            // CORS requires Content-Type 'text-plain' and no other headers
+            headers: {
+              'Content-Type': 'text/plain',
+              'X-Requested-By': undefined
+            }
+          }
+        );
       }
     };
 

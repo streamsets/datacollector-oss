@@ -39,6 +39,8 @@ angular.module('dataCollectorApp.common')
     var SUPPORT_BUNDLE_ENABLED = 'bundle.upload.enabled';
     var DPM_LABELS ='dpm.remote.control.job.labels';
     var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
+    var UI_DEFAULT_CONFIGURATION_VIEW = 'ui.default.configuration.view';
+    var UI_REGISTRATION_URL = 'ui.registration.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -322,5 +324,26 @@ angular.module('dataCollectorApp.common')
           (self.config[HTTP_AUTHENTICATION] !== 'none' || this.isDPMEnabled());
       }
       return true;
+    };
+
+    /*
+     * Returns ui.default.configuration.view converted to a boolean
+     * @returns {Boolean}
+     */
+    this.defaultShowAdvancedConfigs = function() {
+      if (self.config && self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== undefined) {
+        return self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== 'BASIC';
+      }
+      return true;
+    };
+
+    /**
+     * Gets the URL for product registration, ui.regisration.url
+     */
+    this.getRegistrationURL = function() {
+      if (self.config && self.config[UI_REGISTRATION_URL] !== undefined) {
+        return self.config[UI_REGISTRATION_URL];
+      }
+      return '';
     };
   });
