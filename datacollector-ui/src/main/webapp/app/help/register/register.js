@@ -19,16 +19,87 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, api, activationInfo) {
+  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, $location, api, activationInfo, configuration) {
+    /**
+     * Upload the activation key
+     * @param {String} keyText
+     */
+    function uploadActivation(keyText) {
+      $scope.operationInProgress = true;
+      return api.activation.updateActivation(keyText)
+      .then(
+        function(res) {
+          $scope.activationInfo = res.data;
+          if ($scope.activationInfo && $scope.activationInfo.info.valid) {
+            $scope.operationDone = true;
+            $scope.common.errors = [];
+          } else {
+            $scope.common.errors = ['Uploaded activation key is not valid'];
+          }
+          $scope.operationInProgress = false;
+        },
+        function(err) {
+          if (err.data) {
+            if (err.data.RemoteException && err.data.RemoteException.message &&
+              err.data.RemoteException.message === 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Could not verify signature') {
+              $scope.common.errors = ['The entered activation code is invalid'];
+            } else {
+              $scope.common.errors = [err.data];
+            }
+          } else {
+            $scope.common.errors = ['Unable to verify activation code'];
+          }
+          
+          $scope.operationDone = false;
+          $scope.operationInProgress = false;
+          throw err;
+        }
+      );
+    }
+
+    function getActivationKeyFromURL() {
+      return $location.search().activationKey;
+    }
+
+    function getInitialActivationStep(activationInfo) {
+      if (getActivationKeyFromURL()) {
+        return 2;
+      } else if (activationInfo.info && activationInfo.info.valid) {
+        return 1; // Switch to 3 in next commit
+      } else {
+        return 1;
+      }
+    }
+
     angular.extend($scope, {
       common: {
         errors: []
       },
-      showLoading: true,
       uploadFile: {},
       operationDone: false,
       operationInProgress: false,
       activationInfo: activationInfo,
+      activationKeyFilledFromURL: Boolean(getActivationKeyFromURL()),
+      activationStep: getInitialActivationStep(activationInfo),
+      activationData: {
+        activationText: '',
+        firstName: '',
+        lastName: '',
+        companyName: '',
+        email: '',
+        role: '',
+        country: '',
+        postalCode: '',
+        sdcId: '',
+        sdcVersion: ''
+      },
+
+      uploadActivationText: function() {
+        uploadActivation($scope.activationData.activationText).then(function(res) {
+          $modalInstance.dismiss();
+          window.location.reload();
+        });
+      },
 
       /**
        * Upload button callback function.
@@ -39,24 +110,7 @@ angular
         reader.onload = function (loadEvent) {
           try {
             var parsedObj = loadEvent.target.result;
-            api.activation.updateActivation(parsedObj)
-              .then(
-                function(res) {
-                  $scope.activationInfo = res.data;
-                  if ($scope.activationInfo && $scope.activationInfo.info.valid) {
-                    $scope.operationDone = true;
-                    $scope.common.errors = [];
-                  } else {
-                    $scope.common.errors = ['Uploaded activation key is not valid'];
-                  }
-                  $scope.operationInProgress = false;
-                },
-                function(res) {
-                  $scope.common.errors = [res.data];
-                  $scope.operationDone = false;
-                  $scope.operationInProgress = false;
-                }
-              );
+            uploadActivation(parsedObj);
           } catch(e) {
             $scope.$apply(function() {
               $scope.common.errors = [e];
@@ -64,6 +118,33 @@ angular
           }
         };
         reader.readAsText($scope.uploadFile);
+      },
+
+      goToRegistration: function() {
+        $scope.activationStep = 1;
+      },
+
+      sendRegistration: function() {
+        $scope.operationInProgress = true;
+        api.externalRegistration.sendRegistration(
+          configuration.getRegistrationURL(),
+          $scope.activationData.firstName,
+          $scope.activationData.lastName,
+          $scope.activationData.companyName,
+          $scope.activationData.email,
+          $scope.activationData.role,
+          $scope.activationData.country,
+          $scope.activationData.postalCode,
+          $scope.activationData.sdcId,
+          $scope.activationData.sdcVersion,
+          $location.protocol() + '://' + $location.host() + ':' + $location.port()
+        ).then(function(res) {
+          $scope.operationInProgress = false;
+          $scope.activationStep = 2;
+        }, function(err) {
+          $scope.operationInProgress = false;
+          $scope.common.errors = ['We had trouble contacting the registration server, please try again'];
+        });
       },
 
       /**
@@ -75,5 +156,17 @@ angular
       }
     });
 
+    if (getActivationKeyFromURL()) {
+      $scope.activationStep = 2;
+      $scope.activationData.activationText = decodeURI(getActivationKeyFromURL());
+    }
 
+    api.admin.getSdcId().then(function(res) {
+      $scope.activationData.sdcId = res.data.id;
+    });
+    api.admin.getBuildInfo().then(function(res) {
+      if (res && res.data) {
+        $scope.activationData.sdcVersion = res.data.version;
+      }
+    });
   });
