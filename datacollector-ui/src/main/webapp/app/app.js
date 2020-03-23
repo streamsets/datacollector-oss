@@ -627,7 +627,23 @@ angular.module('dataCollectorApp')
           if (buildResult && buildResult.data) {
             $timeout(
               function() {
-                Analytics.set('sdcVersion', buildResult.data.version);
+                Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
+              },
+              1000
+            );
+          }
+          if (statsResult.data.active && statsResult.data.stats && statsResult.data.stats.activeStats && statsResult.data.stats.activeStats.extraInfo) {
+            $timeout(
+              function() {
+                var stats = statsResult.data.stats;
+                if (stats.activeStats.extraInfo) {
+                  if (stats.activeStats.extraInfo.cloudProvider) {
+                    Analytics.set('dimension2', stats.activeStats.extraInfo.cloudProvider); // dimension2 is cloudProvider
+                  }
+                  if (stats.activeStats.extraInfo.distributionChannel) {
+                    Analytics.set('dimension3', stats.activeStats.extraInfo.distributionChannel); // dimension3 is distributionChannel
+                  }
+                }
               },
               1000
             );
