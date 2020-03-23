@@ -223,7 +223,7 @@ public class MultiKafkaSource extends BasePushSource {
           // Transmit remaining when batchWaitTime expired
           if (pollInterval <= MIN_CONSUMER_POLLING_INTERVAL_MS) {
             startTime = System.currentTimeMillis();
-            if (!records.isEmpty() || errorRecordHandler.getErrorRecordCount() > 0) {
+            if (!records.isEmpty() || (errorRecordHandler != null && errorRecordHandler.getErrorRecordCount() > 0)) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
               commitSyncAndProcess(batchContext);
               batchContext = getContext().startBatch();
@@ -236,7 +236,7 @@ public class MultiKafkaSource extends BasePushSource {
         }
 
       } catch (Exception e) {
-        LOG.error("Encountered error in multi kafka thread {} during read {}", threadID, e);
+        LOG.error("Encountered error in multi kafka thread {} during read {}", threadID, e.getMessage(), e);
         handleException(KafkaErrors.KAFKA_29, e);
       } finally {
         consumer.unsubscribe();
@@ -436,7 +436,7 @@ public class MultiKafkaSource extends BasePushSource {
         shutdown();
         Thread.currentThread().interrupt();
       } catch (ExecutionException e) {
-        LOG.info("Multi kafka thread halted unexpectedly: {}", future, e.getCause().getMessage(), e);
+        LOG.info("Multi kafka thread halted unexpectedly: {}", e.getCause().getMessage(), e);
         shutdown();
         Throwables.propagateIfPossible(e.getCause(), StageException.class);
         Throwables.propagate(e.getCause());
