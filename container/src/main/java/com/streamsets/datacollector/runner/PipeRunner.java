@@ -47,6 +47,7 @@ public class PipeRunner {
   public static final String METRIC_CURRENT_STAGE = "currentStage";
   public static final String METRIC_BATCH_START_TIME = "batchStartTime";
   public static final String METRIC_STAGE_START_TIME = "stageStartTime";
+  public static final String METRIC_STATE = "state";
 
   public static final String IDLE = "IDLE";
 
@@ -123,16 +124,25 @@ public class PipeRunner {
       long batchStartTime,
       ThrowingConsumer<Pipe> consumer
   ) throws PipelineRuntimeException, StageException {
-    MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
-    // Persist static information for the batch (this won't change as the batch progresses)
+    this.runtimeMetricGauge.put(METRIC_STATE, "Processing Batch");
     this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, batchStartTime);
     this.runtimeMetricGauge.put(METRIC_OFFSET_KEY, Optional.ofNullable(offsetKey).orElse(""));
     this.runtimeMetricGauge.put(METRIC_OFFSET_VALUE, Optional.ofNullable(offsetValue).orElse(""));
-    this.runtimeMetricGauge.put(METRIC_STAGE_START_TIME, System.currentTimeMillis());
+
+    forEachInternal(consumer);
+
+    // We've successfully finished batch
+    this.runtimeMetricGauge.computeIfPresent(METRIC_BATCH_COUNT, (key, value) -> ((long)value) + 1);
+  }
+
+  private void forEachInternal(ThrowingConsumer<Pipe> consumer) throws PipelineRuntimeException {
+    MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
+
     try {
       // Run one pipe at a time
       for(Pipe p : pipes) {
         String instanceName = p.getStage().getInfo().getInstanceName();
+        this.runtimeMetricGauge.put(METRIC_STAGE_START_TIME, System.currentTimeMillis());
         this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, instanceName);
         MDC.put(LogConstants.STAGE, instanceName);
         if (p instanceof StagePipe) {
@@ -141,10 +151,6 @@ public class PipeRunner {
 
         acceptConsumer(consumer, p);
       }
-
-
-      // We've successfully finished batch
-      this.runtimeMetricGauge.computeIfPresent(METRIC_BATCH_COUNT, (key, value) -> ((long)value) + 1);
     } finally {
       resetBatchSpecificMetrics();
       MDC.put(LogConstants.RUNNER, "");
@@ -155,6 +161,7 @@ public class PipeRunner {
   private void resetBatchSpecificMetrics() {
     // Fill in default values when there is no batch running
     this.runtimeMetricGauge.put(METRIC_CURRENT_STAGE, IDLE);
+    this.runtimeMetricGauge.put(METRIC_STATE, "");
     this.runtimeMetricGauge.put(METRIC_OFFSET_KEY, "");
     this.runtimeMetricGauge.put(METRIC_OFFSET_VALUE, "");
     this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, 0L);
@@ -166,18 +173,11 @@ public class PipeRunner {
    * Suitable for consumer that is not suppose to throw PipelineException and StageException. This method will
    * not calculate usual stage metrics.
    */
-  public void forEach(ThrowingConsumer<Pipe> consumer) {
+  public void forEach(String reportedState, ThrowingConsumer<Pipe> consumer) {
+    this.runtimeMetricGauge.put(METRIC_STATE, reportedState);
+    this.runtimeMetricGauge.put(METRIC_BATCH_START_TIME, System.currentTimeMillis());
     try {
-      MDC.put(LogConstants.RUNNER, String.valueOf(runnerId));
-      try {
-        for(Pipe p : pipes) {
-          MDC.put(LogConstants.STAGE, p.getStage().getInfo().getInstanceName());
-          acceptConsumer(consumer, p);
-        }
-      } finally {
-        MDC.put(LogConstants.RUNNER, "");
-        MDC.put(LogConstants.STAGE, "");
-      }
+      forEachInternal(consumer);
     } catch (PipelineException|StageException e) {
       throw new RuntimeException(e);
     }
@@ -196,20 +196,6 @@ public class PipeRunner {
       }
     }
     return null;
-  }
-
-  /**
-   * Return true if at least one stage is configured with STOP_PIPELINE for OnRecordError policy.
-   */
-  public boolean onRecordErrorStopPipeline() {
-    for(Pipe pipe : pipes) {
-      StageContext stageContext = pipe.getStage().getContext();
-      if(stageContext.getOnErrorRecord() == OnRecordError.STOP_PIPELINE) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   /**

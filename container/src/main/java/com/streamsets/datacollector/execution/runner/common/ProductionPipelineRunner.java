@@ -640,7 +640,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       listeners.add((ErrorListener) originPipe.getStage().getStage());
     }
     for(PipeRunner pipeRunner : pipes) {
-      pipeRunner.forEach(pipe -> {
+      pipeRunner.forEach("", pipe -> {
         Stage stage = pipe.getStage().getStage();
         if (stage instanceof ErrorListener) {
           listeners.add((ErrorListener) stage);

@@ -136,6 +136,10 @@
               <span class="properties-value">{{gaugeData.batchCount}}</span>
             </li>
             <li ng-if="gaugeData.currentStage !== 'IDLE'">
+              <span class="properties-label">State:</span>
+              <span class="properties-value">{{gaugeData.state}}</span>
+            </li>
+            <li ng-if="gaugeData.currentStage !== 'IDLE'">
               <span class="properties-label">In Stage Since:</span>
               <span class="properties-value">{{gaugeData.stageStartTime | date:'medium' }}</span>
             </li>
