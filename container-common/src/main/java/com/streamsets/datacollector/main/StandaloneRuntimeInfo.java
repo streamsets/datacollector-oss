@@ -111,4 +111,8 @@ public class StandaloneRuntimeInfo extends RuntimeInfo {
   public boolean isClusterSlave() {
     return false;
   }
+
+  public void setBaseDir(File baseDir) {
+    this.baseDir = baseDir;
+  }
 }

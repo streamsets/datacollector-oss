@@ -43,6 +43,7 @@ public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   private static String productName = RuntimeInfo.SDC_PRODUCT;
   private static String propertyPrefix = RuntimeInfo.SDC_PRODUCT;
+  private static File baseDir = null;
 
   /**
    * Kept under SDC-12270 to avoid changing too many files
@@ -64,6 +65,10 @@ public class RuntimeModule {
     RuntimeModule.propertyPrefix = propertyPrefix;
   }
 
+  public static synchronized void setBaseDir(File baseDir) {
+    RuntimeModule.baseDir = baseDir;
+  }
+
   //TODO: add setProductName and make that available in RuntimeInfo when constructed
 
   @Provides @Singleton
@@ -73,7 +78,13 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    RuntimeInfo info = new StandaloneRuntimeInfo(productName, propertyPrefix, metrics, stageLibraryClassLoaders);
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        productName,
+        propertyPrefix,
+        metrics,
+        stageLibraryClassLoaders,
+        baseDir
+    );
     info.init();
     return info;
   }

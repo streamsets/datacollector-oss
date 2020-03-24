@@ -792,6 +792,9 @@ public abstract class WebServerTask extends AbstractTask implements Registration
 
   @Override
   protected void runTask() {
+    if (runtimeInfo.isEmbedded()) {
+      return;
+    }
     runTaskInternal();
     try {
       WebServerAgentCondition.waitForCredentials();
