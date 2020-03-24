@@ -89,11 +89,6 @@ public class EmbeddedDataCollector implements DataCollector {
           is.close();
         }
       }
-      // For kafka this is the partitionId, for MR this will be the taskId
-      String uniqueId = Utils.getSdcId();
-      String slaveId = runtimeInfo.getMasterSDCId() + Constants.MASTER_SDC_ID_SEPARATOR + uniqueId;
-      runtimeInfo.setId(slaveId);
-      LOG.info(Utils.format("Slave SDC Id is: '{}'", slaveId));
       String pipelineName = Utils.checkNotNull(
           properties.getProperty(ClusterModeConstants.CLUSTER_PIPELINE_NAME),
           "Pipeline name"
@@ -174,8 +169,13 @@ public class EmbeddedDataCollector implements DataCollector {
     LOG.info("-----------------------------------------------------------------");
     LOG.info("Starting ...");
 
-
     PrivilegedExceptionAction<Void> action = () -> {
+      // For kafka this is the partitionId, for MR this will be the taskId
+      String uniqueId = Utils.getSdcId();
+      String slaveId = runtimeInfo.getMasterSDCId() + Constants.MASTER_SDC_ID_SEPARATOR + uniqueId;
+      runtimeInfo.setId(slaveId);
+      LOG.info("Slave SDC Id is: '{}'", slaveId);
+
       task.init();
       final Thread shutdownHookThread = new Thread("Main.shutdownHook") {
         @Override
@@ -186,11 +186,13 @@ public class EmbeddedDataCollector implements DataCollector {
       };
       shutdownHookThread.setContextClassLoader(classLoader);
       Runtime.getRuntime().addShutdownHook(shutdownHookThread);
-      dagger.get(RuntimeInfo.class).setShutdownHandler(new ShutdownHandler(
+
+      runtimeInfo.setShutdownHandler(new ShutdownHandler(
           LOG,
           task,
           new ShutdownHandler.ShutdownStatus()
       ));
+
       task.run();
 
       // this thread waits until the pipeline is shutdown
