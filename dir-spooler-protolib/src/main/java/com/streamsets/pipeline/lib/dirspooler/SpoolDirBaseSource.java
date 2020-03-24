@@ -226,10 +226,10 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
     if (dir.isEmpty()) {
       issues.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_11));
     }
-    return validateDirPresence(dir, group, config, issues, addDirPresenceIssues);
+    return validateDirPresenceAndPermissions(dir, group, config, issues, addDirPresenceIssues);
   }
 
-  private boolean validateDirPresence(
+  private boolean validateDirPresenceAndPermissions(
       String dir,
       String group,
       String config,
@@ -243,19 +243,20 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
     List<ConfigIssue> issuesToBeAdded = new ArrayList<>();
     boolean isValid = true;
 
-    WrappedFile fDir = null;
     try {
-      fDir = fs.getFile(dir);
+      WrappedFile fDir = fs.getFile(dir);
+      if (!fs.exists(fDir)) {
+        issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
+        isValid = false;
+      } else if (!fs.isDirectory(fDir)) {
+        issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
+        isValid = false;
+      } else if (!fDir.canRead()) {
+        issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_38, dir));
+        isValid = false;
+      }
     } catch (IOException e) {
       issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_36, dir, e));
-      isValid = false;
-    }
-
-    if (!fs.exists(fDir)) {
-      issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_12, dir));
-      isValid = false;
-    } else if (!fs.isDirectory(fDir)) {
-      issuesToBeAdded.add(getContext().createConfigIssue(group, config, Errors.SPOOLDIR_13, dir));
       isValid = false;
     }
     if (addDirPresenceIssues) {

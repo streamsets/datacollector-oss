@@ -123,4 +123,9 @@ public class LocalFile implements WrappedFile {
 
     return filePath.equals(Paths.get(((LocalFile) o).getAbsolutePath()));
   }
+
+  @Override
+  public boolean canRead() {
+    return filePath.toFile().canRead();
+  }
 }

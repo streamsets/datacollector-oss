@@ -81,4 +81,11 @@ public interface WrappedFile {
    * @return the {@code Map<String, Object>} file custom metatdata
    */
   Map<String, Object> getCustomMetadata();
+
+  /**
+   * Returns whether the file has read access permission or not
+   *
+   * @return true if the SDC has read access permission to the file
+   */
+  boolean canRead() throws IOException;
 }

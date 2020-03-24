@@ -19,6 +19,7 @@ import com.streamsets.pipeline.lib.dirspooler.WrappedFile;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 
 import java.io.IOException;
@@ -120,5 +121,10 @@ public class AzureFile implements WrappedFile {
   @Override
   public int hashCode() {
     return Objects.hash(status);
+  }
+
+  @Override
+  public boolean canRead() {
+    return status.getPermission().getUserAction().implies(FsAction.READ);
   }
 }
