@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-hdp-stagelib-base</artifactId>
-    <version>3.14.0</version>
+    <version>3.15.0</version>
     <relativePath>../hdp-stagelib-base</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-hdp_2_3-lib</artifactId>
-  <version>3.14.0</version>
+  <version>3.15.0</version>
   <description>StreamSets Data Collector HDP 2.3.0 Lib</description>
   <name>StreamSets Data Collector HDP 2.3.0 Lib</name>
   <packaging>jar</packaging>
