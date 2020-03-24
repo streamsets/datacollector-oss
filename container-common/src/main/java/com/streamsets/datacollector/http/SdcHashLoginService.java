@@ -25,12 +25,12 @@ import org.eclipse.jetty.util.log.Logger;
 import org.eclipse.jetty.util.resource.Resource;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class SdcHashLoginService extends AbstractLoginService {
   private static final Logger LOG = Log.getLogger(SdcHashLoginService.class);
+  private static final String EMAIL_PREFIX = "email:";
+  private static final String GROUP_PREFIX = "group:";
 
   private String _config;
   private boolean hotReload = true; // default is not to reload
@@ -132,11 +132,11 @@ public class SdcHashLoginService extends AbstractLoginService {
     if (roles == null)
       return null;
 
-    List<String> list = roles.stream()
+    return roles.stream()
         .map(RolePrincipal::getName)
-        .collect(  Collectors.toList() );
-
-    return list.toArray(new String[roles.size()]);
+        .filter(role -> !role.startsWith(EMAIL_PREFIX))
+        .filter(role -> !role.startsWith(GROUP_PREFIX))
+        .toArray(String[]::new);
   }
 
 
