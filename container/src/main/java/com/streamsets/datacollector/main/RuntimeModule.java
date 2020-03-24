@@ -20,10 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.metrics.MetricsModule;
-import com.streamsets.datacollector.restapi.UserManagementResource;
-import com.streamsets.datacollector.security.usermgnt.NoOpUsersManager;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
-import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
@@ -33,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +49,7 @@ public class RuntimeModule {
   private static final Logger LOG = LoggerFactory.getLogger(RuntimeModule.class);
   private static String productName = RuntimeInfo.SDC_PRODUCT;
   private static String propertyPrefix = RuntimeInfo.SDC_PRODUCT;
+  private static File baseDir = null;
 
   /**
    * Kept under SDC-12270 to avoid changing too many files
@@ -74,6 +71,10 @@ public class RuntimeModule {
     RuntimeModule.propertyPrefix = propertyPrefix;
   }
 
+  public static synchronized void setBaseDir(File baseDir) {
+    RuntimeModule.baseDir = baseDir;
+  }
+
   //TODO: add setProductName and make that available in RuntimeInfo when constructed
 
   @Provides @Singleton
@@ -83,7 +84,13 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public RuntimeInfo provideRuntimeInfo(MetricRegistry metrics) {
-    RuntimeInfo info = new StandaloneRuntimeInfo(productName, propertyPrefix, metrics, stageLibraryClassLoaders);
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        productName,
+        propertyPrefix,
+        metrics,
+        stageLibraryClassLoaders,
+        baseDir
+    );
     info.init();
     return info;
   }
