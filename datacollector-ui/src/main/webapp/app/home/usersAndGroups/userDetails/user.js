@@ -46,6 +46,7 @@ angular
       save: function() {
         var allRoles = [ 'admin', 'manager', 'creator', 'guest'];
         $scope.operationInProgress = true;
+        $scope.common.errors = [];
 
         // - make user object for API from user model
         var myUser = {
@@ -62,12 +63,19 @@ angular
 
         // - REST call to insert or update the user
         api.admin[isNew ? 'insertUser' : 'updateUser'](myUser)
-          .then(function() {
-            $modalInstance.close(myUser);
+          .then(function(res) {
+            if(isNew) {
+              $scope.emailSent = res.data.data.sentByEmail;
+              $scope.linkSetPassword = res.data.data.link;
+            }
+            $scope.showConfirmation = true;
+            $scope.modalTitle = isNew ? 'User created' : 'User updated';
           })
           .catch(function(res) {
             $scope.operationInProgress = false;
-            $scope.common.errors = res.data ? [res.data] : [res.status + ' - ' + res.statusText];
+            $scope.common.errors = res.data ? res.data.messages.map(function (msg) {
+              return msg.message;
+            }) : [res.status + ' - ' + res.statusText];
           });
       },
 

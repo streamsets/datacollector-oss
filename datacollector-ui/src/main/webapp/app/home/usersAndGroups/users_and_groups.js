@@ -61,6 +61,7 @@ angular
       },
 
       openUserModal: function(user, isNew) {
+        $scope.common.errors = [];
         return $modal.open({
           templateUrl: 'app/home/usersAndGroups/userDetails/user.tpl.html',
           controller: 'UserModalController',

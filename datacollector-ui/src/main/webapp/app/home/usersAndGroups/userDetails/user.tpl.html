@@ -10,7 +10,7 @@
 
     <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
 
-    <div>
+    <div ng-if="!showConfirmation">
 
       <div class="form-group">
         <label class="control-label">User ID</label>
@@ -99,6 +99,15 @@
 
     </div>
 
+    <div ng-if="showConfirmation">
+      <p>User "{{ userModel.id }}" was {{ isNew ? 'created' : 'updated' }} successfully.</p>
+      <p ng-if="isNew && emailSent">An email has been set to "{{ userModel.email }}" so that they can set a password.</p>
+      <p ng-if="isNew && !emailSent">The user must <a href="{{ linkSetPassword }}">set his/her password</a>.
+        Copy and paste the link below and send it to them.<br><br>
+        <textarea class="form-control" rows="4">{{ linkSetPassword }}</textarea>
+      </p>
+    </div>
+
     <div>
       <div ng-repeat="errorMessage in createResponse.errorMessages" class="alert alert-danger alert-dismissible" role="alert">
         {{errorMessage}}
@@ -107,12 +116,11 @@
 
   </div>
   <div class="modal-footer">
-    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isCreateInProgress"
+    <button type="reset" class="btn btn-default" ng-click="cancel()" ng-if="!isCreateInProgress && !showConfirmation"
             translate="global.form.cancel">Cancel</button>
-
-    <button type="submit" class="btn btn-primary" ng-if="!isCreateInProgress">Save</button>
-
+    <button type="submit" class="btn btn-primary" ng-if="!isCreateInProgress && !showConfirmation">Save</button>
     <button class="btn btn-primary" ng-if="isCreateInProgress" disabled>Saving...</button>
+    <button type="reset" class="btn btn-primary" ng-click="cancel()" ng-if="showConfirmation">OK</button>
 
   </div>
 </form>
