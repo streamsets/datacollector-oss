@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -187,7 +187,7 @@ module.exports = function(grunt) {
         ' * <%= pkg.name %> - v<%= pkg.version %> - <%= buildTime %>\n' +
         ' * <%= pkg.homepage %>\n' +
         ' *\n' +
-        ' * Copyright 2017 StreamSets Inc.\n' +
+        ' * Copyright 2020 StreamSets Inc.\n' +
         ' *\n' +
         ' * Licensed under the Apache License, Version 2.0 (the "License");\n' +
         ' * you may not use this file except in compliance with the License.\n' +
