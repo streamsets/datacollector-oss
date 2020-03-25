@@ -112,7 +112,7 @@ public class EmailExecutor extends BaseExecutor {
       try {
         // for each configuration group in the UI...
         for (EmailConfig co : conf) {
-          if (!processAnyEls(co.conditionELEval,
+          if (!co.condition.isEmpty() && !processAnyEls(co.conditionELEval,
               co.conditionELVars,
               co.condition,
               Boolean.class,
