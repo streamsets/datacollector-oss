@@ -50,7 +50,7 @@ public class ActivationLoader {
       activation = new NopActivation();
       LOG.debug("No activation service available, using {}", activation.getClass().getName());
     } else if (list.size() == 1) {
-      activation = list.get(0);
+      activation = new WhitelistActivation(list.get(0));
       LOG.debug("Found activation service {}", activation.getClass().getName());
     } else {
       List<String> names = Lists.transform(list, element -> element.getClass().getName());
@@ -71,7 +71,11 @@ public class ActivationLoader {
         LOG.info("Activation enabled, activation is valid and it does not expire");
       } else {
         long daysToExpire = TimeUnit.MILLISECONDS.toDays(info.getExpiration() - System.currentTimeMillis() );
-        LOG.info("Activation enabled, activation is valid and it expires in '{}' days", daysToExpire);
+        if (daysToExpire < 0) {
+          LOG.info("Bypass activation because SDC contains only basic stage libraries.");
+        } else {
+          LOG.info("Activation enabled, activation is valid and it expires in '{}' days", daysToExpire);
+        }
       }
     } else {
       LOG.debug("Activation disabled");
