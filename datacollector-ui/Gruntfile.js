@@ -133,7 +133,6 @@ module.exports = function(grunt) {
       ],
       css: [
         'bower_components/bootstrap/dist/css/bootstrap.min.css',
-        'bower_components/json-formatter/dist/json-formatter.min.css.css',
         'bower_components/fontawesome/css/font-awesome.css',
         'bower_components/nvd3/build/nv.d3.css',
         'bower_components/angular-ui-select/dist/select.css',

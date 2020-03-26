@@ -1,6 +1,6 @@
 <form class="users-form" role="form" autocomplete="off" ng-submit="save()">
   <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()">
+    <button type="button" class="close" ng-click="close()">
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
@@ -102,7 +102,7 @@
     <div ng-if="showConfirmation">
       <p>User "{{ userModel.id }}" was {{ isNew ? 'created' : 'updated' }} successfully.</p>
       <p ng-if="isNew && emailSent">An email has been set to "{{ userModel.email }}" so that they can set a password.</p>
-      <p ng-if="isNew && !emailSent">The user must <a href="{{ linkSetPassword }}">set his/her password</a>.
+      <p ng-if="isNew && !emailSent">The user must set his/her password.
         Copy and paste the link below and send it to them.<br><br>
         <textarea class="form-control" rows="4">{{ linkSetPassword }}</textarea>
       </p>
