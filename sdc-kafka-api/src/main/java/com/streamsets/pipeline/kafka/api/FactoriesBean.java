@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.kafka.api;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -29,6 +30,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public abstract class FactoriesBean {
 
@@ -56,8 +58,12 @@ public abstract class FactoriesBean {
       },
       "com.streamsets.pipeline.kafka.impl.Kafka11FactoriesBean",
       new String[] {
-          "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
-          "com.streamsets.pipeline.kafka.impl.Kafka20FactoriesBean"
+        "com.streamsets.pipeline.kafka.impl.Kafka1_0FactoriesBean",
+        "com.streamsets.pipeline.kafka.impl.Kafka20FactoriesBean"
+      },
+      "com.streamsets.pipeline.kafka.impl.MapRStreams09FactoriesBean",
+      new String[] {
+        "com.streamsets.pipeline.kafka.impl.MapR52Streams09FactoriesBean",
       }
   );
 
@@ -75,34 +81,38 @@ public abstract class FactoriesBean {
   }
 
   static {
+    factoriesBean = loadBean(StreamSupport.stream(factoriesBeanLoader.spliterator(), false).collect(Collectors.toList()));
+  }
 
-    int serviceCount = 0;
+  @VisibleForTesting
+  static FactoriesBean loadBean(List<FactoriesBean> beans) {
     Set<String> loadedBeans = new HashSet<>();
+    FactoriesBean factoriesBean = null;
 
-    for (FactoriesBean bean : factoriesBeanLoader) {
-      String beanName = bean.getClass().getName();
+    for (FactoriesBean bean: beans) {
+      String beanName = bean.getClassName();
       LOG.info("Found FactoriesBean loader {}", beanName);
 
       boolean subclass = false;
-      if (factoriesBean == null || isSubclass(beanName, factoriesBean.getClass().getName())) {
+      if (factoriesBean == null || isSubclass(beanName, factoriesBean.getClassName())) {
         if (factoriesBean != null) {
-          serviceCount--;
-          loadedBeans.remove(factoriesBean.getClass().getName());
+          loadedBeans.remove(factoriesBean.getClassName());
         }
         factoriesBean = bean;
         subclass = true;
       }
-      if (subclass || !isSubclass(factoriesBean.getClass().getName(), beanName)) {
+      if (subclass || !isSubclass(factoriesBean.getClassName(), beanName)) {
         loadedBeans.add(beanName);
-        serviceCount++;
       }
     }
-    if (serviceCount > 1) {
+    if (loadedBeans.size() > 1) {
       throw new RuntimeException(Utils.format("Unexpected number of loaders, found {} instead of 1: {}",
-          serviceCount,
-          StringUtils.join(loadedBeans, ", ")
+        loadedBeans.size(),
+        StringUtils.join(loadedBeans, ", ")
       ));
     }
+
+    return factoriesBean;
   }
 
   public static SdcKafkaProducerFactory getKafkaProducerFactory() {
@@ -119,5 +129,9 @@ public abstract class FactoriesBean {
 
   public static SdcKafkaLowLevelConsumerFactory getKafkaLowLevelConsumerFactory() {
     return factoriesBean.createSdcKafkaLowLevelConsumerFactory();
+  }
+
+  public String getClassName() {
+    return getClass().getName();
   }
 }
