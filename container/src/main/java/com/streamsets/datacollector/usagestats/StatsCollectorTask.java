@@ -23,7 +23,6 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -59,6 +58,13 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   /** Tells getTelemetryUrl endpoint to use the test bucket **/
   public static final String TELEMETRY_USE_TEST_BUCKET = "usage.reporting.getTelemetryUrlEndpoint.useTestBucket";
   public static final boolean TELEMETRY_USE_TEST_BUCKET_DEFAULT = false;
+
+  public static final String TELEMETRY_REPORT_PERIOD_SECONDS = "usage.reporting.period.seconds";
+
+  // How often we report stats intervals, every 24 hrs
+  public static final int TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT = 60 * 60 * 24;
+
+
   @VisibleForTesting
   static final String GET_TELEMETRY_URL_ARG_CLIENT_ID = "client_id";
   @VisibleForTesting
@@ -73,13 +79,13 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   public static final String USAGE_PATH = "usage.reporting.path";
   public static final String USAGE_PATH_DEFAULT = "/public-rest/v4/usage/datacollector3";
 
-  static final String ROLL_FREQUENCY_CONFIG = "stats.rollFrequency.hours";
-  private static final int ROLL_FREQUENCY_DEFAULT = 1;
+  static final String TEST_ROLL_PERIOD_CONFIG = "stats.rollFrequency.test.minutes";
+
+  static final String ROLL_PERIOD_CONFIG = "stats.rollFrequency.hours";
+  static final long ROLL_PERIOD_CONFIG_MAX = 1;
+
 
   private static final int REPORT_STATS_FAILED_COUNT_LIMIT = 31;
-
-  // How often we report stats intervals, every 24 hrs
-  private static final int REPORT_PERIOD_SECS = 60 * 60 * 24;
 
   private static final int EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT = 30;
 
@@ -115,7 +121,10 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.config = config;
-    rollFrequencyMillis = TimeUnit.HOURS.toMillis(config.get(ROLL_FREQUENCY_CONFIG, ROLL_FREQUENCY_DEFAULT));
+    long rollFrequencyConfigMillis = (config.get(TEST_ROLL_PERIOD_CONFIG, -1) <= 0)?
+        TimeUnit.HOURS.toMillis(config.get(ROLL_PERIOD_CONFIG, ROLL_PERIOD_CONFIG_MAX)) :
+        TimeUnit.MINUTES.toMillis(config.get(TEST_ROLL_PERIOD_CONFIG, 1));
+    rollFrequencyMillis = Math.min(TimeUnit.HOURS.toMillis(ROLL_PERIOD_CONFIG_MAX), rollFrequencyConfigMillis);
     this.executorService = executorService;
     optFile = new File(runtimeInfo.getDataDir(), OPT_FILE);
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
@@ -249,7 +258,14 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     // when disabled all persistency/reporting done by the Runnable is a No Op.
     getStatsInfo().startSystem();
     getRunnable().run();
-    future = executorService.scheduleAtFixedRate(getRunnable(), 60, REPORT_PERIOD_SECS, TimeUnit.SECONDS);
+    future = executorService.scheduleAtFixedRate(getRunnable(), 60, getReportPeriodSeconds() , TimeUnit.SECONDS);
+  }
+
+  long getReportPeriodSeconds() {
+    return Math.min(
+        TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT,
+        config.get(TELEMETRY_REPORT_PERIOD_SECONDS, TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT)
+    );
   }
 
   Runnable getRunnable() {
@@ -258,6 +274,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
         if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getRollFrequencyMillis())) {
           LOG.debug("Stats collection data rolled");
         }
+        long defaultReportPeriod =  getReportPeriodSeconds();
         if (!getStatsInfo().getCollectedStats().isEmpty()) {
           LOG.debug("Reporting");
           if (reportStats(getStatsInfo().getCollectedStats())) {
@@ -277,8 +294,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
                 future.cancel(false);
                 future = executorService.scheduleAtFixedRate(
                     getRunnable(),
-                    REPORT_PERIOD_SECS,
-                    REPORT_PERIOD_SECS,
+                    defaultReportPeriod,
+                    defaultReportPeriod,
                     TimeUnit.SECONDS
                 );
                 setActive(false);
@@ -288,8 +305,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
                 future.cancel(false);
                 future = executorService.scheduleAtFixedRate(
                     getRunnable(),
-                    delay * 60 * 60 * 24,
-                    REPORT_PERIOD_SECS,
+                    delay * defaultReportPeriod,
+                    defaultReportPeriod,
                     TimeUnit.SECONDS
                 );
               }
