@@ -19,7 +19,8 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, $location, api, activationInfo, configuration) {
+  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, $location, api, activationInfo, configuration, 
+    authService) {
     /**
      * Upload the activation key
      * @param {String} keyText
@@ -64,8 +65,10 @@ angular
     function getInitialActivationStep(activationInfo) {
       if (getActivationKeyFromURL()) {
         return 2;
-      } else if (activationInfo.info && activationInfo.info.valid) {
-        return 1; // Switch to 3 in next commit
+      } else if (activationInfo.info && 
+        activationInfo.info.valid && 
+        authService.daysUntilProductExpiration(activationInfo.info.expiration) > 0) {
+        return 3;
       } else {
         return 1;
       }
@@ -151,6 +154,13 @@ angular
        * Cancel button callback.
        */
       cancel: function () {
+        $modalInstance.dismiss('cancel');
+      },
+
+      /**
+       * Close button callback, after new activation file uploaded
+       */
+      closeAndReload: function () {
         $modalInstance.dismiss('cancel');
         window.location.reload();
       }

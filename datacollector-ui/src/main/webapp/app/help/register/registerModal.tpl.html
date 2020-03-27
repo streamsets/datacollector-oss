@@ -40,7 +40,8 @@
           <div class="col-sm-9">
             <input type="email" class="form-control" required maxlength="255"
               placeholder="name@mycompany.com"
-              ng-model="activationData.email">
+              ng-model="activationData.email"
+              autocomplete="email">
           </div>
         </div>
         <div class="form-group">
@@ -371,7 +372,7 @@
         <button type="reset" class="btn btn-default" ng-click="cancel()" ng-hide="operationDone || operationInProgress"
                 translate="global.form.cancel">Cancel</button>
 
-        <button type="reset" class="btn btn-default" ng-click="cancel()" ng-show="operationDone"
+        <button type="reset" class="btn btn-default" ng-click="closeAndReload()" ng-show="operationDone"
                 translate="global.form.close">Close</button>
       </div>
     </div>

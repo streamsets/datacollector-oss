@@ -154,4 +154,13 @@ angular.module('dataCollectorApp.common')
     this.isUserAdmin = function() {
       return self.userInfo && self.userInfo.roles && self.userInfo.roles.indexOf('admin') !== -1;
     };
+
+    /**
+     * Gets the numbers of days until expiration from the expiration date
+     * @param {number} expiration milliseconds since epoch
+     */
+    this.daysUntilProductExpiration = function(expirationTime) {
+      var currentTime = new Date().getTime();
+      return Math.floor(( expirationTime - currentTime ) / 86400000);
+    };
   });

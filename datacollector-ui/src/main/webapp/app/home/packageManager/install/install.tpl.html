@@ -34,6 +34,17 @@
     </li>
   </ul>
 
+  <div ng-if="operationStatus !== 'complete'">
+    <div ng-if="registrationNeeded" class="alert alert-info" role="alert">
+
+      <p>To install additional libraries, you will need to register with StreamSets.</p>
+
+      <div class="register-button">
+        <button class="btn btn-primary" ng-click="register()">Register</button>
+    </div>
+    </div>
+  </div>
+
   <div ng-if="operationStatus !== 'complete'" class="eula-tos">
     <div ng-if="agreementCheckModel.hasEnterpriseConnectors" class="alert alert-info checkbox" role="alert">
 
@@ -64,7 +75,7 @@
 
   <button type="button" class="btn btn-primary" ng-click="install()"
           ng-if="operationStatus === 'incomplete'"
-          ng-disabled="agreementCheckModel.hasEnterpriseConnectors && !agreementCheckModel.agreementChecked"
+          ng-disabled="registrationNeeded || agreementCheckModel.hasEnterpriseConnectors && !agreementCheckModel.agreementChecked"
           translate="global.form.install">Install</button>
 
   <button type="button" class="btn btn-primary" ng-click="retry()"

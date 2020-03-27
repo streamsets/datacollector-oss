@@ -565,14 +565,17 @@ angular.module('dataCollectorApp')
       if (res && res.data) {
         var activationInfo = $rootScope.common.activationInfo = res.data;
         if (activationInfo.enabled) {
-          var currentTime = new Date().getTime();
-          var expirationTime = activationInfo.info.expiration;
-          var difDays =  Math.floor(( expirationTime - currentTime ) / 86400000);
-          if (difDays < 0 ) {
-            $rootScope.common.infoList = [{
-              message: 'Activation key expired, you need to get a new one from StreamSets'
-            }];
-            $rootScope.common.showRegistrationModal();
+          var difDays =  authService.daysUntilProductExpiration(activationInfo.info.expiration);
+          if (difDays < 0) {
+            // if it is still valid, it is because only core stages are in use
+            if (!activationInfo.info.valid || $location.search().activationKey) {
+              $rootScope.common.showRegistrationModal();
+              if (!activationInfo.info.valid) {
+                $rootScope.common.infoList = [{
+                  message: 'Activation key expired, you need to get a new one from StreamSets'
+                }];
+              }
+            }
           } else if (difDays < 30) {
             $rootScope.common.infoList = [{
               message: 'Activation key expires in ' + difDays + '  days'
