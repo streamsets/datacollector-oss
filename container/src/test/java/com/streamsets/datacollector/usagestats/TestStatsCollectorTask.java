@@ -32,6 +32,7 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -54,6 +55,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -86,7 +88,7 @@ public class TestStatsCollectorTask {
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
 
     Configuration config = new Configuration();
-    config.set(StatsCollectorTask.ROLL_FREQUENCY_CONFIG, 1);
+    config.set(StatsCollectorTask.ROLL_PERIOD_CONFIG, 1);
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
@@ -868,6 +870,82 @@ public class TestStatsCollectorTask {
         Mockito.any(),
         Mockito.any());
     Mockito.verify(task).getHttpURLConnection(Mockito.any());
+  }
+
+  @Test
+  public void testReportFrequencySecondConfiguration() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("abc");
+    Mockito.when(buildInfo.getBuiltDate()).thenReturn(new Date().toString());
+    Mockito.when(buildInfo.getBuiltBy()).thenReturn("System");
+
+    String sdcId = "0123456789-0123456789-0123456789";
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+    config.set(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS, 120);
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task.initTask();
+    Mockito.verify(scheduler).scheduleAtFixedRate(
+        Matchers.any(Runnable.class),
+        Matchers.eq(60L),
+        Matchers.eq(120L),
+        Mockito.eq(TimeUnit.SECONDS)
+    );
+
+    scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+    //Set it to 48 hours - max at 24 hours
+    config.set(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS, TimeUnit.DAYS.toSeconds(2));
+
+    task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task.initTask();
+    Mockito.verify(scheduler).scheduleAtFixedRate(
+        Matchers.any(Runnable.class),
+        Matchers.eq(60L),
+        Matchers.eq(Long.valueOf(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT).longValue()),
+        Mockito.eq(TimeUnit.SECONDS)
+    );
+  }
+
+  @Test
+  public void testRollFrequencyTestMinutesConfiguration() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("abc");
+    Mockito.when(buildInfo.getBuiltDate()).thenReturn(new Date().toString());
+    Mockito.when(buildInfo.getBuiltBy()).thenReturn("System");
+
+    String sdcId = "0123456789-0123456789-0123456789";
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
+    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+
+    Configuration config = new Configuration();
+    config.set(StatsCollectorTask.TEST_ROLL_PERIOD_CONFIG, 20);
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task.initTask();
+    Assert.assertEquals(TimeUnit.MINUTES.toMillis(20), task.getRollFrequencyMillis());
+
+    //120 mins - will max at 60 mins
+    config.set(StatsCollectorTask.TEST_ROLL_PERIOD_CONFIG, 120);
+    scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task.initTask();
+    Assert.assertEquals(TimeUnit.HOURS.toMillis(StatsCollectorTask.ROLL_PERIOD_CONFIG_MAX), task.getRollFrequencyMillis());
   }
 
   private static final Logger LOG = LoggerFactory.getLogger(TestStatsCollectorTask.class);
