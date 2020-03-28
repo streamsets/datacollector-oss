@@ -20,16 +20,20 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.lib.startPipeline.StartPipelineErrors;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.startPipeline.PipelineIdConfig;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineErrors;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineSupplier;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -41,6 +45,9 @@ public class StartPipelineSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(StartPipelineSource.class);
   private StartPipelineCommon startPipelineCommon;
   private StartPipelineConfig conf;
+  private ELVars pipelineIdConfigVars;
+  private ELEval pipelineIdEval;
+  private ELEval runtimeParametersEval;
   private DefaultErrorRecordHandler errorRecordHandler;
 
   StartPipelineSource(StartPipelineConfig conf) {
@@ -51,6 +58,9 @@ public class StartPipelineSource extends BaseSource {
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    pipelineIdConfigVars = getContext().createELVars();
+    pipelineIdEval = getContext().createELEval("pipelineId");
+    runtimeParametersEval = getContext().createELEval("runtimeParameters");
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     return this.startPipelineCommon.init(issues, getContext());
   }
@@ -61,11 +71,23 @@ public class StartPipelineSource extends BaseSource {
     Executor executor = Executors.newCachedThreadPool();
 
     for(PipelineIdConfig pipelineIdConfig: conf.pipelineIdConfigList) {
+      PipelineIdConfig resolvedPipelineIdConfig = new PipelineIdConfig();
+      TimeNowEL.setTimeNowInContext(pipelineIdConfigVars, new Date());
+      resolvedPipelineIdConfig.pipelineId = pipelineIdEval.eval(
+          pipelineIdConfigVars,
+          pipelineIdConfig.pipelineId,
+          String.class
+      );
+      resolvedPipelineIdConfig.runtimeParameters = runtimeParametersEval.eval(
+          pipelineIdConfigVars,
+          pipelineIdConfig.runtimeParameters,
+          String.class
+      );
       CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartPipelineSupplier(
           this.startPipelineCommon.managerApi,
           this.startPipelineCommon.storeApi,
           conf,
-          pipelineIdConfig,
+          resolvedPipelineIdConfig,
           errorRecordHandler
       ), executor);
       startPipelineFutures.add(future);
