@@ -97,7 +97,7 @@ public class TestHiveConfigBean {
     Stage.Context context = mock(Stage.Context.class);
     Stage.UserContext userContext = mock(Stage.UserContext.class);
     when(context.getUserContext()).thenReturn(userContext);
-    when(userContext.getUser()).thenReturn(user);
+    when(userContext.getAliasName()).thenReturn(user);
     when(context.createConfigIssue("HIVE", "conf.hiveJDBCUrl", Errors.HIVE_42, bean.hiveJDBCUrl))
         .thenReturn((ConfigIssue) configIssue);
 

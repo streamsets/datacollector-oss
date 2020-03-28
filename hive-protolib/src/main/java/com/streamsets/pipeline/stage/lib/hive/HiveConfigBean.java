@@ -374,7 +374,7 @@ public class HiveConfigBean {
       }
 
       hiveJDBCUrl += PROPERTY_SEPARATOR + getDriverNamesToProperty().getOrDefault(hiveJDBCDriver,HIVE_PROXY_USER_KEY)
-          + PROPERTY_KEY_VALUE_SEPARATOR + context.getUserContext().getUser();
+          + PROPERTY_KEY_VALUE_SEPARATOR + context.getUserContext().getAliasName();
 
     }
     return true;
