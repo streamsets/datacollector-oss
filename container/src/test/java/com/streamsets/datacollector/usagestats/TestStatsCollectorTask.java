@@ -846,9 +846,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getBuiltBy()).thenReturn("System");
 
     String sdcId = "0123456789-0123456789-0123456789";
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
 
     Configuration config = new Configuration();
     config.set(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS, 120);
@@ -889,9 +887,7 @@ public class TestStatsCollectorTask {
     Mockito.when(buildInfo.getBuiltBy()).thenReturn("System");
 
     String sdcId = "0123456789-0123456789-0123456789";
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getId()).thenReturn(sdcId);
-    Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
 
     Configuration config = new Configuration();
     config.set(StatsCollectorTask.TEST_ROLL_PERIOD_CONFIG, 20);
