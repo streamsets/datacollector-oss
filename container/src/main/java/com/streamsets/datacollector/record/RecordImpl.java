@@ -19,12 +19,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.util.EscapeUtil;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.FieldOperator;
 import com.streamsets.pipeline.api.FieldVisitor;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.RecordField;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -239,8 +239,20 @@ public class RecordImpl implements Record, Cloneable {
           case LIST_MAP:
             Map<String, FieldWithPath> map = new LinkedHashMap<>();
             for (Map.Entry<String, Field> entry : ((Map<String, Field>) field.getValue()).entrySet()) {
-              String ePath1 = singleQuoteEscapedPath + "/" + EscapeUtil.singleQuoteEscape(entry.getKey());
-              String ePath2 = doubleQuoteEscapedPath + "/" + EscapeUtil.doubleQuoteEscape(entry.getKey());
+              String ePath1;
+              String ePath2;
+              if (header.getAttribute(HeaderImpl.TRANSFORMER_RECORD) != null) {
+                if (StringUtils.isEmpty(singleQuoteEscapedPath)) {
+                  ePath1 = EscapeUtil.singleQuoteEscape(entry.getKey());
+                  ePath2 = EscapeUtil.doubleQuoteEscape(entry.getKey());
+                } else {
+                  ePath1 = singleQuoteEscapedPath + "." + EscapeUtil.singleQuoteEscape(entry.getKey());
+                  ePath2 = doubleQuoteEscapedPath + "." + EscapeUtil.doubleQuoteEscape(entry.getKey());
+                }
+              } else {
+                ePath1 = singleQuoteEscapedPath + "/" + EscapeUtil.singleQuoteEscape(entry.getKey());
+                ePath2 = doubleQuoteEscapedPath + "/" + EscapeUtil.doubleQuoteEscape(entry.getKey());
+              }
               Field eField = entry.getValue();
               map.put(entry.getKey(), createFieldWithPath(ePath1, ePath2, eField));
             }

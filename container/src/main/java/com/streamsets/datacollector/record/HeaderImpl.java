@@ -21,13 +21,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.LocalizableString;
-import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +53,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
   private static final String ERROR_JOB_ID = RESERVED_PREFIX + "errorJobId";
+  public static final String TRANSFORMER_RECORD = "transformerRecord";
   private static final List<String> REQUIRED_ATTRIBUTES = ImmutableList.of(STAGE_CREATOR_INSTANCE_ATTR,
       RECORD_SOURCE_ID_ATTR);
 
