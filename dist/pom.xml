@@ -173,10 +173,13 @@
           </execution>
         </executions>
       </plugin>
-      <!--<plugin>
+      <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
+        <configuration>
+          <skip>${skipTests}</skip>
+        </configuration>
         <executions>
           <execution>
             <id>default-cli</id>
@@ -189,7 +192,7 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>-->
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
