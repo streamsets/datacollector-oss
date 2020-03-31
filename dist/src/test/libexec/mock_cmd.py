@@ -36,9 +36,9 @@ to_check = ' '.join(sys.argv[2:])
 for pair in response_pairs:
     if re.match(pair[0], to_check):
         print(pair[1])
-        print >> sys.stderr, "DEBUG: returning {ret} for args {args}".format(ret=pair[1], args=to_check)
+        sys.stderr.write("DEBUG: returning {ret} for args {args}\n".format(ret=pair[1], args=to_check))
         sys.exit(0)
 
-print >> sys.stderr, "ERROR: Could not find matching response among {patterns} for args: {args}".format(patterns=len(response_pairs), args=to_check)
+sys.stderr.write("ERROR: Could not find matching response among {patterns} for args: {args}\n".format(patterns=len(response_pairs), args=to_check))
 
 sys.exit(1)
