@@ -253,13 +253,13 @@ public class MultiKafkaSource extends BasePushSource {
 
 
     private void commitSyncAndProcess(BatchContext batchContext) {
-      if (getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
+      if (!getContext().isPreview() && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
         consumer.commitSync();
       }
 
       boolean batchSuccessful = getContext().processBatch(batchContext);
 
-      if (batchSuccessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
+      if (!getContext().isPreview() && batchSuccessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
         consumer.commitSync();
       }
     }
