@@ -64,6 +64,7 @@ angular
         // - REST call to insert or update the user
         api.admin[isNew ? 'insertUser' : 'updateUser'](myUser)
           .then(function(res) {
+            $scope.operationInProgress = false;
             $scope.myUser = myUser;
             if(isNew) {
               $scope.emailSent = res.data.data.sentByEmail;
@@ -78,6 +79,28 @@ angular
               return msg.message;
             }) : [res.status + ' - ' + res.statusText];
           });
+      },
+
+      resetPassword: function(userId) {
+        $scope.common.errors = [];
+        var confirmed = confirm('Are you sure you want to reset the user\'s password.');
+        if(confirmed) {
+          api.admin.resetUserPassword(userId)
+            .then(function(res) {
+              $scope.operationInProgress = false;
+              $scope.showConfirmation = true;
+              $scope.isReset = true;
+              $scope.emailSent = res.data.data.sentByEmail;
+              $scope.linkSetPassword = res.data.data.link;
+              $scope.modalTitle = 'User password resetted';
+            })
+            .catch(function(res) {
+              $scope.operationInProgress = false;
+              $scope.common.errors = res.data ? res.data.messages.map(function (msg) {
+                return msg.message;
+              }) : [res.status + ' - ' + res.statusText];
+            });
+        }
       },
 
       close: function(user) {

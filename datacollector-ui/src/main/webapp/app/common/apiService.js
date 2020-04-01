@@ -266,26 +266,26 @@ angular.module('dataCollectorApp.common')
         envelopeVersion: "1"
       });},
 
-      changeUserPassword: function(id, oldPwd, newPwd) {return $http.post(
-        apiBase + '/usermanagement/users/' + id + '/changePassword',
-        {
-          data: {
-            id: id,
-            oldPassword: oldPwd,
-            newPassword: newPwd
-          },
-          envelopeVersion: "1"
-        }
-      );},
+      changeUserPassword: function(id, oldPwd, newPwd) {
+        return $http.post(
+          apiBase + '/usermanagement/users/' + id + '/changePassword',
+          {
+            data: {
+              id: id,
+              oldPassword: oldPwd,
+              newPassword: newPwd
+            },
+            envelopeVersion: "1"
+          }
+        );
+      },
 
-      setUserPassword: function(id, token, pwd) {return $http.post(apiBase + '/usermanagement/users/setPassword', {
-        data: {
-          id: id,
-          resetToken: token,
-          password: pwd
-        },
-        envelopeVersion: "1"
-      });},
+      resetUserPassword: function(userId) {
+        return $http.post(apiBase + '/usermanagement/users/' + userId + '/resetPassword', {
+          data: null,
+          envelopeVersion: "1"
+        });
+      },
 
     };
 
