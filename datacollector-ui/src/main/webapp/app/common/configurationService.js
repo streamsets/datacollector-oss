@@ -344,6 +344,6 @@ angular.module('dataCollectorApp.common')
       if (self.config && self.config[UI_REGISTRATION_URL] !== undefined) {
         return self.config[UI_REGISTRATION_URL];
       }
-      return '';
+      return 'https://registration.streamsets.com/register';
     };
   });
