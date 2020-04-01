@@ -534,48 +534,9 @@ angular.module('dataCollectorApp')
       }
     });
 
-    api.admin.getBuildInfo().then(function(res) {
-      if (res && res.data) {
-        $timeout(
-          function() {
-            Analytics.set('sdcVersion', res.data.version);
-          },
-          1000
-        );
-      }
-    });
-
     api.admin.getRemoteServerInfo().then(function(res) {
       if (res && res.data) {
         $rootScope.common.remoteServerInfo.registrationStatus = res.data.registrationStatus;
-      }
-    });
-
-    api.activation.getActivation().then(function(res) {
-      if (res && res.data) {
-        var activationInfo = $rootScope.common.activationInfo = res.data;
-        if (activationInfo.enabled) {
-          var difDays =  authService.daysUntilProductExpiration(activationInfo.info.expiration);
-          if (difDays < 0) {
-            // if it is still valid, it is because only core stages are in use
-            if (!activationInfo.info.valid || $location.search().activationKey) {
-              $rootScope.common.showRegistrationModal();
-              if (!activationInfo.info.valid) {
-                $rootScope.common.infoList = [{
-                  message: 'Activation key expired, you need to get a new one from StreamSets'
-                }];
-              }
-            }
-          } else if (difDays < 30) {
-            $rootScope.common.infoList = [{
-              message: 'Activation key expires in ' + difDays + '  days'
-            }];
-          } else if (!activationInfo.info.valid) {
-            $rootScope.common.infoList = [{
-              message: 'Activation key is not valid'
-            }];
-          }
-        }
       }
     });
 
@@ -620,15 +581,58 @@ angular.module('dataCollectorApp')
           window.$rootScope = $rootScope;
         }
 
-        if ($rootScope.isAdmin) {
-          api.system.getStats()
-            .then(function (res) {
-              if (!res.data.opted) {
-                $rootScope.common.onStatOptInClick();
-              }
-            });
-        }
+        $q.all([api.system.getStats(), api.admin.getBuildInfo(), api.activation.getActivation()]).then(function(sbaResults) {
+          var statsResult = sbaResults[0];
+          var buildResult = sbaResults[1];
+          var activationResult = sbaResults[2];
 
+          var registrationModalShown = false;
+
+          // Modal (or notification) for activation
+          if (activationResult && activationResult.data) {
+            var activationInfo = $rootScope.common.activationInfo = activationResult.data;
+            if (activationInfo.enabled) {
+              var difDays =  authService.daysUntilProductExpiration(activationInfo.info.expiration);
+              if (difDays < 0) {
+                // if it is still valid, it is because only core stages are in use
+                if (!activationInfo.info.valid || $location.search().activationKey) {
+                  $rootScope.common.showRegistrationModal();
+                  registrationModalShown = true;
+                  if (!activationInfo.info.valid) {
+                    $rootScope.common.infoList = [{
+                      message: 'Activation key expired, you need to get a new one from StreamSets'
+                    }];
+                  }
+                }
+              } else if (difDays < 30) {
+                $rootScope.common.infoList = [{
+                  message: 'Activation key expires in ' + difDays + '  days'
+                }];
+              } else if (!activationInfo.info.valid) {
+                $rootScope.common.infoList = [{
+                  message: 'Activation key is not valid'
+                }];
+              }
+            }
+          }
+
+          // Modal for Usage Statistics opt in
+          if ($rootScope.isAdmin) {
+            if (!statsResult.data.opted && !registrationModalShown) {
+              $rootScope.common.onStatOptInClick();
+            }
+          }
+
+          // Analytics tracking
+          if (buildResult && buildResult.data) {
+            $timeout(
+              function() {
+                Analytics.set('sdcVersion', buildResult.data.version);
+              },
+              1000
+            );
+          }
+        });
       });
 
     api.pipelineAgent.getAllAlerts()
