@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.PipelineException;
 import io.swagger.annotations.Api;
@@ -43,10 +44,12 @@ import java.util.Map;
 public class ActivationResource {
 
   private final Activation activation;
+  private final StatsCollector statsCollector;
 
   @Inject
-  public ActivationResource(Activation activation) {
+  public ActivationResource(Activation activation, StatsCollector statsCollector) {
     this.activation = activation;
+    this.statsCollector = statsCollector;
   }
 
   @GET
@@ -65,6 +68,7 @@ public class ActivationResource {
   public Response updateActivation(String activationKey) throws PipelineException, IOException {
     if (activation.isEnabled()) {
       activation.setActivationKey(activationKey);
+      statsCollector.setActive(true);
       return Response.status(Response.Status.OK).entity(activation).build();
     } else {
       return Response.status(Response.Status.NOT_IMPLEMENTED).build();
