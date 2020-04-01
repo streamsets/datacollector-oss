@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -708,5 +709,21 @@ public class TestJavaScriptProcessor {
         new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
         JavaScriptDProcessor.class.getAnnotation(StageDef.class).flags()
     );
+  }
+
+  @Test
+  public void testNativeNullRootField() {
+    String script = "records[0].value = null;\n" +
+        "sdc.output.write(records[0]);\n";
+
+    Processor processor = new JavaScriptProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        ScriptRecordType.NATIVE_OBJECTS,
+        Collections.emptyMap()
+    );
+    ScriptingProcessorTestUtil.verifyNativeNullRootValue(JavaScriptDProcessor.class, processor);
   }
 }

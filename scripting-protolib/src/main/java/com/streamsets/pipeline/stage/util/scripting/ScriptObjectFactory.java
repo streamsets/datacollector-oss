@@ -269,7 +269,11 @@ public class ScriptObjectFactory {
       field = ScriptTypedNullObject.getTypedNullFieldFromScript(scriptObject);
       if (field == null) {
         // unable to find field type from scriptObject. Return null String.
-        field = Field.create(scriptObject.toString());
+        if (scriptObject == null) {
+          field = Field.create(Field.Type.STRING, null);
+        } else {
+          field = Field.create(scriptObject.toString());
+        }
       }
     }
     return field;

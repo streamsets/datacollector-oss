@@ -1181,4 +1181,26 @@ public class ScriptingProcessorTestUtil {
     }
 
   }
+
+  public static void verifyNativeNullRootValue(Class clazz, Processor processor) {
+    Record inRec = RecordCreator.create();
+    inRec.set(Field.create("original value"));
+    List<Record> input = Collections.singletonList(inRec);
+
+    ProcessorRunner runner = new ProcessorRunner.Builder(clazz, processor)
+        .addOutputLane("lane")
+        .build();
+    StageRunner.Output output;
+    try {
+      runner.runInit();
+      output = runner.runProcess(input);
+    } finally {
+      runner.runDestroy();
+    }
+
+    assertEquals(1, output.getRecords().get("lane").size());
+    // a native null or None should come back as a null String field
+    Field expectedField = Field.create(Field.Type.STRING, null);
+    assertEquals(expectedField, output.getRecords().get("lane").get(0).get());
+  }
 }

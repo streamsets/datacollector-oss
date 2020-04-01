@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -494,5 +495,24 @@ public class TestGroovyProcessor {
         new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
         GroovyDProcessor.class.getAnnotation(StageDef.class).flags()
     );
+  }
+
+  @Test
+  public void testNativeNullRootField() {
+    String script = "for (record in sdc.records) {\n" +
+        "record.value = null\n" +
+        "sdc.output.write(record)\n" +
+        "}";
+
+    Processor processor = new GroovyProcessor(
+        ProcessingMode.RECORD,
+        script,
+        "",
+        "",
+        "groovy-sdc",
+        ScriptRecordType.NATIVE_OBJECTS,
+        Collections.emptyMap()
+    );
+    ScriptingProcessorTestUtil.verifyNativeNullRootValue(GroovyDProcessor.class, processor);
   }
 }

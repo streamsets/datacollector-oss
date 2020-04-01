@@ -30,6 +30,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -607,5 +608,22 @@ public class TestJythonProcessor {
         new StageBehaviorFlags[]{StageBehaviorFlags.USER_CODE_INJECTION},
         JythonDProcessor.class.getAnnotation(StageDef.class).flags()
     );
+  }
+
+  @Test
+  public void testNativeNullRootField() {
+    String script = "for record in sdc.records:\n" +
+        "  record.value = None\n" +
+        "  sdc.output.write(record)\n";
+
+    Processor processor = new JythonProcessor(
+      ProcessingMode.RECORD,
+      script,
+      "",
+      "",
+      ScriptRecordType.NATIVE_OBJECTS,
+      Collections.emptyMap()
+    );
+    ScriptingProcessorTestUtil.verifyNativeNullRootValue(JythonDProcessor.class, processor);
   }
 }
