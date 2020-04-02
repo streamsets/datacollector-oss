@@ -16,6 +16,7 @@
   <div ng-switch="activationStep">
     <div ng-switch-when="1">
       <div class="modal-body form-horizontal">
+        <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
         <p>
           Before use, you must activate this copy of StreamSets Data Collector (SDC).
           Enter your contact information, and we will send you a key.
@@ -312,7 +313,8 @@
         <p ng-if="!activationKeyFilledFromURL">
           Please check your email ({{activationData.email}}) for the activation code.
           If you cannot find it (even in a spam folder) go back to the previous
-          page to send another email.
+          page to send another email. This dialog will close if you activate from the link
+          in the email.
         </p>
         <div class="form-group" ng-class="{'has-error': form.activationText.$error.pattern}">
           <label class="control-label">Activation Code</label>

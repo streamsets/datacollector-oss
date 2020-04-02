@@ -197,15 +197,21 @@ angular
     });
 
     // Check if the user was valid due to limited number of stage libraries
-    previouslyValid = $scope.activationInfo.info.valid;
-    if (getInitialActivationStep($scope.activationInfo) === 1 && previouslyValid) {
+    previouslyValid = activationInfo.info.valid;
+    if (getInitialActivationStep(activationInfo) === 1) {
       activationUpdateInterval = $interval(function() {
         if ($scope.activationStep === 2) {
           api.activation.getActivation().then(function(res) {
-            var activationInfo = res.data;
-            if(authService.daysUntilProductExpiration(activationInfo.info.expiration) > 0) {
-              $rootScope.common.activationInfo = activationInfo;
-              $scope.cancel();
+            var newActivationInfo = res.data;
+            if (previouslyValid) {
+              if(authService.daysUntilProductExpiration(newActivationInfo.info.expiration) > 0) {
+                $rootScope.common.activationInfo = newActivationInfo;
+                $scope.cancel();
+              }
+            } else {
+              if (res.data.info.valid) {
+                $scope.closeAndReload();
+              }
             }
           });
         }
