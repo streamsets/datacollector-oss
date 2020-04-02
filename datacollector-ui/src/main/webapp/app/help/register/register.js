@@ -44,10 +44,14 @@ angular
           $scope.operationInProgress = false;
         },
         function(err) {
+          var ERROR_CANNOT_VERIFY = 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Could not verify signature';
+          var ERROR_INVALID = 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Invalid value, cannot verify';
           if (err.data) {
-            if (err.data.RemoteException && err.data.RemoteException.message &&
-              err.data.RemoteException.message === 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Could not verify signature') {
-              $scope.common.errors = ['The entered activation code is invalid'];
+            if (err.data.RemoteException && 
+                err.data.RemoteException.message &&
+                (err.data.RemoteException.message === ERROR_CANNOT_VERIFY || 
+                  err.data.RemoteException.message === ERROR_INVALID)) {
+              $scope.common.errors = ['The entered activation code is invalid, verify that it is the same as what you were emailed'];
             } else {
               $scope.common.errors = [err.data];
             }
