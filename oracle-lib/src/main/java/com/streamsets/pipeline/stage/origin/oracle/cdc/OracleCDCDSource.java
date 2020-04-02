@@ -26,16 +26,16 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.sshtunnel.SshTunnelService;
 import com.streamsets.pipeline.stage.config.OracleHikariPoolConfigBean;
 
-@StageDef(version = 11,
-    label = "Oracle CDC Client",
-    description = "Origin that an read change events from an Oracle Database",
-    icon = "oracle.png",
-    recordsByRef = true,
-    producesEvents = true,
-    resetOffset = true,
-    onlineHelpRefUrl = "index.html?contextID=task_ehh_mjj_tw",
-    upgraderDef = "upgrader/OracleCDCDSource.yaml",
-    services = @ServiceDependency(service = SshTunnelService.class))
+//@StageDef(version = 11,
+//    label = "Oracle CDC Client",
+//    description = "Origin that an read change events from an Oracle Database",
+//    icon = "oracle.png",
+//    recordsByRef = true,
+//    producesEvents = true,
+//    resetOffset = true,
+//    onlineHelpRefUrl = "index.html?contextID=task_ehh_mjj_tw",
+//    upgraderDef = "upgrader/OracleCDCDSource.yaml",
+//    services = @ServiceDependency(service = SshTunnelService.class))
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 @HideConfigs({
