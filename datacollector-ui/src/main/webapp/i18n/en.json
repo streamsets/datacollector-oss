@@ -875,9 +875,9 @@
       "uninstall": "Uninstall"
     },
     "install": {
-      "confirmationMessage": "Are you sure you want to install the following stage libraries?",
+      "confirmationMessage": "The following libraries will be installed.",
       "successMessage": "Successfully installed stage libraries. Restart the Data Collector for the changes to take effect.",
-      "title": "Install Stage Library"
+      "title": "Install Stage Libraries"
     },
     "manifestURL": "Manifest URL",
     "noStageLibrary": "No Stage Library Found",
