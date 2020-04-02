@@ -256,7 +256,7 @@
     "statsOptIn": {
       "headerLabel": "Usage Statistics",
       "headerTitle": "Improve Data Collector with Usage Statistics",
-      "optInLabel": "Improve Data Collector by sending anonymized usage data."
+      "optInLabel": "Share usage data with StreamSets"
     },
     "commitPipelineHistory": {
       "committer": "Committed By",
