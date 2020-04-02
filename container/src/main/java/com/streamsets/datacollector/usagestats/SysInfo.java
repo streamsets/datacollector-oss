@@ -66,6 +66,15 @@ public class SysInfo {
 
   private static final long SCRIPT_CUTOFF_PERIOD = TimeUnit.SECONDS.toMillis(60);
 
+  @VisibleForTesting
+  static final String CLOUD_METADATA_SCRIPT_ID = "cloudMetadata";
+  @VisibleForTesting
+  static final String SYS_V_CORES_SCRIPT_ID = "sysVCores";
+  @VisibleForTesting
+  static final String SYS_MEM_SCRIPT_ID = "sysMem";
+  @VisibleForTesting
+  static final String CLOUD_PROVIDER_SCRIPT_ID = "cloudProvider";
+
   // we use futures since it can take a while to determine what these are, and by the time we need them they should
   // hopefully be known
 
@@ -82,7 +91,7 @@ public class SysInfo {
     if (envCldProvider != null) {
       cloudProvider = hardcodedFuture(envCldProvider);
     } else {
-      cloudProvider = createScriptFuture("cloudProvider",
+      cloudProvider = createScriptFuture(CLOUD_PROVIDER_SCRIPT_ID,
           new File(libExecDir, "_sys_info_util").getPath() + " get_cloud_provider",
           new StdOutConverter<String>() {
             @Override
@@ -95,7 +104,7 @@ public class SysInfo {
             }
           });
     }
-    cloudMetadata = createScriptFuture("cloudMetadata",
+    cloudMetadata = createScriptFuture(CLOUD_METADATA_SCRIPT_ID,
         new File(libExecDir, "_sys_info_util").getPath() + " get_cloud_metadata",
         new SysInfo.StdOutConverter<Map<String, Object>>() {
           @Override
@@ -104,7 +113,7 @@ public class SysInfo {
           }
         });
     sysVCores = createScriptFuture(
-        "sysVCores",
+        SYS_V_CORES_SCRIPT_ID,
         "sysctl -n hw.ncpu || lscpu -p 2>/dev/null | egrep -v '^#' | wc -l",
         new StdOutConverter<Long>() {
           @Override
@@ -113,7 +122,7 @@ public class SysInfo {
           }
         });
     sysMem = createScriptFuture(
-        "sysMem", "sysctl -n hw.memsize || awk '/^MemTotal:/{print $2}' /proc/meminfo",
+        SYS_MEM_SCRIPT_ID, "sysctl -n hw.memsize || awk '/^MemTotal:/{print $2}' /proc/meminfo",
         new StdOutConverter<Long>() {
           @Override
           public Long processStdOut(String stdout) {
@@ -420,13 +429,14 @@ public class SysInfo {
     return "SysInfo: " + toMap().toString();
   }
 
-  public Map<String, String> toMap() {
+  public Map<String, Object> toMap() {
     try {
       ObjectMapper objectMapper = ObjectMapperFactory.get();
       String json = objectMapper.writeValueAsString(this);
-      return objectMapper.readValue(json, new TypeReference<Map<String, String>>(){});
+      return objectMapper.readValue(json, new TypeReference<Map<String, Object>>(){});
     } catch (IOException e) {
-      throw new RuntimeException(e); // shouldn't happen
+      LOG.error("Unable to serialize SysInfo", e);
+      return null;
     }
   }
 }

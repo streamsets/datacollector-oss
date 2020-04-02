@@ -121,8 +121,8 @@ public class StatsInfo {
     return Hashing.sha256().newHasher().putString(value, Charset.forName("UTF-8")).hash().toString();
   }
 
-  Map<String, String> getExtraInfo(SysInfo sysInfo) {
-    ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+  Map<String, Object> getExtraInfo(SysInfo sysInfo) {
+    ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
     sysInfo.toMap().entrySet().forEach(entry -> {
       if (entry.getValue() != null) {
         builder.put(entry.getKey(), entry.getValue());
@@ -165,7 +165,7 @@ public class StatsInfo {
     stats.setDataCollectorVersion((String) info.get(DATA_COLLECTOR_VERSION));
     stats.setBuildRepoSha((String) info.get(BUILD_REPO_SHA));
     stats.setDpmEnabled((Boolean) info.get(DPM_ENABLED));
-    stats.setExtraInfo((Map<String, String>) info.get(EXTRA_INFO));
+    stats.setExtraInfo((Map<String, Object>) info.get(EXTRA_INFO));
   }
 
   public boolean rollIfNeeded(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo, long rollFrequencyMillis) {
