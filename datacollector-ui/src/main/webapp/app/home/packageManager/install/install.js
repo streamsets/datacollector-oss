@@ -33,10 +33,6 @@ angular
       failedLibraries: [],
       errorMap: {},
       registrationNeeded: false,
-      agreementCheckModel: {
-        hasEnterpriseConnectors: false,
-        agreementChecked: false,
-      },
 
       install: function(givenLibraries) {
         $scope.operationStatus = 'installing';
@@ -149,9 +145,6 @@ angular
       angular.forEach(libraryList, function(library) {
         if (library.stageLibraryManifest.stageLibId.indexOf('streamsets-datacollector-mapr_') !== -1) {
           $scope.maprStageLib = true;
-        }
-        if (library.stageLibraryManifest.stageLibLicense === 'StreamSetsEnterprise1.0') {
-          $scope.agreementCheckModel.hasEnterpriseConnectors = true;
         }
       });
     }

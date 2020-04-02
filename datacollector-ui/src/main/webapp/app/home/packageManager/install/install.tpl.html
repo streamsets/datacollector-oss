@@ -44,29 +44,6 @@
     </div>
     </div>
   </div>
-
-  <div ng-if="operationStatus !== 'complete'" class="eula-tos">
-    <div ng-if="agreementCheckModel.hasEnterpriseConnectors" class="alert alert-info checkbox" role="alert">
-
-      <p>Please note that these libraries are not available under the Apache 2.0 Open Source License.
-        You may access these libraries solely for internal, non-production use, by accepting our
-        Subscription Terms of Service (“TOS”) below.</p>
-
-
-      <p>Please note that the "Scope of Use" as defined in the TOS shall be for non-production evaluation purposes
-        only (see Section 3.7 of the TOS for details).</p>
-
-      <p>If you would like to use these StreamSets Stage Libraries in a production setting, you may enter into a separate commercial license.
-        Please contact us via this <a href="https://streamsets.com/connect-sdc" target="_blank">link</a> or
-        email <a href="mailto:sales@streamsets.com" target="_top">sales@streamsets.com</a> for more information.</p>
-
-      <label>
-        <input type="checkbox" name="agreement" ng-model="agreementCheckModel.agreementChecked"/>
-        By clicking this checkbox I agree to the <a href="https://streamsets.com/eula" target="_blank">StreamSets TOS</a>
-      </label>
-    </div>
-  </div>
-
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="cancel()"
@@ -75,7 +52,7 @@
 
   <button type="button" class="btn btn-primary" ng-click="install()"
           ng-if="operationStatus === 'incomplete'"
-          ng-disabled="registrationNeeded || agreementCheckModel.hasEnterpriseConnectors && !agreementCheckModel.agreementChecked"
+          ng-disabled="registrationNeeded"
           translate="global.form.install">Install</button>
 
   <button type="button" class="btn btn-primary" ng-click="retry()"
