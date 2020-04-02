@@ -21,6 +21,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
+import org.jetbrains.annotations.NotNull;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -30,12 +31,23 @@ import org.junit.rules.Timeout;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.mockito.Mockito.*;
 import static org.junit.Assert.*;
 
 public class TestSysInfo {
+
+  private static final String AZURE_PROVIDER = "azure";
+  private static final String AWS_METADATA_FIXTURE = "/com/streamsets/datacollector/usagestats/awsInstanceMetadata.json";
+  private static final String AZURE_METADATA_FIXTURE = "/com/streamsets/datacollector/usagestats/azureInstanceMetadata.json";
+  private static final String AWS_PROVIDER = "aws";
+  private static final String CLOUD_PROVIDER = "cloudProvider";
+  private static final String CLOUD_METADATA = "cloudMetadata";
+  private static final String JAVA_VERSION = "javaVersion";
 
   private static RuntimeInfo runtimeInfo;
   private static SysInfo sysInfo;
@@ -86,7 +98,7 @@ public class TestSysInfo {
   @Test
   public void testAzureParseAndRedact() throws Exception {
     final String azureJson = IOUtils.toString(this.getClass().getResource(
-        "/com/streamsets/datacollector/usagestats/azureInstanceMetadata.json"),
+        AZURE_METADATA_FIXTURE),
         Charsets.UTF_8
     );
     Map<String, Object> map = SysInfo.parseAndRedactMetadata(azureJson);
@@ -121,7 +133,7 @@ public class TestSysInfo {
   public void testAwsParse() throws Exception {
     // Though we will redact in SysInfo, the contents are already redacted by the shell script for aws
     final String awsJson = IOUtils.toString(this.getClass().getResource(
-        "/com/streamsets/datacollector/usagestats/awsInstanceMetadata.json"),
+        AWS_METADATA_FIXTURE),
         Charsets.UTF_8
     );
     Map<String, Object> map = SysInfo.parseAndRedactMetadata(awsJson);
@@ -188,10 +200,134 @@ public class TestSysInfo {
 
   @Test
   public void testToMap() {
-    Map<String, String> map = sysInfo.toMap();
+    Map<String, Object> map = sysInfo.toMap();
     assertEquals(sysInfo.getJavaVersion(), map.get("javaVersion"));
-    assertEquals(Boolean.toString(sysInfo.isUseCGroupMemorySet()), map.get("useCGroupMemorySet"));
+    assertEquals(sysInfo.isUseCGroupMemorySet(), map.get("useCGroupMemorySet"));
     // algorithm is generic, so just need to spot check
+  }
+
+  @Test
+  public void testEmptyCloudMetadataToMap() {
+    SysInfo localSysInfo = new SysInfo(runtimeInfo) {
+      @Override
+      protected <T> Future<T> createScriptFuture(String name, String script, Map<String, String> additionalEnv, StdOutConverter<T> converter) {
+        switch (name) {
+          case SysInfo.CLOUD_PROVIDER_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(SysInfo.UNKNOWN);
+          case SysInfo.CLOUD_METADATA_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(ImmutableMap.<String, Object>of());
+          default:
+            return (Future<T>) hardcodedFuture(null);
+        }
+      }
+    };
+    Map<String, Object> map = localSysInfo.toMap();
+    assertEquals(SysInfo.UNKNOWN, map.get(CLOUD_PROVIDER));
+    Map<String, Object> cloudMetadata = getInnerMap(map, CLOUD_METADATA);
+    assertNotNull(cloudMetadata);
+    assertEquals(0, cloudMetadata.size());
+
+    assertNotNullOrEmpty((String) map.get(JAVA_VERSION));
+  }
+
+  @Test
+  public void testAzureToMap() throws Exception {
+    final String azureJson = IOUtils.toString(this.getClass().getResource(
+        AZURE_METADATA_FIXTURE),
+        Charsets.UTF_8
+    );
+    SysInfo localSysInfo = new SysInfo(runtimeInfo) {
+      @Override
+      protected <T> Future<T> createScriptFuture(String name, String script, Map<String, String> additionalEnv, StdOutConverter<T> converter) {
+        switch (name) {
+          case SysInfo.CLOUD_PROVIDER_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(AZURE_PROVIDER);
+          case SysInfo.CLOUD_METADATA_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(parseAndRedactMetadata(azureJson));
+          default:
+            return (Future<T>) hardcodedFuture(null);
+        }
+      }
+    };
+
+    Map<String, Object> map = localSysInfo.toMap();
+    assertEquals(AZURE_PROVIDER, map.get("cloudProvider"));
+    Map<String, Object> cloudMetadata = getInnerMap(map, "cloudMetadata");
+    assertNotNullOrEmpty(cloudMetadata);
+    assertEquals("AzurePublicCloud", getInnerMap(map, "cloudMetadata", "compute").get("azEnvironment"));
+
+    assertNotNullOrEmpty((String) map.get("javaVersion"));
+  }
+
+  @Test
+  public void testAwsToMap() throws Exception {
+    final String awsJson = IOUtils.toString(this.getClass().getResource(
+        AWS_METADATA_FIXTURE),
+        Charsets.UTF_8
+    );
+    SysInfo localSysInfo = new SysInfo(runtimeInfo) {
+      @Override
+      protected <T> Future<T> createScriptFuture(String name, String script, Map<String, String> additionalEnv, StdOutConverter<T> converter) {
+        switch (name) {
+          case SysInfo.CLOUD_PROVIDER_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(AWS_PROVIDER);
+          case SysInfo.CLOUD_METADATA_SCRIPT_ID:
+            return (Future<T>) hardcodedFuture(parseAndRedactMetadata(awsJson));
+          default:
+            return (Future<T>) hardcodedFuture(null);
+        }
+      }
+    };
+
+    Map<String, Object> map = localSysInfo.toMap();
+    assertEquals(AWS_PROVIDER, map.get("cloudProvider"));
+    Map<String, Object> cloudMetadata = getInnerMap(map, "cloudMetadata");
+    assertNotNullOrEmpty(cloudMetadata);
+    assertEquals("amazonaws.com", getInnerMap(map, "cloudMetadata", "services").get("domain"));
+
+    assertNotNullOrEmpty((String) map.get("javaVersion"));
+  }
+
+  @Test
+  public void testToMapExceptionHandling() {
+    SysInfo localSysInfo = new SysInfo(runtimeInfo) {
+      @Override
+      protected <T> Future<T> createScriptFuture(String name, String script, Map<String, String> additionalEnv, StdOutConverter<T> converter) {
+        switch (name) {
+          case SysInfo.CLOUD_METADATA_SCRIPT_ID:
+            return new Future<T>() {
+              @Override
+              public boolean cancel(boolean mayInterruptIfRunning) {
+                return false;
+              }
+
+              @Override
+              public boolean isCancelled() {
+                return false;
+              }
+
+              @Override
+              public boolean isDone() {
+                return true;
+              }
+
+              @Override
+              public T get() throws InterruptedException, ExecutionException {
+                throw new RuntimeException("Code should swallow this exception");
+              }
+
+              @Override
+              public T get(long timeout, @NotNull TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
+                throw new RuntimeException("Code should swallow this exception");
+              }
+            };
+          default:
+            return (Future<T>) hardcodedFuture(null);
+        }
+      }
+    };
+    Map<String, Object> map = localSysInfo.toMap();
+    assertNull(map);
   }
 
   @Test

@@ -29,7 +29,7 @@ public class StatsBean {
   private String version;
   private String dataCollectorVersion;
   private String buildRepoSha;
-  private Map<String, String> extraInfo;
+  private Map<String, Object> extraInfo;
   private boolean dpmEnabled;
   private long startTime;
   private long endTime;
@@ -127,11 +127,11 @@ public class StatsBean {
     return this;
   }
 
-  public Map<String, String> getExtraInfo() {
+  public Map<String, Object> getExtraInfo() {
     return extraInfo;
   }
 
-  public StatsBean setExtraInfo(Map<String, String> extraInfo) {
+  public StatsBean setExtraInfo(Map<String, Object> extraInfo) {
     this.extraInfo = extraInfo;
     return this;
   }

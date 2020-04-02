@@ -68,7 +68,7 @@ import static org.mockito.Mockito.when;
 public class TestStatsCollectorTask {
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-  private static final Map<String, String> DEFAULT_SYS_INFO_MAP = ImmutableMap.of("cloudProvider", SysInfo.UNKNOWN);
+  private static final Map<String, Object> DEFAULT_SYS_INFO_MAP = ImmutableMap.of("cloudProvider", SysInfo.UNKNOWN);
   private static String POST_TELEMETRY_URL = "https://fake-url.com/post/telemetry/here";
 
   private Runnable runnable;

@@ -43,7 +43,7 @@ public class ActiveStats {
   private String productName;
   private String dataCollectorVersion;
   private String buildRepoSha;
-  private Map<String, String> extraInfo;
+  private Map<String, Object> extraInfo;
   private boolean dpmEnabled;
   private UsageTimer upTime;
   private Map<String, UsageTimer> pipelines;
@@ -128,11 +128,11 @@ public class ActiveStats {
     return this;
   }
 
-  public Map<String, String> getExtraInfo() {
+  public Map<String, Object> getExtraInfo() {
     return extraInfo;
   }
 
-  public ActiveStats setExtraInfo(Map<String, String> extraInfo) {
+  public ActiveStats setExtraInfo(Map<String, Object> extraInfo) {
     this.extraInfo = extraInfo;
     return this;
   }
