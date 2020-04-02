@@ -385,5 +385,18 @@
                 translate="global.form.close">Close</button>
       </div>
     </div>
+
+    <div ng-switch-when="4">
+      <div class="modal-body">
+        <p>
+          Congratulations, activation is complete! Reload to continue.
+        </p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="reset" class="btn btn-primary" 
+          ng-click="closeAndReload()">Reload</button>
+      </div>
+    </div>
   </div>
 </form>

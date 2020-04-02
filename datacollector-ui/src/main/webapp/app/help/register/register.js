@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $rootScope, $modalInstance, $location, $interval,
+  .controller('RegisterModalInstanceController', function ($scope, $rootScope, $modalInstance, $location, $interval, $q,
     api, activationInfo, configuration, authService) {
     
     var activationUpdateInterval;
@@ -78,6 +78,13 @@ angular
       }
     }
 
+    /**
+     * Go to activation confirmation page
+     */
+    function goToConfirmation() {
+      $scope.activationStep = 4;
+    }
+
     angular.extend($scope, {
       common: {
         errors: []
@@ -103,8 +110,7 @@ angular
 
       uploadActivationText: function() {
         uploadActivation($scope.activationData.activationText).then(function(res) {
-          $modalInstance.dismiss();
-          window.location.reload();
+          goToConfirmation();
         });
       },
 
@@ -144,7 +150,8 @@ angular
           $scope.activationData.postalCode,
           $scope.activationData.sdcId,
           $scope.activationData.sdcVersion,
-          $location.protocol() + '://' + $location.host() + ':' + $location.port()
+          window.location.href
+          // $location.protocol() + '://' + $location.host() + ':' + $location.port()
         ).then(function(res) {
           $scope.operationInProgress = false;
           $scope.activationStep = 2;
@@ -175,12 +182,13 @@ angular
       $scope.activationData.activationText = decodeURI(getActivationKeyFromURL());
     }
 
-    api.admin.getSdcId().then(function(res) {
-      $scope.activationData.sdcId = res.data.id;
-    });
-    api.admin.getBuildInfo().then(function(res) {
-      if (res && res.data) {
-        $scope.activationData.sdcVersion = res.data.version;
+    $q.all([api.admin.getSdcId(), api.admin.getBuildInfo()]).then( function(results) {
+      $scope.activationData.sdcId = results[0].data.id;
+      if (results[1] && results[1].data) {
+        $scope.activationData.sdcVersion = results[1].data.version;
+      }
+      if (getActivationKeyFromURL()) {
+        $scope.uploadActivationText();
       }
     });
 
