@@ -4,7 +4,14 @@
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
-    <h3 class="modal-title">Activation</h3>
+    <div ng-switch="activationStep">
+      <div ng-switch-when="1">
+        <h3 class="modal-title">Register</h3>
+      </div>
+      <div ng-switch-default>
+        <h3 class="modal-title">Activation</h3>
+      </div>
+    </div>
   </div>
   <div ng-switch="activationStep">
     <div ng-switch-when="1">
