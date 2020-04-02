@@ -6,20 +6,6 @@
   <h3 class="modal-title" translate="home.statsOptIn.headerTitle">Improve Data Collector with Usage Statistics</h3>
 </div>
 <div class="modal-body">
-  <p> StreamSets would like to collect anonymized usage statistics about features used, system performance, etc.
-    This information helps us understand how users actually use the product in order to improve product performance and
-    guide decisions regarding future development of the product. As with all development efforts, improvements to
-    open source products help the whole community.
-  </p>
-
-  <p>StreamSets is committed to protecting user privacy. Collection of these usage statistics will not include the
-    collection of any sensitive user information, such as stage configuration details, pipeline names, credentials, etc.
-    No personally identifiable information will be collected. StreamSets will use these anonymized usage statistics for
-    its own internal development of the product and support of its users. Information about usage statistics may be
-    shared with the community on an anonymized aggregated basis in the form of blog posts and other published
-    information about how the product is commonly used.
-  </p>
-
   <div ng-if="!isLoading">
     <div class="checkbox">
       <label>
@@ -27,6 +13,7 @@
       </label>
     </div>
   </div>
+  <p>Review the <a href="https://streamsets.com/privacy-policy/" target="_blank">StreamSets Privacy Policy</a></p>
 </div>
 <div class="modal-footer">
   <button type="reset" class="btn btn-default" ng-click="cancel()"
