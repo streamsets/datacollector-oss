@@ -19,8 +19,12 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $modalInstance, $location, api, activationInfo, configuration, 
-    authService) {
+  .controller('RegisterModalInstanceController', function ($scope, $rootScope, $modalInstance, $location, $interval,
+    api, activationInfo, configuration, authService) {
+    
+    var activationUpdateInterval;
+    var previouslyValid = false;
+
     /**
      * Upload the activation key
      * @param {String} keyText
@@ -177,6 +181,28 @@ angular
     api.admin.getBuildInfo().then(function(res) {
       if (res && res.data) {
         $scope.activationData.sdcVersion = res.data.version;
+      }
+    });
+
+    // Check if the user was valid due to limited number of stage libraries
+    previouslyValid = $scope.activationInfo.info.valid;
+    if (getInitialActivationStep($scope.activationInfo) === 1 && previouslyValid) {
+      activationUpdateInterval = $interval(function() {
+        if ($scope.activationStep === 2) {
+          api.activation.getActivation().then(function(res) {
+            var activationInfo = res.data;
+            if(authService.daysUntilProductExpiration(activationInfo.info.expiration) > 0) {
+              $rootScope.common.activationInfo = activationInfo;
+              $scope.cancel();
+            }
+          });
+        }
+      }, 2000);      
+    }
+
+    $scope.$on('$destroy', function() {
+      if (angular.isDefined(activationUpdateInterval)) {
+        $interval.cancel(activationUpdateInterval);
       }
     });
   });
