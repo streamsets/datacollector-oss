@@ -616,13 +616,6 @@ angular.module('dataCollectorApp')
             }
           }
 
-          // Modal for Usage Statistics opt in
-          if ($rootScope.isAdmin) {
-            if (!statsResult.data.opted && !registrationModalShown) {
-              $rootScope.common.onStatOptInClick();
-            }
-          }
-
           // Analytics tracking
           if (buildResult && buildResult.data) {
             $timeout(
