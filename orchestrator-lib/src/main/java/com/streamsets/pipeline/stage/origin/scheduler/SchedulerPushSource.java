@@ -32,6 +32,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -62,10 +63,24 @@ public class SchedulerPushSource implements PushSource {
     this.context = context;
     errorQueue = new ArrayBlockingQueue<>(100);
     errorList = new ArrayList<>(100);
-    SchedulerFactory schedulerFactory = new StdSchedulerFactory();
     try {
+      // Default values
+      Properties properties = new Properties();
+      properties.setProperty(StdSchedulerFactory.PROP_SCHED_INSTANCE_NAME, context.getPipelineId());
+      properties.setProperty(StdSchedulerFactory.PROP_SCHED_RMI_EXPORT, "false");
+      properties.setProperty(StdSchedulerFactory.PROP_SCHED_RMI_PROXY, "false");
+      properties.setProperty(StdSchedulerFactory.PROP_SCHED_WRAP_JOB_IN_USER_TX, "false");
+      properties.setProperty(StdSchedulerFactory.PROP_THREAD_POOL_CLASS, "org.quartz.simpl.SimpleThreadPool");
+      properties.setProperty("org.quartz.threadPool.threadCount", "10");
+      properties.setProperty("org.quartz.threadPool.threadPriority", "5");
+      properties.setProperty("org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread", "true");
+      properties.setProperty("org.quartz.jobStore.misfireThreshold", "60000");
+      properties.setProperty("org.quartz.jobStore.class", "org.quartz.simpl.RAMJobStore");
+
+      SchedulerFactory schedulerFactory = new StdSchedulerFactory(properties);
       scheduler = schedulerFactory.getScheduler();
     } catch (Exception ex) {
+      LOG.error(ex.toString(), ex);
       issues.add(
           context.createConfigIssue(
               Groups.CRON.getLabel(),
@@ -83,17 +98,18 @@ public class SchedulerPushSource implements PushSource {
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) {
     try {
       JobDetail job = JobBuilder.newJob(SchedulerJob.class)
-          .withIdentity("dataCollectorJob", "dataCollectorJobGroup")
+          .withIdentity(context.getPipelineId(), "dataCollectorJobGroup")
           .build();
       CronScheduleBuilder cronScheduleBuilder = CronScheduleBuilder.cronSchedule(conf.cronExpression)
           .inTimeZone(TimeZone.getTimeZone(ZoneId.of(conf.timeZoneID)));
       cronTrigger = TriggerBuilder.newTrigger()
-          .withIdentity("dataCollectorJob", "dataCollectorJobGroup")
+          .withIdentity(context.getPipelineId(), "dataCollectorJobGroup")
           .withSchedule(cronScheduleBuilder)
           .build();
 
       scheduler.getContext().put(PUSH_SOURCE_CONTEXT, context);
       scheduler.scheduleJob(job, cronTrigger);
+
       scheduler.start();
 
       while (!context.isStopped()) {
