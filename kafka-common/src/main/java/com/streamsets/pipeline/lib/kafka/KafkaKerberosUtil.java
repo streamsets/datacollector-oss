@@ -82,6 +82,9 @@ public class KafkaKerberosUtil {
   }
 
   public static void deleteUserKeytabIfExists(String keytabFileName, Stage.Context context) {
+    if(keytabFileName == null) {
+      return;
+    }
     String keytabDir = context.getConfiguration().get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION);
     Path keytabDirPath = Paths.get(keytabDir).resolve(KAFKA_KEYTAB_SUBDIR);
     if (Files.exists(keytabDirPath)) {
