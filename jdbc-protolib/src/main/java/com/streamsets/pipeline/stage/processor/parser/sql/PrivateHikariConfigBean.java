@@ -100,7 +100,7 @@ public class PrivateHikariConfigBean {
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     underlying = new HikariPoolConfigBean();
-    underlying.setConnectionString(connectionString);
+    underlying.connectionString = connectionString;
     underlying.useCredentials = useCredentials;
     underlying.username = username;
     underlying.password = password;
