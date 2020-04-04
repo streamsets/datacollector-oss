@@ -26,9 +26,10 @@ import javax.ws.rs.core.Response;
 public class TestActivationResource {
 
   @Test
-  public void testActivationResource() throws Exception {
+  public void testActivationResourceStatsCollectorNotOpted() throws Exception {
     Activation activation = Mockito.mock(Activation.class);
     StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
+    Mockito.when(statsCollector.isOpted()).thenReturn(false);
     ActivationResource resource = new ActivationResource(activation, statsCollector);
 
     Response response1 = resource.updateActivation("");
@@ -39,5 +40,23 @@ public class TestActivationResource {
     Assert.assertEquals(Response.Status.OK.getStatusCode(), response2.getStatus());
     Mockito.verify(activation).setActivationKey(Mockito.anyString());
     Mockito.verify(statsCollector).setActive(true);
+  }
+
+  @Test
+  public void testActivationResourceStatsCollectorOpted() throws Exception {
+    Activation activation = Mockito.mock(Activation.class);
+    StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
+    Mockito.when(statsCollector.isOpted()).thenReturn(true);
+
+    ActivationResource resource = new ActivationResource(activation, statsCollector);
+
+    Response response1 = resource.updateActivation("");
+    Assert.assertEquals(Response.Status.NOT_IMPLEMENTED.getStatusCode(), response1.getStatus());
+
+    Mockito.when(activation.isEnabled()).thenReturn(true);
+    Response response2 = resource.updateActivation("");
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), response2.getStatus());
+    Mockito.verify(activation).setActivationKey(Mockito.anyString());
+    Mockito.verify(statsCollector, Mockito.never()).setActive(Mockito.anyBoolean());
   }
 }
