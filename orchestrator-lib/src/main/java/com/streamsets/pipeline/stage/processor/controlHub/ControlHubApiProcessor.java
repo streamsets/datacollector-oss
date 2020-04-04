@@ -126,8 +126,8 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
 
     httpClientCommon.init(issues, getContext());
 
-    bodyVars = getContext().createELVars();
-    bodyEval = getContext().createELEval(BASE_URL_CONFIG_NAME);
+    baseUrlVars = getContext().createELVars();
+    baseUrlEval = getContext().createELEval(BASE_URL_CONFIG_NAME);
 
     bodyVars = getContext().createELVars();
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
