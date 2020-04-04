@@ -68,7 +68,9 @@ public class ActivationResource {
   public Response updateActivation(String activationKey) throws PipelineException, IOException {
     if (activation.isEnabled()) {
       activation.setActivationKey(activationKey);
-      statsCollector.setActive(true);
+      if (!statsCollector.isOpted()) {
+        statsCollector.setActive(true);
+      }
       return Response.status(Response.Status.OK).entity(activation).build();
     } else {
       return Response.status(Response.Status.NOT_IMPLEMENTED).build();
