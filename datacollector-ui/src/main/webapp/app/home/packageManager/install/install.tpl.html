@@ -15,6 +15,12 @@
   </div>
 
   <div ng-if="operationStatus !== 'complete'">
+    <div ng-if="registrationNeeded" class="alert alert-info" role="alert">
+      <p>To install additional libraries, you will need to register with StreamSets.</p>
+      <div class="register-button">
+        <button class="btn btn-primary" ng-click="register()">Register</button>
+      </div>
+    </div>
     <div ng-if="maprStageLib" class="alert alert-info" role="alert">
       You must perform additional steps to install MapR stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Installation/MapR-Prerequisites.html" target="_blank">MapR Prerequisites</a>.
     </div>
@@ -33,17 +39,7 @@
       <a href="#" ng-click="showError(library)" ng-show="hasError(library)">show error</a>
     </li>
   </ul>
-
-  <div ng-if="operationStatus !== 'complete'">
-    <div ng-if="registrationNeeded" class="alert alert-info" role="alert">
-
-      <p>To install additional libraries, you will need to register with StreamSets.</p>
-
-      <div class="register-button">
-        <button class="btn btn-primary" ng-click="register()">Register</button>
-    </div>
-    </div>
-  </div>
+  
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-default" ng-click="cancel()"

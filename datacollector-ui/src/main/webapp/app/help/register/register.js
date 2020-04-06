@@ -109,7 +109,9 @@ angular
         country: '',
         postalCode: '',
         sdcId: '',
-        sdcVersion: ''
+        sdcVersion: '',
+        agreedToTerms: false,
+        agreedToPrivacyPolicy: false
       },
 
       uploadActivationText: function() {
