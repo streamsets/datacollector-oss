@@ -19,23 +19,25 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.config.PipelineConfiguration;
-import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.pipeline.api.ErrorCode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.stream.Collectors;
 
 public class StatsInfo {
+  private static final Logger LOG = LoggerFactory.getLogger(StatsInfo.class);
+
   public static final String SDC_ID = "sdcId";
   public static final String PRODUCT_NAME = "productName";
   public static final String DATA_COLLECTOR_VERSION = "dataCollectorVersion";
@@ -168,15 +170,27 @@ public class StatsInfo {
     stats.setExtraInfo((Map<String, Object>) info.get(EXTRA_INFO));
   }
 
-  public boolean rollIfNeeded(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo, long rollFrequencyMillis) {
+  public boolean rollIfNeeded(
+      BuildInfo buildInfo,
+      RuntimeInfo runtimeInfo,
+      SysInfo sysInfo,
+      long rollFrequencyMillis,
+      boolean forceNextRoll) {
     Map<String, Object> currentSys = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
 
     boolean existingStats = getActiveStats().getDataCollectorVersion() != null && !getActiveStats().getDataCollectorVersion().isEmpty();
-    boolean sysChange = existingStats && !currentSys.equals(getSystemInfo(getActiveStats()));
+    Map<String, Object> filteredNewSys = filterSystemInfoDynamicEntries(getSystemInfo(getActiveStats()));
+    boolean sysChange = existingStats && !filterSystemInfoDynamicEntries(currentSys).equals(filteredNewSys);
 
     boolean overFrequency = existingStats &&
-        (System.currentTimeMillis() - getActiveStats().getStartTime() > rollFrequencyMillis);
-    boolean roll = !existingStats || sysChange || overFrequency;
+        (System.currentTimeMillis() - getActiveStats().getStartTime() > (rollFrequencyMillis * 0.99));
+    boolean roll = forceNextRoll || !existingStats || sysChange || overFrequency;
+    LOG.debug("Rolling {} due to isForceNextReport()={} || !existingStats={} || sysChange={} || overFrequency={}",
+        roll, forceNextRoll, existingStats, sysChange, overFrequency);
+    if (sysChange) {
+      LOG.debug("previous sys, filtered: {}", filterSystemInfoDynamicEntries(currentSys));
+      LOG.debug("new sys: {}", filteredNewSys);
+    }
     if (roll) {
       doWithLock(() -> {
         if (!existingStats) {
@@ -199,6 +213,18 @@ public class StatsInfo {
       }, true);
     }
     return roll;
+  }
+
+  /**
+   * Filter out system info for dynamic entries - entries which will normally change throughout the lifecycle of this
+   * JVM.
+   * @param sysInfo to filter
+   * @return map with relatively stable settings
+   */
+  private Map<String, Object> filterSystemInfoDynamicEntries(Map<String, Object> sysInfo) {
+    return sysInfo.entrySet().stream()
+        .filter(x -> !x.getKey().equals(EXTRA_INFO))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 
   public StatsInfo snapshot() {
