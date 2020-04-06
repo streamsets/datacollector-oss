@@ -18,7 +18,7 @@
       <div class="modal-body form-horizontal">
         <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
         <p>
-          Before use, you must activate this copy of StreamSets Data Collector (SDC).
+          Before use, you must activate your copy of StreamSets Data Collector (SDC).
           Enter your contact information, and we will send you a key.
         </p>
         <div class="form-group">
@@ -288,22 +288,36 @@
           </div>
         </div>
         <p>
-          By submitting this form, you agree to be bound by our
+          To activate your copy of StreamSets Data Collector (SDC), you must agree to our
           <a href="https://streamsets.com/legal/tos/" target="_blank">Terms of Service</a>
-          and acknowledge our <a href="https://streamsets.com/privacy-policy/" target="_blank">Privacy Policy</a>.
-          This product automatically
-          collects analytics data (which includes limited personal data) and is used
-          by StreamSets to improve our products and inform our sales and marketing
-          programs.  You can find out more about what data is collected, how it is used,
-          and your associated rights, including how you may opt out of collection
-          <a href="https://streamsets.com/privacy-policy/" target="_blank">here</a>.
+          and <a href="https://streamsets.com/privacy-policy/" target="_blank">Privacy Policy</a>.
         </p>
+        <p>
+          This product also automatically collects analytics data (which includes limited
+          personal data) and is used by StreamSets to improve our products and inform our sales and marketing
+          programs. You can find out more about what data is collected, how it is used,
+          and your associated rights <a href="https://streamsets.com/privacy-policy/" target="_blank">here</a>, 
+          including how you may opt out of collection.
+        </p>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="activationData.agreedToTerms">
+            I have read and agree to the <a href="https://streamsets.com/legal/tos/" target="_blank">Terms of Service</a>
+          </label>
+        </div>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" ng-model="activationData.agreedToPrivacyPolicy">
+            I have read and acknowledge the <a href="https://streamsets.com/privacy-policy/" target="_blank">Privacy Policy</a>
+          </label>
+        </div>
       </div>
       <div class="modal-footer">
         <div class="loading-text" ng-if="operationInProgress">Registration may take up to 30 seconds</div>
-        <button type="submit" class="btn btn-primary" ng-disabled="operationInProgress">
+        <button type="submit" class="btn btn-primary" 
+          ng-disabled="operationInProgress || !activationData.agreedToTerms || !activationData.agreedToPrivacyPolicy">
           <i class="fa fa-spinner fa-spin" ng-if="operationInProgress"></i>
-          Register
+          Agree to Terms and Register
         </button>
       </div>
     </div>
