@@ -170,6 +170,11 @@ public final class MSQueryUtil {
         greater = String.format(WHERE_CLAUSE, String.format(OR_CLAUSE, condition1, condition2));
       }
 
+      String offsetMapSysChangeVersionValue = offsetMap.get(SYS_CHANGE_VERSION);
+      if (!offsetMapSysChangeVersionValue.equals("0")) {
+        offset = Long.parseLong(offsetMapSysChangeVersionValue);
+      }
+
       if (includeJoin) {
         return String.format(
             CHANGE_TRACKING_QUERY,
