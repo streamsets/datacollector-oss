@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
+import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -54,7 +55,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -62,8 +62,6 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-
-import static org.mockito.Mockito.when;
 
 public class TestStatsCollectorTask {
 
@@ -156,7 +154,7 @@ public class TestStatsCollectorTask {
     Mockito.verify(scheduler, Mockito.times(1)).scheduleAtFixedRate(
         Mockito.eq(runnable),
         Mockito.eq(60L),
-        Mockito.eq(60L * 60 * 24),
+        Mockito.eq(60L),
         Mockito.eq(TimeUnit.SECONDS)
     );
 
@@ -526,12 +524,12 @@ public class TestStatsCollectorTask {
     );
 
     // two times
-    task.getRunnable().run();
+    task.getRunnable(false).run();
     Assert.assertTrue(task.isOpted());
     Assert.assertTrue(task.isActive());
 
     // count resets because it works now
-    task.getRunnable().run();
+    task.getRunnable(false).run();
     Assert.assertTrue(task.isOpted());
     Assert.assertTrue(task.isActive());
     Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
@@ -552,7 +550,7 @@ public class TestStatsCollectorTask {
         if (doOnceOnly == 0 && k == 2 && i == 3) {
 
           // count resets because it works now
-          task.getRunnable().run();
+          task.getRunnable(false).run();
           Assert.assertTrue(task.isOpted());
           Assert.assertTrue(task.isActive());
           Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
@@ -563,7 +561,7 @@ public class TestStatsCollectorTask {
           i = -1;
           doOnceOnly = 1;
         } else {
-          task.getRunnable().run();
+          task.getRunnable(false).run();
           Assert.assertTrue(task.isOpted());
           Assert.assertTrue(task.isActive());
           Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
@@ -571,7 +569,7 @@ public class TestStatsCollectorTask {
       }
 
       // six times - we now try to back off
-      task.getRunnable().run();
+      task.getRunnable(false).run();
       Assert.assertTrue(task.isOpted());
       // Keep backing off while it's less than 3
       if (k < 3) {
@@ -662,8 +660,6 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
-
     StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
@@ -700,6 +696,41 @@ public class TestStatsCollectorTask {
     Mockito.verify(task, Mockito.times(1)).saveStats();
 
     Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
+    task.stop();
+  }
+
+  @Test
+  public void testUpgradeFrom313WithOptedTrue() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTaskAndRunnable(buildInfo, runtimeInfo, config, scheduler);
+
+    try (OutputStream os = new FileOutputStream(task.getOptFile())) {
+      // This is copied from a real 3.13.0 install
+      IOUtils.write(
+          "{\n" +
+              "  \"stats.active\" : true,\n" +
+              "  \"stats.lastReport\" : 1585760851613\n" +
+              "}",
+          os);
+    }
+
+    task.init();
+
+    Assert.assertTrue(task.isOpted());
+    Assert.assertTrue(task.isActive());
+
+    Assert.assertEquals("v1", task.getStatsInfo().getActiveStats().getDataCollectorVersion());
     task.stop();
   }
 
@@ -782,6 +813,98 @@ public class TestStatsCollectorTask {
   }
 
   @Test
+  public void testRunnableMultipleRollsAndReport() {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("abc");
+    Mockito.when(buildInfo.getBuiltDate()).thenReturn(new Date().toString());
+    Mockito.when(buildInfo.getBuiltBy()).thenReturn("System");
+
+    String sdcId = "0123456789-0123456789-0123456789";
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    Mockito.when(task.isActive()).thenReturn(true);
+    SysInfo sysInfo = task.getSysInfo();
+
+    StatsInfo statsInfo = Mockito.spy(new StatsInfo());
+    Mockito.when(task.getStatsInfo()).thenReturn(statsInfo);
+    statsInfo.setCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
+
+    long rollFrequencyMillis = task.getRollFrequencyMillis();
+    Assert.assertEquals(TimeUnit.HOURS.toMillis(StatsCollectorTask.ROLL_PERIOD_CONFIG_MAX), rollFrequencyMillis);
+    int expectedRolls = 0;
+    int expectedReports = 0;
+    int expectedSaves = 0;
+
+    // first run, do initial roll and report with force=true
+    Runnable runnable = task.getRunnable(true);
+    runnable.run();
+    expectedRolls++;
+    expectedReports++;
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+
+    // run again, should just save now that we don't force
+    runnable = task.getRunnable(false);
+    runnable.run();
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+
+    // run after roll period but before report period
+    Mockito.when(task.getRollFrequencyMillis()).thenReturn(0L);
+    runnable.run();
+    expectedRolls++;
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+
+    // run after report period
+    Mockito.when(task.getReportPeriodSeconds()).thenReturn(0L);
+    runnable.run();
+    expectedRolls++;
+    expectedReports++;
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+
+    // reset periods and make sure we only save
+    Mockito.when(task.getRollFrequencyMillis()).thenReturn(
+        TimeUnit.HOURS.toMillis(StatsCollectorTask.ROLL_PERIOD_CONFIG_MAX));
+    Mockito.when(task.getReportPeriodSeconds()).thenReturn(
+        (long) StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT);
+    runnable.run();
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+
+    // stop task and make sure we do one full set of activity
+    // we didn't properly start statsInfo, so fake the stop call else it will throw
+    Mockito.doNothing().when(statsInfo).stopSystem();
+    task.stopTask();
+    expectedRolls++;
+    expectedReports++;
+    expectedSaves++;
+    Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(statsInfo).stopSystem();
+  }
+
+  @Test
   public void testSkipSnapshotTelemetry() throws Exception {
     File testDir = createTestDir();
 
@@ -858,9 +981,10 @@ public class TestStatsCollectorTask {
     Mockito.verify(scheduler).scheduleAtFixedRate(
         Matchers.any(Runnable.class),
         Matchers.eq(60L),
-        Matchers.eq(120L),
+        Matchers.eq(60L),
         Mockito.eq(TimeUnit.SECONDS)
     );
+    Assert.assertEquals(120, task.getReportPeriodSeconds());
 
     scheduler = Mockito.mock(SafeScheduledExecutorService.class);
     //Set it to 48 hours - max at 24 hours
@@ -871,9 +995,12 @@ public class TestStatsCollectorTask {
     Mockito.verify(scheduler).scheduleAtFixedRate(
         Matchers.any(Runnable.class),
         Matchers.eq(60L),
-        Matchers.eq(Long.valueOf(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT).longValue()),
+        Matchers.eq(60L),
         Mockito.eq(TimeUnit.SECONDS)
     );
+    Assert.assertEquals(
+        Long.valueOf(StatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS_DEFAULT).longValue(),
+        task.getReportPeriodSeconds());
   }
 
   @Test
@@ -1091,7 +1218,7 @@ public class TestStatsCollectorTask {
     if (dataDir != null) {
       Mockito.when(ret.getDataDir()).thenReturn(dataDir.getAbsolutePath());
     }
-    when(ret.getLibexecDir()).thenReturn(
+    Mockito.when(ret.getLibexecDir()).thenReturn(
         System.getenv("PWD").replace("container/src/main/.*","") + "/dist/src/main/libexec");
     return ret;
   }
@@ -1105,7 +1232,7 @@ public class TestStatsCollectorTask {
     StatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, true);
 
     runnable = Mockito.mock(Runnable.class);
-    Mockito.doReturn(runnable).when(spy).getRunnable();
+    Mockito.doReturn(runnable).when(spy).getRunnable(Mockito.anyBoolean());
 
     return spy;
   }

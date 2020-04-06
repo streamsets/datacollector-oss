@@ -192,7 +192,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
               opted = true;
               active = (Boolean) map.get(STATS_ACTIVE_KEY);
             }
-            if (active) {
+            if (isActive()) {
               if (map.containsKey(STATS_LAST_REPORT_KEY)) {
                 lastReport = (Long) map.get(STATS_LAST_REPORT_KEY);
               }
@@ -204,7 +204,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
           LOG.warn("Stats collection opt-in error, switching off and re-opting. Error: {}", ex.getMessage(), ex);
         }
       }
-      if (active) {
+      if (isActive()) {
         if (statsFile.exists()) {
           DataStore ds = new DataStore(statsFile);
           try {
@@ -241,7 +241,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
           );
         }
       }
-      if (!active) {
+      if (!isActive()) {
         try {
           if (statsFile.exists()) {
             if (statsFile.delete()) {
@@ -258,12 +258,12 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       }
     }
     if (!getRuntimeInfo().isClusterSlave()) {
-      LOG.info("Stats Collection, opted '{}, active '{}'", opted, active);
+      LOG.info("Stats Collection, opted '{}, active '{}'", opted, isActive());
     }
     // when disabled all persistency/reporting done by the Runnable is a No Op.
     getStatsInfo().startSystem();
-    getRunnable().run();
-    future = executorService.scheduleAtFixedRate(getRunnable(), 60, getReportPeriodSeconds() , TimeUnit.SECONDS);
+    getRunnable(true).run();
+    future = executorService.scheduleAtFixedRate(getRunnable(false), 60, 60 , TimeUnit.SECONDS);
   }
 
   long getReportPeriodSeconds() {
@@ -273,54 +273,78 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     );
   }
 
-  Runnable getRunnable() {
+  Runnable getRunnable(boolean forceRollAndReport) {
     return () -> {
-      if (active) {
-        if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis())) {
-          LOG.debug("Stats collection data rolled");
-        }
-        long defaultReportPeriod =  getReportPeriodSeconds();
-        if (!getStatsInfo().getCollectedStats().isEmpty()) {
-          LOG.debug("Reporting");
-          if (reportStats(getStatsInfo().getCollectedStats())) {
-            LOG.debug("Reported");
-            reportStatsFailedCount = 0;
-            extendedReportStatsFailedCount = 0;
-            getStatsInfo().getCollectedStats().clear();
-          } else {
-            reportStatsFailedCount++;
-            LOG.debug("Reporting has failed {} time(s) in a row", reportStatsFailedCount);
-            if (reportStatsFailedCount > REPORT_STATS_FAILED_COUNT_LIMIT) {
+      synchronized (this) {
+        /*
+        Roll every 1 hr, or on initial run
+        Report every 24 hrs, on initial run
+        Save stats every 60s (protects against crashes)
+        On graceful shutdown, this is run one last time as well (mostly to guarantee save stats)
+        */
+        if (isActive()) {
+          if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis(), forceRollAndReport)) {
+            LOG.debug("Stats collection data rolled");
+          }
+          if (shouldReport(forceRollAndReport)) {
+            LOG.debug("Reporting");
+            List<StatsBean> collectedStats = getStatsInfo().getCollectedStats();
+            if (reportStats(collectedStats)) {
+              LOG.debug("Reported");
               reportStatsFailedCount = 0;
-              extendedReportStatsFailedCount++;
-              if (extendedReportStatsFailedCount > EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT) {
-                LOG.warn("Reporting has failed too many times and will be switched off", reportStatsFailedCount);
-                extendedReportStatsFailedCount = 0;
-                future.cancel(false);
-                future = executorService.scheduleAtFixedRate(
-                    getRunnable(),
-                    defaultReportPeriod,
-                    defaultReportPeriod,
-                    TimeUnit.SECONDS
-                );
-                setActive(false);
-              } else {
-                int delay = (int)Math.pow(2, extendedReportStatsFailedCount - 1);
-                LOG.warn("Reporting will back off for {} day(s)", delay);
-                future.cancel(false);
-                future = executorService.scheduleAtFixedRate(
-                    getRunnable(),
-                    delay * defaultReportPeriod,
-                    defaultReportPeriod,
-                    TimeUnit.SECONDS
-                );
+              extendedReportStatsFailedCount = 0;
+              getStatsInfo().getCollectedStats().clear();
+            } else {
+              reportStatsFailedCount++;
+              LOG.debug("Reporting has failed {} time(s) in a row", reportStatsFailedCount);
+              if (reportStatsFailedCount > REPORT_STATS_FAILED_COUNT_LIMIT) {
+                reportStatsFailedCount = 0;
+                extendedReportStatsFailedCount++;
+                long defaultReportPeriod = getReportPeriodSeconds();
+                if (extendedReportStatsFailedCount > EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT) {
+                  LOG.warn("Reporting has failed too many times and will be switched off", reportStatsFailedCount);
+                  extendedReportStatsFailedCount = 0;
+                  future.cancel(false);
+                  future = executorService.scheduleAtFixedRate(
+                      getRunnable(false),
+                      defaultReportPeriod,
+                      defaultReportPeriod,
+                      TimeUnit.SECONDS
+                  );
+                  setActive(false);
+                } else {
+                  int delay = (int) Math.pow(2, extendedReportStatsFailedCount - 1);
+                  LOG.warn("Reporting will back off for {} day(s)", delay);
+                  future.cancel(false);
+                  future = executorService.scheduleAtFixedRate(
+                      getRunnable(false),
+                      delay * defaultReportPeriod,
+                      defaultReportPeriod,
+                      TimeUnit.SECONDS
+                  );
+                }
               }
             }
           }
+          saveStats();
         }
-        saveStats();
       }
     };
+  }
+
+  private boolean shouldReport(boolean forceNextReport) {
+    if (getStatsInfo().getCollectedStats().isEmpty()) {
+      return false;
+    }
+    if (forceNextReport) {
+      LOG.debug("shouldReport because next report is forced");
+      return true;
+    }
+    long oldestStartTime = getStatsInfo().getCollectedStats().get(0).getStartTime();
+    long delta = System.currentTimeMillis() - oldestStartTime;
+    boolean report = delta > (TimeUnit.SECONDS.toMillis(getReportPeriodSeconds()) * 0.99);
+    LOG.debug("shouldReport returning {} with oldest start time {} delta {}", report, oldestStartTime, delta);
+    return report;
   }
 
   protected boolean reportStats(List<StatsBean> stats) {
@@ -443,7 +467,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       getFuture().cancel(false);
     }
     getStatsInfo().stopSystem();
-    getRunnable().run();
+    getRunnable(true).run();
     super.stopTask();
   }
 
