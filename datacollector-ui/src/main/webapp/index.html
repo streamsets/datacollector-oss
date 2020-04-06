@@ -211,6 +211,13 @@
               </a>
             </li>
 
+            <li ng-if="common.activationInfo && common.activationInfo.enabled">
+              <a href="javascript:;" ng-click="common.showRegistrationModal()">
+                <span class="fa fa-key"></span>
+                <span translate="global.menu.admin.activation">Activation</span>
+              </a>
+            </li>
+
             <li>
               <a href="javascript:;"
                  ng-if="common.userName && isAuthorized([userRoles.admin])"
@@ -403,13 +410,6 @@
             </li>
 
             <li role="presentation" class="divider"></li>
-
-            <li ng-if="common.activationInfo && common.activationInfo.enabled">
-              <a href="javascript:;" ng-click="common.showRegistrationModal()">
-                <span class="fa fa-key"></span>
-                <span translate="global.menu.help.register">Register</span>
-              </a>
-            </li>
 
             <li>
               <a href="javascript:;" ng-click="common.showSettings()">

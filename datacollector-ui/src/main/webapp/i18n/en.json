@@ -21,7 +21,8 @@
         "restart": "Restart",
         "shutdown": "Shutdown",
         "statsOptIn": "Stat collection Opt In/Out",
-        "usersAndGroups": "Users & Groups"
+        "usersAndGroups": "Users & Groups",
+        "activation": "Activation"
       },
       "clusterManager": "Cluster Manager",
       "dpm": "StreamSets Control Hub",
@@ -35,7 +36,6 @@
         "useHelp": "Help:",
         "localHelp": "Local Help",
         "hostedHelp": "Hosted Help",
-        "register": "Register",
         "restFulAPI": "RESTful API",
         "settings": "Settings",
         "supportBundle": "Support Bundle"
