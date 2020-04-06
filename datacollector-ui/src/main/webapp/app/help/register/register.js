@@ -163,7 +163,13 @@ angular
           $scope.activationStep = 2;
         }, function(err) {
           $scope.operationInProgress = false;
-          $scope.common.errors = ['We had trouble contacting the registration server, please try again'];
+          if (err.data === 'Error: Too many attempts') {
+            $scope.common.errors = ['You seem to be having trouble registering, and you will need to wait at least an hour before trying again. ' + 
+              'If you are a customer, please reach out to support@streamsets.com. Otherwise, community support options can be found at ' +
+              'https://streamsets.com/community/'];
+          } else {
+            $scope.common.errors = ['We had trouble contacting the registration server, please try again'];
+          }
         });
       },
 
