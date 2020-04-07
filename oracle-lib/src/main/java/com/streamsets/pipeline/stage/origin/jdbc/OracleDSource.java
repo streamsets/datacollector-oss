@@ -47,6 +47,7 @@ import com.streamsets.pipeline.stage.config.OracleHikariPoolConfigBean;
     "commonSourceConfigBean.allowLateTable",
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
+    "commonSourceConfigBean.txnWindow",
     "hikariConfigBean.connectionString",
     "hikariConfigBean.useCredentials",
 })

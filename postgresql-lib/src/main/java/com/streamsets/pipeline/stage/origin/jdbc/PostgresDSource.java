@@ -47,6 +47,7 @@ import com.streamsets.pipeline.stage.config.PostgresHikariPoolConfigBean;
     "commonSourceConfigBean.allowLateTable",
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
+    "commonSourceConfigBean.txnWindow",
 })
 public class PostgresDSource extends JdbcDSource {
 

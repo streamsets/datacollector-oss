@@ -48,6 +48,7 @@ import com.streamsets.pipeline.stage.config.SQLServerHikariPoolConfigBean;
     "commonSourceConfigBean.allowLateTable",
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
+    "commonSourceConfigBean.txnWindow",
 })
 public class SQLServerDSource extends JdbcDSource {
 

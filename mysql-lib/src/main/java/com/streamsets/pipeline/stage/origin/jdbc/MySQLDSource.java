@@ -47,6 +47,7 @@ import com.streamsets.pipeline.stage.config.MySQLHikariPoolConfigBean;
     "commonSourceConfigBean.allowLateTable",
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
+    "commonSourceConfigBean.txnWindow",
 })
 @ConfigGroups(value = EncryptionGroups.class)
 public class MySQLDSource extends JdbcDSource {
