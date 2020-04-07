@@ -93,13 +93,16 @@ angular
       },
 
       onCredentialInputKeyup: function($event) {
-        if($event.key === "Enter") {
+        if ($event.key === 'Enter') {
           $scope.saveCredential();
+        } else if ($event.key === 'Escape') {
+          $scope.blankCredential();
         }
       }
     });
 
     $scope.$watch('credentialSettings.credentialValue', function(newValue, _oldValue, scope) {
+      newValue = (newValue === null || newValue === undefined) ? '' : newValue;
       if (newValue.length > 0) {
         scope.credentialSettings.saved = false;
       }
