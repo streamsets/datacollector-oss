@@ -211,7 +211,7 @@
               </a>
             </li>
 
-            <li ng-if="common.activationInfo && common.activationInfo.enabled">
+            <li ng-if="common.activationInfo && common.activationInfo.enabled && isAdmin">
               <a href="javascript:;" ng-click="common.showRegistrationModal()">
                 <span class="fa fa-key"></span>
                 <span translate="global.menu.admin.activation">Activation</span>

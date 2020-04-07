@@ -586,18 +586,17 @@ angular.module('dataCollectorApp')
           var buildResult = sbaResults[1];
           var activationResult = sbaResults[2];
 
-          var registrationModalShown = false;
-
           // Modal (or notification) for activation
           if (activationResult && activationResult.data) {
             var activationInfo = $rootScope.common.activationInfo = activationResult.data;
             if (activationInfo.enabled) {
-              var difDays =  authService.daysUntilProductExpiration(activationInfo.info.expiration);
+              var difDays = authService.daysUntilProductExpiration(activationInfo.info.expiration);
               if (difDays < 0) {
                 // if it is still valid, it is because only core stages are in use
                 if (!activationInfo.info.valid || $location.search().activationKey) {
-                  $rootScope.common.showRegistrationModal();
-                  registrationModalShown = true;
+                  if ($rootScope.isAdmin) {
+                    $rootScope.common.showRegistrationModal();
+                  }
                   if (!activationInfo.info.valid) {
                     $rootScope.common.infoList = [{
                       message: 'Activation key expired, you need to get a new one from StreamSets'

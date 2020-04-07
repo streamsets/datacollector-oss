@@ -52,8 +52,12 @@ angular
                 (err.data.RemoteException.message === ERROR_CANNOT_VERIFY || 
                   err.data.RemoteException.message === ERROR_INVALID)) {
               $scope.common.errors = ['The entered activation code is invalid, verify that it is the same as what you were emailed'];
-            } else {
+            } else if (err.status === 403) {
+              $scope.common.errors = ['You are not allowed to activate, activation must be done by a user with the Admin role'];
+            } else if (typeof err.data === 'string') {
               $scope.common.errors = [err.data];
+            } else {
+              $scope.common.errors = ['Unable to verify activation code'];
             }
           } else {
             $scope.common.errors = ['Unable to verify activation code'];
