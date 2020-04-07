@@ -30,6 +30,7 @@ angular.module('dataCollectorApp.common')
      * Checks if the credential EL is for the interal secret storage
      */
     secretUtil.isInternalSecret = function(credentialEL, store) {
+      credentialEL = credentialEL || '';
       return credentialEL.startsWith('\${credential:get("' + store +'"') ||
         credentialEL.startsWith('\${credential:get(\'' + store +'\'');
     };

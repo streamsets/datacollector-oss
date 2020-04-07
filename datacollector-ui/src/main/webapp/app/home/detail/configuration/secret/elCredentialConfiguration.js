@@ -106,6 +106,14 @@ angular
     });
 
     this.$onInit = function() {
+      // Show the expression if it is not internal
+      var currentValue = $scope.detailPaneConfig.configuration[$scope.configIndex].value;
+      var internalSecret = secretUtil.isInternalSecret(
+        currentValue,
+        $scope.credentialSettings.store
+      );
+      $scope.credentialSettings.showExpression = currentValue && !internalSecret;
+
       api.secret.checkSecretsAvailability().then(function(res) {
         if (res.status === 200) {
           $scope.credentialSettings.useInternalSecrets = true;
