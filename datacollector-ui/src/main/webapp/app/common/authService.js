@@ -22,7 +22,8 @@ angular.module('dataCollectorApp.common')
     admin: 'admin',
     creator: 'creator',
     manager: 'manager',
-    guest: 'guest'
+    guest: 'guest',
+    adminActivation: 'admin-activation'
   })
   .service('authService', function($rootScope, $q, $cookies, api, configuration) {
     var self = this;
