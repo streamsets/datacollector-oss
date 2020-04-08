@@ -104,6 +104,8 @@ public class InfoResource {
       }
       if (context.isUserInRole(AuthzRole.ADMIN) || context.isUserInRole(AuthzRole.ADMIN_REMOTE)) {
         roles.add(AuthzRole.ADMIN);
+      } else if (context.isUserInRole(AuthzRole.ADMIN_ACTIVATION)) {
+        roles.add(AuthzRole.ADMIN_ACTIVATION);
       }
       if (context.isUserInRole(DisconnectedAuthentication.DISCONNECTED_MODE_ROLE)) {
         roles.add(DisconnectedAuthentication.DISCONNECTED_MODE_ROLE);
