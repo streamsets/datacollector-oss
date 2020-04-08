@@ -19,15 +19,15 @@ package com.streamsets.pipeline.stage.pubsub.origin;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
-import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
 
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
+import static com.streamsets.pipeline.lib.googlecloud.Errors.GOOGLE_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

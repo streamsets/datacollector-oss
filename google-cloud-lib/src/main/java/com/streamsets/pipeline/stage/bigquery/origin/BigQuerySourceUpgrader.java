@@ -19,7 +19,7 @@ package com.streamsets.pipeline.stage.bigquery.origin;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
+import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
 
 import java.util.List;
 

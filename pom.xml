@@ -280,6 +280,7 @@
     <module>windows-lib</module>
     <module>pulsar-protolib</module>
     <module>thycotic-credentialstore-lib</module>
+    <module>google-cloud-support</module>
   </modules>
 
   <build>

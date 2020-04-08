@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
+package com.streamsets.pipeline.lib.googlecloud;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public enum PipelineGroups implements Label {
-  CLUSTER("Cluster"),
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  STATS("Statistics"),
-  EMR("EMR"),
-  DATAPROC("Dataproc"),
-  ADVANCED("Advanced"),
-  ;
-
-  private final String label;
-
-  PipelineGroups(String label) {
-    this.label = label;
+public class MachineTypeChooserValues extends BaseEnumChooserValues<MachineType> {
+  
+  public MachineTypeChooserValues() {
+    super(MachineType.class);
   }
-
-  @Override
-  public String getLabel() {
-    return label;
-  }
+  
 }

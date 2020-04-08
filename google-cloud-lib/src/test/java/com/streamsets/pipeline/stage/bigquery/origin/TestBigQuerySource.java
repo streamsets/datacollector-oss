@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.bigquery.origin;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.bigquery.BigQuery;
-import com.google.cloud.bigquery.FieldValue;
 import com.google.cloud.bigquery.FieldValueList;
 import com.google.cloud.bigquery.Job;
 import com.google.cloud.bigquery.JobId;
@@ -27,11 +26,11 @@ import com.google.cloud.bigquery.JobStatus;
 import com.google.cloud.bigquery.TableResult;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.TestBigQueryDelegate;
-import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +45,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static com.streamsets.pipeline.lib.googlecloud.Errors.GOOGLE_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -101,7 +101,7 @@ public class TestBigQuerySource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     assertEquals(1, issues.size());
-    assertTrue(issues.get(0).toString().contains(com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01.getCode()));
+    assertTrue(issues.get(0).toString().contains(GOOGLE_01.getCode()));
   }
 
   @Test

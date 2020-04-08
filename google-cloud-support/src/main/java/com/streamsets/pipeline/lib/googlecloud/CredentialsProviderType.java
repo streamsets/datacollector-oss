@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2017 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,30 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+package com.streamsets.pipeline.lib.googlecloud;
+
 import com.streamsets.pipeline.api.Label;
 
-/**
- * Enum for representing possible Cluster Type
- */
-@GenerateResourceBundle
-public enum SparkClusterType implements Label {
-  AZURE_HD_INSIGHT("Apache Spark for HDInsight"),
-  DATABRICKS("Databricks"),
-  EMR("EMR"),
-  DATAPROC("Dataproc"),
-  YARN("Hadoop YARN"),
-  KUBERNETES("Kubernetes Cluster (advanced users only)"),
-  LOCAL("None (local)"),
-  STANDALONE_SPARK_CLUSTER("Spark Standalone Cluster"),
-  SQL_SERVER_BIG_DATA_CLUSTER("SQL Server 2019 Big Data Cluster"),
+public enum CredentialsProviderType implements Label {
+  DEFAULT_PROVIDER("Default Credentials Provider"),
+  JSON_PROVIDER("Service Account Credentials File (JSON)"),
+  JSON("Service Account Credentials (JSON)"),
   ;
 
   private final String label;
 
-  SparkClusterType(String label) {
+  CredentialsProviderType(String label) {
     this.label = label;
   }
 

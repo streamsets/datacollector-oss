@@ -33,13 +33,21 @@
   <packaging>jar</packaging>
 
   <properties>
-    <gcp-beta.version>0.25.0-beta</gcp-beta.version>
-    <gcp-gcs.version>1.93.0</gcp-gcs.version>
-    <gcp-ps.version>1.93.0</gcp-ps.version>
-    <gcp-bigquery.version>1.93.0</gcp-bigquery.version>
     <netty.version>4.1.14.Final</netty.version>
     <guava.version>28.0-android</guava.version>
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>libraries-bom</artifactId>
+        <version>${google.cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- Compile Dependencies -->
@@ -63,6 +71,11 @@
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-storage</artifactId>
       <version>${gcp-gcs.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-google-cloud-support</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.lib;
+package com.streamsets.pipeline.lib.googlecloud;
 
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.stage.pubsub.origin.PubSubDSource;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayInputStream;
@@ -33,8 +32,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_02;
+import static com.streamsets.pipeline.lib.googlecloud.Errors.GOOGLE_01;
+import static com.streamsets.pipeline.lib.googlecloud.Errors.GOOGLE_02;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;

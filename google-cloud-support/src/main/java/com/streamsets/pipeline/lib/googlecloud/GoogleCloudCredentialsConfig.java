@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib;
+package com.streamsets.pipeline.lib.googlecloud;
 
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedCredentialsProvider;
@@ -25,7 +25,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,55 +39,53 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_01;
-import static com.streamsets.pipeline.stage.lib.Errors.GOOGLE_02;
 
 public class GoogleCloudCredentialsConfig {
   private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudCredentialsConfig.class);
   public static final String CONF_CREDENTIALS_CREDENTIALS_PROVIDER = "conf.credentials.credentialsProvider";
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Project ID",
-      displayPosition = 10,
-      group = "CREDENTIALS"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Project ID",
+    displayPosition = 10,
+    group = "#0"
   )
   public String projectId = "";
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Credentials Provider",
-      defaultValue = "DEFAULT_PROVIDER",
-      displayPosition = 20,
-      group = "CREDENTIALS"
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Credentials Provider",
+    defaultValue = "DEFAULT_PROVIDER",
+    displayPosition = 20,
+    group = "#0"
   )
   @ValueChooserModel(CredentialsProviderChooserValues.class)
   public CredentialsProviderType credentialsProvider;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Credentials File Path (JSON)",
-      description = "Path to the credentials file. Relative path to the Data Collector resources directory, or " +
-          "absolute path.",
-      dependsOn = "credentialsProvider",
-      triggeredByValue = "JSON_PROVIDER",
-      displayPosition = 30,
-      group = "CREDENTIALS"
+    required = true,
+    type = ConfigDef.Type.STRING,
+    label = "Credentials File Path (JSON)",
+    description = "Path to the credentials file.",
+    dependsOn = "credentialsProvider",
+    triggeredByValue = "JSON_PROVIDER",
+    displayPosition = 30,
+    group = "#0"
   )
   public String path = "";
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      mode = ConfigDef.Mode.JSON,
-      label = "Credentials File Content (JSON)",
-      description = "Content of the credentials file",
-      dependsOn = "credentialsProvider",
-      triggeredByValue = "JSON",
-      displayPosition = 30,
-      group = "CREDENTIALS")
+    type = ConfigDef.Type.CREDENTIAL,
+    mode = ConfigDef.Mode.JSON,
+    label = "Credentials File Content (JSON)",
+    description = "Content of the credentials file",
+    dependsOn = "credentialsProvider",
+    triggeredByValue = "JSON",
+    displayPosition = 30,
+    group = "#0"
+  )
   public CredentialValue credentialsFileContent;
 
   /**
@@ -132,10 +129,10 @@ public class GoogleCloudCredentialsConfig {
         credentials = ServiceAccountCredentials.fromStream(in);
       }
     } catch (IOException | IllegalArgumentException e) {
-      LOG.error(GOOGLE_02.getMessage(), e);
-      issues.add(context.createConfigIssue(Groups.CREDENTIALS.name(),
+      LOG.error(Errors.GOOGLE_02.getMessage(), e);
+      issues.add(context.createConfigIssue("CREDENTIALS",
           CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-          GOOGLE_02
+          Errors.GOOGLE_02
       ));
     }
 
@@ -154,10 +151,10 @@ public class GoogleCloudCredentialsConfig {
       }
 
       if (!credentialsFile.exists() || !credentialsFile.isFile()) {
-        LOG.error(GOOGLE_01.getMessage(), credentialsFile.getPath());
-        issues.add(context.createConfigIssue(Groups.CREDENTIALS.name(),
+        LOG.error(Errors.GOOGLE_01.getMessage(), credentialsFile.getPath());
+        issues.add(context.createConfigIssue("CREDENTIALS",
             CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-            GOOGLE_01,
+            Errors.GOOGLE_01,
             credentialsFile.getPath()
         ));
         return null;

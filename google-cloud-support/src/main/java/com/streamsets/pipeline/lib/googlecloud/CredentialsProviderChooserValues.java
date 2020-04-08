@@ -13,29 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.config;
 
-import com.streamsets.pipeline.api.Label;
+package com.streamsets.pipeline.lib.googlecloud;
 
-public enum PipelineGroups implements Label {
-  CLUSTER("Cluster"),
-  PARAMETERS("Parameters"),
-  NOTIFICATIONS("Notifications"),
-  BAD_RECORDS("Error Records"),
-  STATS("Statistics"),
-  EMR("EMR"),
-  DATAPROC("Dataproc"),
-  ADVANCED("Advanced"),
-  ;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-  private final String label;
-
-  PipelineGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return label;
+@GenerateResourceBundle
+public class CredentialsProviderChooserValues extends BaseEnumChooserValues<CredentialsProviderType> {
+  public CredentialsProviderChooserValues() {
+    super(CredentialsProviderType.class);
   }
 }

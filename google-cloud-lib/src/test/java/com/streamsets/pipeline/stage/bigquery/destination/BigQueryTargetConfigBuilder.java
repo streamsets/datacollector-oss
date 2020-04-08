@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.stage.bigquery.destination;
 
-import com.streamsets.pipeline.stage.lib.CredentialsProviderType;
+import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
 
 public class BigQueryTargetConfigBuilder {
   private String projectId;

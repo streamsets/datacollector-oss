@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.pipeline.lib.googlecloud;
+import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 
-package com.streamsets.pipeline.stage.lib;
-
-import com.streamsets.pipeline.api.Label;
-
-public enum CredentialsProviderType implements Label {
-  DEFAULT_PROVIDER("Default Credentials Provider"),
-  JSON_PROVIDER("Service Account Credentials File (JSON)"),
-  JSON("Service Account Credentials (JSON)"),
+@GenerateResourceBundle
+public enum Errors implements ErrorCode {
+  GOOGLE_01("Credentials file '{}' not found"),
+  GOOGLE_02("Error reading credentials file"),
   ;
 
-  private final String label;
+  private final String msg;
 
-  CredentialsProviderType(String label) {
-    this.label = label;
+  Errors(String msg) {
+    this.msg = msg;
   }
 
   @Override
-  public String getLabel() {
-    return label;
+  public String getCode() {
+    return name();
+  }
+
+  @Override
+  public String getMessage() {
+    return msg;
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib;
-import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.GenerateResourceBundle;
+package com.streamsets.pipeline.lib.googlecloud;
 
-@GenerateResourceBundle
-public enum Errors implements ErrorCode {
-  GOOGLE_01("Credentials file '{}' not found"),
-  GOOGLE_02("Error reading credentials file"),
-  ;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-  private final String msg;
-
-  Errors(String msg) {
-    this.msg = msg;
-  }
-
-  @Override
-  public String getCode() {
-    return name();
-  }
-
-  @Override
-  public String getMessage() {
-    return msg;
+public class NetworkChooserValues extends BaseEnumChooserValues<Network> {
+  
+  public NetworkChooserValues() {
+    super(Network.class);
   }
 }
