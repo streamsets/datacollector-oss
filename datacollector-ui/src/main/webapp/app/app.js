@@ -361,6 +361,15 @@ angular.module('dataCollectorApp')
         });
       },
 
+      showRegistrationPermissionErrorModal: function() {
+        $modal.open({
+          templateUrl: 'app/help/register/registrationPermissionErrorModal.tpl.html',
+          controller: 'RegisterPermissionErrorModalController',
+          size: '',
+          backdrop: 'static'
+        });
+      },
+
       showSDCDirectories: function() {
         $modal.open({
           templateUrl: 'common/administration/sdcDirectories/sdcDirectoriesModal.tpl.html',
@@ -594,8 +603,11 @@ angular.module('dataCollectorApp')
               if (difDays < 0) {
                 // if it is still valid, it is because only core stages are in use
                 if (!activationInfo.info.valid || $location.search().activationKey) {
-                  if ($rootScope.isAdmin) {
+                  // When activation is not valid, roles other than adminActivation are not returned
+                  if ($rootScope.isAdmin || authService.isAuthorized(userRoles.adminActivation)) {
                     $rootScope.common.showRegistrationModal();
+                  } else {
+                    $rootScope.common.showRegistrationPermissionErrorModal();
                   }
                   if (!activationInfo.info.valid) {
                     $rootScope.common.infoList = [{
