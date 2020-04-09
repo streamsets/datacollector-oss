@@ -774,31 +774,25 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             PipelineStatusEvent pipelineStatusEvent = createPipelineStatusEvent(jsonToFromDto,
                 pipelineAndValidationStatus
             );
-            if (hasElapsedWaitPercentInterval(stopWatch, waitBetweenSendingStatusEvents, percentOfWaitIntervalBeforeSkip)) {
-              LOG.warn("Timer already past {}% of wait interval, so not going to send any more pipeline updates",
-                  percentOfWaitIntervalBeforeSkip);
-              break;
-            } else {
-              LOG.debug(Utils.format(
-                  "Sending event for remote pipeline: '{}' in status: '{}' through sync thread",
-                  pipelineStatusEvent.getName(),
-                  pipelineStatusEvent.getPipelineStatus()
-              ));
-              long startTime = System.currentTimeMillis();
-              eventClient.sendSyncEvents(jobRunnerPipelineStatusEventUrl,
-                  new HashMap<>(),
-                  requestHeader,
-                  pipelineStatusEvent,
-                  1
-              );
-              long endTime = System.currentTimeMillis();
-              LOG.debug(Utils.format(
-                  "Ended sending event for remote pipeline: '{}' in status: '{}' through sync thread",
-                  pipelineStatusEvent.getName(),
-                  pipelineStatusEvent.getPipelineStatus()
-              ));
-              logWarningIfAPICallTimeExceedsThreshold(jobRunnerPipelineStatusEventUrl, 30000, startTime, endTime);
-            }
+            LOG.debug(Utils.format(
+                "Sending event for remote pipeline: '{}' in status: '{}' through sync thread",
+                pipelineStatusEvent.getName(),
+                pipelineStatusEvent.getPipelineStatus()
+            ));
+            long startTime = System.currentTimeMillis();
+            eventClient.sendSyncEvents(jobRunnerPipelineStatusEventUrl,
+                new HashMap<>(),
+                requestHeader,
+                pipelineStatusEvent,
+                1
+            );
+            long endTime = System.currentTimeMillis();
+            LOG.debug(Utils.format(
+                "Ended sending event for remote pipeline: '{}' in status: '{}' through sync thread",
+                pipelineStatusEvent.getName(),
+                pipelineStatusEvent.getPipelineStatus()
+            ));
+            logWarningIfAPICallTimeExceedsThreshold(jobRunnerPipelineStatusEventUrl, 30000, startTime, endTime);
           }
         } catch (Exception e) {
           LOG.error(Utils.format("Error while sending a single pipeline status to DPM: {}", e), e);
