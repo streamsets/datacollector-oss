@@ -56,9 +56,6 @@ angular
     api.system.getStats()
       .then(function(res) {
         $scope.currentStatus = res.data;
-        if (!res.data.opted) {
-          $scope.currentStatus.active = true;
-        }
         $scope.isLoading = false;
       });
   });
