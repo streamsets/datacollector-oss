@@ -24,10 +24,13 @@ import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import dagger.ObjectGraph;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.net.Authenticator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;
@@ -35,6 +38,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Main {
   private final String PROPERTY_USE_SDC_SECURITY_MANAGER = "security_manager.sdc_manager.enable";
@@ -76,6 +80,12 @@ public class Main {
       log.info("-----------------------------------------------------------------");
       RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
       runtimeInfo.log(log);
+      log.info("-----------------------------------------------------------------");
+      log.info("Process and Machine Info");
+      log.info("  Available Cores: {}", Runtime.getRuntime().availableProcessors());
+      log.info("  Total RAM: {}", FileUtils.byteCountToDisplaySize(((com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean()).getTotalPhysicalMemorySize()));
+      log.info("  Non-SDC JVM Args: {}", String.join(" ", ManagementFactory.getRuntimeMXBean().getInputArguments().stream().filter(i -> !i.startsWith("-Dsdc")).collect(Collectors.toList())));
+      log.debug("  Full JVM Args: {}", String.join(" ", ManagementFactory.getRuntimeMXBean().getInputArguments()));
       log.info("-----------------------------------------------------------------");
       Configuration configuration = dagger.get(Configuration.class);
       if (System.getSecurityManager() != null) {

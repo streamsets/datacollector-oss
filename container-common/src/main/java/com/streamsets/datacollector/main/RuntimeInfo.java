@@ -23,6 +23,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileStore;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,11 +216,21 @@ public abstract class RuntimeInfo {
     log.info("Runtime info:");
     log.info("  Java version  : {}", System.getProperty("java.runtime.version"));
     log.info("  SDC ID        : {}", getId());
-    log.info("  Runtime dir   : {}", getRuntimeDir());
-    log.info("  Config dir    : {}", getConfigDir());
-    log.info("  Data dir      : {}", getDataDir());
-    log.info("  Log dir       : {}", getLogDir());
-    log.info("  Extra Libs dir: {}", getLibsExtraDir());
+    log.info("  Runtime dir   : {} {}", getRuntimeDir(), sizeOfDir(getRuntimeDir()));
+    log.info("  Config dir    : {} {}", getConfigDir(), sizeOfDir(getConfigDir()));
+    log.info("  Data dir      : {} {}", getDataDir(), sizeOfDir(getDataDir()));
+    log.info("  Log dir       : {} {}", getLogDir(), sizeOfDir(getLogDir()));
+    log.info("  Extra Libs dir: {} {}", getLibsExtraDir(), sizeOfDir(getLibsExtraDir()));
+  }
+
+  private String sizeOfDir(String directory) {
+    try {
+      Path path = Paths.get(directory);
+      FileStore store = Files.getFileStore(path.getRoot());
+      return Utils.format("(total {}, unallocated {}, root {})", FileUtils.byteCountToDisplaySize(store.getTotalSpace()), FileUtils.byteCountToDisplaySize(store.getUnallocatedSpace()), path.getRoot());
+    } catch (Exception e) {
+      return "";
+    }
   }
 
   public void setShutdownHandler(ShutdownHandler runnable) {
