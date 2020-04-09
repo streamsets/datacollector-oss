@@ -15,9 +15,11 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,7 +58,8 @@ public class TestActiveStats {
     Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
     as.setCreateToPreview(map);
     Assert.assertEquals(1, as.getCreateToPreview().size());
-    Assert.assertEquals(2, as.getCreateToPreview().get("p1").getTimeToFirstUse());
+    Assert.assertEquals(1, as.getCreateToPreview().get("p1").getCreatedOn());
+    Assert.assertEquals(3, as.getCreateToPreview().get("p1").getFirstUseOn());
   }
 
   @Test
@@ -65,18 +68,22 @@ public class TestActiveStats {
     Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
     as.setCreateToRun(map);
     Assert.assertEquals(1, as.getCreateToRun().size());
-    Assert.assertEquals(2, as.getCreateToRun().get("p1").getTimeToFirstUse());
+    Assert.assertEquals(1, as.getCreateToRun().get("p1").getCreatedOn());
+    Assert.assertEquals(3, as.getCreateToRun().get("p1").getFirstUseOn());
   }
 
   @Test
   public void testCreatePipeline() {
     ActiveStats as = new ActiveStats();
     as.createPipeline("p1");
+    long currentTime = System.currentTimeMillis();
+
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
     Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
-    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getTimeToFirstUse());
+    assertWithinDelta(currentTime, as.getCreateToPreview().get("p1").getCreatedOn(), 1000);
+    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getFirstUseOn());
     Assert.assertEquals(0, as.getCreateToPreview().get("p1").getStageCount());
-    Assert.assertEquals(-1, as.getCreateToRun().get("p1").getTimeToFirstUse());
+    assertWithinDelta(currentTime, as.getCreateToRun().get("p1").getCreatedOn(), 1000);
     Assert.assertEquals(0, as.getCreateToRun().get("p1").getStageCount());
   }
 
@@ -85,11 +92,15 @@ public class TestActiveStats {
     ActiveStats as = new ActiveStats();
     as.createPipeline("p1");
     as.previewPipeline("p1");
+    long currentTime = System.currentTimeMillis();
+
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
     Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
-    Assert.assertTrue(as.getCreateToPreview().get("p1").getTimeToFirstUse() >= 0);
+    assertWithinDelta(currentTime, as.getCreateToPreview().get("p1").getCreatedOn(), 1000);
+    Assert.assertTrue(as.getCreateToPreview().get("p1").getFirstUseOn() >= as.getCreateToPreview().get("p1").getCreatedOn());
     Assert.assertEquals(0, as.getCreateToPreview().get("p1").getStageCount());
-    Assert.assertEquals(-1, as.getCreateToRun().get("p1").getTimeToFirstUse());
+    assertWithinDelta(currentTime, as.getCreateToRun().get("p1").getCreatedOn(), 1000);
+    Assert.assertEquals(-1, as.getCreateToRun().get("p1").getFirstUseOn());
     Assert.assertEquals(0, as.getCreateToRun().get("p1").getStageCount());
   }
 
@@ -104,10 +115,14 @@ public class TestActiveStats {
     Mockito.when(stageConfiguration.getStageName()).thenReturn("n");
     Mockito.when(pipelineConfiguration.getStages()).thenReturn((List)ImmutableList.of(stageConfiguration));
     as.startPipeline(pipelineConfiguration);
+    long currentTime = System.currentTimeMillis();
+
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
     Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
-    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getTimeToFirstUse());
-    Assert.assertTrue(as.getCreateToRun().get("p1").getTimeToFirstUse() >= 0);
+    assertWithinDelta(currentTime, as.getCreateToPreview().get("p1").getCreatedOn(), 1000);
+    assertWithinDelta(currentTime, as.getCreateToRun().get("p1").getCreatedOn(), 1000);
+    Assert.assertEquals(-1, as.getCreateToPreview().get("p1").getFirstUseOn());
+    Assert.assertTrue(as.getCreateToRun().get("p1").getFirstUseOn() >= as.getCreateToRun().get("p1").getCreatedOn());
     Assert.assertEquals(1, as.getCreateToRun().get("p1").getStageCount());
   }
 
@@ -294,5 +309,55 @@ public class TestActiveStats {
     map = as.removeUsedAndExpired(map, 250);
     Assert.assertEquals(1, map.size());
     Assert.assertTrue(map.containsKey("p3"));
+  }
+
+  @Test
+  public void testSerialization() throws Exception {
+    ObjectMapper objectMapper = ObjectMapperFactory.get();
+    ActiveStats as = new ActiveStats();
+    as.setProductName("FOO");
+    as.setExtraInfo(ImmutableMap.of("extraKey", "extraValue"));
+    as.setCreateToPreview(ImmutableMap.of(
+        "pipelineId1", new FirstPipelineUse()
+            .setCreatedOn(System.currentTimeMillis() - 10)
+            .setFirstUseOn(System.currentTimeMillis() - 6),
+        "pipelineId2", new FirstPipelineUse()
+            .setCreatedOn(System.currentTimeMillis() - 5)
+    ));
+    as.setCreateToRun(ImmutableMap.of(
+        "pipelineId3", new FirstPipelineUse()
+            .setCreatedOn(System.currentTimeMillis() - 20)
+            .setFirstUseOn(System.currentTimeMillis() - 16),
+        "pipelineId4", new FirstPipelineUse()
+            .setCreatedOn(System.currentTimeMillis() - 15)
+    ));
+    as.setPipelines(ImmutableList.of(
+        new UsageTimer().setName("timer1").setAccumulatedTime(23456)));
+    as.getPipelines().get(0).start();
+    as.getPipelines().get(0).stop();
+    as.setErrorCodes(ImmutableMap.of("ERROR_1", 3L));
+
+    String json = objectMapper.writeValueAsString(as);
+    Assert.assertTrue("json does not contain timer1:" + json, json.contains("timer1")); // check random nested thing
+    ActiveStats deserialized = objectMapper.readValue(json, ActiveStats.class);
+
+    Assert.assertEquals(as.getProductName(), deserialized.getProductName());
+    Assert.assertEquals(as.getExtraInfo(), deserialized.getExtraInfo());
+    Assert.assertEquals(as.getCreateToPreview(), deserialized.getCreateToPreview());
+    Assert.assertEquals(as.getCreateToRun(), deserialized.getCreateToRun());
+    Assert.assertEquals(1, deserialized.getPipelines().size());
+    UsageTimer expectedRunningPipeline = as.getPipelines().get(0);
+    UsageTimer actualRunningPipeline = deserialized.getPipelines().get(0);
+    Assert.assertEquals(expectedRunningPipeline.getMultiplier(), actualRunningPipeline.getMultiplier());
+    // UsageTimer is running, so can't compare and need to use a delta
+    assertWithinDelta(expectedRunningPipeline.getAccumulatedTime(), actualRunningPipeline.getAccumulatedTime(), 1000);
+    Assert.assertEquals(as.getErrorCodes(), deserialized.getErrorCodes());
+  }
+
+  private void assertWithinDelta(long expected, long actual, double delta) {
+    Assert.assertEquals(
+        Long.valueOf(expected).doubleValue(),
+        Long.valueOf(actual).doubleValue(),
+        delta);
   }
 }

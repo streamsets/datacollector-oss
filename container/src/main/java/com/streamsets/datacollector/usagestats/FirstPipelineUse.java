@@ -15,14 +15,13 @@
  */
 package com.streamsets.datacollector.usagestats;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Objects;
 
 public class FirstPipelineUse implements Cloneable {
   private long createdOn;
   private int stageCount;
   private long firstUseOn = -1;
 
-  @JsonIgnore
   public long getCreatedOn() {
     return createdOn;
   }
@@ -41,7 +40,6 @@ public class FirstPipelineUse implements Cloneable {
     return this;
   }
 
-  @JsonIgnore
   public long getFirstUseOn() {
     return firstUseOn;
   }
@@ -51,9 +49,6 @@ public class FirstPipelineUse implements Cloneable {
     return this;
   }
 
-  public long getTimeToFirstUse() {
-    return (firstUseOn == -1) ? -1  : firstUseOn - createdOn;
-  }
   @Override
   protected Object clone() {
     try {
@@ -63,4 +58,18 @@ public class FirstPipelineUse implements Cloneable {
     }
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    FirstPipelineUse that = (FirstPipelineUse) o;
+    return createdOn == that.createdOn &&
+        stageCount == that.stageCount &&
+        firstUseOn == that.firstUseOn;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(createdOn, stageCount, firstUseOn);
+  }
 }
