@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
-import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 import org.apache.commons.lang3.StringUtils;
 import org.cometd.bayeux.Channel;
 import org.cometd.bayeux.Message;
@@ -200,7 +199,7 @@ public class ForceStreamConsumer {
               if (isReplayIdExpired(error)) {
                 // Retry subscription for all available events
                 LOG.info("Event ID was not available. Subscribing for available events.");
-                subscribeForNotifications(ForceSource.READ_EVENTS_FROM_START);
+                subscribeForNotifications(ForceUtils.READ_EVENTS_FROM_START);
                 return;
               } else {
                 messageQueue.put(message);

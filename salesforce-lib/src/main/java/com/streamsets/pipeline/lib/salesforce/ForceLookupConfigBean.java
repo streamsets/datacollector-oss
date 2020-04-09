@@ -38,7 +38,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       label = "Lookup Mode",
       description = "Lookup records by a SOQL Query or by the Salesforce record ID.",
       displayPosition = 50,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   @ValueChooserModel(LookupModeChooserValues.class)
   public LookupMode lookupMode;
@@ -56,22 +56,9 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "QUERY",
       displayPosition = 60,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   public String soqlQuery;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Include Deleted Records",
-      description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
-      defaultValue = "false",
-      dependsOn = "lookupMode",
-      triggeredByValue = "QUERY",
-      displayPosition = 70,
-      group = "LOOKUP"
-  )
-  public boolean queryAll = false;
 
   @ConfigDef(
       required = true,
@@ -82,7 +69,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 75,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   @FieldSelectorModel(singleValued = true)
   public String idField = "";
@@ -99,7 +86,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 80,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   public String retrieveFields = "";
 
@@ -112,7 +99,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 85,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   public String sObjectType = "";
 
@@ -123,7 +110,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       defaultValue = "",
       description = "Mappings from Salesforce field names to SDC field names",
       displayPosition = 90,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   @ListBeanModel
   public List<ForceSDCFieldMapping> fieldMappings;
@@ -135,7 +122,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       description = "How to handle multiple values",
       defaultValue = "FIRST_ONLY",
       displayPosition = 95,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   @ValueChooserModel(ForceLookupMultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
@@ -147,11 +134,15 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       description = "How to handle missing values when no default value is defined.",
       defaultValue = "PASS_RECORD_ON",
       displayPosition = 97,
-      group = "LOOKUP"
+      group = "QUERY"
   )
   @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
   public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
 
-  @ConfigDefBean(groups = "LOOKUP")
+  @ConfigDefBean(groups = "QUERY")
   public CacheConfig cacheConfig = new CacheConfig();
+
+  public ForceLookupConfigBean() {
+    queryExistingData = true;
+  }
 }

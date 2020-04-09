@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Salesforce Lookup",
     description = "Lookup records in Salesforce to enrich records",
     icon = "salesforce.png",
@@ -38,7 +38,8 @@ import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 @HideConfigs({
   "forceConfig.useCompression",
   "forceConfig.showTrace",
-  "forceConfig.cacheConfig.retryOnCacheMiss"
+  "forceConfig.cacheConfig.retryOnCacheMiss",
+  "forceConfig.queryExistingData"
 })
 public class ForceLookupDProcessor extends DProcessor {
   @ConfigDefBean

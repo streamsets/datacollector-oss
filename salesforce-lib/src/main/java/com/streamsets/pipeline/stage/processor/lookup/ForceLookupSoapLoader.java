@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.processor.lookup;
 
 import com.google.common.cache.CacheLoader;
-import com.google.common.collect.ImmutableMap;
 import com.sforce.soap.partner.QueryResult;
 import com.sforce.soap.partner.fault.ApiFault;
 import com.sforce.soap.partner.sobject.SObject;
@@ -26,6 +25,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
+import com.streamsets.pipeline.lib.salesforce.SoapRecordCreator;
+import com.streamsets.pipeline.lib.salesforce.SobjectRecordCreator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +36,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Field>>>> {
-  private static final Logger LOG = LoggerFactory.getLogger(ForceLookupLoader.class);
+/**
+ Retrieve records for the lookup processor via the Salesforce SOAP API
+ */
+class ForceLookupSoapLoader extends CacheLoader<String, Optional<List<Map<String, Field>>>> {
+  private static final Logger LOG = LoggerFactory.getLogger(ForceLookupSoapLoader.class);
   private static final String COUNT = "count";
 
   private final ForceLookupProcessor processor;
 
-  ForceLookupLoader(ForceLookupProcessor processor) {
+  ForceLookupSoapLoader(ForceLookupProcessor processor) {
     this.processor = processor;
   }
 
@@ -52,13 +56,14 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
 
   private Optional<List<Map<String, Field>>> lookupValuesForRecord(String preparedQuery) throws StageException {
     List<Map<String, Field>> lookupItems = new ArrayList<>();
+    SobjectRecordCreator recordCreator = (SobjectRecordCreator)processor.getRecordCreator();
 
     try {
-      if (!processor.recordCreator.metadataCacheExists()) {
-        processor.recordCreator.buildMetadataCacheFromQuery(processor.partnerConnection, preparedQuery);
+      if (!recordCreator.metadataCacheExists()) {
+        recordCreator.buildMetadataCacheFromQuery(processor.partnerConnection, preparedQuery);
       }
 
-      QueryResult queryResult = processor.conf.queryAll
+      QueryResult queryResult = processor.getConfig().queryAll
           ? processor.partnerConnection.queryAll(preparedQuery)
           : processor.partnerConnection.query(preparedQuery);
       addResult(lookupItems, queryResult);
@@ -68,17 +73,14 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
         addResult(lookupItems, queryResult);
       }
 
-      // If no lookup items were found, use defaults
-      if(lookupItems.isEmpty()) {
-        return Optional.empty();
-      }
     } catch (ConnectionException e) {
       String message = (e instanceof ApiFault) ? ((ApiFault)e).getExceptionMessage() : e.getMessage();
       LOG.error(Errors.FORCE_17.getMessage(), preparedQuery, message, e);
       throw new OnRecordErrorException(Errors.FORCE_17, preparedQuery, message, e);
     }
 
-    return Optional.of(lookupItems);
+    // If no lookup items were found, use defaults
+    return lookupItems.isEmpty() ? Optional.empty() : Optional.of(lookupItems);
   }
 
   private void addResult(List<Map<String, Field>> lookupItems, QueryResult queryResult) throws StageException {
@@ -86,7 +88,7 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
 
     LOG.info("Retrieved {} records", records.length);
 
-    if (processor.recordCreator.isCountQuery()) {
+    if (processor.getRecordCreator().isCountQuery()) {
       // Special case for old-style COUNT() query
       DataType dataType = (processor.columnsToTypes != null)
           ? processor.columnsToTypes.get(COUNT.toLowerCase())
@@ -102,7 +104,7 @@ class ForceLookupLoader extends CacheLoader<String, Optional<List<Map<String, Fi
       lookupItems.add(map);
     } else {
       for (int i = 0; i < records.length; i++) {
-        lookupItems.add(processor.recordCreator.addFields(
+        lookupItems.add(((SoapRecordCreator) processor.getRecordCreator()).addFields(
             records[i],
             processor.columnsToTypes));
       }

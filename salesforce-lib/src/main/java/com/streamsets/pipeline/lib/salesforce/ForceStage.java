@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,27 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.lookup;
+package com.streamsets.pipeline.lib.salesforce;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.sforce.async.BulkConnection;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  FORCE("Salesforce"),
-  QUERY("Lookup"),
-  ADVANCED("Advanced"),
-  ;
+/**
+ Allows commonality between lookup processor and origin
+ */
+public interface ForceStage {
+  BulkConnection getBulkConnection();
 
-  private final String label;
+  ForceRecordCreator getRecordCreator();
 
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  /** {@inheritDoc} */
-  @Override
-  public String getLabel() {
-    return this.label;
-  }
+  ForceInputConfigBean getConfig();
 }

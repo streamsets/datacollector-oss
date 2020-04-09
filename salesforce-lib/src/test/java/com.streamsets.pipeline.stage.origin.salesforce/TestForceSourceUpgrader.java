@@ -17,24 +17,43 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
+import com.streamsets.pipeline.lib.salesforce.TestForceInputUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestForceSourceUpgrader {
+public class TestForceSourceUpgrader extends TestForceInputUpgrader {
   @Test
   public void testUpgradeV1toV2() throws StageException {
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
+
     List<Config> configs = new ArrayList<>();
 
     ForceSourceUpgrader forceSourceUpgrader = new ForceSourceUpgrader();
-    forceSourceUpgrader.upgrade("a", "b", "c", 1, 2, configs);
+    forceSourceUpgrader.upgrade(configs, context);
 
     Assert.assertEquals(1, configs.size());
     Config config = configs.get(0);
     Assert.assertEquals("forceConfig.subscriptionType", config.getName());
     Assert.assertEquals(SubscriptionType.PUSH_TOPIC, config.getValue());
+  }
+
+  @Override
+  public StageUpgrader getStageUpgrader() {
+    return new ForceSourceUpgrader();
+  }
+
+  @Test
+  public void testUpgradeV2toV3() throws StageException {
+    List<Config> configs = testUpgradeV2toV3Common();
+
+    Assert.assertEquals(0, configs.size());
   }
 }

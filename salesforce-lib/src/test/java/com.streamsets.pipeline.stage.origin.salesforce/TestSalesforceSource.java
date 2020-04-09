@@ -200,7 +200,7 @@ public class TestSalesforceSource {
   @Test
   public void testPKChunkingOrderByClause() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
-    conf.usePKChunking = true;
+    conf.bulkConfig.usePKChunking = true;
     conf.soqlQuery = "SELECT Id, Name FROM Account ORDER BY Id";
     ForceSource origin = new ForceSource(conf);
 
@@ -219,7 +219,7 @@ public class TestSalesforceSource {
   @Test
   public void testPKChunkingWhereClause() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
-    conf.usePKChunking = true;
+    conf.bulkConfig.usePKChunking = true;
     conf.soqlQuery = "SELECT Id, Name FROM Account WHERE Id > '${offset}'";
     ForceSource origin = new ForceSource(conf);
 
@@ -238,7 +238,7 @@ public class TestSalesforceSource {
   @Test
   public void testPKChunkingRepeatIncremental() throws Exception {
     ForceSourceConfigBean conf = getForceSourceConfig();
-    conf.usePKChunking = true;
+    conf.bulkConfig.usePKChunking = true;
     conf.soqlQuery = "SELECT Id, Name FROM Account";
     conf.repeatQuery = ForceRepeatQuery.INCREMENTAL;
     ForceSource origin = new ForceSource(conf);

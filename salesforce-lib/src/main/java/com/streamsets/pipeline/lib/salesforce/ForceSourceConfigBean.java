@@ -26,73 +26,6 @@ import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 public class ForceSourceConfigBean extends ForceInputConfigBean {
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Query Existing Data",
-      description = "If enabled, existing data will be read from Force.com.",
-      displayPosition = 70,
-      group = "FORCE"
-  )
-  public boolean queryExistingData;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Use Bulk API",
-      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
-          "otherwise, the Salesforce SOAP API will be used.",
-      displayPosition = 72,
-      dependsOn = "queryExistingData",
-      triggeredByValue = "true",
-      group = "QUERY"
-  )
-  public boolean useBulkAPI;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use PK Chunking",
-      description = "Enables automatic primary key (PK) chunking for the bulk query job. " +
-          "Note that the 'Query All' option and offsets are not used with PK Chunking, " +
-          "and the SOQL Query cannot contain an ORDER BY clause, or contain the Id field in a WHERE clause.",
-      displayPosition = 74,
-      dependsOn = "useBulkAPI",
-      triggeredByValue = "true",
-      group = "QUERY"
-  )
-  public boolean usePKChunking;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "100000",
-      min = 1,
-      max = 250000,
-      label = "Chunk Size",
-      displayPosition = 76,
-      dependsOn = "usePKChunking",
-      triggeredByValue = "true",
-      group = "QUERY"
-  )
-  public int chunkSize;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Start Id",
-      description = "Optional 15- or 18-character record ID to be used as the lower boundary for the first chunk. " +
-          "If omitted, all records matching the query will be retrieved.",
-      displayPosition = 78,
-      dependsOn = "usePKChunking",
-      triggeredByValue = "true",
-      group = "QUERY"
-  )
-  public String startId;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       label = "SOQL Query",
@@ -106,20 +39,6 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       group = "QUERY"
   )
   public String soqlQuery;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Include Deleted Records",
-      description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
-      defaultValue = "false",
-      displayPosition = 82,
-      dependencies = {
-          @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
-      },
-      group = "QUERY"
-  )
-  public boolean queryAll = false;
 
   @ConfigDef(
       required = true,

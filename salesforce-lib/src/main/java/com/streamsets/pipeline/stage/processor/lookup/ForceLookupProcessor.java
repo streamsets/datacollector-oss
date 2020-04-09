@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
+import com.sforce.async.AsyncApiException;
+import com.sforce.async.BulkConnection;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.fault.ApiFault;
@@ -47,13 +49,17 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.salesforce.BulkRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
+import com.streamsets.pipeline.lib.salesforce.ForceRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ForceSDCFieldMapping;
+import com.streamsets.pipeline.lib.salesforce.ForceStage;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.salesforce.LookupMode;
 import com.streamsets.pipeline.lib.salesforce.SoapRecordCreator;
+import com.streamsets.pipeline.lib.salesforce.SobjectRecordCreator;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.origin.salesforce.Groups;
@@ -74,14 +80,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.streamsets.pipeline.lib.salesforce.LookupMode.QUERY;
 
-public class ForceLookupProcessor extends SingleLaneRecordProcessor {
+public class ForceLookupProcessor extends SingleLaneRecordProcessor implements ForceStage {
   // Defined by Salesforce SOAP API
   private static final int MAX_OBJECT_IDS = 2000;
   private static final Logger LOG = LoggerFactory.getLogger(ForceLookupProcessor.class);
-  final ForceLookupConfigBean conf;
+  private final ForceLookupConfigBean conf;
   private static final String CONF_PREFIX = "conf";
 
   private Map<String, String> columnsToFields = new HashMap<>();
@@ -89,15 +96,29 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
   Map<String, DataType> columnsToTypes = new HashMap<>();
 
   private Cache<String, Optional<List<Map<String, Field>>>> cache;
+  private AtomicBoolean destroyed = new AtomicBoolean(false);
 
   PartnerConnection partnerConnection;
+  private BulkConnection bulkConnection;
   private ErrorRecordHandler errorRecordHandler;
   private ELEval queryEval;
   private CacheCleaner cacheCleaner;
-  SoapRecordCreator recordCreator;
+  private SobjectRecordCreator recordCreator;
 
   public ForceLookupProcessor(ForceLookupConfigBean conf) {
     this.conf = conf;
+  }
+
+  public BulkConnection getBulkConnection() {
+    return bulkConnection;
+  }
+
+  public ForceRecordCreator getRecordCreator() {
+    return recordCreator;
+  }
+
+  public ForceLookupConfigBean getConfig() {
+    return conf;
   }
 
   // Renew the Salesforce session on timeout
@@ -137,7 +158,10 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
         if (conf.mutualAuth.useMutualAuth) {
           ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
         }
-      } catch (ConnectionException | StageException | URISyntaxException e) {
+        if (conf.useBulkAPI) {
+          bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
+        }
+      } catch (ConnectionException | StageException | URISyntaxException | AsyncApiException e) {
         LOG.error("Error connecting: {}", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             "connectorConfig",
@@ -166,7 +190,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       cacheCleaner = new CacheCleaner(cache, "ForceLookupProcessor", 10 * 60 * 1000);
       if (conf.lookupMode == LookupMode.RETRIEVE) {
         // All records are of the configured object type, so we only need one record creator
-        recordCreator = new SoapRecordCreator(getContext(), conf, conf.sObjectType);
+        recordCreator = new SoapRecordCreator(getContext(), conf, conf.sObjectType.toLowerCase());
       }
     }
 
@@ -274,7 +298,8 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
               }
             } else {
               String id = sObject.getId();
-              Map<String, Field> fieldMap = recordCreator.addFields(sObject, columnsToTypes);
+              // TODO - ugly cast
+              Map<String, Field> fieldMap = ((SoapRecordCreator)recordCreator).addFields(sObject, columnsToTypes);
               for (Record record : recordsToRetrieve.get(id)) {
                 setFieldsInRecord(record, fieldMap);
               }
@@ -428,7 +453,9 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
       String preparedQuery = prepareQuery(queryEval.eval(elVars, conf.soqlQuery, String.class));
       // Need this ugly cast since there isn't a way to do a simple
       // get with the Cache interface
+      LOG.debug("Prepared query is {}", preparedQuery);
       Optional<List<Map<String, Field>>> entry = ((LoadingCache<String, Optional<List<Map<String, Field>>>>)cache).get(preparedQuery);
+      LOG.debug("entry {}", entry.isPresent() ? entry.get() : null);
 
       if (!entry.isPresent()) {
         // No results
@@ -473,11 +500,18 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
   }
 
+  private SobjectRecordCreator buildRecordCreator(String sobjectType) {
+    if (conf.useBulkAPI) {
+      return new BulkRecordCreator(getContext(), conf, sobjectType);
+    }
+    return new SoapRecordCreator(getContext(), conf, sobjectType);
+  }
+
   private String prepareQuery(String preparedQuery) throws StageException {
     String sobjectType = ForceUtils.getSobjectTypeFromQuery(preparedQuery);
 
     if (recordCreator == null || ! sobjectType.equals(recordCreator.getSobjectType())) {
-      recordCreator = new SoapRecordCreator(getContext(), conf, sobjectType);
+      recordCreator = buildRecordCreator(sobjectType);
     }
 
     if (recordCreator.queryHasWildcard(preparedQuery)) {
@@ -501,7 +535,7 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
 
     if (!conf.cacheConfig.enabled) {
       return (conf.lookupMode == QUERY)
-          ? cacheBuilder.maximumSize(0).build(new ForceLookupLoader(this))
+          ? cacheBuilder.build(conf.useBulkAPI ? new ForceLookupBulkLoader(this) : new ForceLookupSoapLoader(this))
           : cacheBuilder.maximumSize(0).build();
     }
 
@@ -526,7 +560,18 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor {
     }
 
     return (conf.lookupMode == QUERY)
-        ? cacheBuilder.build(new ForceLookupLoader(this))
+        ? cacheBuilder.build(conf.useBulkAPI ? new ForceLookupBulkLoader(this) : new ForceLookupSoapLoader(this))
         : cacheBuilder.build();
+  }
+
+  public boolean isDestroyed() {
+    return destroyed.get();
+  }
+
+  @Override
+  public void destroy() {
+    destroyed.set(true);
+
+    super.destroy();
   }
 }

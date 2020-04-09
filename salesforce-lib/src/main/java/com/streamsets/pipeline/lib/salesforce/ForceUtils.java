@@ -50,6 +50,12 @@ import java.util.List;
 public class ForceUtils {
   private static final Logger LOG = LoggerFactory.getLogger(ForceUtils.class);
   private static final int MUTUAL_AUTHENTICATION_PORT = 8443;
+  public static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
+  public static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
+  public static final long EVENT_ID_FROM_NOW = -1;
+  private static final long EVENT_ID_FROM_START = -2;
+  public static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
+  public static final String READ_EVENTS_FROM_NOW = ForceUtils.EVENT_ID_OFFSET_PREFIX + ForceUtils.EVENT_ID_FROM_NOW;
 
   public static String getExceptionCode(Throwable th) {
     return (th instanceof ApiFault) ? ((ApiFault) th).getExceptionCode().name() : "";

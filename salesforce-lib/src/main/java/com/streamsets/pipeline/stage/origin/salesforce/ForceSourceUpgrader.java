@@ -21,15 +21,21 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ForceSourceUpgrader implements StageUpgrader {
 
   @Override
-  public List<Config> upgrade(
-      String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
+  public List<Config> upgrade(List<Config> configs, Context context
   ) throws StageException {
+    int fromVersion = context.getFromVersion();
+
     switch(fromVersion) {
+      case 2:
+        upgradeV2ToV3(configs);
+        break;
       case 1:
         upgradeV1ToV2(configs);
         break;
@@ -39,7 +45,35 @@ public class ForceSourceUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private void upgradeV1ToV2(List<Config> configs) {
+  private static void upgradeV1ToV2(List<Config> configs) {
     configs.add(new Config("forceConfig.subscriptionType", SubscriptionType.PUSH_TOPIC));
+  }
+
+  private static void upgradeV2ToV3(List<Config> configs) {
+    List<String> names = Arrays.asList("usePKChunking", "chunkSize", "startId");
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "forceConfig.usePKChunking":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.usePKChunking", config.getValue()));
+          break;
+        case "forceConfig.chunkSize":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.chunkSize", config.getValue()));
+          break;
+        case "forceConfig.startId":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.startId", config.getValue()));
+          break;
+        default:
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

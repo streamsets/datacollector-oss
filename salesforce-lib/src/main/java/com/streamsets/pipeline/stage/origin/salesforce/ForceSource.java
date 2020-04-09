@@ -17,14 +17,7 @@ package com.streamsets.pipeline.stage.origin.salesforce;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sforce.async.AsyncApiException;
-import com.sforce.async.BatchInfo;
-import com.sforce.async.BatchInfoList;
-import com.sforce.async.BatchStateEnum;
 import com.sforce.async.BulkConnection;
-import com.sforce.async.ContentType;
-import com.sforce.async.JobInfo;
-import com.sforce.async.OperationEnum;
-import com.sforce.async.QueryResultList;
 import com.sforce.soap.partner.Connector;
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.soap.partner.QueryResult;
@@ -42,10 +35,14 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.salesforce.BulkRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ChangeDataCaptureRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.Errors;
+import com.streamsets.pipeline.lib.salesforce.ForceBulkReader;
+import com.streamsets.pipeline.lib.salesforce.ForceCollector;
 import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.ForceInputConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.ForceStage;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.salesforce.PlatformEventRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.PushTopicRecordCreator;
@@ -64,32 +61,22 @@ import org.slf4j.LoggerFactory;
 import soql.SOQLParser;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.events.XMLEvent;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class ForceSource extends BaseSource {
-  private static final long EVENT_ID_FROM_NOW = -1;
-  private static final long EVENT_ID_FROM_START = -2;
-  private static final String RECORD_ID_OFFSET_PREFIX = "recordId:";
-  private static final String EVENT_ID_OFFSET_PREFIX = "eventId:";
+public class ForceSource extends BaseSource implements ForceStage {
 
   private static final Logger LOG = LoggerFactory.getLogger(ForceSource.class);
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -98,16 +85,10 @@ public class ForceSource extends BaseSource {
   private static final String META = "/meta";
   private static final String META_HANDSHAKE = "/meta/handshake";
   private static final String META_CONNECT = "/meta/connect";
-  private static final String READ_EVENTS_FROM_NOW = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_NOW;
-  private static final String SFORCE_ENABLE_PKCHUNKING = "Sforce-Enable-PKChunking";
-  private static final String CHUNK_SIZE = "chunkSize";
   private static final String ID = "Id";
-  private static final String START_ROW = "startRow";
   private static final String CONF_PREFIX = "conf";
-  private static final String RECORDS = "records";
   private static final String COUNT = "count";
 
-  static final String READ_EVENTS_FROM_START = EVENT_ID_OFFSET_PREFIX + EVENT_ID_FROM_START;
   private static final BigDecimal MAX_OFFSET_INT = new BigDecimal(Integer.MAX_VALUE);
   private static final String NONE = "none";
   private static final String RECONNECT = "reconnect";
@@ -117,15 +98,6 @@ public class ForceSource extends BaseSource {
   private PartnerConnection partnerConnection;
   private BulkConnection bulkConnection;
   private String sobjectType;
-
-  // Bulk API state
-  private BatchInfo batch;
-  private JobInfo job;
-  private QueryResultList queryResultList;
-  private int resultIndex;
-  private XMLEventReader xmlEventReader;
-  private Set<String> processedBatches;
-  private BatchInfoList batchList;
 
   // SOAP API state
   private QueryResult queryResult;
@@ -141,16 +113,30 @@ public class ForceSource extends BaseSource {
   private boolean noRecordsCreated = true; // true if we haven't created any records from the current query
   private boolean eventFired = false;      // true if we have fired an event since the last query
   private AtomicBoolean destroyed = new AtomicBoolean(false);
-  private XMLInputFactory xmlInputFactory = XMLInputFactory.newFactory();
+  private ForceBulkReader bulkReader;
+  private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+  private SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
+
 
   public ForceSource(
       ForceSourceConfigBean conf
   ) {
     this.conf = conf;
+  }
 
-    xmlInputFactory.setProperty(XMLInputFactory.IS_COALESCING, true);
-    xmlInputFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, false);
-    xmlInputFactory.setProperty(XMLInputFactory.SUPPORT_DTD, false);
+  @Override
+  public BulkConnection getBulkConnection() {
+    return bulkConnection;
+  }
+
+  @Override
+  public ForceRecordCreator getRecordCreator() {
+    return recordCreator;
+  }
+
+  @Override
+  public ForceInputConfigBean getConfig() {
+    return conf;
   }
 
   // Renew the Salesforce session on timeout
@@ -199,7 +185,7 @@ public class ForceSource extends BaseSource {
     }
 
     if (conf.queryExistingData) {
-      if (conf.usePKChunking) {
+      if (conf.bulkConfig.usePKChunking) {
         conf.offsetColumn = ID;
       }
 
@@ -211,7 +197,7 @@ public class ForceSource extends BaseSource {
 
           String sobject = statementContext.objectList().getText().toLowerCase();
 
-          if (conf.usePKChunking) {
+          if (conf.bulkConfig.usePKChunking) {
             if (fieldOrderByList != null) {
               issues.add(getContext().createConfigIssue(Groups.QUERY.name(),
                   ForceConfigBean.CONF_PREFIX + "soqlQuery", Errors.FORCE_31
@@ -291,7 +277,7 @@ public class ForceSource extends BaseSource {
           }
         }
       } catch (ConnectionException | AsyncApiException | StageException | URISyntaxException e) {
-        LOG.error("Error connecting: {}", e);
+        LOG.error("Error connecting", e);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),
             ForceConfigBean.CONF_PREFIX + "authEndpoint",
             Errors.FORCE_00,
@@ -318,6 +304,10 @@ public class ForceSource extends BaseSource {
         recordCreator.init();
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(null, null, Errors.FORCE_34, e));
+      }
+
+      if (conf.queryExistingData && conf.useBulkAPI) {
+        bulkReader = new ForceBulkReader(this);
       }
     }
 
@@ -420,21 +410,9 @@ public class ForceSource extends BaseSource {
     // need to signal produce() to terminate early
     destroyed.set(true);
 
-    if (job != null) {
-      try {
-        try {
-          bulkConnection.abortJob(job.getId());
-        } catch (AsyncApiException e) {
-          ForceUtils.renewSession(bulkConnection, e);
-          bulkConnection.abortJob(job.getId());
-        }
-        job = null;
-      } catch (AsyncApiException e) {
-        LOG.error("Exception while aborting job", e);
-      }
+    if (bulkReader != null) {
+      bulkReader.destroy();
     }
-
-    job = null;
 
     if (forceConsumer != null) {
       try {
@@ -459,8 +437,8 @@ public class ForceSource extends BaseSource {
     super.destroy();
   }
 
-  private String prepareQuery(String query, String lastSourceOffset) throws StageException {
-    final String offset = (null == lastSourceOffset) ? conf.initialOffset : lastSourceOffset;
+  public String prepareQuery(String query, String offset) throws StageException {
+    String id = offset.substring(offset.indexOf(':') + 1);
     SobjectRecordCreator sobjectRecordCreator = (SobjectRecordCreator)recordCreator;
 
     String expandedQuery;
@@ -474,7 +452,7 @@ public class ForceSource extends BaseSource {
       sobjectRecordCreator.buildMetadataCacheFromQuery(partnerConnection, query);
     }
 
-    return expandedQuery.replaceAll("\\$\\{offset\\}", offset);
+    return (offset == null) ? expandedQuery : expandedQuery.replaceAll("\\$\\{offset\\}", id);
   }
 
   /** {@inheritDoc} */
@@ -487,7 +465,7 @@ public class ForceSource extends BaseSource {
     int batchSize = Math.min(conf.basicConfig.maxBatchSize, maxBatchSize);
 
     if (!conf.queryExistingData ||
-        (null != lastSourceOffset && lastSourceOffset.startsWith(EVENT_ID_OFFSET_PREFIX))) {
+        (null != lastSourceOffset && lastSourceOffset.startsWith(ForceUtils.EVENT_ID_OFFSET_PREFIX))) {
       if (conf.subscribeToStreaming) {
         nextSourceOffset = streamingProduce(lastSourceOffset, batchSize, batchMaker);
       } else {
@@ -515,7 +493,7 @@ public class ForceSource extends BaseSource {
       }
     } else if (conf.subscribeToStreaming) {
       // No offset, and we're not querying existing data, so switch to streaming
-      nextSourceOffset = READ_EVENTS_FROM_NOW;
+      nextSourceOffset = ForceUtils.READ_EVENTS_FROM_NOW;
     }
 
     // If we're not repeating the query, then send the event
@@ -531,184 +509,91 @@ public class ForceSource extends BaseSource {
   }
 
   private boolean queryInProgress() {
-    return (conf.useBulkAPI && job != null) || (!conf.useBulkAPI && queryResult != null);
+    return (conf.useBulkAPI && bulkReader.queryInProgress()) || (!conf.useBulkAPI && queryResult != null);
+  }
+
+  private static Object getIgnoreCase(Map<String, Field> map, String offsetColumn) {
+    for (Map.Entry<String, Field> entry : map.entrySet()) {
+      if (entry.getKey().equalsIgnoreCase(offsetColumn)) {
+        return entry.getValue().getValue();
+      }
+    }
+
+    return null;
   }
 
   private String bulkProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
+    String nextSourceOffset = (null == lastSourceOffset) ? ForceUtils.RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
 
-    String nextSourceOffset = (null == lastSourceOffset) ? RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
-
-    if (job == null) {
-      // No job in progress - start from scratch
-      try {
+    return bulkReader.produce(nextSourceOffset, maxBatchSize, new ForceCollector() {
+      @Override
+      public void init() {
         noRecordsCreated = true;
         queryComplete = false;
-
-        String id = (lastSourceOffset == null) ? null : lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1);
-        final String preparedQuery = prepareQuery(conf.soqlQuery, id);
-        LOG.info("SOQL Query is: {}", preparedQuery);
-
-        if (destroyed.get()) {
-          throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
-        }
-        job = createJob(sobjectType, bulkConnection);
-        LOG.info("Created Bulk API job {}", job.getId());
-
-        if (destroyed.get()) {
-          throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
-        }
-        BatchInfo b;
-        try {
-          b = bulkConnection.createBatchFromStream(job,
-              new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
-        } catch (AsyncApiException e) {
-          ForceUtils.renewSession(bulkConnection, e);
-          b = bulkConnection.createBatchFromStream(job,
-              new ByteArrayInputStream(preparedQuery.getBytes(StandardCharsets.UTF_8)));
-        }
-        LOG.info("Created Bulk API batch {}", b.getId());
-        processedBatches = new HashSet<>();
-      } catch (AsyncApiException e) {
-        throw new StageException(Errors.FORCE_01, e);
-      }
-    }
-
-    // We started the job already, see if the results are ready
-    // Loop here so that we can wait for results in preview mode and not return an empty batch
-    // Preview will cut us off anyway if we wait too long
-    while (queryResultList == null) {
-      if (destroyed.get()) {
-        throw new StageException(getContext().isPreview() ? Errors.FORCE_25 : Errors.FORCE_26);
       }
 
-      try {
-        // PK Chunking gives us multiple batches - process them in turn
-        try {
-          batchList = bulkConnection.getBatchInfoList(job.getId());
-        } catch (AsyncApiException e) {
-          ForceUtils.renewSession(bulkConnection, e);
-          batchList = bulkConnection.getBatchInfoList(job.getId());
-        }
-        for (BatchInfo batchInfo : batchList.getBatchInfo()) {
-          if (batchInfo.getState() == BatchStateEnum.Failed) {
-            LOG.error("Batch {} failed: {}", batchInfo.getId(), batchInfo.getStateMessage());
-            throw new StageException(Errors.FORCE_03, batchInfo.getStateMessage());
-          } else if (!processedBatches.contains(batchInfo.getId())) {
-            if (batchInfo.getState() == BatchStateEnum.NotProcessed) {
-              // Skip this batch - it's the 'original batch' in PK chunking
-              // See https://developer.salesforce.com/docs/atlas.en-us.api_asynch.meta/api_asynch/asynch_api_code_curl_walkthrough_pk_chunking.htm
-              LOG.info("Batch {} not processed", batchInfo.getId());
-              processedBatches.add(batchInfo.getId());
-            } else if (batchInfo.getState() == BatchStateEnum.Completed) {
-              LOG.info("Batch {} completed", batchInfo.getId());
-              batch = batchInfo;
-              try {
-                queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
-              } catch (AsyncApiException e) {
-                ForceUtils.renewSession(bulkConnection, e);
-                queryResultList = bulkConnection.getQueryResultList(job.getId(), batch.getId());
-              }
-              LOG.info("Query results: {}", queryResultList.getResult());
-              resultIndex = 0;
-              break;
-            }
-          }
-        }
-        if (queryResultList == null) {
-          // Bulk API is asynchronous, so wait a little while...
-          try {
-            LOG.info("Waiting {} milliseconds for job {}", conf.basicConfig.maxWaitTime, job.getId());
-            Thread.sleep(conf.basicConfig.maxWaitTime);
-          } catch (InterruptedException e) {
-            LOG.debug("Interrupted while sleeping");
-            Thread.currentThread().interrupt();
-          }
-          if (!getContext().isPreview()) { // If we're in preview, then don't return an empty batch!
-            LOG.info("Job {} in progress", job.getId());
-            return nextSourceOffset;
-          }
-        }
-      } catch (AsyncApiException e) {
-        throw new StageException(Errors.FORCE_02, e);
-      }
-    }
+      @Override
+      public String addRecord(LinkedHashMap<String, Field> fields, int numRecords) {
+        noRecordsCreated = false;
+        eventFired = false;
 
-    if (xmlEventReader == null && queryResultList != null) {
-      // We have results - retrieve the next one!
-      String resultId = queryResultList.getResult()[resultIndex];
-      resultIndex++;
-
-      try {
-        try {
-          xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
-        } catch (AsyncApiException e) {
-          ForceUtils.renewSession(bulkConnection, e);
-          xmlEventReader = xmlInputFactory.createXMLEventReader(bulkConnection.getQueryResultStream(job.getId(), batch.getId(), resultId));
+        // Get the offset from the record
+        Object newRawOffset = getIgnoreCase(fields, conf.offsetColumn);
+        if (newRawOffset == null) {
+          throw new StageException(Errors.FORCE_22, conf.offsetColumn);
         }
-      } catch (AsyncApiException e) {
-        throw new StageException(Errors.FORCE_05, e);
-      } catch (XMLStreamException e) {
-        throw new StageException(Errors.FORCE_36, e);
-      }
-    }
-
-    if (xmlEventReader != null){
-      int numRecords = 0;
-      while (xmlEventReader.hasNext() && numRecords < maxBatchSize) {
-        try {
-          XMLEvent event = xmlEventReader.nextEvent();
-          if (event.isStartElement() && event.asStartElement().getName().getLocalPart().equals(RECORDS)) {
-            // SDC-9731 will refactor record creators so we don't need this downcast
-            String offset = ((BulkRecordCreator) recordCreator).createRecord(xmlEventReader, batchMaker, numRecords);
-            nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
-            ++numRecords;
-            noRecordsCreated = false;
-            eventFired = false;
-          }
-        } catch (XMLStreamException e) {
-          throw new StageException(Errors.FORCE_37, e);
+        String newOffset;
+        if (newRawOffset instanceof Date){
+          newOffset = dateFormat.format((Date) newRawOffset);
+        } else {
+          newOffset = newRawOffset.toString();
         }
+
+        final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + newOffset);
+        batchMaker.addRecord(recordCreator.createRecord(sourceId, fields));
+        recordIndex++;
+
+        return fixOffset(conf.offsetColumn, newOffset);
       }
 
-      if (!xmlEventReader.hasNext()) {
-        // Exhausted this result - come back in on the next batch
-        xmlEventReader = null;
-        if (resultIndex == queryResultList.getResult().length) {
-          // We're out of results, too!
-          processedBatches.add(batch.getId());
-          queryResultList = null;
-          batch = null;
-          if (processedBatches.size() == batchList.getBatchInfo().length) {
-            // And we're done with the job
-            try {
-              try {
-                bulkConnection.closeJob(job.getId());
-              } catch (AsyncApiException e) {
-                ForceUtils.renewSession(bulkConnection, e);
-                bulkConnection.closeJob(job.getId());
-              }
-              lastQueryCompletedTime = System.currentTimeMillis();
-              LOG.info("Query completed at: {}", lastQueryCompletedTime);
-            } catch (AsyncApiException e) {
-              LOG.error("Error closing job: {}", e);
-            }
-            LOG.info("Partial batch of {} records", numRecords);
-            job = null;
-            queryComplete = true;
-            if (conf.subscribeToStreaming) {
-              // Switch to processing events
-              nextSourceOffset = READ_EVENTS_FROM_NOW;
-            } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
-              nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
-            } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
-              nextSourceOffset = null;
-            }
-          }
-        }
+      @Override
+      public String prepareQuery(String offset) {
+        return ForceSource.this.prepareQuery(conf.soqlQuery, offset);
       }
-      LOG.info("Full batch of {} records", numRecords);
-    }
-    return nextSourceOffset;
+
+      @Override
+      public boolean isDestroyed() {
+        return destroyed.get();
+      }
+
+      @Override
+      public boolean isPreview() {
+        return getContext().isPreview();
+      }
+
+      @Override
+      public void queryCompleted() {
+        lastQueryCompletedTime = System.currentTimeMillis();
+        LOG.info("Query completed at: {}", lastQueryCompletedTime);
+        queryComplete = true;
+        recordIndex = 0;
+      }
+
+      @Override
+      public boolean subscribeToStreaming() {
+        return conf.subscribeToStreaming;
+      }
+
+      @Override
+      public ForceRepeatQuery repeatQuery() {
+        return conf.repeatQuery;
+      }
+
+      @Override
+      public String initialOffset() {
+        return conf.initialOffset;
+      }
+    });
   }
 
   private static XmlObject getChildIgnoreCase(SObject record, String name) {
@@ -728,12 +613,11 @@ public class ForceSource extends BaseSource {
 
   private String soapProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
 
-    String nextSourceOffset = (null == lastSourceOffset) ? RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
+    String nextSourceOffset = (null == lastSourceOffset) ? ForceUtils.RECORD_ID_OFFSET_PREFIX + conf.initialOffset : lastSourceOffset;
 
     if (queryResult == null) {
       try {
-        String id = (lastSourceOffset == null) ? null : lastSourceOffset.substring(lastSourceOffset.indexOf(':') + 1);
-        final String preparedQuery = prepareQuery(conf.soqlQuery, id);
+        final String preparedQuery = prepareQuery(conf.soqlQuery, nextSourceOffset);
         LOG.info("preparedQuery: {}", preparedQuery);
         queryResult = conf.queryAll
             ? partnerConnection.queryAll(preparedQuery)
@@ -778,7 +662,7 @@ public class ForceSource extends BaseSource {
           offset = String.valueOf(recordIndex);
         } else {
           offset = fixOffset(offsetColumn, offsetField.getValue().toString());
-          nextSourceOffset = RECORD_ID_OFFSET_PREFIX + offset;
+          nextSourceOffset = ForceUtils.RECORD_ID_OFFSET_PREFIX + offset;
         }
         final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + offset);
         Record rec = recordCreator.createRecord(sourceId, record);
@@ -799,9 +683,9 @@ public class ForceSource extends BaseSource {
           queryComplete = true;
           if (conf.subscribeToStreaming) {
             // Switch to processing events
-            nextSourceOffset = READ_EVENTS_FROM_NOW;
+            nextSourceOffset = ForceUtils.READ_EVENTS_FROM_NOW;
           } else if (conf.repeatQuery == ForceRepeatQuery.FULL) {
-            nextSourceOffset = RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
+            nextSourceOffset = ForceUtils.RECORD_ID_OFFSET_PREFIX + conf.initialOffset;
           } else if (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT) {
             nextSourceOffset = null;
           }
@@ -932,19 +816,19 @@ public class ForceSource extends BaseSource {
 
     batchMaker.addRecord(rec);
 
-    return EVENT_ID_OFFSET_PREFIX + event.get(REPLAY_ID).toString();
+    return ForceUtils.EVENT_ID_OFFSET_PREFIX + event.get(REPLAY_ID).toString();
   }
 
   private String streamingProduce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String nextSourceOffset;
     if (getContext().isPreview()) {
-      nextSourceOffset = READ_EVENTS_FROM_START;
+      nextSourceOffset = ForceUtils.READ_EVENTS_FROM_START;
     } else if (null == lastSourceOffset) {
       if (conf.subscriptionType == SubscriptionType.PLATFORM_EVENT &&
           conf.replayOption == ReplayOption.ALL_EVENTS) {
-        nextSourceOffset = READ_EVENTS_FROM_START;
+        nextSourceOffset = ForceUtils.READ_EVENTS_FROM_START;
       } else {
-        nextSourceOffset = READ_EVENTS_FROM_NOW;
+        nextSourceOffset = ForceUtils.READ_EVENTS_FROM_NOW;
       }
     } else {
       nextSourceOffset = lastSourceOffset;
@@ -1033,27 +917,5 @@ public class ForceSource extends BaseSource {
     }
 
     return nextSourceOffset;
-  }
-
-  private JobInfo createJob(String sobjectType, BulkConnection connection)
-          throws AsyncApiException {
-    JobInfo job = new JobInfo();
-    job.setObject(sobjectType);
-    job.setOperation((conf.queryAll && !conf.usePKChunking) ? OperationEnum.queryAll : OperationEnum.query);
-    job.setContentType(ContentType.XML);
-    if (conf.usePKChunking) {
-      String headerValue = CHUNK_SIZE + "=" + conf.chunkSize;
-      if (!StringUtils.isEmpty(conf.startId)) {
-        headerValue += "; " + START_ROW + "=" + conf.startId;
-      }
-      connection.addHeader(SFORCE_ENABLE_PKCHUNKING, headerValue);
-    }
-    try {
-      job = connection.createJob(job);
-    } catch (AsyncApiException e) {
-      ForceUtils.renewSession(bulkConnection, e);
-      job = connection.createJob(job);
-    }
-    return job;
   }
 }

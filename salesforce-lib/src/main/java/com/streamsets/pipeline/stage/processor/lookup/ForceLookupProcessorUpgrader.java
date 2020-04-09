@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.salesforce.LookupMode;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -34,6 +36,9 @@ public class ForceLookupProcessorUpgrader implements StageUpgrader {
     int fromVersion = context.getFromVersion();
 
     switch (fromVersion) {
+      case 2:
+        upgradeV2ToV3(configs);
+        break;
       case 1:
         upgradeV1ToV2(configs);
         break;
@@ -43,7 +48,7 @@ public class ForceLookupProcessorUpgrader implements StageUpgrader {
     return configs;
   }
 
-  private static void upgradeV1ToV2(List<Config> configs) {
+  private void upgradeV1ToV2(List<Config> configs) {
     // RETRIEVE lookup mode was added without an upgrader, so default to QUERY
     String lookupMode = LookupMode.QUERY.name();
 
@@ -58,5 +63,34 @@ public class ForceLookupProcessorUpgrader implements StageUpgrader {
     }
     configs.add(new Config("forceConfig.missingValuesBehavior",
         (lookupMode.equals(LookupMode.QUERY.name())) ? MissingValuesBehavior.SEND_TO_ERROR : MissingValuesBehavior.PASS_RECORD_ON));
+  }
+
+  private void upgradeV2ToV3(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    configsToAdd.add(new Config("forceConfig.queryExistingData", true));
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "forceConfig.usePKChunking":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.usePKChunking", config.getValue()));
+          break;
+        case "forceConfig.chunkSize":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.chunkSize", config.getValue()));
+          break;
+        case "forceConfig.startId":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("forceConfig.bulkConfig.startId", config.getValue()));
+          break;
+        default:
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }
