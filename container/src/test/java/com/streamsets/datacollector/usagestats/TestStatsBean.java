@@ -61,8 +61,10 @@ public class TestStatsBean {
     Assert.assertEquals((Long) 2L, sb.getStageMilliseconds().get("s2"));
     Assert.assertEquals(1, sb.getCreateToPreview().size());
     Assert.assertEquals(1, sb.getCreateToRun().size());
-    Assert.assertEquals(preview1.getTimeToFirstUse(), sb.getCreateToPreview().get(0).getTimeToFirstUse());
-    Assert.assertEquals(run1.getTimeToFirstUse(), sb.getCreateToRun().get(0).getTimeToFirstUse());
+    Assert.assertEquals(preview1.getCreatedOn(), sb.getCreateToPreview().get(0).getCreatedOn());
+    Assert.assertEquals(preview1.getFirstUseOn(), sb.getCreateToPreview().get(0).getFirstUseOn());
+    Assert.assertEquals(run1.getCreatedOn(), sb.getCreateToRun().get(0).getCreatedOn());
+    Assert.assertEquals(run1.getFirstUseOn(), sb.getCreateToRun().get(0).getFirstUseOn());
   }
 
 }
