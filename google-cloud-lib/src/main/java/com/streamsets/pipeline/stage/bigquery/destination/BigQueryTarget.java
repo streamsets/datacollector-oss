@@ -41,6 +41,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.Errors;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,6 +82,7 @@ public class BigQueryTarget extends BaseTarget {
   private ELEval tableNameELEval;
   private ELEval rowIdELEval;
   private LoadingCache<TableId, Boolean> tableIdExistsCache;
+  private ErrorRecordHandler errorRecordHandler;
 
   BigQueryTarget(BigQueryTargetConfig conf) {
     this.conf = conf;
@@ -129,6 +132,7 @@ public class BigQueryTarget extends BaseTarget {
         return bigQuery.getTable(key) != null;
       }
     });
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     return issues;
   }
@@ -147,7 +151,13 @@ public class BigQueryTarget extends BaseTarget {
           String tableName = tableNameELEval.eval(elVars, conf.tableNameEL, String.class);
           TableId tableId = TableId.of(datasetName, tableName);
           if(!tableIdExistsCache.get(tableId)) {
-            getContext().toError(record, Errors.BIGQUERY_17, datasetName, tableName, conf.credentials.projectId);
+            errorRecordHandler.onError(new OnRecordErrorException(
+                record,
+                Errors.BIGQUERY_17,
+                datasetName,
+                tableName,
+                conf.credentials.projectId
+            ));
           }
           else {
             List<Record> tableIdRecords = tableIdToRecords.computeIfAbsent(tableId, t -> new ArrayList<>());
@@ -155,13 +165,26 @@ public class BigQueryTarget extends BaseTarget {
           }
         } catch (ELEvalException e) {
           LOG.error("Error evaluating DataSet/TableName EL", e);
-          getContext().toError(record, Errors.BIGQUERY_10, e);
+          errorRecordHandler.onError(new OnRecordErrorException(
+              record,
+              Errors.BIGQUERY_10,
+              e
+          ));
         } catch (ExecutionException e){
           LOG.error("Error when checking exists for tableId, Reason : {}", e.getMessage(), e);
           Throwable rootCause = Throwables.getRootCause(e);
-          getContext().toError(record, Errors.BIGQUERY_13, rootCause);
+          errorRecordHandler.onError(new OnRecordErrorException(
+              record,
+              Errors.BIGQUERY_13,
+              rootCause
+          ));
+
         } catch (IllegalArgumentException | BigQueryException | UncheckedExecutionException e) {
-          getContext().toError(record, Errors.BIGQUERY_18, e.getMessage());
+          errorRecordHandler.onError(new OnRecordErrorException(
+              record,
+              Errors.BIGQUERY_18,
+              e.getMessage()
+          ));
         }
       });
 
@@ -185,7 +208,7 @@ public class BigQueryTarget extends BaseTarget {
                     record.getHeader().getSourceId(),
                     e.getMessage()
                 );
-                getContext().toError(record, e.getErrorCode(), e.getParams());
+                errorRecordHandler.onError(e);
               }
             }
         );
@@ -218,7 +241,12 @@ public class BigQueryTarget extends BaseTarget {
                       reasons,
                       messages
                   );
-                  getContext().toError(record, Errors.BIGQUERY_11, reasons, messages);
+                  errorRecordHandler.onError(new OnRecordErrorException(
+                      record,
+                      Errors.BIGQUERY_11,
+                      reasons,
+                      messages
+                  ));
                 });
               }
             } catch (BigQueryException e) {
@@ -226,7 +254,11 @@ public class BigQueryTarget extends BaseTarget {
               //Put all records to error.
               for (long i = 0; i < request.getRows().size(); i++) {
                 Record record = requestIndexToRecords.get(i);
-                getContext().toError(record, Errors.BIGQUERY_13, e);
+                errorRecordHandler.onError(new OnRecordErrorException(
+                    record,
+                    Errors.BIGQUERY_13,
+                    e
+                ));
               }
             }
           }
