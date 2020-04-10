@@ -304,7 +304,7 @@ public class BootstrapMain {
 
     Map<String, List<URL>> streamsetsLibsUrls = getStageLibrariesClasspaths(streamsetsLibrariesDir,
         streamsetsLibrariesExtraDir, systemStageLibs, libsCommonLibDir);
-    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, null, systemStageLibs,
+    Map<String, List<URL>> userLibsUrls = getStageLibrariesClasspaths(userLibrariesDir, streamsetsLibrariesExtraDir, systemStageLibs,
         libsCommonLibDir);
 
     if (debug) {
