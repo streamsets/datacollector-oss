@@ -23,7 +23,7 @@ public enum DatabaseVendor {
   MYSQL("com.mysql.jdbc.Driver"),
   HIVE("org.apache.hive.jdbc.HiveDriver", "com.cloudera.impala.jdbc41.Driver", "com.cloudera.impala.jdbc4.Driver"),
   TERADATA("com.teradata.jdbc.TeraDriver"),
-  ORACLE("oracle.jdbc.driver.OracleDriver"),
+  ORACLE("oracle.jdbc.driver.OracleDriver", "oracle.jdbc.OracleDriver"),
   POSTGRESQL("org.postgresql.Driver"),
   SQL_SERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver"),
   UNKNOWN(),
