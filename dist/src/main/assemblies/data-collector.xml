@@ -659,6 +659,25 @@
       <includes>
         <include>com.streamsets:streamsets-datacollector-container</include>
         <include>com.streamsets:streamsets-datacollector-metadata-generator</include>
+        <!--
+          !! HACK ALERT !!
+          Including these dependencies explicitly here is the fix for SDC-12541.  The problem is that these particular
+          dependencies (which, at some level, are compile scoped transitive dependencies of container), are
+          being excluded by the assembly plugin. This may be caused by MASSEMBLY-894, or some other issue.
+
+          In any event, the maven-assembly-plugi doesn't provide detailed enough debug output to understand why
+          these artifacts are being excluded. Therefore, we are declaring them explicitly here so they are selected
+          for inclusion by the plugin to fix the problem.
+        -->
+        <include>org.glassfish.jersey.core:jersey-server</include>
+        <include>org.glassfish.jersey.core:jersey-client</include>
+        <include>org.glassfish.jersey.core:jersey-common</include>
+        <include>org.glassfish.jersey.bundles.repackaged:jersey-guava</include>
+        <include>org.glassfish.jersey.media:jersey-media-json-jackson</include>
+        <include>org.glassfish.jersey.ext:jersey-entity-filtering</include>
+        <include>com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider</include>
+        <include>com.fasterxml.jackson.jaxrs:jackson-jaxrs-base</include>
+        <include>io.swagger:swagger-annotations</include>
       </includes>
       <excludes>
         <exclude>com.streamsets:streamsets-datacollector-api</exclude>
