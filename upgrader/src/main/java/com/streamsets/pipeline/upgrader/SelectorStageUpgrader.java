@@ -59,9 +59,15 @@ public class SelectorStageUpgrader implements StageUpgrader {
     }
 
     if (hasYamlUpgrades) {
-      int fromYamlVersion = yamlUpgrader.getMinimumConfigVersionHandled();
+      int fromYamlVersion = Math.max(context.getFromVersion(), yamlUpgrader.getMinimumConfigVersionHandled());
       MutableVersionRangeContextWrapper yamlContext = new MutableVersionRangeContextWrapper(context);
       yamlContext.setFromVersion(fromYamlVersion);
+      LOG.debug(
+          "Running YAML upgrader to upgrade '{}' stage from '{}' version to '{}' version",
+          yamlContext.getStageInstance(),
+          yamlContext.getFromVersion(),
+          yamlContext.getToVersion()
+      );
       configs = yamlUpgrader.upgrade(configs, yamlContext);
     }
 
