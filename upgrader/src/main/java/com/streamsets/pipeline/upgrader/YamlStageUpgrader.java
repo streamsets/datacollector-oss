@@ -80,7 +80,7 @@ public class YamlStageUpgrader implements StageUpgrader {
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     LOG.debug(
         "Upgrade '{}' stage from '{}' version to '{}' version",
-        stageName,
+        context.getStageInstance(),
         context.getFromVersion(),
         context.getToVersion()
     );
@@ -91,7 +91,7 @@ public class YamlStageUpgrader implements StageUpgrader {
         .filter(e -> e.getKey() > context.getFromVersion() && e.getKey() <= context.getToVersion())
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (o1, o2) -> o1, TreeMap::new)); //dummy merger
     for (Map.Entry<Integer, UpgradeToVersion> upgradeToVersion : upgradesToVersionToUse.entrySet()) {
-      LOG.debug("Upgrading '{}' stage to '{}' version", stageName, upgradeToVersion.getKey());
+      LOG.debug("Upgrading '{}' stage to '{}' version", context.getStageInstance(), upgradeToVersion.getKey());
       upgradeToVersion.getValue().upgrade(configs, context);
     }
     return configs;

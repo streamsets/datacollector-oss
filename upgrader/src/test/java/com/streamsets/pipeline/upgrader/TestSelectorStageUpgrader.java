@@ -130,6 +130,24 @@ public class TestSelectorStageUpgrader {
   }
 
   @Test
+  public void testSelectorCallingOnlyYamlUpgrader() {
+    List<Config> configs = new ArrayList<>();
+
+    StageUpgrader legacyUpgrader = Mockito.mock(StageUpgrader.class);
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-selectorUpgrader.yaml");
+    SelectorStageUpgrader upgrader = new SelectorStageUpgrader("stage", legacyUpgrader, yamlResource);
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("ddd", find(configs, "d").getValue());
+  }
+
+  @Test
   public void testSelectorNullYamlUpgrader() {
     List<Config> configs = new ArrayList<>();
 
