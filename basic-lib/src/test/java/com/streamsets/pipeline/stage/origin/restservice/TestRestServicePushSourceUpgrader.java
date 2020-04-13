@@ -73,9 +73,9 @@ public class TestRestServicePushSourceUpgrader {
   }
 
   @Test
-  public void testV4ToV5() {
-    Mockito.doReturn(4).when(context).getFromVersion();
-    Mockito.doReturn(5).when(context).getToVersion();
+  public void testV3ToV4() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
 
     String dataFormatPrefix = "dataFormatConfig.";
     configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
