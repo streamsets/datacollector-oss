@@ -804,6 +804,12 @@
         <artifactId>selma</artifactId>
         <version>${selma.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-s3</artifactId>
+        <version>${aws.sdk.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

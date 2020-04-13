@@ -38,6 +38,7 @@
     <gcp-ps.version>1.93.0</gcp-ps.version>
     <gcp-bigquery.version>1.93.0</gcp-bigquery.version>
     <netty.version>4.1.14.Final</netty.version>
+    <guava.version>28.0-android</guava.version>
   </properties>
 
   <dependencies>
@@ -125,6 +126,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-sdk</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.google.guava</groupId>
+          <artifactId>guava</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Test Dependencies -->

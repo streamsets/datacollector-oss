@@ -43,6 +43,8 @@
     <hadoop.version>3.2.1</hadoop.version>
 
     <guava.version>28.1-jre</guava.version>
+    <!-- match Jackson version to azure-data-lake-store-sdk dependency -->
+    <jackson.version>2.8.6</jackson.version>
   </properties>
 
   <dependencies>

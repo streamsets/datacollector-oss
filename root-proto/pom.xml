@@ -50,6 +50,7 @@
     -->
     <awaitility.version>2.0.0</awaitility.version>
     <aws-encryption-sdk.version>1.3.5</aws-encryption-sdk.version>
+    <aws.sdk.version>1.11.385</aws.sdk.version>
     <bouncycastle.version>1.60</bouncycastle.version>
     <conscrypt.version>1.2.0</conscrypt.version>
     <metrics.version>4.0.3</metrics.version>
@@ -142,6 +143,11 @@
         <version>${mockito.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-all</artifactId>
+        <version>${mockito.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.powermock</groupId>
         <artifactId>powermock-module-junit4</artifactId>
         <version>${powermock.version}</version>
@@ -171,6 +177,16 @@
       <dependency>
         <groupId>org.glassfish.jersey.core</groupId>
         <artifactId>jersey-server</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.core</groupId>
+        <artifactId>jersey-common</artifactId>
+        <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.glassfish.jersey.bundles.repackaged</groupId>
+        <artifactId>jersey-guava</artifactId>
         <version>${jersey.version}</version>
       </dependency>
       <dependency>
@@ -232,6 +248,11 @@
         <groupId>org.glassfish.jersey.connectors</groupId>
         <artifactId>jersey-apache-connector</artifactId>
         <version>${jersey.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.jaxrs</groupId>
+        <artifactId>jackson-jaxrs-base</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.jaxrs</groupId>

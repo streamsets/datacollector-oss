@@ -16,18 +16,13 @@
 package com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroparquet;
 
 import com.streamsets.pipeline.lib.converter.AvroParquetConstants;
-import com.streamsets.pipeline.lib.util.AvroParquetWriterBuilder;
 import com.streamsets.pipeline.lib.util.AvroToParquetConverterUtil;
 import com.streamsets.pipeline.stage.destination.mapreduce.jobtype.avroconvert.AvroConversionBaseMapper;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericRecord;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
-import org.apache.parquet.SemanticVersion;
-import org.apache.parquet.Version;
-import org.apache.parquet.avro.AvroParquetWriter;
 import org.apache.parquet.hadoop.ParquetWriter;
-import org.apache.parquet.hadoop.metadata.CompressionCodecName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -207,6 +207,14 @@
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-spark-processor-protolib</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+
 
         <!--
         Due to a quirk (bug?) in maven-assembly plugin, these Jackson dependencies must be explicitly declared here;
@@ -238,12 +246,25 @@
             <artifactId>jackson-module-paranamer</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-scala_2.11</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
         <dependency>
           <groupId>com.streamsets</groupId>
           <artifactId>streamsets-datacollector-spark-executor-protolib</artifactId>
           <version>${project.version}</version>
           <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.streamsets</groupId>
+            <artifactId>streamsets-datacollector-spark-executor-protolib</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -256,6 +277,14 @@
             <groupId>org.apache.spark</groupId>
             <artifactId>spark-sql_2.11</artifactId>
             <version>${spark.version}</version>
+            <exclusions>
+                <!-- exclude the com.twitter (Parquet) dependencies here, because hive-serde already
+                     depends on and includes parquet-hadoop-bundle, which has all of these classes together -->
+                <exclusion>
+                    <groupId>com.twitter</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -786,7 +815,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
             <scope>test</scope>
         </dependency>
 
@@ -836,8 +864,6 @@
                                 <source>${basedir}/../hive-protolib/src/test/java</source>
                                 <source>${basedir}/../kudu-protolib/src/test/java</source>
                                 <source>${basedir}/../mapreduce-protolib/src/test/java</source>
-                                <source>${basedir}/../spark-executor-protolib/src/test/java</source>
-                                <source>${basedir}/../spark-processor-protolib/src/test/java</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -867,12 +893,6 @@
                                 <resource>
                                     <directory>${basedir}/../flume-protolib/src/test/resources</directory>
                                 </resource>
-                                <resource>
-                                    <directory>${basedir}/../spark-processor-protolib/src/test/resources</directory>
-                                </resource>
-                                <resource>
-                                  <directory>${basedir}/../spark-executor-protolib/src/test/resources</directory>
-                                </resource>
                             </resources>
                         </configuration>
                     </execution>
@@ -895,6 +915,8 @@
                         <dependency>com.streamsets:streamsets-datacollector-dir-spooler-protolib</dependency>
                         <dependency>com.streamsets:streamsets-datacollector-hdfs-protolib</dependency>
                         <dependency>com.streamsets:streamsets-datacollector-cluster-hdfs-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-spark-processor-protolib</dependency>
+                        <dependency>com.streamsets:streamsets-datacollector-spark-executor-protolib</dependency>
                     </dependenciesToScan>
                 </configuration>
             </plugin>

@@ -146,23 +146,11 @@
 
         Therefore, exclude all of our Netty dependencies since we should not need them from this stagelib
         anyway (TCP server, Netflow decoding, etc. should not be needed)
-
-        Sadly, we can't use wildcards for the artifactId here, since there is a bug in maven-assembly-plugin
-        where wildcards are ignored for purposes of building the assembly
-        See: https://issues.apache.org/jira/browse/MASSEMBLY-675 (fixed in an upcoming release)
         -->
         <exclusions>
           <exclusion>
             <groupId>io.netty</groupId>
             <artifactId>*</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-transport-native-epoll</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-codec</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

@@ -40,6 +40,7 @@
     <hive.version>2.1.1-mapr-1803</hive.version>
     <zookeeper.version>3.4.5-mapr-1710</zookeeper.version>
     <spark.version>2.2.1-mapr-1803</spark.version>
+    <jackson.version>2.6.5</jackson.version>
  </properties>
 
   <dependencies>
@@ -336,6 +337,12 @@
           <artifactId>jackson-databind</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-scala_2.11</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>

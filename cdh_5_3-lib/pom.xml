@@ -42,20 +42,9 @@
     <flume.version>1.5.0-cdh5.3.10</flume.version>
     <thrift.version>0.9.0-cdh5-2</thrift.version>
     <avro.version>1.7.7</avro.version>
-    <parquet.version>1.8.1</parquet.version>
   </properties>
 
   <dependencies>
-    <!-- Parquet dependency must be here. Otherwise tests are run with incorrect parquet version taken from
-        MapReduce Protolib-->
-
-    <dependency>
-      <groupId>org.apache.parquet</groupId>
-      <artifactId>parquet-avro</artifactId>
-      <version>${parquet.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
     <!--Dependency for Solr Unit Tests to override SDC Jetty Artifacts -->
     <dependency>
       <groupId>org.eclipse.jetty</groupId>

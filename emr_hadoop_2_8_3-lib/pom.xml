@@ -94,6 +94,21 @@
             <version>${hadoop.version}</version>
         </dependency>
 
+        <!-- add explicit jackson dependencies due to maven-assembly-plugin behavior (since it will pull 2.8.9 from
+             container-common even though that is only reachable through a test scope) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <scope>compile</scope>
+            <version>${jackson.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.streamsets</groupId>
             <artifactId>streamsets-datacollector-api</artifactId>

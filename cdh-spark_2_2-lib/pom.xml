@@ -38,6 +38,8 @@
     <spark.version>2.2.0.cloudera1</spark.version>
     <kafka.version>0.10.0-kafka-2.1.0</kafka.version>
     <zkclient.version>0.8</zkclient.version>
+    <!-- make Jackson version match the one depended on by jackson-module-scala -->
+    <jackson.version>2.6.5</jackson.version>
   </properties>
 
   <dependencies>
@@ -58,6 +60,17 @@
       <groupId>org.apache.spark</groupId>
       <artifactId>spark-sql_2.11</artifactId>
       <version>${spark.version}</version>
+    </dependency>
+
+    <!-- need an explicit dependency on jackson-annotations to force it to 2.6.5, because things are a mess
+         jackson-databind 2.6.5 depends on jackson-annotations 2.6.0
+         however, jackson-module-scala_2.11 2.6.5 depends on jackson-annotations 2.6.5
+         Maven is selecting 2.6.0, so to unify the versions, we will manually pick 2.6.5 here
+    -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <version>${jackson.version}</version>
     </dependency>
 
     <dependency>
@@ -165,6 +178,12 @@
       <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-annotations</artifactId>
+        </exclusion>
+      </exclusions>
    </dependency>
 
 

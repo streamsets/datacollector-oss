@@ -34,7 +34,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <aws.version>1.11.385</aws.version>
     <sdc.log4j.level>DEBUG</sdc.log4j.level>
     <airlift.version>0.7</airlift.version>
     <jexl.version>3.1</jexl.version>
@@ -478,7 +477,6 @@
     <dependency>
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-java-sdk-s3</artifactId>
-      <version>${aws.version}</version>
     </dependency>
   </dependencies>
 

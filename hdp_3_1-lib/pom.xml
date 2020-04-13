@@ -39,6 +39,7 @@
     <scala.version>2.11.11</scala.version>
     <kafka.version>2.0.0.3.3.1.2-3</kafka.version>
     <spark.version>2.3.2</spark.version>
+    <jackson.version>2.6.7</jackson.version>
     <zk-client.version>0.5-1</zk-client.version>
     <avro.version>1.7.7</avro.version>
     <h2.version>1.4.187</h2.version>
@@ -48,6 +49,7 @@
     <aws.java.sdk.version>1.11.134</aws.java.sdk.version>
     <parquet.version>1.8.1</parquet.version>
     <atlas.version>1.1.0.3.1.0.6-1</atlas.version>
+    <jetty.version>9.3.19.v20170502</jetty.version>
   </properties>
 
   <dependencies>
@@ -162,6 +164,12 @@
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-cluster-bootstrap-api</artifactId>
       <scope>provided</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- Spark dependencies -->
@@ -179,11 +187,15 @@
       <exclusions>
         <exclusion>
           <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
+          <artifactId>*</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.module</groupId>
+          <artifactId>*</artifactId>
         </exclusion>
         <exclusion>
           <groupId>org.apache.spark</groupId>
-          <artifactId>spark-sql_2.11</artifactId>
+          <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -216,15 +228,7 @@
         </exclusion>
         <exclusion>
           <groupId>org.glassfish.jersey.core</groupId>
-          <artifactId>jersey-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-annotations</artifactId>
+          <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
@@ -238,13 +242,31 @@
       <exclusions>
         <exclusion>
           <groupId>org.apache.orc</groupId>
-          <artifactId>orc-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.orc</groupId>
-          <artifactId>orc-mapreduce</artifactId>
+          <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <!-- add explicit jackson dependencies due to maven-assembly-plugin behavior (since it will pull 2.8.9 from
+         container-common even though that is only reachable through a test scope) -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <scope>compile</scope>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <scope>compile</scope>
+      <version>${jackson.version}</version>
+    </dependency>
+    <!-- also for websocket -->
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-servlet</artifactId>
+      <version>9.3.25.v20180904</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -258,7 +280,13 @@
       <groupId>org.apache.atlas</groupId>
       <artifactId>hive-bridge</artifactId>
       <version>${atlas.version}</version>
-      <scope>compile</scope>
+        <scope>compile</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>asm</groupId>
+            <artifactId>asm</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
@@ -593,6 +621,12 @@
       <artifactId>hadoop-minicluster</artifactId>
       <version>${hadoop.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

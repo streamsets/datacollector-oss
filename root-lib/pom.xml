@@ -200,12 +200,6 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
-        <artifactId>streamsets-datacollector-kafka_multisource-protolib</artifactId>
-        <type>test-jar</type>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-hdfs-protolib</artifactId>
         <type>test-jar</type>
         <version>${project.version}</version>
