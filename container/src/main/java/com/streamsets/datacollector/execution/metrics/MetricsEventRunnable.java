@@ -181,8 +181,8 @@ public class MetricsEventRunnable implements Runnable {
           || state.getExecutionMode() == ExecutionMode.CLUSTER_MESOS_STREAMING) {
           MetricRegistryJson json = getAggregatedMetrics();
           metricsJSONStr = objectMapper.writer().writeValueAsString(json);
-        } else if (state.getExecutionMode() == ExecutionMode.BATCH
-            || state.getExecutionMode() == ExecutionMode.STREAMING && metricRegistryJson != null) {
+        } else if ((state.getExecutionMode() == ExecutionMode.BATCH
+            || state.getExecutionMode() == ExecutionMode.STREAMING) && metricRegistryJson != null) {
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistryJson);
         } else {
           metricsJSONStr = objectMapper.writer().writeValueAsString(metricRegistry);
