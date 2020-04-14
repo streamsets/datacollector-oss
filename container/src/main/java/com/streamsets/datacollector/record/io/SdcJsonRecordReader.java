@@ -61,8 +61,11 @@ public class SdcJsonRecordReader implements RecordReader {
 
   @Override
   public Record readRecord() throws IOException {
-    RecordJson recordJson = (RecordJson) reader.read();
-    return BeanHelper.unwrapRecord(recordJson);
+    Object record = reader.read();
+    if(record == JsonObjectReader.EOF) {
+      return null;
+    }
+    return BeanHelper.unwrapRecord((RecordJson)record);
   }
 
   @Override

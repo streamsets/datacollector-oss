@@ -118,7 +118,7 @@ public class SdkJsonDataFormatParserService extends BaseService implements DataF
     @Override
     public Record parse() throws IOException, DataParserException {
       Object object = recordReader.read();
-      if(object == null) {
+      if(object == JsonObjectReader.EOF) {
         return null;
       }
 

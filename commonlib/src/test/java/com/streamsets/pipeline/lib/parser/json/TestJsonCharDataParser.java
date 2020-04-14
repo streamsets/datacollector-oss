@@ -133,6 +133,27 @@ public class TestJsonCharDataParser {
   }
 
   @Test
+  public void testParseArrayWithConstants() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("[\"Hi\",true,null]"), 1000, true, false);
+    DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0, Mode.ARRAY_OBJECTS, 10);
+    Assert.assertEquals(0, Long.parseLong(parser.getOffset()));
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals("Hi", record.get().getValueAsString());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals(true, record.get().getValueAsBoolean());
+    record = parser.parse();
+    Assert.assertNotNull(record);
+    Assert.assertEquals(Field.Type.STRING, record.get().getType());
+    Assert.assertEquals(null, record.get().getValueAsString());
+    record = parser.parse();
+    Assert.assertNull(record);
+    Assert.assertEquals(-1, Long.parseLong(parser.getOffset()));
+    parser.close();
+  }
+
+  @Test
   public void testParseArrayWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("[[\"Hello\"],[\"Bye\"]]"), 1000, true, false);
     DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 9,
@@ -220,4 +241,42 @@ public class TestJsonCharDataParser {
     parser.close();
   }
 
+  @Test
+  public void testParseStringConstant() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("\"str\""), 1000, true, false);
+    DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0, Mode.MULTIPLE_OBJECTS, 100);
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+
+    Assert.assertEquals(Field.Type.STRING, record.get().getType());
+    Assert.assertEquals("str", record.get().getValueAsString());
+
+    parser.close();
+  }
+
+  @Test
+  public void testParseFalseConstant() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("false"), 1000, true, false);
+    DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0, Mode.MULTIPLE_OBJECTS, 100);
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+
+    Assert.assertEquals(Field.Type.BOOLEAN, record.get().getType());
+    Assert.assertEquals(false, record.get().getValueAsBoolean());
+
+    parser.close();
+  }
+
+  @Test
+  public void testParseNullConstant() throws Exception {
+    OverrunReader reader = new OverrunReader(new StringReader("null"), 1000, true, false);
+    DataParser parser = new JsonCharDataParser(getContext(), "id", reader, 0, Mode.MULTIPLE_OBJECTS, 100);
+    Record record = parser.parse();
+    Assert.assertNotNull(record);
+
+    Assert.assertEquals(Field.Type.STRING, record.get().getType());
+    Assert.assertEquals(null, record.get().getValueAsString());
+
+    parser.close();
+  }
 }

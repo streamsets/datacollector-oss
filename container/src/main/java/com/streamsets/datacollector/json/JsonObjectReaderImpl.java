@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.ext.JsonObjectReader;
 import com.streamsets.pipeline.api.ext.json.Mode;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.ext.io.OverrunException;
-import com.streamsets.pipeline.lib.json.StreamingJsonParserImpl;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +34,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class JsonObjectReaderImpl implements JsonObjectReader {
-  private static final Logger LOG = LoggerFactory.getLogger(StreamingJsonParserImpl.class);
+  private static final Logger LOG = LoggerFactory.getLogger(JsonObjectReaderImpl.class);
 
   private static final int MAX_CHARS_TO_READ_FORWARD = 64;
   private static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper();
@@ -165,7 +164,7 @@ public class JsonObjectReaderImpl implements JsonObjectReader {
 
   @SuppressWarnings("unchecked")
   protected Object readObjectFromArray() throws IOException {
-    Object value = null;
+    Object value = JsonObjectReader.EOF;
     if (starting) {
       starting = false;
       JsonToken token = jsonParser.nextToken();
@@ -190,7 +189,7 @@ public class JsonObjectReaderImpl implements JsonObjectReader {
 
   @SuppressWarnings("unchecked")
   protected Object readObjectFromStream() throws IOException {
-    Object value = null;
+    Object value = JsonObjectReader.EOF;
     if (starting) {
       starting = false;
       nextToken = jsonParser.nextToken();

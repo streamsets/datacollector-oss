@@ -68,7 +68,7 @@ public class JsonCharDataParser extends AbstractDataParser {
     long offset = parser.getReaderPosition();
     try {
       Object json = parser.read();
-      if (json != null) {
+      if (json != JsonObjectReader.EOF) {
         record = createRecord(offset, json);
       } else {
         eof = true;
@@ -83,7 +83,7 @@ public class JsonCharDataParser extends AbstractDataParser {
     long offset = parser.getReaderPosition();
     try {
       Object json = parser.read();
-      return (json != null) ? jsonToField(json,  offset) : null;
+      return (json != JsonObjectReader.EOF) ? jsonToField(json,  offset) : null;
     } catch (ObjectLengthException ex) {
       throw new DataParserException(Errors.JSON_PARSER_02, readerId, offset, maxObjectLen);
     }
