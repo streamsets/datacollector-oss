@@ -160,12 +160,21 @@ public class StageLibraryManifestJson {
     this.stageLibLicense = stageLibLicense;
   }
 
+  /**
+   * @return the minimum supported SDC version for the stage library or empty if not specified.
+   */
   public String getStageLibMinSdcVersion() {
-    return stageLibMinSdcVersion;
+    if (stageLibMinSdcVersion == null
+        || stageLibMinSdcVersion.equalsIgnoreCase("undefined")
+        || stageLibMinSdcVersion.equalsIgnoreCase("not-specified")) {
+      return "";
+    } else {
+      return stageLibMinSdcVersion;
+    }
   }
 
   public void setStageLibMinSdcVersion(String stageLibMinSdcVersion) {
-    this.stageLibMinSdcVersion = stageLibMinSdcVersion;
+    this.stageLibMinSdcVersion = stageLibMinSdcVersion == null ? "" : stageLibMinSdcVersion.trim();
   }
 
   public List<StageInfoJson> getStages() {

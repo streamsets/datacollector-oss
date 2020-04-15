@@ -107,12 +107,21 @@ public class RepositoryManifestJson {
     this.stageLibrariesLicense = stageLibrariesLicense;
   }
 
+  /**
+   * @return the minimum supported SDC version for the stage libraries or empty if not specified.
+   */
   public String getStageLibrariesMinSdcVersion() {
-    return stageLibrariesMinSdcVersion;
+    if (stageLibrariesMinSdcVersion == null
+        || stageLibrariesMinSdcVersion.equalsIgnoreCase("undefined")
+        || stageLibrariesMinSdcVersion.equalsIgnoreCase("not-specified")) {
+      return "";
+    } else {
+      return stageLibrariesMinSdcVersion;
+    }
   }
 
   public void setStageLibrariesMinSdcVersion(String stageLibrariesMinSdcVersion) {
-    this.stageLibrariesMinSdcVersion = stageLibrariesMinSdcVersion;
+    this.stageLibrariesMinSdcVersion = stageLibrariesMinSdcVersion == null ? "" : stageLibrariesMinSdcVersion.trim();
   }
 
   public List<StageLibrariesJson> getStageLibraries() {
