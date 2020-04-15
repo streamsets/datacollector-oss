@@ -140,16 +140,6 @@
       <outputDirectory>/</outputDirectory>
     </fileSet>
 
-    <!-- MapR Libs -->
-    <fileSet>
-      <directory>${basedir}/../${mapr_5_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${mapr_5_1-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/</outputDirectory>
-    </fileSet>
-
     <!-- Apache Kudu libs -->
     <fileSet>
       <directory>${basedir}/../${apache-kudu_1_0-lib}/target/streamsets-libs/</directory>

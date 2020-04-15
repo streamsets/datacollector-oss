@@ -576,15 +576,11 @@
         <kinetica_6_1-lib>kinetica_6_1-lib</kinetica_6_1-lib>
         <kinetica_6_2-lib>kinetica_6_2-lib</kinetica_6_2-lib>
         <kinetica_7_0-lib>kinetica_7_0-lib</kinetica_7_0-lib>
-        <mapr_5_0-lib>mapr_5_0-lib</mapr_5_0-lib>
-        <mapr_5_1-lib>mapr_5_1-lib</mapr_5_1-lib>
-        <mapr_5_2-lib>mapr_5_2-lib</mapr_5_2-lib>
         <mapr_6_0-lib>mapr_6_0-lib</mapr_6_0-lib>
         <mapr_6_0-mep4-lib>mapr_6_0-mep4-lib</mapr_6_0-mep4-lib>
         <mapr_6_0-mep5-lib>mapr_6_0-mep5-lib</mapr_6_0-mep5-lib>
         <mapr_6_1-lib>mapr_6_1-lib</mapr_6_1-lib>
         <mapr_6_1-mep6-lib>mapr_6_1-mep6-lib</mapr_6_1-mep6-lib>
-        <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_3-lib>mongodb_3-lib</mongodb_3-lib>
         <mongodb_4-lib>mongodb_4-lib</mongodb_4-lib>
         <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
@@ -667,15 +663,11 @@
         <module>hdp_2_6-flume-lib</module>
         <module>hdp_3_1-lib</module>
         <module>jython_2_7-lib</module>
-        <module>mapr_5_0-lib</module>
-        <module>mapr_5_1-lib</module>
-        <module>mapr_5_2-lib</module>
         <module>mapr_6_0-lib</module>
         <module>mapr_6_0-mep4-lib</module>
         <module>mapr_6_0-mep5-lib</module>
         <module>mapr_6_1-lib</module>
         <module>mapr_6_1-mep6-lib</module>
-        <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_3-lib</module>
         <module>mongodb_4-lib</module>
         <module>databricks-ml_2-lib</module>
@@ -721,7 +713,6 @@
         <kinetica_7_0-lib>kinetica_7_0-lib</kinetica_7_0-lib>
         <mapr_6_1-lib>mapr_6_1-lib</mapr_6_1-lib>
         <mapr_6_1-mep6-lib>mapr_6_1-mep6-lib</mapr_6_1-mep6-lib>
-        <mapr_spark_2_1_mep_3_0-lib>mapr_spark_2_1_mep_3_0-lib</mapr_spark_2_1_mep_3_0-lib>
         <mongodb_4-lib>mongodb_4-lib</mongodb_4-lib>
         <azure-lib>azure_lib</azure-lib>
         <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
@@ -757,7 +748,6 @@
         <module>jython_2_7-lib</module>
         <module>mapr_6_1-lib</module>
         <module>mapr_6_1-mep6-lib</module>
-        <module>mapr_spark_2_1_mep_3_0-lib</module>
         <module>mongodb_4-lib</module>
         <module>databricks-ml_2-lib</module>
       </modules>
