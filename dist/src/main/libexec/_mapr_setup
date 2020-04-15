@@ -31,7 +31,6 @@ BLACKLIST_PROP="system.stagelibs.blacklist"
 PROP_FILENAME="sdc.properties"
 POLICY_FILENAME="sdc-security.policy"
 MAPR_LIB_BASE="streamsets-datacollector-mapr"
-MAPR_SPARK_LIB="streamsets-datacollector-mapr_spark*-lib"
 
 if [ -z ${SDC_HOME} ];then
   echo "Set the SDC_HOME environment variable to the Data Collector installation directory."
@@ -104,10 +103,6 @@ if [ ! -z $MAPR_MEP_VERSION ]; then
   fi
 fi
 
-# Obtain the version of MapR Spark Data Collector supports
-SDC_MAPR_SPARK_LIB=`ls $SDC_HOME/streamsets-libs | grep streamsets-datacollector-mapr_spark_*`
-SDC_SPARK_VERSION=`echo $SDC_MAPR_SPARK_LIB | cut -d'_' -f 3,4 | sed 's/_/./g'`
-
 # Obtain MapR home
 if [[ -z "${MAPR_HOME}" ]];
 then
@@ -120,18 +115,6 @@ if [ ! -e "${MAPR_HOME}/MapRBuildVersion" ]; then
   echo "Error: ${MAPR_HOME} is not the correct path to MapR Home"
   exit 0
 fi
-# Check if MapR Spark is installed in this platform
-if [ ! -d "${MAPR_HOME}/spark" ]; then
-  echo "Warning: Spark is not installed. Skipping MapR Spark enablement."
-else
-  # Obtain MapR Spark version and check if SDC supports it
-  MAPR_SPARK_VERSION=`ls ${MAPR_HOME}/spark |cut -d'-' -f2 | cut -d'.' -f1,2`
-  if [ $SDC_SPARK_VERSION = $MAPR_SPARK_VERSION ];then
-    ENABLE_MAPR_SPARK=true
-  else
-    echo "Warning: The MapR Spark version is $MAPR_SPARK_VERSION while SDC supports version $SDC_SPARK_VERSION"
-  fi
-fi
 
 # Remove given library from the list of blacklisted properties
 function blacklist_remove {
@@ -141,10 +124,6 @@ function blacklist_remove {
 
   original_property=$(grep -i "$BLACKLIST_PROP" "${SDC_PROP_FILE}")
   blacklist_property=${original_property/${STAGE_LIB},/}
-  if [ ! -z $ENABLE_MAPR_SPARK ];then
-    echo "Enabling MapR Spark ..."
-    blacklist_property=${blacklist_property/${SDC_MAPR_SPARK_LIB}/}
-  fi
   sed -i ${BACKUP_EXT} "s/${original_property}/${blacklist_property}/" "${SDC_PROP_FILE}"
 }
 
@@ -196,9 +175,6 @@ echo "SDC_CONF=$SDC_CONF"
 echo "MAPR_HOME=$MAPR_HOME"
 echo "MAPR_VERSION=$MAPR_VERSION"
 echo "MAPR_MEP_VERSION=$MAPR_MEP_VERSION"
-if [ ! -z $ENABLE_MAPR_SPARK ];then
-  echo "MAPR_SPARK_VERSION=$MAPR_SPARK_VERSION"
-fi
 echo ""
 
 echo "Updating sdc.properties file ...."
