@@ -287,7 +287,7 @@ public class FieldRenamerProcessor extends SingleLaneRecordProcessor {
       if(count == 50000) {
         count = 0;
         CacheStats stats = cache.stats();
-        LOG.info("cache_stats: hits {} misses {} rate {} ",
+        LOG.debug("cache_stats: hits {} misses {} rate {} ",
             stats.hitCount(),
             stats.missCount(),
             stats.hitRate());
