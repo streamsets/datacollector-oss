@@ -25,8 +25,8 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
-import com.streamsets.pipeline.stage.processor.lookup.ForceLookupMultipleValuesBehaviorChooserValues;
 
 import java.util.List;
 
@@ -124,7 +124,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       displayPosition = 95,
       group = "QUERY"
   )
-  @ValueChooserModel(ForceLookupMultipleValuesBehaviorChooserValues.class)
+  @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   @ConfigDef(

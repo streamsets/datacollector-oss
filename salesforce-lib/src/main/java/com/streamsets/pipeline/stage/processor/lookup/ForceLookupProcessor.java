@@ -70,6 +70,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.xml.namespace.QName;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -478,11 +479,28 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor implements F
             batchMaker.addRecord(record);
             break;
           case SPLIT_INTO_MULTIPLE_RECORDS:
+            int i = 0;
             for (Map<String, Field> lookupItem : values) {
-              Record newRecord = getContext().cloneRecord(record);
+              Record newRecord = getContext().cloneRecord(record, String.valueOf(i++));
               setFieldsInRecord(newRecord, lookupItem);
               batchMaker.addRecord(newRecord);
             }
+            break;
+          case ALL_AS_LIST:
+            Map<String, List<Field>> valuesMap = new HashMap<>();
+            for (Map<String, Field> lookupItem : values) {
+              lookupItem.forEach((k, v) -> {
+                if (valuesMap.get(k) == null) {
+                  List<Field> lookupValue = new ArrayList<>();
+                  valuesMap.put(k, lookupValue);
+                }
+                valuesMap.get(k).add(v);
+              });
+            }
+            Map<String, Field> valueMap = new HashMap<>();
+            valuesMap.forEach( (k,v) -> valueMap.put(k, Field.create(v)));
+            setFieldsInRecord(record, valueMap);
+            batchMaker.addRecord(record);
             break;
           default:
             throw new IllegalStateException("Unknown multiple value behavior: " + conf.multipleValuesBehavior);
