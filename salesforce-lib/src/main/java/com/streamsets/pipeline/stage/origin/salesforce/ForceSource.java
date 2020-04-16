@@ -117,6 +117,7 @@ public class ForceSource extends BaseSource implements ForceStage {
   private static final String datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
   private SimpleDateFormat dateFormat = new SimpleDateFormat(datePattern);
 
+  private long noMoreDataRecordCount = 0;
 
   public ForceSource(
       ForceSourceConfigBean conf
@@ -499,7 +500,10 @@ public class ForceSource extends BaseSource implements ForceStage {
     // If we're not repeating the query, then send the event
     // If we ARE repeating, wait for a query with no records (SDC-12418)
     if (queryComplete && !eventFired && (conf.repeatQuery == ForceRepeatQuery.NO_REPEAT || noRecordsCreated)) {
-      NoMoreDataEvent.EVENT_CREATOR.create(getContext()).createAndSend();
+      NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+          .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+          .createAndSend();
+      noMoreDataRecordCount = 0;
       eventFired = true;
     }
 
@@ -551,6 +555,7 @@ public class ForceSource extends BaseSource implements ForceStage {
 
         final String sourceId = StringUtils.substring(conf.soqlQuery.replaceAll("[\n\r]", " "), 0, 100) + "::rowCount:" + recordIndex + (StringUtils.isEmpty(conf.offsetColumn) ? "" : ":" + newOffset);
         batchMaker.addRecord(recordCreator.createRecord(sourceId, fields));
+        noMoreDataRecordCount++;
         recordIndex++;
 
         return fixOffset(conf.offsetColumn, newOffset);
@@ -668,6 +673,7 @@ public class ForceSource extends BaseSource implements ForceStage {
         Record rec = recordCreator.createRecord(sourceId, record);
         noRecordsCreated = false;
         eventFired = false;
+        noMoreDataRecordCount++;
 
         batchMaker.addRecord(rec);
       }
