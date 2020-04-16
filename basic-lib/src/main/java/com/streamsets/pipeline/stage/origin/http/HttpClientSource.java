@@ -76,6 +76,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_66;
 import static com.streamsets.pipeline.lib.parser.json.Errors.JSON_PARSER_00;
 
 /**
@@ -635,6 +636,9 @@ public class HttpClientSource extends BaseSource {
           haveMorePages = !stopEval.eval(stopVars, conf.pagination.stopCondition, Boolean.class);
           if (haveMorePages) {
             final String nextPageURLPrefix = StringUtils.isNotBlank(conf.pagination.nextPageURLPrefix) ? conf.pagination.nextPageURLPrefix : "";
+            if(!record.has(conf.pagination.nextPageFieldPath)){
+              throw new StageException(HTTP_66, conf.pagination.nextPageFieldPath);
+            }
             final String nextPageFieldValue = record.get(conf.pagination.nextPageFieldPath).getValueAsString();
             final String nextPageURL = nextPageFieldValue.startsWith(nextPageURLPrefix) ? nextPageFieldValue : nextPageURLPrefix.concat(nextPageFieldValue);
             next = Link.fromUri(nextPageURL).build();

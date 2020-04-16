@@ -73,6 +73,7 @@ public enum Errors implements ErrorCode {
   HTTP_63("{} parsing the field '{}' as type {} for record '{}': {}"),
   HTTP_64("IOException attempting to parse whole file field '{}' for record '{}': {}"),
   HTTP_65("Input field '{}' does not exist in record '{}'"),
+  HTTP_66("Link field '{}' does not exist in record"),
   ;
 
   private final String msg;
