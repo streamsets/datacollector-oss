@@ -52,6 +52,8 @@ public class PipelineStartEvent extends PipelineBaseEvent {
 
   private List<InterceptorConfiguration> interceptorConfiguration;
 
+  private List<String> groups;
+
   public PipelineStartEvent() {
   }
 
@@ -59,10 +61,12 @@ public class PipelineStartEvent extends PipelineBaseEvent {
     String name,
     String rev,
     String user,
-    List<InterceptorConfiguration> interceptorConfiguration
+    List<InterceptorConfiguration> interceptorConfiguration,
+    List<String> groups
   ) {
     super(name, rev, user);
     this.interceptorConfiguration = interceptorConfiguration;
+    this.groups = groups;
   }
 
   public List<InterceptorConfiguration> getInterceptorConfiguration() {
@@ -71,5 +75,13 @@ public class PipelineStartEvent extends PipelineBaseEvent {
 
   public void setInterceptorConfiguration(List<InterceptorConfiguration> interceptorConfiguration) {
     this.interceptorConfiguration = interceptorConfiguration;
+  }
+
+  public List<String> getGroups() {
+    return this.groups;
+  }
+
+  public void setGroups(List<String> groups) {
+    this.groups = groups;
   }
 }

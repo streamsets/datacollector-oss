@@ -112,6 +112,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.function.Function;
@@ -317,7 +318,9 @@ public class TestRemoteEventHandler {
   }
 
   private static PipelineStartEventJson createStartEvent(String name, String rev, String user) {
-    return setBaseEventPropertiesAndReturn(new PipelineStartEventJson(), name, rev, user);
+    PipelineStartEventJson pipelineStartEventJson = setBaseEventPropertiesAndReturn(new PipelineStartEventJson(), name, rev, user);
+    pipelineStartEventJson.setGroups(Arrays.asList("all"));
+    return pipelineStartEventJson;
   }
 
   private static PipelineStopEventJson createStopEvent(String name, String rev, String user) {
@@ -601,7 +604,7 @@ public class TestRemoteEventHandler {
     }
 
     @Override
-    public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
+    public void start(Runner.StartPipelineContext context, String name, String rev, Set<String> groups) throws PipelineException, StageException {
       startCalled++;
       if (errorInjection) {
         throw new PipelineException(ContainerError.CONTAINER_0001);
@@ -1352,7 +1355,8 @@ public class TestRemoteEventHandler {
         null,
         1000l,
         false,
-        null
+        null,
+        Arrays.asList("all")
     ), EventType.PREVIEW_PIPELINE);
 
     assertThat(result.isError(), equalTo(false));

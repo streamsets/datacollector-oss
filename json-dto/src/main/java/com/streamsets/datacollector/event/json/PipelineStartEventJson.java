@@ -17,6 +17,7 @@ package com.streamsets.datacollector.event.json;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class PipelineStartEventJson extends PipelineBaseEventJson {
 
@@ -51,6 +52,16 @@ public class PipelineStartEventJson extends PipelineBaseEventJson {
   }
 
   private List<InterceptorConfigurationJson> interceptorConfiguration;
+
+  List<String> groups;
+
+  public List<String> getGroups() {
+    return this.groups;
+  }
+
+  public void setGroups(List<String> groups) {
+    this.groups = groups;
+  }
 
   public List<InterceptorConfigurationJson> getInterceptorConfiguration() {
     return interceptorConfiguration;

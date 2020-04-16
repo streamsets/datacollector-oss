@@ -103,6 +103,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -510,10 +511,15 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         Runner.StartPipelineContext startPipelineContext = new StartPipelineContextBuilder(pipelineStartEvent.getUser())
             .withInterceptorConfigurations(pipelineStartEvent.getInterceptorConfiguration())
             .build();
+        Set<String> groups = null;
+        if (pipelineStartEvent.getGroups() != null) {
+          groups = new HashSet(pipelineStartEvent.getGroups());
+        }
         remoteDataCollector.start(
             startPipelineContext,
             pipelineStartEvent.getName(),
-            pipelineStartEvent.getRev()
+            pipelineStartEvent.getRev(),
+            groups
         );
         break;
       case STOP_PIPELINE:

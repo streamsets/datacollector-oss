@@ -46,9 +46,10 @@ public class PipelinePreviewEvent extends PipelineStartEvent {
       String stopStage,
       long timeoutMillis,
       boolean testOrigin,
-      String stageOutputsToOverrideJsonText
+      String stageOutputsToOverrideJsonText,
+      List<String> groups
   ) {
-    super(name, rev, user, interceptorConfiguration);
+    super(name, rev, user, interceptorConfiguration, groups);
     this.batches = batches;
     this.batchSize = batchSize;
     this.skipTargets = skipTargets;

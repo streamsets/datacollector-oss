@@ -164,14 +164,13 @@ public class RemoteDataCollector implements DataCollector {
   }
 
   @Override
-  public void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException {
-    //TODO we should receive the groups from DPM, SDC-6793
+  public void start(Runner.StartPipelineContext context, String name, String rev, Set<String> groups) throws PipelineException, StageException {
     try {
-      // we need to skip enforcement user groups in scope.
-      GroupsInScope.executeIgnoreGroups(() -> {
+      Callable<String> callable = () -> {
         PipelineState pipelineState = pipelineStateStore.getState(name, rev);
         if (pipelineState.getStatus().isActive()) {
-          LOG.warn("Pipeline {}:{} is already in active state {}",
+          LOG.warn(
+              "Pipeline {}:{} is already in active state {}",
               pipelineState.getPipelineId(),
               pipelineState.getRev(),
               pipelineState.getStatus()
@@ -183,7 +182,13 @@ public class RemoteDataCollector implements DataCollector {
           manager.getRunner(name, rev).start(context);
         }
         return null;
-      });
+      };
+      if (groups != null) {
+        GroupsInScope.execute(groups, callable);
+      } else {
+        // For SCH versions < 3.16.0, we don't send user groups so we need to just revert back to old functionality of not checking group credentials
+        GroupsInScope.executeIgnoreGroups(callable);
+      }
     } catch (Exception ex) {
       LOG.warn(Utils.format("Error while starting pipeline: {} is {}", name, ex), ex);
       if (ex.getCause() != null) {

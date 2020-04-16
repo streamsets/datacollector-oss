@@ -66,7 +66,7 @@ public class TestJsonToFromDto {
   @Test
   public void testPipelineClientEventJson() throws Exception {
     UUID uuid = UUID.randomUUID();
-    PipelineStartEvent pse = new PipelineStartEvent("name1", "rev1", "user1", null);
+    PipelineStartEvent pse = new PipelineStartEvent("name1", "rev1", "user1", null, Collections.emptyList());
     ClientEvent clientEvent = new ClientEvent(uuid.toString(), Arrays.asList("SDC1"),
       true, false, EventType.START_PIPELINE, pse, "org1");
     String payload = MessagingJsonToFromDto.INSTANCE.serialize(MessagingDtoJsonMapper.INSTANCE.toPipelineStartEventJson(

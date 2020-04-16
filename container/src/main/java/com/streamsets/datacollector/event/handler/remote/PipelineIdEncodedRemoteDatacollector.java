@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
@@ -52,9 +53,9 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
 
   @Override
   public void start(
-      Runner.StartPipelineContext context, String name, String rev
+      Runner.StartPipelineContext context, String name, String rev, Set<String> groups
   ) throws PipelineException, StageException {
-    remoteDataCollector.start(context, replaceColonWithDoubleUnderscore(name), rev);
+    remoteDataCollector.start(context, replaceColonWithDoubleUnderscore(name), rev, groups);
   }
 
   @Override

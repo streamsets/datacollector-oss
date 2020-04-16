@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
@@ -42,7 +43,7 @@ public interface DataCollector {
    */
   void init();
 
-  void start(Runner.StartPipelineContext context, String name, String rev) throws PipelineException, StageException;
+  void start(Runner.StartPipelineContext context, String name, String rev, Set<String> groups) throws PipelineException, StageException;
 
   void stop(String user, String name, String rev) throws PipelineException;
 
