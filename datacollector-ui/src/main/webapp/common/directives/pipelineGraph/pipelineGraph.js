@@ -1752,6 +1752,24 @@ angular.module('pipelineGraphDirectives', [])
           type: pipelineConstant.PIPELINE
         });
         graph.updateGraph();
+
+        var stageTrackingDetail = {
+          'Pipeline ID': $scope.pipelineConfig.pipelineId,
+          'Stage ID': selectedNode.instanceName,
+          'Stage Type Name': selectedNode.stageName,
+          'Library Name': selectedNode.library
+        };
+        if (selectedNode.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
+          mixpanel.track('Origin Removed', stageTrackingDetail);
+        } else if (selectedNode.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
+          mixpanel.track('Processor Removed', stageTrackingDetail);
+        } else if (selectedNode.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
+          mixpanel.track('Destination Removed', stageTrackingDetail);
+        } else if (selectedNode.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
+          mixpanel.track('Executor Removed', stageTrackingDetail);
+        } else {
+          mixpanel.track('Stage with unknown type removed', stageTrackingDetail);
+        }
       }
     };
 

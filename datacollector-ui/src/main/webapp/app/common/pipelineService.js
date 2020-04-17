@@ -2099,4 +2099,61 @@ angular.module('dataCollectorApp.common')
       return this.betaStages[stageName];
     };
 
+    /**
+     * Get tracking data about the pipeline for MixPanel
+     */
+    this.getTrackingInfo = function(pipelineConfig) {
+      var originStages = pipelineConfig.stages.filter(function(stage) {
+        return stage.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE;
+      });
+      var destinationStages = pipelineConfig.stages.filter(function(stage) {
+        return stage.uiInfo.stageType === pipelineConstant.TARGET_STAGE_TYPE;
+      });
+      var processorStages = pipelineConfig.stages.filter(function(stage) {
+        return stage.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE;
+      });
+      var destinationStageIds = destinationStages.map(function(stage) {
+        return stage.instanceName;
+      });
+      var destinationStageNames = destinationStages.map(function(stage) {
+        return stage.stageName;
+      });
+      var processorStageNames = processorStages.map(function(stage) {
+        return stage.stageName;
+      });
+      var originStage = originStages[0] || {};
+      var trackingData = {
+        'Pipeline ID': pipelineConfig.pipelineId,
+        'Number of Stages': pipelineConfig.stages.length,
+        'Origin Stage ID': originStage.instanceName,
+        'Origin Type Name': originStage.stageName,
+        'Destination Stage ID List': destinationStageIds,
+        'Destination Type Name List': destinationStageNames,
+        'Processor Type Name List': processorStageNames
+      };
+      return trackingData;
+    };
+
+    this.getFlatIssueList = function(issues) {
+      var issueList = [];
+      var pipelineIssueMessages = [];
+      if (issues.pipelineIssues) {
+        pipelineIssueMessages = issues.pipelineIssues.map(function(issue) {
+          return issue.message;
+        });
+      }
+      if (issues.stageIssues) {
+        for (var stage in issues.stageIssues) {
+          issueList = issueList.concat(issues.stageIssues[stage].map(function(issue) {
+            if (issue.message) {
+              return issue.message.split(' ', 1)[0];
+            } else {
+              return JSON.stringify(issue);
+            }
+          }));
+        }
+      }
+      issueList = issueList.concat(pipelineIssueMessages);
+      return issueList;
+    };
   });

@@ -18,7 +18,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('PreviewController', function (
-    $scope, $rootScope, $q, _, api, previewService, pipelineConstant, $timeout, $modal
+    $scope, $rootScope, $q, _, api, previewService, pipelineConstant, pipelineService, $timeout, $modal
   ) {
     var previewDataBackup, previewStatusTimer, currentPreviewerId, currentStage;
 
@@ -394,6 +394,8 @@ angular
       var testOrigin = false;
       var firstStageInstance = $scope.stageInstances[0];
 
+      var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+
       $scope.stepExecuted = false;
       $scope.showLoading = true;
 
@@ -481,18 +483,28 @@ angular
               previewService.getPreviewStageErrorCounts($scope.previewData.batchesOutput[0]));
             $rootScope.$broadcast('clearDirtyLaneConnector');
             $scope.showLoading = false;
+
+            trackingData['Preview Successful'] = true;
+            trackingData['Preview Error'] = [];
+            mixpanel.track('Preview Complete', trackingData);
           });
 
         }).catch(function(res) {
           $rootScope.common.errors = [res.data];
           $scope.closePreview();
           $scope.showLoading = false;
+          trackingData['Preview Successful'] = false;
+          trackingData['Preview Error'] = [JSON.stringify(res.data)];
+          mixpanel.track('Preview Complete', trackingData);
         });
 
       }, function(data) {
         $rootScope.common.errors = [data];
         $scope.closePreview();
         $scope.showLoading = false;
+        trackingData['Preview Successful'] = false;
+        trackingData['Preview Error'] = [JSON.stringify(data)];
+        mixpanel.track('Preview Complete', trackingData);
       });
 
 
@@ -608,9 +620,14 @@ angular
       api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
         .then(function(res) {
           var previewData = res.data;
+          var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
           if (previewData.status !== 'FINISHED') {
             if (previewData.issues) {
               $rootScope.common.errors = [previewData.issues];
+              trackingData['Preview Successful'] = false;
+              var issueList = pipelineService.getFlatIssueList(previewData.issues);
+              trackingData['Preview Error'] = issueList;
+              mixpanel.track('Preview Complete', trackingData);
             } else if (previewData.message) {
               $rootScope.common.errors = [{
                 RemoteException: {
@@ -619,6 +636,9 @@ angular
                   stackTrace: previewData.errorStackTrace
                 }
               }];
+              trackingData['Preview Successful'] = false;
+              trackingData['Preview Error'] = [previewData.message];
+              mixpanel.track('Preview Complete', trackingData);
             }
 
             $scope.closePreview();

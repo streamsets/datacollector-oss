@@ -39,6 +39,7 @@ angular
         $scope.operationInProgress = true;
         var formData = new FormData();
         formData.append('file', $scope.uploadFile);
+        mixpanel.track('Import Pipelines From Archive Started', {});
         api.pipelineAgent.importPipelines(formData)
           .then(function(response) {
             var res = response.data;
@@ -46,11 +47,14 @@ angular
             $scope.successEntities = res.successEntities;
             $scope.operationDone = true;
             $scope.operationInProgress = false;
+            mixpanel.track('Import Pipeline From Archive Completed', {});
+            mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
           })
           .catch(function(res) {
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
+            mixpanel.track('Import Pipeline From Archive Failed', {'Failure Reason': JSON.stringify(res.data)});
           });
       },
 
