@@ -306,13 +306,10 @@ public class HiveMetastoreTarget extends BaseTarget {
             qualifiedTableName,
             headers
           );
-        }
-
-        //Add Columns
-        hiveQueryExecutor.executeAlterTableAddColumnsQuery(qualifiedTableName, columnDiff);
-
-        if (!conf.storedAsAvro) {
           hiveQueryExecutor.executeAlterTableSetTblPropertiesQuery(qualifiedTableName, schemaPath);
+        } else {
+          //Add Columns
+          hiveQueryExecutor.executeAlterTableAddColumnsQuery(qualifiedTableName, columnDiff);
         }
         cachedColumnTypeInfo.updateState(columnDiff);
 
