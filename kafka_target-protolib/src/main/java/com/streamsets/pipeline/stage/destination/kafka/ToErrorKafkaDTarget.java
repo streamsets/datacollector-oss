@@ -31,7 +31,8 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
     description = "Writes records to Kafka as SDC Records",
     onlineHelpRefUrl ="index.html?contextID=concept_kgc_l4y_5r",
     upgrader = KafkaTargetUpgrader.class,
-    upgraderDef = "upgrader/ToErrorKafkaDTarget.yaml")
+    upgraderDef = "upgrader/KafkaDTarget.yaml"
+)
 @HideConfigs(preconditions = true, onErrorRecord = true, value = {
     "conf.dataFormat",
     "conf.keySerializer",
