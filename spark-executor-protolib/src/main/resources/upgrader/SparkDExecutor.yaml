@@ -21,4 +21,4 @@ upgrades:
     actions:
     - setConfig:
         name: conf.yarnConfigBean.submitTimeout
-        value: "0"
+        value: 0

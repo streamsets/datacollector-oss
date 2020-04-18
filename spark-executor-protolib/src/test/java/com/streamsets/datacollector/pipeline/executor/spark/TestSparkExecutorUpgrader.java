@@ -71,7 +71,7 @@ public class TestSparkExecutorUpgrader {
 
     configs = upgrader.upgrade(configs, context);
     //conf.yarnConfigBean.submitTimeout
-    UpgraderTestUtils.assertExists(configs, "conf.yarnConfigBean.submitTimeout", "0");
+    UpgraderTestUtils.assertExists(configs, "conf.yarnConfigBean.submitTimeout", 0);
 
 
   }
