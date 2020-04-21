@@ -46,6 +46,7 @@ cloud_provider_aws="aws"
 cloud_provider_unknown="UNKNOWN"
 
 fetch_error="<FETCH_ERROR>"
+ip_regex='^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$'
 
 # other configurable constants
 
@@ -62,6 +63,7 @@ fi
 
 # overrides for testing
 curl_cmd="${SDC_SYS_INFO_CURL_TEST_OVERRIDE-"$(command -v curl)"}"
+skip_ec2_hypervisor_check="${SKIP_EC2_HYPERVISOR_CHECK:-""}"
 
 log_error() {
   >&2 echo ERROR: "$@"
@@ -115,7 +117,7 @@ determine_cloud_provider() {
   fi
 
   # quick EC2 check, doesn't work reliably on newer instances though
-  if [ -f /sys/hypervisor/uuid ]; then
+  if [ -f /sys/hypervisor/uuid ] && [ -z "$skip_ec2_hypervisor_check" ] ; then
     if [ "$(head -c 3 /sys/hypervisor/uuid)" == "ec2" ]; then
       cloud_provider="$cloud_provider_aws"
       echo "cloud_provider is $cloud_provider"
@@ -259,7 +261,7 @@ escape_json_value() {
   if ! command -v python 2>&1 1>/dev/null ; then
     log_error python not installed, json escaping may not work reliably
     # remove newlines and escape double quotes. Doesn't handle already-escaped double quotes properly...but better than nothing
-    printf '"%s "' "$(printf '%s' "$1" | tr -d '\n' | sed 's/"/\\"/g')"
+    printf '"%s"' "$(printf '%s' "$1" | tr -d '\n' | sed 's/"/\\"/g')"
   fi
   printf '%s' "$1" | python -c 'import json,sys; print(json.dumps(sys.stdin.read()))'
 }
@@ -284,8 +286,8 @@ get_public_ip() {
 
 get_aws_public_ip() {
   # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
-  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/$aws_meta_api_version/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
-    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/public-ipv4
+  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
+    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/public-ipv4 | grep -E "$ip_regex"
 }
 
 get_azure_public_ip() {
@@ -294,12 +296,12 @@ get_azure_public_ip() {
     # sometimes azure returns empty string for public IP
     get_fallback_public_ip
   else
-    echo "$ip"
+    echo "$ip" | grep -E "$ip_regex"
   fi
 }
 
 get_fallback_public_ip() {
-  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1
+  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1  | grep -E "$ip_regex"
 }
 
 get_private_ip() {
@@ -321,17 +323,17 @@ get_private_ip() {
 }
 
 get_azure_private_ip() {
-  curl -s --connect-timeout "$metadata_wait" -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/privateIpAddress?api-version=$azure_meta_api_version&format=text"
+  curl -s --connect-timeout "$metadata_wait" -H Metadata:true "http://169.254.169.254/metadata/instance/network/interface/0/ipv4/ipAddress/0/privateIpAddress?api-version=$azure_meta_api_version&format=text" | grep -E "$ip_regex"
 }
 
 get_aws_private_ip() {
   # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html#using-instance-addressing-common
-  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/$aws_meta_api_version/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
-    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/local-ipv4
+  TOKEN="$(curl -s --connect-timeout "$metadata_wait" -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")" \
+    && curl -s --connect-timeout "$metadata_wait" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/"$aws_meta_api_version"/meta-data/local-ipv4 | grep -E "$ip_regex"
 }
 
 get_fallback_private_ip() {
-  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1
+  ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n 1  | grep -E "$ip_regex"
 }
 
 usage() {

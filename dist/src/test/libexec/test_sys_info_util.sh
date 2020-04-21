@@ -52,8 +52,9 @@ invoke_sys_info_util() {
 
 reset_test() {
   export SDC_DATA="$target_dir"
-  export SDC_SYS_INFO_UTIL_METADATA_WAIT=1
+  export SDC_SYS_INFO_UTIL_METADATA_WAIT=3
   unset SDC_SYS_INFO_CURL_TEST_OVERRIDE
+  unset SKIP_EC2_HYPERVISOR_CHECK
   if [[ -e "$cache_file" ]] ; then
     rm "$cache_file"
   fi
@@ -84,6 +85,46 @@ result="$(invoke_sys_info_util get_cloud_provider)"
 assert_matches "cloud provider doesn't match original" "$cloud_provider" "$result"
 assert_file_contains "$cache_file" "$cloud_provider"
 assert_file_contains "$cache_file" "$private_ip"
+
+reset_test
+export SKIP_EC2_HYPERVISOR_CHECK=true
+echo "Test aws detection when azure throws 404"
+export MOCK_CURL_RESPONSES="$(cat <<END
+[
+  [".*/api/token ",            "MY_TOKEN"],
+  [".*/meta-data/local-ipv4$", "1.2.3.4"],
+  [".*/privateIpAddress\\\\?api-version=.*&format=text$", "<?xml blah>\n<html>\n <head>\n  <title>404 - Not Found</title>\n </head>\n</html>\n"]
+]
+END
+)"
+export SDC_SYS_INFO_CURL_TEST_OVERRIDE="python $prg_dir/mock_cmd.py MOCK_CURL_RESPONSES"
+result="$(CLD_PROVIDER="azure" invoke_sys_info_util get_private_ip)"
+assert_equals "Expected empty ip address due to 404" "" "$result"
+result="$(CLD_PROVIDER="aws" invoke_sys_info_util get_private_ip)"
+assert_equals "Wrong IP for mocked aws" "1.2.3.4" "$result"
+assert "Should be no cache file" [ ! -e "$cache_file" ]
+result="$(invoke_sys_info_util get_cloud_provider)"
+assert_equals "Wrong cloud provider" "aws" "$result"
+
+reset_test
+export SKIP_EC2_HYPERVISOR_CHECK=true
+echo "Test azure detection when aws throws 404"
+export MOCK_CURL_RESPONSES="$(cat <<END
+[
+  [".*/api/token ",            "<?xml blah>\n<html>\n <head>\n  <title>404 - Not Found</title>\n </head>\n</html>\n"],
+  [".*/meta-data/local-ipv4$", "<?xml blah>\n<html>\n <head>\n  <title>404 - Not Found</title>\n </head>\n</html>\n"],
+  [".*/privateIpAddress\\\\?api-version=.*&format=text$", "2.3.4.5"]
+]
+END
+)"
+export SDC_SYS_INFO_CURL_TEST_OVERRIDE="python $prg_dir/mock_cmd.py MOCK_CURL_RESPONSES"
+result="$(CLD_PROVIDER="aws" invoke_sys_info_util get_private_ip)"
+assert_equals "Expected empty ip address due to 404" "" "$result"
+result="$(CLD_PROVIDER="azure" invoke_sys_info_util get_private_ip)"
+assert_equals "Wrong IP for mocked azure" "2.3.4.5" "$result"
+assert "Should be no cache file" [ ! -e "$cache_file" ]
+result="$(invoke_sys_info_util get_cloud_provider)"
+assert_equals "Wrong cloud provider" "azure" "$result"
 
 reset_test
 echo "Test simple aws metadata"
