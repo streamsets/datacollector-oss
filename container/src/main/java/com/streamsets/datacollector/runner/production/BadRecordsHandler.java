@@ -20,6 +20,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.BatchImpl;
 import com.streamsets.datacollector.runner.ErrorSink;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.validation.Issue;
@@ -74,18 +75,16 @@ public class BadRecordsHandler {
     synchronized (errorStage) {
       errorStage.execute(
           sourceOffset,
-          // Source offset for this batch
           -1,
-          // BatchSize is not used for target
           new BatchImpl("errorStage", sourceEntity, sourceOffset, badRecords),
           null,
-          // BatchMaker doesn't make sense for target
+          // Error destination generating error records is a fatal issue (since there is no "error error handling") and
+          // thus there is no error sink.
           null,
-          // Error stage can't generate error records
+          // All events from the error stage will be ignored the same way events are ignored in case that user doesn't
+          // connect stages to process them on the main canvas.
+          new EventSink(),
           null,
-          // And also can't generate events
-          null,
-          // Doesn't yet suport user defined metrics
           sourceResponseSink
       );
     }

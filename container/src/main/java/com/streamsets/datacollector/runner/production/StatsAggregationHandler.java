@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner.production;
 
 import com.streamsets.datacollector.runner.BatchImpl;
+import com.streamsets.datacollector.runner.EventSink;
 import com.streamsets.datacollector.runner.StagePipe;
 import com.streamsets.datacollector.runner.StageRuntime;
 import com.streamsets.datacollector.validation.Issue;
@@ -44,18 +45,14 @@ public class StatsAggregationHandler {
     synchronized (statsAggregator) {
       statsAggregator.execute(
           sourceOffset,
-          // Source offset for this batch
           -1,
-          // BatchSize is not used for target
           new BatchImpl(STATS_AGGREGATOR, sourceEntity, sourceOffset, statsRecords),
           null,
-          // BatchMaker doesn't make sense for target
           null,
-          // Stats stage can't generate error records
+          // All events from the stats stage will be ignored the same way events are ignored in case that user doesn't
+          // connect stages to process them on the main canvas.
+          new EventSink(),
           null,
-          // And also can't generate events
-          null,
-          // Doesn't support user defined metrics
           null
       );
     }
