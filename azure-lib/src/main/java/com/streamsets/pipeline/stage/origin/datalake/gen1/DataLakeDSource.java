@@ -23,8 +23,11 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
+
+import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
     version = 2,
@@ -65,6 +68,10 @@ public class DataLakeDSource extends DPushSource {
 
   @Override
   protected PushSource createPushSource() {
+    if (spoolDirConfig.dataFormat == DataFormat.AVRO) {
+      spoolDirConfig.dataFormatConfig.avroSchemaSource = SOURCE;
+    }
+
     return new DataLakeSource(spoolDirConfig, dataLakeConfig);
   }
 }
