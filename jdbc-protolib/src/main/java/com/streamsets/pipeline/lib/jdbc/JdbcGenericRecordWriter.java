@@ -23,11 +23,12 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,14 +127,22 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     try (Connection connection = getDataSource().getConnection()){
       int prevOpCode = -1;
       HashCode prevColumnHash = null;
-      LinkedList<Record> queue = new LinkedList<>();
+      LinkedList<Pair<Record, Map<String, String>>> queue = new LinkedList<>();
 
       while (recordIterator.hasNext()) {
         Record record = recordIterator.next();
         int opCode = getOperationCode(record, errorRecords);
 
+        Map<String, String> columnsToParameters = recordReader.getColumnsToParameters(
+            record,
+            opCode,
+            getColumnsToParameters(),
+            opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields(),
+            sortedColumns
+        );
+
         // Need to consider the number of columns in query. If different, process saved records in queue.
-        HashCode columnHash = getColumnHash(record, opCode);
+        HashCode columnHash = columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
 
         boolean opCodeValid = opCode > 0;
         boolean opCodeUnchanged = opCode == prevOpCode;
@@ -141,7 +150,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         boolean canEnqueue = opCodeValid && opCodeUnchanged && supportedOpCode;
 
         if (canEnqueue) {
-          queue.add(record);
+          queue.add(Pair.of(record, columnsToParameters));
         }
 
         if (!opCodeValid || canEnqueue) {
@@ -155,7 +164,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           throw new IllegalStateException("Queue processed, but was not empty upon completion.");
         }
 
-        queue.add(record);
+        queue.add(Pair.of(record, columnsToParameters));
         prevOpCode = opCode;
         prevColumnHash = columnHash;
       }
@@ -174,7 +183,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
   }
 
   private void processQueue(
-      LinkedList<Record> queue,
+      LinkedList<Pair<Record, Map<String, String>>> queue,
       List<OnRecordErrorException> errorRecords,
       Connection connection,
       int opCode,
@@ -185,20 +194,16 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     }
 
     PreparedStatement statement = null;
+    LinkedList<Record> queueRecord = new LinkedList<>();
 
-    for(Record record : queue) {
+    for(Pair<Record, Map<String, String>> recordValue : queue) {
       if (opCode <= 0) {
         continue;
       }
 
-      // columnName to parameter mapping. Ex. parameter is default "?".
-      Map<String, String> columnsToParameters = recordReader.getColumnsToParameters(
-          record,
-          opCode,
-          getColumnsToParameters(),
-          opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields(),
-          sortedColumns
-      );
+      Record record = recordValue.getKey();
+      Map<String, String> columnsToParameters = recordValue.getValue();
+      queueRecord.add(record);
 
       if (columnsToParameters.isEmpty()) {
         // no parameters found for configured columns
@@ -253,11 +258,11 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
           if (getRollbackOnError()) {
             connection.rollback();
           }
-          handleBatchUpdateException(queue, e, errorRecords);
+          handleBatchUpdateException(queueRecord, e, errorRecords);
         }
 
         if (getGeneratedColumnMappings() != null) {
-          writeGeneratedColumns(statement, queue.iterator(), errorRecords);
+          writeGeneratedColumns(statement, queueRecord.iterator(), errorRecords);
         }
       }
 
@@ -367,18 +372,6 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     } else {
       handleSqlException(e);
     }
-  }
-
-  private HashCode getColumnHash(Record record, int op) {
-    Map<String, String> parameters = getColumnsToParameters();
-    Map<String, String> columnsToParameters = recordReader.getColumnsToParameters(
-        record,
-        op,
-        parameters,
-        getColumnsToFields(),
-        sortedColumns
-    );
-    return columnHashFunction.newHasher().putObject(columnsToParameters, stringMapFunnel).hash();
   }
 
   private String generateQuery(
