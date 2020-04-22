@@ -27,6 +27,8 @@ public enum Errors implements ErrorCode {
   GCS_05("Object Name Suffix contains '/' or starts with '.'"),
   GCS_06("Error handling failed for {}.Reason: {}"),
   GCS_07("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  GCS_08("Error happened when creating Output stream"),
+  GCS_09("Error happened when writing to Output stream"),
   ;
 
   private final String msg;
