@@ -16,21 +16,39 @@
 package com.streamsets.pipeline.stage.destination.http;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.http.logging.JulLogLevelChooserValues;
 import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.logging.VerbosityChooserValues;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
+import com.streamsets.pipeline.stage.origin.http.HttpClientSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.fail;
 
 public class TestHttpClientTargetUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HttpClientDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new HttpClientTargetUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testV1ToV2() throws Exception {
@@ -99,5 +117,19 @@ public class TestHttpClientTargetUpgrader {
           //do nothing
       }
     }
+  }
+
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.client.";
+    configs.add(new Config(dataFormatPrefix + "connectTimeoutMillis", 0));
+    configs.add(new Config(dataFormatPrefix + "readTimeoutMillis", 0));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "connectTimeoutMillis", 250000);
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "readTimeoutMillis", 30000);
   }
 }

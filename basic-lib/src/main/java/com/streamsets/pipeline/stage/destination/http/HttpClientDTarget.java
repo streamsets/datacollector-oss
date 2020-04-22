@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "HTTP Client",
     description = "Uses an HTTP client to write data.",
     icon = "httpclient.png",

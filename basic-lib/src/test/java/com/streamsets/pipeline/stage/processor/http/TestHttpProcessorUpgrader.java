@@ -353,4 +353,18 @@ public class TestHttpProcessorUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV13ToV14() {
+    Mockito.doReturn(13).when(context).getFromVersion();
+    Mockito.doReturn(14).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.client.";
+    configs.add(new Config(dataFormatPrefix + "connectTimeoutMillis", 0));
+    configs.add(new Config(dataFormatPrefix + "readTimeoutMillis", 0));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "connectTimeoutMillis", 250000);
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "readTimeoutMillis", 30000);
+  }
 }

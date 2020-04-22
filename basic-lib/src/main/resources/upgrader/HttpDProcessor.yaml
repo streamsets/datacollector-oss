@@ -22,3 +22,13 @@ upgrades:
       - setConfig:
           name: conf.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 14
+    actions:
+      - replaceConfig:
+          name: conf.client.connectTimeoutMillis
+          ifOldValueMatches: 0
+          newValue: 250000
+      - replaceConfig:
+          name: conf.client.readTimeoutMillis
+          ifOldValueMatches: 0
+          newValue: 30000

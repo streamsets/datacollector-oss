@@ -64,23 +64,25 @@ public class JerseyClientConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Connect Timeout",
-      defaultValue = "0",
-      description = "HTTP connection timeout in milliseconds. 0 means no timeout.",
+      min = 1,
+      defaultValue = "250000",
+      description = "HTTP connection timeout in milliseconds. Must be greater than 0.",
       displayPosition = 120,
       group = "HTTP"
   )
-  public int connectTimeoutMillis = 0;
+  public int connectTimeoutMillis = 250000;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Read Timeout",
-      defaultValue = "0",
-      description = "HTTP read timeout in milliseconds. 0 means no timeout.",
+      min = 1,
+      defaultValue = "30000",
+      description = "HTTP read timeout in milliseconds. Must be greater than 0.",
       displayPosition = 130,
       group = "HTTP"
   )
-  public int readTimeoutMillis = 0;
+  public int readTimeoutMillis = 30000;
 
   @ConfigDef(
       required = true,
