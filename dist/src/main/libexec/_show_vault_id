@@ -32,4 +32,5 @@ BASEDIR=`dirname ${PRG}`
 BASEDIR=`cd ${BASEDIR}/..;pwd`
 
 SDC_DIST=${BASEDIR}
-exec java -cp "${SDC_DIST}/container-lib/*:${SDC_DIST}/api-lib/*" com.streamsets.datacollector.vault.VaultShowId
+exec java -cp "${SDC_DIST}/container-lib/*:${SDC_DIST}/api-lib/*:${SDC_DIST}/cli-lib/*" \
+     com.streamsets.datacollector.vault.VaultShowId

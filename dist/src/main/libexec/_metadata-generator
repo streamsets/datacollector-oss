@@ -39,6 +39,9 @@ BOOT_CLASSPATH=${BOOT_CLASSPATH:="${BOOT_DIR}/*"}
 API_LIB_DIR=${API_LIB_DIR:=${SDC_DIST}/api-lib}
 API_CLASSPATH=${API_CLASSPATH:="${API_LIB_DIR}/*"}
 
+CLI_LIB_DIR=${CLI_LIB_DIR:=${SDC_DIST}/cli-lib}
+CLI_CLASSPATH=${CLI_CLASSPATH:="${CLI_LIB_DIR}/*"}
+
 CONTAINER_LIB_DIR=${CONTAINER_LIB_DIR:=${SDC_DIST}/container-lib}
 CONTAINER_CLASSPATH=${CONTAINER_CLASSPATH:="${CONTAINER_LIB_DIR}/*"}
 
@@ -90,5 +93,6 @@ if [[ $ulimit -lt $SDC_FILE_LIMIT ]]; then
   exit 1
 fi
 
-${JAVA} -classpath ${BOOT_CLASSPATH}:${API_CLASSPATH}:${CONTAINER_CLASSPATH} ${SDC_JAVA_OPTS} -Dstreamsets.cloud=true -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} \
+${JAVA} -classpath ${BOOT_CLASSPATH}:${API_CLASSPATH}:${CONTAINER_CLASSPATH}:${CLI_CLASSPATH} ${SDC_JAVA_OPTS} \
+        -Dstreamsets.cloud=true -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} \
         com.streamsets.datacollector.main.MetadataGeneratorMain "${@}"
