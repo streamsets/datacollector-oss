@@ -68,6 +68,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpProcessor.class);
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
+  private static final String REQUEST_STATUS_CONFIG_NAME = "HTTP-Status";
 
   private HttpProcessorConfig conf;
   private final HttpClientCommon httpClientCommon;
@@ -504,6 +505,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
 
     Record.Header header = record.getHeader();
+    header.setAttribute(REQUEST_STATUS_CONFIG_NAME,String.format("%d",response.getStatus()));
 
     if (conf.headerOutputLocation == HeaderOutputLocation.FIELD) {
       return createResponseHeaderField(record, response);

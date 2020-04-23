@@ -101,6 +101,7 @@ public class HttpClientSource extends BaseSource {
   private static final String BASIC_CONFIG_PREFIX = "conf.basic.";
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":";
   private static final HashFunction HF = Hashing.sha256();
+  private static final String REQUEST_STATUS_CONFIG_NAME = "HTTP-Status";
 
   private final HttpClientConfigBean conf;
   private Hasher hasher;
@@ -628,6 +629,7 @@ public class HttpClientSource extends BaseSource {
         if (record == null) {
           break;
         }
+        record.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d",getResponse().getStatus()));
 
         // LINK_FIELD pagination
         if (conf.pagination.mode == PaginationMode.LINK_FIELD) {
