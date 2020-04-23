@@ -19,12 +19,15 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.streamsets.datacollector.http.GaugeValue;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class RuntimeStats implements GaugeValue {
 
-  private AtomicLong batchCount;
-  private AtomicLong idleBatchCount;
+  private final AtomicLong batchCount;
+  private final AtomicLong idleBatchCount;
   private long timeOfLastReceivedRecord;
   private long lastBatchInputRecordsCount;
   private long lastBatchOutputRecordsCount;
@@ -32,13 +35,16 @@ public class RuntimeStats implements GaugeValue {
   private long lastBatchErrorMessagesCount;
   private long totalRunners;
   private long availableRunners;
+  // SHOULD ALWAYS BE ACCESS FROM SYNCHRONIZED METHODS ONLY
+  private final Set<String> currentStages;
 
   public RuntimeStats() {
-    //initialize to current time, otherwise it will be 0 and will trigger the pipeline idle alert as soon as the
+    // initialize to current time, otherwise it will be 0 and will trigger the pipeline idle alert as soon as the
     // pipeline is started.
     timeOfLastReceivedRecord = System.currentTimeMillis();
     batchCount = new AtomicLong(0);
     idleBatchCount = new AtomicLong(0);
+    currentStages = new HashSet<>();
   }
 
   public long getBatchCount() {
@@ -111,6 +117,22 @@ public class RuntimeStats implements GaugeValue {
 
   public void setAvailableRunners(long availableRunners) {
     this.availableRunners = availableRunners;
+  }
+
+  public synchronized Set<String> getCurrentStages() {
+    return Collections.unmodifiableSet(currentStages);
+  }
+
+  public synchronized void addToCurrentStages(String currentStage) {
+    currentStages.add(currentStage);
+  }
+
+  public synchronized void clearCurrentStages() {
+    currentStages.clear();
+  }
+
+  public synchronized void removeFromCurrentStages(String stage) {
+    currentStages.remove(stage);
   }
 
   @Override

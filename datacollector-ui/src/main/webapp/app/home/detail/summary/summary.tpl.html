@@ -397,6 +397,14 @@
 
         <ul class="table-properties">
           <li>
+            <span class="properties-label">Current Stages:</span>
+            <span class="properties-value"
+                  ng-repeat="currentStage in common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages">{{stageNameToLabelMap[currentStage] + (!$last ? ', ' : '')}}</span>
+            <span class="properties-value"
+                  ng-if="!common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages || common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages.length === 0">--</span>
+          </li>
+
+          <li>
             <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchInputRecordsCount' | translate}}:</span>
             <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchInputRecordsCount}}</span>
           </li>
@@ -461,6 +469,7 @@
             <span class="properties-label">{{'home.detailPane.summaryTab.metricsEventRunnable' | translate}}:</span>
             <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
+
         </ul>
 
       </div>

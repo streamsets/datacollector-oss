@@ -207,7 +207,8 @@ angular.module('pipelineGraphDirectives', [])
       nodeRadius: 70,
       rectWidth: 140,
       rectHeight: 100,
-      rectRound: 14
+      rectRound: 14,
+      runningNodeClass: 'runningNode'
     };
 
     /* PROTOTYPE FUNCTIONS */
@@ -867,6 +868,17 @@ angular.module('pipelineGraphDirectives', [])
           $scope.state.showConfiguration = false;
         });
       */
+
+      //Add Running icon
+      newGs.append('svg:foreignObject')
+        .attr('width', 30)
+        .attr('height', 30)
+        .attr('x', consts.rectWidth - 35)
+        .attr('y', 8)
+        .append('xhtml:span')
+        .attr('class', 'running-stage fa fa-gear fa-spin fa-2x graph-bootstrap-tooltip')
+        .attr('title', 'running')
+        .attr('data-placement', 'bottom');
 
       //Add bad records count
       newGs.append('svg:foreignObject')
@@ -1594,6 +1606,21 @@ angular.module('pipelineGraphDirectives', [])
           .html(function(d) {
             return $filter('abbreviateNumber')(stageInstanceErrorCounts[d.instanceName]);
           });
+      }
+    });
+
+    $scope.$on('updateRunningStage', function(event, runningStageInstances) {
+      if (graph) {
+        // hide all beta icons during pipeline run, so it won't overlap with running stage icon
+        graph.rects.selectAll('.beta-stage').style('visibility', 'hidden');
+
+        graph.rects.classed(graph.consts.runningNodeClass, false);
+        graph.rects
+          .filter(function(d) {
+            return (runningStageInstances && runningStageInstances.indexOf(d.instanceName) !== -1);
+          })
+          .classed(graph.consts.runningNodeClass, true)
+          .classed('verbose', $rootScope.$storage.currentStageVerbose);
       }
     });
 

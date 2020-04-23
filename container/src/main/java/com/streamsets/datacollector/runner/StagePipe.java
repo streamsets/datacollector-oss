@@ -65,6 +65,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   private final String name;
   private final String rev;
   private final MetricRegistryJson metricRegistryJson;
+  private final String stageInstanceName;
   private Map<String, Object> batchMetrics;
   FilterRecordBatch.Predicate[] predicates;
 
@@ -100,6 +101,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     this.rev = rev;
     this.metricRegistryJson = metricRegistryJson;
     this.batchMetrics = new HashMap<>();
+    this.stageInstanceName = stage.getConfiguration().getInstanceName();
   }
 
   @Override
@@ -202,6 +204,7 @@ public class StagePipe extends Pipe<StagePipe.Context> {
   @Override
   @SuppressWarnings("unchecked")
   public void process(PipeBatch pipeBatch) throws StageException {
+    context.getRuntimeStats().addToCurrentStages(this.stageInstanceName);
     BatchMakerImpl batchMaker = pipeBatch.startStage(this);
     BatchImpl batchImpl = pipeBatch.getBatch(this);
     ErrorSink errorSink = pipeBatch.getErrorSink();
@@ -305,13 +308,14 @@ public class StagePipe extends Pipe<StagePipe.Context> {
     pipeBatch.completeStage(batchMaker);
 
     // In this is source pipe, update source-specific metrics
-    if(isSource()) {
+    if (isSource()) {
       if (outputRecordsCount > 0) {
         context.getRuntimeStats().setTimeOfLastReceivedRecord(System.currentTimeMillis());
       }
       //Empty batches will increment batch count
       context.getRuntimeStats().incBatchCount();
     }
+    context.getRuntimeStats().removeFromCurrentStages(this.stageInstanceName);
 
     return batchMetrics;
   }

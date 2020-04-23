@@ -2239,11 +2239,13 @@ angular
 
       });
 
+    var updatedRunningStageStatus = false;
     metricsWatchListener = $rootScope.$watch('common.pipelineMetrics', function() {
-      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName],
-        config = $scope.pipelineConfig;
+      var pipelineStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName];
+      var config = $scope.pipelineConfig;
+      var pipelineMetrics  = $rootScope.common.pipelineMetrics;
       if (pipelineStatus && config && pipelineStatus.pipelineId === config.info.pipelineId &&
-        $scope.isPipelineRunning && $rootScope.common.pipelineMetrics) {
+        $scope.isPipelineRunning && pipelineMetrics) {
 
         if (!$scope.snapshotMode) {
           $scope.$broadcast('updateErrorCount', getStageErrorCounts());
@@ -2252,12 +2254,27 @@ angular
         $scope.triggeredAlerts = pipelineService.getTriggeredAlerts(
           routeParamPipelineName,
           $scope.pipelineRules,
-          $rootScope.common.pipelineMetrics
+          pipelineMetrics
         );
+
+        if (pipelineMetrics.gauges && pipelineMetrics.gauges['RuntimeStatsGauge.gauge'] &&
+          pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value) {
+          $scope.$broadcast(
+            'updateRunningStage',
+            pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages
+          );
+          updatedRunningStageStatus = true;
+        } else {
+          $scope.$broadcast('updateRunningStage', null);
+        }
 
         $scope.$broadcast('updateEdgePreviewIconColor', $scope.pipelineRules, $scope.triggeredAlerts);
       } else {
         $scope.triggeredAlerts = [];
+        if (updatedRunningStageStatus) {
+          $scope.$broadcast('updateRunningStage', null);
+          updatedRunningStageStatus = false;
+        }
       }
     });
 

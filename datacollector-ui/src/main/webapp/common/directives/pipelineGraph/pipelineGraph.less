@@ -179,6 +179,12 @@ pipeline-graph {
         }
       }
 
+      .running-stage {
+        visibility: hidden;
+        margin-left: 2px;
+        color: @default-pipeline-graph-start-node-color;
+      }
+
       &:hover {
         rect {
           fill: @default-pipeline-graph-selection-color;
@@ -205,6 +211,10 @@ pipeline-graph {
 
         image {
           fill: #ffffff;
+        }
+
+        .running-stage {
+          color: #000000;
         }
 
         .node-config {
@@ -255,6 +265,31 @@ pipeline-graph {
       }
     }
 
+    &.runningNode {
+      .running-stage {
+        visibility: visible;
+      }
+
+      &.verbose {
+
+        rect {
+          fill: @default-pipeline-graph-start-node-color;
+          stroke: @default-pipeline-graph-start-node-color;
+        }
+
+        circle {
+          stroke: @default-pipeline-graph-start-node-color;
+        }
+
+        text {
+          fill: #ffffff;
+        }
+
+        .running-stage {
+          color: #ffffff;
+        }
+      }
+    }
 
     &.startNode {
       rect {
