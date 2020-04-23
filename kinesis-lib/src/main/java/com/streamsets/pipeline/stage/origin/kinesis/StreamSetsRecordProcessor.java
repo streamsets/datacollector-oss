@@ -115,6 +115,7 @@ public class StreamSetsRecordProcessor implements IRecordProcessor {
             recordCount = 0;
             finishBatch(checkpointer, kRecord);
             startBatch();
+            lastProcessedRecord = Optional.empty();
           }
         } catch (DataParserException | IOException e) {
           com.streamsets.pipeline.api.Record record = context.createRecord(kRecord.getSequenceNumber());
