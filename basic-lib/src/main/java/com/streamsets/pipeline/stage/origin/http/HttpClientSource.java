@@ -58,8 +58,10 @@ import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.SocketTimeoutException;
 import java.nio.charset.Charset;
 import java.time.ZoneId;
@@ -74,6 +76,7 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_66;
@@ -913,13 +916,25 @@ public class HttpClientSource extends BaseSource {
       lastRequestCompletedTime = System.currentTimeMillis();
       String reason = getResponse().getStatusInfo().getReasonPhrase();
       String respString = getResponse().readEntity(String.class);
-      getResponse().close();
-      setResponse(null);
-
 
       final String errorMsg = reason + " : " + respString;
       LOG.warn(Errors.HTTP_01.getMessage(), status, errorMsg);
-      errorRecordHandler.onError(Errors.HTTP_01, status, errorMsg);
+
+      if(conf.propagateAllHttpResponses){
+        Map<String,Field> mapFields = new HashMap<>();
+        mapFields.put(conf.errorResponseField,Field.create(respString));
+        Record r = getContext().createRecord("");
+        r.set(Field.create(mapFields));
+        addResponseHeaders(r.getHeader());
+        r.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d",getResponse().getStatus()));
+        batchMaker.addRecord(r);
+      }else{
+        errorRecordHandler.onError(Errors.HTTP_01, status, errorMsg);
+      }
+
+      getResponse().close();
+      setResponse(null);
+
 
       return newSourceOffset;
     }

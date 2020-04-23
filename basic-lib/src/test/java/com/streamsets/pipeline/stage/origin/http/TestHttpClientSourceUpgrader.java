@@ -440,6 +440,18 @@ public class TestHttpClientSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "readTimeoutMillis", 30000);
   }
 
+  @Test
+  public void testV16ToV17() {
+    Mockito.doReturn(16).when(context).getFromVersion();
+    Mockito.doReturn(17).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "propagateAllHttpResponses", false);
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "errorResponseField", "outErrorBody");
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

@@ -32,3 +32,11 @@ upgrades:
           name: conf.client.readTimeoutMillis
           ifOldValueMatches: 0
           newValue: 30000
+  - toVersion: 17
+    actions:
+      - setConfig:
+          name: conf.propagateAllHttpResponses
+          value: false
+      - setConfig:
+          name: conf.errorResponseField
+          value: outErrorBody
