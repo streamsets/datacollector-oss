@@ -62,7 +62,7 @@ public class ActiveStats {
     stages = new ConcurrentHashMap<>();
     recordCount = new AtomicLong();
     dataCollectorVersion = "";
-    errorCodes = new HashMap<>();
+    errorCodes = new ConcurrentHashMap<>();
     createToPreview = new ConcurrentHashMap<>();
     createToRun = new ConcurrentHashMap<>();
   }
@@ -325,15 +325,15 @@ public class ActiveStats {
   public ActiveStats roll() {
     long now = System.currentTimeMillis();
     setEndTime(now);
-    ActiveStats statsBean = new ActiveStats().setSdcId(getSdcId())
-                                             .setProductName(getProductName())
-                                             .setStartTime(now)
-                                             .setDataCollectorVersion(getDataCollectorVersion())
-                                             .setBuildRepoSha(getBuildRepoSha())
-                                             .setExtraInfo(getExtraInfo())
-                                             .setDpmEnabled(isDpmEnabled())
-                                             .setErrorCodes(errorCodes)
-                                             .setUpTime(getUpTime().roll());
+    ActiveStats statsBean = new ActiveStats()
+        .setSdcId(getSdcId())
+        .setProductName(getProductName())
+        .setStartTime(now)
+        .setDataCollectorVersion(getDataCollectorVersion())
+        .setBuildRepoSha(getBuildRepoSha())
+        .setExtraInfo(getExtraInfo())
+        .setDpmEnabled(isDpmEnabled())
+        .setUpTime(getUpTime().roll());
     statsBean.setPipelines(
         getPipelines().stream()
             // If multiplier is 0, its not running/used anymore

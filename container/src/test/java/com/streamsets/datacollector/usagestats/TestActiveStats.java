@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.pipeline.api.ErrorCode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -179,7 +180,6 @@ public class TestActiveStats {
 
     as.startSystem();
 
-
     PipelineConfiguration pc = Mockito.mock(PipelineConfiguration.class);
     Mockito.when(pc.getPipelineId()).thenReturn("id");
     StageConfiguration stageConf = Mockito.mock(StageConfiguration.class);
@@ -191,7 +191,20 @@ public class TestActiveStats {
 
     as.incrementRecordCount(1);
 
+    as.errorCode(new ErrorCode() {
+      @Override
+      public String getCode() {
+        return "ERROR_01";
+      }
+
+      @Override
+      public String getMessage() {
+        return "ERROR_01";
+      }
+    });
+
     long now = System.currentTimeMillis();
+
     ActiveStats roll = as.roll();
 
     Assert.assertEquals("v1", as.getDataCollectorVersion());
@@ -204,6 +217,8 @@ public class TestActiveStats {
     Assert.assertEquals(0, as.getPipelines().get(0).getMultiplier());
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
     Assert.assertEquals(1, as.getRecordCount());
+    Assert.assertEquals(1, as.getErrorCodes().size());
+    Assert.assertEquals(1L, as.getErrorCodes().get("ERROR_01").longValue());
 
     Assert.assertTrue(roll.getStartTime() >= now);
     Assert.assertEquals(0, roll.getEndTime());
@@ -211,6 +226,7 @@ public class TestActiveStats {
     Assert.assertEquals(1, roll.getPipelines().get(0).getMultiplier());
     Assert.assertEquals(1, roll.getStages().get(0).getMultiplier());
     Assert.assertEquals(0, roll.getRecordCount());
+    Assert.assertEquals(0, roll.getErrorCodes().size());
 
 
     //Test Stage / Pipeline purged on stop and then next roll
