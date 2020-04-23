@@ -196,8 +196,8 @@ public class TestActiveStats {
 
     Assert.assertEquals("v1", as.getDataCollectorVersion());
     Assert.assertEquals("sha1", as.getBuildRepoSha());
-    Assert.assertEquals(ImmutableMap.of("a", "A"), as.getExtraInfo());
-    Assert.assertEquals(true, as.isDpmEnabled());
+    Assert.assertEquals(ImmutableMap.<String, Object>of("a", "A"), as.getExtraInfo());
+    Assert.assertTrue(as.isDpmEnabled());
 
     Assert.assertTrue(as.getEndTime() >= now);
     Assert.assertEquals(0, as.getUpTime().getMultiplier());
@@ -206,11 +206,21 @@ public class TestActiveStats {
     Assert.assertEquals(1, as.getRecordCount());
 
     Assert.assertTrue(roll.getStartTime() >= now);
-    Assert.assertTrue(roll.getEndTime() == 0);
+    Assert.assertEquals(0, roll.getEndTime());
     Assert.assertEquals(1, roll.getUpTime().getMultiplier());
     Assert.assertEquals(1, roll.getPipelines().get(0).getMultiplier());
     Assert.assertEquals(1, roll.getStages().get(0).getMultiplier());
     Assert.assertEquals(0, roll.getRecordCount());
+
+
+    //Test Stage / Pipeline purged on stop and then next roll
+    roll.stopPipeline(pc);
+    Assert.assertEquals(1, as.getPipelines().size());
+    Assert.assertEquals(1, as.getStages().size());
+
+    roll = roll.roll();
+    Assert.assertTrue(roll.getPipelines().isEmpty());
+    Assert.assertTrue(roll.getStages().isEmpty());
   }
 
   @Test
@@ -295,6 +305,14 @@ public class TestActiveStats {
 
     as.stopPipeline(pc2);
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
+
+    as.startPipeline(pc1);
+    Assert.assertEquals(1, as.getStages().size());
+    Assert.assertEquals(1, as.getStages().get(0).getMultiplier());
+
+    as.stopPipeline(pc1);
+    Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
+
   }
 
   @Test

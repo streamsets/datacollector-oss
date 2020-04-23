@@ -751,12 +751,10 @@ public class TestStatsCollectorTask {
     StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
-      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, false));
+      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(StatsCollectorTask.STATS_ACTIVE_KEY, false));
     }
 
     task.init();
-
-    Mockito.reset(task);
 
     long start = task.getStatsInfo().getActiveStats().getStartTime();
     Thread.sleep(1);
@@ -844,8 +842,7 @@ public class TestStatsCollectorTask {
     int expectedSaves = 0;
 
     // first run, do initial roll and report with force=true
-    Runnable runnable = task.getRunnable(true);
-    runnable.run();
+    task.initTask();
     expectedRolls++;
     expectedReports++;
     expectedSaves++;
@@ -854,7 +851,7 @@ public class TestStatsCollectorTask {
     Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
 
     // run again, should just save now that we don't force
-    runnable = task.getRunnable(false);
+    Runnable runnable = task.getRunnable(false);
     runnable.run();
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());

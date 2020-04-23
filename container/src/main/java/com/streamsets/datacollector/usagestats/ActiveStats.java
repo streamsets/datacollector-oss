@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -256,13 +257,15 @@ public class ActiveStats {
     }
 
     // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
-    if (pipelines.computeIfAbsent(
-        pipeline.getPipelineId(),
-        id -> new UsageTimer().setName(pipeline.getPipelineId())).startIfNotRunning()
-        ) {
+    UsageTimer pipelineUsageTimer = pipelines.computeIfAbsent(pipeline.getPipelineId(), id -> new UsageTimer().setName(pipeline.getPipelineId()));
+    if (pipelineUsageTimer.startIfNotRunning()) {
       for (StageConfiguration stageConfiguration : pipeline.getStages()) {
         String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
-        stages.computeIfAbsent(name, (key) -> new UsageTimer().setName(name)).start();
+        UsageTimer stageUsageTimer = stages.computeIfAbsent(
+            name,
+            key -> new UsageTimer().setName(name)
+        );
+        stageUsageTimer.start();
       }
     }
     return this;
@@ -331,11 +334,20 @@ public class ActiveStats {
                                              .setDpmEnabled(isDpmEnabled())
                                              .setErrorCodes(errorCodes)
                                              .setUpTime(getUpTime().roll());
-    statsBean.setPipelines(getPipelines().stream().map(UsageTimer::roll).collect(Collectors.toList()));
-    statsBean.setStages(getStages().stream()
-                                   .filter(timer -> timer.getMultiplier() > 0)
-                                   .map(UsageTimer::roll)
-                                   .collect(Collectors.toList()));
+    statsBean.setPipelines(
+        getPipelines().stream()
+            // If multiplier is 0, its not running/used anymore
+            .filter(u -> u.getMultiplier() > 0)
+            .map(UsageTimer::roll)
+            .collect(Collectors.toList())
+    );
+    statsBean.setStages(
+        getStages().stream()
+            // If multiplier is 0, its not running/used anymore
+            .filter(u -> u.getMultiplier() > 0)
+            .map(UsageTimer::roll)
+            .collect(Collectors.toList())
+    );
     long expiredTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
     statsBean.setCreateToPreview(removeUsedAndExpired(getCreateToPreview(), expiredTime));
     statsBean.setCreateToRun(removeUsedAndExpired(getCreateToRun(), expiredTime));
