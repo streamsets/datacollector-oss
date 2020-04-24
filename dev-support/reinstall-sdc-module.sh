@@ -23,13 +23,26 @@
 # (so they are actually reinstalled properly). Does not touch the UI or any data/config files in the locally
 # installed version.
 #
-# Example invocation (rebuild and reinstall all CDH 6.x stagelibs)
-# dev-support/reinstall-sdc-module.sh $(ls -d cdh_6_*-lib)
+# If the first argument is -noam then the -am (also make dependents) option to Maven is omitted, meaning that
+# only this module and dist itself will be rebuilt.
+#
+# Example invocations
+# Rebuild and reinstall all CDH 6.x stagelibs, including all dependent modules
+#   dev-support/reinstall-sdc-module.sh $(ls -d cdh_6_*-lib)
+# Rebuild only one stagelib, but not all dependent modules
+#   dev-support/reinstall-sdc-module.sh -noam cdh_spark_2_1_r1-lib
 
-if [ $# -eq 0 ]
+if [[ $# -eq 0 ]]
 then
     echo >&1 "No module names given as args"
     exit 10
+fi
+if [[ $0 == '-noam' ]]
+MAVEN_OPT="-am"
+then
+    echo "Omitting -am argument to Maven"
+    MAVEN_OPT=""
+    shift
 fi
 for module in "$@"
 do
@@ -38,4 +51,4 @@ do
 done
 module_names=$(echo "$@" | tr ' ' ',')
 echo "Running new Maven build for modules: $module_names"
-mvn install -Dmaven.javadoc.skip=true -DskipTests -DskipRat -Pdist,all-libs -am -pl dist,$module_names
+mvn install -Dmaven.javadoc.skip=true -DskipTests -DskipRat -Pdist,all-libs $MAVEN_OPT -pl dist,$module_names
