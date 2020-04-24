@@ -498,7 +498,13 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
         LOG.warn("Could not change stats collection state, Disabling and re-opting. Error: {}", ex.getMessage(), ex);
       }
       getStatsInfo().reset();
-      saveStats();
+      if (active) {
+        // Active flag changed to active, trigger roll and report
+        // This internally save stats as well
+        getRunnable(true).run();
+      } else {
+        saveStats();
+      }
     }
   }
 

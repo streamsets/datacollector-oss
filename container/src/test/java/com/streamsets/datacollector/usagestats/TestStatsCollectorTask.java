@@ -56,12 +56,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class TestStatsCollectorTask {
 
@@ -757,10 +759,15 @@ public class TestStatsCollectorTask {
     task.init();
 
     long start = task.getStatsInfo().getActiveStats().getStartTime();
+    Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
+
+
     Thread.sleep(1);
     task.setActive(true);
 
     Assert.assertTrue(task.getStatsInfo().getActiveStats().getStartTime() > start);
+
+    Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
 
     Assert.assertTrue(task.isActive());
 
@@ -769,9 +776,8 @@ public class TestStatsCollectorTask {
       Assert.assertNotNull(map.get(StatsCollectorTask.STATS_ACTIVE_KEY));
       Assert.assertTrue((Boolean) map.get(StatsCollectorTask.STATS_ACTIVE_KEY));
     }
-    Mockito.verify(task, Mockito.times(1)).saveStats();
 
-    Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
+    Mockito.verify(task, Mockito.times(1)).saveStats();
     task.stop();
   }
 
@@ -1205,7 +1211,59 @@ public class TestStatsCollectorTask {
           statsInfo.getCollectedStats().get(0).getExtraInfo());
     }
     task.stop();
+  }
 
+  @Test
+  public void testSetActiveRunnableCalled() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    StatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+
+    Map<Boolean, AtomicLong> runnableForceParamToTimes =
+        new HashMap<>(ImmutableMap.of(Boolean.TRUE, new AtomicLong(0), Boolean.FALSE, new AtomicLong(0)));
+    Mockito.when(task.getRunnable(Matchers.anyBoolean())).thenAnswer((Answer<Runnable>) invocation -> {
+      final Runnable r = (Runnable) invocation.callRealMethod();
+      return (Runnable) () -> {
+        runnableForceParamToTimes.get(invocation.getArgumentAt(0, Boolean.class)).incrementAndGet();
+        r.run();
+      };
+    });
+
+    task.initTask();
+    Assert.assertEquals(1, runnableForceParamToTimes.get(Boolean.TRUE).get());
+
+    //Set InActive should not trigger roll and report
+    task.setActive(false);
+    // 1 from start
+    Assert.assertEquals(1, runnableForceParamToTimes.get(Boolean.TRUE).get());
+    Assert.assertEquals(0, runnableForceParamToTimes.get(Boolean.FALSE).get());
+
+
+    //Set Active should trigger roll and report
+    task.setActive(true);
+    Assert.assertEquals(2, runnableForceParamToTimes.get(Boolean.TRUE).get());
+    Assert.assertEquals(0, runnableForceParamToTimes.get(Boolean.FALSE).get());
+
+
+    // try it again, but should not roll and report again
+    task.setActive(true);
+    Assert.assertEquals(2, runnableForceParamToTimes.get(Boolean.TRUE).get());
+    Assert.assertEquals(0, runnableForceParamToTimes.get(Boolean.FALSE).get());
+
+    //Stop should trigger roll and report
+    task.stopTask();
+    Assert.assertEquals(3, runnableForceParamToTimes.get(Boolean.TRUE).get());
+    Assert.assertEquals(0, runnableForceParamToTimes.get(Boolean.FALSE).get());
   }
 
   private RuntimeInfo mockRuntimeInfo(String sdcId, File dataDir) {
