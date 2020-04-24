@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -75,6 +76,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
   private RateLimiter rateLimiter;
+  private Response response;
 
   private ELVars bodyVars;
   private ELEval bodyEval;
@@ -207,11 +209,11 @@ public class HttpProcessor extends SingleLaneProcessor {
         try {
           response = responses.get(recordNum).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-          LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
-          throw new OnRecordErrorException(inRec, Errors.HTTP_03, e.toString());
+          LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(response), e.toString(), e);
+          throw new OnRecordErrorException(inRec, Errors.HTTP_03, getResponseStatus(response), e.toString());
         } catch (TimeoutException e) {
           LOG.error("HTTP request future timed out", e.toString(), e);
-          throw new OnRecordErrorException(inRec , Errors.HTTP_03, e.toString());
+          throw new OnRecordErrorException(inRec , Errors.HTTP_03, getResponseStatus(response), e.toString());
         }
         if (recordsResponse != null && response != null) {
           processRecord(batchMaker, recordsResponse, inRec, response);
@@ -267,6 +269,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             } catch (IOException e) {
               throw new OnRecordErrorException(inRec,
                   Errors.HTTP_64,
+                  getResponseStatus(response),
                   conf.outputField,
                   inRec.getHeader().getSourceId(),
                   e.getMessage(),
@@ -275,7 +278,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             }
             break;
           default:
-            throw new OnRecordErrorException(inRec, Errors.HTTP_61, conf.outputField, field.getType().name());
+            throw new OnRecordErrorException(inRec, Errors.HTTP_61, getResponseStatus(response) , conf.outputField, field.getType().name());
         }
 
         if (parsedRecords.isEmpty()) {
@@ -330,6 +333,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       } catch (DataParserException ex) {
         throw new OnRecordErrorException(inRec,
             Errors.HTTP_61,
+            getResponseStatus(response),
             conf.outputField,
             inRec.getHeader().getSourceId(),
             ex.toString(),
@@ -337,7 +341,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         );
       }
     } else {
-      throw new OnRecordErrorException(inRec, Errors.HTTP_65, conf.outputField, inRec.getHeader().getSourceId());
+      throw new OnRecordErrorException(inRec, Errors.HTTP_65, getResponseStatus(response), conf.outputField, inRec.getHeader().getSourceId());
     }
   }
 
@@ -364,11 +368,11 @@ public class HttpProcessor extends SingleLaneProcessor {
         try {
           response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
         } catch (InterruptedException | ExecutionException e) {
-          LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
-          throw new OnRecordErrorException(entry.getKey(), Errors.HTTP_03, e.toString());
+          LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(), e.toString(), e);
+          throw new OnRecordErrorException(entry.getKey(), Errors.HTTP_03, getResponseStatus(), e.toString());
         } catch (TimeoutException e) {
           LOG.error("HTTP request future timed out", e.toString(), e);
-          throw new OnRecordErrorException(entry.getKey() , Errors.HTTP_03, e.toString());
+          throw new OnRecordErrorException(entry.getKey() , Errors.HTTP_03, getResponseStatus(), e.toString());
         }
         if (output != null && response != null) {
           processRecord(batchMaker, output, entry.getKey(), response);
@@ -400,6 +404,8 @@ public class HttpProcessor extends SingleLaneProcessor {
     Response response = null;
     try {
       response = responseFuture.get(maxRequestCompletionSecs, TimeUnit.SECONDS);
+      setResponse(response);
+
       InputStream responseBody = null;
       if (response.hasEntity()) {
         responseBody = response.readEntity(InputStream.class);
@@ -420,15 +426,15 @@ public class HttpProcessor extends SingleLaneProcessor {
       resolvedRecords.remove(record);
       List<Record> parsedResponse = parseResponse(record, responseBody);
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
-        throw new OnRecordErrorException(record, Errors.HTTP_34);
+        throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       }
       return parsedResponse;
     } catch (InterruptedException | ExecutionException e) {
-      LOG.error(Errors.HTTP_03.getMessage(), e.toString(), e);
-      throw new OnRecordErrorException(record, Errors.HTTP_03, e.toString());
+      LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(), e.toString(), e);
+      throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(), e.toString());
     } catch (TimeoutException e) {
       LOG.error("HTTP request future timed out", e.toString(), e);
-      throw new OnRecordErrorException(record, Errors.HTTP_03, e.toString());
+      throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(), e.toString());
     } finally {
       if (response != null) {
         response.close();
@@ -482,7 +488,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         }
 
       } catch (IOException | DataParserException e) {
-        errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
+        errorRecordHandler.onError(Errors.HTTP_00, getResponseStatus(), e.toString(), e);
       }
     }
     // Ensure there is always at least one record.
@@ -525,7 +531,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    */
   private Field createResponseHeaderField(Record record, Response response) throws StageException {
     if (record.has(conf.headerOutputField) || conf.headerOutputLocation.equals(conf.outputField)) {
-      throw new StageException(Errors.HTTP_11, conf.headerOutputField);
+      throw new StageException(Errors.HTTP_11, getResponseStatus(response), conf.headerOutputField);
     }
     Map<String, Field> headers = new HashMap<>(response.getStringHeaders().size());
 
@@ -552,5 +558,27 @@ public class HttpProcessor extends SingleLaneProcessor {
         header.setAttribute(conf.headerAttributePrefix + entry.getKey(), firstValue);
       }
     }
+  }
+
+  Response getResponse() {
+    return response;
+  }
+
+  void setResponse(Response response) {
+    this.response = response;
+  }
+
+  String getResponseStatus(){
+    if(getResponse() == null){
+      return "NULL";
+    }
+    return String.format("%d",getResponse().getStatus());
+  }
+
+  String getResponseStatus(Response response){
+    if(response == null){
+      return "NULL";
+    }
+    return String.format("%d",getResponse().getStatus());
   }
 }

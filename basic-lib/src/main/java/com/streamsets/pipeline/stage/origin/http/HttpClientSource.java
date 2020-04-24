@@ -518,7 +518,7 @@ public class HttpClientSource extends BaseSource {
             ),
           e);
           Throwable reportEx = cause != null ? cause : e;
-          final StageException stageException = new StageException(Errors.HTTP_32, reportEx.toString(), reportEx);
+          final StageException stageException = new StageException(Errors.HTTP_32, getResponseStatus(), reportEx.toString(), reportEx);
           LOG.error(stageException.getMessage());
           throw stageException;
         }
@@ -642,7 +642,7 @@ public class HttpClientSource extends BaseSource {
           if (haveMorePages) {
             final String nextPageURLPrefix = StringUtils.isNotBlank(conf.pagination.nextPageURLPrefix) ? conf.pagination.nextPageURLPrefix : "";
             if(!record.has(conf.pagination.nextPageFieldPath)){
-              throw new StageException(HTTP_66, conf.pagination.nextPageFieldPath);
+              throw new StageException(HTTP_66, getResponseStatus(), conf.pagination.nextPageFieldPath);
             }
             final String nextPageFieldValue = record.get(conf.pagination.nextPageFieldPath).getValueAsString();
             final String nextPageURL = nextPageFieldValue.startsWith(nextPageURLPrefix) ? nextPageFieldValue : nextPageURLPrefix.concat(nextPageFieldValue);
@@ -664,8 +664,8 @@ public class HttpClientSource extends BaseSource {
       } while (recordCount < maxRecords && !waitTimeExpired(start));
 
     } catch (IOException e) {
-      LOG.error(Errors.HTTP_00.getMessage(), e.toString(), e);
-      errorRecordHandler.onError(Errors.HTTP_00, e.toString(), e);
+      LOG.error(Errors.HTTP_00.getMessage(), getResponseStatus(), e.toString(), e);
+      errorRecordHandler.onError(Errors.HTTP_00, getResponseStatus(), e.toString(), e);
 
     } finally {
       try {
@@ -676,8 +676,8 @@ public class HttpClientSource extends BaseSource {
           incrementSourceOffset(sourceOffset, subRecordCount);
         }
       } catch(IOException e) {
-        LOG.warn(Errors.HTTP_28.getMessage(), e.toString(), e);
-        errorRecordHandler.onError(Errors.HTTP_28, e.toString(), e);
+        LOG.warn(Errors.HTTP_28.getMessage(), getResponseStatus(), e.toString(), e);
+        errorRecordHandler.onError(Errors.HTTP_28, getResponseStatus(), e.toString(), e);
       }
     }
 
@@ -687,6 +687,13 @@ public class HttpClientSource extends BaseSource {
   @VisibleForTesting
   Response getResponse() {
     return response;
+  }
+
+  String getResponseStatus(){
+    if(getResponse() == null){
+      return "NULL";
+    }
+    return String.format("%d",getResponse().getStatus());
   }
 
   @VisibleForTesting
@@ -806,14 +813,14 @@ public class HttpClientSource extends BaseSource {
     int numSubRecords = 0;
 
     if (!record.has(conf.pagination.resultFieldPath)) {
-      final StageException stageException = new StageException(Errors.HTTP_12, conf.pagination.resultFieldPath);
+      final StageException stageException = new StageException(Errors.HTTP_12, getResponseStatus(), conf.pagination.resultFieldPath);
       LOG.error(stageException.getMessage());
       throw stageException;
     }
     Field resultField = record.get(conf.pagination.resultFieldPath);
 
     if (resultField.getType() != Field.Type.LIST) {
-      final StageException stageException = new StageException(Errors.HTTP_08, resultField.getType());
+      final StageException stageException = new StageException(Errors.HTTP_08, getResponseStatus(), resultField.getType());
       LOG.error(stageException.getMessage());
       throw stageException;
     }
