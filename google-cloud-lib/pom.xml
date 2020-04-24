@@ -35,6 +35,9 @@
   <properties>
     <netty.version>4.1.14.Final</netty.version>
     <guava.version>28.0-android</guava.version>
+    <!-- grpc-protobuf 1.23.0 depends on 3.9.0, and google-cloud-core 1.90.0 depends on 3.9.1, so we will use the
+         higher point version here-->
+    <protobuf.version>3.9.1</protobuf.version>
   </properties>
 
   <dependencyManagement>
@@ -83,23 +86,12 @@
       <exclusions>
         <exclusion>
           <groupId>io.netty</groupId>
-          <artifactId>netty-transport</artifactId>
+          <artifactId>*</artifactId>
         </exclusion>
+        <!-- commonlib is hardcoded to use protobuf version 3.3.1, which won't work for us here -->
         <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-transport-native-epoll</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-buffer</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-codec</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>io.netty</groupId>
-          <artifactId>netty-handler</artifactId>
+          <groupId>com.google.protobuf</groupId>
+          <artifactId>protobuf-java</artifactId>
         </exclusion>
       </exclusions>
       <scope>compile</scope>
@@ -107,6 +99,14 @@
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-schema-registry-client</artifactId>
+    </dependency>
+
+    <!-- now, depend on the specific version of protobuf-java-util we need here, which in turn depends on
+         protobuf-java -->
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java-util</artifactId>
+      <version>${protobuf.version}</version>
     </dependency>
 
     <!-- Provided StreamSets Dependencies -->
