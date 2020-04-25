@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.SysInfo;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;

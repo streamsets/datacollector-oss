@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.usagestats;
+package com.streamsets.datacollector.util;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.SysInfo;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
@@ -42,8 +43,8 @@ import static org.junit.Assert.*;
 public class TestSysInfo {
 
   private static final String AZURE_PROVIDER = "azure";
-  private static final String AWS_METADATA_FIXTURE = "/com/streamsets/datacollector/usagestats/awsInstanceMetadata.json";
-  private static final String AZURE_METADATA_FIXTURE = "/com/streamsets/datacollector/usagestats/azureInstanceMetadata.json";
+  private static final String AWS_METADATA_FIXTURE = "/com/streamsets/datacollector/util/awsInstanceMetadata.json";
+  private static final String AZURE_METADATA_FIXTURE = "/com/streamsets/datacollector/util/azureInstanceMetadata.json";
   private static final String AWS_PROVIDER = "aws";
   private static final String CLOUD_PROVIDER = "cloudProvider";
   private static final String CLOUD_METADATA = "cloudMetadata";

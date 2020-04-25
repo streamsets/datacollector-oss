@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.SysInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

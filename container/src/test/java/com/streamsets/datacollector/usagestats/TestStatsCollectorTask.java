@@ -24,6 +24,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.SysInfo;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.io.IOUtils;

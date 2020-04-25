@@ -18,6 +18,8 @@ package com.streamsets.datacollector.usagestats;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.SysInfo;
+import com.streamsets.datacollector.util.SysInfoModule;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
 import dagger.Provides;
@@ -28,7 +30,8 @@ import javax.inject.Singleton;
 @Module(
     library = true,
     complete = false,
-    injects = { StatsCollector.class }
+    injects = { StatsCollector.class },
+    includes = { SysInfoModule.class }
     )
 public class StatsCollectorModule {
 
@@ -38,9 +41,10 @@ public class StatsCollectorModule {
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      @Named("runnerExecutor") SafeScheduledExecutorService executorService
+      @Named("runnerExecutor") SafeScheduledExecutorService executorService,
+      SysInfo sysInfo
   ) {
-    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, new SysInfo(runtimeInfo));
+    return new StatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo);
   }
 
 }

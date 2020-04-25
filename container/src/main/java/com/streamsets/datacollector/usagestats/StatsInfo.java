@@ -21,6 +21,7 @@ import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.SysInfo;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
