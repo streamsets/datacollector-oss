@@ -198,6 +198,17 @@ public class ChrootSFTPClient {
     renameInternal(fromPath, toPath, true);
   }
 
+  public boolean rename(String fromPath, String toPath, boolean overwriteFile) throws IOException {
+    fromPath = prependRoot(fromPath);
+    toPath = prependRoot(toPath);
+
+    if (!overwriteFile && sftpClient.statExistence(toPath) != null) {
+      return false;
+    }
+    renameInternal(fromPath, toPath, true);
+    return true;
+  }
+
   private void renameInternal(String fromPath, String toPath, boolean deleteExists) throws IOException {
     // Create the toPath's parent dir(s) if they don't exist
     String toDir = Paths.get(toPath).getParent().toString();

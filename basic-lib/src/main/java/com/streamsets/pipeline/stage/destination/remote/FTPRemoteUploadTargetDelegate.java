@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.destination.remote;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.RemoteConfigBean;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.FTPRemoteFile;
 import org.apache.commons.vfs2.FileObject;
@@ -28,15 +29,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-class FTPRemoteUploadTargetDelegate extends FTPRemoteConnector implements RemoteUploadTargetDelegate {
+public class FTPRemoteUploadTargetDelegate extends FTPRemoteConnector implements RemoteUploadTargetDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(FTPRemoteUploadTargetDelegate.class);
 
-  private RemoteUploadConfigBean conf;
-
-  FTPRemoteUploadTargetDelegate(RemoteUploadConfigBean conf) {
-    super(conf.remoteConfig);
-    this.conf = conf;
+  public FTPRemoteUploadTargetDelegate(RemoteConfigBean remoteConfig) {
+    super(remoteConfig);
   }
 
   @Override

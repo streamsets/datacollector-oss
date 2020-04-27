@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.remote;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.lib.remote.RemoteConfigBean;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteFile;
@@ -27,15 +28,12 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 
-class SFTPRemoteUploadTargetDelegate extends SFTPRemoteConnector implements RemoteUploadTargetDelegate {
+public class SFTPRemoteUploadTargetDelegate extends SFTPRemoteConnector implements RemoteUploadTargetDelegate {
 
   private static final Logger LOG = LoggerFactory.getLogger(SFTPRemoteUploadTargetDelegate.class);
 
-  private RemoteUploadConfigBean conf;
-
-  SFTPRemoteUploadTargetDelegate(RemoteUploadConfigBean conf) {
-    super(conf.remoteConfig);
-    this.conf = conf;
+  public SFTPRemoteUploadTargetDelegate(RemoteConfigBean remoteConfig) {
+    super(remoteConfig);
   }
 
   @Override

@@ -817,6 +817,160 @@ public class TestChrootSFTPClient extends SSHDUnitTest {
     }
   }
 
+  @Test
+  public void testBooleanRenameOverwriteIsTrueTargetFileDoesntExist() throws Exception {
+    String text = "hello";
+    File sourceFile = testFolder.newFile("source.txt");
+    File targetFile = testFolder.newFile("target.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String source : new String[] {
+          sourceFile.getName(),
+          "/" + sourceFile.getName(),
+      }) {
+        for (String target : new String[] {
+            targetFile.getName(),
+            "/" + targetFile.getName(),
+        }) {
+          Files.write(text.getBytes(Charset.forName("UTF-8")), sourceFile);
+          Assert.assertEquals(text, Files.readFirstLine(sourceFile, Charset.forName("UTF-8")));
+          sftpClient.stat(source);
+
+          targetFile.delete();
+          Assert.assertFalse(targetFile.exists());
+          expectNotExist(() -> sftpClient.stat(target));
+
+          Assert.assertTrue(sftpClient.rename(source, target, true));
+          expectNotExist(() -> sftpClient.stat(source));
+          sftpClient.stat(target);
+          Assert.assertEquals(text, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testBooleanRenameOverwriteIsFalseTargetFileDoesntExist() throws Exception {
+    String text = "hello";
+    File sourceFile = testFolder.newFile("source.txt");
+    File targetFile = testFolder.newFile("target.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String source : new String[] {
+          sourceFile.getName(),
+          "/" + sourceFile.getName(),
+      }) {
+        for (String target : new String[] {
+            targetFile.getName(),
+            "/" + targetFile.getName(),
+        }) {
+          Files.write(text.getBytes(Charset.forName("UTF-8")), sourceFile);
+          Assert.assertEquals(text, Files.readFirstLine(sourceFile, Charset.forName("UTF-8")));
+          sftpClient.stat(source);
+
+          targetFile.delete();
+          Assert.assertFalse(targetFile.exists());
+          expectNotExist(() -> sftpClient.stat(target));
+
+          Assert.assertTrue(sftpClient.rename(source, target, false));
+          expectNotExist(() -> sftpClient.stat(source));
+          sftpClient.stat(target);
+          Assert.assertEquals(text, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testBooleanRenameOverwriteIsTrueTargetFileExists() throws Exception {
+    String text = "hello";
+    String targetText = "goodbye";
+    File sourceFile = testFolder.newFile("source.txt");
+    File targetFile = testFolder.newFile("target.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String source : new String[] {
+          sourceFile.getName(),
+          "/" + sourceFile.getName(),
+      }) {
+        for (String target : new String[] {
+            targetFile.getName(),
+            "/" + targetFile.getName(),
+        }) {
+          Files.write(text.getBytes(Charset.forName("UTF-8")), sourceFile);
+          Assert.assertEquals(text, Files.readFirstLine(sourceFile, Charset.forName("UTF-8")));
+          sftpClient.stat(source);
+
+          Files.write(targetText.getBytes(Charset.forName("UTF-8")), targetFile);
+          Assert.assertEquals(targetText, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+          sftpClient.stat(target);
+
+          Assert.assertTrue(sftpClient.rename(source, target, true));
+          expectNotExist(() -> sftpClient.stat(source));
+          sftpClient.stat(target);
+          Assert.assertEquals(text, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+        }
+      }
+    }
+  }
+
+  @Test
+  public void testBooleanRenameOverwriteIsFalseTargetFileExists() throws Exception {
+    String text = "hello";
+    String targetText = "goodbye";
+    File sourceFile = testFolder.newFile("source.txt");
+    File targetFile = testFolder.newFile("target.txt");
+
+    path = testFolder.getRoot().getAbsolutePath();
+    setupSSHD(path);
+    SSHClient sshClient = createSSHClient();
+
+    for (ChrootSFTPClient sftpClient : getClientsWithEquivalentRoots(sshClient)) {
+      // We can specify a file as either a relative path "file" or an absolute path "/file" and they should be
+      // equivalent
+      for (String source : new String[] {
+          sourceFile.getName(),
+          "/" + sourceFile.getName(),
+      }) {
+        for (String target : new String[] {
+            targetFile.getName(),
+            "/" + targetFile.getName(),
+        }) {
+          Files.write(text.getBytes(Charset.forName("UTF-8")), sourceFile);
+          Assert.assertEquals(text, Files.readFirstLine(sourceFile, Charset.forName("UTF-8")));
+          sftpClient.stat(source);
+
+          Files.write(targetText.getBytes(Charset.forName("UTF-8")), targetFile);
+          Assert.assertEquals(targetText, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+          sftpClient.stat(target);
+
+          Assert.assertFalse(sftpClient.rename(source, target, false));
+          sftpClient.stat(source);
+          sftpClient.stat(target);
+          Assert.assertEquals(targetText, Files.readFirstLine(targetFile, Charset.forName("UTF-8")));
+        }
+      }
+    }
+  }
+
   private List<ChrootSFTPClient> getClientsWithEquivalentRoots(SSHClient sshClient) throws Exception {
     return getClientsWithEquivalentRoots(sshClient, null);
   }

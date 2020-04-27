@@ -88,10 +88,10 @@ public class RemoteUploadTarget extends BaseTarget {
 
     if (issues.isEmpty()) {
       if (FTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
-        delegate = new FTPRemoteUploadTargetDelegate(conf);
+        delegate = new FTPRemoteUploadTargetDelegate(conf.remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
       } else if (SFTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
-        delegate = new SFTPRemoteUploadTargetDelegate(conf);
+        delegate = new SFTPRemoteUploadTargetDelegate(conf.remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
       }
     }
