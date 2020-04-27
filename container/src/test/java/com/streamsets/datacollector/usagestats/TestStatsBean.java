@@ -17,6 +17,7 @@ package com.streamsets.datacollector.usagestats;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.usagestats.TestStatsInfo.TestModelStatsExtension;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -24,7 +25,10 @@ public class TestStatsBean {
 
   @Test
   public void testCreationFromActiveStats() {
-    ActiveStats as = new ActiveStats();
+    TestModelStatsExtension ext = new TestModelStatsExtension();
+    ext.setStatsInfo(new StatsInfo(ImmutableList.of(ext)));
+
+    ActiveStats as = new ActiveStats(ImmutableList.of(ext));
     as.setDpmEnabled(true);
     as.setDataCollectorVersion("version");
     as.setUpTime(new UsageTimer().setName("upTime").setAccumulatedTime(1));
@@ -46,6 +50,9 @@ public class TestStatsBean {
     FirstPipelineUse run2 = new FirstPipelineUse().setCreatedOn(10);
     as.setCreateToRun(ImmutableMap.of("r1", run1, "r2", run2));
 
+    ext.startPipelines = 5;
+    ext.stopPipelines = 2;
+
     StatsBean sb = new StatsBean("sdcid", as);
 
     Assert.assertEquals("sdcid", sb.getSdcId());
@@ -65,6 +72,37 @@ public class TestStatsBean {
     Assert.assertEquals(preview1.getFirstUseOn(), sb.getCreateToPreview().get(0).getFirstUseOn());
     Assert.assertEquals(run1.getCreatedOn(), sb.getCreateToRun().get(0).getCreatedOn());
     Assert.assertEquals(run1.getFirstUseOn(), sb.getCreateToRun().get(0).getFirstUseOn());
+    Assert.assertEquals(1, sb.getExtensions().size());
+    Assert.assertEquals(TestModelStatsBeanExtension.class, sb.getExtensions().get(0).getClass());
+    TestModelStatsBeanExtension sbExt = (TestModelStatsBeanExtension) sb.getExtensions().get(0);
+    Assert.assertEquals(5, sbExt.getStartPipelines());
+    Assert.assertEquals(2, sbExt.getStopPipelines());
+    Assert.assertEquals(3, sbExt.getNetPipelineStarts());
   }
 
+  // just adds one more field to serialize and overwrites version, but otherwise re-uses TestModelStatsExtension
+  public static class TestModelStatsBeanExtension extends TestModelStatsExtension implements StatsBeanExtension {
+    public static final String VERSION = "TestModelStatsBeanExtension Version";
+    private long netPipelineStarts;
+
+    public long getNetPipelineStarts() {
+      return netPipelineStarts;
+    }
+
+    public void setNetPipelineStarts(long netPipelineStarts) {
+      this.netPipelineStarts = netPipelineStarts;
+    }
+
+    @Override
+    public String getVersion() {
+      return VERSION;
+    }
+
+    @Override
+    public void setVersion(String version) {
+      if (!VERSION.equals(version)) {
+        throw new RuntimeException("unexpected version: " + version);
+      }
+    }
+  }
 }

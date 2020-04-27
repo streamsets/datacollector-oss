@@ -85,6 +85,7 @@ public class TestUsageTimer {
     Assert.assertEquals(1, ut.getMultiplier());
     Assert.assertFalse(ut.startIfNotRunning());
     Assert.assertEquals(1, ut.getMultiplier());
+    Assert.assertTrue(ut.isRunning());
   }
 
   @Test
@@ -93,12 +94,14 @@ public class TestUsageTimer {
     Assert.assertEquals(0, ut.getMultiplier());
     Assert.assertFalse(ut.stopIfRunning());
     Assert.assertEquals(0, ut.getMultiplier());
+    Assert.assertFalse(ut.isRunning());
     ut.start();
     Assert.assertEquals(1, ut.getMultiplier());
     Assert.assertTrue(ut.stopIfRunning());
     Assert.assertEquals(0, ut.getMultiplier());
     Assert.assertFalse(ut.stopIfRunning());
     Assert.assertEquals(0, ut.getMultiplier());
+    Assert.assertFalse(ut.isRunning());
   }
 
   @Test
@@ -121,6 +124,9 @@ public class TestUsageTimer {
 
       Assert.assertEquals(0, ut.getMultiplier());
       Assert.assertEquals(10 + (2 - 1), ut.getAccumulatedTime());
+
+      Assert.assertFalse(ut.isRunning());
+      Assert.assertTrue(ut1.isRunning());
       return null;
     });
 

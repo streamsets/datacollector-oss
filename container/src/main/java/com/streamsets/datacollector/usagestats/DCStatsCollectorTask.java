@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,32 +19,24 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.SysInfo;
-import com.streamsets.datacollector.util.SysInfoModule;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import dagger.Module;
-import dagger.Provides;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import java.util.Collections;
+import java.util.List;
 
-@Module(
-    library = true,
-    complete = false,
-    injects = { StatsCollector.class },
-    includes = { SysInfoModule.class }
-    )
-public class StatsCollectorModule {
+public class DCStatsCollectorTask extends AbstractStatsCollectorTask {
 
-  @Provides
-  @Singleton
-  public StatsCollector provideStatsCollector(
+  public DCStatsCollectorTask(
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
-      @Named("runnerExecutor") SafeScheduledExecutorService executorService,
-      SysInfo sysInfo
-  ) {
-    return new DCStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo);
+      SafeScheduledExecutorService executorService,
+      SysInfo sysInfo) {
+    super(buildInfo, runtimeInfo, config, executorService, sysInfo);
   }
 
+  @Override
+  protected List<AbstractStatsExtension> provideStatsExtensions() {
+    return Collections.emptyList();
+  }
 }

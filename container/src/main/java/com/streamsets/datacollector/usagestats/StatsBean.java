@@ -41,6 +41,7 @@ public class StatsBean {
   private Map<String, Long> errorCodes;
   private List<FirstPipelineUse> createToPreview;
   private List<FirstPipelineUse> createToRun;
+  private List<StatsBeanExtension> extensions;
 
   public StatsBean() {
     stageMilliseconds = new HashMap<>();
@@ -75,6 +76,9 @@ public class StatsBean {
     setErrorCodes(new HashMap<>(activeStats.getErrorCodes()));
     createToPreview = getFirstUse(activeStats.getCreateToPreview());
     createToRun = getFirstUse(activeStats.getCreateToRun());
+    extensions = activeStats.getExtensions().stream()
+        .map(AbstractStatsExtension::report)
+        .collect(Collectors.toList());
   }
 
   @NotNull
@@ -223,6 +227,15 @@ public class StatsBean {
 
   public StatsBean setCreateToRun(List<FirstPipelineUse> createToRun) {
     this.createToRun = createToRun;
+    return this;
+  }
+
+  public List<StatsBeanExtension> getExtensions() {
+    return extensions;
+  }
+
+  public StatsBean setExtensions(List<StatsBeanExtension> extensions) {
+    this.extensions = extensions;
     return this;
   }
 }

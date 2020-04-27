@@ -15,7 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -52,10 +52,21 @@ public class StatsInfo {
   private volatile ActiveStats activeStats;
   private List<StatsBean> collectedStats;
 
-  public StatsInfo() {
+  /**
+   * @param extensions Immutable list of callbacks to extend stats behavior.
+   */
+  public StatsInfo(List<AbstractStatsExtension> extensions) {
     rwLock = new ReentrantReadWriteLock(true);
-    collectedStats = new ArrayList<>();
-    activeStats = new ActiveStats();
+    doWithLock(() -> {
+      collectedStats = new ArrayList<>();
+      extensions.stream().forEach(e -> e.setStatsInfo(this));
+      activeStats = new ActiveStats(extensions.stream().map(AbstractStatsExtension::snapshotAndPopulateStatsInfo).collect(Collectors.toList()));
+    }, true);
+  }
+
+  // for serialization
+  private StatsInfo() {
+    this(ImmutableList.of());
   }
 
   public ActiveStats getActiveStats() {
@@ -119,8 +130,19 @@ public class StatsInfo {
     doWithLock(() -> getActiveStats().errorCode(errorCode), false);
   }
 
-  @VisibleForTesting
-  static String computeHash(String value) {
+  /**
+   * Provide a consistent hash for a given pipelineId. Helpful to produce anonymous ids that can be used
+   * to correlate across periods and across extensions / base DC telemetry.
+   *
+   * @param pipelineId pipeline ID to hash
+   * @return hashed pipeline ID
+   */
+  String hashPipelineId(String pipelineId) {
+    // TODO add a salt, ideally per-pipeline
+    return computeHash(pipelineId);
+  }
+
+  private static String computeHash(String value) {
     return Hashing.sha256().newHasher().putString(value, Charset.forName("UTF-8")).hash().toString();
   }
 
@@ -229,12 +251,14 @@ public class StatsInfo {
   }
 
   public StatsInfo snapshot() {
-    StatsInfo snapshot = new StatsInfo();
+    StatsInfo[] snapshotHolder = new StatsInfo[1];
     doWithLock(() -> {
+      StatsInfo snapshot = new StatsInfo(activeStats.getExtensions());
       snapshot.setActiveStats(activeStats.snapshot());
       snapshot.setCollectedStats(getCollectedStats());
+      snapshotHolder[0] = snapshot;
     }, false);
-    return snapshot;
+    return snapshotHolder[0];
   }
 
   public void reset() {

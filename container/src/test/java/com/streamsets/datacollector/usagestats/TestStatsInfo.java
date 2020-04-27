@@ -15,16 +15,19 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.usagestats.TestStatsBean.TestModelStatsBeanExtension;
 import com.streamsets.datacollector.util.SysInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,28 +38,32 @@ public class TestStatsInfo {
 
   @Test
   public void testGetters() {
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     Assert.assertNotNull(si.getActiveStats());
     Assert.assertNotNull(si.getCollectedStats());
   }
 
   @Test
   public void testCollection() throws Exception {
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
-    ActiveStats ai = new ActiveStats();
+    ActiveStats ai = si.getActiveStats();
     ai = Mockito.spy(ai);
     si.setActiveStats(ai);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.startSystem();
     Mockito.verify(ai, Mockito.times(1)).startSystem();
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(false));
+    Assert.assertEquals(1, ext.getStartSystems());
 
     Mockito.reset(si);
 
     si.stopSystem();
     Mockito.verify(ai, Mockito.times(1)).stopSystem();
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(false));
+    Assert.assertEquals(1, ext.getStopSystems());
 
     Mockito.reset(si);
 
@@ -66,12 +73,14 @@ public class TestStatsInfo {
     si.startPipeline(pc);
     Mockito.verify(ai, Mockito.times(1)).startPipeline(Mockito.eq(pc));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(false));
+    Assert.assertEquals(1, ext.getStartPipelines());
 
     Mockito.reset(si);
 
     si.stopPipeline(pc);
     Mockito.verify(ai, Mockito.times(1)).stopPipeline(Mockito.eq(pc));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(false));
+    Assert.assertEquals(1, ext.getStopPipelines());
 
     Mockito.reset(si);
 
@@ -82,38 +91,45 @@ public class TestStatsInfo {
 
   @Test
   public void testSnapshot() throws Exception {
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
-    ActiveStats ai = new ActiveStats();
+    ActiveStats ai = si.getActiveStats();
     ai = Mockito.spy(ai);
     si.setActiveStats(ai);
-    ActiveStats ais = new ActiveStats();
+    ActiveStats ais = createActiveStats(si);
     Mockito.doReturn(ais).when(ai).snapshot();
     StatsBean sb = new StatsBean();
     si.setCollectedStats(ImmutableList.of(sb));
+
+    TestModelStatsExtension ext = getTestExtension(si);
+    Assert.assertEquals(1, ext.getSnapshots()); // called once when making safe copies in constructor
 
     StatsInfo sis = si.snapshot();
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(false));
     Assert.assertEquals(ais, sis.getActiveStats());
     Assert.assertEquals(ImmutableList.of(sb), sis.getCollectedStats());
+    Assert.assertEquals(2, ext.getSnapshots());
   }
 
   @Test
   public void testReset() throws Exception {
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
-    ActiveStats ai = new ActiveStats();
+    ActiveStats ai = si.getActiveStats();
     ai = Mockito.spy(ai);
     si.setActiveStats(ai);
-    ActiveStats ais = new ActiveStats();
+    ActiveStats ais = createActiveStats(si);
     Mockito.doReturn(ais).when(ai).roll();
     StatsBean sb = new StatsBean();
     si.setCollectedStats(ImmutableList.of(sb));
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.reset();
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(ais, si.getActiveStats());
     Assert.assertTrue(si.getCollectedStats().isEmpty());
+    Assert.assertEquals(0, ext.getRolls()); // reset throws away the one with rolls = 1
   }
 
   @Test
@@ -123,14 +139,18 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", true);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.startSystem();
     Assert.assertEquals(1, si.getActiveStats().getUpTime().getMultiplier());
+    Assert.assertEquals(1, ext.getStartSystems());
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo,1000, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
     Assert.assertTrue(si.getActiveStats().isDpmEnabled());
@@ -154,9 +174,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id2", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id1");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -167,6 +189,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("id2", si.getActiveStats().getSdcId());
     Assert.assertEquals(1, si.getCollectedStats().size());
@@ -179,9 +202,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -192,6 +217,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
     Assert.assertEquals(1, si.getCollectedStats().size());
@@ -204,9 +230,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -217,6 +245,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
     Assert.assertEquals(1, si.getCollectedStats().size());
@@ -229,9 +258,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "B")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -242,6 +273,7 @@ public class TestStatsInfo {
 
     Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(0, ext.getRolls());
 
     Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
     Assert.assertEquals(0, si.getCollectedStats().size());
@@ -254,9 +286,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", true);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -268,6 +302,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
     Assert.assertTrue(si.getActiveStats().isDpmEnabled());
@@ -281,9 +316,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -295,6 +332,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
     Assert.assertEquals(1, si.getCollectedStats().size());
@@ -307,9 +345,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -321,6 +361,7 @@ public class TestStatsInfo {
 
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, true));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+    Assert.assertEquals(1, ext.getRolls());
 
     Assert.assertEquals("v1", si.getActiveStats().getDataCollectorVersion());
     Assert.assertEquals(1, si.getCollectedStats().size());
@@ -333,9 +374,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -349,6 +392,7 @@ public class TestStatsInfo {
     Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1000, false));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(as, si.getActiveStats());
+    Assert.assertEquals(0, ext.getRolls());
   }
 
   @Test
@@ -358,9 +402,11 @@ public class TestStatsInfo {
     Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
 
-    StatsInfo si = new StatsInfo();
+    StatsInfo si = createStatsInfo();
     si = Mockito.spy(si);
     Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    TestModelStatsExtension ext = getTestExtension(si);
 
     si.getActiveStats().setSdcId("id");
     si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -376,6 +422,7 @@ public class TestStatsInfo {
     }
     si.setCollectedStats(collected);
     Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false));
+    Assert.assertEquals(1, ext.getRolls());
     List<StatsBean> got = si.getCollectedStats();
 
     collected.remove(0);
@@ -391,9 +438,11 @@ public class TestStatsInfo {
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id2", false);
 
     for (String fieldToNull : ImmutableList.of("sdcId", "buildRepoSha")) {
-      StatsInfo si = new StatsInfo();
+      StatsInfo si = createStatsInfo();
       si = Mockito.spy(si);
       Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+      TestModelStatsExtension ext = getTestExtension(si);
 
       si.getActiveStats().setSdcId("id2");
       si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -405,6 +454,7 @@ public class TestStatsInfo {
       Whitebox.setInternalState(si.getActiveStats(), fieldToNull, null);
       Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
       Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
+      Assert.assertEquals(1, ext.getRolls());
 
       Assert.assertEquals("id2", si.getActiveStats().getSdcId());
       Assert.assertEquals("sha1", si.getActiveStats().getBuildRepoSha());
@@ -414,5 +464,182 @@ public class TestStatsInfo {
     }
   }
 
+  private StatsInfo createStatsInfo() {
+    return new StatsInfo(ImmutableList.of(
+        new TestModelStatsExtension()));
+  }
 
+  /** Warning: some things are weird when creating orphaned ActiveStats objects like this */
+  private ActiveStats createActiveStats(StatsInfo si) {
+    return new ActiveStats(si.getActiveStats().getExtensions());
+  }
+
+  private TestModelStatsExtension getTestExtension(StatsInfo info) {
+    Assert.assertEquals(1, info.getActiveStats().getExtensions().size());
+    return (TestModelStatsExtension) info.getActiveStats().getExtensions().get(0);
+  }
+
+  static class TestModelStatsExtension extends AbstractStatsExtension {
+    static final String VERSION = "4.2";
+
+    long instantiateTime = System.currentTimeMillis();
+    int startSystems, stopSystems, createPipelines, previewPipelines, startPipelines, stopPipelines, rolls, snapshots;
+
+    @Override
+    public String getVersion() {
+      return VERSION;
+    }
+
+    public void setVersion(String version) {
+      if (!VERSION.equals(version)) {
+        throw new RuntimeException("Unexpected version: " + version);
+      }
+    }
+
+    public long getInstantiateTime() {
+      return instantiateTime;
+    }
+
+    public void setInstantiateTime(long instantiateTime) {
+      this.instantiateTime = instantiateTime;
+    }
+
+    public int getStartSystems() {
+      return startSystems;
+    }
+
+    public void setStartSystems(int startSystems) {
+      this.startSystems = startSystems;
+    }
+
+    public int getStopSystems() {
+      return stopSystems;
+    }
+
+    public void setStopSystems(int stopSystems) {
+      this.stopSystems = stopSystems;
+    }
+
+    public int getCreatePipelines() {
+      return createPipelines;
+    }
+
+    public void setCreatePipelines(int createsPipelines) {
+      this.createPipelines = createsPipelines;
+    }
+
+    public int getPreviewPipelines() {
+      return previewPipelines;
+    }
+
+    public void setPreviewPipelines(int previewPipelines) {
+      this.previewPipelines = previewPipelines;
+    }
+
+    public int getStartPipelines() {
+      return startPipelines;
+    }
+
+    public void setStartPipelines(int startPipelines) {
+      this.startPipelines = startPipelines;
+    }
+
+    public int getStopPipelines() {
+      return stopPipelines;
+    }
+
+    public void setStopPipelines(int stopPipelines) {
+      this.stopPipelines = stopPipelines;
+    }
+
+    public int getRolls() {
+      return rolls;
+    }
+
+    public void setRolls(int rolls) {
+      this.rolls = rolls;
+    }
+
+    public int getSnapshots() {
+      return snapshots;
+    }
+
+    public void setSnapshots(int snapshots) {
+      this.snapshots = snapshots;
+    }
+
+    @Override
+    protected StatsBeanExtension report() {
+      TestModelStatsBeanExtension ret = new TestModelStatsBeanExtension();
+      // calculate one more field unique to report
+      ret.setNetPipelineStarts(getStartPipelines() - getStopPipelines());
+
+      // report other stuff too
+      ret.setStartSystems(getStartSystems());
+      ret.setStopSystems(getStopSystems());
+      ret.setCreatePipelines(getCreatePipelines());
+      ret.setStartPipelines(getStartPipelines());
+      ret.setCreatePipelines(getCreatePipelines());
+      ret.setStopPipelines(getStopPipelines());
+      ret.setRolls(getRolls());
+      ret.setSnapshots(getSnapshots());
+
+      // make sure this does something, though test class doesn't use it
+      String hashedPid = hashPipelineId("pid");
+      Assert.assertNotNull(hashedPid);
+      Assert.assertNotEquals("pid", hashedPid);
+
+      return ret;
+    }
+
+    @Override
+    public void startSystem(ActiveStats activeStats) {
+      startSystems++;
+    }
+
+    @Override
+    public void stopSystem(ActiveStats activeStats) {
+      stopSystems++;
+    }
+
+    @Override
+    public void createPipeline(ActiveStats activeStats, String pipelineId) {
+      createPipelines++;
+    }
+
+    @Override
+    public void previewPipeline(ActiveStats activeStats, String pipelineId) {
+      previewPipelines++;
+    }
+
+    @Override
+    public void startPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {
+      startPipelines++;
+    }
+
+    @Override
+    public void stopPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {
+      stopPipelines++;
+    }
+
+    @Override
+    public AbstractStatsExtension roll(ActiveStats activeStats) {
+      rolls++;
+      return new TestModelStatsExtension();
+    }
+
+    @Override
+    public AbstractStatsExtension snapshot() {
+      snapshots++;
+      ObjectMapper objectMapper = ObjectMapperFactory.get();
+      TestModelStatsExtension snapshot = null;
+      try {
+        // using json to do a clone
+        snapshot = objectMapper.readValue(objectMapper.writeValueAsString(this), TestModelStatsExtension.class);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+      return snapshot;
+    }
+  }
 }

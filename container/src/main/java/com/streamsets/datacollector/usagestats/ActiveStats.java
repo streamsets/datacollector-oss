@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.usagestats;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -24,13 +26,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ActiveStats {
@@ -38,6 +39,8 @@ public class ActiveStats {
 
   public static final String VERSION = "1.2";
 
+  /** In upgrade scenarios, this can differ from {@link #VERSION} until the first roll. */
+  private String version;
   private long startTime;
   private long endTime;
   private String sdcId;
@@ -53,9 +56,15 @@ public class ActiveStats {
   private Map<String, Long> errorCodes;
   private Map<String, FirstPipelineUse> createToPreview;
   private Map<String, FirstPipelineUse> createToRun;
+  private List<AbstractStatsExtension> extensions;
 
-
-  public ActiveStats() {
+  /**
+   * @param extensions immutable list of callbacks for extensions to customize behavior
+   */
+  @JsonCreator
+  public ActiveStats(
+      @JsonProperty("extensions") List<AbstractStatsExtension> extensions) {
+    version = VERSION;
     startTime = System.currentTimeMillis();
     upTime = new UsageTimer().setName("upTime");
     pipelines = new ConcurrentHashMap<>();
@@ -65,6 +74,16 @@ public class ActiveStats {
     errorCodes = new ConcurrentHashMap<>();
     createToPreview = new ConcurrentHashMap<>();
     createToRun = new ConcurrentHashMap<>();
+    this.extensions = null == extensions ? Collections.emptyList() : extensions;
+  }
+
+  public List<AbstractStatsExtension> getExtensions() {
+    return extensions;
+  }
+
+  public ActiveStats setExtensions(List<AbstractStatsExtension> callbacks) {
+    this.extensions = callbacks;
+    return this;
   }
 
   public String getSdcId() {
@@ -86,11 +105,12 @@ public class ActiveStats {
   }
 
   public String getVersion() {
-    return VERSION;
+    return version;
   }
 
-  public void setVersion(String version) {
-    // NoOp, we need this for Jackson not to complain
+  public ActiveStats setVersion(String version) {
+    this.version = version;
+    return this;
   }
 
   public long getStartTime() {
@@ -191,11 +211,13 @@ public class ActiveStats {
 
   public ActiveStats startSystem() {
     upTime.start();
+    safeInvokeCallbacks("startSystem", c -> c.startSystem(this));
     return this;
   }
 
   public ActiveStats stopSystem() {
     upTime.stop();
+    safeInvokeCallbacks("stopSystem", c -> c.stopSystem(this));
     return this;
   }
 
@@ -233,6 +255,7 @@ public class ActiveStats {
     long now = System.currentTimeMillis();
     createToPreview.put(pipelineId, new FirstPipelineUse().setCreatedOn(now));
     createToRun.put(pipelineId, new FirstPipelineUse().setCreatedOn(now));
+    safeInvokeCallbacks("createPipeline", c -> c.createPipeline(this, pipelineId));
     return this;
   }
 
@@ -243,6 +266,7 @@ public class ActiveStats {
         created.setFirstUseOn(System.currentTimeMillis());
       }
     }
+    safeInvokeCallbacks("previewPipeline", c -> c.previewPipeline(this, pipelineId));
     return this;
   }
 
@@ -268,6 +292,7 @@ public class ActiveStats {
         stageUsageTimer.start();
       }
     }
+    safeInvokeCallbacks("startPipeline", c -> c.startPipeline(this, pipeline));
     return this;
   }
 
@@ -300,6 +325,7 @@ public class ActiveStats {
     } else {
       LOG.warn("UsageTimer for '{}' pipeline not found", pipeline.getPipelineId());
     }
+    safeInvokeCallbacks("stopPipeline", c -> c.stopPipeline(this, pipeline));
     return this;
   }
 
@@ -325,7 +351,7 @@ public class ActiveStats {
   public ActiveStats roll() {
     long now = System.currentTimeMillis();
     setEndTime(now);
-    ActiveStats statsBean = new ActiveStats()
+    ActiveStats statsBean = new ActiveStats(rollExtensions())
         .setSdcId(getSdcId())
         .setProductName(getProductName())
         .setStartTime(now)
@@ -356,16 +382,17 @@ public class ActiveStats {
 
   // returns a snapshot for persistency
   public ActiveStats snapshot() {
-    ActiveStats snapshot = new ActiveStats().setSdcId(getSdcId())
-                                            .setProductName(getProductName())
-                                            .setStartTime(getStartTime())
-                                            .setDataCollectorVersion(getDataCollectorVersion())
-                                            .setBuildRepoSha(getBuildRepoSha())
-                                            .setExtraInfo(getExtraInfo())
-                                            .setDpmEnabled(isDpmEnabled())
-                                            .setErrorCodes(errorCodes)
-                                            .setUpTime(getUpTime().snapshot())
-                                            .setRecordCount(getRecordCount());
+    ActiveStats snapshot = new ActiveStats(snapshotExtensions())
+        .setSdcId(getSdcId())
+        .setProductName(getProductName())
+        .setStartTime(getStartTime())
+        .setDataCollectorVersion(getDataCollectorVersion())
+        .setBuildRepoSha(getBuildRepoSha())
+        .setExtraInfo(getExtraInfo())
+        .setDpmEnabled(isDpmEnabled())
+        .setErrorCodes(errorCodes)
+        .setUpTime(getUpTime().snapshot())
+        .setRecordCount(getRecordCount());
     snapshot.setPipelines(getPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
     snapshot.setStages(getStages().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
     snapshot.setCreateToPreview(getCreateToPreview());
@@ -373,4 +400,21 @@ public class ActiveStats {
     return snapshot;
   }
 
+  private void safeInvokeCallbacks(String methodName, Consumer<AbstractStatsExtension> lambda) {
+    extensions.stream().forEachOrdered(c -> {
+      try {
+        lambda.accept(c);
+      } catch (Exception e) {
+        LOG.error("Error processing callback {}.{}", c.getName(), methodName, e);
+      }
+    });
+  }
+
+  private List<AbstractStatsExtension> rollExtensions() {
+    return extensions.stream().map(e -> e.rollAndPopulateStatsInfo(this)).collect(Collectors.toList());
+  }
+
+  private List<AbstractStatsExtension> snapshotExtensions() {
+    return extensions.stream().map(AbstractStatsExtension::snapshotAndPopulateStatsInfo).collect(Collectors.toList());
+  }
 }

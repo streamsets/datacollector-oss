@@ -18,6 +18,7 @@ package com.streamsets.datacollector.usagestats;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.io.DataStore;
@@ -47,9 +48,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-public class StatsCollectorTask extends AbstractTask implements StatsCollector {
-  private static final Logger LOG = LoggerFactory.getLogger(StatsCollectorTask.class);
+public abstract class AbstractStatsCollectorTask extends AbstractTask implements StatsCollector {
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractStatsCollectorTask.class);
   private static final ObjectMapper OBJECT_MAPPER = ObjectMapperFactory.get();
 
   public static final String GET_TELEMETRY_URL_ENDPOINT = "usage.reporting.getTelemetryUrlEndpoint";
@@ -113,7 +115,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   private int reportStatsFailedCount;
   private int extendedReportStatsFailedCount;
 
-  public StatsCollectorTask(
+  public AbstractStatsCollectorTask(
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
@@ -134,6 +136,20 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
     reportStatsFailedCount = 0;
     extendedReportStatsFailedCount = 0;
     this.sysInfo = sysInfo;
+  }
+
+  /**
+   * Provide stats extensions. These instances will not be "live", but are snapshotted. To get the instances that are
+   * actually used, call {@link #getStatsExtensions()}. Called on init and every roll.
+   */
+  abstract protected List<AbstractStatsExtension> provideStatsExtensions();
+
+  /**
+   * @return Live instances of stats extensions, which can be snapshotted, rolled, etc. as part of ActiveStats. Any
+   * modifications to these objects must use {@link AbstractStatsExtension#doWithLock(Runnable, boolean)}.
+   */
+  protected final List<AbstractStatsExtension> getStatsExtensions() {
+    return statsInfo.getActiveStats().getExtensions();
   }
 
   @VisibleForTesting
@@ -172,7 +188,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
   protected void initTask() {
     super.initTask();
 
-    statsInfo =  new StatsInfo();
+    statsInfo =  new StatsInfo(provideStatsExtensions());
     statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo(), getSysInfo());
 
     if (runtimeInfo.isClusterSlave()) {
@@ -217,6 +233,8 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
                 LOG.warn("Stats collection data is missing, switching off and re-opting");
               } else {
                 statsInfo = data;
+                // deserialization doesn't populate this back reference, so do it ourselves
+                statsInfo.getActiveStats().getExtensions().forEach(e -> e.setStatsInfo(statsInfo));
                 LOG.debug("Stats collection loaded");
               }
             }
@@ -262,9 +280,40 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
       LOG.info("Stats Collection, opted '{}, active '{}'", opted, isActive());
     }
     // when disabled all persistency/reporting done by the Runnable is a No Op.
-    getStatsInfo().startSystem();
     getRunnable(true).run();
+    // report all old stuff before we trigger startSystem
+    getStatsInfo().startSystem();
     future = executorService.scheduleAtFixedRate(getRunnable(false), 60, 60 , TimeUnit.SECONDS);
+  }
+
+  @VisibleForTesting
+  StatsInfo updateAfterRoll(StatsInfo statsInfo) {
+    // inject any new extensions
+    Map<String, AbstractStatsExtension> existingToProcess = statsInfo.getActiveStats().getExtensions().stream()
+        .collect(Collectors.toMap(
+            e -> e.getClass().getName(),
+            e -> e,
+            (x, y) -> { throw new RuntimeException("No merge expected"); }));
+    ImmutableList.Builder<AbstractStatsExtension> updatedStats = ImmutableList.builder();
+    provideStatsExtensions().forEach(e -> {
+      AbstractStatsExtension existing = existingToProcess.remove(e.getClass().getName());
+      if (existing == null) {
+        updatedStats.add(e.snapshot());
+        LOG.info("Added stats extension: {}", e.getName());
+      } else {
+        updatedStats.add(existing);
+        if (!e.getVersion().equals(existing.getVersion())) {
+          LOG.warn("Stats extension {} not upgraded. Version is {} but expected {}.",
+              e.getName(), existing.getVersion(), e.getVersion());
+        }
+      }
+    });
+    existingToProcess.values().forEach(e -> {
+      LOG.warn("Removing stats extension {} of version {}", e.getName(), e.getVersion());
+    });
+    statsInfo.getActiveStats().setExtensions(updatedStats.build());
+    statsInfo.getActiveStats().getExtensions().forEach(e -> e.setStatsInfo(statsInfo));
+    return statsInfo;
   }
 
   long getReportPeriodSeconds() {
@@ -285,6 +334,7 @@ public class StatsCollectorTask extends AbstractTask implements StatsCollector {
         */
         if (isActive()) {
           if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis(), forceRollAndReport)) {
+            updateAfterRoll(getStatsInfo());
             LOG.debug("Stats collection data rolled");
           }
           if (shouldReport(forceRollAndReport)) {

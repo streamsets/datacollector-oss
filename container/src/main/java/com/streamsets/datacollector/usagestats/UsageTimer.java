@@ -86,13 +86,17 @@ public class UsageTimer {
     return this;
   }
 
+  public boolean isRunning() {
+    return getMultiplier() > 0;
+  }
+
   protected int getMultiplier() {
     return multiplier;
   }
 
   protected synchronized UsageTimer changeMultiplier(int count) {
     long now = timeNow();
-    if (lastStart > 0 && getMultiplier() > 0) {
+    if (lastStart > 0 && isRunning()) {
       accumulatedTime.addAndGet(getMultiplier() * (now - lastStart));
     }
     multiplier += count;
@@ -106,7 +110,7 @@ public class UsageTimer {
   }
 
   public synchronized boolean startIfNotRunning() {
-    if (getMultiplier() == 1) {
+    if (isRunning()) {
       return false;
     }
     start();
@@ -118,7 +122,7 @@ public class UsageTimer {
   }
 
   public synchronized boolean stopIfRunning() {
-    if (getMultiplier() == 0) {
+    if (!isRunning()) {
       return false;
     }
     stop();

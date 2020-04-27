@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -24,16 +25,19 @@ import com.streamsets.pipeline.api.ErrorCode;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 import java.util.List;
 import java.util.Map;
 
 public class TestActiveStats {
 
+  List<AbstractStatsExtension> extensions = ImmutableList.of(
+      new TestStatsInfo.TestModelStatsExtension()
+  );
+
   @Test
   public void testNew() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     Assert.assertEquals("", as.getDataCollectorVersion());
     Assert.assertTrue(as.getStartTime() <= System.currentTimeMillis());
     Assert.assertEquals(0, as.getEndTime());
@@ -42,11 +46,12 @@ public class TestActiveStats {
     Assert.assertNotNull(as.getStages());
     Assert.assertNotNull(as.getCreateToPreview());
     Assert.assertNotNull(as.getCreateToRun());
+    Assert.assertEquals(0, getTestExtension(as).getSnapshots());
   }
 
   @Test
   public void testSetPipelines() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     UsageTimer ut = new UsageTimer().setName("p");
     as.setPipelines(ImmutableList.of(ut));
     Assert.assertEquals(1, as.getPipelines().size());
@@ -55,7 +60,7 @@ public class TestActiveStats {
 
   @Test
   public void testSetCreateToPreview() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
     as.setCreateToPreview(map);
     Assert.assertEquals(1, as.getCreateToPreview().size());
@@ -65,7 +70,7 @@ public class TestActiveStats {
 
   @Test
   public void testSetCreateToRun() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     Map map = ImmutableMap.of("p1", new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(3));
     as.setCreateToRun(map);
     Assert.assertEquals(1, as.getCreateToRun().size());
@@ -75,8 +80,9 @@ public class TestActiveStats {
 
   @Test
   public void testCreatePipeline() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.createPipeline("p1");
+    Assert.assertEquals(1, getTestExtension(as).getCreatePipelines());
     long currentTime = System.currentTimeMillis();
 
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
@@ -90,10 +96,12 @@ public class TestActiveStats {
 
   @Test
   public void testPreviewPipeline() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.createPipeline("p1");
+    Assert.assertEquals(1, getTestExtension(as).getCreatePipelines());
     as.previewPipeline("p1");
     long currentTime = System.currentTimeMillis();
+    Assert.assertEquals(1, getTestExtension(as).getPreviewPipelines());
 
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
     Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
@@ -107,8 +115,9 @@ public class TestActiveStats {
 
   @Test
   public void testRunPipeline() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.createPipeline("p1");
+    Assert.assertEquals(1, getTestExtension(as).getCreatePipelines());
     PipelineConfiguration pipelineConfiguration = Mockito.mock(PipelineConfiguration.class);
     Mockito.when(pipelineConfiguration.getPipelineId()).thenReturn("p1");
     StageConfiguration stageConfiguration = Mockito.mock(StageConfiguration.class);
@@ -117,6 +126,7 @@ public class TestActiveStats {
     Mockito.when(pipelineConfiguration.getStages()).thenReturn((List)ImmutableList.of(stageConfiguration));
     as.startPipeline(pipelineConfiguration);
     long currentTime = System.currentTimeMillis();
+    Assert.assertEquals(1, getTestExtension(as).getStartPipelines());
 
     Assert.assertTrue(as.getCreateToPreview().containsKey("p1"));
     Assert.assertTrue(as.getCreateToRun().containsKey("p1"));
@@ -129,7 +139,7 @@ public class TestActiveStats {
 
   @Test
   public void testSetStages() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     UsageTimer ut = new UsageTimer().setName("p");
     as.setStages(ImmutableList.of(ut));
     Assert.assertEquals(1, as.getStages().size());
@@ -138,11 +148,13 @@ public class TestActiveStats {
 
   @Test
   public void testCollection() throws Exception {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.startSystem();
     Assert.assertEquals(1, as.getUpTime().getMultiplier());
+    Assert.assertEquals(1, getTestExtension(as).getStartSystems());
     Thread.sleep(1);
     as.stopSystem();
+    Assert.assertEquals(1, getTestExtension(as).getStopSystems());
 
     Assert.assertEquals(0, as.getUpTime().getMultiplier());
 
@@ -157,6 +169,7 @@ public class TestActiveStats {
     Mockito.when(pc.getStages()).thenReturn(ImmutableList.of(stageConf));
 
     as.startPipeline(pc);
+    Assert.assertEquals(1, getTestExtension(as).getStartPipelines());
     Assert.assertEquals(1, as.getPipelines().size());
     Assert.assertEquals(1, as.getStages().size());
     Assert.assertEquals(1, as.getPipelines().get(0).getMultiplier());
@@ -164,6 +177,7 @@ public class TestActiveStats {
     Assert.assertEquals("lib::stage", as.getStages().get(0).getName());
 
     as.stopPipeline(pc);
+    Assert.assertEquals(1, getTestExtension(as).getStopPipelines());
     Assert.assertEquals(1, as.getPipelines().size());
     Assert.assertEquals(1, as.getStages().size());
     Assert.assertEquals(0, as.getPipelines().get(0).getMultiplier());
@@ -172,13 +186,14 @@ public class TestActiveStats {
 
   @Test
   public void testRoll() throws Exception {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.setDataCollectorVersion("v1");
     as.setBuildRepoSha("sha1");
     as.setExtraInfo(ImmutableMap.of("a", "A"));
     as.setDpmEnabled(true);
 
     as.startSystem();
+    Assert.assertEquals(1, getTestExtension(as).getStartSystems());
 
     PipelineConfiguration pc = Mockito.mock(PipelineConfiguration.class);
     Mockito.when(pc.getPipelineId()).thenReturn("id");
@@ -188,6 +203,7 @@ public class TestActiveStats {
     Mockito.when(pc.getStages()).thenReturn(ImmutableList.of(stageConf));
 
     as.startPipeline(pc);
+    Assert.assertEquals(1, getTestExtension(as).getStartPipelines());
 
     as.incrementRecordCount(1);
 
@@ -206,6 +222,8 @@ public class TestActiveStats {
     long now = System.currentTimeMillis();
 
     ActiveStats roll = as.roll();
+    Assert.assertEquals(1, getTestExtension(as).getRolls());
+    Assert.assertTrue(getTestExtension(as).getInstantiateTime() < getTestExtension(roll).getInstantiateTime());
 
     Assert.assertEquals("v1", as.getDataCollectorVersion());
     Assert.assertEquals("sha1", as.getBuildRepoSha());
@@ -241,7 +259,7 @@ public class TestActiveStats {
 
   @Test
   public void testSnapshot() throws Exception {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.setDataCollectorVersion("v1");
     as.setBuildRepoSha("sha1");
     as.setDpmEnabled(true);
@@ -261,6 +279,10 @@ public class TestActiveStats {
     as.incrementRecordCount(1);
 
     ActiveStats snapshot = as.snapshot();
+    Assert.assertNotSame(getTestExtension(as), getTestExtension(snapshot));
+    Assert.assertEquals(1, getTestExtension(as).getSnapshots());
+    Assert.assertEquals(1, getTestExtension(snapshot).getSnapshots());
+    Assert.assertEquals(getTestExtension(as).getInstantiateTime(), getTestExtension(snapshot).getInstantiateTime());
 
     Assert.assertEquals("v1", as.getDataCollectorVersion());
     Assert.assertEquals("sha1", as.getBuildRepoSha());
@@ -284,7 +306,7 @@ public class TestActiveStats {
 
   @Test
   public void testStartStopPipelineMultipleTimes() throws Exception {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.startSystem();
 
     PipelineConfiguration pc1 = Mockito.mock(PipelineConfiguration.class);
@@ -313,6 +335,8 @@ public class TestActiveStats {
     Assert.assertEquals(1, as.getStages().size());
     Assert.assertEquals(2, as.getStages().get(0).getMultiplier());
 
+    Assert.assertEquals(3, getTestExtension(as).getStartPipelines());
+
     as.stopPipeline(pc1);
     Assert.assertEquals(1, as.getStages().get(0).getMultiplier());
 
@@ -322,18 +346,23 @@ public class TestActiveStats {
     as.stopPipeline(pc2);
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
 
+    Assert.assertEquals(3, getTestExtension(as).getStopPipelines());
+
     as.startPipeline(pc1);
     Assert.assertEquals(1, as.getStages().size());
     Assert.assertEquals(1, as.getStages().get(0).getMultiplier());
+    Assert.assertEquals(4, getTestExtension(as).getStartPipelines());
 
     as.stopPipeline(pc1);
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
+    Assert.assertEquals(4, getTestExtension(as).getStopPipelines());
+
 
   }
 
   @Test
   public void testRemoveUsedAndExpiredFirstPipelineUse() {
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     Map map = ImmutableMap.of(
         "p1", new FirstPipelineUse().setCreatedOn(100).setFirstUseOn(200),
         "p2", new FirstPipelineUse().setCreatedOn(200),
@@ -348,7 +377,7 @@ public class TestActiveStats {
   @Test
   public void testSerialization() throws Exception {
     ObjectMapper objectMapper = ObjectMapperFactory.get();
-    ActiveStats as = new ActiveStats();
+    ActiveStats as = new ActiveStats(extensions);
     as.setProductName("FOO");
     as.setExtraInfo(ImmutableMap.of("extraKey", "extraValue"));
     as.setCreateToPreview(ImmutableMap.of(
@@ -371,8 +400,15 @@ public class TestActiveStats {
     as.getPipelines().get(0).stop();
     as.setErrorCodes(ImmutableMap.of("ERROR_1", 3L));
 
+    // configure extension
+    as.getExtensions().get(0).startSystem(as);
+    Assert.assertEquals(1, getTestExtension(as).getStartSystems());
+    long extensionInitTime = getTestExtension(as).getInstantiateTime();
+    Assert.assertEquals(TestStatsInfo.TestModelStatsExtension.VERSION, getTestExtension(as).getVersion());
+
     String json = objectMapper.writeValueAsString(as);
     Assert.assertTrue("json does not contain timer1:" + json, json.contains("timer1")); // check random nested thing
+    Assert.assertTrue("json should have extension version: " + json, json.contains(TestStatsInfo.TestModelStatsExtension.VERSION));
     ActiveStats deserialized = objectMapper.readValue(json, ActiveStats.class);
 
     Assert.assertEquals(as.getProductName(), deserialized.getProductName());
@@ -386,6 +422,15 @@ public class TestActiveStats {
     // UsageTimer is running, so can't compare and need to use a delta
     assertWithinDelta(expectedRunningPipeline.getAccumulatedTime(), actualRunningPipeline.getAccumulatedTime(), 1000);
     Assert.assertEquals(as.getErrorCodes(), deserialized.getErrorCodes());
+
+    Assert.assertEquals(1, getTestExtension(deserialized).getStartSystems());
+    Assert.assertEquals(extensionInitTime, getTestExtension(deserialized).getInstantiateTime());
+    Assert.assertEquals(TestStatsInfo.TestModelStatsExtension.VERSION, getTestExtension(deserialized).getVersion());
+  }
+
+  private TestStatsInfo.TestModelStatsExtension getTestExtension(ActiveStats stats) {
+    Assert.assertEquals(1, stats.getExtensions().size());
+    return (TestStatsInfo.TestModelStatsExtension) stats.getExtensions().get(0);
   }
 
   private void assertWithinDelta(long expected, long actual, double delta) {
