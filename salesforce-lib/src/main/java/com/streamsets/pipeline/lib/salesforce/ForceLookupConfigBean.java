@@ -62,6 +62,20 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Bulk API",
+      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
+          "otherwise, the Salesforce SOAP API will be used.",
+      displayPosition = 72,
+      dependsOn = "lookupMode",
+      triggeredByValue = "QUERY",
+      group = "QUERY"
+  )
+  public boolean useBulkAPI;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Id Field",
       description = "The field in the record containing the Salesforce record ID for lookup",

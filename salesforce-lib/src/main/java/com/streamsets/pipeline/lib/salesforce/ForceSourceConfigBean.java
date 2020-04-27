@@ -26,6 +26,20 @@ import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 public class ForceSourceConfigBean extends ForceInputConfigBean {
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Bulk API",
+      description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
+          "otherwise, the Salesforce SOAP API will be used.",
+      displayPosition = 72,
+      dependsOn = "queryExistingData",
+      triggeredByValue = "true",
+      group = "QUERY"
+  )
+  public boolean useBulkAPI;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       label = "SOQL Query",
