@@ -46,6 +46,9 @@ angular
                 'opt in',
                 sdcId
               );
+            } else {
+              // refresh to ensure FullStory stops
+              location.reload();
             }
             $modalInstance.close();
           });

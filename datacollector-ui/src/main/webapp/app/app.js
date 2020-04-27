@@ -579,6 +579,7 @@ angular.module('dataCollectorApp')
         $rootScope.common.headerTitle = configuration.getUIHeaderTitle();
         if(configuration.isAnalyticsEnabled()) {
           Analytics.createAnalyticsScriptTag();
+          configuration.createFullStoryScriptTag();
         }
 
         if ($rootScope.common.isDPMEnabled && $rootScope.common.userRoles.indexOf('disconnected-sso') !== -1) {
