@@ -80,6 +80,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     this.currentLineBuilderPool = currentLineBuilderPool;
     try {
       this.currentLine = currentLineBuilderPool.borrowObject();
+      this.currentLine.setLength(0);
       LOG.debug(
           "Borrowed current line string builder from pool. Num Active {}, Num Idle {}",
           this.currentLineBuilderPool.getNumActive(),
@@ -98,6 +99,7 @@ public abstract class LogCharDataParser extends AbstractDataParser {
     this.previousLineBuilderPool = previousLineBuilderPool;
     try {
       this.previousLine = previousLineBuilderPool.borrowObject();
+      this.previousLine.setLength(0);
       LOG.debug(
         "Borrowed previous line string builder from pool. Num Active {}, Num Idle {}",
         this.previousLineBuilderPool.getNumActive(),
