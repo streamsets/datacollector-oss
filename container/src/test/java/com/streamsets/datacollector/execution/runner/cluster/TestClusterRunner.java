@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.runner.cluster;
 
 import com.google.common.io.Files;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.cluster.ApplicationState;
@@ -147,7 +148,8 @@ public class TestClusterRunner {
         pipelineStateStore,
         eventListenerManager,
         new LockCache<String>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        Mockito.mock(BlobStoreTask.class)
     );
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", NAME, "label","some desc", false, false, attributes);
@@ -670,7 +672,8 @@ public class TestClusterRunner {
         pipelineStateStore,
         eventListenerManager,
         new LockCache<String>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        Mockito.mock(BlobStoreTask.class)
     );
     pipelineStoreTask.init();
     pipelineStoreTask.create("admin", "a", "label", "some desc", false, false, attributes);

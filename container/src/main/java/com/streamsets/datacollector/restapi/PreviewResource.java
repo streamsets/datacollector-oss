@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewConstants;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
@@ -151,6 +152,7 @@ public class PreviewResource {
     this.eventHandlerTask = eventHandlerTask;
     this.pipelineStoreTask = pipelineStoreTask;
     this.blobStoreTask = blobStoreTask;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
 
     if (runtimeInfo.isDPMEnabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);

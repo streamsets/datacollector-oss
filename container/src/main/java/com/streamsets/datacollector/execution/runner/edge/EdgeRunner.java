@@ -15,9 +15,11 @@
  */
 package com.streamsets.datacollector.execution.runner.edge;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
@@ -40,6 +42,7 @@ import dagger.ObjectGraph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +50,13 @@ import java.util.Map;
 public class EdgeRunner extends AbstractRunner implements StateListener {
   private static final Logger LOG = LoggerFactory.getLogger(EdgeRunner.class);
 
+  @Inject BlobStoreTask blobStoreTask;
   private String pipelineTitle = null;
 
   public EdgeRunner(String name, String rev, ObjectGraph objectGraph) {
     super(name, rev);
     objectGraph.inject(this);
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   @Override

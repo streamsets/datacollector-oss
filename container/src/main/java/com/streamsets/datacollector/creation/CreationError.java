@@ -78,6 +78,9 @@ public enum CreationError implements ErrorCode {
 
   // Cluster Type support
   CREATION_1000("Invalid cluster manager type '{}'"),
+
+  CREATION_1100("Connection object failed to load"),
+  CREATION_1101("Blob store object not loaded correctly")
   ;
 
   private final String msg;

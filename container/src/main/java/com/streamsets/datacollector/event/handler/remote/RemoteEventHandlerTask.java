@@ -24,6 +24,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -193,9 +194,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       SafeScheduledExecutorService syncEventsExecutorService,
       StageLibraryTask stageLibrary,
       RuntimeInfo runtimeInfo,
-      Configuration conf
+      Configuration conf,
+      BlobStoreTask blobStoreTask
   ) {
-    this(remoteDataCollector, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null);
+    this(remoteDataCollector, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null, blobStoreTask);
   }
 
   public RemoteEventHandlerTask(
@@ -205,7 +207,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       StageLibraryTask stageLibrary,
       RuntimeInfo runtimeInfo,
       Configuration conf,
-      DataStore disconnectedSsoCredentialsDataStore
+      DataStore disconnectedSsoCredentialsDataStore,
+      BlobStoreTask blobStoreTask
   ) {
     super("REMOTE_EVENT_HANDLER");
 
@@ -249,6 +252,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
     requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
     stopWatch = Stopwatch.createUnstarted();
     stopWatchForSyncEvents = Stopwatch.createUnstarted();
 

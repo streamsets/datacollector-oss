@@ -15,7 +15,9 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -40,8 +42,12 @@ public class PipelineUpgraderResource {
   private final StageLibraryTask stageLibrary;
 
   @Inject
-  public PipelineUpgraderResource(StageLibraryTask stageLibrary) {
+  public PipelineUpgraderResource(
+      StageLibraryTask stageLibrary,
+      BlobStoreTask blobStoreTask
+  ) {
     this.stageLibrary = stageLibrary;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   @Path("/pipeline-upgrader")

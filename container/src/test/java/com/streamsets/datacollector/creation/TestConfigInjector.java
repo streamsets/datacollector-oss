@@ -21,15 +21,22 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.connection.ConnectionConstants;
 import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.ConnectionEngine;
+import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -51,6 +58,43 @@ import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class TestConfigInjector {
+
+  @ConnectionDef(
+      label = "My Connection",
+      description = "",
+      type = "MYCONN",
+      version = 1,
+      upgraderDef = "abcd/dne.yaml",
+      verifier = MyConnection.MyConnectionVerifier.class,
+      supportedEngines = ConnectionEngine.COLLECTOR
+  )
+  public static class MyConnection {
+
+    @ConfigDef(
+        label = "URL",
+        type = ConfigDef.Type.STRING,
+        defaultValue = "http://location.place",
+        required = true
+    )
+    public String URL = "http://location.place";
+
+    public static class MyConnectionVerifier extends ConnectionVerifier {
+      @Override
+      protected List<ConfigIssue> init() {
+        return super.init();
+      }
+
+      @Override
+      public List<ConfigIssue> init(Info info, Source.Context context) {
+        return super.init(info, context);
+      }
+
+      @Override
+      protected List<ConfigIssue> initConnection() {
+        return null;
+      }
+    }
+  }
 
   public enum E { A, B }
 
@@ -102,6 +146,23 @@ public class TestConfigInjector {
 
   @StageDef(version = 1, label = "L", onlineHelpRefUrl = "")
   public static class MySource extends BaseSource {
+
+    @ConfigDef(
+        label = "L",
+        type = ConfigDef.Type.CONNECTION,
+        connectionType = "MYCONN",
+        defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+        required = false
+    )
+    public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+    @ConfigDefBean(
+        dependencies = @Dependency(
+            configName = "connectionSelection",
+            triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+        )
+    )
+    public MyConnection myConnection;
 
     @ConfigDef(
       label = "L",
@@ -275,6 +336,7 @@ public class TestConfigInjector {
   @Test
   public void testInjectConfigsToObject() throws Exception {
     Map<String, Object> values = ImmutableMap.<String, Object>builder()
+      .put("connectionSelection", ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)
       .put("intValue", 666)
       .put("enumSNoDefaultAlAll", "A")
       .put("bean.beanInt", 1987)
@@ -283,6 +345,9 @@ public class TestConfigInjector {
         "beanInt", 55
       )))
       .build();
+
+    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
+    ConfigInjector.setBlobStore(mockBlobStore);
 
     StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
     Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
@@ -298,6 +363,7 @@ public class TestConfigInjector {
     Assert.assertTrue(issues.isEmpty());
 
     // Explicitly filled values
+    Assert.assertEquals(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL, stage.connectionSelection);
     Assert.assertEquals(1987, stage.bean.beanInt);
     Assert.assertEquals("StreamSets", stage.bean.beanSubBean.subBeanString);
     Assert.assertEquals(1, stage.bean.beanSubBean.subBeanList.size());
@@ -313,12 +379,80 @@ public class TestConfigInjector {
     Assert.assertEquals("b", stage.password3.get());
 
     // Values loaded from "defaults"
+    Assert.assertEquals("http://location.place", stage.myConnection.URL);
     Assert.assertEquals("Hello", stage.stringJavaDefault);
     Assert.assertEquals(5, stage.intJavaDefault);
     Assert.assertEquals(E.B, stage.enumSJavaDefault);
     Assert.assertEquals(E.A, stage.enumSNoDefaultAlAll);
     Assert.assertEquals(1, stage.enumMJavaDefault.size());
     Assert.assertEquals(E.A, stage.enumMJavaDefault.get(0));
+
+    Mockito.verify(mockBlobStore, Mockito.never())
+        .retrieve(Mockito.anyString(), Mockito.anyString(), Mockito.anyLong());
+  }
+
+  @Test
+  public void testInjectConfigsToObjectConnection() {
+    String connectionId = "abcd-1234-efgh-5678";
+    Map<String, Object> values = ImmutableMap.<String, Object>builder()
+        .put("connectionSelection", connectionId)
+        .build();
+
+    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
+    Mockito.when(mockBlobStore.retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    )).thenReturn("{\"URL\":\"http://new.place\"}");
+    ConfigInjector.setBlobStore(mockBlobStore);
+
+    StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
+      String name = (String)invocation.getArguments()[0];
+      return new Config(name, values.get(name));
+    });
+
+    ConfigInjector.Context context = new ConfigInjector.StageInjectorContext(stageDef, configuration, constants, issues);
+
+    MySource stage = new MySource();
+    ConfigInjector.get().injectConfigsToObject(stage, context);
+
+    Assert.assertTrue(issues.isEmpty());
+
+    Assert.assertEquals(connectionId, context.getConnection("MYCONN"));
+    Assert.assertEquals(connectionId, stage.connectionSelection);
+    Assert.assertEquals("http://new.place", stage.myConnection.URL);
+
+    Mockito.verify(mockBlobStore).retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    );
+  }
+
+  @Test
+  public void testInjectConfigsToObjectsMissingBlobStore() {
+    String connectionId = "abcd-1234-efgh-5678";
+    Map<String, Object> values = ImmutableMap.<String, Object>builder()
+        .put("connectionSelection", connectionId)
+        .build();
+
+    // let it be null
+    ConfigInjector.setBlobStore(null);
+
+    StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
+      String name = (String)invocation.getArguments()[0];
+      return new Config(name, values.get(name));
+    });
+
+    ConfigInjector.Context context = new ConfigInjector.StageInjectorContext(stageDef, configuration, constants, issues);
+
+    MySource stage = new MySource();
+    ConfigInjector.get().injectConfigsToObject(stage, context);
+
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals(CreationError.CREATION_1101.name(), issues.get(0).getErrorCode());
   }
 
   @Test

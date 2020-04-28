@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
@@ -48,7 +50,8 @@ public class DataObserverRunnable implements Runnable {
       MetricRegistry metrics,
       AlertManager alertManager,
       Configuration configuration,
-      Map<String, Object> resolvedParameters
+      Map<String, Object> resolvedParameters,
+      BlobStoreTask blobStoreTask
   ) {
     this.dataObserverRunner = new DataObserverRunner(
         name,
@@ -59,6 +62,7 @@ public class DataObserverRunnable implements Runnable {
         resolvedParameters
     );
     this.threadHealthReporter = threadHealthReporter;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public void setRequestQueue(BlockingQueue<Object> requestQueue) {

@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.alerts.AlertsUtil;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -143,6 +144,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Inject SnapshotStore snapshotStore;
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject ResourceManager resourceManager;
+  @Inject BlobStoreTask blobStoreTask;
 
   private final StatsCollector statsCollector;
   private final ObjectGraph objectGraph;
@@ -246,6 +248,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public void addErrorListener(ErrorListener errorListener) {

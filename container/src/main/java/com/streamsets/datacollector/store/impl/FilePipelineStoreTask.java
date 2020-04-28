@@ -18,6 +18,7 @@ package com.streamsets.datacollector.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -110,7 +111,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineStateStore pipelineStateStore,
       EventListenerManager eventListenerManager,
       LockCache<String> lockCache,
-      PipelineCredentialHandler encryptingCredentialHandler
+      PipelineCredentialHandler encryptingCredentialHandler,
+      BlobStoreTask blobStoreTask
   ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
@@ -130,6 +132,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     );
     this.eventListenerManager = eventListenerManager;
     this.encryptingCredentialHandler = encryptingCredentialHandler;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   @VisibleForTesting

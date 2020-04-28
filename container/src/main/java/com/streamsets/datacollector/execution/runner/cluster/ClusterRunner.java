@@ -203,6 +203,7 @@ public class ClusterRunner extends AbstractRunner {
       eventListenerManager,
       aclStoreTask
     );
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
     this.runnerExecutor = executorService;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
@@ -219,6 +220,7 @@ public class ClusterRunner extends AbstractRunner {
   @SuppressWarnings("deprecation")
   public ClusterRunner(String name, String rev, ObjectGraph objectGraph) {
     super(name, rev);
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
     this.tempDir = new File(Files.createTempDir(), PipelineUtils.

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.store;
 
+import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.credential.CredentialStoresModule;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStoreModule;
@@ -37,7 +38,8 @@ import javax.inject.Singleton;
     SlaveStageLibraryModule.class,
     SlavePipelineStateStoreModule.class,
     LockCacheModule.class,
-    CredentialStoresModule.class
+    CredentialStoresModule.class,
+    BlobStoreModule.class
 })
 public class SlavePipelineStoreModule {
 

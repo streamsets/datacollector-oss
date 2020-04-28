@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -555,6 +556,7 @@ public class TestPipelineStoreResource extends JerseyTest {
       bindFactory(TestUtil.CredentialStoreTaskTestInjector.class).to(CredentialStoresTask.class);
       bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
       bindFactory(ActivationTestInjector.class).to(Activation.class);
+      bindFactory(BlobStoreTaskTestInjector.class).to(BlobStoreTask.class);
     }
   }
 

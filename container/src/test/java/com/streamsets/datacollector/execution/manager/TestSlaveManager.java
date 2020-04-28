@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.manager;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -53,6 +54,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -75,7 +77,8 @@ public class TestSlaveManager {
         PipelineStoreTask.class,
         PipelineStateStore.class,
         EventListenerManager.class,
-        AclStoreTask.class
+        AclStoreTask.class,
+        BlobStoreTask.class
     },
     library = true)
   public static class TestSlaveManagerModule {
@@ -105,6 +108,11 @@ public class TestSlaveManager {
       return Mockito.spy(new EventListenerManager());
     }
 
+    @Provides
+    @Singleton
+    public BlobStoreTask provideBlobStoreTask() {
+      return Mockito.mock(BlobStoreTask.class);
+    }
 
     @Provides
     @Singleton
@@ -112,17 +120,17 @@ public class TestSlaveManager {
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
-        PipelineStateStore pipelineStateStore
+        PipelineStateStore pipelineStateStore,
+        BlobStoreTask blobStoreTask
     ) {
-      PipelineStoreTask pipelineStoreTask =
-        new SlavePipelineStoreTask(
+      return new SlavePipelineStoreTask(
             new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
                 runtimeInfo,
                 stageLibraryTask,
                 eventListenerManager,
-                new FilePipelineStateStore(runtimeInfo, provideConfiguration()))
+                new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
+                blobStoreTask)
         );
-      return pipelineStoreTask;
     }
 
     @Provides

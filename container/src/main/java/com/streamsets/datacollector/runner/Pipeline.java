@@ -162,6 +162,7 @@ public class Pipeline {
     this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
+    PipelineBeanCreator.setBlobStore(blobStore);
   }
 
   public PipelineConfigBean getPipelineConfig() {
@@ -594,6 +595,7 @@ public class Pipeline {
         configuration,
         interceptorConfs
       );
+      PipelineBeanCreator.setBlobStore(blobStore);
     }
 
     public Builder setObserver(Observer observer) {

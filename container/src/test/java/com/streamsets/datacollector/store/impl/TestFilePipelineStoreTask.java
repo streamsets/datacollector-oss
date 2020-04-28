@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.store.impl;
 
 
+import com.streamsets.datacollector.blobstore.BlobStoreModule;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -82,7 +84,8 @@ public class TestFilePipelineStoreTask {
           FilePipelineStoreTask.class,
           LockCache.class,
           EventListenerManager.class,
-          PipelineCredentialHandler.class
+          PipelineCredentialHandler.class,
+          BlobStoreTask.class
       },
       includes = LockCacheModule.class
   )
@@ -123,16 +126,23 @@ public class TestFilePipelineStoreTask {
 
     @Provides
     @Singleton
+    public BlobStoreTask provideBlobStore() {
+      return Mockito.mock(BlobStoreTask.class);
+    }
+
+    @Provides
+    @Singleton
     public FilePipelineStoreTask providePipelineStoreTask(
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
         EventListenerManager eventListenerManager,
         LockCache<String> lockCache,
-        PipelineCredentialHandler encryptingCredentialsHandler
+        PipelineCredentialHandler encryptingCredentialsHandler,
+        BlobStoreTask blobStoreTask
     ) {
       return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
-          eventListenerManager, lockCache, encryptingCredentialsHandler);
+          eventListenerManager, lockCache, encryptingCredentialsHandler, blobStoreTask);
     }
   }
 

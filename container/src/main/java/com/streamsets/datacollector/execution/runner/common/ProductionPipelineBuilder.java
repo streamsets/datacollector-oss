@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -80,6 +81,7 @@ public class ProductionPipelineBuilder {
     this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
     this.statsCollector = statsCollector;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public ProductionPipeline build(

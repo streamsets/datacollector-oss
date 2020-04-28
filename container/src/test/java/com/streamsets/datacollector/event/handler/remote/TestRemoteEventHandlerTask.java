@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -40,13 +41,15 @@ public class TestRemoteEventHandlerTask {
     SafeScheduledExecutorService executorService = Mockito.mock(SafeScheduledExecutorService.class);
     StageLibraryTask stageLibrary = Mockito.mock(StageLibraryTask.class);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BlobStoreTask blobStoreTask = Mockito.mock(BlobStoreTask.class);
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
     Configuration conf = new Configuration();
     RemoteEventHandlerTask task = new RemoteEventHandlerTask(remoteDataCollector, executorService,
         executorService,
         stageLibrary,
         runtimeInfo,
-        conf
+        conf,
+        blobStoreTask
     );
 
     Assert.assertEquals(new File(testDir, DisconnectedSSOManager.DISCONNECTED_SSO_AUTHENTICATION_FILE),

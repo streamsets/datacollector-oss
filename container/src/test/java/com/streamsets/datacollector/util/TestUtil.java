@@ -350,8 +350,13 @@ public class TestUtil {
   @Module(
       injects = {PipelineStoreTask.class, Configuration.class},
       library = true,
-      includes = {TestRuntimeModule.class, TestStageLibraryModule.class,  TestCredentialStoreModule
-          .class, TestPipelineStateStoreModule.class }
+      includes = {
+          TestRuntimeModule.class,
+          TestStageLibraryModule.class,
+          TestCredentialStoreModule.class,
+          TestPipelineStateStoreModule.class,
+          TestBlobStoreModule.class
+      }
   )
   public static class TestPipelineStoreModuleNew {
 
@@ -364,7 +369,8 @@ public class TestUtil {
         RuntimeInfo info,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
-        PipelineStateStore pipelineStateStore
+        PipelineStateStore pipelineStateStore,
+        BlobStoreTask blobStoreTask
     ) {
       FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
           info,
@@ -372,7 +378,8 @@ public class TestUtil {
           pipelineStateStore,
           eventListenerManager,
           new LockCache<>(),
-          Mockito.mock(PipelineCredentialHandler.class)
+          Mockito.mock(PipelineCredentialHandler.class),
+          blobStoreTask
       );
       pipelineStoreTask.init();
       try {

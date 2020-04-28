@@ -21,6 +21,7 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
@@ -222,7 +223,8 @@ public class PipelineStoreResource {
       Manager manager,
       UserGroupManager userGroupManager,
       AclStoreTask aclStore,
-      Activation activation
+      Activation activation,
+      BlobStoreTask blobStoreTask
   ) {
     this.uri = uri;
     this.user = principal.getName();
@@ -232,6 +234,7 @@ public class PipelineStoreResource {
     this.configuration = configuration;
     this.manager = manager;
     this.activation = activation;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {

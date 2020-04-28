@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.store.impl;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.datacollector.execution.store.TestPipelineStateStore;
@@ -62,7 +63,7 @@ public class TestSlavePipelineStoreExecutionModes {
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
       new SlavePipelineStateStore(), new EventListenerManager(), new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class));
+        Mockito.mock(PipelineCredentialHandler.class), Mockito.mock(BlobStoreTask.class));
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());
@@ -78,7 +79,7 @@ public class TestSlavePipelineStoreExecutionModes {
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
         new SlavePipelineStateStore(), new EventListenerManager(),
-        new LockCache<>(), Mockito.mock(PipelineCredentialHandler.class));
+        new LockCache<>(), Mockito.mock(PipelineCredentialHandler.class), Mockito.mock(BlobStoreTask.class));
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());

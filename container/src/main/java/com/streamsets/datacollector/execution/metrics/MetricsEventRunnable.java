@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
@@ -120,7 +121,8 @@ public class MetricsEventRunnable implements Runnable {
       EventListenerManager eventListenerManager,
       MetricRegistry metricRegistry,
       SlaveCallbackManager slaveCallbackManager,
-      RuntimeInfo runtimeInfo
+      RuntimeInfo runtimeInfo,
+      BlobStoreTask blobStoreTask
   ) {
     slaveMetrics = new ConcurrentHashMap<>();
     this.threadHealthReporter = threadHealthReporter;
@@ -133,6 +135,8 @@ public class MetricsEventRunnable implements Runnable {
     this.scheduledDelay = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public void onStopOrFinishPipeline() {

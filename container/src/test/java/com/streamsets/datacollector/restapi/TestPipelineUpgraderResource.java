@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -40,6 +41,7 @@ public class TestPipelineUpgraderResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
+      bindFactory(BlobStoreTaskTestInjector.class).to(BlobStoreTask.class);
     }
 
   }

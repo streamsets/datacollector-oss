@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.alerts.AlertsUtil;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
@@ -51,7 +52,8 @@ public class MetricsObserverRunner {
       boolean statsAggregationEnabled,
       MetricRegistry metrics,
       AlertManager alertManager,
-      Map<String, Object> resolvedParameters
+      Map<String, Object> resolvedParameters,
+      BlobStoreTask blobStoreTask
   ) {
     this.metrics = metrics;
     this.alertManager = alertManager;
@@ -59,6 +61,7 @@ public class MetricsObserverRunner {
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
     this.resolvedParameters = resolvedParameters;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public void setPipelineStartTime(long pipelineStartTime) {

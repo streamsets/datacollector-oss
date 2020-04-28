@@ -19,6 +19,7 @@ import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -106,6 +107,7 @@ public class PreviewPipelineBuilder {
     this.statsCollector = statsCollector;
     this.testOrigin = testOrigin;
     this.interceptorConfs = interceptorConfs;
+    PipelineBeanCreator.setBlobStore(blobStoreTask);
   }
 
   public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException {

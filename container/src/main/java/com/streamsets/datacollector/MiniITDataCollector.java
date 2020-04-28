@@ -16,10 +16,12 @@
 package com.streamsets.datacollector;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
@@ -139,6 +141,7 @@ public class MiniITDataCollector implements DataCollector {
     LOG.info("Entering Embedded SDC with ClassLoader: " + classLoader);
     LOG.info("Java classpath is " + System.getProperty("java.class.path"));
     dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    PipelineBeanCreator.setBlobStore(dagger.get(BlobStoreTask.class));
     task = dagger.get(TaskWrapper.class);
     pipelineTask = (PipelineTask) ((TaskWrapper)task).getTask();
     pipelineManager = pipelineTask.getManager();

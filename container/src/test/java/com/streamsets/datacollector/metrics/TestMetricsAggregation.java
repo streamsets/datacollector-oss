@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.metrics;
 
+import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -95,7 +96,8 @@ public class TestMetricsAggregation {
         new EventListenerManager(),
         null,
         slaveCallbackManager,
-        null
+        null,
+        Mockito.mock(BlobStoreTask.class)
     );
     MetricRegistryJson aggregatedMetrics = metricsEventRunnable.getAggregatedMetrics();
     validateAggregatedResults(aggregatedMetrics);
