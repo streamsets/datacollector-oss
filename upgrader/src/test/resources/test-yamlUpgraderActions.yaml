@@ -246,3 +246,26 @@ upgrades:
         existingConfigsPattern: bean2.innerBean2.(.*$)
     - registerService:
         service: com.streamsets.pipeline.upgrader.TestYamlStageUpgraderLoader$Service3
+
+- toVersion: 10
+  actions:
+    - setConfig:
+        name: newConfig
+        value: newValue
+    - setConfig:
+        name: newConfigUsingOtherNewConfig
+        value: ${value("newConfig")}
+    - setConfig:
+        lookForName: newConfigUsingOtherNewConfig
+        ifValueMatches: newValue
+        name: newIfConfig1
+        value: ${value("newConfig")}
+        elseName: newIfConfig1
+        elseValue: not-matched
+    - setConfig:
+        lookForName: newConfigUsingOtherNewConfig
+        ifValueMatches: someOtherValue
+        name: newIfConfig2
+        value: not-matched
+        elseName: newIfConfig2
+        elseValue: ${value("newConfig")}

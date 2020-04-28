@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.jsp.el.ELException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -98,6 +99,7 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
     @Override
     Iterator<Pair> iterator();
 
+    Map<String, Object> toConfigMap();
   }
 
   private static class ListConfigConfigsAdapter implements ConfigsAdapter {
@@ -167,6 +169,16 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
       return configs.stream().map(c -> (ConfigsAdapter.Pair) new PairImpl(c)).collect(Collectors.toList()).iterator();
     }
 
+    @Override
+    public Map<String, Object> toConfigMap() {
+      // Using for loop instead of streams because Collectors.toMap() throws NPE when value is null (JDK-8148463)
+      Map<String, Object> map = new HashMap<>();
+      for (Config config : configs) {
+        map.put(config.getName(), config.getValue());
+      }
+      return map;
+    }
+
   }
 
   private static class MapConfigsAdapter implements ConfigsAdapter {
@@ -224,6 +236,11 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
           .map(e -> (ConfigsAdapter.Pair) new PairImpl(e.getKey(), e.getValue()))
           .collect(Collectors.toList())
           .iterator();
+    }
+
+    @Override
+    public Map<String, Object> toConfigMap() {
+      return configs;
     }
 
   }

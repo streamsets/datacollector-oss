@@ -133,6 +133,21 @@ public class TestYamlStageUpgraderLoader {
   }
 
   @Test
+  public void testSetConfigActionWithNewConfigsAndELs() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 9, 10));
+    Assert.assertEquals(4, configs.size());
+    Assert.assertEquals("newValue", find(configs, "newConfig").getValue());
+    Assert.assertEquals("newValue", find(configs, "newConfigUsingOtherNewConfig").getValue());
+    Assert.assertEquals("newValue", find(configs, "newIfConfig1").getValue());
+    Assert.assertEquals("newValue", find(configs, "newIfConfig1").getValue());
+  }
+
+  @Test
   public void testRenameConfigAction() {
     URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
     YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);

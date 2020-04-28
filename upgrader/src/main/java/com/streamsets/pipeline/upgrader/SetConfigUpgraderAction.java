@@ -99,13 +99,13 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
     ConfigsAdapter configsAdapter = wrap(configs);
 
     if (getLookForName() == null) {
-      configsAdapter.set(getName(), resolveValueIfEL(originalConfigs, getValue()));
+      configsAdapter.set(getName(), resolveValueIfEL(configsAdapter.toConfigMap(), getValue()));
     } else {
       boolean configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
       if (getName() != null && configFound) {
-        configsAdapter.set(getName(), resolveValueIfEL(originalConfigs, getValue()));
+        configsAdapter.set(getName(), resolveValueIfEL(configsAdapter.toConfigMap(), getValue()));
       } else if (getElseName() != null && !configFound) {
-        configsAdapter.set(getElseName(), resolveValueIfEL(originalConfigs, getElseValue()));
+        configsAdapter.set(getElseName(), resolveValueIfEL(configsAdapter.toConfigMap(), getElseValue()));
       }
     }
   }
