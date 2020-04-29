@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.streamsets.datacollector.http.GaugeValue;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
@@ -120,7 +119,7 @@ public class RuntimeStats implements GaugeValue {
   }
 
   public synchronized Set<String> getCurrentStages() {
-    return Collections.unmodifiableSet(currentStages);
+    return new HashSet<>(currentStages);
   }
 
   public synchronized void addToCurrentStages(String currentStage) {
