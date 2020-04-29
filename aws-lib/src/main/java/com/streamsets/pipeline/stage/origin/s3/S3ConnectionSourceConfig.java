@@ -49,7 +49,7 @@ public class S3ConnectionSourceConfig extends S3ConnectionBaseConfig {
     int maxErrorRetries
   ) {
     super.init(context, configPrefix, proxyConfig, issues, maxErrorRetries);
-    if (prefixHasWildcard) {
+    if (prefixHasWildcard && issues.isEmpty()) {
       validateConnection(context, configPrefix, issues);
     }
   }

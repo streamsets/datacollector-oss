@@ -156,7 +156,7 @@ public abstract class S3ConnectionBaseConfig {
       List<Stage.ConfigIssue> issues,
       int maxErrorRetries
   ) throws StageException {
-    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig, true);
+    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
 
     if (maxErrorRetries >= 0) {

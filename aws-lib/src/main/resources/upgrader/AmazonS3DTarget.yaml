@@ -22,3 +22,25 @@ upgrades:
       - setConfig:
           name: s3TargetConfigBean.s3Config.usePathAddressModel
           value: true
+      # Adds a new credentialMode dropdown, which we need to set to WITH_IAM_ROLES if awsAccessKeyId and
+      # awsSecretAccessKey are both empty.  We do that by introducing a temporary flag to check if each of those are
+      # empty, and then set credentialMode accordingly, finally deleting the temporary flag.
+      - setConfig:
+          lookForName: s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId
+          ifValueMatches: ^$
+          name: temp.aws.creds.flag
+          value: keyEmpty
+      - setConfig:
+          lookForName: s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey
+          ifValueMatches: ^$
+          name: temp.aws.creds.flag
+          value: ${value("temp.aws.creds.flag")}-secretEmpty
+      - setConfig:
+          lookForName: temp.aws.creds.flag
+          ifValueMatches: keyEmpty-secretEmpty
+          name: s3TargetConfigBean.s3Config.awsConfig.credentialMode
+          value: WITH_IAM_ROLES
+          elseName: s3TargetConfigBean.s3Config.awsConfig.credentialMode
+          elseValue: WITH_CREDENTIALS
+      - removeConfigs:
+          namePattern: temp.aws.creds.flag

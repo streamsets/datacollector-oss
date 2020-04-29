@@ -42,12 +42,45 @@ public class AmazonS3TargetUpgraderTest {
   }
 
   @Test
-  public void testV11toV12() throws StageException {
+  public void testV11toV12BothEmptyCredentials() throws StageException {
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId", ""));
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey", ""));
+    testV11toV12("WITH_IAM_ROLES");
+  }
+
+  @Test
+  public void testV11toV12FirstEmptyCredentials() throws StageException {
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId", ""));
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey", "foo"));
+    testV11toV12("WITH_CREDENTIALS");
+  }
+
+  @Test
+  public void testV11toV12SecondEmptyCredentials() throws StageException {
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId", "foo"));
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey", ""));
+    testV11toV12("WITH_CREDENTIALS");
+  }
+
+  @Test
+  public void testV11toV12NoneEmptyCredentials() throws StageException {
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsAccessKeyId", "foo"));
+    configs.add(new Config("s3TargetConfigBean.s3Config.awsConfig.awsSecretAccessKey", "bar"));
+    testV11toV12("WITH_CREDENTIALS");
+  }
+
+
+  private void testV11toV12(String expectedCredentialsMode) throws StageException {
     Mockito.doReturn(11).when(context).getFromVersion();
     Mockito.doReturn(12).when(context).getToVersion();
 
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, "s3TargetConfigBean.s3Config.usePathAddressModel", true);
+    UpgraderTestUtils.assertExists(
+        configs,
+        "s3TargetConfigBean.s3Config.awsConfig.credentialMode",
+        expectedCredentialsMode
+    );
   }
 }

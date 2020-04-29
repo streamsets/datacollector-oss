@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.lib.aws;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.streamsets.pipeline.api.Config;
@@ -32,22 +33,18 @@ public class AWSUtil {
   private static final int MILLIS = 1000;
   private AWSUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, boolean allowAnonymous) throws StageException {
-    AWSCredentialsProvider credentialsProvider;
-    if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
-      credentialsProvider = new AWSStaticCredentialsProvider(
-          new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
-      );
-    } else {
-      credentialsProvider = allowAnonymous ?
-          new AwsAllowAnonymousCredentialsProviderChain() :
-          new DefaultAWSCredentialsProviderChain();
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+    AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
+    if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
+      if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
+        credentialsProvider = new AWSStaticCredentialsProvider(
+            new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
+        );
+      }
+    } else if (config.credentialMode == AWSCredentialMode.WITH_ANONYMOUS_CREDENTIALS) {
+      credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
     }
     return credentialsProvider;
-  }
-
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
-    return getCredentialsProvider(config, false);
   }
 
   public static ClientConfiguration getClientConfiguration(ProxyConfig config) throws StageException {

@@ -16,5 +16,28 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 4
+    actions:
+      # Adds a new credentialMode dropdown, which we need to set to WITH_IAM_ROLES if awsAccessKeyId and
+      # awsSecretAccessKey are both empty.  We do that by introducing a temporary flag to check if each of those are
+      # empty, and then set credentialMode accordingly, finally deleting the temporary flag.
+      - setConfig:
+          lookForName: sqsConfig.awsConfig.awsAccessKeyId
+          ifValueMatches: ^$
+          name: temp.aws.creds.flag
+          value: keyEmpty
+      - setConfig:
+          lookForName: sqsConfig.awsConfig.awsSecretAccessKey
+          ifValueMatches: ^$
+          name: temp.aws.creds.flag
+          value: ${value("temp.aws.creds.flag")}-secretEmpty
+      - setConfig:
+          lookForName: temp.aws.creds.flag
+          ifValueMatches: keyEmpty-secretEmpty
+          name: sqsConfig.awsConfig.credentialMode
+          value: WITH_IAM_ROLES
+          elseName: sqsConfig.awsConfig.credentialMode
+          elseValue: WITH_CREDENTIALS
+      - removeConfigs:
+          namePattern: temp.aws.creds.flag
