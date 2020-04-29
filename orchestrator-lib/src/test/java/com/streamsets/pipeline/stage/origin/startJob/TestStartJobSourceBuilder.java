@@ -13,32 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startJob;
+package com.streamsets.pipeline.stage.origin.startJob;
 
 import com.streamsets.pipeline.lib.startJob.JobIdConfig;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
-import java.util.ArrayList;
+class TestStartJobSourceBuilder {
 
-class TestStartJobProcessorBuilder {
+  private final StartJobConfig conf = new StartJobConfig();
 
-  private StartJobConfig conf = new StartJobConfig();
-
-  TestStartJobProcessorBuilder() {
-    conf.jobIdConfigList = new ArrayList<>();
-  }
-
-  TestStartJobProcessorBuilder taskName(String taskName) {
+  TestStartJobSourceBuilder taskName(String taskName) {
     conf.taskName = taskName;
     return this;
   }
 
-  TestStartJobProcessorBuilder baseUrl(String baseUrl) {
+  TestStartJobSourceBuilder baseUrl(String baseUrl) {
     conf.baseUrl = baseUrl;
     return this;
   }
 
-  TestStartJobProcessorBuilder jobIdConfig(String jobId, String runtimeParameters) {
+  TestStartJobSourceBuilder jobIdConfig(String jobId, String runtimeParameters) {
     JobIdConfig jobIdConfig = new JobIdConfig();
     jobIdConfig.jobId = jobId;
     jobIdConfig.runtimeParameters = runtimeParameters;
@@ -46,8 +40,9 @@ class TestStartJobProcessorBuilder {
     return this;
   }
 
-  StartJobProcessor build() {
-    return new StartJobProcessor(conf);
+  StartJobSource build() {
+    return new StartJobSource(conf);
   }
+
 
 }

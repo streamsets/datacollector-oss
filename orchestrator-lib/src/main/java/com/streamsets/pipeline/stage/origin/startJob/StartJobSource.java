@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startJob;
+package com.streamsets.pipeline.stage.origin.startJob;
 
-import com.streamsets.pipeline.api.Batch;
+import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.startJob.StartJobCommon;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 import com.streamsets.pipeline.lib.startJob.StartJobErrors;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class StartJobProcessor extends SingleLaneProcessor {
+public class StartJobSource extends BaseSource {
 
-  private static final Logger LOG = LoggerFactory.getLogger(StartJobProcessor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(StartJobSource.class);
   private final StartJobCommon startJobCommon;
   private final StartJobConfig conf;
-  private ErrorRecordHandler errorRecordHandler;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
-  StartJobProcessor(StartJobConfig conf) {
-    this.conf = conf;
+  StartJobSource(StartJobConfig conf) {
     this.startJobCommon = new StartJobCommon(conf);
+    this.conf = conf;
   }
 
   @Override
@@ -57,41 +53,23 @@ public class StartJobProcessor extends SingleLaneProcessor {
     return this.startJobCommon.init(issues, errorRecordHandler, getContext());
   }
 
-  public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
-    List<CompletableFuture<Field>> startJobFutures = new ArrayList<>();
+  @Override
+  public String produce(String s, int i, BatchMaker batchMaker) throws StageException {
     Executor executor = Executors.newCachedThreadPool();
-    Iterator<Record> it = batch.getRecords();
-    Record firstRecord = null;
-    while (it.hasNext()) {
-      Record record = it.next();
-      if (firstRecord == null) {
-        firstRecord = record;
-      }
-      try {
-        startJobFutures.addAll(startJobCommon.getStartJobFutures(executor, record));
-      } catch (OnRecordErrorException ex) {
-        LOG.error(ex.toString(), ex);
-        errorRecordHandler.onError(ex);
-      }
-    }
-
-    if (startJobFutures.isEmpty()) {
-      return;
-    }
-
+    List<CompletableFuture<Field>> startJobFutures = startJobCommon.getStartJobFutures(executor, null);
     try {
       LinkedHashMap<String, Field> outputField = startJobCommon.startJobInParallel(startJobFutures);
-      firstRecord = CommonUtil.createOrchestratorTaskRecord(
-          firstRecord,
+      Record outputRecord = CommonUtil.createOrchestratorTaskRecord(
+          null,
           getContext(),
           conf.taskName,
           outputField
       );
-      batchMaker.addRecord(firstRecord);
+      batchMaker.addRecord(outputRecord);
     } catch (Exception ex) {
       LOG.error(ex.toString(), ex);
       errorRecordHandler.onError(StartJobErrors.START_JOB_08, ex.toString(), ex);
     }
+    return null;
   }
-
 }

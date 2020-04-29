@@ -29,6 +29,7 @@ public class TestStartPipelineProcessor {
   @Test
   public void testEmptyPipelineId() throws StageException {
     Processor startPipelineProcessor = new TestStartPipelineProcessorBuilder()
+        .taskName("task1")
         .baseUrl("http://invalidHost:19630")
         .pipelineIdConfig("", "{}")
         .build();
@@ -45,6 +46,7 @@ public class TestStartPipelineProcessor {
   @Test
   public void testInvalidUrl() throws StageException {
     Processor startPipelineProcessor = new TestStartPipelineProcessorBuilder()
+        .taskName("task1")
         .baseUrl("http://invalidHost:19630")
         .pipelineIdConfig("samplePipelineId", "{}")
         .build();

@@ -20,14 +20,23 @@ import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.api.SystemApi;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.Constants;
+import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.lib.tls.TlsConfigBean;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -39,13 +48,26 @@ public class StartPipelineCommon {
   public static final String SSL_CONFIG_PREFIX = "conf.tlsConfig.";
   public ManagerApi managerApi;
   public StoreApi storeApi;
-  private StartPipelineConfig conf;
+  private final StartPipelineConfig conf;
+  private ELVars pipelineIdConfigVars;
+  private ELEval pipelineIdEval;
+  private ELEval runtimeParametersEval;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
   public StartPipelineCommon(StartPipelineConfig conf) {
     this.conf = conf;
   }
 
-  public List<Stage.ConfigIssue> init(List<Stage.ConfigIssue> issues, Stage.Context context) {
+  public List<Stage.ConfigIssue> init(
+      List<Stage.ConfigIssue> issues,
+      DefaultErrorRecordHandler errorRecordHandler,
+      Stage.Context context
+  ) {
+    this.errorRecordHandler = errorRecordHandler;
+    pipelineIdConfigVars = context.createELVars();
+    pipelineIdEval = context.createELEval("pipelineId");
+    runtimeParametersEval = context.createELEval("runtimeParameters");
+
     if (conf.tlsConfig.isEnabled()) {
       conf.tlsConfig.init(
           context,
@@ -75,7 +97,14 @@ public class StartPipelineCommon {
     // Validate Server is reachable
     if (issues.size() == 0) {
       try {
-        ApiClient apiClient = getApiClient();
+        ApiClient apiClient = getApiClient(
+            conf.controlHubEnabled,
+            conf.baseUrl,
+            conf.username,
+            conf.password,
+            conf.controlHubUrl,
+            conf.tlsConfig
+        );
         SystemApi systemApi = new SystemApi(apiClient);
         systemApi.getServerTime();
         managerApi = new ManagerApi(apiClient);
@@ -97,24 +126,59 @@ public class StartPipelineCommon {
     return issues;
   }
 
-  private ApiClient getApiClient() throws StageException {
+  public static ApiClient getApiClient(
+      boolean controlHubEnabled,
+      String baseUrl,
+      CredentialValue username,
+      CredentialValue password,
+      String controlHubUrl,
+      TlsConfigBean tlsConfig
+  ) {
     String authType = "form";
-    if (conf.controlHubEnabled) {
+    if (controlHubEnabled) {
       authType = "dpm";
     }
     ApiClient apiClient = new ApiClient(authType);
     apiClient.setUserAgent("Start Pipeline Processor");
-    apiClient.setBasePath(conf.baseUrl + "/rest");
-    apiClient.setUsername(conf.username.get());
-    apiClient.setPassword(conf.password.get());
-    apiClient.setDPMBaseURL(conf.controlHubUrl);
-    apiClient.setSslContext(conf.tlsConfig.getSslContext());
+    apiClient.setBasePath(baseUrl + "/rest");
+    apiClient.setUsername(username.get());
+    apiClient.setPassword(password.get());
+    apiClient.setDPMBaseURL(controlHubUrl);
+    apiClient.setSslContext(tlsConfig.getSslContext());
     return apiClient;
   }
 
+  public StartPipelineSupplier getStartPipelineSupplier(
+      PipelineIdConfig pipelineIdConfig,
+      Record record
+  ) {
+    PipelineIdConfig resolvedPipelineIdConfig = new PipelineIdConfig();
+    resolvedPipelineIdConfig.pipelineIdType = pipelineIdConfig.pipelineIdType;
+    if (record != null) {
+      RecordEL.setRecordInContext(pipelineIdConfigVars, record);
+    }
+    TimeNowEL.setTimeNowInContext(pipelineIdConfigVars, new Date());
+    resolvedPipelineIdConfig.pipelineId = pipelineIdEval.eval(
+        pipelineIdConfigVars,
+        pipelineIdConfig.pipelineId,
+        String.class
+    );
+    resolvedPipelineIdConfig.runtimeParameters = runtimeParametersEval.eval(
+        pipelineIdConfigVars,
+        pipelineIdConfig.runtimeParameters,
+        String.class
+    );
+    return new StartPipelineSupplier(
+        managerApi,
+        storeApi,
+        conf,
+        resolvedPipelineIdConfig,
+        errorRecordHandler
+    );
+  }
+
   public LinkedHashMap<String, Field> startPipelineInParallel(
-      List<CompletableFuture<Field>> startPipelineFutures,
-      ErrorRecordHandler errorRecordHandler
+      List<CompletableFuture<Field>> startPipelineFutures
   ) throws ExecutionException, InterruptedException {
     // Create a combined Future using allOf()
     CompletableFuture<Void> allFutures = CompletableFuture.allOf(
@@ -122,7 +186,8 @@ public class StartPipelineCommon {
     );
 
     CompletableFuture<LinkedHashMap<String, Field>> completableFuture = allFutures.thenApply(v -> {
-      LinkedHashMap<String, Field> outputField = new LinkedHashMap<>();
+      LinkedHashMap<String, Field> pipelineResults = new LinkedHashMap<>();
+      List<Field> pipelineIds = new ArrayList<>();
       boolean success = true;
       for (CompletableFuture<Field> future: startPipelineFutures) {
         try {
@@ -130,8 +195,16 @@ public class StartPipelineCommon {
           if (startPipelineOutputField != null) {
             LinkedHashMap<String, Field> fields = startPipelineOutputField.getValueAsListMap();
             Field pipelineIdField = fields.get("pipelineId");
-            outputField.put(pipelineIdField.getValueAsString(), startPipelineOutputField);
-            success &= fields.get("success").getValueAsBoolean();
+            if (pipelineIdField != null) {
+              pipelineIds.add(Field.create(pipelineIdField.getValueAsString()));
+              pipelineResults.put(pipelineIdField.getValueAsString(), startPipelineOutputField);
+            }
+            if (!conf.runInBackground) {
+              Field finishedSuccessfully = fields.get(Constants.FINISHED_SUCCESSFULLY_FIELD);
+              if (finishedSuccessfully != null) {
+                success &= finishedSuccessfully.getValueAsBoolean();
+              }
+            }
           } else {
             success = false;
           }
@@ -140,7 +213,13 @@ public class StartPipelineCommon {
           errorRecordHandler.onError(StartPipelineErrors.START_PIPELINE_04, ex.toString(), ex);
         }
       }
-      outputField.put("success", Field.create(success));
+      LinkedHashMap<String, Field> outputField = new LinkedHashMap<>();
+      outputField.put(Constants.PIPELINE_IDS_FIELD, Field.create(pipelineIds));
+      outputField.put(Constants.PIPELINE_RESULTS_FIELD, Field.createListMap(pipelineResults));
+      if (!conf.runInBackground) {
+        // Don't set success flag for the task if the runInBackground set
+        outputField.put(Constants.SUCCESS_FIELD, Field.create(success));
+      }
       return outputField;
     });
 

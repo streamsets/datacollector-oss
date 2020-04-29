@@ -16,13 +16,15 @@
 package com.streamsets.pipeline.lib.startPipeline;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
+import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.datacollector.client.model.SourceOffsetJson;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -37,27 +39,14 @@ import java.util.function.Supplier;
 public class StartPipelineSupplier implements Supplier<Field> {
 
   private static final Logger LOG = LoggerFactory.getLogger(StartPipelineSupplier.class);
-  private static final String REV = "0";
   private final StartPipelineConfig conf;
   private final PipelineIdConfig pipelineIdConfig;
   private final StoreApi storeApi;
   private final ManagerApi managerApi;
   private final ErrorRecordHandler errorRecordHandler;
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
   private PipelineConfigurationJson pipelineConfiguration = null;
-
-  private List<PipelineStateJson.StatusEnum> successStates = ImmutableList.of(
-      PipelineStateJson.StatusEnum.STOPPED,
-      PipelineStateJson.StatusEnum.FINISHED
-  );
-
-  private List<PipelineStateJson.StatusEnum> errorStates = ImmutableList.of(
-      PipelineStateJson.StatusEnum.START_ERROR,
-      PipelineStateJson.StatusEnum.RUN_ERROR,
-      PipelineStateJson.StatusEnum.STOP_ERROR,
-      PipelineStateJson.StatusEnum.DISCONNECTED
-  );
 
   public StartPipelineSupplier(
       ManagerApi managerApi,
@@ -76,11 +65,38 @@ public class StartPipelineSupplier implements Supplier<Field> {
   @Override
   public Field get() {
     try {
+
+      if (pipelineIdConfig.pipelineIdType.equals(PipelineIdType.TITLE)) {
+        // fetch Pipeline ID using GET pipelines REST API using query param filterText=<pipeline name>
+        List<PipelineInfoJson> pipelines = storeApi.getPipelines(
+            pipelineIdConfig.pipelineId,
+            null,
+            0,
+            2,
+            null,
+            null,
+            false
+        );
+        if (pipelines.size() != 1) {
+          throw new StageException(
+              StartPipelineErrors.START_PIPELINE_05,
+              pipelineIdConfig.pipelineId,
+              pipelines.size()
+          );
+        }
+        pipelineIdConfig.pipelineId = pipelines.get(0).getPipelineId();
+      }
+
       // validate pipelineId exists
-      pipelineConfiguration = storeApi.getPipelineInfo(pipelineIdConfig.pipelineId, REV, null, false);
+      pipelineConfiguration = storeApi.getPipelineInfo(
+          pipelineIdConfig.pipelineId,
+          Constants.REV,
+          null,
+          false
+      );
 
       if (conf.resetOrigin) {
-        managerApi.resetOffset(pipelineIdConfig.pipelineId, REV);
+        managerApi.resetOffset(pipelineIdConfig.pipelineId, Constants.REV);
       }
       Map<String, Object> runtimeParameters = null;
       if (StringUtils.isNotEmpty(pipelineIdConfig.runtimeParameters)) {
@@ -88,7 +104,7 @@ public class StartPipelineSupplier implements Supplier<Field> {
       }
       PipelineStateJson pipelineStateJson = managerApi.startPipeline(
           pipelineIdConfig.pipelineId,
-          REV,
+          Constants.REV,
           runtimeParameters
       );
       if (conf.runInBackground) {
@@ -104,10 +120,10 @@ public class StartPipelineSupplier implements Supplier<Field> {
   }
 
   private void waitForPipelineCompletion() throws Exception {
-    PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineIdConfig.pipelineId, REV);
-    if (successStates.contains(pipelineStateJson.getStatus())) {
+    PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineIdConfig.pipelineId, Constants.REV);
+    if (Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus())) {
       generateField(pipelineStateJson);
-    } else if (errorStates.contains(pipelineStateJson.getStatus())) {
+    } else if (Constants.PIPELINE_ERROR_STATES.contains(pipelineStateJson.getStatus())) {
       generateField(pipelineStateJson);
     } else {
       ThreadUtil.sleep(conf.waitTime);
@@ -117,15 +133,22 @@ public class StartPipelineSupplier implements Supplier<Field> {
 
   private void generateField(PipelineStateJson pipelineStateJson) throws Exception {
     // after done add status, offset and metrics to record
-    SourceOffsetJson sourceOffset = managerApi.getCommittedOffsets(pipelineIdConfig.pipelineId, REV);
     LinkedHashMap<String, Field> startOutput = new LinkedHashMap<>();
-    startOutput.put("pipelineId", Field.create(pipelineConfiguration.getPipelineId()));
-    startOutput.put("pipelineTitle", Field.create(pipelineConfiguration.getTitle()));
-    startOutput.put("success", Field.create(successStates.contains(pipelineStateJson.getStatus())));
-    startOutput.put("pipelineStatus", Field.create(pipelineStateJson.getStatus().toString()));
-    startOutput.put("pipelineStatusMessage", Field.create(pipelineStateJson.getMessage()));
-    startOutput.put("committedOffsetsStr", Field.create(objectMapper.writeValueAsString(sourceOffset)));
-    startOutput.put("pipelineStateStr", Field.create(objectMapper.writeValueAsString(pipelineStateJson)));
+    startOutput.put(Constants.PIPELINE_ID_FIELD, Field.create(pipelineConfiguration.getPipelineId()));
+    startOutput.put(Constants.PIPELINE_TITLE_FIELD, Field.create(pipelineConfiguration.getTitle()));
+    startOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
+    if (!conf.runInBackground) {
+      startOutput.put(
+          Constants.FINISHED_SUCCESSFULLY_FIELD,
+          Field.create(Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus()))
+      );
+    }
+    startOutput.put(Constants.PIPELINE_STATUS_FIELD, Field.create(pipelineStateJson.getStatus().toString()));
+    startOutput.put(Constants.PIPELINE_STATUS_MESSAGE_FIELD, Field.create(pipelineStateJson.getMessage()));
+    if (!conf.runInBackground) {
+      SourceOffsetJson sourceOffset = managerApi.getCommittedOffsets(pipelineIdConfig.pipelineId, Constants.REV);
+      startOutput.put(Constants.COMMITTED_OFFSET_STR, Field.create(objectMapper.writeValueAsString(sourceOffset)));
+    }
     responseField = Field.createListMap(startOutput);
   }
 }

@@ -13,26 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.startPipeline;
+package com.streamsets.pipeline.stage.processor.waitForPipelineCompletion;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
-import java.util.List;
-
-public class StartPipelineConfig {
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Unique Task Name",
-      displayPosition = 5,
-      group = "PIPELINE"
-  )
-  public String taskName;
+public class WaitForPipelineCompletionConfig {
 
   @ConfigDef(
       required = true,
@@ -44,28 +32,6 @@ public class StartPipelineConfig {
       group = "PIPELINE"
   )
   public String baseUrl = "http://localhost:18630";
-
-  @ConfigDef(
-      label = "Pipelines",
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      description="Pipelines to start in parallel",
-      displayPosition = 20,
-      group = "PIPELINE"
-  )
-  @ListBeanModel
-  public List<PipelineIdConfig> pipelineIdConfigList;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Reset Origin",
-      description = "Reset the origin before starting the pipeline",
-      defaultValue = "false",
-      displayPosition = 40,
-      group = "PIPELINE"
-  )
-  public boolean resetOrigin = false;
 
   @ConfigDef(
       required = true,
@@ -93,18 +59,6 @@ public class StartPipelineConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Run in Background",
-      description = "Run started pipelines in the background and pass the record to the next stage immediately after " +
-          "starting pipelines. If not selected, pass the record to the next stage after all started pipelines finish.",
-      defaultValue = "false",
-      displayPosition = 70,
-      group = "PIPELINE"
-  )
-  public boolean runInBackground = false;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
       label = "Delay Between State Checks",
@@ -112,9 +66,7 @@ public class StartPipelineConfig {
       displayPosition = 80,
       group = "PIPELINE",
       min = 0,
-      max = Integer.MAX_VALUE,
-      dependsOn = "runInBackground",
-      triggeredByValue = { "false" }
+      max = Integer.MAX_VALUE
   )
   public int waitTime;
 
@@ -134,7 +86,7 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
-      description = "Password for the user.",
+      description = "Password for the user",
       defaultValue = "admin",
       displayPosition = 82,
       group = "CREDENTIALS"

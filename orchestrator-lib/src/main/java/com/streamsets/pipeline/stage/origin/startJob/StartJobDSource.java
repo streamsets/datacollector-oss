@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,29 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.stage.origin.startJob;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
-import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
-import com.streamsets.pipeline.lib.startPipeline.Groups;
-import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
+import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.lib.startJob.StartJobConfig;
+import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
-    version = 2,
-    label = "Start Pipeline",
-    description = "Starts a Data Collector, Transformer, or Edge pipeline",
-    icon="pipeline.png",
+    version = 1,
+    label = "Start Job",
+    description = "Starts a Control Hub job",
+    icon="job.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb",
-    upgraderDef = "upgrader/StartPipelineDProcessor.yaml"
+    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb"
 )
 @GenerateResourceBundle
 @HideConfigs({
@@ -45,14 +44,13 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
     "conf.tlsConfig.keyStoreAlgorithm"
 })
 @ConfigGroups(Groups.class)
-public class StartPipelineDProcessor extends DProcessor {
+public class StartJobDSource extends DSource {
 
   @ConfigDefBean
-  public StartPipelineConfig conf;
+  public StartJobConfig conf;
 
   @Override
-  protected Processor createProcessor() {
-    return new StartPipelineProcessor(conf);
+  protected Source createSource() {
+    return new StartJobSource(conf);
   }
-
 }

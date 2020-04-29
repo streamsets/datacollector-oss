@@ -28,6 +28,11 @@ class TestStartPipelineSourceBuilder {
     conf.pipelineIdConfigList = new ArrayList<>();
   }
 
+  TestStartPipelineSourceBuilder taskName(String taskName) {
+    conf.taskName = taskName;
+    return this;
+  }
+
   TestStartPipelineSourceBuilder baseUrl(String baseUrl) {
     conf.baseUrl = baseUrl;
     return this;

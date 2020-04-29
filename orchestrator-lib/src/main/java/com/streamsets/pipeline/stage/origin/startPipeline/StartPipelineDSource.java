@@ -27,14 +27,15 @@ import com.streamsets.pipeline.lib.startPipeline.Groups;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Start Pipeline",
     description = "Starts a Data Collector, Transformer, or Edge pipeline",
     icon="pipeline.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_nvq_1rr_2jb"
+    onlineHelpRefUrl ="index.html?contextID=task_nvq_1rr_2jb",
+    upgraderDef = "upgrader/StartPipelineDSource.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({

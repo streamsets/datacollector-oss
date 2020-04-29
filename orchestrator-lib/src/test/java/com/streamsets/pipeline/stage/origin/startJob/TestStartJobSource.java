@@ -13,28 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startJob;
+package com.streamsets.pipeline.stage.origin.startJob;
 
-import com.streamsets.pipeline.api.Processor;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.sdk.ProcessorRunner;
+import com.streamsets.pipeline.sdk.SourceRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
-public class TestStartJobProcessor {
+public class TestStartJobSource {
 
   @Test
   public void testEmptyJobId() throws StageException {
-    Processor startJobProcessor = new TestStartJobProcessorBuilder()
+    Source startJobSource = new TestStartJobSourceBuilder()
         .taskName("task1")
         .baseUrl("http://invalidHost:18631")
         .jobIdConfig("", "{}")
         .build();
 
-    ProcessorRunner runner = new ProcessorRunner.Builder(StartJobDProcessor.class, startJobProcessor)
+    SourceRunner runner = new SourceRunner.Builder(StartJobDSource.class, startJobSource)
         .addOutputLane("a")
         .build();
 

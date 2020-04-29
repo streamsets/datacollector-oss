@@ -16,11 +16,11 @@
 package com.streamsets.pipeline.lib.startJob;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.lib.Constants;
+import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
@@ -31,7 +31,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,25 +41,15 @@ import java.util.stream.Collectors;
 public class StartJobTemplateSupplier implements Supplier<Field> {
 
   private static final Logger LOG = LoggerFactory.getLogger(StartJobTemplateSupplier.class);
-  private String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
   private final StartJobConfig conf;
   private final String templateJobId;
   private final String runtimeParametersList;
   private final ErrorRecordHandler errorRecordHandler;
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
   private String userAuthToken;
-  private List<String> jobInstancesIdList = new ArrayList<>();
-  private ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+  private final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
-  private List<String> successStates = ImmutableList.of(
-      "INACTIVE"
-  );
-
-  private List<String> errorStates = ImmutableList.of(
-      "ACTIVATION_ERROR",
-      "INACTIVE_ERROR"
-  );
 
   public StartJobTemplateSupplier(
       StartJobConfig conf,
@@ -81,68 +70,26 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
   @Override
   public Field get() {
     try {
-      getUserAuthToken();
+      userAuthToken = ControlHubApiUtil
+          .getUserAuthToken(clientBuilder, conf.baseUrl, conf.username.get(), conf.password.get());
       List<Map<String, Object>> jobStatusList = startJobTemplate();
-      jobInstancesIdList = jobStatusList.stream().map(j -> (String)j.get("jobId")).collect(Collectors.toList());
-      if (conf.runInBackground) {
-        generateField(jobStatusList);
-      } else {
-        waitForJobCompletion();
+      List<String> jobInstancesIdList = jobStatusList.stream()
+          .map(j -> (String) j.get("jobId")).collect(Collectors.toList());
+      if (!conf.runInBackground) {
+        jobStatusList = ControlHubApiUtil.waitForJobCompletion(
+            clientBuilder,
+            conf.baseUrl,
+            jobInstancesIdList,
+            userAuthToken,
+            conf.waitTime
+        );
       }
+      generateField(jobStatusList);
     } catch (StageException ex) {
       LOG.error(ex.getMessage(), ex);
       errorRecordHandler.onError(ex.getErrorCode(), ex.getMessage(), ex);
     }
     return responseField;
-  }
-
-  private void waitForJobCompletion() {
-    ThreadUtil.sleep(conf.waitTime);
-
-    Map<String, Map<String, Object>> jobStatusMap = getMultipleJobStatus();
-    List<Map<String, Object>> jobStatusList = jobStatusMap.keySet()
-        .stream()
-        .map(jobStatusMap::get)
-        .collect(Collectors.toList());
-
-    boolean allDone = true;
-    for(Map<String, Object> jobStatus: jobStatusList) {
-      String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-      allDone &= (successStates.contains(status) || errorStates.contains(status));
-    }
-
-    if (allDone) {
-      generateField(jobStatusList);
-    } else {
-      waitForJobCompletion();
-    }
-  }
-
-  private void getUserAuthToken() throws OnRecordErrorException {
-    // 1. Login to DPM to get user auth token
-    Response response = null;
-    try {
-      Map<String, String> loginJson = new HashMap<>();
-      loginJson.put("userName", conf.username.get());
-      loginJson.put("password", conf.password.get());
-      response = clientBuilder.build()
-          .target(conf.baseUrl + "security/public-rest/v1/authentication/login")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(loginJson));
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new StageException(
-            StartJobErrors.START_JOB_01,
-            response.getStatus(),
-            response.readEntity(String.class)
-        );
-      }
-      userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
-    } finally {
-      if (response != null) {
-        response.close();
-      }
-    }
   }
 
   private List<Map<String, Object>> startJobTemplate() throws OnRecordErrorException {
@@ -170,7 +117,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
         .target(jobStartUrl)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
+        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(jobTemplateCreationInfo))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -184,34 +131,34 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
     }
   }
 
-  private Map<String, Map<String, Object>> getMultipleJobStatus() {
-    String jobStatusUrl = conf.baseUrl + "jobrunner/rest/v1/jobs/status";
-    try (Response response = clientBuilder.build()
-        .target(jobStatusUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
-        .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .post(Entity.json(jobInstancesIdList))) {
-      return (Map<String, Map<String, Object>>)response.readEntity(Map.class);
-    }
-  }
+
 
   private void generateField(List<Map<String, Object>> jobStatusList) {
     LinkedHashMap<String, Field> jobTemplateOutput = new LinkedHashMap<>();
     boolean jobTemplateSuccess = true;
     for (Map<String, Object> jobStatus : jobStatusList) {
       String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
+      String statusColor = jobStatus.containsKey("color") ? (String) jobStatus.get("color") : null;
+      String errorMessage = jobStatus.containsKey("errorMessage") ? (String) jobStatus.get("errorMessage") : null;
       String jobId = (String)jobStatus.get("jobId");
-      boolean success =  (status != null && successStates.contains(status));
+      boolean success = ControlHubApiUtil.determineJobSuccess(status, statusColor);
       LinkedHashMap<String, Field> startOutput = new LinkedHashMap<>();
-      startOutput.put("jobId", Field.create(jobId));
-      startOutput.put("success", Field.create(success));
-      startOutput.put("jobStatus", Field.create(status));
+      startOutput.put(Constants.JOB_ID_FIELD, Field.create(jobId));
+      startOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
+      if (!conf.runInBackground) {
+        startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
+      }
+      startOutput.put(Constants.JOB_STATUS_FIELD, Field.create(status));
+      startOutput.put(Constants.JOB_STATUS_COLOR_FIELD, Field.create(statusColor));
+      startOutput.put(Constants.ERROR_MESSAGE_FIELD, Field.create(errorMessage));
       jobTemplateOutput.put(jobId, Field.createListMap(startOutput));
       jobTemplateSuccess &= success;
     }
-    jobTemplateOutput.put("jobId", Field.create(templateJobId));
-    jobTemplateOutput.put("success", Field.create(jobTemplateSuccess));
+    jobTemplateOutput.put(Constants.TEMPLATE_JOB_ID_FIELD, Field.create(templateJobId));
+    jobTemplateOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
+    if (!conf.runInBackground) {
+      jobTemplateOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(jobTemplateSuccess));
+    }
     responseField = Field.createListMap(jobTemplateOutput);
   }
 

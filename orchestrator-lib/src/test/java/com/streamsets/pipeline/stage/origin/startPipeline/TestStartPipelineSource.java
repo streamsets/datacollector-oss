@@ -29,6 +29,7 @@ public class TestStartPipelineSource {
   @Test
   public void testEmptyPipelineId() throws StageException {
     Source startPipelineSource = new TestStartPipelineSourceBuilder()
+        .taskName("task1")
         .baseUrl("http://invalidHost:19630")
         .pipelineIdConfig("", "{}")
         .build();
@@ -45,6 +46,7 @@ public class TestStartPipelineSource {
   @Test
   public void testInvalidUrl() throws StageException {
     Source startPipelineSource = new TestStartPipelineSourceBuilder()
+        .taskName("task1")
         .baseUrl("http://invalidHost:19630")
         .pipelineIdConfig("samplePipelineId", "{}")
         .build();

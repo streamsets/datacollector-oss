@@ -16,10 +16,21 @@
 package com.streamsets.pipeline.lib.startPipeline;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class PipelineIdConfig {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Pipeline ID Type",
+      defaultValue = "ID",
+      displayPosition = 15,
+      group = "PIPELINE"
+  )
+  @ValueChooserModel(PipelineIdTypeChooserValues.class)
+  public PipelineIdType pipelineIdType = PipelineIdType.ID;
 
   @ConfigDef(
       required = true,

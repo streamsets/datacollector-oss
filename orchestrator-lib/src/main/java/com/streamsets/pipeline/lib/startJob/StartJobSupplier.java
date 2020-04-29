@@ -16,9 +16,10 @@
 package com.streamsets.pipeline.lib.startJob;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.Constants;
+import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +31,6 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,22 +39,13 @@ import java.util.function.Supplier;
 public class StartJobSupplier implements Supplier<Field> {
 
   private static final Logger LOG = LoggerFactory.getLogger(StartJobSupplier.class);
-  private String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
   private final StartJobConfig conf;
   private final JobIdConfig jobIdConfig;
   private final ErrorRecordHandler errorRecordHandler;
-  private ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
   private String userAuthToken;
-
-  private List<String> successStates = ImmutableList.of(
-      "INACTIVE"
-  );
-
-  private List<String> errorStates = ImmutableList.of(
-      "ACTIVATION_ERROR",
-      "INACTIVE_ERROR"
-  );
+  private final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
 
   public StartJobSupplier(
       StartJobConfig conf,
@@ -64,14 +55,26 @@ public class StartJobSupplier implements Supplier<Field> {
     this.conf = conf;
     this.jobIdConfig = jobIdConfig;
     this.errorRecordHandler = errorRecordHandler;
+    if (conf.tlsConfig.getSslContext() != null) {
+      clientBuilder.sslContext(conf.tlsConfig.getSslContext());
+    }
   }
 
   @Override
   public Field get() {
     try {
-      getUserAuthToken();
+      userAuthToken = ControlHubApiUtil.getUserAuthToken(
+          clientBuilder,
+          conf.baseUrl,
+          conf.username.get(),
+          conf.password.get()
+      );
+      if (jobIdConfig.jobIdType.equals(JobIdType.NAME)) {
+        // fetch Job ID using GET jobs REST API using query param filterText=<job name>
+        initializeJobId();
+      }
       if (conf.resetOrigin) {
-        resetOffset();
+        ControlHubApiUtil.resetOffset(clientBuilder, conf.baseUrl, jobIdConfig.jobId, userAuthToken);
       }
       Map<String, Object> jobStatus = startJob();
       if (conf.runInBackground) {
@@ -88,52 +91,27 @@ public class StartJobSupplier implements Supplier<Field> {
 
   private void waitForJobCompletion() {
     ThreadUtil.sleep(conf.waitTime);
-    Map<String, Object> jobStatus = getJobStatus();
+    Map<String, Object> jobStatus = ControlHubApiUtil
+        .getJobStatus(clientBuilder, conf.baseUrl, jobIdConfig.jobId, userAuthToken);
     String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-    if (status != null && successStates.contains(status)) {
+    if (status != null && Constants.JOB_SUCCESS_STATES.contains(status)) {
       generateField(jobStatus);
-    } else if (status != null && errorStates.contains(status)) {
+    } else if (status != null && Constants.JOB_ERROR_STATES.contains(status)) {
       generateField(jobStatus);
     } else {
       waitForJobCompletion();
     }
   }
 
-  private void getUserAuthToken() {
-    // 1. Login to DPM to get user auth token
-    Response response = null;
-    try {
-      Map<String, String> loginJson = new HashMap<>();
-      loginJson.put("userName", conf.username.get());
-      loginJson.put("password", conf.password.get());
-      response = ClientBuilder.newClient()
-          .target(conf.baseUrl + "security/public-rest/v1/authentication/login")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(loginJson));
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new StageException(
-            StartJobErrors.START_JOB_01,
-            response.getStatus(),
-            response.readEntity(String.class)
-        );
-      }
-      userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
-    } finally {
-      if (response != null) {
-        response.close();
-      }
-    }
-  }
-
-  private void resetOffset() {
-    String resetOffsetUrl = conf.baseUrl + "jobrunner/rest/v1/jobs/resetOffset";
+  private void initializeJobId() {
+    String fetchJobsUrl = conf.baseUrl + "jobrunner/rest/v1/jobs";
     try (Response response = ClientBuilder.newClient()
-        .target(resetOffsetUrl)
+        .target(fetchJobsUrl)
+        .queryParam("filterText", jobIdConfig.jobId)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .post(Entity.json(ImmutableList.of(jobIdConfig.jobId)))) {
+        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
+        .get()) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
             StartJobErrors.START_JOB_02,
@@ -142,6 +120,16 @@ public class StartJobSupplier implements Supplier<Field> {
             response.readEntity(String.class)
         );
       }
+
+      List<Map<String, Object>> jobs = (List<Map<String, Object>>)response.readEntity(List.class);
+      if (jobs.size() != 1) {
+        throw new StageException(
+            StartJobErrors.START_JOB_07,
+            jobIdConfig.jobId,
+            jobs.size()
+        );
+      }
+      jobIdConfig.jobId = (String)jobs.get(0).get("id");
     }
   }
 
@@ -164,7 +152,7 @@ public class StartJobSupplier implements Supplier<Field> {
         .target(jobStartUrl)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
+        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(runtimeParameters))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -178,24 +166,20 @@ public class StartJobSupplier implements Supplier<Field> {
     }
   }
 
-  private Map<String, Object> getJobStatus() {
-    String jobStatusUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + jobIdConfig.jobId + "/currentStatus";
-    try (Response response = ClientBuilder.newClient()
-        .target(jobStatusUrl)
-        .request()
-        .header(X_USER_AUTH_TOKEN, userAuthToken)
-        .get()) {
-      return (Map<String, Object>)response.readEntity(Map.class);
-    }
-  }
-
   private void generateField(Map<String, Object> jobStatus) {
     String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-    boolean success =  (status != null && successStates.contains(status));
+    String statusColor = jobStatus.containsKey("color") ? (String) jobStatus.get("color") : null;
+    String errorMessage = jobStatus.containsKey("errorMessage") ? (String) jobStatus.get("errorMessage") : null;
+    boolean success = ControlHubApiUtil.determineJobSuccess(status, statusColor);
     LinkedHashMap<String, Field> startOutput = new LinkedHashMap<>();
-    startOutput.put("jobId", Field.create(jobIdConfig.jobId));
-    startOutput.put("success", Field.create(success));
-    startOutput.put("jobStatus", Field.create(status));
+    startOutput.put(Constants.JOB_ID_FIELD, Field.create(jobIdConfig.jobId));
+    startOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
+    if (!conf.runInBackground) {
+      startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
+    }
+    startOutput.put(Constants.JOB_STATUS_FIELD, Field.create(status));
+    startOutput.put(Constants.JOB_STATUS_COLOR_FIELD, Field.create(statusColor));
+    startOutput.put(Constants.ERROR_MESSAGE_FIELD, Field.create(errorMessage));
     responseField = Field.createListMap(startOutput);
   }
 

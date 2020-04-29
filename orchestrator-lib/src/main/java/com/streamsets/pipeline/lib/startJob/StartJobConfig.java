@@ -24,9 +24,19 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class StartJobConfig {
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Unique Task Name",
+      displayPosition = 5,
+      group = "JOB"
+  )
+  public String taskName;
 
   @ConfigDef(
       required = true,
@@ -108,7 +118,6 @@ public class StartJobConfig {
       label = "Jobs",
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue="",
       description="Jobs to start in parallel",
       displayPosition = 20,
       group = "JOB",
@@ -116,7 +125,7 @@ public class StartJobConfig {
       triggeredByValue = { "false" }
   )
   @ListBeanModel
-  public List<JobIdConfig> jobIdConfigList;
+  public List<JobIdConfig> jobIdConfigList = new ArrayList<>();
 
   @ConfigDef(
       required = true,

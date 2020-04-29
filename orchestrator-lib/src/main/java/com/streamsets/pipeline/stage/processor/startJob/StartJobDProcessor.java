@@ -27,14 +27,15 @@ import com.streamsets.pipeline.lib.startJob.Groups;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Start Job",
     description = "Starts a Control Hub job",
     icon="job.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb"
+    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb",
+    upgraderDef = "upgrader/StartJobDProcessor.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({

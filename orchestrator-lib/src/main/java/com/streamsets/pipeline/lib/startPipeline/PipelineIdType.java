@@ -15,32 +15,26 @@
  */
 package com.streamsets.pipeline.lib.startPipeline;
 
-import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
+/**
+ * Enum for representing possible Job Id values
+ */
 @GenerateResourceBundle
-public enum StartPipelineErrors implements ErrorCode {
-  START_PIPELINE_01("Failed to connect to Execution Engine: {}"),
-  START_PIPELINE_02("Pipeline ID {} does not exist in Execution Engine: {}"),
-  START_PIPELINE_03("Configuration value is required for Pipeline ID, at index: {}"),
-  START_PIPELINE_04("Failed to start pipeline: {}"),
-  START_PIPELINE_05("Failed to fetch a unique pipeline from the given pipeline name: {}, found {} entries"),
-  START_PIPELINE_06("Failed to fetch pipeline status: {}"),
+public enum PipelineIdType implements Label {
+  ID("Pipeline ID"),
+  TITLE("Pipeline Title"),
   ;
 
-  private final String msg;
-  StartPipelineErrors(String msg) {
-    this.msg = msg;
+  private final String label;
+
+  PipelineIdType(String label) {
+    this.label = label;
   }
 
   @Override
-  public String getCode() {
-    return name();
+  public String getLabel() {
+    return label;
   }
-
-  @Override
-  public String getMessage() {
-    return msg;
-  }
-
 }

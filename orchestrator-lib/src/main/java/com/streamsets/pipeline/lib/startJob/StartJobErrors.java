@@ -26,6 +26,8 @@ public enum StartJobErrors implements ErrorCode {
   START_JOB_04("Failed to Start Job Template for Job ID: {}, status code '{}': {}"),
   START_JOB_05("Failed to parse runtime parameters for Job ID: {}, error: {}"),
   START_JOB_06("Configuration value is required for Job ID, at index: {}"),
+  START_JOB_07("Failed to fetch a unique job from the given job name: {}, fount {} entries"),
+  START_JOB_08("Failed to start job: {}"),
   ;
 
   private final String msg;

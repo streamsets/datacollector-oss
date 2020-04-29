@@ -16,15 +16,27 @@
 package com.streamsets.pipeline.lib.startJob;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 
 public class JobIdConfig {
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Job ID Type",
+      defaultValue = "ID",
+      displayPosition = 15,
+      group = "JOB"
+  )
+  @ValueChooserModel(JobIdTypeChooserValues.class)
+  public JobIdType jobIdType = JobIdType.ID;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Job ID",
-      description = "ID of the job to start",
+      description = "ID of the job to start. If Job ID Type is 'Job Name', then enter the name of the job to start.",
       displayPosition = 20,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},

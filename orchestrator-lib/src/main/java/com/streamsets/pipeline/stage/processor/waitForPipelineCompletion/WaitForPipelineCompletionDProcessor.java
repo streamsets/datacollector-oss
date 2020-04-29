@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.stage.processor.waitForPipelineCompletion;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -24,18 +24,16 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.startPipeline.Groups;
-import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 
 @StageDef(
-    version = 2,
-    label = "Start Pipeline",
-    description = "Starts a Data Collector, Transformer, or Edge pipeline",
+    version = 1,
+    label = "Wait for Pipeline Completion",
+    description = "Wait for a Data Collector, Transformer, or Edge pipeline to complete",
     icon="pipeline.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb",
-    upgraderDef = "upgrader/StartPipelineDProcessor.yaml"
+    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb"
 )
 @GenerateResourceBundle
 @HideConfigs({
@@ -45,14 +43,14 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
     "conf.tlsConfig.keyStoreAlgorithm"
 })
 @ConfigGroups(Groups.class)
-public class StartPipelineDProcessor extends DProcessor {
+public class WaitForPipelineCompletionDProcessor extends DProcessor {
 
   @ConfigDefBean
-  public StartPipelineConfig conf;
+  public WaitForPipelineCompletionConfig conf;
 
   @Override
   protected Processor createProcessor() {
-    return new StartPipelineProcessor(conf);
+    return new WaitForPipelineCompletionProcessor(conf);
   }
 
 }

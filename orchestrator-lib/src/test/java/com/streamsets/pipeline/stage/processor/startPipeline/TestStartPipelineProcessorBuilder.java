@@ -28,6 +28,11 @@ class TestStartPipelineProcessorBuilder {
     conf.pipelineIdConfigList = new ArrayList<>();
   }
 
+  TestStartPipelineProcessorBuilder taskName(String taskName) {
+    conf.taskName = taskName;
+    return this;
+  }
+
   TestStartPipelineProcessorBuilder baseUrl(String baseUrl) {
     conf.baseUrl = baseUrl;
     return this;
