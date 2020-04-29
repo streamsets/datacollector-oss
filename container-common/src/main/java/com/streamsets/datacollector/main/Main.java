@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.net.Authenticator;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivilegedExceptionAction;

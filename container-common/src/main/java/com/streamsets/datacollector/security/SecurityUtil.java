@@ -45,8 +45,8 @@ public class SecurityUtil {
         ProtectionDomain[] currentDomains, ProtectionDomain[] assignedDomains
     ) {
       // SujbectDomainCombiner.combine() takes a lock on map and then a look on principal set.
-      // Some other thread could take a lock in reverse order causing the JDK bug (http://bugs.java
-      // .com/bugdatabase/view_bug.do?bug_id=8166124) to pop up
+      // Some other thread could take a lock in reverse order causing the JDK
+      // bug (http://bugs.java.com/bugdatabase/view_bug.do?bug_id=8166124) to pop up
       // To prevent this, access is ordered through a lock on principal set and then a lock on
       // cachedPds combiner map
       synchronized (subject.getPrincipals()) {
@@ -89,9 +89,15 @@ public class SecurityUtil {
       throw new RuntimeException("No privileged exception action provided");
     }
 
-    return AccessController.doPrivileged(privilegedExceptionAction,
-        createContext(subject, AccessController.getContext())
-    );
+    // The bug this class patches only affects JDK 8 & 9. In later JDK not only the issue is fixed but
+    // the code collides with this patch causing strange behavior due to concurrency issues/race conditions.
+    // Apply only the patch for versions <9, use the JDK AccessController directly for 9+ versions.
+    if (getJavaVersion() <= 9) {
+      return AccessController.doPrivileged(privilegedExceptionAction,
+          createContext(subject, AccessController.getContext()));
+    } else {
+      return AccessController.doPrivileged(privilegedExceptionAction, AccessController.getContext());
+    }
   }
 
   // Influenced by javax.security.auth.Subject.#doAs
@@ -105,4 +111,14 @@ public class SecurityUtil {
     return AccessController.doPrivileged(privilegedAction, createContext(subject, AccessController.getContext()));
   }
 
+  // Up to Java10 the versions were in the format 1.X; starting from version 10 only the decimal number is used
+  private static int getJavaVersion() {
+    String version = System.getProperty("java.version");
+    if(version.startsWith("1.")) {
+      version = version.substring(2, 3);
+    } else {
+      int dot = version.indexOf(".");
+      if(dot != -1) { version = version.substring(0, dot); }
+    } return Integer.parseInt(version);
+  }
 }
