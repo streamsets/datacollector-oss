@@ -384,6 +384,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     this.running = true;
 
     try {
+      LOG.debug("Staring pipeline with offset: {}", offsetTracker.getOffsets());
       if (originPipe.getStage().getStage() instanceof PushSource) {
         runPushSource();
       } else {
