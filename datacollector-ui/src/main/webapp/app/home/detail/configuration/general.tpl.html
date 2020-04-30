@@ -5,7 +5,7 @@
 
   <!-- General Configuration for Pipeline-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.pipelineId">Pipeline ID</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.pipelineId">Pipeline ID</label>
     <div class="controls col-lg-7 col-md-8">
       <input readonly type="text" class="form-control" name="name"
              ng-model="pipelineConfig.info.pipelineId">
@@ -13,7 +13,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.title">Title</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.title">Title</label>
     <div class="controls col-lg-7 col-md-8">
       <input type="text" class="form-control" name="title"
              ng-readonly="isPipelineReadOnly || isPipelineRunning"
@@ -22,7 +22,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.description">Description</label>
     <div class="controls col-lg-7 col-md-8">
       <div ui-codemirror
            ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
@@ -38,7 +38,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.PIPELINE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.labels">Labels</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.labels">Labels</label>
     <div class="controls col-lg-7 col-md-8">
       <ui-select multiple
                  tagging
@@ -57,7 +57,7 @@
 
   <!-- General Configuration for Stages-->
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.name">Name</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.name">Name</label>
     <div class="controls col-lg-7 col-md-8">
       <input type="text" class="form-control" name="name"
              ng-readonly="isPipelineReadOnly || isPipelineRunning"
@@ -66,7 +66,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE">
-    <label class="col-lg-3 col-md-4 control-label" translate="global.form.description">Description</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="global.form.description">Description</label>
     <div class="controls col-lg-7 col-md-8">
       <div ui-codemirror
            ng-class="{'codemirror-read-only': isPipelineReadOnly || isPipelineRunning}"
@@ -82,7 +82,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && stageLibraryList.length > 1">
-    <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.configurationTab.stageLibrary">Stage Library</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="home.detailPane.configurationTab.stageLibrary">Stage Library</label>
     <div class="controls col-lg-7 col-md-8">
       <select class="form-control"
               name="stageLibrary"
@@ -94,7 +94,7 @@
   </div>
 
   <div class="form-group" ng-if="selectedType === pipelineConstant.STAGE_INSTANCE && detailPaneConfigDefn.producingEvents">
-    <label class="col-lg-3 col-md-4 control-label" translate="home.detailPane.configurationTab.producingEventsConfig">Produce Events</label>
+    <label class="col-lg-3 col-md-4 control-label fs-unmask" translate="home.detailPane.configurationTab.producingEventsConfig">Produce Events</label>
     <div class="controls col-lg-7 col-md-8">
       <input type="checkbox" name="producingEventsConfig"
              ng-change="producingEventsConfigChange()"

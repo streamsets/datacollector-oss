@@ -2,7 +2,7 @@
   <tabset class="tabs-top">
 
     <tab active="generalConfigActive" select="onTabSelect({name: 'generalConfig'})">
-      <tab-heading>
+      <tab-heading class="fs-unmask">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, '')"></i>
         <span translate="home.detailPane.configurationTab.general">General</span>
@@ -18,7 +18,7 @@
          disable="!isStageGroupEnabled(detailPaneConfig, detailPaneConfigDefn, detailPaneServices, groupNameToLabelMap.name)"
          active="groupNameToLabelMap.active"
          select="onTabSelect(groupNameToLabelMap)">
-      <tab-heading>
+      <tab-heading class="fs-unmask">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, groupNameToLabelMap.name)"></i>
         <span>{{groupNameToLabelMap.label}}</span>
@@ -55,7 +55,7 @@
     <tab ng-if="testOriginStageConfig"
          select="onTabSelect({name: 'testOriginStageConfig'})"
          active="testOriginStageConfigActive">
-      <tab-heading ng-controller="TestOriginConfigurationController">
+      <tab-heading class="fs-unmask" ng-controller="TestOriginConfigurationController">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.testOrigin' | translate}}
@@ -158,7 +158,7 @@
     <tab ng-if="statsAggregatorStageConfig"
          select="onTabSelect({name: 'statsAggregatorStageConfig'})"
          active="statsAggregatorStageConfigActive">
-      <tab-heading ng-controller="StatsAggregatorConfigurationController">
+      <tab-heading class="fs-unmask" ng-controller="StatsAggregatorConfigurationController">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.statsAggregator' | translate}} - {{statsAggregatorStageConfigDefn.label}}
@@ -209,7 +209,7 @@
     <tab ng-if="startEventStageConfig"
          select="onTabSelect({name: 'startEventStageConfig'})"
          active="startEventStageConfigActive">
-      <tab-heading ng-controller="StartEventConfigurationController">
+      <tab-heading class="fs-unmask" ng-controller="StartEventConfigurationController">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.startEvent' | translate}} - {{startEventStageConfigDefn.label}}
@@ -265,7 +265,7 @@
     <tab ng-if="stopEventStageConfig"
          select="onTabSelect({name: 'stopEventStageConfig'})"
          active="stopEventStageConfigActive">
-      <tab-heading ng-controller="StopEventConfigurationController">
+      <tab-heading  class="fs-unmask" ng-controller="StopEventConfigurationController">
         <i class="fa fa-exclamation-triangle icon-danger"
            ng-show="showConfigurationWarning(detailPaneConfig, undefined, true)"></i>
         {{'home.detailPane.stopEvent' | translate}} - {{stopEventStageConfigDefn.label}}

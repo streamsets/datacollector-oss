@@ -1,5 +1,5 @@
 <script type="text/ng-template" id="labelConfigurationTemplate">
-  <label class="col-lg-3 col-md-4 control-label">{{configDefinition.label}}
+  <label class="col-lg-3 col-md-4 control-label fs-unmask">{{configDefinition.label}}
     <i class="fa fa-info-circle help-icon"
        ng-class="{
        'fa-info-circle': configDefinition.type !== 'CREDENTIAL' && configDefinition.type !== 'EL_CREDENTIAL',
@@ -202,7 +202,7 @@
       </div>
 
       <div ng-class="{'input-group': (!credentialSettings.showExpression && credentialSettings.credentialValue) || credentialSettings.saved}">
-        <input type="{{credentialSettings.showCredential ? 'text' : 'password'}}" class="form-control"
+        <input type="{{credentialSettings.showCredential ? 'text' : 'password'}}" class="form-control fs-exclude"
           ng-if="!credentialSettings.showExpression"
           name="{{configDefinition.name}}"
           focus-me="{{autoFocusConfigName === configDefinition.name}}"

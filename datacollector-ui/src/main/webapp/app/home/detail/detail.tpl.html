@@ -56,7 +56,7 @@
     </div>
 
 
-    <div class="pull-right size-toolbar">
+    <div class="pull-right size-toolbar fs-unmask">
 
       <div class="btn-group pull-left detail-settings-dropdown"
            ng-if="!$storage.dontShowRESTResponseMenu || isPipelineRunning">
@@ -162,7 +162,7 @@
     <tabset class="detail-tabs-left tabs-left" ng-if="detailPaneConfigDefn">
       <tab ng-repeat="tab in detailPaneTabs track by $index" active="tab.active" disable="tab.disabled"
            select="onTabSelect(tab)">
-        <tab-heading>  <!--tooltip-placement="right" tooltip="{{tab.label}}" -->
+        <tab-heading class="fs-unmask">  <!--tooltip-placement="right" tooltip="{{tab.label}}" -->
           <i class="fa fa-exclamation-triangle icon-danger"
              ng-show="showWarning(tab)"></i>
 
