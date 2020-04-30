@@ -348,6 +348,7 @@ angular
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
         $scope.setGraphPreviewMode(false);
+        tracking.mixpanel.track('Preview Closed', {'Pipeline ID': $scope.pipelineConfig ? $scope.pipelineConfig.pipelineId : 'N/A'});
         if ($scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
           $scope.refreshGraph();
         }
@@ -1943,7 +1944,7 @@ angular
       trackingData['Has Remember The Configuration'] = previewConfig.rememberMe;
       tracking.mixpanel.people.set({'Core Journey Stage - Preview Run': true});
       tracking.mixpanel.track('Preview Config Complete', trackingData);
-      
+
       $scope.previewMode = true;
       $rootScope.$storage.maximizeDetailPane = false;
       $rootScope.$storage.minimizeDetailPane = false;

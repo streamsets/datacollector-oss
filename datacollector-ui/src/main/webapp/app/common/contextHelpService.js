@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,9 +52,11 @@ angular.module('dataCollectorApp.common')
           relativeURL = helpIds[stagename];
 
         uiHelpBaseURL = getHelpBaseUrl();
-
         helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
-
+        tracking.mixpanel.track('Help Documentation Clicked', {
+          'Current Page': window.location.pathname,
+          'Help Topic': relativeURL || 'index.html'
+        });
         if(typeof(helpWindow) == 'undefined' || helpWindow.closed) {
           helpWindow = window.open(helpURL);
         } else {
@@ -71,13 +73,16 @@ angular.module('dataCollectorApp.common')
         uiHelpBaseURL = getHelpBaseUrl();
         helpURL = uiHelpBaseURL + '/index.html';
 
+        tracking.mixpanel.track('Help Documentation Clicked', {
+          'Current Page': window.location.pathname,
+          'Help Topic': 'index.html'
+        });
         if(typeof(helpWindow) == 'undefined' || helpWindow.closed) {
           helpWindow = window.open(helpURL);
         } else {
           helpWindow.location.href = helpURL;
           helpWindow.focus();
         }
-
       });
     };
 

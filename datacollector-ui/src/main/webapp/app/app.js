@@ -649,16 +649,19 @@ angular.module('dataCollectorApp')
                     $rootScope.common.infoList = [{
                       message: 'Activation key expired, you need to get a new one from StreamSets'
                     }];
+                    tracking.mixpanel.track('Activation key expired', {});
                   }
                 }
               } else if (difDays < 30) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key expires in ' + difDays + '  days'
                 }];
+                tracking.mixpanel.track('Activation key expiring soon', {'Days': difDays});
               } else if (!activationInfo.info.valid) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key is not valid'
                 }];
+                tracking.mixpanel.track('Activation key invalid', {});
               }
             }
           }
@@ -668,7 +671,7 @@ angular.module('dataCollectorApp')
             $timeout(
               function() {
                 Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
-                mixpanel.register({'sdcVersion': buildResult.data.version});
+                tracking.mixpanel.register({'sdcVersion': buildResult.data.version});
                 tracking.FS.setUserVars({'sdcVersion': buildResult.data.version});
               },
               1000
@@ -681,12 +684,12 @@ angular.module('dataCollectorApp')
                 if (stats.activeStats.extraInfo) {
                   if (stats.activeStats.extraInfo.cloudProvider) {
                     Analytics.set('dimension2', stats.activeStats.extraInfo.cloudProvider); // dimension2 is cloudProvider
-                    mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                    tracking.mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
                     tracking.FS.setUserVars({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
                   }
                   if (stats.activeStats.extraInfo.distributionChannel) {
                     Analytics.set('dimension3', stats.activeStats.extraInfo.distributionChannel); // dimension3 is distributionChannel
-                    mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                    tracking.mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
                     tracking.FS.setUserVars({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
                   }
                 }
@@ -932,11 +935,10 @@ angular.module('dataCollectorApp')
 
     window.onbeforeunload = function (event) {
       //Check if there was any change, if no changes, then simply let the user leave
-
       if($rootScope.common.saveOperationInProgress <= 0){
+        tracking.mixpanel.track('Window Closed', {});
         return;
       }
-
       if (typeof event === 'undefined') {
         event = window.event;
       }

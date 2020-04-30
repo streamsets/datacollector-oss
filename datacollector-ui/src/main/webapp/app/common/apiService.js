@@ -18,7 +18,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('api', function($rootScope, $http, $q) {
+  .factory('api', function($rootScope, $http, $q, tracking) {
     var apiVersion = 'v1';
     var apiBase = 'rest/' + apiVersion;
     var api = {
@@ -195,18 +195,19 @@ angular.module('dataCollectorApp.common')
        * logout
        */
       logout: function(authenticationType, isDPMEnabled) {
-        var url;
+        tracking.mixpanel.track('Logout', {
+          //'Time to First Pipeline': '',
+          'Logout Type': 'User Logout',
+        });
         if (isDPMEnabled) {
-          url = 'logout';
           return $http({
             method: 'GET',
-            url: url
+            url: 'logout'
           });
         } else {
-          url = apiBase + '/authentication/logout';
           return $http({
             method: 'POST',
-            url: url
+            url: apiBase + '/authentication/logout'
           });
         }
       },
@@ -956,6 +957,11 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipeline: function(pipelineName, rev, forceStop) {
+        tracking.mixpanel.track('Pipeline Stopped', {
+          'Pipeline ID': pipelineName,
+          'Stop Type': 'User',
+          'Force Stop': forceStop,
+        });
         var url = apiBase + '/pipeline/' + pipelineName + '/stop?rev=' + rev ;
         if (forceStop) {
           url = apiBase + '/pipeline/' + pipelineName + '/forceStop?rev=' + rev ;
@@ -974,6 +980,13 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipelines: function(pipelineIds, forceStop) {
+        pipelineIds.forEach(function (pId) {
+          tracking.mixpanel.track('Pipeline Stopped', {
+            'Pipeline ID': pId,
+            'Stop Type': 'User',
+            'Force Stop': forceStop,
+          });
+        });
         var url = apiBase + '/pipelines/stop';
         if (forceStop) {
           url = apiBase + '/pipelines/forceStop';
@@ -1506,8 +1519,8 @@ angular.module('dataCollectorApp.common')
     api.activation = {
       /**
        * Returns SDC activation information
-       * 
-       * Response shape: 
+       *
+       * Response shape:
          {
           "info" : {
             "type" : "rsa-signed",
@@ -1603,15 +1616,15 @@ angular.module('dataCollectorApp.common')
      */
     api.externalRegistration = {
       sendRegistration: function(
-        registrationURL, firstName, lastName, companyName, email, 
-        role, country, postalCode, sdcId, productVersion, 
+        registrationURL, firstName, lastName, companyName, email,
+        role, country, postalCode, sdcId, productVersion,
         activationUrl
         ) {
         if (!registrationURL) {
           throw Error('missing registrationURL');
         }
         postalCode = postalCode || '';
-        
+
         var registrationObject = {
           firstName: firstName,
           lastName: lastName,
