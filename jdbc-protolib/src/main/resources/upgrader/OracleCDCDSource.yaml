@@ -16,5 +16,8 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 12
+    actions:
+      - removeConfigs:
+          namePattern: oracleCDCConfigBean.durationDictExtract

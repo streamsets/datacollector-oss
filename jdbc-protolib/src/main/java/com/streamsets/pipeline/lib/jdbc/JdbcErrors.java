@@ -157,6 +157,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_601("Could not find a valid LogMiner dictionary: {}"),
   JDBC_602("Could not find any redo log file for datetime {}"),
   JDBC_603("Error while retrieving LogMiner metadata: {}"),
+  JDBC_604("Failed to find a valid SCN >= {}.")
   ;
 
   private final String msg;

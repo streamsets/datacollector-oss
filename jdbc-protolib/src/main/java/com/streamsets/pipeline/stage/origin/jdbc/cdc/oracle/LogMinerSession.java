@@ -51,6 +51,7 @@ public class LogMinerSession {
   private static final String COMMITTED_DATA_ONLY_OPTION = "DBMS_LOGMNR.COMMITTED_DATA_ONLY";
   private static final String DDL_DICT_TRACKING_OPTION = "DBMS_LOGMNR.DDL_DICT_TRACKING";
   private static final String DICT_FROM_REDO_LOGS_OPTION = "DBMS_LOGMNR.DICT_FROM_REDO_LOGS";
+  private static final String DICT_FROM_ONLINE_CATALOG_OPTION = "DBMS_LOGMNR.DICT_FROM_ONLINE_CATALOG";
 
   // Templates to build LogMiner start/stop commands
   private static final String STOP_LOGMNR_CMD = "BEGIN DBMS_LOGMNR.END_LOGMNR; END;";
@@ -128,6 +129,11 @@ public class LogMinerSession {
       + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO AND V$LOG.ARCHIVED = 'NO' AND "
       + "     FIRST_TIME <= :time AND (NEXT_TIME > :time OR NEXT_TIME IS NULL) ";
   private static final String SELECT_LOGS_FROM_DATE_ARG = ":time";
+
+  // Template for the getLocalDateTimeForSCN utility function.
+  private static final String SELECT_TIMESTAMP_FOR_SCN =
+      "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS WHERE SCN >= ? ORDER BY SCN";
+  private static final String TIMESTAMP_COLUMN = "TIMESTAMP";
 
   // Query retrieving the current redo log files registered in the current LogMiner session.
   private final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
@@ -442,12 +448,93 @@ public class LogMinerSession {
     List<RedoLog> logList = findDictionary(scn);
 
     if (continuousMine) {
-      BigDecimal start = logList.get(0).getNextChange();
+      BigDecimal start = logList.get(0).getFirstChange();
       start(start, scn);  // Force the dictionary extraction by starting a LogMiner session with a proper range.
     } else {
       BigDecimal start = logList.get(logList.size() - 1).getNextChange();
       updateLogList(start, scn);
     }
+  }
+
+  /**
+   * Utility function that implicitly uses a LogMiner session to find the LocalDateTime corresponding to a given SCN.
+   * If the SCN does not exist in the redo logs, the function selects the next closest SCN registered in the redo
+   * logs and returns its LocalDateTime.
+   *
+   * The function might reuse an existing LogMiner session, otherwise it will start a new one. In both cases, after a
+   * successful call to this function the LogMiner session will be closed.
+   *
+   * NOTE: there exists an Oracle SCN_TO_TIMESTAMP function, but when used to return the timestamp for the
+   * FIRST_CHANGE# of the oldest redo log, it was observed that the timestamp returned might not match the redo log's
+   * FIRST_TIME value. It probably has to do with the undo retention policy in the Oracle database, that affects the
+   * domain of SCN values the SCN_TO_TIMESTAMP is able to convert. This motivates the use of this function instead,
+   * which only relies on LogMiner.
+   *
+   * @param scn The queried SCN.
+   * @return The LocalDateTime for the given SCN.
+   * @throws StageException If any error occurs when starting the LogMiner session or no valid SCN was found.
+   */
+  public LocalDateTime getLocalDateTimeForSCN(BigDecimal scn) throws StageException {
+    LOG.debug("Using LogMiner to find timestamp for SCN = {}", scn);
+    LocalDateTime result;
+
+    // Find all the redo logs whose range covers the requested SCN.
+    List<RedoLog> logList = findLogs(scn, scn.add(BigDecimal.valueOf(1)));
+    if (logList.isEmpty()) {
+      throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString());
+    }
+    logList.sort(Comparator.comparing(RedoLog::getNextChange));
+    BigDecimal lastSCN = logList.get(logList.size() - 1).getNextChange();
+
+    for (RedoLog log : logList) {
+      if (continuousMine || !currentLogList.contains(log)) {
+        String cmd = currentLogList.isEmpty() ? ADD_LOGFILE_NEWLIST_CMD : ADD_LOGFILE_APPEND_CMD;
+        try (CallableStatement statement = connection.prepareCall(cmd)) {
+          LOG.debug("Add redo log: {}", log);
+          statement.setString(1, log.getPath());
+          statement.execute();
+          currentLogList.add(log);
+        } catch (SQLException e) {
+          LOG.error("Could not add redo log file to LogMiner: {}", log, e);
+        }
+      }
+    }
+
+    // Start LogMiner session. Unlike the LogMinerSession#start functions, this ad-hoc session simplifies the logic by
+    // not honoring the LogMiner options configured via the LogMinerSession.Builder. This can be done as this
+    // session is not exposed to the caller and only employed to extract the timestamp for the given SCN.
+    try (Statement statement = connection.createStatement()) {
+      String sessionStart = Utils.format(START_SCN_ARG, scn.toPlainString());
+      String sessionEnd = Utils.format(END_SCN_ARG, lastSCN.toPlainString());
+      String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, DICT_FROM_ONLINE_CATALOG_OPTION);
+      statement.execute(command);
+      activeSession = true;
+    } catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_52, e);
+    }
+
+    // Query LOGMNR_CONTENTS to find the timestamp for the requested SCN
+    try (PreparedStatement statement = connection.prepareStatement(SELECT_TIMESTAMP_FOR_SCN)) {
+      statement.setBigDecimal(1, scn);
+      statement.setMaxRows(1);
+      ResultSet rs = statement.executeQuery();
+      if (!rs.next()) {
+        throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString());
+      }
+      result = rs.getTimestamp(TIMESTAMP_COLUMN).toLocalDateTime();
+    } catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    try (Statement statement = connection.createStatement()) {
+      activeSession = false;
+      statement.execute(STOP_LOGMNR_CMD);
+      currentLogList.clear();
+    } catch (SQLException e) {
+      LOG.error("Could not close LogMiner session: {}", e);
+    }
+
+    return result;
   }
 
   /**
@@ -647,10 +734,13 @@ public class LogMinerSession {
   }
 
   /**
-   * Returns the list of redo logs that covers a given range of changes in database.
+   * Returns the list of redo logs that covers a given range of changes in database. The range is defined as the
+   * interval [start, end) and the list will contain any redo log with some SCN in that range; i.e. it is not necessary
+   * that all the redo log SCNs are in range [start, end).
    *
-   * @param start The initial SCN to cover.
-   * @param end The last SCN to cover.
+   * @param start Start SCN (inclusive limit).
+   * @param end End SCN (exclusive limit).
+   * @return List of all the redo logs having some SCN in range [start, end).
    * @throws StageException Database error.
    */
   private List<RedoLog> findLogs(BigDecimal start, BigDecimal end) {

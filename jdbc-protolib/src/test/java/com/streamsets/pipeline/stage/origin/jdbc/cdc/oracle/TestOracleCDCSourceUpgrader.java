@@ -16,10 +16,14 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,5 +120,48 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(2, ret.size());
     Assert.assertEquals("oracleCDCConfigBean.fetchSizeLatest", ret.get(1).getName());
     Assert.assertEquals(100, ret.get(1).getValue());
+  }
+
+  @Test
+  public void upgradeV10TOV11() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/OracleCDCDSource.yaml");
+    StageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new OracleCDCSourceUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(10).when(context).getFromVersion();
+    Mockito.doReturn(11).when(context).getToVersion();
+    configs = upgrader.upgrade(configs, context);
+
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("oracleCDCConfigBean.durationDictExtract", configs.get(0).getName());
+    Assert.assertEquals(-1, configs.get(0).getValue());
+  }
+
+  @Test
+  public void upgradeV11TOV12() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("oracleCDCConfigBean.durationDictExtract","${24 * HOURS}"));
+    configs.add(new Config("oracleCDCConfigBean.logminerWindow", "${2 * HOURS}"));
+
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/OracleCDCDSource.yaml");
+    StageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new OracleCDCSourceUpgrader(),
+        yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(11).when(context).getFromVersion();
+    Mockito.doReturn(12).when(context).getToVersion();
+    configs = upgrader.upgrade(configs, context);
+
+    Assert.assertEquals(1, configs.size());
+    Assert.assertEquals("oracleCDCConfigBean.logminerWindow", configs.get(0).getName());
+    Assert.assertEquals("${2 * HOURS}", configs.get(0).getValue());
   }
 }

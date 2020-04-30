@@ -196,7 +196,6 @@ public class OracleCDCSourceUpgrader implements StageUpgrader {
   }
 
   private static List<Config> upgradeV10ToV11(List<Config> configs) {
-    // Applying existing fetch size to fetchSizeLatest in order to persist the behavior
     configs.add(new Config("oracleCDCConfigBean.durationDictExtract", -1));
     return configs;
   }
