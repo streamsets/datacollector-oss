@@ -889,6 +889,7 @@ angular.module('pipelineGraphDirectives', [])
         .append('xhtml:span')
         .attr('title', graphErrorBadgeLabel)
         .attr('class', 'badge alert-danger pointer graph-bootstrap-tooltip')
+        .attr('data-placement', 'bottom')
         .style('visibility', function(d) {
           if (stageErrorCounts && stageErrorCounts[d.instanceName] &&
             parseInt(stageErrorCounts[d.instanceName]) > 0) {
