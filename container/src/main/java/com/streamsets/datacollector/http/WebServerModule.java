@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.jmx.JmxReporter;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.activation.ActivationLoader;
+import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -81,7 +82,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Module(injects = {TaskWrapper.class, Manager.class}, library = true, complete = false)
+@Module(injects = {TaskWrapper.class, Manager.class}, library = true, includes = ActivationModule.class, complete = false)
 public class WebServerModule {
 
   private final Manager mgr;
@@ -93,12 +94,6 @@ public class WebServerModule {
   @Provides
   public Manager provideManager() {
     return mgr;
-  }
-
-  @Provides
-  @Singleton
-  public Activation provideActivation(final RuntimeInfo runtimeInfo) {
-    return new ActivationLoader(runtimeInfo).getActivation();
   }
 
   private final String SWAGGER_PACKAGE = "io.swagger.jaxrs.listing";
