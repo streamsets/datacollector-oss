@@ -117,4 +117,28 @@ public class ProxyConfig {
       group = "ADVANCED"
   )
   public CredentialValue proxyPassword;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy Domain",
+      description = "Optional domain name for the proxy server",
+      displayPosition = 5050,
+      dependsOn = "useProxy",
+      triggeredByValue = "true",
+      group = "ADVANCED"
+  )
+  public String proxyDomain;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Proxy Workstation",
+      description = "Optional workstation for the proxy server",
+      displayPosition = 5060,
+      dependsOn = "useProxy",
+      triggeredByValue = "true",
+      group = "ADVANCED"
+  )
+  public String proxyWorkstation;
 }

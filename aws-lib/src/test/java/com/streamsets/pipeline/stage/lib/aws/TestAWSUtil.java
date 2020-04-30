@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.junit.Assert;
@@ -63,5 +64,78 @@ public class TestAWSUtil {
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
     Assert.assertNull(credentialsProvider.getCredentials().getAWSAccessKeyId());
     Assert.assertNull(credentialsProvider.getCredentials().getAWSSecretKey());
+  }
+
+  @Test
+  public void testGetClientConfiguration() {
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = true;
+    proxyConfig.proxyHost = "host";
+    proxyConfig.proxyPort = 1234;
+    proxyConfig.proxyUser = () -> "user";
+    proxyConfig.proxyPassword = () -> "password";
+    proxyConfig.proxyDomain = "domain";
+    proxyConfig.proxyWorkstation = "workstation";
+
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
+    Assert.assertEquals("host", clientConfig.getProxyHost());
+    Assert.assertEquals(1234, clientConfig.getProxyPort());
+    Assert.assertEquals("user", clientConfig.getProxyUsername());
+    Assert.assertEquals("password", clientConfig.getProxyPassword());
+    Assert.assertEquals("domain", clientConfig.getProxyDomain());
+    Assert.assertEquals("workstation", clientConfig.getProxyWorkstation());
+  }
+
+  @Test
+  public void testGetClientConfigurationNotSet() {
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = true;
+
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
+    Assert.assertNull(clientConfig.getProxyHost());
+    Assert.assertEquals(-1, clientConfig.getProxyPort());
+    Assert.assertNull(clientConfig.getProxyUsername());
+    Assert.assertNull(clientConfig.getProxyPassword());
+    Assert.assertNull(clientConfig.getProxyDomain());
+    Assert.assertNull(clientConfig.getProxyWorkstation());
+  }
+
+  @Test
+  public void testGetClientConfigurationEmpty() {
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = true;
+    proxyConfig.proxyHost = "";
+    proxyConfig.proxyUser = () -> "";
+    proxyConfig.proxyPassword = () -> "";
+    proxyConfig.proxyDomain = "";
+    proxyConfig.proxyWorkstation = "";
+
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
+    Assert.assertNull(clientConfig.getProxyHost());
+    Assert.assertEquals(-1, clientConfig.getProxyPort());
+    Assert.assertNull(clientConfig.getProxyUsername());
+    Assert.assertNull(clientConfig.getProxyPassword());
+    Assert.assertNull(clientConfig.getProxyDomain());
+    Assert.assertNull(clientConfig.getProxyWorkstation());
+  }
+
+  @Test
+  public void testGetClientConfigurationNotUsing() {
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = false; // other values will be ignored because this is false
+    proxyConfig.proxyHost = "host";
+    proxyConfig.proxyPort = 1234;
+    proxyConfig.proxyUser = () -> "user";
+    proxyConfig.proxyPassword = () -> "password";
+    proxyConfig.proxyDomain = "domain";
+    proxyConfig.proxyWorkstation = "workstation";
+
+    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
+    Assert.assertNull(clientConfig.getProxyHost());
+    Assert.assertEquals(-1, clientConfig.getProxyPort());
+    Assert.assertNull(clientConfig.getProxyUsername());
+    Assert.assertNull(clientConfig.getProxyPassword());
+    Assert.assertNull(clientConfig.getProxyDomain());
+    Assert.assertNull(clientConfig.getProxyWorkstation());
   }
 }

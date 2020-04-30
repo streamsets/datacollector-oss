@@ -64,8 +64,16 @@ public class AWSUtil {
           clientConfig.setProxyUsername(config.proxyUser.get());
         }
 
-        if (config.proxyPassword != null) {
+        if (config.proxyPassword != null && !config.proxyPassword.get().isEmpty()) {
           clientConfig.setProxyPassword(config.proxyPassword.get());
+        }
+
+        if (config.proxyDomain != null && !config.proxyDomain.isEmpty()) {
+          clientConfig.setProxyDomain(config.proxyDomain);
+        }
+
+        if (config.proxyWorkstation != null && !config.proxyWorkstation.isEmpty()) {
+          clientConfig.setProxyWorkstation(config.proxyWorkstation);
         }
       }
     }
