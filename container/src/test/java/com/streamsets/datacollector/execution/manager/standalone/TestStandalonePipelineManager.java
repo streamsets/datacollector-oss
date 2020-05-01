@@ -365,6 +365,20 @@ public class TestStandalonePipelineManager {
   }
 
   @Test
+  public void testGetPipelineStatesStateFileRemoved() throws Exception {
+    // create two pipeline info files
+    pipelineStoreTask.create("user", "aaaa", "label", "blah", false, false, new HashMap<String, Object>());
+    pipelineStoreTask.create("user", "bbbb", "label", "blah", false, false, new HashMap<String, Object>());
+
+    // delete state file for one of the pipelines
+    pipelineStateStore.delete("aaaa", "0");
+    List<PipelineState> pipelineStates = pipelineManager.getPipelines();
+    assertEquals(1, pipelineStates.size());
+    assertEquals("bbbb", pipelineStates.get(0).getPipelineId());
+    assertEquals("0", pipelineStates.get(0).getRev());
+  }
+
+  @Test
   public void testGetPipelineStates() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false, false, new HashMap<String, Object>());
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();

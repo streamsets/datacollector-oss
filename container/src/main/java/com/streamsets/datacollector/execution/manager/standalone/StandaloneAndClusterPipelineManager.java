@@ -202,13 +202,15 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     for (PipelineInfo pipelineInfo : pipelineInfoList) {
       String name = pipelineInfo.getPipelineId();
       String rev = pipelineInfo.getLastRev();
-      PipelineState pipelineState = pipelineStateStore.getState(name, rev);
-      Utils.checkState(pipelineState != null, Utils.format("State for pipeline: '{}::{}' doesn't exist", name, rev));
-      pipelineStateList.add(pipelineState);
+      try {
+        PipelineState pipelineState = pipelineStateStore.getState(name, rev);
+        pipelineStateList.add(pipelineState);
+      } catch (Exception e) {
+        LOG.error(Utils.format("State file not found for pipeline {}", name), e);
+      }
     }
     return pipelineStateList;
   }
-
 
   @Override
   public PipelineState getPipelineState(String name, String rev) throws PipelineStoreException {
