@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.lib.kafka;
 
+import com.streamsets.datacollector.security.TempKeytabManager;
+import com.streamsets.pipeline.api.Configuration;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import org.slf4j.Logger;
@@ -31,78 +33,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class KafkaKerberosUtil {
+public class KafkaKerberosUtil extends TempKeytabManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaValidationUtil.class);
 
   private static final String KAFKA_KEYTAB_LOCATION_KEY = "kafka.keytab.location";
-  private static  final String KAFKA_DEFAULT_KEYTAB_LOCATION = "/tmp/sdc";
+  private static final String KAFKA_DEFAULT_KEYTAB_LOCATION = "/tmp/sdc";
   private static final String KAFKA_KEYTAB_SUBDIR = "kafka-keytabs";
   private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
       "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
-  public static String saveUserKeytab(
+  public KafkaKerberosUtil(Configuration configuration) throws IllegalStateException {
+    super(configuration, KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION, KAFKA_KEYTAB_SUBDIR);
+  }
+
+  public String saveUserKeytab(
       String userKeytab,
       String userPrincipal,
       Map<String, String> kafkaOptions,
       List<Stage.ConfigIssue> issues,
       Stage.Context context
   ) {
-    String keytabDir = context.getConfiguration().get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION);
-    String keytabFileName = UUID.randomUUID().toString();
-    Path keytabSubdirPath = Paths.get(keytabDir).resolve(KAFKA_KEYTAB_SUBDIR);
-    if (!Files.exists(keytabSubdirPath) && !createAndRestrictKeytabSubdirIfNeeded(keytabSubdirPath.toFile())) {
-      addSaveException(issues, context);
-    } else {
-      try {
-        Path keytabPath = keytabSubdirPath.resolve(keytabFileName);
-        if (!Files.exists(keytabPath) && !keytabPath.toFile().createNewFile()) {
-          LOG.debug("");
-        }
-        FileOutputStream writer = new FileOutputStream(keytabPath.toFile());
-        writer.write(Base64.getDecoder().decode(userKeytab));
-        writer.close();
-        kafkaOptions.put("sasl.jaas.config", String.format(KAFKA_JAAS_CONFIG, keytabPath.toString(), userPrincipal));
-      } catch (IOException ex) {
-        addSaveException(issues, context);
-      }
-    }
-    return keytabFileName;
-  }
-
-  private static synchronized boolean createAndRestrictKeytabSubdirIfNeeded(File keytabSubdir) {
-    boolean created = keytabSubdir.exists();
-    if (!created) {
-      created = keytabSubdir.mkdirs();
-      if (created) {
-        created = keytabSubdir.setReadable(false, false);
-      }
-    }
-    return created;
-  }
-
-  public static void deleteUserKeytabIfExists(String keytabFileName, Stage.Context context) {
-    if(keytabFileName == null) {
-      return;
-    }
-    String keytabDir = context.getConfiguration().get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION);
-    Path keytabDirPath = Paths.get(keytabDir).resolve(KAFKA_KEYTAB_SUBDIR);
-    if (Files.exists(keytabDirPath)) {
-      Path keytabPath = keytabDirPath.resolve(keytabFileName);
-      if (Files.exists(keytabPath) && !keytabPath.toFile().delete()) {
-        LOG.debug("Unable to delete keytab " + keytabPath.toString());
-      }
+    try {
+      final String keytabFileName = createTempKeytabFile(userKeytab);
+      kafkaOptions.put("sasl.jaas.config", String.format(
+          KAFKA_JAAS_CONFIG,
+          getTempKeytabPath(keytabFileName),
+          userPrincipal
+      ));
+      return keytabFileName;
+    } catch (IOException | IllegalStateException e) {
+      issues.add(context.createConfigIssue(
+          KafkaDestinationGroups.KAFKA.name(),
+          "userKeytab",
+          KafkaErrors.KAFKA_13,
+          e.getMessage(),
+          e
+      ));
+      return null;
     }
   }
 
-  private static void addSaveException(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    issues.add(
-        context.createConfigIssue(
-            KafkaDestinationGroups.KAFKA.name(),
-            "userKeytab",
-            KafkaErrors.KAFKA_13
-        )
-    );
+  public void deleteUserKeytabIfExists(String keytabFileName, Stage.Context context) {
+    try {
+      deleteTempKeytabFileIfExists(keytabFileName);
+    } catch (IOException | IllegalStateException e) {
+      LOG.error("Failed to delete temp keytab file {}: {}", keytabFileName, e.getMessage(), e);
+    }
   }
-
 }

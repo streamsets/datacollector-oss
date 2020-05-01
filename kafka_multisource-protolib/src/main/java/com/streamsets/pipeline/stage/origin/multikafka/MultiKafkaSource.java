@@ -80,6 +80,7 @@ public class MultiKafkaSource extends BasePushSource {
   private ExecutorService executor;
 
   private SdcKafkaValidationUtil kafkaValidationUtil;
+  private KafkaKerberosUtil kafkaKerberosUtil;
   private String keytabFileName;
 
   public MultiKafkaSource(MultiKafkaBeanConfig conf) {
@@ -344,6 +345,7 @@ public class MultiKafkaSource extends BasePushSource {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
+    kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
 
     conf.init(getContext(), issues);
 
@@ -361,7 +363,7 @@ public class MultiKafkaSource extends BasePushSource {
     kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
 
     if (conf.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
-      keytabFileName = KafkaKerberosUtil.saveUserKeytab(
+      keytabFileName = kafkaKerberosUtil.saveUserKeytab(
           conf.userKeytab.get(),
           conf.userPrincipal,
           conf.kafkaOptions,
@@ -497,7 +499,7 @@ public class MultiKafkaSource extends BasePushSource {
   @Override
   public void destroy() {
     super.destroy();
-    KafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
+    kafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
     executor.shutdownNow();
   }
 

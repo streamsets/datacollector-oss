@@ -57,6 +57,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
   protected final KafkaConfigBean conf;
   protected SdcKafkaConsumer kafkaConsumer;
+  private KafkaKerberosUtil kafkaKerberosUtil;
+  private String keytabFileName;
 
   private ErrorRecordHandler errorRecordHandler;
   private DataParserFactory parserFactory;
@@ -66,7 +68,6 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected static final String CONSUMER_GROUP = "consumerGroup";
   protected static final String TOPIC = "topic";
   protected static final String BROKER_LIST = "metadataBrokerList";
-  private static String keytabFileName;
 
 
   public BaseKafkaSource(KafkaConfigBean conf) {
@@ -77,6 +78,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
+    kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     if (conf.topic == null || conf.topic.isEmpty()) {
@@ -130,7 +132,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     );
 
     if (conf.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
-      keytabFileName = KafkaKerberosUtil.saveUserKeytab(
+      keytabFileName = kafkaKerberosUtil.saveUserKeytab(
           conf.userKeytab.get(),
           conf.userPrincipal,
           conf.kafkaConsumerConfigs,
@@ -329,6 +331,6 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
   @Override
   public void destroy() {
-    KafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
+    kafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
   }
 }

@@ -335,6 +335,7 @@ public class KafkaTargetConfig {
   // holds the value of 'retry.backoff.ms' supplied by the user or the default value
   private long retryBackoffMs;
   private String keytabFileName;
+  private KafkaKerberosUtil kafkaKerberosUtil;
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     init(context, this.dataFormat, false, issues);
@@ -345,6 +346,7 @@ public class KafkaTargetConfig {
   }
 
   public void init(Stage.Context context, DataFormat dataFormat, boolean sendResponse, List<Stage.ConfigIssue> issues) {
+    kafkaKerberosUtil = new KafkaKerberosUtil(context.getConfiguration());
     dataGeneratorFormatConfig.init(
         context,
         dataFormat,
@@ -408,7 +410,7 @@ public class KafkaTargetConfig {
     );
 
     if (provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
-      keytabFileName = KafkaKerberosUtil.saveUserKeytab(
+      keytabFileName = kafkaKerberosUtil.saveUserKeytab(
           userKeytab.get(),
           userPrincipal,
           kafkaProducerConfigs,
@@ -560,7 +562,7 @@ public class KafkaTargetConfig {
   }
 
   public void destroy(Stage.Context context) {
-    KafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, context);
+    kafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, context);
     destroy();
   }
 
