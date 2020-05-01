@@ -18,7 +18,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ImportFromURLModalInstanceController', function (
-    $scope, $modalInstance, api, pipelineTitle, pipelineHttpUrl
+    $scope, $modalInstance, api, pipelineTitle, pipelineHttpUrl, tracking
   ) {
 
     angular.extend($scope, {
@@ -36,20 +36,20 @@ angular
 
       import: function () {
         $scope.operationInProgress = true;
-        mixpanel.track('Import Pipeline From URL Started', {});
+        tracking.mixpanel.track('Import Pipeline From URL Started', {});
         api.pipelineAgent.importPipelineFromUrl($scope.newConfig.title, $scope.newConfig.pipelineHttpUrl)
           .then(function(response) {
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            mixpanel.track('Import Pipeline From URL Completed', {});
-            mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            tracking.mixpanel.track('Import Pipeline From URL Completed', {});
+            tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
             $modalInstance.close(response.data);
           })
           .catch(function(res) {
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            mixpanel.track('Import Pipeline From URL', {'Failure Reason': JSON.stringify(res.data)});
+            tracking.mixpanel.track('Import Pipeline From URL', {'Failure Reason': JSON.stringify(res.data)});
 
           });
       },

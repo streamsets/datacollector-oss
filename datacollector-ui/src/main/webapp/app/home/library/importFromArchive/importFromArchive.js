@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ImportFromArchiveModalInstanceController', function ($scope, $modalInstance, api, $translate) {
+  .controller('ImportFromArchiveModalInstanceController', function ($scope, $modalInstance, api, $translate, tracking) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
     angular.extend($scope, {
@@ -39,7 +39,7 @@ angular
         $scope.operationInProgress = true;
         var formData = new FormData();
         formData.append('file', $scope.uploadFile);
-        mixpanel.track('Import Pipelines From Archive Started', {});
+        tracking.mixpanel.track('Import Pipelines From Archive Started', {});
         api.pipelineAgent.importPipelines(formData)
           .then(function(response) {
             var res = response.data;
@@ -47,14 +47,14 @@ angular
             $scope.successEntities = res.successEntities;
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            mixpanel.track('Import Pipeline From Archive Completed', {});
-            mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            tracking.mixpanel.track('Import Pipeline From Archive Completed', {});
+            tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
           })
           .catch(function(res) {
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            mixpanel.track('Import Pipeline From Archive Failed', {'Failure Reason': JSON.stringify(res.data)});
+            tracking.mixpanel.track('Import Pipeline From Archive Failed', {'Failure Reason': JSON.stringify(res.data)});
           });
       },
 

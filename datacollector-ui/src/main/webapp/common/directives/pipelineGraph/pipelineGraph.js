@@ -25,7 +25,8 @@ angular.module('pipelineGraphDirectives', [])
     };
   })
   .controller('PipelineGraphController', function(
-    $scope, $rootScope, $element, _, $filter, $location, $modal, pipelineConstant, $translate, pipelineService
+    $scope, $rootScope, $element, _, $filter, $location, $modal, 
+    pipelineConstant, $translate, pipelineService, tracking
   ) {
 
     var showTransition = false;
@@ -1761,15 +1762,15 @@ angular.module('pipelineGraphDirectives', [])
           'Library Name': selectedNode.library
         };
         if (selectedNode.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          mixpanel.track('Origin Removed', stageTrackingDetail);
+          tracking.mixpanel.track('Origin Removed', stageTrackingDetail);
         } else if (selectedNode.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          mixpanel.track('Processor Removed', stageTrackingDetail);
+          tracking.mixpanel.track('Processor Removed', stageTrackingDetail);
         } else if (selectedNode.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-          mixpanel.track('Destination Removed', stageTrackingDetail);
+          tracking.mixpanel.track('Destination Removed', stageTrackingDetail);
         } else if (selectedNode.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-          mixpanel.track('Executor Removed', stageTrackingDetail);
+          tracking.mixpanel.track('Executor Removed', stageTrackingDetail);
         } else {
-          mixpanel.track('Stage with unknown type removed', stageTrackingDetail);
+          tracking.mixpanel.track('Stage with unknown type removed', stageTrackingDetail);
         }
       }
     };

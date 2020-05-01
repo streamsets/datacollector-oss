@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ImportModalInstanceController', function ($scope, $modalInstance, api, pipelineInfo, $translate) {
+  .controller('ImportModalInstanceController', function ($scope, $modalInstance, api, pipelineInfo, $translate, tracking) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
     angular.extend($scope, {
@@ -39,7 +39,7 @@ angular
        * Import button callback function.
        */
       import: function () {
-        mixpanel.track('Import Pipeline Started', {});
+        tracking.mixpanel.track('Import Pipeline Started', {});
         var reader = new FileReader();
 
         if ($scope.createNewPipeline && !$scope.newConfig.title) {
@@ -91,8 +91,8 @@ angular
 
                       api.pipelineAgent.savePipelineRules(pipelineInfo.pipelineId, rulesObj).
                       then(function() {
-                        mixpanel.track('Import Pipeline Update Completed', {});
-                        mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+                        tracking.mixpanel.track('Import Pipeline Update Completed', {});
+                        tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
                         $modalInstance.close();
                       });
 
@@ -103,7 +103,7 @@ angular
                   }
                 },function(res) {
                   $scope.common.errors = [res.data];
-                  mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(res.data)});
+                  tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(res.data)});
                 });
               } else { // If no pipeline exist or create pipeline option selected
                 var newPipelineObject,
@@ -153,20 +153,20 @@ angular
                         api.pipelineAgent.savePipelineRules(name, rulesObj).
                         then(function() {
                           $modalInstance.close(newPipelineObject);
-                          mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
-                          mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+                          tracking.mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
+                          tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
                         });
 
                       });
 
                     } else {
                       $modalInstance.close(newPipelineObject);
-                      mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
-                      mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+                      tracking.mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
+                      tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
                     }
                   },function(res) {
                     $scope.common.errors = [res.data];
-                    mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(res.data)});
+                    tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(res.data)});
                     //Failed to import pipeline. If new pipeline is created during import revert it back.
                     if (res.data && res.data.RemoteException &&
                       res.data.RemoteException.errorCode === 'CONTAINER_0201') {
@@ -182,14 +182,14 @@ angular
               $scope.$apply(function() {
                 $scope.common.errors = [errorMsg];
               });
-              mixpanel.track('Import Pipeline Failed', {'Failure Reason': 'Missing Pipeline uuid'});
+              tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': 'Missing Pipeline uuid'});
 
             }
           } catch(e) {
             $scope.$apply(function() {
               $scope.common.errors = [errorMsg];
             });
-            mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(e)});
+            tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(e)});
           }
         };
         reader.readAsText($scope.uploadFile);

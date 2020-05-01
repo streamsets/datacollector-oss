@@ -35,7 +35,7 @@ angular
   .controller('PipelineHomeController', function (
     $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, $localStorage, pipelineService,
     pipelineConstant, visibilityBroadcaster, $translate, contextHelpService, $location, authService, userRoles,
-    Analytics
+    Analytics, tracking
   ) {
     var routeParamPipelineName = $routeParams.pipelineName;
     var configTimeout;
@@ -261,27 +261,27 @@ angular
         };
         $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, stage.label, 1);
         if (stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          mixpanel.track('Origin Added', stageTrackingDetail);
-          mixpanel.people.set({
+          tracking.mixpanel.track('Origin Added', stageTrackingDetail);
+          tracking.mixpanel.people.set({
             'Core Journey Stage - Origin Added': true
           });
         } else if (stageInstance.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          mixpanel.track('Processor Added', stageTrackingDetail);
-          mixpanel.people.set({
+          tracking.mixpanel.track('Processor Added', stageTrackingDetail);
+          tracking.mixpanel.people.set({
             'Core Journey Stage - Processor Added': true
           });
         } else if (stageInstance.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-          mixpanel.track('Destination Added', stageTrackingDetail);
-          mixpanel.people.set({
+          tracking.mixpanel.track('Destination Added', stageTrackingDetail);
+          tracking.mixpanel.people.set({
             'Core Journey Stage - Destination Added': true
           });
         } else if (stageInstance.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-          mixpanel.track('Executor Added', stageTrackingDetail);
-          mixpanel.people.set({
+          tracking.mixpanel.track('Executor Added', stageTrackingDetail);
+          tracking.mixpanel.people.set({
             'Core Journey Stage - Executor Added': true
           });
         } else {
-          mixpanel.track('Stage with unknown type added', stageTrackingDetail);
+          tracking.mixpanel.track('Stage with unknown type added', stageTrackingDetail);
         }
       },
 
@@ -316,7 +316,7 @@ angular
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
           trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
-          mixpanel.track('Preview Selected', trackingData);
+          tracking.mixpanel.track('Preview Selected', trackingData);
 
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
@@ -1941,8 +1941,8 @@ angular
       trackingData['Has Show Record Field Header'] = previewConfig.showHeader;
       trackingData['Has Show Field Type'] = previewConfig.showFieldType;
       trackingData['Has Remember The Configuration'] = previewConfig.rememberMe;
-      mixpanel.people.set({'Core Journey Stage - Preview Run': true});
-      mixpanel.track('Preview Config Complete', trackingData);
+      tracking.mixpanel.people.set({'Core Journey Stage - Preview Run': true});
+      tracking.mixpanel.track('Preview Config Complete', trackingData);
       
       $scope.previewMode = true;
       $rootScope.$storage.maximizeDetailPane = false;
