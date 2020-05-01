@@ -20,6 +20,7 @@ import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
@@ -60,6 +61,7 @@ import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
+import com.streamsets.datacollector.util.ActivationUtil;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
@@ -206,6 +208,7 @@ public class PipelineStoreResource {
   private final CredentialStoresTask credentialStoresTask;
   private final URI uri;
   private final String user;
+  private final Activation activation;
 
   @Inject
   public PipelineStoreResource(
@@ -218,7 +221,8 @@ public class PipelineStoreResource {
       Configuration configuration,
       Manager manager,
       UserGroupManager userGroupManager,
-      AclStoreTask aclStore
+      AclStoreTask aclStore,
+      Activation activation
   ) {
     this.uri = uri;
     this.user = principal.getName();
@@ -227,6 +231,7 @@ public class PipelineStoreResource {
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.manager = manager;
+    this.activation = activation;
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {
@@ -1621,6 +1626,18 @@ public class PipelineStoreResource {
   }
 
   private void setStreamingModeDefaults(PipelineConfiguration pipelineConfig) {
+    List<Map<String, String>> maxExecutorConfigsDefault = new ArrayList<>();
+    int maxExecutors = ActivationUtil.getMaxExecutors(activation);
+    if (maxExecutors > 0) {
+      Map<String, String> sparkConfigs = ImmutableMap.of(
+          "key",
+          "spark.dynamicAllocation.maxExecutors",
+          "value",
+          String.valueOf(maxExecutors)
+      );
+      maxExecutorConfigsDefault.add(sparkConfigs);
+    }
+
     List<Map<String, String>> sparkConfigsDefault = ImmutableList.<Map<String, String>>builder()
         .add(ImmutableMap.of("key", "spark.driver.memory", "value", "2G"))
         .add(ImmutableMap.of("key", "spark.driver.cores", "value","1"))
@@ -1629,6 +1646,7 @@ public class PipelineStoreResource {
         .add(ImmutableMap.of("key", "spark.dynamicAllocation.enabled", "value", "true"))
         .add(ImmutableMap.of("key", "spark.shuffle.service.enabled", "value", "true"))
         .add(ImmutableMap.of("key", "spark.dynamicAllocation.minExecutors", "value", "1"))
+        .addAll(maxExecutorConfigsDefault)
         .build();
     Map<String, Config> replacementConfigs = ImmutableMap.<String, Config>builder()
         .put("executionMode", new Config("executionMode", ExecutionMode.BATCH.name()))
