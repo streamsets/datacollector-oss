@@ -597,6 +597,11 @@ angular.module('dataCollectorApp')
             'userName': $rootScope.common.userName,
             'sdcId': SDC_ID
           });
+          FS.setUserVars({
+            'userName': $rootScope.common.userName,
+            'UserID': USER_ID,
+            'sdcId': SDC_ID
+          });
           setTimeout(function() {
             mixpanel.track('Login Complete', {});
           }, 500); // setTimeout to pick up extra super/register properties set later
@@ -662,6 +667,7 @@ angular.module('dataCollectorApp')
               function() {
                 Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
                 mixpanel.register({'sdcVersion': buildResult.data.version});
+                FS.setUserVars({'sdcVersion': buildResult.data.version});
               },
               1000
             );
@@ -674,10 +680,12 @@ angular.module('dataCollectorApp')
                   if (stats.activeStats.extraInfo.cloudProvider) {
                     Analytics.set('dimension2', stats.activeStats.extraInfo.cloudProvider); // dimension2 is cloudProvider
                     mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                    FS.setUserVars({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
                   }
                   if (stats.activeStats.extraInfo.distributionChannel) {
                     Analytics.set('dimension3', stats.activeStats.extraInfo.distributionChannel); // dimension3 is distributionChannel
                     mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                    FS.setUserVars({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
                   }
                 }
               },
