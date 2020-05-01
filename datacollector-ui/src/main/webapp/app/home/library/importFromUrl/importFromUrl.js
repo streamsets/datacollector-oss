@@ -42,6 +42,7 @@ angular
             $scope.operationDone = true;
             $scope.operationInProgress = false;
             mixpanel.track('Import Pipeline From URL Completed', {});
+            FS.event('Import Pipeline Completed', {});
             mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
             $modalInstance.close(response.data);
           })

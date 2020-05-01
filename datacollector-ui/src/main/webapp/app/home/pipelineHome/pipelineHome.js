@@ -317,6 +317,7 @@ angular
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
           trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
           mixpanel.track('Preview Selected', trackingData);
+          FS.event('Preview Selected', trackingData);
 
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
