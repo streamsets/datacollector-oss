@@ -42,6 +42,7 @@ import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -81,7 +82,7 @@ public class MetricsEventRunnable implements Runnable {
   private static final String JOB_ID = "JOB_ID";
   private static final String UPDATE_WAIT_TIME_MS = "UPDATE_WAIT_TIME_MS";
   public static final String TIME_SERIES_ANALYSIS = "TIME_SERIES_ANALYSIS";
-
+  public static final String CONTROL_HUB_METRICS_URL = "timeseries/rest/v1/metrics";
   public static final String RUNNABLE_NAME = "MetricsEventRunnable";
   private static final Logger LOG = LoggerFactory.getLogger(MetricsEventRunnable.class);
   private final ConcurrentMap<String, MetricRegistryJson> slaveMetrics;
@@ -100,7 +101,6 @@ public class MetricsEventRunnable implements Runnable {
   private MetricRegistryJson metricRegistryJson;
 
   private boolean isDPMPipeline = false;
-  private String remoteTimeSeriesUrl;
   private String pipelineCommitId;
   private String jobId;
   private Integer waitTimeBetweenUpdates;
@@ -138,7 +138,7 @@ public class MetricsEventRunnable implements Runnable {
   public void onStopOrFinishPipeline() {
     this.threadHealthReporter = null;
     if (isDPMPipeline) {
-      // Send final metrics to DPM on stop
+      // Send final metrics to Control Hub on stop
       this.stopwatch = null;
       this.isPipelineStopped = true;
       this.run();
@@ -309,9 +309,6 @@ public class MetricsEventRunnable implements Runnable {
             .create(pipelineConfiguration, new ArrayList<>(), null);
         for (String key : pipelineConfigBean.constants.keySet()) {
           switch (key) {
-            case REMOTE_TIMESERIES_URL:
-              remoteTimeSeriesUrl = (String) pipelineConfigBean.constants.get(key);
-              break;
             case PIPELINE_COMMIT_ID:
               pipelineCommitId = (String) pipelineConfigBean.constants.get(key);
               break;
@@ -335,12 +332,15 @@ public class MetricsEventRunnable implements Runnable {
           }
         }
 
-        if (remoteTimeSeriesUrl != null) {
-          Client client = ClientBuilder.newBuilder().build();
-          client.register(new CsrfProtectionFilter("CSRF"));
-          client.register(SnappyWriterInterceptor.class);
-          webTarget = client.target(remoteTimeSeriesUrl);
-        }
+        String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(
+            RemoteSSOService.DPM_BASE_URL_CONFIG,
+            RemoteSSOService.DPM_BASE_URL_DEFAULT
+        ));
+        String remoteTimeSeriesUrl = remoteBaseURL + CONTROL_HUB_METRICS_URL;
+        Client client = ClientBuilder.newBuilder().build();
+        client.register(new CsrfProtectionFilter("CSRF"));
+        client.register(SnappyWriterInterceptor.class);
+        webTarget = client.target(remoteTimeSeriesUrl);
       }
     } catch (PipelineStoreException e) {
       LOG.error(Utils.format("Error when reading pipeline state: {}", e.getErrorMessage(), e));
@@ -414,20 +414,20 @@ public class MetricsEventRunnable implements Runnable {
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {
           return;
         } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
-          LOG.warn("Error writing to time-series app: DPM unavailable");
+          LOG.warn("Error writing to time-series app: Control Hub unavailable");
           // retry
         } else if (response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN) {
           // no retry in this case
           String errorResponseMessage = response.readEntity(String.class);
-          LOG.error(Utils.format("Error writing to DPM: {}", errorResponseMessage));
+          LOG.error(Utils.format("Error writing to Control Hub: {}", errorResponseMessage));
           return;
         } else {
           String responseMessage = response.readEntity(String.class);
-          LOG.error(Utils.format("Error writing to DPM: {}", responseMessage));
+          LOG.error(Utils.format("Error writing to Control Hub: {}", responseMessage));
           //retry
         }
       } catch (Exception ex) {
-        LOG.error(Utils.format("Error writing to DPM: {}", ex.toString(), ex));
+        LOG.error(Utils.format("Error writing to Control Hub: {}", ex.toString(), ex));
         // retry
       } finally {
         if (response != null) {
@@ -437,14 +437,14 @@ public class MetricsEventRunnable implements Runnable {
     }
 
     // no success after retry
-    LOG.warn("Unable to write metrics to DPM after {} attempts", retryAttempts);
+    LOG.warn("Unable to write metrics to Control Hub after {} attempts", retryAttempts);
   }
 
   public static void sleep(int secs) {
     try {
       Thread.sleep(secs * 1000);
     } catch (InterruptedException ex) {
-      String msg = "Interrupted while attempting to fetch latest Metrics from DPM";
+      String msg = "Interrupted while attempting to fetch latest Metrics from Control Hub";
       LOG.error(msg);
       throw new RuntimeException(msg, ex);
     }
