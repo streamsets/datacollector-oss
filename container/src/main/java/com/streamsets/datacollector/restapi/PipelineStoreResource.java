@@ -307,7 +307,17 @@ public class PipelineStoreResource {
   ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
 
-    final List<PipelineInfo> pipelineInfoList = store.getPipelines();
+    final List<PipelineInfo> pipelineInfoList = store.getPipelines().stream().filter(p -> {
+      boolean includeInList = true;
+      try {
+        manager.getPipelineState(p.getPipelineId(), p.getLastRev());
+      } catch (Exception e) {
+        LOG.error(Utils.format("State file not found for pipeline {}", p.getTitle()), e);
+        includeInList = false;
+      }
+      return includeInList;
+    }).collect(Collectors.toList());
+
     final Map<String, PipelineState> pipelineStateCache = new HashMap<>();
 
     Collection<PipelineInfo> filteredCollection = Collections2.filter(pipelineInfoList, pipelineInfo -> {
