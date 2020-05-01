@@ -111,7 +111,8 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
   }
 
   /**
-   * Check if a configuration exists and has a given value.
+   * Check if a configuration exists and has a given value.  If the configuration value is null, it'll match against
+   * empty string.
    *
    * @param name    Name of the configuration to look for.
    * @param value   Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
@@ -125,11 +126,12 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
         return true;
       } else {
         boolean matches;
-        if ((config.getValue() instanceof String)) {
+        Object configValue = config.getValue() != null ? config.getValue() : "";
+        if ((configValue instanceof String)) {
           Pattern pattern = Pattern.compile(value.toString());
-          matches = pattern.matcher(config.getValue().toString()).matches();
+          matches = pattern.matcher(configValue.toString()).matches();
         } else {
-          matches = config.getValue().equals(value);
+          matches = configValue.equals(value);
         }
         return matches;
       }

@@ -42,6 +42,13 @@ public class AmazonS3SourceUpgraderTest {
   }
 
   @Test
+  public void testV11toV12BothNullCredentials() throws StageException {
+    configs.add(new Config("s3ConfigBean.s3Config.awsConfig.awsAccessKeyId", null));
+    configs.add(new Config("s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey", null));
+    testV11toV12("WITH_IAM_ROLES");
+  }
+
+  @Test
   public void testV11toV12BothEmptyCredentials() throws StageException {
     configs.add(new Config("s3ConfigBean.s3Config.awsConfig.awsAccessKeyId", ""));
     configs.add(new Config("s3ConfigBean.s3Config.awsConfig.awsSecretAccessKey", ""));
