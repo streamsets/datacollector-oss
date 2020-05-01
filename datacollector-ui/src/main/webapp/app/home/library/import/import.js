@@ -155,6 +155,7 @@ angular
                           $modalInstance.close(newPipelineObject);
                           tracking.mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
                           tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+                          tracking.FS.event('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
                         });
 
                       });
@@ -163,6 +164,7 @@ angular
                       $modalInstance.close(newPipelineObject);
                       tracking.mixpanel.track('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
                       tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+                      tracking.FS.event('Import Pipeline Completed', {'Pipeline ID': newPipelineObject.pipelineId});
                     }
                   },function(res) {
                     $scope.common.errors = [res.data];

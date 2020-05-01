@@ -48,6 +48,7 @@ angular
               $modalInstance.close(res.data);
               tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Created': true});
               tracking.mixpanel.track('New Pipeline Created', {'Pipeline ID': res.data.pipelineId});
+              tracking.FS.event('New Pipeline Created', {'Pipeline ID': res.data.pipelineId});
             },
             function(res) {
               $scope.common.errors = [res.data];

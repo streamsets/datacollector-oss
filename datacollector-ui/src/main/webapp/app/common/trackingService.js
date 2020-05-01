@@ -29,22 +29,29 @@ angular.module('dataCollectorApp.common')
 
     // Fullstory
     tracking.FS.setUserVars = function() {
-      if(typeof FS === 'object') {
+      if(typeof FS !== 'undefined') {
         return FS.setUserVars.apply(FS, arguments);
       } else {
         return null;
       }
     };
     tracking.FS.restart = function() {
-      if(typeof FS === 'object') {
+      if(typeof FS !== 'undefined') {
         return FS.restart.apply(FS, arguments);
       } else {
         return null;
       }
     };
     tracking.FS.shutdown = function() {
-      if(typeof FS === 'object') {
+      if(typeof FS !== 'undefined') {
         return FS.shutdown.apply(FS, arguments);
+      } else {
+        return null;
+      }
+    };
+    tracking.FS.event = function() {
+      if(typeof FS !== 'undefined') {
+        return FS.event.apply(FS, arguments);
       } else {
         return null;
       }
