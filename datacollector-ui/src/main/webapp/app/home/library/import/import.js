@@ -133,6 +133,8 @@ angular
                     newPipelineObject.metadata = jsonConfigObj.metadata;
                     newPipelineObject.startEventStages = jsonConfigObj.startEventStages;
                     newPipelineObject.stopEventStages = jsonConfigObj.stopEventStages;
+                    newPipelineObject.testOriginStage = jsonConfigObj.testOriginStage;
+                    newPipelineObject.fragments = jsonConfigObj.fragments;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
