@@ -23,6 +23,15 @@
     </div>
   </div>
 
+  <div class="row" ng-if="restServiceAPIEndpoint">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+      <div class="alert alert-info" role="alert">
+        <span>REST Service API Endpoint - </span>
+        <a ng-href="{{restServiceAPIEndpoint}}" target="_blank">{{restServiceAPIEndpoint}}</a>
+      </div>
+    </div>
+  </div>
+
   <div ng-if="summaryDataLoaded && selectedType === pipelineConstant.STAGE_INSTANCE && customStageMeters">
     <div class="col-sm-4 chartPanels" ng-repeat="customStageMeter in customStageMeters">
       <div class="panel panel-default" ng-controller="CustomMeterController">

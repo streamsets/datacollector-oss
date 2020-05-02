@@ -108,6 +108,7 @@ angular
       customStageHistograms: undefined,
       customStageGauges: undefined,
       runnerGauges: undefined,
+      restServiceAPIEndpoint: undefined,
 
       getDurationLabel: function(key) {
         switch(key) {
@@ -320,6 +321,10 @@ angular
                 runnerId: runnerId
               });
             }
+
+            if (gaugeKey.indexOf('.restService.') !== -1 && gaugeObj && gaugeObj.value) {
+              $scope.restServiceAPIEndpoint = gaugeObj.value.apiEndpoint;
+            }
           });
         }
       }
@@ -450,6 +455,7 @@ angular
         $scope.customStageHistograms = undefined;
         $scope.customStageGauges = undefined;
         $scope.runnerGauges = undefined;
+        $scope.restServiceAPIEndpoint = undefined;
         updateSummaryData();
       }
     });
