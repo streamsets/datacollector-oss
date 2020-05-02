@@ -75,7 +75,6 @@ angular
       validatePipeline: function() {
         var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
         mixpanel.track('Validation Selected', trackingData);
-        FS.event('Validation Selected', trackingData);
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Validate Pipeline', 1);
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
@@ -149,7 +148,6 @@ angular
         var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
         trackingData['With Parameters'] = false;
         mixpanel.track('Run Selected', trackingData);
-        FS.event('Run Selected', trackingData);
         if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
@@ -193,7 +191,6 @@ angular
         var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
         trackingData['With Parameters'] = true;
         mixpanel.track('Run Selected', trackingData);
-        FS.event('Run Selected', trackingData);
         if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
