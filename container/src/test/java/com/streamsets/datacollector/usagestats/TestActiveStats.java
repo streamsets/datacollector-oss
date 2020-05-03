@@ -20,7 +20,11 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.junit.Assert;
 import org.junit.Test;
@@ -182,6 +186,61 @@ public class TestActiveStats {
     Assert.assertEquals(1, as.getStages().size());
     Assert.assertEquals(0, as.getPipelines().get(0).getMultiplier());
     Assert.assertEquals(0, as.getStages().get(0).getMultiplier());
+  }
+
+  @Test
+  public void testPreviewStatusChange() {
+    ActiveStats as = new ActiveStats(extensions);
+    PipelineConfiguration pc = Mockito.mock(PipelineConfiguration.class);
+    Mockito.when(pc.getPipelineId()).thenReturn("pid");
+
+    as.createPipeline(pc.getPipelineId());
+    TestStatsInfo.TestModelStatsExtension ext = getTestExtension(as);
+    Assert.assertEquals(1, ext.getCreatePipelines());
+
+    Previewer previewer = Mockito.mock(Previewer.class);
+    as.previewPipeline(pc.getPipelineId());
+    Assert.assertEquals(1, ext.getPreviewPipelines());
+
+    as.previewStatusChanged(PreviewStatus.VALIDATING, previewer);
+    Assert.assertEquals(ImmutableList.of(PreviewStatus.VALIDATING), ext.getPreviewStatuses());
+
+    as.previewStatusChanged(PreviewStatus.RUN_ERROR, previewer);
+    Assert.assertEquals(
+        ImmutableList.of(
+            PreviewStatus.VALIDATING,
+            PreviewStatus.RUN_ERROR),
+        ext.getPreviewStatuses());
+  }
+
+  @Test
+  public void testPipelineStatusChange() {
+    ActiveStats as = new ActiveStats(extensions);
+    PipelineConfiguration pc = Mockito.mock(PipelineConfiguration.class);
+    Mockito.when(pc.getPipelineId()).thenReturn("pid");
+
+    as.createPipeline(pc.getPipelineId());
+    TestStatsInfo.TestModelStatsExtension ext = getTestExtension(as);
+    Assert.assertEquals(1, ext.getCreatePipelines());
+
+    as.startPipeline(pc);
+    Assert.assertEquals(1, ext.getStartPipelines());
+
+    Pipeline pipeline = Mockito.mock(Pipeline.class);
+    Mockito.when(pipeline.getNumOfRunners()).thenReturn(4);
+
+    Pipeline p = Mockito.mock(Pipeline.class);
+    Mockito.when(p.getPipelineConf()).thenReturn(pc);
+
+    as.pipelineStatusChanged(PipelineStatus.STARTING, pc, p);
+    Assert.assertEquals(ImmutableList.of(PipelineStatus.STARTING), ext.getPipelineStatuses());
+
+    as.pipelineStatusChanged(PipelineStatus.START_ERROR, pc, p);
+    Assert.assertEquals(
+        ImmutableList.of(
+            PipelineStatus.STARTING,
+            PipelineStatus.START_ERROR),
+        ext.getPipelineStatuses());
   }
 
   @Test

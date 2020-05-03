@@ -21,10 +21,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.SysInfo;
@@ -587,6 +591,16 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   @Override
   public void incrementRecordCount(long count) {
     getStatsInfo().incrementRecordCount(count);
+  }
+
+  @Override
+  public void previewStatusChanged(PreviewStatus previewStatus, Previewer previewer) {
+    getStatsInfo().previewStatusChanged(previewStatus, previewer);
+  }
+
+  @Override
+  public void pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline pipeline) {
+    getStatsInfo().pipelineStatusChanged(pipelineStatus, conf, pipeline);
   }
 
   public ScheduledFuture getFuture() {

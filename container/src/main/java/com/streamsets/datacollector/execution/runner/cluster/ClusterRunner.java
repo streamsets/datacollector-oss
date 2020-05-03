@@ -189,7 +189,8 @@ public class ClusterRunner extends AbstractRunner {
       ResourceManager resourceManager,
       EventListenerManager eventListenerManager,
       String sdcToken,
-      AclStoreTask aclStoreTask
+      AclStoreTask aclStoreTask,
+      StatsCollector statsCollector
   ) {
     super(
       name,
@@ -212,6 +213,7 @@ public class ClusterRunner extends AbstractRunner {
     this.resourceManager = resourceManager;
     this.slaveCallbackManager = new SlaveCallbackManager();
     this.slaveCallbackManager.setClusterToken(sdcToken);
+    this.statsCollector = statsCollector;
   }
 
   @SuppressWarnings("deprecation")
@@ -691,6 +693,7 @@ public class ClusterRunner extends AbstractRunner {
         }
       }
       // This should be out of sync block
+      statsCollector.pipelineStatusChanged(toStatus, pipelineConf, null);
       if (getEventListenerManager() != null) {
         getEventListenerManager().broadcastStateChange(
             fromState,

@@ -20,16 +20,18 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.GreenMailUtil;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.AbstractRunner;
-import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.Snapshot;
 import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.common.ExecutorConstants;
+import com.streamsets.datacollector.execution.manager.PreviewerProvider;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
@@ -41,6 +43,7 @@ import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
@@ -60,6 +63,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
@@ -81,15 +85,16 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class TestStandaloneRunner {
 
   private static final String DATA_DIR_KEY = RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR;
 
   private File dataDir;
-  private Manager pipelineManager;
+  private ObjectGraph objectGraph;
+  private StandaloneAndClusterPipelineManager pipelineManager;
   private PipelineStateStore pipelineStateStore;
+  private StatsCollector statsCollector;
 
   @Before
   public void setUp() throws IOException {
@@ -107,9 +112,10 @@ public class TestStandaloneRunner {
     );
     Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(info, TestUtil.MY_PIPELINE, "0").toPath());
     OffsetFileUtil.saveOffsets(info, TestUtil.MY_PIPELINE, "0", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "dummy"));
-    ObjectGraph objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
+    objectGraph = ObjectGraph.create(new TestUtil.TestPipelineManagerModule());
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
+    statsCollector = objectGraph.get(StatsCollector.class);
     pipelineManager.init();
     pipelineManager.run();
   }
@@ -130,9 +136,13 @@ public class TestStandaloneRunner {
     Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     runner.start(new StartPipelineContextBuilder("admin").build());
     waitForState(runner, PipelineStatus.RUNNING);
+    Assert.assertNotNull(statsCollector);
+    // Once from StandaloneRunner, another time from ProductionPipeline, since state is not centrally managed or reported
+    Mockito.verify(statsCollector).pipelineStatusChanged(Matchers.eq(PipelineStatus.RUNNING), Matchers.any(), Matchers.any());
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().prepareForStop("admin");
     runner.getRunner(AsyncRunner.class).getDelegatingRunner().stop("admin");
     waitForState(runner, PipelineStatus.STOPPED);
+    Mockito.verify(statsCollector).pipelineStatusChanged(Matchers.eq(PipelineStatus.STOPPED), Matchers.any(), Matchers.any());
   }
 
   @Test(timeout = 20000)
@@ -686,6 +696,35 @@ public class TestStandaloneRunner {
     standaloneRunner.stateChanged(PipelineStatus.FINISHING, "", Collections.emptyMap());
     standaloneRunner.stateChanged(PipelineStatus.FINISHED, "", Collections.emptyMap());
     Mockito.verify(metricsEventRunnable, Mockito.times(1)).onStopOrFinishPipeline();
+  }
+
+  @Test
+  public void testPreviewRegistersCorrectListener() throws Exception {
+    // the previewer is mocked, so we can only test registration and invoking the listener method separately
+    PreviewerProvider previewerProvider = objectGraph.get(PreviewerProvider.class);
+
+    pipelineManager.createPreviewer(
+        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false);
+
+    Mockito.verify(previewerProvider).createPreviewer(
+        Mockito.anyString(),
+        Mockito.anyString(),
+        Mockito.anyString(),
+        Mockito.same(pipelineManager),
+        Mockito.same(objectGraph),
+        Mockito.anyListOf(PipelineStartEvent.InterceptorConfiguration.class),
+        Mockito.any(),
+        Mockito.anyBoolean());
+  }
+
+  @Test
+  public void testPreviewStateChangeUpdatesStats() throws Exception {
+    // the previewer is mocked, so we can only test registration and invoking the listener method separately
+    Previewer previewer = pipelineManager.createPreviewer(
+        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false);
+
+    pipelineManager.statusChange(previewer.getId(), PreviewStatus.VALIDATING);
+    Mockito.verify(statsCollector).previewStatusChanged(PreviewStatus.VALIDATING, previewer);
   }
 
   @Module(overrides = true, library = true)

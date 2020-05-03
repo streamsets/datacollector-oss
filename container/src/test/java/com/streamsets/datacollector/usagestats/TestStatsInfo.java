@@ -19,9 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.usagestats.TestStatsBean.TestModelStatsBeanExtension;
 import com.streamsets.datacollector.util.SysInfo;
 import org.junit.Assert;
@@ -484,6 +488,8 @@ public class TestStatsInfo {
 
     long instantiateTime = System.currentTimeMillis();
     int startSystems, stopSystems, createPipelines, previewPipelines, startPipelines, stopPipelines, rolls, snapshots;
+    List<PreviewStatus> previewStatuses = new ArrayList<>();
+    List<PipelineStatus> pipelineStatuses = new ArrayList<>();
 
     @Override
     public String getVersion() {
@@ -568,6 +574,14 @@ public class TestStatsInfo {
       this.snapshots = snapshots;
     }
 
+    public List<PreviewStatus> getPreviewStatuses() { return previewStatuses; }
+
+    public void setPreviewStatuses(List<PreviewStatus> previewStatuses) { this.previewStatuses = previewStatuses; }
+
+    public List<PipelineStatus> getPipelineStatuses() { return pipelineStatuses; }
+
+    public void setPipelineStatuses(List<PipelineStatus> pipelineStatuses) { this.pipelineStatuses = pipelineStatuses; }
+
     @Override
     protected StatsBeanExtension report() {
       TestModelStatsBeanExtension ret = new TestModelStatsBeanExtension();
@@ -620,6 +634,16 @@ public class TestStatsInfo {
     @Override
     public void stopPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {
       stopPipelines++;
+    }
+
+    @Override
+    protected void previewStatusChanged(PreviewStatus previewStatus, Previewer previewer) {
+      previewStatuses.add(previewStatus);
+    }
+
+    @Override
+    protected void pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline p) {
+      pipelineStatuses.add(pipelineStatus);
     }
 
     @Override

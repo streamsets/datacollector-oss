@@ -16,6 +16,10 @@
 package com.streamsets.datacollector.usagestats;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.ErrorCode;
 
@@ -87,10 +91,24 @@ public interface StatsCollector extends Task {
   void incrementRecordCount(long count);
 
   /**
+   * Called whenever there is a change to preview status.
+   * @param previewStatus new status
+   * @param previewer current previewer
+   */
+  void previewStatusChanged(PreviewStatus previewStatus, Previewer previewer);
+
+  /**
+   * Called whenever there is a change to preview status.
+   * @param pipelineStatus new status
+   * @param conf the PipelineConfiguration, may be null, or can be stale in the case of STARTING events
+   * @param pipeline pipeline object, may be null, or can be stale in the case of STARTING events
+   */
+  void pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline pipeline);
+
+  /**
    * Returns the StatsInfo of the data collector.
    *
    * @return the StatsInfo of the data collector.
    */
   StatsInfo getStatsInfo();
-
 }

@@ -19,8 +19,12 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.util.SysInfo;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
@@ -121,6 +125,14 @@ public class StatsInfo {
 
   public void incrementRecordCount(long count) {
     doWithLock(() -> getActiveStats().incrementRecordCount(count), false);
+  }
+
+  public void previewStatusChanged(PreviewStatus previewStatus, Previewer previewer) {
+    doWithLock(() -> getActiveStats().previewStatusChanged(previewStatus, previewer), false);
+  }
+
+  public void pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline pipeline) {
+    doWithLock(() -> getActiveStats().pipelineStatusChanged(pipelineStatus, conf, pipeline), false);
   }
 
   /**

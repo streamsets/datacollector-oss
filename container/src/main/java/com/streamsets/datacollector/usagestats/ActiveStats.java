@@ -20,6 +20,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -335,6 +339,23 @@ public class ActiveStats {
 
   public ActiveStats incrementRecordCount(long count) {
     recordCount.addAndGet(count);
+    return this;
+  }
+
+  public ActiveStats previewStatusChanged(PreviewStatus previewStatus, Previewer previewer) {
+    LOG.trace("Preview stateChange to {} with id {}",
+        previewStatus, previewer.getId());
+    safeInvokeCallbacks("previewStatusChanged", c ->
+        c.previewStatusChanged(previewStatus, previewer));
+    return this;
+  }
+
+  public ActiveStats pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline pipeline) {
+    LOG.trace("Pipeline stateChange for {} to {} and runnerCount {}",
+        conf.getPipelineId(), pipelineStatus, pipeline == null ? "null" : pipeline.getNumOfRunners());
+    // TODO persist something in next commit
+    safeInvokeCallbacks("pipelineStatusChanged", c ->
+        c.pipelineStatusChanged(pipelineStatus, conf, pipeline));
     return this;
   }
 

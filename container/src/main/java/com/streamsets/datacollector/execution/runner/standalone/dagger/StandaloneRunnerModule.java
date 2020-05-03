@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner.standalone.dagger;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
 import dagger.Module;
@@ -41,8 +42,10 @@ public class StandaloneRunnerModule {
   }
 
   @Provides
-  public StandaloneRunner provideRunner() {
-    return new StandaloneRunner(name, rev, objectGraph);
+  public StandaloneRunner provideRunner(
+      StatsCollector statsCollector
+  ) {
+    return new StandaloneRunner(name, rev, statsCollector, objectGraph);
   }
 
   @Provides

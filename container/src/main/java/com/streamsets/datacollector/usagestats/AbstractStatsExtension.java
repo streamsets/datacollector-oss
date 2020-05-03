@@ -19,6 +19,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.runner.Pipeline;
 
 /**
  * Callback for extensions to inject statistics. All methods must be safe for multithreading. Locking is done in
@@ -159,4 +163,29 @@ public abstract class AbstractStatsExtension {
    * @param activeStats current active stats
    */
   protected void stopPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {};
+
+  /**
+   * Called when there is a previewer state change. StatsInfo will take a read lock before calling this.
+   * @param previewStatus New pipeline status
+   * @param previewer current previewer
+   */
+  protected void previewStatusChanged(
+      PreviewStatus previewStatus,
+      Previewer previewer) {
+  }
+
+  /**
+   * Called when there is a pipeline run state change. StatsInfo will take a read lock before calling this. conf and
+   * pipeline may be stale for the STARTING status, and implementors may want to just ignore the event in that case. A
+   * RUNNING event or some other state with full context should follow.
+   *
+   * @param pipelineStatus New pipeline status
+   * @param conf           PipelineConfiguration, may be null or may be stale from previous run.
+   * @param pipeline       Pipeline object, may be null, or may be stale from the previous run.
+   */
+  protected void pipelineStatusChanged(
+      PipelineStatus pipelineStatus,
+      PipelineConfiguration conf,
+      Pipeline pipeline) {
+  }
 }

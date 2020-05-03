@@ -168,6 +168,10 @@ public class Pipeline {
     return pipelineBean.getConfig();
   }
 
+  // this is named unfortunately similar to above, but above is used in Transformer so it is hard to rename.
+  public PipelineConfiguration getPipelineConf() {
+    return pipelineConf;
+  }
 
   @VisibleForTesting
   Pipe getSourcePipe() {
