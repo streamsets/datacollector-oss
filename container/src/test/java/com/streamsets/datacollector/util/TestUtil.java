@@ -744,8 +744,15 @@ public class TestUtil {
 
   /*************** Runner ***************/
 
-  @Module(injects = Runner.class, library = true, includes = {TestExecutorModule.class, TestPipelineStoreModuleNew.class,
-    TestPipelineStateStoreModule.class, TestPipelineProviderModule.class})
+  @Module(
+      injects = Runner.class,
+      library = true,
+      complete = false,
+      includes = {
+          TestExecutorModule.class,
+          TestPipelineStoreModuleNew.class,
+          TestPipelineStateStoreModule.class,
+          TestPipelineProviderModule.class})
   public static class TestRunnerModule {
 
     private final String name;
@@ -760,10 +767,11 @@ public class TestUtil {
 
     @Provides
     public Runner provideRunner(
-      @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor,
-      @Named("runnerStopExecutor") SafeScheduledExecutorService runnerStopExecutor
+        StatsCollector statsCollector,
+        @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor,
+        @Named("runnerStopExecutor") SafeScheduledExecutorService runnerStopExecutor
     ) {
-      return new AsyncRunner(new StandaloneRunner(name, rev, objectGraph), runnerExecutor, runnerStopExecutor);
+      return new AsyncRunner(new StandaloneRunner(name, rev, statsCollector, objectGraph), runnerExecutor, runnerStopExecutor);
     }
   }
 
@@ -784,8 +792,10 @@ public class TestUtil {
 
   @Module(
     injects = {
+      PreviewerProvider.class,
       StandaloneAndClusterPipelineManager.class,
-      StandaloneRunner.class
+      StandaloneRunner.class,
+      StatsCollector.class
     },
     library = true,
     includes = {
@@ -804,7 +814,7 @@ public class TestUtil {
 
     @Provides @Singleton
     public PreviewerProvider providePreviewerProvider() {
-      return new PreviewerProvider() {
+      return Mockito.spy(new PreviewerProvider() {
         @Override
         public Previewer createPreviewer(
             String user,
@@ -823,15 +833,18 @@ public class TestUtil {
           Mockito.when(mock.getInterceptorConfs()).thenReturn(interceptorConfs);
           return mock;
         }
-      };
+      });
     }
 
     @Provides @Singleton
-    public RunnerProvider provideRunnerProvider() {
+    public RunnerProvider provideRunnerProvider(
+        StatsCollector statsCollector
+    ) {
       return (name, rev, objectGraph, executionMode) -> {
         ObjectGraph plus = objectGraph.plus(new TestPipelineProviderModule(name, rev));
         TestRunnerModule testRunnerModule = new TestRunnerModule(name, rev, plus);
         return testRunnerModule.provideRunner(
+            statsCollector,
             new SafeScheduledExecutorService(1, "runnerExecutor"),
             new SafeScheduledExecutorService(1, "runnerStopExecutor")
         );

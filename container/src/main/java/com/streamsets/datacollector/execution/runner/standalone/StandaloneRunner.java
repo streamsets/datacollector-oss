@@ -72,6 +72,7 @@ import com.streamsets.datacollector.runner.production.RulesConfigLoaderRunnable;
 import com.streamsets.datacollector.runner.production.SourceOffset;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LogUtil;
@@ -143,6 +144,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject ResourceManager resourceManager;
 
+  private final StatsCollector statsCollector;
   private final ObjectGraph objectGraph;
   private String pipelineTitle = null;
   // User context for the user who started the pipeline
@@ -238,8 +240,9 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     ))
     .build();
 
-  public StandaloneRunner(String name, String rev, ObjectGraph objectGraph) {
+  public StandaloneRunner(String name, String rev, StatsCollector statsCollector, ObjectGraph objectGraph) {
     super(name, rev);
+    this.statsCollector = statsCollector;
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
@@ -667,6 +670,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         retryFuture = scheduleForRetries(runnerExecutor);
       }
     }
+    statsCollector.pipelineStatusChanged(toStatus, getPipelineConfigurationIfExists(), getPipeline());
     getEventListenerManager().broadcastStateChange(
         fromState,
         pipelineState,
@@ -998,6 +1002,17 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   @Override
   public Runner getDelegatingRunner() {
     return null;
+  }
+
+  private PipelineConfiguration getPipelineConfigurationIfExists() {
+    PipelineConfiguration pc;
+    try {
+      pc = getPipeline() != null ? getPipeline().getPipelineConf() : null;
+      pc = pc != null ? pc : getPipelineConfiguration();
+    } catch (PipelineException e) {
+      pc = null;
+    }
+    return pc;
   }
 
   private static int getNumBatches() {

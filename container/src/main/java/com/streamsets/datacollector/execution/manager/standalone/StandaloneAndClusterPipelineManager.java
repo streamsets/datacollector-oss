@@ -463,6 +463,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Override
   public void statusChange(String id, PreviewStatus status) {
     LOG.debug("Status of previewer with id: '{}' changed to status: '{}'", id, status);
+    statsCollector.previewStatusChanged(status, getPreviewer(id));
   }
 
   @Override

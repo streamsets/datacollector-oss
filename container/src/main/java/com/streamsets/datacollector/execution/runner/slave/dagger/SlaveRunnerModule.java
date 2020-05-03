@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.runner.common.AsyncRunner;
 import com.streamsets.datacollector.execution.runner.slave.SlaveStandaloneRunner;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 
@@ -45,9 +46,12 @@ public class SlaveRunnerModule {
   }
 
   @Provides
-  public SlaveStandaloneRunner provideStandaloneRunner(Configuration configuration, RuntimeInfo runtimeInfo,
-                                                       EventListenerManager eventListenerManager) {
-    return new SlaveStandaloneRunner(new StandaloneRunner(name, rev, objectGraph), configuration, runtimeInfo,
+  public SlaveStandaloneRunner provideStandaloneRunner(
+      StatsCollector statsCollector,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo,
+      EventListenerManager eventListenerManager) {
+    return new SlaveStandaloneRunner(new StandaloneRunner(name, rev, statsCollector, objectGraph), configuration, runtimeInfo,
       eventListenerManager);
   }
 

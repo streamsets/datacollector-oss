@@ -40,6 +40,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -47,6 +48,7 @@ import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
@@ -113,6 +115,7 @@ public class TestClusterRunner {
   private MockClusterProvider clusterProvider;
   private Map<String, Object> attributes;
   private SafeScheduledExecutorService executorService;
+  private StatsCollector statsCollector;
 
   @Before
   public void setup() throws Exception {
@@ -172,6 +175,8 @@ public class TestClusterRunner {
     setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
     aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>(),
         Mockito.mock(UserGroupManager.class));
+
+    statsCollector = Mockito.mock(StatsCollector.class);
   }
 
   @After
@@ -219,7 +224,8 @@ public class TestClusterRunner {
         ClusterHelper clusterHelper,
         ResourceManager resourceManager,
         EventListenerManager eventListenerManager,
-        String sdcToken
+        String sdcToken,
+        StatsCollector statsCollector
     ) {
       super(
           name,
@@ -235,7 +241,8 @@ public class TestClusterRunner {
           eventListenerManager,
           sdcToken,
           new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>(),
-              Mockito.mock(UserGroupManager.class))
+              Mockito.mock(UserGroupManager.class)),
+          statsCollector
       );
     }
 
@@ -317,7 +324,7 @@ public class TestClusterRunner {
     eventListenerManager = new EventListenerManager();
     MyClusterRunner clusterRunner =
       new MyClusterRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager);
+        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, statsCollector);
     assertEquals("My_dummy_metrics", clusterRunner.getMetrics().toString());
     assertNull(clusterRunner.getState().getMetrics());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_BATCH,
@@ -445,17 +452,23 @@ public class TestClusterRunner {
     clusterRunner.prepareForStart(new StartPipelineContextBuilder("admin").build());
     clusterRunner.start(new StartPipelineContextBuilder("admin").build());
     Assert.assertEquals(PipelineStatus.START_ERROR, clusterRunner.getState().getStatus());
+    Mockito.verify(statsCollector).pipelineStatusChanged(
+        Mockito.eq(PipelineStatus.START_ERROR), Mockito.any(), Mockito.isNull(Pipeline.class));
     clusterProvider.submitTimesOut = false;
     clusterProvider.appId = APPID;
     clusterRunner.prepareForStart(new StartPipelineContextBuilder("admin").build());
     clusterRunner.start(new StartPipelineContextBuilder("admin").build());
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
+    Mockito.verify(statsCollector).pipelineStatusChanged(
+        Mockito.eq(PipelineStatus.RUNNING), Mockito.any(), Mockito.isNull(Pipeline.class));
     ApplicationState appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertEquals(APPID, appState.getAppId());
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
     assertEquals(PipelineStatus.STOPPED, clusterRunner.getState().getStatus());
+    Mockito.verify(statsCollector).pipelineStatusChanged(
+        Mockito.eq(PipelineStatus.STOPPED), Mockito.any(), Mockito.isNull(Pipeline.class));
     appState = new ApplicationState((Map)pipelineStateStore.getState(NAME, REV).getAttributes().
       get(ClusterRunner.APPLICATION_STATE));
     assertNull(appState.getAppId());
@@ -724,41 +737,44 @@ public class TestClusterRunner {
   private ClusterRunner createClusterRunner() {
     return new ClusterRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
       stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken",
-      aclStoreTask);
+      aclStoreTask, statsCollector);
   }
 
   private Runner createRunnerForRetryTest(PipelineStateStore pipelineStateStore) {
     pipelineStateStore.init();
     return new RetryRunner(NAME, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken");
+        stageLibraryTask, executorService, clusterHelper, new ResourceManager(conf), eventListenerManager, "myToken",
+        statsCollector);
   }
 
 
   private Runner createClusterRunner(String name, PipelineStoreTask pipelineStoreTask, ResourceManager resourceManager) {
     return new ClusterRunner(name, "0", runtimeInfo, conf, pipelineStoreTask, pipelineStateStore,
-      stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken", aclStoreTask);
+        stageLibraryTask, executorService, clusterHelper, resourceManager, eventListenerManager, "myToken", aclStoreTask,
+        statsCollector);
   }
 
   private Runner createClusterRunnerForUnsupportedPipeline() {
     return new AsyncRunner(
-      new ClusterRunner(
-        TestUtil.HIGHER_VERSION_PIPELINE,
-        "0",
-        runtimeInfo,
-        conf,
-        pipelineStoreTask,
-        pipelineStateStore,
-        stageLibraryTask,
-        executorService,
-        clusterHelper,
-        new ResourceManager(conf),
-        eventListenerManager,
-        "myToken",
-        aclStoreTask
-      ),
-      new SafeScheduledExecutorService(1, "runner"),
-      new SafeScheduledExecutorService(1, "runnerStop")
-      );
+        new ClusterRunner(
+            TestUtil.HIGHER_VERSION_PIPELINE,
+            "0",
+            runtimeInfo,
+            conf,
+            pipelineStoreTask,
+            pipelineStateStore,
+            stageLibraryTask,
+            executorService,
+            clusterHelper,
+            new ResourceManager(conf),
+            eventListenerManager,
+            "myToken",
+            aclStoreTask,
+            statsCollector
+        ),
+        new SafeScheduledExecutorService(1, "runner"),
+        new SafeScheduledExecutorService(1, "runnerStop")
+        );
   }
 
   static class MyClusterRunner extends ClusterRunner {
@@ -768,11 +784,12 @@ public class TestClusterRunner {
     MyClusterRunner(String name, String rev, RuntimeInfo runtimeInfo, Configuration configuration,
       PipelineStoreTask pipelineStore, PipelineStateStore pipelineStateStore, StageLibraryTask stageLibrary,
       SafeScheduledExecutorService executorService, ClusterHelper clusterHelper, ResourceManager resourceManager, EventListenerManager
-      eventListenerManager) {
+      eventListenerManager, StatsCollector statsCollector) {
       super(name, rev, runtimeInfo, configuration, pipelineStore, pipelineStateStore, stageLibrary, executorService,
-        clusterHelper, resourceManager, eventListenerManager, "myToken",
-        new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>(),
-            Mockito.mock(UserGroupManager.class)));
+          clusterHelper, resourceManager, eventListenerManager, "myToken",
+          new FileAclStoreTask(runtimeInfo, pipelineStore, new LockCache<String>(),
+              Mockito.mock(UserGroupManager.class)),
+          statsCollector);
     }
 
     @Override
