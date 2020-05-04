@@ -3,7 +3,7 @@
     <div class="panel-heading clearfix">
       <div class="panel-title">
         <h3 class="pull-left" translate="usersAndGroups.title">Users and Groups</h3>
-        <button type="button" class="btn btn-primary btn-sm pull-right" ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])" ng-click="onAddUserClick()">
+        <button ng-if="canManageUsers" type="button" class="btn btn-primary btn-sm pull-right" ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator])" ng-click="onAddUserClick()">
           <span class="glyphicon glyphicon-plus"></span>
           <span>Add New User</span>
         </button>
@@ -29,7 +29,7 @@
 
         <li class="list-group-item" ng-repeat="user in userList">
           <div class="user-name">
-            <span>{{user.id}}</span>
+            <span>{{ canManageUsers ? user.id : user.name}}</span>
           </div>
           <div class="user-roles">
             <span>{{getRoles(user)}}</span>
@@ -37,7 +37,7 @@
           <div class="user-groups">
             <span>{{user.groups.join(', ')}}</span>
           </div>
-          <div class="list-actions">
+          <div ng-if="canManageUsers" class="list-actions">
             <i class="fa fa-edit fa-11x" ng-click="onEditUserClick(user.id);"></i>
             <i class="fa fa-trash fa-11x" ng-click="onDeleteUserClick(user.id);"></i>
           </div>

@@ -41,6 +41,7 @@ angular
     angular.extend($scope, {
       fetching: false,
       userList: [],
+      canManageUsers: false, // TODO: FEATURE PLANNED FOR 3.17
 
       getUserIdx: function(userId) {
         return $scope.userList.findIndex(function(user) {
@@ -143,15 +144,19 @@ angular
       $scope.fetching = true;
       $q.all([
         api.admin.getGroups(),
-        api.admin.getUsers2()
+        api.admin[$scope.canManageUsers ? 'getUsers2' : 'getUsers' ]()
       ]).then(
         function (res) {
           $scope.fetching = false;
           // - list of groups
           $scope.groupList = res[0].data;
           // - list of users
-          $scope.userList = res[1].data.data.sort(function(a, b) {return a.id.localeCompare(b.id);});
-          $scope.userList.forEach(function(user) {user.groups = user.groups.sort();});
+          if($scope.canManageUsers){
+            $scope.userList = res[1].data.data.sort(function(a, b) {return a.id.localeCompare(b.id);});
+            $scope.userList.forEach(function(user) {user.groups = user.groups.sort();});
+          }else{
+            $scope.userList = res[1].data.sort(function(a, b) {return a.name.localeCompare(b.name);});
+          }
         },
         function (res) {
           $rootScope.common.errors = [res.data];
