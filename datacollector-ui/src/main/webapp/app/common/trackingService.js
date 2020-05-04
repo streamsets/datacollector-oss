@@ -30,21 +30,21 @@ angular.module('dataCollectorApp.common')
     // Fullstory
     tracking.FS.setUserVars = function() {
       if(typeof FS === 'object') {
-        return FS.setUserVars(arguments);
+        return FS.setUserVars.apply(FS, arguments);
       } else {
         return null;
       }
     };
     tracking.FS.restart = function() {
       if(typeof FS === 'object') {
-        return FS.restart(arguments);
+        return FS.restart.apply(FS, arguments);
       } else {
         return null;
       }
     };
     tracking.FS.shutdown = function() {
       if(typeof FS === 'object') {
-        return FS.shutdown(arguments);
+        return FS.shutdown.apply(FS, arguments);
       } else {
         return null;
       }
@@ -53,49 +53,49 @@ angular.module('dataCollectorApp.common')
     // Mixpanel
     tracking.mixpanel.opt_in_tracking = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.opt_in_tracking(arguments);
+        return mixpanel.opt_in_tracking.apply(mixpanel, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.opt_out_tracking = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.opt_out_tracking(arguments);
+        return mixpanel.opt_out_tracking.apply(mixpanel, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.opt_out_tracking = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.opt_out_tracking(arguments);
+        return mixpanel.opt_out_tracking.apply(mixpanel, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.identify = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.identify(arguments);
+        return mixpanel.identify.apply(mixpanel, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.people.set = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.people.set(arguments);
+        return mixpanel.people.set.apply(mixpanel.people, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.register = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.register(arguments);
+        return mixpanel.register.apply(mixpanel, arguments);
       } else {
         return null;
       }
     };
     tracking.mixpanel.track = function() {
       if(typeof mixpanel === 'object') {
-        return mixpanel.track(arguments);
+        return mixpanel.track.apply(mixpanel, arguments);
       } else {
         return null;
       }
