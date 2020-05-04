@@ -46,14 +46,56 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use API Gateway",
+      description = "Enable to use Data Collector instance as API gateway",
+      defaultValue = "false",
+      displayPosition = 5,
+      group = "HTTP"
+  )
+  public boolean useApiGateway = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Gateway Service Name",
+      description = "Name of the Gateway Service used in the REST Service URL - " +
+          "<Data Collector Instance URL>/rest/v1/gateway/<service name>",
+      displayPosition = 7,
+      group = "HTTP",
+      dependsOn = "useApiGateway",
+      triggeredByValue = "true"
+  )
+  public String serviceName;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Require Gateway Authentication",
+      description = "Enable to use protected Data Collector instance URL " +
+          "<Data Collector Instance URL>/rest/v1/gateway/<service name>. If not enabled, " +
+          "REST service uses unprotected Data Collector instance URL " +
+          "<Data Collector Instance URL>/public-rest/v1/gateway/<service name>",
+      defaultValue = "false",
+      displayPosition = 8,
+      group = "HTTP",
+      dependsOn = "useApiGateway",
+      triggeredByValue = "true"
+  )
+  public boolean needGatewayAuth = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "8000",
       label = "HTTP Listening Port",
-      description = "HTTP endpoint to listen for data.",
+      description = "HTTP endpoint to listen for data",
       displayPosition = 10,
       group = "HTTP",
       min = 1,
-      max = 65535
+      max = 65535,
+      dependsOn = "useApiGateway",
+      triggeredByValue = "false"
   )
   public int port;
 
@@ -62,7 +104,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       label = "Max Concurrent Requests",
-      description = "Maximum number of concurrent requests allowed by the origin.",
+      description = "Maximum number of concurrent requests allowed by the origin",
       displayPosition = 15,
       group = "HTTP",
       min = 1,
@@ -75,7 +117,8 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Application ID in URL",
-      description = "Use when the application ID is included in a query parameter in the URL instead of in the request header - http://localhost:8000?sdcApplicationId=<Application ID>",
+      description = "Select if the application ID is in a URL query parameter rather than in the request header " +
+          "- http://localhost:8000?sdcApplicationId=<Application ID>",
       displayPosition = 21,
       group = "HTTP"
   )
@@ -83,6 +126,9 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
 
   @Override
   public int getPort() {
+    if (useApiGateway) {
+      return 0;
+    }
     return port;
   }
 
@@ -123,5 +169,30 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
     return needClientAuth;
   }
 
+  @Override
+  public boolean useApiGateway() {
+    return useApiGateway;
+  }
+
+  @Override
+  public String getGatewayServiceName() {
+    return serviceName;
+  }
+
+  @Override
+  public boolean getNeedGatewayAuth() {
+    return needGatewayAuth;
+  }
+
+  private String gatewaySecret = "";
+
+  public void setGatewaySecret(String secret) {
+    gatewaySecret = secret;
+  }
+
+  @Override
+  public String getGatewaySecret() {
+    return gatewaySecret;
+  }
 }
 

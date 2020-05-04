@@ -55,7 +55,7 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
     }
   }
 
-  private SecurityHandler getSpnegoAuthHandler(HttpSourceConfigs httpCourceConf) {
+  public static SecurityHandler getSpnegoAuthHandler(HttpSourceConfigs httpCourceConf) {
     String domainRealm = httpCourceConf.spnegoConfigBean.getKerberosRealm();
 
     Constraint constraint = new Constraint();
@@ -80,7 +80,7 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
     return csh;
   }
 
-  private SecurityHandler getBasicAuthHandler(HttpSourceConfigs httpCourceConf) {
+  public static SecurityHandler getBasicAuthHandler(HttpSourceConfigs httpCourceConf) {
       List<CredentialValueUserPassBean> basicAuthUsers = httpCourceConf.getBasicAuthUsers();
 
       HashLoginService loginService = new HashLoginService();

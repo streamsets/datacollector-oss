@@ -21,6 +21,7 @@ import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.gateway.GatewayInfo;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import org.apache.commons.io.FileUtils;
@@ -86,6 +87,8 @@ public abstract class RuntimeInfo {
 
   protected static final String BASE_HTTP_URL_ATTR = "%s.base.http.url";
 
+  private static final String GATEWAY_END_POINT_TEMPLATE = "{}/{}/v1/gateway/{}";
+
   private final MetricRegistry metrics;
   private final List<? extends ClassLoader> stageLibraryClassLoaders;
   private String httpUrl;
@@ -99,6 +102,7 @@ public abstract class RuntimeInfo {
   private final UUID randomUUID;
   private SSLContext sslContext;
   private boolean remoteRegistrationSuccessful;
+  private final Map<String, GatewayInfo> apiGatewayInfoMap = new HashMap<>();
 
   public RuntimeInfo(
       String productName,
@@ -471,6 +475,25 @@ public abstract class RuntimeInfo {
     try(FileWriter writer = new FileWriter(configFile)) {
       properties.store(writer, null);
     }
+  }
+
+  public synchronized String registerApiGateway(GatewayInfo gatewayInfo) {
+    if (apiGatewayInfoMap.containsKey(gatewayInfo.getServiceName())) {
+      throw new IllegalStateException(
+          Utils.format("Service name {} already registered", gatewayInfo.getServiceName())
+      );
+    }
+    apiGatewayInfoMap.put(gatewayInfo.getServiceName(), gatewayInfo);
+    String basePath = gatewayInfo.getNeedGatewayAuth() ? "rest" : "public-rest";
+    return Utils.format(GATEWAY_END_POINT_TEMPLATE, getBaseHttpUrl(), basePath, gatewayInfo.getServiceName());
+  }
+
+  public synchronized void unregisterApiGateway(GatewayInfo gatewayInfo) {
+    apiGatewayInfoMap.remove(gatewayInfo.getServiceName());
+  }
+
+  public GatewayInfo getApiGateway(String serviceName) {
+    return apiGatewayInfoMap.get(serviceName);
   }
 
   /**

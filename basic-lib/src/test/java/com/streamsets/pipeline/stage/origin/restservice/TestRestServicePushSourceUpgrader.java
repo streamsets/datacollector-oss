@@ -18,17 +18,16 @@ package com.streamsets.pipeline.stage.origin.restservice;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.origin.websocketserver.WebSocketServerPushSourceUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
-import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class TestRestServicePushSourceUpgrader {
 
@@ -38,8 +37,7 @@ public class TestRestServicePushSourceUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RestServiceDPushSource.yaml");
-    upgrader = new SelectorStageUpgrader("stage", new RestServicePushSourceUpgrader(), yamlResource);
+    upgrader = new SelectorStageUpgrader("stage", new RestServicePushSourceUpgrader(), null);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
@@ -77,10 +75,27 @@ public class TestRestServicePushSourceUpgrader {
     Mockito.doReturn(3).when(context).getFromVersion();
     Mockito.doReturn(4).when(context).getToVersion();
 
-    String dataFormatPrefix = "dataFormatConfig.";
-    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
-    configs = upgrader.upgrade(configs, context);
+    upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "dataFormatConfig.preserveRootElement"
+    );
+  }
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    String idValue = "idFooo";
+    configs.add(new Config("httpConfigs.appId", idValue));
+    upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertNoneExist(configs,"httpConfigs.appId");
+    UpgraderTestUtils.assertAllExist(configs, "httpConfigs.appIds");
+    Config configWithName = UpgraderUtils.getConfigWithName(configs, "httpConfigs.appIds");
+    List<Map<String,Object>> listCredentials = (List<Map<String,Object>>) configWithName.getValue();
+    Assert.assertEquals(listCredentials.size(), 1);
+    Assert.assertEquals(listCredentials.get(0).get("appId"), idValue);
   }
 }

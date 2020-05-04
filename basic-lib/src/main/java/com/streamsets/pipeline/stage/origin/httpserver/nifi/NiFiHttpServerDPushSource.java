@@ -50,7 +50,10 @@ import com.streamsets.pipeline.stage.origin.lib.OuterDataParserFormatConfig;
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
     "httpConfigs.tlsConfigBean.trustStoreAlgorithm",
-    "httpConfigs.needClientAuth"
+    "httpConfigs.needClientAuth",
+    "httpConfigs.useApiGateway",
+    "httpConfigs.serviceName",
+    "httpConfigs.needGatewayAuth"
 })
 @GenerateResourceBundle
 public class NiFiHttpServerDPushSource extends DPushSource {

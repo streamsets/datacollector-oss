@@ -149,10 +149,15 @@ public abstract class AbstractHttpReceiverServer {
     return issues;
   }
 
-  public void startServer()  throws StageException {
+  /**
+   * Start Jetty Server
+   * @return Jetty Server URI String
+   */
+  public String startServer() throws StageException {
     try {
       httpServer.start();
       LOG.debug("Running, port '{}', TLS '{}'", configs.getPort(), configs.isTlsEnabled());
+      return httpServer.getURI().toString();
     } catch (Exception e) {
        throw new StageException(HttpServerErrors.HTTP_SERVER_ORIG_20, e.getMessage());
     }

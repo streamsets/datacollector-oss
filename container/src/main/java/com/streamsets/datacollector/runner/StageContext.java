@@ -50,6 +50,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.gateway.GatewayInfo;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.lineage.LineageEvent;
@@ -288,6 +289,16 @@ public class StageContext extends ProtoContext implements
   public boolean processBatch(BatchContext batchContext, String entityName, String entityOffset) {
     Preconditions.checkNotNull(entityName);
     return pushSourceContextDelegate.processBatch(batchContext, entityName, entityOffset);
+  }
+
+  @Override
+  public String registerApiGateway(GatewayInfo gatewayInfo) {
+    return runtimeInfo.registerApiGateway(gatewayInfo);
+  }
+
+  @Override
+  public void unregisterApiGateway(GatewayInfo gatewayInfo) {
+    runtimeInfo.unregisterApiGateway(gatewayInfo);
   }
 
   @Override

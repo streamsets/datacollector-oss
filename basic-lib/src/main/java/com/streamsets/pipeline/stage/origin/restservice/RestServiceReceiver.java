@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.origin.httpserver.PushHttpReceiver;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,6 +48,8 @@ public class RestServiceReceiver extends PushHttpReceiver {
   public final static String RESPONSE_HEADER_ATTR_NAME_PREFIX = "responseHeader_";
   public final static String RAW_DATA_RECORD_HEADER_ATTR_NAME = "rawPayloadRecord";
   final static String EMPTY_PAYLOAD_RECORD_HEADER_ATTR_NAME = "emptyPayloadRecord";
+  final static String GATEWAY_SECRET = "GATEWAY_SECRET";
+  private final HttpConfigs httpConfigs;
   private final ResponseConfigBean responseConfig;
   private DataGeneratorFactory dataGeneratorFactory;
 
@@ -57,6 +60,7 @@ public class RestServiceReceiver extends PushHttpReceiver {
       ResponseConfigBean responseConfig
   ) {
     super(httpConfigs, maxRequestSizeMB, dataParserFormatConfig);
+    this.httpConfigs = httpConfigs;
     this.responseConfig = responseConfig;
   }
 
@@ -172,4 +176,12 @@ public class RestServiceReceiver extends PushHttpReceiver {
     return placeholderRecord;
   }
 
+  @Override
+  public boolean validate(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    if (httpConfigs.useApiGateway()) {
+      String gatewaySecretHeaderVal = req.getHeader(GATEWAY_SECRET);
+      return StringUtils.equals(gatewaySecretHeaderVal, httpConfigs.getGatewaySecret());
+    }
+    return super.validate(req, res);
+  }
 }

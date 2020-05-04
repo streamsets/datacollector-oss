@@ -21,6 +21,7 @@ import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.util.Configuration;
 
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.gateway.GatewayInfo;
 import dagger.ObjectGraph;
 
 import org.junit.After;
@@ -36,6 +37,7 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
@@ -248,6 +250,57 @@ public class TestRuntimeInfo {
     info.init();
     Assert.assertNotEquals(id, info.getId());
     Assert.assertFalse(info.isClusterSlave());
+  }
+
+  @Test
+  public void testApiGatewayMethods() throws Exception {
+    RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        Collections.singletonList(getClass().getClassLoader())
+    );
+    runtimeInfo.setBaseHttpUrl("http://localhost:18630");
+
+    GatewayInfo gatewayInfo = runtimeInfo.getApiGateway("invalidService");
+    Assert.assertNull(gatewayInfo);
+
+    GatewayInfo testGatewayInfo = new GatewayInfo() {
+      @Override
+      public String getPipelineId() {
+        return "pipelineId";
+      }
+
+      @Override
+      public String getServiceName() {
+        return "serviceName1";
+      }
+
+      @Override
+      public String getServiceUrl() {
+        return "http://localhost:8080";
+      }
+
+      @Override
+      public boolean getNeedGatewayAuth() {
+        return false;
+      }
+
+      @Override
+      public String getSecret() {
+        return "1234";
+      }
+    };
+
+    String gatewayEndpoint = runtimeInfo.registerApiGateway(testGatewayInfo);
+    Assert.assertEquals("http://localhost:18630/public-rest/v1/gateway/serviceName1", gatewayEndpoint);
+
+    GatewayInfo savedGatewayInfo = runtimeInfo.getApiGateway("serviceName1");
+    Assert.assertEquals(testGatewayInfo, savedGatewayInfo);
+
+    runtimeInfo.unregisterApiGateway(testGatewayInfo);
+    savedGatewayInfo = runtimeInfo.getApiGateway("invalidService");
+    Assert.assertNull(savedGatewayInfo);
   }
 
 }

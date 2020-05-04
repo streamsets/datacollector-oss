@@ -15,10 +15,12 @@
  */
 package com.streamsets.pipeline.stage.origin.restservice;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
+import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
+import com.streamsets.pipeline.lib.httpsource.HttpSourceConfigs;
 import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
@@ -64,8 +66,8 @@ public class TestRestServicePushSource {
 
   @Test
   public void testRestServiceOrigin() {
-    RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    HttpSourceConfigs httpConfigs = new HttpSourceConfigs();
+    httpConfigs.appIds = ImmutableList.of(new CredentialValueBean("id"));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;
@@ -303,8 +305,8 @@ public class TestRestServicePushSource {
     TLSTestUtils.createKeyStore(clientKeyStore.toString(), keyStorePassword, "web", clientKeyPair.getPrivate(), clientCert);
     TLSTestUtils.createTrustStore(clientTrustStore.toString(), trustStorePassword, "web", clientCert);
 
-    RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    HttpSourceConfigs httpConfigs = new HttpSourceConfigs();
+    httpConfigs.appIds = ImmutableList.of(new CredentialValueBean("id"));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
 
@@ -424,8 +426,8 @@ public class TestRestServicePushSource {
 
   @Test
   public void testSendingRawResponse() throws Exception {
-    RawHttpConfigs httpConfigs = new RawHttpConfigs();
-    httpConfigs.appId = () -> "id";
+    HttpSourceConfigs httpConfigs = new HttpSourceConfigs();
+    httpConfigs.appIds = ImmutableList.of(new CredentialValueBean("id"));
     httpConfigs.port = NetworkUtils.getRandomPort();
     httpConfigs.maxConcurrentRequests = 1;
     httpConfigs.tlsConfigBean.tlsEnabled = false;

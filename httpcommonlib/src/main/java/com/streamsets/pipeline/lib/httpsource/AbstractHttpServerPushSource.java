@@ -41,8 +41,8 @@ public abstract class AbstractHttpServerPushSource<R extends HttpReceiver>
   @Override
   public void produce(Map<String, String> map, int i) throws StageException {
     try {
-      server.startServer();
-
+      String serverUrl = server.startServer();
+      onServerStart(serverUrl);
       while (!getContext().isStopped()) {
         dispatchHttpReceiverErrors(100);
       }
@@ -50,5 +50,9 @@ public abstract class AbstractHttpServerPushSource<R extends HttpReceiver>
       LOG.trace("Destroying server");
       server.destroy();
     }
+  }
+
+  protected void onServerStart(String serverUrl) {
+
   }
 }

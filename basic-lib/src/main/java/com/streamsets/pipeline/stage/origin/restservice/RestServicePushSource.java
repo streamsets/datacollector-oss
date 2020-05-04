@@ -18,23 +18,29 @@ package com.streamsets.pipeline.stage.origin.restservice;
 import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
-import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.httpsource.AbstractHttpServerPushSource;
+import com.streamsets.pipeline.lib.httpsource.HttpSourceConfigs;
 import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class RestServicePushSource extends AbstractHttpServerPushSource<HttpReceiver> {
 
-  private final HttpConfigs httpConfigs;
+  public static final String REST_SERVICE_METRICS = "restService";
+  public static final String API_ENDPOINT = "apiEndpoint";
+  private final HttpSourceConfigs httpConfigs;
   private final DataFormat dataFormat;
   private final DataParserFormatConfig dataFormatConfig;
   private final ResponseConfigBean responseConfig;
+  private RestServiceGatewayInfo gatewayInfo;
+  private Map<String, Object> gaugeMap;
 
   RestServicePushSource(
-      HttpConfigs httpConfigs,
+      HttpSourceConfigs httpConfigs,
       int maxRequestSizeMB,
       DataFormat dataFormat,
       DataParserFormatConfig dataFormatConfig,
@@ -77,6 +83,19 @@ public class RestServicePushSource extends AbstractHttpServerPushSource<HttpRece
     if (issues.isEmpty()) {
       issues.addAll(super.init());
     }
+
+    if (httpConfigs.useApiGateway()) {
+      String secret = UUID.randomUUID().toString();
+      httpConfigs.setGatewaySecret(secret);
+      gatewayInfo = new RestServiceGatewayInfo(
+          getContext().getPipelineId(),
+          httpConfigs.getGatewayServiceName(),
+          httpConfigs.getNeedGatewayAuth(),
+          secret
+      );
+    }
+    this.gaugeMap = getContext().createGauge(REST_SERVICE_METRICS).getValue();
+
     return issues;
   }
 
@@ -84,9 +103,22 @@ public class RestServicePushSource extends AbstractHttpServerPushSource<HttpRece
     return  new RestServiceReceiverServer(httpConfigs, getReceiver(), getErrorQueue());
   }
 
+  protected void onServerStart(String serverUrl) {
+    if (gatewayInfo != null) {
+      gatewayInfo.setServiceUrl(serverUrl);
+      String gatewayEndpoint = getContext().registerApiGateway(gatewayInfo);
+      gaugeMap.put(API_ENDPOINT, gatewayEndpoint);
+    } else {
+      gaugeMap.put(API_ENDPOINT, serverUrl);
+    }
+  }
+
   @Override
   public void destroy() {
     super.destroy();
+    if (gatewayInfo != null) {
+      getContext().unregisterApiGateway(gatewayInfo);
+    }
     getReceiver().destroy();
     httpConfigs.destroy();
   }

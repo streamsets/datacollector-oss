@@ -19,6 +19,9 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.http.AbstractHttpReceiverServer;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
+import com.streamsets.pipeline.lib.httpsource.HttpSourceConfigs;
+import com.streamsets.pipeline.stage.origin.httpserver.HttpReceiverServerPush;
+import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
@@ -38,6 +41,17 @@ public class RestServiceReceiverServer extends AbstractHttpReceiverServer {
   public void addReceiverServlet(Stage.Context context, ServletContextHandler contextHandler) {
     servlet = new RestServiceReceiverServlet(context, receiver, errorQueue);
     contextHandler.addServlet(new ServletHolder(servlet), receiver.getUriPath());
+    HttpSourceConfigs httpSourceConfigs = (HttpSourceConfigs) configs;
+
+    SecurityHandler securityHandler = null;
+    if (httpSourceConfigs.spnegoConfigBean.isSpnegoEnabled()) {
+      securityHandler = HttpReceiverServerPush.getSpnegoAuthHandler(httpSourceConfigs);
+    } else if (httpSourceConfigs.tlsConfigBean.isEnabled()) {
+      securityHandler = HttpReceiverServerPush.getBasicAuthHandler(httpSourceConfigs);
+    }
+    if (securityHandler != null) {
+      contextHandler.setSecurityHandler(securityHandler);
+    }
   }
 
   @Override

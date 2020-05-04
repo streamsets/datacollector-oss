@@ -83,7 +83,10 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "configs.tlsConfigBean.trustStoreType",
         "configs.tlsConfigBean.trustStorePassword",
         "configs.tlsConfigBean.trustStoreAlgorithm",
-        "configs.needClientAuth"
+        "configs.needClientAuth",
+        "configs.useApiGateway",
+        "configs.serviceName",
+        "configs.needGatewayAuth"
     }
 )
 @Deprecated

@@ -42,6 +42,7 @@ import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
@@ -101,7 +102,6 @@ public class ManagerResource {
       UserGroupManager userGroupManager
   ) {
     this.user = principal.getName();
-    this.store = store;
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled() && !runtimeInfo.isRemoteSsoDisabled()) {
@@ -112,8 +112,10 @@ public class ManagerResource {
 
     if (runtimeInfo.isAclEnabled()) {
       this.manager = new AclManager(manager, aclStore, currentUser);
+      this.store = new AclPipelineStoreTask(store, aclStore, currentUser);
     } else {
       this.manager = manager;
+      this.store = store;
     }
   }
 

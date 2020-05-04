@@ -19,10 +19,14 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RestServicePushSourceUpgrader implements StageUpgrader {
 
@@ -34,6 +38,12 @@ public class RestServicePushSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
+        // fall through
+      case 4:
+        upgradeV4ToV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -53,6 +63,21 @@ public class RestServicePushSourceUpgrader implements StageUpgrader {
 
   private void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("responseConfig.sendRawResponse", false));
+  }
+
+  private void upgradeV3ToV4(List<Config> configs) {
+    configs.add(new Config("dataFormatConfig.preserveRootElement", false));
+  }
+
+  private void upgradeV4ToV5(List<Config> configs) {
+    Config appIdConfig = UpgraderUtils.getAndRemoveConfigWithName(configs, "httpConfigs.appId");
+    if (appIdConfig != null) {
+      List<Map<String,Object>> credentialValueBeanList = new ArrayList<>();
+      Map<String,Object> mapCredentialValueBean = new HashMap<>();
+      mapCredentialValueBean.put("appId",appIdConfig.getValue());
+      credentialValueBeanList.add(mapCredentialValueBean);
+      configs.add(new Config("httpConfigs.appIds", credentialValueBeanList));
+    }
   }
 
 }
