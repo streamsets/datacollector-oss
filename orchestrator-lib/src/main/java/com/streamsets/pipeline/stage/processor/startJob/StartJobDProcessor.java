@@ -35,7 +35,7 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
         ExecutionMode.STANDALONE
     },
     onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb",
-    upgraderDef = "upgrader/StartJobDProcessor.yaml"
+    upgrader = StartJobDProcessorUpgrader.class
 )
 @GenerateResourceBundle
 @HideConfigs({

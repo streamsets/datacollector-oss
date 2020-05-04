@@ -35,7 +35,7 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
         ExecutionMode.STANDALONE
     },
     onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb",
-    upgraderDef = "upgrader/StartPipelineDProcessor.yaml"
+    upgrader = StartPipelineDProcessorUpgrader.class
 )
 @GenerateResourceBundle
 @HideConfigs({

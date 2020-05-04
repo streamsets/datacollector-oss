@@ -17,60 +17,38 @@
 package com.streamsets.pipeline.stage.processor.startJob;
 
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.upgrader.YamlStageUpgrader;
-import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
-import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
-import org.junit.Assert;
+import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.junit.Assert.assertTrue;
 
 public class TestStartJobDProcessorUpgrader {
 
-  private static final String YAML_UPGRADER_PATH = "upgrader/StartJobDProcessor.yaml";
-  private YamlStageUpgrader yamlUpgrader;
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource(YAML_UPGRADER_PATH);
-    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
-    yamlUpgrader = loader.get();
+    upgrader = new SelectorStageUpgrader("stage", new StartJobDProcessorUpgrader(), null);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
   }
 
   @Test
   public void testV1ToV2Upgrade() {
-    List<Config> validV1Configs = new ArrayList<Config>() {
-      {
-        add(new Config("conf.baseUrl", ""));
-      }
-    };
-    int oldNumberOfFields = validV1Configs.size();
-    Set<String> fieldNames = validV1Configs.stream().map(Config::getName).collect(Collectors.toSet());
-    fieldNames.add("conf.taskName");
-    List<Config> newConfigs = yamlUpgrader.upgrade(
-        validV1Configs,
-        new TestUpgraderContext(
-            "lib",
-            "stage",
-            "instance",
-            1,
-            2
-        )
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
+
+    upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertAllExist(
+        configs,
+        "conf.taskName"
     );
-    Assert.assertEquals(oldNumberOfFields + 1, newConfigs.size());
-    // Check that the field names are all correct
-    for (Config config : newConfigs) {
-      String configName = config.getName();
-      assertTrue(fieldNames.contains(configName));
-      // Check that no duplicates happened when upgrading
-      fieldNames.remove(configName);
-    }
   }
 }
