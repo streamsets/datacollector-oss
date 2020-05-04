@@ -93,7 +93,7 @@ public class GroupEnforcerCredentialStore<T extends CredentialStore> implements 
   private boolean hasGroupAccess(String group, String name, String credentialStoreOptions) {
     CredentialValue entryGroups;
     try {
-      entryGroups = store.get(group, name + ".groups", credentialStoreOptions);
+      entryGroups = store.get(group, name + "-groups", credentialStoreOptions);
     } catch (StageException ex) {
       throw new StageException(Errors.CREDENTIAL_STORE_003, name, storeId);
     }
