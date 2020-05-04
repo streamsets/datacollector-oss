@@ -878,6 +878,10 @@ angular.module('dataCollectorApp.common')
        * @param edgeHttpUrl
        */
       cancelPreview: function(pipelineId, previewerId, edgeHttpUrl) {
+        tracking.mixpanel.track('Preview Cancelled', {
+          'Pipeline ID': pipelineId,
+          'Stop Type': 'User',
+        });
         var url = apiBase + '/pipeline/' + pipelineId + '/preview/' + previewerId;
         return $http({
           method: 'DELETE',
