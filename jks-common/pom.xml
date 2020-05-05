@@ -17,65 +17,56 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
+    <artifactId>streamsets-datacollector-root</artifactId>
     <version>3.16.0-SNAPSHOT</version>
-    <relativePath>../stage-lib-parent</relativePath>
+    <relativePath>../root-lib</relativePath>
   </parent>
-  <artifactId>streamsets-datacollector-streamsets-credentialstore-lib</artifactId>
+  <artifactId>streamsets-datacollector-jks-common</artifactId>
   <version>3.16.0-SNAPSHOT</version>
-  <description>StreamSets Data Collector Streamsets Credential Store Lib</description>
-  <name>StreamSets Data Collector Streamsets Credential Store Lib</name>
+  <description>StreamSets Data Collector JKS Common</description>
+  <name>StreamSets Data Collector JKS Common</name>
   <packaging>jar</packaging>
 
   <properties>
-    <jsch.version>0.1.55</jsch.version>
+    <airlift.version>0.7</airlift.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-jks-common</artifactId>
-      <version>${project.version}</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
     </dependency>
-
-    <dependency>
-      <groupId>com.jcraft</groupId>
-      <artifactId>jsch</artifactId>
-      <version>${jsch.version}</version>
-      <scope>compile</scope>
-    </dependency>
-
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-jks-common</artifactId>
+      <artifactId>streamsets-utils</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
-      <classifier>tests</classifier>
+      <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
-
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-core</artifactId>
-      <version>${jackson.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-      <scope>test</scope>
+      <groupId>io.airlift</groupId>
+      <artifactId>airline</artifactId>
+      <version>${airlift.version}</version>
+      <scope>compile</scope>
     </dependency>
 
     <dependency>
@@ -92,6 +83,17 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

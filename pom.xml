@@ -146,6 +146,7 @@
     <module>stage-lib-archetype</module>
     <module>hadoop-common</module>
     <module>mapr-common</module>
+    <module>jks-common</module>
     <module>aws-support</module>
 
     <module>root-lib</module>
