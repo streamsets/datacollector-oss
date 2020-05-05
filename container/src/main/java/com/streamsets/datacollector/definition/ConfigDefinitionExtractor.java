@@ -37,6 +37,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.el.VaultEL;
 import org.apache.commons.lang3.StringUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayDeque;
@@ -182,6 +183,15 @@ public abstract class ConfigDefinitionExtractor {
 
         ConfigDefBean configDefBean = field.getAnnotation(ConfigDefBean.class);
         Dependency[] dependency = configDefBean.dependencies();
+        // Propagate forward any grandparent (or higher) dependencies
+        if (parentDependency != null && parentDependency.length > 0) {
+          dependency = Arrays.copyOf(dependency, dependency.length + parentDependency.length);
+          for (int i = 0 ; i < parentDependency.length; i++) {
+            dependency[dependency.length - parentDependency.length + i] = createDependency(
+                    parentDependency[i].configName() + "^",
+                    parentDependency[i].triggeredByValues());
+          }
+        }
 
         defs.addAll(extract(configPrefix + field.getName() + ".", field.getType(), beanGroups, true,
             Utils.formatL("{} BeanField='{}'", contextMsg, field.getName()), dependency));
@@ -661,4 +671,22 @@ public abstract class ConfigDefinitionExtractor {
 
   }
 
+  private Dependency createDependency(String name, String[] triggeredByValues) {
+    return new Dependency() {
+      @Override
+      public String configName() {
+        return name;
+      }
+
+      @Override
+      public String[] triggeredByValues() {
+        return triggeredByValues;
+      }
+
+      @Override
+      public Class<? extends Annotation> annotationType() {
+        return Dependency.class;
+      }
+    };
+  }
 }

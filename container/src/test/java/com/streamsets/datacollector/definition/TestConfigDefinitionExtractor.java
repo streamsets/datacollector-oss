@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -910,5 +911,84 @@ public class TestConfigDefinitionExtractor {
         Collections.<String>emptyList(),
         "x"
     );
+  }
+
+  public static class SubSubBean5 {
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop4;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependsOn = "prop4",
+        triggeredByValue = "abc"
+    )
+    public String prop5;
+
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING,
+        dependencies = {
+            @Dependency(configName = "prop4", triggeredByValues = {"xyz"})
+        }
+    )
+    public String prop6;
+  }
+
+  public static class SubBean5 {
+    @ConfigDefBean()
+    public SubSubBean5 prop3;
+  }
+
+  public static class Bean5 {
+    @ConfigDef(
+        label = "L",
+        required = true,
+        type = ConfigDef.Type.STRING
+    )
+    public String prop1;
+
+    @ConfigDefBean(
+        dependencies = {
+            @Dependency(configName = "prop1", triggeredByValues = {"trigger"})
+        })
+    public SubBean5 prop2;
+  }
+
+  @Test
+  public void testMultipleLevelsConfigDefBeanDependency() {
+    List<ErrorMessage> errors = ConfigDefinitionExtractor.get().validate(Bean5.class, ImmutableList.of("bar", "foo"),
+            "x");
+    Assert.assertTrue(errors.isEmpty());
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Bean5.class,
+            ImmutableList.of("bar", "foo"), "x");
+    Assert.assertEquals(4, configs.size());
+    configs.sort(Comparator.comparing(ConfigDefinition::getName)); // Ensure consistent ordering for retrieval
+
+    Assert.assertEquals("prop1", configs.get(0).getName());
+    Assert.assertEquals(0, configs.get(0).getDependsOnMap().size());
+
+    Assert.assertEquals("prop2.prop3.prop4", configs.get(1).getName());
+    Map<String, List<Object>> dependsOnMap1 = configs.get(1).getDependsOnMap();
+    Assert.assertEquals(1, dependsOnMap1.size());
+    Assert.assertEquals(Lists.newArrayList("trigger"), dependsOnMap1.get("prop1"));
+
+    Assert.assertEquals("prop2.prop3.prop5", configs.get(2).getName());
+    Map<String, List<Object>> dependsOnMap2 = configs.get(2).getDependsOnMap();
+    Assert.assertEquals(2, dependsOnMap2.size());
+    Assert.assertEquals(Lists.newArrayList("trigger"), dependsOnMap2.get("prop1"));
+    Assert.assertEquals(Lists.newArrayList("abc"), dependsOnMap2.get("prop2.prop3.prop4"));
+
+    Assert.assertEquals("prop2.prop3.prop6", configs.get(3).getName());
+    Map<String, List<Object>> dependsOnMap3 = configs.get(3).getDependsOnMap();
+    Assert.assertEquals(2, dependsOnMap3.size());
+    Assert.assertEquals(Lists.newArrayList("trigger"), dependsOnMap3.get("prop1"));
+    Assert.assertEquals(Lists.newArrayList("xyz"), dependsOnMap3.get("prop2.prop3.prop4"));
   }
 }
