@@ -143,7 +143,7 @@ public class AdminResource {
       authorizations = @Authorization(value = "basic")
   )
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE, AuthzRole.ADMIN_ACTIVATION})
   public Response enableDPM(DPMInfoJson dpmInfo) throws IOException {
     Utils.checkNotNull(dpmInfo, "DPMInfo");
     SchAdmin.enableDPM(dpmInfo, new SchAdmin.Context(runtimeInfo, config));
