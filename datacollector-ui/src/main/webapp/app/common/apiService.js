@@ -569,6 +569,8 @@ angular.module('dataCollectorApp.common')
             duplicatePipelineObject.stages = pipelineObject.stages;
             duplicatePipelineObject.startEventStages = pipelineObject.startEventStages;
             duplicatePipelineObject.stopEventStages = pipelineObject.stopEventStages;
+            duplicatePipelineObject.testOriginStage = pipelineObject.testOriginStage;
+            duplicatePipelineObject.fragments = pipelineObject.fragments;
             if (pipelineObject.metadata && pipelineObject.metadata.labels) {
               duplicatePipelineObject.metadata = {
                 labels: pipelineObject.metadata.labels
