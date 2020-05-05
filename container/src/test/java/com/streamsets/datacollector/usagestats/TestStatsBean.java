@@ -15,8 +15,11 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.Multimap;
 import com.streamsets.datacollector.usagestats.TestStatsInfo.TestModelStatsExtension;
 import org.junit.Assert;
 import org.junit.Test;
@@ -26,19 +29,62 @@ public class TestStatsBean {
   @Test
   public void testCreationFromActiveStats() {
     TestModelStatsExtension ext = new TestModelStatsExtension();
-    ext.setStatsInfo(new StatsInfo(ImmutableList.of(ext)));
+    StatsInfo si = new StatsInfo(ImmutableList.of(ext));
+    ext.setStatsInfo(si);
 
     ActiveStats as = new ActiveStats(ImmutableList.of(ext));
+    as.setStatsInfo(si);
     as.setDpmEnabled(true);
     as.setDataCollectorVersion("version");
     as.setUpTime(new UsageTimer().setName("upTime").setAccumulatedTime(1));
     as.setStartTime(1);
     as.setEndTime(3);
     as.setRecordCount(1000);
-    as.setPipelines(ImmutableList.of(
-        new UsageTimer().setName("p1").setAccumulatedTime(1),
-        new UsageTimer().setName("p2").setAccumulatedTime(2)
+    as.setPipelineStats(ImmutableMap.of(
+        "p1", new PipelineStats().setRuns(ImmutableList.of(
+            new PipelineRunStats()
+                .setStartTime(19)
+                .setTimer(new UsageTimer().setName("p1").setAccumulatedTime(1))
+                .setRunnerCount(10)
+                .setExecutionMode("execMode1")
+        )),
+        "p2", new PipelineStats().setRuns(ImmutableList.of(
+            new PipelineRunStats()
+                .setStartTime(10)
+                .setTimer(new UsageTimer().setName("p2").setAccumulatedTime(2))
+                .setRunnerCount(100)
+                .setExecutionMode("execMode2.1")
+                .setFinalState("finalState2.1"),
+            new PipelineRunStats()
+                .setStartTime(16)
+                .setTimer(new UsageTimer().setName("p2").setAccumulatedTime(4))
+                .setRunnerCount(1000)
+                .setExecutionMode("execMode2.2")
+        ))
     ));
+    String hashedP1 = ext.hashPipelineId("p1");
+    String hashedP2 = ext.hashPipelineId("p2");
+    Multimap<String, PipelineRunReport> expectedRunReports = ImmutableSetMultimap.of(
+        hashedP1, new PipelineRunReport()
+            .setHashedId(hashedP1)
+            .setStartTime(19)
+            .setRunMillis(1)
+            .setRunnerCount(10)
+            .setExecutionMode("execMode1"),
+        hashedP2, new PipelineRunReport()
+            .setHashedId(hashedP2)
+            .setStartTime(10)
+            .setRunMillis(2)
+            .setRunnerCount(100)
+            .setExecutionMode("execMode2.1")
+            .setFinalState("finalState2.1"),
+        hashedP2, new PipelineRunReport()
+            .setHashedId(hashedP2)
+            .setStartTime(16)
+            .setRunMillis(4)
+            .setRunnerCount(1000)
+            .setExecutionMode("execMode2.2")
+    );
     as.setStages(ImmutableList.of(
         new UsageTimer().setName("s1").setAccumulatedTime(1),
         new UsageTimer().setName("s2").setAccumulatedTime(2)
@@ -63,6 +109,64 @@ public class TestStatsBean {
     Assert.assertEquals(3, sb.getEndTime());
     Assert.assertEquals(3, sb.getRecordsOM());
     Assert.assertEquals(2, sb.getActivePipelines());
+    Assert.assertEquals(7, sb.getPipelineMilliseconds());
+    Assert.assertEquals((Long) 1L, sb.getStageMilliseconds().get("s1"));
+    Assert.assertEquals((Long) 2L, sb.getStageMilliseconds().get("s2"));
+    Assert.assertEquals(1, sb.getCreateToPreview().size());
+    Assert.assertEquals(1, sb.getCreateToRun().size());
+    Assert.assertEquals(preview1.getCreatedOn(), sb.getCreateToPreview().get(0).getCreatedOn());
+    Assert.assertEquals(preview1.getFirstUseOn(), sb.getCreateToPreview().get(0).getFirstUseOn());
+    Assert.assertEquals(run1.getCreatedOn(), sb.getCreateToRun().get(0).getCreatedOn());
+    Assert.assertEquals(run1.getFirstUseOn(), sb.getCreateToRun().get(0).getFirstUseOn());
+
+    Multimap<String, PipelineRunReport> actualRunReports = HashMultimap.create();
+    sb.getPipelineRunReports().forEach(r -> {
+      actualRunReports.put(r.getHashedId(), r);
+    });
+    Assert.assertEquals(expectedRunReports, actualRunReports);
+
+    Assert.assertEquals(1, sb.getExtensions().size());
+    Assert.assertEquals(TestModelStatsBeanExtension.class, sb.getExtensions().get(0).getClass());
+    TestModelStatsBeanExtension sbExt = (TestModelStatsBeanExtension) sb.getExtensions().get(0);
+    Assert.assertEquals(5, sbExt.getStartPipelines());
+    Assert.assertEquals(2, sbExt.getStopPipelines());
+    Assert.assertEquals(3, sbExt.getNetPipelineStarts());
+  }
+
+  @Test
+  public void testCreationFromActiveStatsV1_1() {
+    ActiveStats as = new ActiveStats(ImmutableList.of());
+    as.setDpmEnabled(true);
+    as.setDataCollectorVersion("version");
+    as.setUpTime(new UsageTimer().setName("upTime").setAccumulatedTime(1));
+    as.setStartTime(1);
+    as.setEndTime(3);
+    as.setRecordCount(1000);
+    as.setDeprecatedPipelines(ImmutableList.of(
+        new UsageTimer().setName("p1").setAccumulatedTime(1),
+        new UsageTimer().setName("p2").setAccumulatedTime(2)
+    ));
+    as.setStages(ImmutableList.of(
+        new UsageTimer().setName("s1").setAccumulatedTime(1),
+        new UsageTimer().setName("s2").setAccumulatedTime(2)
+    ));
+    FirstPipelineUse preview1 = new FirstPipelineUse().setCreatedOn(1).setFirstUseOn(2);
+    FirstPipelineUse preview2 = new FirstPipelineUse().setCreatedOn(1);
+    as.setCreateToPreview(ImmutableMap.of("p1", preview1, "p2", preview2));
+    FirstPipelineUse run1 = new FirstPipelineUse().setCreatedOn(10).setFirstUseOn(20).setStageCount(30);
+    FirstPipelineUse run2 = new FirstPipelineUse().setCreatedOn(10);
+    as.setCreateToRun(ImmutableMap.of("r1", run1, "r2", run2));
+
+    StatsBean sb = new StatsBean("sdcid", as);
+
+    Assert.assertEquals("sdcid", sb.getSdcId());
+    Assert.assertEquals("version", sb.getDataCollectorVersion());
+    Assert.assertEquals(true, sb.isDpmEnabled());
+    Assert.assertEquals(1, sb.getUpTime());
+    Assert.assertEquals(1, sb.getStartTime());
+    Assert.assertEquals(3, sb.getEndTime());
+    Assert.assertEquals(3, sb.getRecordsOM());
+    Assert.assertEquals(2, sb.getActivePipelines());
     Assert.assertEquals(3, sb.getPipelineMilliseconds());
     Assert.assertEquals((Long) 1L, sb.getStageMilliseconds().get("s1"));
     Assert.assertEquals((Long) 2L, sb.getStageMilliseconds().get("s2"));
@@ -72,12 +176,7 @@ public class TestStatsBean {
     Assert.assertEquals(preview1.getFirstUseOn(), sb.getCreateToPreview().get(0).getFirstUseOn());
     Assert.assertEquals(run1.getCreatedOn(), sb.getCreateToRun().get(0).getCreatedOn());
     Assert.assertEquals(run1.getFirstUseOn(), sb.getCreateToRun().get(0).getFirstUseOn());
-    Assert.assertEquals(1, sb.getExtensions().size());
-    Assert.assertEquals(TestModelStatsBeanExtension.class, sb.getExtensions().get(0).getClass());
-    TestModelStatsBeanExtension sbExt = (TestModelStatsBeanExtension) sb.getExtensions().get(0);
-    Assert.assertEquals(5, sbExt.getStartPipelines());
-    Assert.assertEquals(2, sbExt.getStopPipelines());
-    Assert.assertEquals(3, sbExt.getNetPipelineStarts());
+    Assert.assertEquals(0, sb.getExtensions().size());
   }
 
   // just adds one more field to serialize and overwrites version, but otherwise re-uses TestModelStatsExtension

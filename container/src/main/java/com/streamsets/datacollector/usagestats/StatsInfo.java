@@ -65,6 +65,7 @@ public class StatsInfo {
       collectedStats = new ArrayList<>();
       extensions.stream().forEach(e -> e.setStatsInfo(this));
       activeStats = new ActiveStats(extensions.stream().map(AbstractStatsExtension::snapshotAndPopulateStatsInfo).collect(Collectors.toList()));
+      activeStats.setStatsInfo(this);
     }, true);
   }
 
@@ -79,6 +80,7 @@ public class StatsInfo {
 
   public void setActiveStats(ActiveStats activeStats) {
     this.activeStats = activeStats;
+    activeStats.setStatsInfo(this);
   }
 
   public List<StatsBean> getCollectedStats() {
