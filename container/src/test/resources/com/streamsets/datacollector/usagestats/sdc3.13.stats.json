@@ -1,0 +1,30 @@
+{
+  "activeStats" : {
+    "startTime" : 1588195985352,
+    "endTime" : 0,
+    "dataCollectorVersion" : "3.13.0",
+    "dpmEnabled" : false,
+    "upTime" : {
+      "name" : "upTime",
+      "accumulatedTime" : 0
+    },
+    "pipelines" : [ {
+      "name" : "RunOnlyfce83a4f-1415-4788-afbb-e734dd1b5ee5",
+      "accumulatedTime" : 12193
+    }, {
+      "name" : "PreviewAndRun12ace4c4-1785-49fb-b3da-ef34693bc13f",
+      "accumulatedTime" : 47797
+    } ],
+    "stages" : [ {
+      "name" : "streamsets-datacollector-dev-lib::com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource",
+      "accumulatedTime" : 59989
+    }, {
+      "name" : "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget",
+      "accumulatedTime" : 59989
+    } ],
+    "recordCount" : 90,
+    "errorCodes" : { },
+    "version" : "1.0"
+  },
+  "collectedStats" : [ ]
+}

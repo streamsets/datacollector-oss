@@ -17,6 +17,7 @@ package com.streamsets.datacollector.usagestats;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +37,7 @@ public class StatsBean {
   private long upTime;
   private long activePipelines;
   private long pipelineMilliseconds;
+  private List<PipelineRunReport> pipelineRunReports;
   private Map<String, Long> stageMilliseconds;
   private long recordsOM;
   private Map<String, Long> errorCodes;
@@ -59,12 +61,24 @@ public class StatsBean {
     setStartTime(activeStats.getStartTime());
     setEndTime(activeStats.getEndTime());
     setUpTime(activeStats.getUpTime().getAccumulatedTime());
+
     long pipelineMilliseconds = 0;
-    setActivePipelines(activeStats.getPipelines().size());
-    for (UsageTimer timer : activeStats.getPipelines()) {
+    setActivePipelines(activeStats.getDeprecatedPipelines().size() + activeStats.getPipelineStats().size());
+    for (UsageTimer timer : activeStats.getDeprecatedPipelines()) {
       pipelineMilliseconds += timer.getAccumulatedTime();
     }
+    List<PipelineRunReport> runReports = new ArrayList<>();
+    for (Map.Entry<String, PipelineStats> entry : activeStats.getPipelineStats().entrySet()) {
+      String hashedId = activeStats.hashPipelineId(entry.getKey());
+      PipelineStats ps = entry.getValue();
+      for (PipelineRunStats run : ps.getRuns()) {
+        pipelineMilliseconds += run.getTimer().getAccumulatedTime();
+        runReports.add(new PipelineRunReport(hashedId, run));
+      }
+    }
     setPipelineMilliseconds(pipelineMilliseconds);
+    setPipelineRunReports(runReports);
+
     for (UsageTimer timer : activeStats.getStages()) {
       getStageMilliseconds().put(timer.getName(), timer.getAccumulatedTime());
     }
@@ -187,6 +201,10 @@ public class StatsBean {
   public void setPipelineMilliseconds(long pipelineMilliseconds) {
     this.pipelineMilliseconds = pipelineMilliseconds;
   }
+
+  public List<PipelineRunReport> getPipelineRunReports() { return pipelineRunReports; }
+
+  public void setPipelineRunReports(List<PipelineRunReport> pipelineRunReports) { this.pipelineRunReports = pipelineRunReports; }
 
   public Map<String, Long> getStageMilliseconds() {
     return stageMilliseconds;

@@ -17,6 +17,7 @@ package com.streamsets.datacollector.usagestats;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -25,6 +26,7 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.pipeline.api.ErrorCode;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +47,7 @@ public class ActiveStats {
 
   /** In upgrade scenarios, this can differ from {@link #VERSION} until the first roll. */
   private String version;
+  private StatsInfo statsInfo;
   private long startTime;
   private long endTime;
   private String sdcId;
@@ -54,7 +57,11 @@ public class ActiveStats {
   private Map<String, Object> extraInfo;
   private boolean dpmEnabled;
   private UsageTimer upTime;
-  private Map<String, UsageTimer> pipelines;
+  /** This should only be populated in version 1.1 or earlier (and earlier builds of 1.2). It is immediately rolled and
+   * never populated again */
+  @Deprecated
+  private Map<String, UsageTimer> deprecatedPipelines;
+  private Map<String, PipelineStats> pipelineStats;
   private Map<String, UsageTimer> stages;
   private AtomicLong recordCount;
   private Map<String, Long> errorCodes;
@@ -71,7 +78,8 @@ public class ActiveStats {
     version = VERSION;
     startTime = System.currentTimeMillis();
     upTime = new UsageTimer().setName("upTime");
-    pipelines = new ConcurrentHashMap<>();
+    deprecatedPipelines = new ConcurrentHashMap<>();
+    pipelineStats = new ConcurrentHashMap<>();
     stages = new ConcurrentHashMap<>();
     recordCount = new AtomicLong();
     dataCollectorVersion = "";
@@ -79,6 +87,12 @@ public class ActiveStats {
     createToPreview = new ConcurrentHashMap<>();
     createToRun = new ConcurrentHashMap<>();
     this.extensions = null == extensions ? Collections.emptyList() : extensions;
+  }
+
+  @JsonIgnore
+  public ActiveStats setStatsInfo(StatsInfo statsInfo) {
+    this.statsInfo = statsInfo;
+    return this;
   }
 
   public List<AbstractStatsExtension> getExtensions() {
@@ -180,16 +194,35 @@ public class ActiveStats {
     return this;
   }
 
-  public ActiveStats setPipelines(List<UsageTimer> pipelines) {
-    this.pipelines.clear();
+  public Map<String, PipelineStats> getPipelineStats() {
+    return pipelineStats;
+  }
+
+  public ActiveStats setPipelineStats(Map<String, PipelineStats> pipelineStats) {
+    this.pipelineStats = pipelineStats;
+    return this;
+  }
+
+  /**
+   * @deprecated in 1.2, use pipelineStats instead
+   */
+  @Deprecated
+  @JsonProperty(value="pipelines")
+  public ActiveStats setDeprecatedPipelines(List<UsageTimer> pipelines) {
+    this.deprecatedPipelines.clear();
     for (UsageTimer usageTimer : pipelines) {
-      this.pipelines.put(usageTimer.getName(), usageTimer);
+      this.deprecatedPipelines.put(usageTimer.getName(), usageTimer);
     }
     return this;
   }
 
-  public List<UsageTimer> getPipelines() {
-    return new ArrayList<>(pipelines.values());
+  /**
+   * @deprecated in 1.2, use pipelineStats instead
+   */
+  @Deprecated
+  @JsonProperty(value="pipelines")
+  public List<UsageTimer> getDeprecatedPipelines() {
+    return new ArrayList<>(deprecatedPipelines.values());
   }
 
   public ActiveStats setStages(List<UsageTimer> stages) {
@@ -255,6 +288,10 @@ public class ActiveStats {
     return this;
   }
 
+  public String hashPipelineId(String id) {
+    return statsInfo.hashPipelineId(id);
+  }
+
   public ActiveStats createPipeline(String pipelineId) {
     long now = System.currentTimeMillis();
     createToPreview.put(pipelineId, new FirstPipelineUse().setCreatedOn(now));
@@ -283,52 +320,12 @@ public class ActiveStats {
         created.setStageCount(pipeline.getStages().size());
       }
     }
-
-    // we only start the pipeline stats if not running already (to avoid stage stats going out of wak)
-    UsageTimer pipelineUsageTimer = pipelines.computeIfAbsent(pipeline.getPipelineId(), id -> new UsageTimer().setName(pipeline.getPipelineId()));
-    if (pipelineUsageTimer.startIfNotRunning()) {
-      for (StageConfiguration stageConfiguration : pipeline.getStages()) {
-        String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
-        UsageTimer stageUsageTimer = stages.computeIfAbsent(
-            name,
-            key -> new UsageTimer().setName(name)
-        );
-        stageUsageTimer.start();
-      }
-    }
     safeInvokeCallbacks("startPipeline", c -> c.startPipeline(this, pipeline));
     return this;
   }
 
   public ActiveStats stopPipeline(PipelineConfiguration pipeline) {
     LOG.debug("Stopping UsageTimers for '{}' pipeline and its stages", pipeline.getPipelineId());
-    // we only stop the pipeline stats if not running already (to avoid stage stats going out of wak)
-    UsageTimer pipelineUsageTimer = pipelines.get(pipeline.getPipelineId());
-    if (pipelineUsageTimer != null) {
-      if (pipelines.get(pipeline.getPipelineId()).stopIfRunning()) {
-        for (StageConfiguration stageConfiguration : pipeline.getStages()) {
-          String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
-          UsageTimer stageUsageTimer = stages.get(name);
-          if (stageUsageTimer != null) {
-            if (!stageUsageTimer.stopIfRunning()) {
-              LOG.warn(
-                  "UsageTimer for '{}' stage not not running on stopPipeline for '{}' pipeline",
-                  name,
-                  pipeline.getPipelineId()
-              );
-            }
-          } else {
-            LOG.warn(
-                "UsageTimer for '{}' stage not found on stopPipeline for '{}' pipeline",
-                name,
-                pipeline.getPipelineId()
-            );
-          }
-        }
-      }
-    } else {
-      LOG.warn("UsageTimer for '{}' pipeline not found", pipeline.getPipelineId());
-    }
     safeInvokeCallbacks("stopPipeline", c -> c.stopPipeline(this, pipeline));
     return this;
   }
@@ -343,20 +340,85 @@ public class ActiveStats {
   }
 
   public ActiveStats previewStatusChanged(PreviewStatus previewStatus, Previewer previewer) {
-    LOG.trace("Preview stateChange to {} with id {}",
-        previewStatus, previewer.getId());
+    LOG.trace("Preview stateChange to {} with pipeline id {}",
+        previewStatus, previewer.getName());
+
     safeInvokeCallbacks("previewStatusChanged", c ->
         c.previewStatusChanged(previewStatus, previewer));
     return this;
   }
 
   public ActiveStats pipelineStatusChanged(PipelineStatus pipelineStatus, PipelineConfiguration conf, Pipeline pipeline) {
-    LOG.trace("Pipeline stateChange for {} to {} and runnerCount {}",
-        conf.getPipelineId(), pipelineStatus, pipeline == null ? "null" : pipeline.getNumOfRunners());
-    // TODO persist something in next commit
+    LOG.trace("Pipeline stateChange for {} to {} with runnerCount {}",
+        conf == null ? "null" : conf.getPipelineId(),
+        pipelineStatus,
+        pipeline == null ? "null" : pipeline.getNumOfRunners());
+
+    if (pipelineStatus.isActive()) {
+      pipelineActive(pipelineStatus, conf, pipeline);
+    } else {
+      pipelineInactive(pipelineStatus, conf, pipeline);
+    }
     safeInvokeCallbacks("pipelineStatusChanged", c ->
         c.pipelineStatusChanged(pipelineStatus, conf, pipeline));
     return this;
+  }
+
+  /** Called when pipeline enters any active status */
+  private void pipelineActive(PipelineStatus status, PipelineConfiguration config, Pipeline p) {
+    if (config == null) {
+      // not enough context to do anything
+      return;
+    }
+    String pid = config.getPipelineId();
+    PipelineStats statsEntry = pipelineStats.computeIfAbsent(pid, k -> new PipelineStats());
+    boolean netNewRun = statsEntry.pipelineActive(status, config, p);
+
+    if (netNewRun) {
+      for (StageConfiguration stageConfiguration : config.getStages()) {
+        String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
+        UsageTimer stageUsageTimer = stages.computeIfAbsent(
+            name,
+            key -> new UsageTimer().setName(name)
+        );
+        stageUsageTimer.start();
+      }
+    }
+  }
+
+  /** Called when pipeline enters any non-active status. */
+  private void pipelineInactive(PipelineStatus finalState, PipelineConfiguration conf, Pipeline p) {
+    if (conf == null) {
+      // not enough context to do anything
+      return;
+    }
+    String pid = conf.getPipelineId();
+    boolean stopStageTimers = false;
+    PipelineStats statsEntry = pipelineStats.get(pid);
+    if (statsEntry != null) {
+      stopStageTimers = statsEntry.pipelineInactive(finalState.name(), conf, p);
+    }
+    if (stopStageTimers) {
+      for (StageConfiguration stageConfiguration : conf.getStages()) {
+        String name = stageConfiguration.getLibrary() + "::" + stageConfiguration.getStageName();
+        UsageTimer stageUsageTimer = stages.get(name);
+        if (stageUsageTimer != null) {
+          if (!stageUsageTimer.stopIfRunning()) {
+            LOG.warn(
+                "UsageTimer for '{}' stage not not running on stopPipeline for '{}' pipeline",
+                name,
+                pid
+            );
+          }
+        } else {
+          LOG.warn(
+              "UsageTimer for '{}' stage not found on stopPipeline for '{}' pipeline",
+              name,
+              pid
+          );
+        }
+      }
+    }
   }
 
   Map<String, FirstPipelineUse> removeUsedAndExpired(Map<String, FirstPipelineUse> map, long expiredTime) {
@@ -373,6 +435,7 @@ public class ActiveStats {
     long now = System.currentTimeMillis();
     setEndTime(now);
     ActiveStats statsBean = new ActiveStats(rollExtensions())
+        .setStatsInfo(statsInfo)
         .setSdcId(getSdcId())
         .setProductName(getProductName())
         .setStartTime(now)
@@ -381,13 +444,21 @@ public class ActiveStats {
         .setExtraInfo(getExtraInfo())
         .setDpmEnabled(isDpmEnabled())
         .setUpTime(getUpTime().roll());
-    statsBean.setPipelines(
-        getPipelines().stream()
+    statsBean.setDeprecatedPipelines(
+        getDeprecatedPipelines().stream()
             // If multiplier is 0, its not running/used anymore
             .filter(u -> u.getMultiplier() > 0)
             .map(UsageTimer::roll)
             .collect(Collectors.toList())
     );
+    statsBean.setPipelineStats(getPipelineStats().entrySet().stream()
+        .map(e -> ImmutablePair.of(e.getKey(), e.getValue().roll()))
+        .filter(p -> p.getRight().getRuns().size() > 0)
+        .collect(Collectors.toConcurrentMap(
+            ImmutablePair::getLeft,
+            ImmutablePair::getRight,
+            (k, v) -> { throw new UnsupportedOperationException("Should be no merges of pipeline stats"); }
+    )));
     statsBean.setStages(
         getStages().stream()
             // If multiplier is 0, its not running/used anymore
@@ -404,6 +475,7 @@ public class ActiveStats {
   // returns a snapshot for persistency
   public ActiveStats snapshot() {
     ActiveStats snapshot = new ActiveStats(snapshotExtensions())
+        .setStatsInfo(statsInfo)
         .setSdcId(getSdcId())
         .setProductName(getProductName())
         .setStartTime(getStartTime())
@@ -414,7 +486,12 @@ public class ActiveStats {
         .setErrorCodes(errorCodes)
         .setUpTime(getUpTime().snapshot())
         .setRecordCount(getRecordCount());
-    snapshot.setPipelines(getPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
+    snapshot.setDeprecatedPipelines(getDeprecatedPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
+    snapshot.setPipelineStats(getPipelineStats().entrySet().stream().collect(Collectors.toConcurrentMap(
+        e -> e.getKey(),
+        e -> e.getValue().snapshot(),
+        (k, v) -> { throw new UnsupportedOperationException("Should be no merges of pipeline stats"); }
+    )));
     snapshot.setStages(getStages().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
     snapshot.setCreateToPreview(getCreateToPreview());
     snapshot.setCreateToRun(getCreateToRun());

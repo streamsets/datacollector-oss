@@ -31,13 +31,15 @@ import com.streamsets.datacollector.runner.Pipeline;
  * any additional entry points implemented by a subclass must call {@link #doWithStatsInfoStructuralLock(Runnable)},
  * before accessing or modifying any state.
  */
-@JsonTypeInfo(use= JsonTypeInfo.Id.CLASS, property="class")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, property = "class")
 public abstract class AbstractStatsExtension {
 
   private StatsInfo statsInfo = null;
 
   @JsonIgnore
-  private StatsInfo getStatsInfo() { return statsInfo; }
+  private StatsInfo getStatsInfo() {
+    return statsInfo;
+  }
 
   @VisibleForTesting
   @JsonIgnore
@@ -82,6 +84,7 @@ public abstract class AbstractStatsExtension {
 
   /**
    * Identifier for this extension / callback, used for messages but not persistence.
+   *
    * @return identifier
    */
   @JsonIgnore
@@ -92,6 +95,7 @@ public abstract class AbstractStatsExtension {
   /**
    * Return a version, like 1.0 or 1.2.1, that represents the version of the JSON for this extension. Whenever a
    * backwards incompatible change is done (behavioral or structural), this version must be incremented.
+   *
    * @return version for this extension's JSON
    */
   protected abstract String getVersion();
@@ -99,6 +103,7 @@ public abstract class AbstractStatsExtension {
   /**
    * Called by deserialization code. If this differs from the current version, must perform upgrades as needed, though
    * there is no guarantee of the order of set calls, so you should use a @JsonConstructor to handle upgrades.
+   *
    * @param version version from serialized object
    */
   protected abstract void setVersion(String version);
@@ -107,6 +112,7 @@ public abstract class AbstractStatsExtension {
    * Called when stats are rolled, which means that a period has ended, the current stats objects should be frozen,
    * and we need to return a fresh stats object for the next period. StatsInfo will take a write lock before calling
    * this.
+   *
    * @param activeStats current active stats, before roll has completed, but after endTime is set.
    * @return new copy of this class that will be used to start the next period.
    */
@@ -115,6 +121,7 @@ public abstract class AbstractStatsExtension {
   /**
    * Collect information worth reporting. Performed after a roll, so state should be frozen, during the same StatsInfo
    * write lock as roll.
+   *
    * @return StatsBeanExtension object to be included in reports
    */
   protected abstract StatsBeanExtension report();
@@ -122,6 +129,7 @@ public abstract class AbstractStatsExtension {
   /**
    * Called when stats are snapshotted, usually before they are persisted to disk. Also called during initialization
    * to ensure objects are isolated instances. StatsInfo will take a write lock before calling this.
+   *
    * @return new, frozen copy of this class.
    */
   protected abstract AbstractStatsExtension snapshot();
@@ -129,45 +137,70 @@ public abstract class AbstractStatsExtension {
   /**
    * Called when the stats system is initialized, generally around the time the product starts. StatsInfo will take a
    * read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void startSystem(ActiveStats activeStats) {};
+  protected void startSystem(ActiveStats activeStats) {
+  }
+
+  ;
 
   /**
    * Called when the stats system is stopped, generally around the time the product shuts down (gracefully). May not
    * be called for abnormal exits. StatsInfo will take a read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void stopSystem(ActiveStats activeStats) {};
+  protected void stopSystem(ActiveStats activeStats) {
+  }
+
+  ;
 
   /**
    * Called when a pipeline is created. StatsInfo will take a read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void createPipeline(ActiveStats activeStats, String pipelineId) {};
+  protected void createPipeline(ActiveStats activeStats, String pipelineId) {
+  }
+
+  ;
 
   /**
    * Called when a pipeline is previewed. StatsInfo will take a read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void previewPipeline(ActiveStats activeStats, String pipelineId) {};
+  protected void previewPipeline(ActiveStats activeStats, String pipelineId) {
+  }
+
+  ;
 
   /**
    * Called when a pipeline is started. StatsInfo will take a read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void startPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {};
+  protected void startPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {
+  }
+
+  ;
 
   /**
    * Called when a pipeline is stopped. StatsInfo will take a read lock before calling this.
+   *
    * @param activeStats current active stats
    */
-  protected void stopPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {};
+  protected void stopPipeline(ActiveStats activeStats, PipelineConfiguration pipeline) {
+  }
+
+  ;
 
   /**
    * Called when there is a previewer state change. StatsInfo will take a read lock before calling this.
+   *
    * @param previewStatus New pipeline status
-   * @param previewer current previewer
+   * @param previewer     current previewer
    */
   protected void previewStatusChanged(
       PreviewStatus previewStatus,

@@ -73,7 +73,7 @@ public class TestStatsCollectorTask {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private static final Map<String, Object> DEFAULT_SYS_INFO_MAP = ImmutableMap.of("cloudProvider", SysInfo.UNKNOWN);
   private static final String POST_TELEMETRY_URL = "https://fake-url.com/post/telemetry/here";
-  private static final String SDC_313_EMPTY_STATS_JSON_FIXTURE = "/com/streamsets/datacollector/usagestats/sdc3.13.empty.stats.json";
+  private static final String SDC_313_STATS_JSON_FIXTURE = "/com/streamsets/datacollector/usagestats/sdc3.13.stats.json";
 
   private Runnable runnable;
   private HttpURLConnection[] uploadConnectionHolder = new HttpURLConnection[1];
@@ -486,6 +486,9 @@ public class TestStatsCollectorTask {
     //verifying we rolled the read stats
     Assert.assertEquals("v1", task.getStatsInfo().getActiveStats().getDataCollectorVersion());
 
+    // verifying StatsInfo is populated correctly on activeStats
+    Assert.assertNotEquals("pid", task.getStatsInfo().getActiveStats().hashPipelineId("pid"));
+
     task.stop();
   }
 
@@ -742,7 +745,7 @@ public class TestStatsCollectorTask {
     }
 
     FileUtils.copyFile(
-        new File(this.getClass().getResource(SDC_313_EMPTY_STATS_JSON_FIXTURE).getPath()),
+        new File(this.getClass().getResource(SDC_313_STATS_JSON_FIXTURE).getPath()),
         task.getStatsFile());
 
     task.init();
@@ -783,6 +786,12 @@ public class TestStatsCollectorTask {
     // test collected fields were not upgraded and have no extensions
     Assert.assertEquals("1.0", collected.getVersion());
     Assert.assertEquals("3.13.0", collected.getDataCollectorVersion());
+    Assert.assertEquals(12193 + 47797, collected.getPipelineMilliseconds());
+    Assert.assertEquals(Long.valueOf(59989), collected.getStageMilliseconds().get(
+        "streamsets-datacollector-dev-lib::com_streamsets_pipeline_stage_devtest_RandomDataGeneratorSource"));
+    Assert.assertEquals(Long.valueOf(59989), collected.getStageMilliseconds().get(
+        "streamsets-datacollector-basic-lib::com_streamsets_pipeline_stage_destination_devnull_NullDTarget"));
+    Assert.assertEquals(1, collected.getRecordsOM());
     Assert.assertEquals(ImmutableList.of(), collected.getExtensions());
 
     task.stop();
