@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Preconditions;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -86,6 +87,7 @@ public class UsageTimer {
     return this;
   }
 
+  @JsonIgnore
   public boolean isRunning() {
     return getMultiplier() > 0;
   }
