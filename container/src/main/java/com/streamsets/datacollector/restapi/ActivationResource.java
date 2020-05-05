@@ -35,13 +35,17 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Path("/v1/activation")
 @Api(value = "activation")
 @DenyAll
 @RequiresCredentialsDeployed
 public class ActivationResource {
+
+  static final String LICENSE_TYPE = "licenseType";
 
   private final Activation activation;
   private final StatsCollector statsCollector;
@@ -68,7 +72,10 @@ public class ActivationResource {
   public Response updateActivation(String activationKey) throws PipelineException, IOException {
     if (activation.isEnabled()) {
       activation.setActivationKey(activationKey);
-      if (!statsCollector.isOpted()) {
+      Map<String, Object> additionalInfo = Optional.ofNullable(activation.getInfo())
+          .map(Activation.Info::getAdditionalInfo).orElse(Collections.emptyMap());
+      boolean canOptIn = !additionalInfo.containsKey(LICENSE_TYPE) || additionalInfo.get(LICENSE_TYPE).equals("TRIAL");
+      if (!statsCollector.isOpted() && canOptIn) {
         statsCollector.setActive(true);
       }
       return Response.status(Response.Status.OK).entity(activation).build();

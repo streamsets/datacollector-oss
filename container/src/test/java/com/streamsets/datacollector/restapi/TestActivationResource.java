@@ -19,7 +19,9 @@ import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import javax.ws.rs.core.Response;
 
@@ -59,4 +61,45 @@ public class TestActivationResource {
     Mockito.verify(activation).setActivationKey(Mockito.anyString());
     Mockito.verify(statsCollector, Mockito.never()).setActive(Mockito.anyBoolean());
   }
+
+  @Test
+  public void testActivationResourceStatsCollectorNoOptLicenseType() throws Exception {
+    Activation activation = Mockito.mock(Activation.class);
+    StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
+    Mockito.when(statsCollector.isOpted()).thenReturn(false);
+
+    Activation.Info mockInfo = Mockito.mock(Activation.Info.class);
+    Mockito.when(mockInfo.getAdditionalInfo()).thenReturn(ImmutableMap.of(ActivationResource.LICENSE_TYPE, "NONTRIAL"));
+
+    ActivationResource resource = new ActivationResource(activation, statsCollector);
+    Mockito.when(activation.isEnabled()).thenReturn(true);
+
+
+
+    Mockito.when(activation.getInfo()).thenReturn(mockInfo);
+    Response response = resource.updateActivation("");
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    Mockito.verify(activation).setActivationKey(Mockito.anyString());
+    Mockito.verify(statsCollector, Mockito.never()).setActive(Mockito.anyBoolean());
+  }
+
+  @Test
+  public void testActivationResourceStatsCollectorOptBasedOnLicenseType() throws Exception {
+    Activation activation = Mockito.mock(Activation.class);
+    StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
+    Mockito.when(statsCollector.isOpted()).thenReturn(false);
+
+    Activation.Info mockInfo = Mockito.mock(Activation.Info.class);
+    Mockito.when(mockInfo.getAdditionalInfo()).thenReturn(ImmutableMap.of(ActivationResource.LICENSE_TYPE, "TRIAL"));
+
+    ActivationResource resource = new ActivationResource(activation, statsCollector);
+    Mockito.when(activation.isEnabled()).thenReturn(true);
+
+    Mockito.when(activation.getInfo()).thenReturn(mockInfo);
+    Response response = resource.updateActivation("");
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    Mockito.verify(activation).setActivationKey(Mockito.anyString());
+    Mockito.verify(statsCollector).setActive(Mockito.anyBoolean());
+  }
+
 }
