@@ -978,6 +978,12 @@ public class JdbcUtil {
               columnNames.add(columns.getString(4));
             }
             for (JdbcFieldColumnParamMapping customMapping : customMappings) {
+              if (customMapping.columnName.isEmpty()) {
+                issues.add(context.createConfigIssue(Groups.JDBC.name(),
+                    CUSTOM_MAPPINGS,
+                    JdbcErrors.JDBC_59
+                ));
+              }
               if (!columnNames.contains(customMapping.columnName)) {
                 issues.add(context.createConfigIssue(Groups.JDBC.name(),
                     CUSTOM_MAPPINGS,

@@ -81,7 +81,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_56("The default value of '{}' must be in the format '" + JdbcLookupProcessor.DATETIME_FORMAT + "': {}"),
   JDBC_57("Unsupported Multi-Row Operation to SQL Server"),
   JDBC_58("Error processing batch: {}"),
-
+  JDBC_59("Column name in Field to Column Mapping can not be empty"),
   JDBC_60("Cannot Serialize Offset: {}"),
   JDBC_61("Cannot Deserialize Offset: {}"),
   JDBC_62("Table {} does not have a primary or no partition configuration defined."),
