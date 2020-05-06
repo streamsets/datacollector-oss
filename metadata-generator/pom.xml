@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.16.0-SNAPSHOT</version>
+    <version>3.16.0</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-metadata-generator</artifactId>
-  <version>3.16.0-SNAPSHOT</version>
+  <version>3.16.0</version>
   <description>StreamSets Data Collector Metadata Generator</description>
   <name>StreamSets Data Collector Metadata Generator</name>
   <packaging>jar</packaging>
