@@ -72,7 +72,6 @@
     <cyberark-credentialstore-lib>cyberark-credentialstore-lib</cyberark-credentialstore-lib>
     <dev-lib>dev-lib</dev-lib>
     <dataformats-lib>dataformats-lib</dataformats-lib>
-    <sshtunnel-lib>sshtunnel-lib</sshtunnel-lib>
     <google-cloud-lib>google-cloud-lib</google-cloud-lib>
     <influxdb_0_9-lib>influxdb_0_9-lib</influxdb_0_9-lib>
     <jks-credentialstore-lib>jks-credentialstore-lib</jks-credentialstore-lib>
@@ -81,15 +80,11 @@
     <kinesis-lib>kinesis-lib</kinesis-lib>
     <mleap-lib>mleap-lib</mleap-lib>
     <mysql-binlog-lib>mysql-binlog-lib</mysql-binlog-lib>
-    <mysql-lib>mysql-lib</mysql-lib>
     <omniture-lib>omniture-lib</omniture-lib>
-    <oracle-lib>oracle-lib</oracle-lib>
     <orchestrator-lib>orchestrator-lib</orchestrator-lib>
-    <postgresql-lib>postgresql-lib</postgresql-lib>
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
-    <sqlserver-lib>sqlserver-lib</sqlserver-lib>
     <stats-lib>stats-lib</stats-lib>
     <tensorflow-lib>tensorflow-lib</tensorflow-lib>
     <vault-credentialstore-lib>vault-credentialstore-lib</vault-credentialstore-lib>
@@ -255,7 +250,6 @@
     <module>cyberark-credentialstore-lib</module>
     <module>dev-lib</module>
     <module>dataformats-lib</module>
-    <module>sshtunnel-lib</module>
     <module>google-cloud-lib</module>
     <module>influxdb_0_9-lib</module>
     <module>jks-credentialstore-lib</module>
@@ -265,15 +259,11 @@
     <module>kinesis-lib</module>
     <module>mleap-lib</module>
     <module>mysql-binlog-lib</module>
-    <module>mysql-lib</module>
     <module>omniture-lib</module>
-    <module>oracle-lib</module>
     <module>orchestrator-lib</module>
-    <module>postgresql-lib</module>
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
-    <module>sqlserver-lib</module>
     <module>stats-lib</module>
     <module>tensorflow-lib</module>
     <module>vault-credentialstore-lib</module>
