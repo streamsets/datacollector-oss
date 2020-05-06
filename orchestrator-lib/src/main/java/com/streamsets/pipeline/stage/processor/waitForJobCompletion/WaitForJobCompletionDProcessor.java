@@ -33,7 +33,7 @@ import com.streamsets.pipeline.lib.startJob.Groups;
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb"
+    onlineHelpRefUrl ="index.html?contextID=task_rlz_yn3_plb"
 )
 @GenerateResourceBundle
 @HideConfigs({
