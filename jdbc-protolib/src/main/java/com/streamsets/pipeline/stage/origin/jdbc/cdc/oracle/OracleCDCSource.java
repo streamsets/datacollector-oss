@@ -813,15 +813,13 @@ public class OracleCDCSource extends BaseSource {
           LOG.warn("Error while attempting to close SQL statements", ex);
         }
         try {
-          if (continuousMine) {
-            logMinerSession.close();
-          }
-        } catch (SQLException ex) {
-          LOG.warn("Error while trying to close logminer session", ex);
-        }
-        try {
           if (error) {
             resetConnectionsQuietly();
+            if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
+              // The LogMiner session will be closed after a connection reset. We need to reload the LogMiner
+              // dictionary before opening again a new session.
+              logMinerSession.preloadDictionary(startTime);
+            }
           } else {
             discardOldUncommitted(startTime);
             if (sessionWindowInCurrent) {
