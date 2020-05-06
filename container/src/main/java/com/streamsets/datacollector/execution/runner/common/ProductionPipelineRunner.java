@@ -467,7 +467,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     FullPipeBatch pipeBatch = createFullPipeBatch(null,null);
-    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
+    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch, originPipe.getStage().getDefinition().getRecordsByRef());
 
     originPipe.prepareBatchContext(batchContext);
 

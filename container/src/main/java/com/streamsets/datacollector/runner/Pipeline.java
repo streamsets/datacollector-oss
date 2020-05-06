@@ -1165,7 +1165,8 @@ public class Pipeline {
         isErrorStage,
         antennaDoctor,
         antennaDoctorContext,
-        statsCollector
+        statsCollector,
+        stageRuntime.getDefinition().getRecordsByRef()
       )
     );
 

@@ -247,7 +247,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   @Override
   public BatchContext startBatch() {
     FullPipeBatch pipeBatch = new FullPipeBatch(null, null, batchSize, true);
-    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
+    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch, originPipe.getStage().getDefinition().getRecordsByRef());
 
     originPipe.prepareBatchContext(batchContext);
 
