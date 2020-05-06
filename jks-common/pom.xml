@@ -24,7 +24,7 @@
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
     <version>3.16.0-SNAPSHOT</version>
-    <relativePath>../root-lib</relativePath>
+    <relativePath>../root</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-jks-common</artifactId>
   <version>3.16.0-SNAPSHOT</version>

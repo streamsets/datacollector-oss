@@ -23,7 +23,7 @@ then
   echo "Usage: $0 NEW-VERSION"
   exit 1
 fi
-mvn versions:set -Drelease -Parchetype,stage-lib-parent,hdp-stagelib-base -DnewVersion=$version
+mvn versions:set -Drelease -Parchetype,stage-lib-parent,all-poms -DnewVersion=$version
 
 ROOTDIR=`echo $PWD | tr -d "\r"`
 

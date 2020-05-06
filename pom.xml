@@ -801,13 +801,17 @@
       </modules>
     </profile>
 
-   <profile>
-      <id>hdp-stagelib-base</id>
+    <profile>
+      <!-- include all "base" modules, where a set of stagelibs needs a common parent pom that doesn't necessarily
+           need to be imported as a module in its own right; this is necessary in order to run the version update
+           properly -->
+      <id>all-poms</id>
       <activation>
         <activeByDefault>false</activeByDefault>
       </activation>
       <modules>
         <module>hdp-stagelib-base</module>
+        <module>cdh_6-stagelib-base</module>
       </modules>
     </profile>
 
