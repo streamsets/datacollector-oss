@@ -119,7 +119,7 @@ public class AdminResource {
   @Path("/restart")
   @ApiOperation(value = "Restart SDC", authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
-  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE, AuthzRole.ADMIN_ACTIVATION})
   public Response restart() throws PipelineStoreException {
     LOG.info("Restart requested.");
     Thread thread = new Thread("Shutdown Request") {
