@@ -906,6 +906,11 @@ angular
             };
           }
 
+          if (hasConnections(config.stages, $scope.stageLibraries)) {
+            $scope.isPipelineReadOnly = true;
+            $rootScope.common.errors = ['Pipeline is read only as it has a connection in use.'];
+          }
+
           if (config.metadata && config.metadata.controlHubTestRun) {
             // Pipeline is Control Hub test run pipeline - so mark it readonly
             $scope.isPipelineReadOnly = true;
@@ -953,6 +958,44 @@ angular
         $scope.showLoading = false;
         $rootScope.common.errors = [resp.data];
       });
+
+
+    /**
+     * Check if any stage in the pipeline is configured to use a connection
+     * A stage can have multiple connections configured.
+     * if at least one of them is not set to MANUAL, that connection is in use for that stage.
+     */
+    var hasConnections = function(pipelineStages, stageLibraries) {
+      /**
+       * this generates list of fields for each stage with the type CONNECTION type configurations
+       * {
+       *    stageName: ['config1', 'config2']
+       * }
+       */
+      var configsWithConnections = stageLibraries
+        .flatMap(function (stage) {
+          return stage.configDefinitions
+            .filter(function (config) { return config.type === 'CONNECTION'; })
+            .map(function (config) { return {name: config.name, stageName: stage.name }; });
+        })
+        .reduce(function(map, config) {
+          map[config.stageName] = (map[config.stageName] || []).concat(config.name);
+          return map;
+        }, {});
+      /*
+      * we first check if the pipeline has any stages that could have a connection config
+      * if it has, then we check that configuration value to check if that is using a connection. (If set to MANUAL it is not in use)
+      */
+      return pipelineStages.some(function (stage)  {
+        // 1. does this stage have CONNECTION type config
+        // 2. are they set to MANUAL
+        return configsWithConnections[stage.stageName] && stage.configuration.some(
+          function (configValue) {
+              return configsWithConnections[stage.stageName].indexOf(configValue.name) !== -1 && configValue.value !== 'MANUAL';
+            }
+        );
+      });
+    };
 
     /**
      * Load Pipeline Configuration by fetching it from server for the given Pipeline Configuration name.
@@ -1004,7 +1047,7 @@ angular
         }
       },function(resp) {
         $scope.pipelineConfig = undefined;
-        $rootScope.common.errors = [resp.data];
+        $rootScope.common.errors = ['Pipeline contains stages with connections configured'];
       });
     };
 
