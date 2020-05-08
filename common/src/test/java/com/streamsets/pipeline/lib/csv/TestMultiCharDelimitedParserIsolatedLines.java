@@ -22,8 +22,11 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 
@@ -93,5 +96,19 @@ public class TestMultiCharDelimitedParserIsolatedLines {
     for (String line : NEWLINES_IN_CELLS_LINES) {
       parser.parseStandaloneLine(line);
     }
+  }
+
+  @Test
+  public void testEscapeFieldSeparator() {
+    final List<String> fields = CsvMultiCharDelimitedParser.createNonReaderParser('"', '\\', "||").parseStandaloneLine("abc\\||def||ghi");
+    assertThat(fields, hasSize(2));
+    assertThat(fields, contains("abc||def", "ghi"));
+  }
+
+  @Test
+  public void testEscapeQuotedFieldSeparator() {
+    final List<String> fields = CsvMultiCharDelimitedParser.createNonReaderParser('"', '\\', "||").parseStandaloneLine("\"abc\\||def\"||ghi");
+    assertThat(fields, hasSize(2));
+    assertThat(fields, contains("abc||def", "ghi"));
   }
 }
