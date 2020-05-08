@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     label = "Elasticsearch",
     description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch_multithreaded.png",
+    recordsByRef = true,
     resetOffset = true,
     upgraderDef = "upgrader/ElasticsearchDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pmh_xpm_2z"

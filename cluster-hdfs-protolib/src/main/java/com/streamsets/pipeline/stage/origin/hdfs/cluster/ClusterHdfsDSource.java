@@ -34,6 +34,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
   libJarsRegex = {"avro-\\d+.*", "avro-mapred.*"},
   icon = "hdfs.png",
   privateClassLoader = true,
+  recordsByRef = true,
   upgrader = ClusterHdfsSourceUpgrader.class,
   upgraderDef = "upgrader/ClusterHdfsDSource.yaml",
   onlineHelpRefUrl ="index.html?contextID=task_hgl_vgn_vs"

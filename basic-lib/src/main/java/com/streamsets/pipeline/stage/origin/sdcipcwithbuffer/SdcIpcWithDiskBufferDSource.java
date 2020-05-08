@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
     description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination. " +
         "It buffers records in memory/disk. In case of failure/stop records may be lost.",
     execution = ExecutionMode.STANDALONE,
+    recordsByRef = true,
     icon = "dev.png",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html",
     upgrader = SdcIpcWithDiskBufferSourceUpgrader.class,

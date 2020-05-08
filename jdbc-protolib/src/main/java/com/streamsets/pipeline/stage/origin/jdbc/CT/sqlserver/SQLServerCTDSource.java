@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
     icon = "sql-server-multithreaded.png",
     resetOffset = true,
     producesEvents = true,
+    recordsByRef = true,
     upgrader = SQLServerCTSourceUpgrader.class,
     upgraderDef = "upgrader/SQLServerCTDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_vsh_22s_r1b"

@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
     icon="sdcipc.png",
     onlineHelpRefUrl ="index.html?contextID=task_lxh_1w2_ct",
     upgrader = SdcIpcSourceUpgrader.class,
+    recordsByRef = true,
     upgraderDef = "upgrader/SdcIpcDSource.yaml"
 )
 @ConfigGroups(Groups.class)

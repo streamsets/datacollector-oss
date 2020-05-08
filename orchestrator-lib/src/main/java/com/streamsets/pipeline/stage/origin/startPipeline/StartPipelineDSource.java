@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
     label = "Start Pipeline",
     description = "Starts a Data Collector, Transformer, or Edge pipeline",
     icon="pipeline.png",
+    recordsByRef = true,
     execution = {
         ExecutionMode.STANDALONE
     },

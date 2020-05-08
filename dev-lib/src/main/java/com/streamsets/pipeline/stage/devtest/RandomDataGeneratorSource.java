@@ -66,6 +66,7 @@ import java.util.concurrent.Future;
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     icon= "dev.png",
     producesEvents = true,
+    recordsByRef = true,
     upgrader = RandomDataGeneratorSourceUpgrader.class,
     upgraderDef = "upgrader/RandomDataGeneratorSource.yaml",
     onlineHelpRefUrl ="index.html#datacollector/UserGuide/Pipeline_Design/DevStages.html"

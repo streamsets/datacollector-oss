@@ -35,6 +35,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
   icon="httptokafka.png",
   onlineHelpRefUrl ="index.html?contextID=task_vgx_nqd_dy",
   upgrader = HttpToKafkaSourceUpgrader.class,
+  recordsByRef = true,
   upgraderDef = "upgrader/HttpToKafkaDSource.yaml"
 )
 @ConfigGroups(Groups.class)
