@@ -35,7 +35,7 @@
 
   <properties>
     <edge.release-dir>target/SDCe</edge.release-dir>
-    <datacollector-edge.version>3.17.0-CATALOG</datacollector-edge.version>
+    <datacollector-edge.version>3.17.0-SNAPSHOT</datacollector-edge.version>
   </properties>
 
   <dependencies>
