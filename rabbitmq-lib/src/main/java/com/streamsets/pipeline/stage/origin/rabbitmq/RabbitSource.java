@@ -133,8 +133,8 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
         }
         String recordId = message.getEnvelope().toString();
         List<Record> records = parseRabbitMessage(recordId, message.getBody());
+        Envelope envelope = message.getEnvelope();
         for (Record record : records){
-          Envelope envelope = message.getEnvelope();
           BasicProperties properties = message.getProperties();
           Record.Header outHeader = record.getHeader();
           if (envelope != null) {
@@ -165,8 +165,13 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
             }
           }
           batchMaker.addRecord(record);
-          nextSourceOffset = outHeader.getAttribute("deliveryTag");
           numRecords++;
+        }
+        if (envelope != null) {
+          nextSourceOffset = String.valueOf(envelope.getDeliveryTag());
+        } else {
+          nextSourceOffset = null;
+          LOG.warn("Message received with no envelope" );
         }
       } catch (InterruptedException e) {
         LOG.warn("Pipeline is shutting down.");
