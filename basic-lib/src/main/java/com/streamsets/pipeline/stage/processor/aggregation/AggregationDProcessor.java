@@ -30,6 +30,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     icon="aggregation.png",
     producesEvents = true,
     onlineHelpRefUrl ="index.html?contextID=task_bd3_vvm_5bb",
+    recordsByRef = true,
     flags = StageBehaviorFlags.PASSTHROUGH,
     upgrader = AggregationProcessorUpgrader.class,
     upgraderDef = "upgrader/AggregationDProcessor.yaml"

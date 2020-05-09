@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Performs KV lookups to enrich records",
     icon = "kudu.png",
     privateClassLoader = true,
+    recordsByRef = true,
     upgrader = KuduProcessorUpgrader.class,
     upgraderDef = "upgrader/KuduLookupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_b5b_dyl_p1b"

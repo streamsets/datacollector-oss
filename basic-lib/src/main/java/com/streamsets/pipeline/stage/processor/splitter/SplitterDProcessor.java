@@ -34,6 +34,7 @@ import java.util.List;
     label="Field Splitter",
     description = "Splits a string field based on a separator character",
     icon="splitter.png",
+    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     onlineHelpRefUrl ="index.html?contextID=task_av1_5g3_yq",
     upgrader = SplitterProcessorUpgrader.class,

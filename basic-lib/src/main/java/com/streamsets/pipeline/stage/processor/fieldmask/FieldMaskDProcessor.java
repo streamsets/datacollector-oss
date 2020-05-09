@@ -31,6 +31,7 @@ import java.util.List;
     label = "Field Masker",
     description = "Masks field values",
     icon = "mask.png",
+    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgraderDef = "upgrader/FieldMaskDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_vgg_z44_wq"
