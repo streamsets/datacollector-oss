@@ -290,7 +290,7 @@ public class TestPipeBatch {
     Record copiedRecordY = pipeBatch.getFullPayload().get("y").get(0);
 
     assertEquals(origRecord, copiedRecordX);
-    Assert.assertNotSame(origRecord, copiedRecordX);
+    Assert.assertSame(origRecord, copiedRecordX);
 
     assertEquals(origRecord, copiedRecordY);
     Assert.assertNotSame(origRecord, copiedRecordY);

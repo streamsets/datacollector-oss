@@ -330,7 +330,7 @@ public class FullPipeBatch implements PipeBatch {
     List<Record> records = Preconditions.checkNotNull(fullPayload.remove(inputLane), Utils.formatL(
         "Stream '{}' does not exist", inputLane));
     boolean firstOutputLane = true;
-    for (String lane : outputLanes.subList(1, outputLanes.size())) {
+    for (String lane : outputLanes) {
       Preconditions.checkState(!fullPayload.containsKey(lane), Utils.formatL("Lane '{}' already exists", lane));
       if(firstOutputLane) {
         fullPayload.put(lane, records);
