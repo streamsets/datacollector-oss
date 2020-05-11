@@ -1187,6 +1187,11 @@ public class OracleCDCSource extends BaseSource {
     if (redoSQL != null) {
       event.getHeader().setAttribute(DDL_TEXT, redoSQL);
     }
+    if (timestamp != null) {
+      event.getHeader().setAttribute(TIMESTAMP_HEADER, timestamp);
+    }
+
+    Map<String, Field> fields = new HashMap<>();
     if (sendSchema) {
       // Note that the schema inserted is the *current* schema and not the result of the DDL.
       // Getting the schema as a result of the DDL is not possible.
@@ -1194,19 +1199,13 @@ public class OracleCDCSource extends BaseSource {
       // trying to figure out the schema at the time of the DDL is not really possible since this DDL could have occured
       // before the source started. Since we allow only types to be bigger and no column drops, this is ok.
       Map<String, Integer> schema = tableSchemas.get(schemaAndTable);
-      Map<String, Field> fields = new HashMap<>();
       for (Map.Entry<String, Integer> column : schema.entrySet()) {
         fields.put(column.getKey(), Field.create(JDBCTypeNames.get(column.getValue())));
       }
-      event.set(Field.create(fields));
     }
-    if (timestamp != null) {
-      event.getHeader().setAttribute(TIMESTAMP_HEADER, timestamp);
-    }
+    event.set(Field.create(fields));
+    LOG.debug("Event produced: " + event);
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Event produced: " + event);
-    }
     return event;
   }
 
