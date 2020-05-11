@@ -72,13 +72,6 @@ angular.module('dataCollectorApp.common')
         return null;
       }
     };
-    tracking.mixpanel.opt_out_tracking = function() {
-      if(typeof mixpanel === 'object') {
-        return mixpanel.opt_out_tracking.apply(mixpanel, arguments);
-      } else {
-        return null;
-      }
-    };
     tracking.mixpanel.identify = function() {
       if(typeof mixpanel === 'object') {
         return mixpanel.identify.apply(mixpanel, arguments);
