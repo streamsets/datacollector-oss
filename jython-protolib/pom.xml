@@ -34,7 +34,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <jython.version>2.7.1</jython.version>
+    <jython.version>2.7.2</jython.version>
     <guava.version>20.0</guava.version>
   </properties>
 
