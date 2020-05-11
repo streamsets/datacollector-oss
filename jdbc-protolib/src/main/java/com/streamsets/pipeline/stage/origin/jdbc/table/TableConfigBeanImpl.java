@@ -43,14 +43,41 @@ public class TableConfigBeanImpl implements TableConfigBean {
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable Table Name List",
+      description = "Specify a list of table names or patterns to read. Use a SQL like syntax",
+      defaultValue = "" + IS_TABLE_PATTERN_LIST_PROVIDED_DEFAULT_VALUE,
+      displayPosition = 30,
+      group = "TABLE"
+  )
+  public boolean isTablePatternListProvided = false;
+
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name Pattern",
       description = "Pattern of the table names to read. Use a SQL like syntax.",
-      displayPosition = 30,
+      displayPosition = 35,
       defaultValue = "%",
-      group = "TABLE"
+      group = "TABLE",
+      dependsOn = "isTablePatternListProvided",
+      triggeredByValue = "false"
   )
   public String tablePattern;
+
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Table Name Pattern List",
+      description = "List of table name patterns to read. Use a SQL like syntax.",
+      displayPosition = 40,
+      group = "TABLE",
+      dependsOn = "isTablePatternListProvided",
+      triggeredByValue = "true"
+  )
+  public List<String> tablePatternList = new ArrayList<>();
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -59,7 +86,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Table Exclusion Pattern",
       description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no exclusion needed.",
-      displayPosition = 40,
+      displayPosition = 50,
       group = "TABLE"
   )
   public String tableExclusionPattern;
@@ -71,7 +98,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Schema Exclusion Pattern",
       description = "Pattern of the schema names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no schema exclusions are needed.",
-      displayPosition = 45,
+      displayPosition = 55,
       group = "TABLE"
   )
   public String schemaExclusionPattern;
@@ -82,7 +109,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       type = ConfigDef.Type.BOOLEAN,
       label = "Override Offset Columns",
       description = "Overrides the primary key(s) as the offset column(s).",
-      displayPosition = 50,
+      displayPosition = 60,
       defaultValue = "false",
       group = "TABLE"
   )
@@ -94,7 +121,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       type = ConfigDef.Type.LIST,
       label = "Offset Columns",
       description = "Specify offset column(s) to override default offset column(s)",
-      displayPosition  = 60,
+      displayPosition  = 70,
       group = "TABLE",
       dependsOn = "overrideDefaultOffsetColumns",
       triggeredByValue = "true"
@@ -108,7 +135,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       type = ConfigDef.Type.MAP,
       label = "Initial Offset",
       description = "Configure Initial Offset for each Offset Column.",
-      displayPosition = 70,
+      displayPosition = 80,
       group = "TABLE",
       elDefs = {TimeNowEL.class, TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -122,7 +149,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Enable Non-Incremental Load",
       description = "Use non-incremental loading for any tables that do not have suitable keys or offset column" +
           " overrides defined.  Progress within the table will not be tracked.",
-      displayPosition = 75,
+      displayPosition = 85,
       defaultValue = "" + ENABLE_NON_INCREMENTAL_DEFAULT_VALUE,
       group = "TABLE"
   )
@@ -135,7 +162,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Multithreaded Partition Processing Mode",
       description = "Multithreaded processing of partitions mode. Required (validation error if not possible), Best" +
           " effort (use if possible, but don't fail validation if not), or disabled (no partitioning).",
-      displayPosition = 80,
+      displayPosition = 90,
       defaultValue = PARTITIONING_MODE_DEFAULT_VALUE_STR,
       group = "TABLE"
   )
@@ -149,7 +176,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Partition Size",
       description = "Controls the size of partitions.  This value represents the range of values that will be covered" +
           " by a single partition.",
-      displayPosition = 90,
+      displayPosition = 100,
       defaultValue = DEFAULT_PARTITION_SIZE,
       group = "TABLE",
       dependsOn = "partitioningMode",
@@ -164,7 +191,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
       label = "Max Partitions",
       description = "The maximum number of partitions that can be processed at once. Includes active partitions with" +
           " rows left to read and completed partitions before they are pruned.",
-      displayPosition = 100,
+      displayPosition = 110,
       defaultValue = "" + DEFAULT_MAX_NUM_ACTIVE_PARTITIONS,
       group = "TABLE",
       dependsOn = "partitioningMode",
@@ -193,8 +220,18 @@ public class TableConfigBeanImpl implements TableConfigBean {
   }
 
   @Override
+  public boolean isTablePatternListProvided() {
+    return isTablePatternListProvided;
+  }
+
+  @Override
   public String getTablePattern() {
     return tablePattern;
+  }
+
+  @Override
+  public List<String> getTablePatternList() {
+    return tablePatternList;
   }
 
   @Override

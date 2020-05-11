@@ -72,6 +72,7 @@ public class TableJdbcSourceUpgrader implements StageUpgrader{
         removeDriverClassNameAndTestQuery(configs);
         break;
       case 7:
+      case 8:
         // handled by YAML upgrader
         break;
       default:

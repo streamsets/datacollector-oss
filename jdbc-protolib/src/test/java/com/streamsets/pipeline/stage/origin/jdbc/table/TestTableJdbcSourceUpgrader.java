@@ -241,6 +241,17 @@ public class TestTableJdbcSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "createJDBCHeaders", true);
   }
 
+  @Test
+  public void testUpgradeV8ToV9() {
+    Mockito.doReturn(8).when(context).getFromVersion();
+    Mockito.doReturn(9).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "tableJdbcConfigBean.isTablePatternListProvided", false);
+    UpgraderTestUtils.assertExists(configs, "tableJdbcConfigBean.tablePatternList", Collections.emptyList());
+  }
+
   private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {
     for (LinkedHashMap<String, Object> tableConfigMap : tableConfigMaps) {
       assertThat(tableConfigMap, hasEntry(

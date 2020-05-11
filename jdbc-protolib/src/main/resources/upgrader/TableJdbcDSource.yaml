@@ -22,3 +22,11 @@ upgrades:
       - setConfig:
           name: tableJdbcConfigBean.createJDBCHeaders
           value: true
+  - toVersion: 9
+    actions:
+      - setConfig:
+          name: tableJdbcConfigBean.isTablePatternListProvided
+          value: false
+      - setConfig:
+          name: tableJdbcConfigBean.tablePatternList
+          value: []
