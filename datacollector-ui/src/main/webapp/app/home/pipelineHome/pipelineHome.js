@@ -35,7 +35,7 @@ angular
   .controller('PipelineHomeController', function (
     $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, $localStorage, pipelineService,
     pipelineConstant, visibilityBroadcaster, $translate, contextHelpService, $location, authService, userRoles,
-    Analytics, tracking
+    Analytics, tracking, pipelineTracking
   ) {
     var routeParamPipelineName = $routeParams.pipelineName;
     var configTimeout;
@@ -315,7 +315,7 @@ angular
         $rootScope.common.errors = [];
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
-          trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+          trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
           tracking.mixpanel.track('Preview Selected', trackingData);
           tracking.FS.event('Preview Selected', trackingData);
 
@@ -813,6 +813,17 @@ angular
         $scope.refreshGraph();
       }
     });
+
+    /**
+     * Checks if status is one of the error statuses
+     * @param {string} status
+     */
+    function isErrorStatus(status) {
+      return _.contains(
+        ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'],
+        status
+        );
+    }
 
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
@@ -1933,7 +1944,7 @@ angular
 
     var prepareForPreview = function() {
       $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
-      var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+      var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
       var previewConfig = $scope.pipelineConfig.uiInfo.previewConfig;
       trackingData['Preview Source'] = previewConfig.previewSource;
       trackingData['Preview Batch Size'] = previewConfig.batchSize;
@@ -2253,7 +2264,7 @@ angular
         $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
 
         if (oldActiveConfigStatus.timeStamp && oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
-          _.contains(['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'], $scope.activeConfigStatus.status)
+          isErrorStatus($scope.activeConfigStatus.status)
         ) {
 
           var status = $scope.activeConfigStatus;
@@ -2273,6 +2284,10 @@ angular
             $scope.activeConfigStatus.message];
           }
 
+          // Track if this error status is new
+          if (!isErrorStatus(oldActiveConfigStatus.status)) {
+            pipelineTracking.pipelineError(status, oldActiveConfigStatus, $scope.pipelineConfig);
+          }
         }
 
         if ($scope.activeConfigStatus.status === 'RETRY') {

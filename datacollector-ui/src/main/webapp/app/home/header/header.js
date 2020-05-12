@@ -21,7 +21,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('HeaderController', function (
     $scope, $rootScope, $timeout, _, api, $translate, $location, authService, pipelineService, pipelineConstant,
-    $modal, $q, $route, tracking
+    $modal, $q, $route, tracking, pipelineTracking
   ) {
 
     var pipelineValidationInProgress;
@@ -73,7 +73,7 @@ angular
        * Validate Pipeline
        */
       validatePipeline: function() {
-        var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
         tracking.mixpanel.track('Validation Selected', trackingData);
         tracking.FS.event('Validation Selected', trackingData);
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Validate Pipeline', 1);
@@ -119,7 +119,7 @@ angular
                 trackingData['Validation Successful'] = false;
                 if (previewData.issues) {
                   $rootScope.common.errors = [previewData.issues];
-                  var issueList = pipelineService.getFlatIssueList(previewData.issues);
+                  var issueList = pipelineTracking.getFlatIssueList(previewData.issues);
                   trackingData['Validation Error'] = issueList;
                 } else if (previewData.message) {
                   $rootScope.common.errors = [previewData.message];
@@ -146,7 +146,7 @@ angular
        */
       startPipeline: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
         trackingData['With Parameters'] = false;
         tracking.mixpanel.track('Run Selected', trackingData);
         tracking.FS.event('Run Selected', trackingData);
@@ -190,7 +190,7 @@ angular
        */
       startPipelineWithParameters: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
         trackingData['With Parameters'] = true;
         tracking.mixpanel.track('Run Selected', trackingData);
         tracking.FS.event('Run Selected', trackingData);
@@ -258,7 +258,7 @@ angular
         });
 
         modalInstance.result.then(function(status) {
-          var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+          var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
           trackingData['Force Stop'] = !!forceStop;
           tracking.mixpanel.track('Pipeline Stop Requested', trackingData);
           $scope.clearTabSelectionCache();
