@@ -65,28 +65,29 @@ public class ConfigDefinition {
   private Map<String, List<Object>> dependsOnMap;
   private String prefix;
   private ConfigDef.DisplayMode displayMode;
+  private String connectionType;
 
   public ConfigDefinition(String name, ConfigDef.Type type, ConfigDef.Upload upload, String label, String description,
-      Object defaultValue,
-      boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
-      List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
-      List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
-                          ConfigDef.DisplayMode displayMode) {
+                          Object defaultValue,
+                          boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
+                          List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
+                          List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
+                          List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
+                          ConfigDef.DisplayMode displayMode, String connectionType) {
     this(null, name, type, upload, label, description, defaultValue, "",
         required, group, fieldName,
         model, dependsOn, triggeredByValues, displayPosition, elFunctionDefinitions,
-        elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap, displayMode);
+        elConstantDefinitions, min, max, mode, lines, elDefs, evaluation, dependsOnMap, displayMode, connectionType);
   }
 
   public ConfigDefinition(Field configField, String name, ConfigDef.Type type, ConfigDef.Upload upload,
                           String label, String description,
-      Object defaultValue, String defaultValueFromResource,
-      boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
-      List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
-      List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
-      List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
-      ConfigDef.DisplayMode displayMode) {
+                          Object defaultValue, String defaultValueFromResource,
+                          boolean required, String group, String fieldName, ModelDefinition model, String dependsOn,
+                          List<Object> triggeredByValues, int displayPosition, List<ElFunctionDefinition> elFunctionDefinitions,
+                          List<ElConstantDefinition> elConstantDefinitions, long min, long max, String mode, int lines,
+                          List<Class> elDefs, ConfigDef.Evaluation evaluation, Map<String, List<Object>> dependsOnMap,
+                          ConfigDef.DisplayMode displayMode, String connectionType) {
     this.configField = configField;
     this.name = name;
     this.type = type;
@@ -123,6 +124,8 @@ public class ConfigDefinition {
     this.evaluation = evaluation;
 
     this.displayMode = displayMode;
+
+    this.connectionType = connectionType;
 
     // if getDefaultValueFromResources is a valid resource path we'll read that into String and use it as defaultValue
     if (defaultValueFromResource != null && !defaultValueFromResource.equals("")) {
@@ -322,6 +325,10 @@ public class ConfigDefinition {
     return evaluation;
   }
 
+  public String getConnectionType() {
+    return connectionType;
+  }
+
   public ConfigDefinition localize(ClassLoader classLoader, String bundle) {
     String labelKey = "configLabel." + getName();
     String descriptionKey = "configDescription." + getName();
@@ -376,7 +383,7 @@ public class ConfigDefinition {
                                 getDependsOn(), getTriggeredByValues(), getDisplayPosition(),
                                 getElFunctionDefinitions(), getElConstantDefinitions(), getMin(),
                                 getMax(), getMode(), getLines(), getElDefs(), getEvaluation(), getDependsOnMap(),
-                                getDisplayMode()
+                                getDisplayMode(), getConnectionType()
     );
   }
 

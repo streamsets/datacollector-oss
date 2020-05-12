@@ -87,6 +87,14 @@ public abstract class ConfigValueExtractor {
               errors.add(new ErrorMessage(DefinitionError.DEF_013, contextMsg, valueStr));
             }
             break;
+          case CONNECTION:
+            if (field.getAnnotation(ConfigDef.class).connectionType().isEmpty()) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_016, contextMsg));
+            }
+            if (!String.class.isAssignableFrom(field.getType())) {
+              errors.add(new ErrorMessage(DefinitionError.DEF_011, contextMsg, field.getType()));
+            }
+            break;
           case STRING:
           case MODEL:
             if (!String.class.isAssignableFrom(field.getType()) && !field.getType().isEnum() &&
@@ -197,6 +205,9 @@ public abstract class ConfigValueExtractor {
                 break;
               case NUMBER:
                 value = extractAsNumber(field, valueStr);
+                break;
+              case CONNECTION:
+                value = valueStr;
                 break;
               case STRING:
               case MODEL:

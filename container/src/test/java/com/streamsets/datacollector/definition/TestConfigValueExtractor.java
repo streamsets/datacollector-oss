@@ -192,6 +192,32 @@ public class TestConfigValueExtractor {
       defaultValue = "1987"
     )
     public int runtimeInteger;
+
+    @ConfigDef(
+      type = ConfigDef.Type.CONNECTION,
+      required = true,
+      label = "L",
+      defaultValue = "stringValue",
+      connectionType = "FOO"
+    )
+    public String connection;
+
+    @ConfigDef(
+      type = ConfigDef.Type.CONNECTION,
+      required = true,
+      label = "L",
+      defaultValue = "stringValue"
+    )
+    public String connectionWithoutType;
+
+    @ConfigDef(
+      type = ConfigDef.Type.CONNECTION,
+      required = true,
+      label = "L",
+      defaultValue = "5",
+      connectionType = "FOO"
+    )
+    public int connectionWithWrongDatatype;
   }
 
   @Test
@@ -269,5 +295,27 @@ public class TestConfigValueExtractor {
     field = Configs.class.getField("runtimeInteger");
     configDef = field.getAnnotation(ConfigDef.class);
     Assert.assertEquals(1987, ConfigValueExtractor.get().extract(field, configDef, "x"));
+
+    field = Configs.class.getField("connection");
+    configDef = field.getAnnotation(ConfigDef.class);
+    Assert.assertEquals("stringValue", ConfigValueExtractor.get().extract(field, configDef, "x"));
+
+    field = Configs.class.getField("connectionWithoutType");
+    configDef = field.getAnnotation(ConfigDef.class);
+    try {
+      ConfigValueExtractor.get().extract(field, configDef, "x");
+      Assert.fail("Should have failed due to missing connectionType");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().contains("DEF_016"));
+    }
+
+    field = Configs.class.getField("connectionWithWrongDatatype");
+    configDef = field.getAnnotation(ConfigDef.class);
+    try {
+      ConfigValueExtractor.get().extract(field, configDef, "x");
+      Assert.fail("Should have failed due to wrong datatype");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().contains("DEF_011"));
+    }
   }
 }

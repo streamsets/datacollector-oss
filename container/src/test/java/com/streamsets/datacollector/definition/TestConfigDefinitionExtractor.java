@@ -991,4 +991,24 @@ public class TestConfigDefinitionExtractor {
     Assert.assertEquals(Lists.newArrayList("trigger"), dependsOnMap3.get("prop1"));
     Assert.assertEquals(Lists.newArrayList("xyz"), dependsOnMap3.get("prop2.prop3.prop4"));
   }
+
+  public static class Bean6 {
+
+    @ConfigDef(
+      label = "L",
+      required = true,
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = "FOO"
+    )
+    public String connectionSelection;
+
+  }
+
+  @Test
+  public void testConnectionType() {
+    List<ConfigDefinition> defs = ConfigDefinitionExtractor.get().extract(Bean6.class, Collections.emptyList(), "x");
+    Assert.assertEquals(1, defs.size());
+    ConfigDefinition def = defs.get(0);
+    Assert.assertEquals("FOO", def.getConnectionType());
+  }
 }
