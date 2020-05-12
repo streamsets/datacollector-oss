@@ -733,6 +733,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
 
   @Test
   public void testAddAdditionalProperties() {
+    String additionalProperties = "{\"_retry_on_conflict\":1}";
     ElasticsearchTarget target = createTarget("${time:now()}",
         "${record:value('/index')}",
         "docId",
@@ -743,6 +744,6 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
 
     String expected = ",\"_retry_on_conflict\":1";
 
-    Assert.assertEquals(expected, target.addAdditionalProperties());
+    Assert.assertEquals(expected, target.addAdditionalProperties(additionalProperties));
   }
 }
