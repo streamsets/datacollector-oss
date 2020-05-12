@@ -54,11 +54,13 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
         issues.add(getContext().createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
       }
     }
-    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
-    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
-    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.topic);
-    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.consumerGroup);
-    getContext().publishLineageEvent(event);
+    if(issues.isEmpty()) {
+      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.topic);
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.consumerGroup);
+      getContext().publishLineageEvent(event);
+    }
 
     return issues;
   }
