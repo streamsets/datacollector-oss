@@ -16,8 +16,11 @@
 package com.streamsets.pipeline.stage.origin.multikafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This is very thin wrapper on top of KafkaConsumer (Kafka native class) that is abstracting method calls that
@@ -34,5 +37,11 @@ public interface MultiSdcKafkaConsumer<K, V> {
 
   public void close();
 
-  public void commitSync();
+  public void commitSync(Map<TopicPartition, OffsetAndMetadata> offsets);
+
+  public List<TopicPartition> getTopicPartitions(String topic);
+
+  public long getOffset(TopicPartition topicPartition);
+
+  public Long getCommittedOffset(TopicPartition topicPartition);
 }
