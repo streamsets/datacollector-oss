@@ -301,13 +301,13 @@ public class TestAmazonS3Executor {
   private AmazonS3ExecutorConfig getConfig() {
     AmazonS3ExecutorConfig config = new AmazonS3ExecutorConfig();
 
-    config.s3Config.region = AwsRegion.OTHER;
-    config.s3Config.endpoint = "http://localhost:" + port;
+    config.s3Config.connection.region = AwsRegion.OTHER;
+    config.s3Config.connection.endpoint = "http://localhost:" + port;
     config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
-    config.s3Config.awsConfig = new AWSConfig();
-    config.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
-    config.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
-    config.s3Config.awsConfig.disableChunkedEncoding = true;
+    config.s3Config.connection.awsConfig = new AWSConfig();
+    config.s3Config.connection.awsConfig.awsAccessKeyId = () -> "foo";
+    config.s3Config.connection.awsConfig.awsSecretAccessKey = () -> "bar";
+    config.s3Config.connection.awsConfig.disableChunkedEncoding = true;
 
     config.taskConfig.taskType = TaskType.CHANGE_EXISTING_OBJECT;
     config.taskConfig.objectPath = "${record:value('/object')}";

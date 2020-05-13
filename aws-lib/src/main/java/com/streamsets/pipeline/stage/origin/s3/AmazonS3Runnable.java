@@ -96,7 +96,7 @@ public class AmazonS3Runnable implements Runnable {
     String oldThreadName = Thread.currentThread().getName();
     Thread.currentThread().setName(S3Constants.AMAZON_S3_THREAD_PREFIX + runnerId);
     try {
-      s3Client = s3ConfigBean.s3Config.getS3Client();
+      s3Client = s3ConfigBean.s3Config.connection.getS3Client();
       initGaugeIfNeeded();
       S3Offset offset;
       while (!context.isStopped()) {

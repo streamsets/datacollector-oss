@@ -20,12 +20,10 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
-import com.streamsets.pipeline.api.service.dataformats.SdcRecordGeneratorService;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
 
 import java.util.List;
@@ -37,14 +35,11 @@ public class S3TargetConfigBean {
   public static final String S3_SSE_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "sseConfig.";
   public static final String S3_TM_CONFIG_PREFIX = S3_TARGET_CONFIG_BEAN_PREFIX + "tmConfig.";
 
-  @ConfigDefBean(groups = "S3")
+  @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public S3ConnectionTargetConfig s3Config;
 
   @ConfigDefBean(groups = "SSE")
   public S3TargetSSEConfigBean sseConfig;
-
-  @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig proxyConfig;
 
   @ConfigDefBean(groups = "ADVANCED")
   public TransferManagerConfig tmConfig;
@@ -130,7 +125,7 @@ public class S3TargetConfigBean {
 
     // Don't use amazon s3 client for file transfer error retries (Setting maxErrorRetries to 0)
     // (SDC will retry the file transfer based on AT_LEAST_ONCE/AT_MOST_ONCE SEMANTICS)
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, isWholeFileFormat ? 0 : -1);
+    s3Config.init(context, S3_CONFIG_PREFIX, issues, isWholeFileFormat ? 0 : -1);
 
     //File prefix should not be empty for non whole file format.
     if (!isWholeFileFormat && (fileNamePrefix == null || fileNamePrefix.isEmpty())) {
@@ -158,6 +153,6 @@ public class S3TargetConfigBean {
   }
 
   public void destroy() {
-    s3Config.destroy();
+    s3Config.connection.destroy();
   }
 }

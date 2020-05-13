@@ -44,3 +44,18 @@ upgrades:
           elseValue: WITH_CREDENTIALS
       - removeConfigs:
           namePattern: temp.aws.creds.flag
+  - toVersion: 13
+    actions:
+      # Added AWS_S3 Connection type and need to move a few configs around
+      - renameConfig:
+          oldNamePattern: ^s3TargetConfigBean.s3Config.awsConfig.(.*$)
+          newNamePattern: s3TargetConfigBean.s3Config.connection.awsConfig.(0)
+      - renameConfig:
+          oldNamePattern: ^s3TargetConfigBean.s3Config.region$
+          newNamePattern: s3TargetConfigBean.s3Config.connection.region
+      - renameConfig:
+          oldNamePattern: ^s3TargetConfigBean.s3Config.endpoint$
+          newNamePattern: s3TargetConfigBean.s3Config.connection.endpoint
+      - renameConfig:
+          oldNamePattern: ^s3TargetConfigBean.proxy.(.*$)
+          newNamePattern: s3TargetConfigBean.s3Config.connection.proxy.(0)

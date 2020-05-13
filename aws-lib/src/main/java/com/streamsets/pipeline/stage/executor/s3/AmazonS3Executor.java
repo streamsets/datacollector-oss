@@ -138,10 +138,10 @@ public class AmazonS3Executor extends BaseExecutor {
   ) throws StageException {
     // Copy is currently limited to the same bucket
     String newLocation = evaluate(record, "copyTargetLocation", variables, config.taskConfig.copyTargetLocation);
-    config.s3Config.getS3Client().copyObject(bucket, objectPath, bucket, newLocation);
+    config.s3Config.connection.getS3Client().copyObject(bucket, objectPath, bucket, newLocation);
 
     if(config.taskConfig.dropAfterCopy) {
-      config.s3Config.getS3Client().deleteObject(bucket, objectPath);
+      config.s3Config.connection.getS3Client().deleteObject(bucket, objectPath);
     }
 
     Events.FILE_COPIED.create(getContext())
@@ -158,7 +158,7 @@ public class AmazonS3Executor extends BaseExecutor {
     // Evaluate content
     String content = evaluate(record, "content", variables, config.taskConfig.content);
 
-    config.s3Config.getS3Client().putObject(bucket, objectPath, content);
+    config.s3Config.connection.getS3Client().putObject(bucket, objectPath, content);
 
     Events.FILE_CREATED.create(getContext())
       .with("object_key", objectPath)
@@ -184,7 +184,7 @@ public class AmazonS3Executor extends BaseExecutor {
       }
 
       // Apply all tags at once
-      config.s3Config.getS3Client().setObjectTagging(new SetObjectTaggingRequest(
+      config.s3Config.connection.getS3Client().setObjectTagging(new SetObjectTaggingRequest(
         bucket,
         objectPath,
         new ObjectTagging(newTags)

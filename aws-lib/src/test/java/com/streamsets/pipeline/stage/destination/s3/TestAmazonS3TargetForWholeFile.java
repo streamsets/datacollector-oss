@@ -44,6 +44,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.sdk.service.SdkWholeFileDataFormatGeneratorService;
 import com.streamsets.pipeline.stage.common.AmazonS3TestSuite;
 import com.streamsets.pipeline.stage.common.TestUtil;
+import com.streamsets.pipeline.stage.common.s3.AwsS3Connection;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.aws.TransferManagerConfig;
@@ -269,15 +270,17 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
 
   private AmazonS3Target createS3targetWithWholeFile() {
     S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
-    s3Config.region = AwsRegion.OTHER;
-    s3Config.endpoint = "http://localhost:" + port;
+    s3Config.connection = new AwsS3Connection();
+    s3Config.connection.region = AwsRegion.OTHER;
+    s3Config.connection.endpoint = "http://localhost:" + port;
     s3Config.bucketTemplate = "${record:attribute('bucket')}";
-    s3Config.awsConfig = new AWSConfig();
-    s3Config.awsConfig.awsAccessKeyId = () -> "foo";
-    s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
-    s3Config.awsConfig.disableChunkedEncoding = true;
+    s3Config.connection.awsConfig = new AWSConfig();
+    s3Config.connection.awsConfig.awsAccessKeyId = () -> "foo";
+    s3Config.connection.awsConfig.awsSecretAccessKey = () -> "bar";
+    s3Config.connection.awsConfig.disableChunkedEncoding = true;
     s3Config.commonPrefix = "";
     s3Config.delimiter = DELIMITER;
+    s3Config.connection.proxyConfig = new ProxyConfig();
 
     S3TargetConfigBean s3TargetConfigBean = new S3TargetConfigBean();
     s3TargetConfigBean.partitionTemplate = "";
@@ -286,7 +289,6 @@ public class TestAmazonS3TargetForWholeFile extends AmazonS3TestSuite {
     s3TargetConfigBean.timeZoneID = "UTC";
     s3TargetConfigBean.s3Config = s3Config;
     s3TargetConfigBean.sseConfig = new S3TargetSSEConfigBean();
-    s3TargetConfigBean.proxyConfig = new ProxyConfig();
     s3TargetConfigBean.tmConfig = new TransferManagerConfig();
     s3TargetConfigBean.tmConfig.threadPoolSize = 3;
 

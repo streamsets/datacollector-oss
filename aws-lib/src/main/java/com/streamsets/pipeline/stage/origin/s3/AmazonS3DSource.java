@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.event.NewFileEvent;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
-    version = 12,
+    version = 13,
     label = "Amazon S3",
     description = "Reads files from Amazon S3",
     icon="s3.png",

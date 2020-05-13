@@ -23,7 +23,6 @@ import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
 import java.util.List;
@@ -45,9 +44,6 @@ public class S3ConfigBean {
 
   @ConfigDefBean(groups = "SSE")
   public S3SSEConfigBean sseConfig;
-
-  @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig proxyConfig;
 
   @ConfigDefBean(groups = {"ERROR_HANDLING"})
   public S3ErrorConfig errorConfig;
@@ -89,16 +85,16 @@ public class S3ConfigBean {
     basicConfig.init(context, Groups.S3.name(), BASIC_CONFIG_PREFIX, issues);
 
     //S3 source specific validation
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, AWSUtil.containsWildcard(s3FileConfig.prefixPattern), issues, -1);
+    s3Config.init(context, S3_CONFIG_PREFIX, AWSUtil.containsWildcard(s3FileConfig.prefixPattern), issues, -1);
 
     errorConfig.errorPrefix = AWSUtil.normalizePrefix(errorConfig.errorPrefix, s3Config.delimiter);
     postProcessingConfig.postProcessPrefix = AWSUtil.normalizePrefix(postProcessingConfig.postProcessPrefix, s3Config.delimiter);
 
-    if(s3Config.getS3Client() != null) {
+    if(s3Config.connection.getS3Client() != null) {
       validateBucket(
           context,
           issues,
-          s3Config.getS3Client(),
+          s3Config.connection.getS3Client(),
           s3Config.bucket,
           Groups.S3.name(),
           S3_CONFIG_PREFIX + "bucket"
@@ -157,7 +153,7 @@ public class S3ConfigBean {
       // source prefix
       if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_BUCKET) {
         //If archive option is move to bucket, then bucket must be specified.
-        validateBucket(context, issues, s3Config.getS3Client(), postProcessBucket,groupName, bucketConfig);
+        validateBucket(context, issues, s3Config.connection.getS3Client(), postProcessBucket,groupName, bucketConfig);
         //If the specified bucket is same as the source bucket then prefix must be specified
         if(postProcessBucket != null && !postProcessBucket.isEmpty() &&postProcessBucket.equals(s3Config.bucket)) {
           validatePostProcessingPrefix(context, postProcessBucket, postProcessFolder, groupName, prefixConfig, issues);
@@ -176,7 +172,7 @@ public class S3ConfigBean {
   }
 
   public void destroy() {
-    s3Config.destroy();
+    s3Config.connection.destroy();
   }
 
   private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3 s3Client,
