@@ -19,7 +19,11 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('StopConfirmationModalInstanceController', function ($scope, $modalInstance, pipelineInfo, forceStop, api) {
+  .controller('StopConfirmationModalInstanceController', function (
+      $rootScope, $scope, $modalInstance, pipelineInfo, forceStop,
+      pipelineConfig, api, pipelineTracking
+    ) {
+
     angular.extend($scope, {
       common: {
         errors: []
@@ -32,9 +36,15 @@ angular
       yes: function() {
         $scope.stopping = true;
         if ($scope.isList) {
-
-          var pipelineNames = _.pluck(pipelineInfo, 'pipelineId');
-          api.pipelineAgent.stopPipelines(pipelineNames, forceStop)
+          var pipelineIds = _.pluck(pipelineInfo, 'pipelineId');
+          pipelineIds.forEach(function(pId) {
+            pipelineTracking.trackPipelineStopRequest(
+              $rootScope.common.pipelineStatusMap,
+              pId,
+              forceStop
+            );
+          });
+          api.pipelineAgent.stopPipelines(pipelineIds, forceStop)
             .then(function(response) {
               var res = response.data;
               if (res.errorMessages.length === 0) {
@@ -50,6 +60,14 @@ angular
             });
 
         } else {
+          pipelineTracking.trackPipelineStopRequest(
+            $rootScope.common.pipelineStatusMap,
+            pipelineInfo.pipelineId,
+            forceStop,
+            pipelineConfig,
+            $rootScope.common.pipelineMetrics
+          );
+
           api.pipelineAgent.stopPipeline(pipelineInfo.pipelineId, 0, forceStop)
             .then(function(res) {
               $modalInstance.close(res.data);

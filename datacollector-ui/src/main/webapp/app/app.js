@@ -167,6 +167,8 @@ angular.module('dataCollectorApp')
       logEndingOffset: -1,
       fetchingLog: false,
       counters: {},
+      previousInputRecordCount: {},
+      previousBatchCount: {},
       serverTimeDifference: 0,
       remoteServerInfo: {
         registrationStatus: false

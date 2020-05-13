@@ -566,6 +566,9 @@ angular
             },
             forceStop: function() {
               return forceStop;
+            },
+            pipelineConfig: function() {
+              return null;
             }
           }
         });
@@ -619,6 +622,9 @@ angular
             },
             forceStop: function() {
               return forceStop;
+            },
+            pipelineConfig: function() {
+              return null;
             }
           }
         });

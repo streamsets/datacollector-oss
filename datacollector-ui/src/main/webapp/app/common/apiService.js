@@ -965,11 +965,6 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipeline: function(pipelineName, rev, forceStop) {
-        tracking.mixpanel.track('Pipeline Stopped', {
-          'Pipeline ID': pipelineName,
-          'Stop Type': 'User',
-          'Force Stop': forceStop,
-        });
         var url = apiBase + '/pipeline/' + pipelineName + '/stop?rev=' + rev ;
         if (forceStop) {
           url = apiBase + '/pipeline/' + pipelineName + '/forceStop?rev=' + rev ;
@@ -988,13 +983,6 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipelines: function(pipelineIds, forceStop) {
-        pipelineIds.forEach(function (pId) {
-          tracking.mixpanel.track('Pipeline Stopped', {
-            'Pipeline ID': pId,
-            'Stop Type': 'User',
-            'Force Stop': forceStop,
-          });
-        });
         var url = apiBase + '/pipelines/stop';
         if (forceStop) {
           url = apiBase + '/pipelines/forceStop';

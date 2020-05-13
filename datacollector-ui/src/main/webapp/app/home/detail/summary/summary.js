@@ -21,7 +21,8 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('SummaryController', function (
-    $scope, $rootScope, $modal, $http, pipelineConstant, $filter, authService, $timeout
+    $scope, $rootScope, $modal, $filter, $timeout,
+    pipelineConstant, pipelineTracking
   ) {
     var chartList = [
       {
@@ -304,6 +305,8 @@ angular
           });
 
         });
+
+        pipelineTracking.trackRunReported(pipelineMetrics, pipelineConfig);
       }
 
       //Gauges

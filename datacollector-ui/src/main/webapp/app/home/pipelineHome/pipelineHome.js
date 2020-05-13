@@ -33,8 +33,8 @@ angular
       });
   }])
   .controller('PipelineHomeController', function (
-    $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, $localStorage, pipelineService,
-    pipelineConstant, visibilityBroadcaster, $translate, contextHelpService, $location, authService, userRoles,
+    $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, pipelineService,
+    pipelineConstant, $translate, contextHelpService, $location, authService, userRoles,
     Analytics, tracking, pipelineTracking
   ) {
     var routeParamPipelineName = $routeParams.pipelineName;
@@ -252,37 +252,8 @@ angular
 
         $scope.$broadcast('addNode', stageInstance, edges, relativeXPos, relativeYPos);
 
-        // MixPanel data
-        var stageTrackingDetail = {
-          'Pipeline ID': $scope.pipelineConfig.pipelineId,
-          'Stage ID': stageInstance.instanceName,
-          'Stage Type Name': stageInstance.stageName,
-          'Library Name': stageInstance.library
-        };
+        pipelineTracking.trackStageAdded(stageInstance, $scope.pipelineConfig.pipelineId);
         $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, stage.label, 1);
-        if (stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          tracking.mixpanel.track('Origin Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Origin Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Processor Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Processor Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-          tracking.mixpanel.track('Destination Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Destination Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Executor Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Executor Added': true
-          });
-        } else {
-          tracking.mixpanel.track('Stage with unknown type added', stageTrackingDetail);
-        }
       },
 
       /**
@@ -315,9 +286,7 @@ angular
         $rootScope.common.errors = [];
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
-          trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-          tracking.mixpanel.track('Preview Selected', trackingData);
-          tracking.FS.event('Preview Selected', trackingData);
+          pipelineTracking.trackPreviewSelected($scope.pipelineConfig);
 
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
@@ -349,7 +318,7 @@ angular
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
         $scope.setGraphPreviewMode(false);
-        tracking.mixpanel.track('Preview Closed', {'Pipeline ID': $scope.pipelineConfig ? $scope.pipelineConfig.pipelineId : 'N/A'});
+        pipelineTracking.trackPreviewClosed($scope.pipelineConfig);
         if ($scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
           $scope.refreshGraph();
         }
@@ -1944,18 +1913,7 @@ angular
 
     var prepareForPreview = function() {
       $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
-      var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-      var previewConfig = $scope.pipelineConfig.uiInfo.previewConfig;
-      trackingData['Preview Source'] = previewConfig.previewSource;
-      trackingData['Preview Batch Size'] = previewConfig.batchSize;
-      trackingData['Preview Timeout'] = previewConfig.timeout;
-      trackingData['Has Write to Destinations'] = previewConfig.writeToDestinations;
-      trackingData['Has Pipeline Lifecycle Events'] = previewConfig.executeLifecycleEvents;
-      trackingData['Has Show Record Field Header'] = previewConfig.showHeader;
-      trackingData['Has Show Field Type'] = previewConfig.showFieldType;
-      trackingData['Has Remember The Configuration'] = previewConfig.rememberMe;
-      tracking.mixpanel.people.set({'Core Journey Stage - Preview Run': true});
-      tracking.mixpanel.track('Preview Config Complete', trackingData);
+      pipelineTracking.trackPreviewConfigComplete($scope.pipelineConfig, $scope.pipelineConfig.uiInfo.previewConfig);
 
       $scope.previewMode = true;
       $rootScope.$storage.maximizeDetailPane = false;
@@ -2298,6 +2256,13 @@ angular
           $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
           $scope.isRemotePipeline = true;
           $scope.isPipelineReadOnly = true;
+        }
+
+        if ($scope.activeConfigStatus.status === 'STOPPED' && oldActiveConfigStatus.status === 'STOPPING') {
+          pipelineTracking.trackPipelineStop(
+            $scope.pipelineConfig,
+            $rootScope.common.pipelineMetrics
+          );
         }
 
       });

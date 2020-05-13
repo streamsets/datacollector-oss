@@ -21,7 +21,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('HeaderController', function (
     $scope, $rootScope, $timeout, _, api, $translate, $location, authService, pipelineService, pipelineConstant,
-    $modal, $q, $route, tracking, pipelineTracking
+    $modal, $q, $route, pipelineTracking
   ) {
 
     var pipelineValidationInProgress;
@@ -73,9 +73,7 @@ angular
        * Validate Pipeline
        */
       validatePipeline: function() {
-        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-        tracking.mixpanel.track('Validation Selected', trackingData);
-        tracking.FS.event('Validation Selected', trackingData);
+        pipelineTracking.trackValidationSelected($scope.pipelineConfig);
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Validate Pipeline', 1);
         $scope.$storage.maximizeDetailPane = false;
         $scope.$storage.minimizeDetailPane = false;
@@ -112,20 +110,14 @@ angular
                 $rootScope.common.successList.push({
                   message: pipelineValidationSuccess
                 });
-                trackingData['Validation Successful'] = true;
-                trackingData['Validation Error'] = [];
-                tracking.mixpanel.track('Validation Complete', trackingData);
+                pipelineTracking.trackValidationComplete($scope.pipelineConfig, true);
               } else {
-                trackingData['Validation Successful'] = false;
                 if (previewData.issues) {
                   $rootScope.common.errors = [previewData.issues];
-                  var issueList = pipelineTracking.getFlatIssueList(previewData.issues);
-                  trackingData['Validation Error'] = issueList;
                 } else if (previewData.message) {
                   $rootScope.common.errors = [previewData.message];
-                  trackingData['Validation Error'] = [JSON.stringify(previewData.message)];
                 }
-                tracking.mixpanel.track('Validation Complete', trackingData);
+                pipelineTracking.trackValidationComplete($scope.pipelineConfig, false, previewData);
               }
             });
 
@@ -146,10 +138,7 @@ angular
        */
       startPipeline: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-        trackingData['With Parameters'] = false;
-        tracking.mixpanel.track('Run Selected', trackingData);
-        tracking.FS.event('Run Selected', trackingData);
+        pipelineTracking.trackRunSelected($scope.pipelineConfig, false);
         if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
@@ -166,6 +155,8 @@ angular
               if (!currentStatus || (res.data && currentStatus.timeStamp < res.data.timeStamp)) {
                 $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = res.data;
               }
+              $rootScope.common.previousInputRecordCount[$scope.activeConfigInfo.pipelineId] = 0;
+              $rootScope.common.previousBatchCount[$scope.activeConfigInfo.pipelineId] = 0;
 
               $timeout(function() {
                 $scope.refreshGraph();
@@ -190,10 +181,7 @@ angular
        */
       startPipelineWithParameters: function() {
         $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Start Pipeline', 1);
-        var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-        trackingData['With Parameters'] = true;
-        tracking.mixpanel.track('Run Selected', trackingData);
-        tracking.FS.event('Run Selected', trackingData);
+        pipelineTracking.trackRunSelected($scope.pipelineConfig, true);
         if ($rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId].status !== 'RUNNING') {
           $scope.$storage.maximizeDetailPane = false;
           $scope.$storage.minimizeDetailPane = false;
@@ -253,26 +241,28 @@ angular
             },
             forceStop: function() {
               return forceStop;
+            },
+            pipelineConfig: function() {
+              return $scope.pipelineConfig;
             }
           }
         });
 
         modalInstance.result.then(function(status) {
-          var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
-          trackingData['Force Stop'] = !!forceStop;
-          tracking.mixpanel.track('Pipeline Stop Requested', trackingData);
+          var pipelineId = $scope.activeConfigInfo.pipelineId;
+
           $scope.clearTabSelectionCache();
           $scope.selectPipelineConfig();
 
-          var currentStatus = $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId];
+          var currentStatus = $rootScope.common.pipelineStatusMap[pipelineId];
           if (!currentStatus || (status && currentStatus.timeStamp < status.timeStamp)) {
-            $rootScope.common.pipelineStatusMap[$scope.activeConfigInfo.pipelineId] = status;
+            $rootScope.common.pipelineStatusMap[pipelineId] = status;
           }
 
-          var alerts = $rootScope.common.alertsMap[$scope.activeConfigInfo.pipelineId];
+          var alerts = $rootScope.common.alertsMap[pipelineId];
 
           if (alerts) {
-            delete $rootScope.common.alertsMap[$scope.activeConfigInfo.pipelineId];
+            delete $rootScope.common.alertsMap[pipelineId];
             $rootScope.common.alertsTotalCount -= alerts.length;
           }
 
