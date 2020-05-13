@@ -346,7 +346,7 @@ public class ActiveStats {
         previewStatus, previewer.getName());
 
     safeInvokeCallbacks("previewStatusChanged", c ->
-        c.previewStatusChanged(previewStatus, previewer));
+        c.previewStatusChanged(this, previewStatus, previewer));
     return this;
   }
 
@@ -362,7 +362,7 @@ public class ActiveStats {
       pipelineInactive(pipelineStatus, conf, pipeline);
     }
     safeInvokeCallbacks("pipelineStatusChanged", c ->
-        c.pipelineStatusChanged(pipelineStatus, conf, pipeline));
+        c.pipelineStatusChanged(this, pipelineStatus, conf, pipeline));
     return this;
   }
 
