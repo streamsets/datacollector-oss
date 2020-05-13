@@ -25,9 +25,14 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.common.TopicPartition;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Kafka0_9ConsumerLoader extends KafkaConsumerLoader {
 
@@ -85,6 +90,24 @@ public class Kafka0_9ConsumerLoader extends KafkaConsumerLoader {
     }
 
     @Override
-    public void commitSync() { delegate.commitSync(); }
+    public void commitSync(Map offsets) { delegate.commitSync(offsets); }
+
+    @Override
+    public List<TopicPartition> getTopicPartitions(String topic) {
+      return ((Set<PartitionInfo>) delegate.assignment())
+          .stream()
+          .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))
+          .collect(Collectors.toList());
+    }
+
+    @Override
+    public long getOffset(TopicPartition topicPartition) {
+      return delegate.position(topicPartition);
+    }
+
+    @Override
+    public Long getCommittedOffset(TopicPartition topicPartition) {
+      return delegate.committed(topicPartition) == null ? null : delegate.committed(topicPartition).offset();
+    }
   }
 }

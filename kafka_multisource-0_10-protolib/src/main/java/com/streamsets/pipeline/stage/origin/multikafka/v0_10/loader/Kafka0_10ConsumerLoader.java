@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
@@ -176,6 +177,24 @@ public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
     }
 
     @Override
-    public void commitSync() { delegate.commitSync(); }
+    public void commitSync(Map offsets) { delegate.commitSync(offsets); }
+
+    @Override
+    public List<TopicPartition> getTopicPartitions(String topic) {
+      return ((Set<PartitionInfo>) delegate.assignment())
+          .stream()
+          .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))
+          .collect(Collectors.toList());
+    }
+
+    @Override
+    public long getOffset(TopicPartition topicPartition) {
+      return delegate.position(topicPartition);
+    }
+
+    @Override
+    public Long getCommittedOffset(TopicPartition topicPartition) {
+      return delegate.committed(topicPartition) == null ? null : delegate.committed(topicPartition).offset();
+    }
   }
 }
