@@ -82,4 +82,34 @@ public class TestHttpServerPushSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+
+  @Test
+  public void testV12ToV13() {
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+
+    String configPrefix = "httpConfigs.spnegoConfigBean.";
+
+    Config spnegoEnabledConf = new Config(configPrefix + "spnegoEnabled", true);
+    Config kerberosRealmConf = new Config(configPrefix + "kerberosRealm", "FOOOO");
+    configs.add(spnegoEnabledConf);
+    configs.add(kerberosRealmConf);
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoEnabled", true);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "kerberosRealm", "FOOOO");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoPrincipal", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoKeytabFilePath", "");
+
+    configs.remove(spnegoEnabledConf);
+    configs.remove(kerberosRealmConf);
+
+    configs = upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoEnabled", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "kerberosRealm", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoPrincipal", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoKeytabFilePath", "");
+  }
 }

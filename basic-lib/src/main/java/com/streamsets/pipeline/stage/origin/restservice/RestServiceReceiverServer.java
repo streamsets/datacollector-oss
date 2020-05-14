@@ -45,7 +45,7 @@ public class RestServiceReceiverServer extends AbstractHttpReceiverServer {
 
     SecurityHandler securityHandler = null;
     if (httpSourceConfigs.spnegoConfigBean.isSpnegoEnabled()) {
-      securityHandler = HttpReceiverServerPush.getSpnegoAuthHandler(httpSourceConfigs);
+      securityHandler = HttpReceiverServerPush.getSpnegoAuthHandler(httpSourceConfigs, context);
     } else if (httpSourceConfigs.tlsConfigBean.isEnabled()) {
       securityHandler = HttpReceiverServerPush.getBasicAuthHandler(httpSourceConfigs);
     }

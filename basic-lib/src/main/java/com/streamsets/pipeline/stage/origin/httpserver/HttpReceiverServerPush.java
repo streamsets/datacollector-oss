@@ -15,7 +15,10 @@
  */
 package com.streamsets.pipeline.stage.origin.httpserver;
 
+
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.HttpConfigs;
 import com.streamsets.pipeline.lib.http.HttpReceiver;
 import com.streamsets.pipeline.lib.http.HttpReceiverServer;
@@ -34,10 +37,36 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Password;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 public class HttpReceiverServerPush extends HttpReceiverServer {
+
+  private static final String TARGET_NAME_FIELD_NAME = "_targetName";
+  private static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
+  private static final String JAVA_SECURITY_AUTH_LOGIN_CONFIG = "java.security.auth.login.config";
+  private static final String JGSS_ACCEPT = "com.sun.security.jgss.accept {\n" +
+      "     com.sun.security.auth.module.Krb5LoginModule required\n" +
+      "     principal=\"%s\"\n" +
+      "     useKeyTab=true\n" +
+      "     keyTab=\"%s\"\n" +
+      "     storeKey=true\n" +
+      "     debug=true\n" +
+      "     isInitiator=false;\n" +
+      "};";
+  private static final String JGSS_INITITATE = "com.sun.security.jgss.initiate {\n" +
+      "     com.sun.security.auth.module.Krb5LoginModule required\n" +
+      "     principal=\"%s\"\n" +
+      "     keyTab=\"%s\"\n" +
+      "     useKeyTab=true\n" +
+      "     storeKey=true\n" +
+      "     debug=true\n" +
+      "     isInitiator=false;\n" +
+      "};";
 
   public HttpReceiverServerPush(HttpConfigs configs, HttpReceiver receiver, BlockingQueue<Exception> errorQueue) {
     super(configs, receiver, errorQueue);
@@ -48,15 +77,29 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
     super.addReceiverServlet(context, contextHandler);
     HttpSourceConfigs httpSourceConfigs = (HttpSourceConfigs) configs;
     SecurityHandler securityHandler =
-        httpSourceConfigs.spnegoConfigBean.isSpnegoEnabled() ? getSpnegoAuthHandler(httpSourceConfigs) :
+        httpSourceConfigs.spnegoConfigBean.isSpnegoEnabled() ? getSpnegoAuthHandler(httpSourceConfigs, context) :
             httpSourceConfigs.tlsConfigBean.isEnabled() ? getBasicAuthHandler(httpSourceConfigs) : null;
     if(securityHandler!=null) {
       contextHandler.setSecurityHandler(securityHandler);
     }
   }
 
-  public static SecurityHandler getSpnegoAuthHandler(HttpSourceConfigs httpCourceConf) {
-    String domainRealm = httpCourceConf.spnegoConfigBean.getKerberosRealm();
+  public static SecurityHandler getSpnegoAuthHandler(HttpSourceConfigs httpCourceConf, Stage.Context context) throws StageException {
+    String domainRealm = httpCourceConf.getSpnegoConfigBean().getKerberosRealm();
+    String principal = httpCourceConf.getSpnegoConfigBean().getSpnegoPrincipal();
+    String keytab = httpCourceConf.getSpnegoConfigBean().getSpnegoKeytabFilePath();
+
+    File f = new File(context.getResourcesDirectory()+"/spnego.conf");
+    try {
+      PrintWriter pw = new PrintWriter(f);
+      pw.println(String.format(JGSS_INITITATE ,principal,keytab) +"\n"+ String.format(JGSS_ACCEPT,principal,keytab));
+      pw.close();
+    } catch (IOException e) {
+      throw new StageException(Errors.HTTP_36, e);
+    }
+
+    System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, "false");
+    System.setProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG, context.getResourcesDirectory()+"/spnego.conf");
 
     Constraint constraint = new Constraint();
     constraint.setName(Constraint.__SPNEGO_AUTH);
@@ -67,8 +110,16 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
     cm.setConstraint(constraint);
     cm.setPathSpec("/*");
 
-    SpnegoLoginService loginService = new SpnegoLoginService();
-    loginService.setConfig(httpCourceConf.spnegoConfigBean.getSpnegoPropertiesFilePath());
+    SpnegoLoginService loginService = new SpnegoLoginService(){
+      @Override
+      protected void doStart() throws Exception {
+        // Override the parent implementation to set the targetName without having
+        // an extra .properties file.
+        final Field targetNameField = SpnegoLoginService.class.getDeclaredField(TARGET_NAME_FIELD_NAME);
+        targetNameField.setAccessible(true);
+        targetNameField.set(this, principal);
+      }
+    };
     loginService.setName(domainRealm);
 
     ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
@@ -81,38 +132,38 @@ public class HttpReceiverServerPush extends HttpReceiverServer {
   }
 
   public static SecurityHandler getBasicAuthHandler(HttpSourceConfigs httpCourceConf) {
-      List<CredentialValueUserPassBean> basicAuthUsers = httpCourceConf.getBasicAuthUsers();
+    List<CredentialValueUserPassBean> basicAuthUsers = httpCourceConf.getBasicAuthUsers();
 
-      HashLoginService loginService = new HashLoginService();
-      UserStore userStore = new UserStore();
+    HashLoginService loginService = new HashLoginService();
+    UserStore userStore = new UserStore();
 
-      boolean empty = true;
-      for (CredentialValueUserPassBean userPassBean : basicAuthUsers) {
-        String username = userPassBean.getUsername();
-        String password = userPassBean.get();
-        if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
-          userStore.addUser(username, new Password(password), new String[]{"sdc"});
-          empty = false;
-        }
+    boolean empty = true;
+    for (CredentialValueUserPassBean userPassBean : basicAuthUsers) {
+      String username = userPassBean.getUsername();
+      String password = userPassBean.get();
+      if(StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
+        userStore.addUser(username, new Password(password), new String[]{"sdc"});
+        empty = false;
       }
-      if(empty) {
-        return null;
-      }
+    }
+    if(empty) {
+      return null;
+    }
 
-      loginService.setUserStore(userStore);
+    loginService.setUserStore(userStore);
 
-      Constraint constraint = new Constraint(Constraint.__BASIC_AUTH,"sdc");
-      constraint.setAuthenticate(true);
+    Constraint constraint = new Constraint(Constraint.__BASIC_AUTH,"sdc");
+    constraint.setAuthenticate(true);
 
-      ConstraintMapping mapping = new ConstraintMapping();
-      mapping.setConstraint(constraint);
-      mapping.setPathSpec("/*");
+    ConstraintMapping mapping = new ConstraintMapping();
+    mapping.setConstraint(constraint);
+    mapping.setPathSpec("/*");
 
-      ConstraintSecurityHandler handler = new ConstraintSecurityHandler();
-      handler.setAuthenticator(new BasicAuthenticator());
-      handler.addConstraintMapping(mapping);
-      handler.setLoginService(loginService);
+    ConstraintSecurityHandler handler = new ConstraintSecurityHandler();
+    handler.setAuthenticator(new BasicAuthenticator());
+    handler.addConstraintMapping(mapping);
+    handler.setLoginService(loginService);
 
-      return handler;
+    return handler;
   }
 }

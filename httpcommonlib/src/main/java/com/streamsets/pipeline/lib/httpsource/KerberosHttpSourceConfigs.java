@@ -45,15 +45,26 @@ public class KerberosHttpSourceConfigs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "SPNEGO Properties File",
-      description = "Path to the SPNEGO properties file",
+      label = "HTTP-SPNEGO Principal",
+      description = "HTTP service principal declared on the KDC.",
       displayPosition = 42,
       group = "HTTP",
       dependsOn = "spnegoEnabled",
       triggeredByValue = "true"
   )
-  public String spnegoPropertiesFilePath = "";
+  public String spnegoPrincipal = "";
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Keytab file",
+      description = "Path where to find the keytab that contains the entry of the HTTP-SPNEGO Principal.",
+      displayPosition = 42,
+      group = "HTTP",
+      dependsOn = "spnegoEnabled",
+      triggeredByValue = "true"
+  )
+  public String spnegoKeytabFilePath = "";
 
   public boolean isSpnegoEnabled(){
     return spnegoEnabled;
@@ -63,9 +74,11 @@ public class KerberosHttpSourceConfigs {
     return kerberosRealm;
   }
 
-  public String getSpnegoPropertiesFilePath(){
-    return spnegoPropertiesFilePath;
+  public String getSpnegoPrincipal() {
+    return spnegoPrincipal;
   }
 
+  public String getSpnegoKeytabFilePath() {
+    return spnegoKeytabFilePath;
+  }
 }
-
