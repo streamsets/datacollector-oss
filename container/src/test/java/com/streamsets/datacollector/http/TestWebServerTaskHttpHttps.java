@@ -283,28 +283,32 @@ public class TestWebServerTaskHttpHttps {
 
   @Test
   public void testHttps() throws Exception {
+    testHttpsWithKeyStore("sdc-keystore.jks");
+  }
+
+  @Test
+  public void testHttpsUsingKeystoreFileWithMultipleCerts() throws Exception {
+    testHttpsWithKeyStore("sdc-keystore-with-multiple-certs.jks");
+  }
+
+  public void testHttpsWithKeyStore(String keystoreFileName) throws Exception {
     Configuration conf = new Configuration();
     int httpsPort = NetworkUtils.getRandomPort();
     String confDir = createTestDir();
-    String keyStore = new File(confDir, "sdc-keystore.jks").getAbsolutePath();
+    String keyStore = new File(confDir, keystoreFileName).getAbsolutePath();
     OutputStream os = new FileOutputStream(keyStore);
-    IOUtils.copy(getClass().getClassLoader().getResourceAsStream("sdc-keystore.jks"),os);
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream(keystoreFileName),os);
     os.close();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, -1);
     conf.set(WebServerTask.HTTPS_PORT_KEY, httpsPort);
-    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, keystoreFileName);
     conf.set(WebServerTask.HTTPS_KEYSTORE_PASSWORD_KEY, "password");
     conf.set(WebServerTask.HTTPS_TRUSTSTORE_PATH_KEY, "");
     final WebServerTask ws = createWebServerTask(confDir, conf);
     try {
       ws.initTask();
-      new Thread() {
-        @Override
-        public void run() {
-          ws.runTask();
-        }
-      }.start();
+      new Thread(ws::runTask).start();
       waitForStart(ws);
       HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort + "/ping")
           .openConnection();
