@@ -611,10 +611,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         allAttributes.putAll(getState().getAttributes());
         allAttributes.putAll(attributes);
       }
-      validateAndSetStateTransition(getState().getUser(), pipelineStatus, message, allAttributes);
+      PipelineState fromState = getState();
+      checkState(VALID_TRANSITIONS.get(fromState.getStatus()).contains(pipelineStatus), ContainerError.CONTAINER_0102,
+          fromState.getStatus(), pipelineStatus);
+      // send metrics to SCH before sending finished status event to SCH
       if (pipelineStatus == PipelineStatus.FINISHED && metricsEventRunnable != null) {
         this.metricsEventRunnable.onStopOrFinishPipeline();
       }
+      validateAndSetStateTransition(getState().getUser(), pipelineStatus, message, allAttributes);
     } catch (PipelineStoreException | PipelineRunnerException ex) {
       throw new PipelineRuntimeException(ex.getErrorCode(), ex);
     }
