@@ -643,7 +643,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
       HttpConfiguration httpsConf = new HttpConfiguration(httpConf);
       httpsConf.addCustomizer(new SecureRequestCustomizer());
 
-      SslContextFactory sslContextFactory = createSslContextFactory();
+      SslContextFactory.Server sslContextFactory = createSslContextFactory();
       SslConnectionFactory ssl;
       ServerConnector httpsConnector;
 
@@ -667,8 +667,8 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     return server;
   }
 
-  protected SslContextFactory createSslContextFactory() {
-    SslContextFactory sslContextFactory = new SslContextFactory();
+  protected SslContextFactory.Server createSslContextFactory() {
+    SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
     File keyStore = getHttpsKeystore(conf, runtimeInfo.getConfigDir());
     if (!keyStore.exists()) {
       throw new RuntimeException(Utils.format("KeyStore file '{}' does not exist", keyStore.getPath()));
