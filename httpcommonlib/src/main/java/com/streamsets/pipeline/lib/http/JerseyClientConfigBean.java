@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.http.logging.RequestLoggingConfigBean;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -105,6 +106,45 @@ public class JerseyClientConfigBean {
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
   public AuthenticationType authType = AuthenticationType.NONE;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Principal",
+      defaultValue = "",
+      description = "Principal to be used to authenticate using Kerberos/SPNEGO",
+      displayPosition = 151,
+      group = "HTTP",
+      dependsOn = "authType",
+      triggeredByValue = {"KERBEROS_SPNEGO"}
+  )
+  public String spnegoPrincipal = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Principal Password",
+      defaultValue = "",
+      description = "Principal to be used to authenticate using Kerberos/SPNEGO",
+      displayPosition = 151,
+      group = "HTTP",
+      dependsOn = "authType",
+      triggeredByValue = {"KERBEROS_SPNEGO"}
+  )
+  public CredentialValue spnegoPrincipalPassword = () -> "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Keytab File",
+      defaultValue = "",
+      description = "Keytab file path where to find the principal.",
+      displayPosition = 152,
+      group = "HTTP",
+      dependsOn = "authType",
+      triggeredByValue = {"KERBEROS_SPNEGO"}
+  )
+  public String spnegoKeytabFile = "";
 
   @ConfigDef(
       required = true,

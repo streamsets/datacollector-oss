@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.http;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -44,7 +45,12 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -67,6 +73,17 @@ public class HttpClientCommon {
   private static final String VAULT_EL_PREFIX = VaultEL.PREFIX + ":read";
   private static final String OAUTH2_GROUP = "OAUTH2";
   private static final String CONF_CLIENT_OAUTH2_TOKEN_URL = "conf.client.oauth2.tokenUrl";
+  public static final String SPNEGO_CLIENT_LOGIN = "client {\n" +
+      "  com.sun.security.auth.module.Krb5LoginModule required\n" +
+      "  principal = \"%s\"\n" +
+      "  debug=false\n" +
+      "  useKeyTab=true\n" +
+      "  keyTab=\"%s\"\n" +
+      "  refreshKrb5Config=true\n" +
+      "  storeKey=true;\n" +
+      "};";
+  public static final String JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY = "javax.security.auth.useSubjectCredsOnly";
+  public static final String JAVA_SECURITY_AUTH_LOGIN_CONFIG = "java.security.auth.login.config";
 
   private final JerseyClientConfigBean jerseyClientConfig;
 
@@ -155,8 +172,36 @@ public class HttpClientCommon {
       JerseyClientUtil.configureSslContext(jerseyClientConfig.tlsConfig, clientBuilder);
 
       configureAuthAndBuildClient(clientBuilder, issues);
-    }
 
+
+      if(jerseyClientConfig.authType.equals(AuthenticationType.KERBEROS_SPNEGO)) {
+
+        String principal = jerseyClientConfig.spnegoPrincipal;
+        String keytab = jerseyClientConfig.spnegoKeytabFile;
+        CredentialValue princPass = jerseyClientConfig.spnegoPrincipalPassword;
+        String pathnameSpnegoConf = context.getResourcesDirectory() + "/spnego.conf";
+        File f = new File(pathnameSpnegoConf);
+        try {
+          PrintWriter pw = new PrintWriter(f);
+          pw.println(String.format(SPNEGO_CLIENT_LOGIN, principal, keytab));
+          pw.close();
+        } catch (IOException e) {
+          throw new StageException(HTTP_36,e);
+        }
+
+        System.setProperty(JAVAX_SECURITY_AUTH_USE_SUBJECT_CREDS_ONLY, "false");
+        System.setProperty(JAVA_SECURITY_AUTH_LOGIN_CONFIG, pathnameSpnegoConf);
+
+        Authenticator.setDefault(new Authenticator() {
+          @Override
+          protected PasswordAuthentication getPasswordAuthentication() {
+            String kuser = principal;
+            String kpass = princPass.get();
+            return (new PasswordAuthentication(kuser, kpass.toCharArray()));
+          }
+        });
+      }
+    }
     return issues;
   }
 
