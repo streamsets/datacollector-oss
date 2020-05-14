@@ -106,7 +106,7 @@ public class MetricsEventRunnable implements Runnable {
   private Integer waitTimeBetweenUpdates;
   private final int retryAttempts = 5;
   private boolean timeSeriesAnalysis = true;
-  private boolean isPipelineStopped = false;
+  private volatile boolean isPipelineStopped = false;
   private WebTarget webTarget;
   private Stopwatch stopwatch = null;
 
@@ -139,9 +139,7 @@ public class MetricsEventRunnable implements Runnable {
     this.threadHealthReporter = null;
     if (isDPMPipeline) {
       // Send final metrics to Control Hub on stop
-      this.stopwatch = null;
-      this.isPipelineStopped = true;
-      this.run();
+      sendMetricsInternal(true);
     }
   }
 
@@ -158,13 +156,31 @@ public class MetricsEventRunnable implements Runnable {
     this.metricRegistryJson = metricRegistryJson;
   }
 
-  @Override
-  public void run() {
-    // Added log trace to debug SDC-725
+  private void sendMetricsInternal(boolean onPipelineStop) {
     if (LOG.isTraceEnabled()) {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-      LOG.trace("MetricsEventRunnable Run - {}", sdf.format(new Date()));
+      LOG.trace("MetricsEventRunnable Run - {}, Is pipeline stopped - {}", sdf.format(new Date()), onPipelineStop);
     }
+    if (!isPipelineStopped) {
+      synchronized (this) {
+        if (!isPipelineStopped) {
+          if (onPipelineStop) {
+            this.stopwatch = null;
+            this.isPipelineStopped = true;
+          }
+          doRun();
+        }
+      }
+    }
+  }
+
+  @Override
+  public void run() {
+    sendMetricsInternal(false);
+  }
+
+
+  private void doRun() {
     try {
       if(threadHealthReporter != null) {
         threadHealthReporter.reportHealth(RUNNABLE_NAME, scheduledDelay, System.currentTimeMillis());
@@ -412,6 +428,7 @@ public class MetricsEventRunnable implements Runnable {
                 )
             );
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {
+          LOG.trace("Sending metrics was successful");
           return;
         } else if (response.getStatus() == HttpURLConnection.HTTP_UNAVAILABLE) {
           LOG.warn("Error writing to time-series app: Control Hub unavailable");
