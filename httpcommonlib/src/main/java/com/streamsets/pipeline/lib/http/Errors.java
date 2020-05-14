@@ -56,6 +56,7 @@ public enum Errors implements ErrorCode {
   HTTP_33("Null authorization token - checked for '{}', '{}' and '{}'"),
   HTTP_34("HTTP-Status: {}. Received no entity in the HTTP message body."),
   HTTP_35("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  HTTP_36("SPNEGO config file could not be created."),
 
   // HTTP Target
   HTTP_40("Error sending resource. HTTP-Status: {} Reason: {}"),
@@ -92,4 +93,3 @@ public enum Errors implements ErrorCode {
     return msg;
   }
 }
-

@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 12,
+    version = 13,
     label = "HTTP Server",
     description = "Listens for requests on an HTTP endpoint",
     icon="httpserver_multithreaded.png",

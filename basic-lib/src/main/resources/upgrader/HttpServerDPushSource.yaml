@@ -22,3 +22,19 @@ upgrades:
       - setConfig:
           name: dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 13
+    actions:
+      - setConfig:
+          lookForName: httpConfigs.spnegoConfigBean.spnegoEnabled
+          elseName: httpConfigs.spnegoConfigBean.spnegoEnabled
+          elseValue: false
+      - setConfig:
+          lookForName: httpConfigs.spnegoConfigBean.kerberosRealm
+          elseName: httpConfigs.spnegoConfigBean.kerberosRealm
+          elseValue: ""
+      - setConfig:
+          name: httpConfigs.spnegoConfigBean.spnegoPrincipal
+          value: ""
+      - setConfig:
+          name: httpConfigs.spnegoConfigBean.spnegoKeytabFilePath
+          value: ""
