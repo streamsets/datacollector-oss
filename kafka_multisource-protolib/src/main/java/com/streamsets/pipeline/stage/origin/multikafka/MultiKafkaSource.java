@@ -175,7 +175,7 @@ public class MultiKafkaSource extends BasePushSource {
         long startTime = System.currentTimeMillis();
 
         Map<String, Long> offsetIncrements = new HashMap<>();
-        int recordsSinceLastCommit = 0;
+        Map<String, Long> recordsSinceLastCommit = new HashMap<>();
 
         while (!getContext().isStopped() && !Thread.interrupted()) {
 
@@ -184,7 +184,11 @@ public class MultiKafkaSource extends BasePushSource {
 
           ConsumerRecords<String, byte[]> messages = consumer.poll(pollInterval);
 
-          recordsSinceLastCommit += messages.count();
+          for (ConsumerRecord<String, byte[]> item : messages) {
+            String topicPartitionName = item.topic() + "-" + item.partition();
+            recordsSinceLastCommit.putIfAbsent(topicPartitionName, 0L);
+            recordsSinceLastCommit.put(topicPartitionName, recordsSinceLastCommit.get(topicPartitionName) + 1);
+          }
 
           if (!messages.isEmpty()) {
 
@@ -219,18 +223,15 @@ public class MultiKafkaSource extends BasePushSource {
             ));
 
             String topicPartitionName = item.topic() + "-" + item.partition();
-            if (!offsetIncrements.containsKey(topicPartitionName)) {
-              offsetIncrements.put(topicPartitionName, 1L);
-            } else {
-              offsetIncrements.put(topicPartitionName, offsetIncrements.get(topicPartitionName) + 1);
-            }
+            offsetIncrements.putIfAbsent(topicPartitionName, 0L);
+            offsetIncrements.put(topicPartitionName, offsetIncrements.get(topicPartitionName) + 1);
 
             if (records.size() >= batchSize) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
               Map<TopicPartition, OffsetAndMetadata> offsets = getNewOffsets(offsetIncrements, recordsSinceLastCommit);
               offsetIncrements.clear();
               commitSyncAndProcess(batchContext, offsets);
-              recordsSinceLastCommit = 0;
+              recordsSinceLastCommit.clear();
               startTime = System.currentTimeMillis();
               recordsProcessed += records.size();
               records.clear();
@@ -249,7 +250,7 @@ public class MultiKafkaSource extends BasePushSource {
               Map<TopicPartition, OffsetAndMetadata> offsets = getNewOffsets(offsetIncrements, recordsSinceLastCommit);
               offsetIncrements.clear();
               commitSyncAndProcess(batchContext, offsets);
-              recordsSinceLastCommit = 0;
+              recordsSinceLastCommit.clear();
               batchContext = getContext().startBatch();
               errorRecordHandler = new CountingDefaultErrorRecordHandler(getContext(), batchContext);
               recordsProcessed += records.size();
@@ -278,7 +279,7 @@ public class MultiKafkaSource extends BasePushSource {
     @NotNull
     private Map<TopicPartition, OffsetAndMetadata> getNewOffsets(
         Map<String, Long> offsetIncrements,
-        int uncommittedMessages
+        Map<String, Long> recordsSinceLastCommit
     ) {
       Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
       for (Map.Entry<String, Long> offsetIncrement : offsetIncrements.entrySet()) {
@@ -290,7 +291,7 @@ public class MultiKafkaSource extends BasePushSource {
         long commitOffset;
         Long committedOffset = consumer.getCommittedOffset(topicPartition);
         if (committedOffset == null) {
-          commitOffset = consumer.getOffset(topicPartition) - uncommittedMessages + offsetIncrement.getValue();
+          commitOffset = consumer.getOffset(topicPartition) - recordsSinceLastCommit.get(offsetIncrement.getKey()) + offsetIncrement.getValue();
         } else {
           commitOffset = committedOffset + offsetIncrement.getValue();
         }
