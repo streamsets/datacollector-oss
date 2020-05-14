@@ -17,7 +17,7 @@
  * Service for providing access to the Configuration from dist/src/main/etc/pipeline.properties.
  */
 angular.module('dataCollectorApp.common')
-  .service('configuration', function($rootScope, api, $q, Analytics) {
+  .service('configuration', function(api, $q, Analytics, tracking) {
     var self = this;
     var UI_HEADER_TITLE = 'ui.header.title';
     var REFRESH_INTERVAL = 'ui.refresh.interval.ms';
@@ -155,6 +155,10 @@ angular.module('dataCollectorApp.common')
           // This may throw a warning to the console if it is already set
           Analytics.createAnalyticsScriptTag();
           this.createFullStoryScriptTag();
+          tracking.mixpanel.opt_in_tracking();
+        } else {
+          tracking.mixpanel.opt_out_tracking();
+          tracking.FS.shutdown();
         }
       }
     };

@@ -19,9 +19,11 @@
 
 angular
   .module('dataCollectorApp')
-  .controller('RegisterModalInstanceController', function ($scope, $rootScope, $modalInstance, $location, $interval, $q,
-    api, activationInfo, configuration, authService) {
-    
+  .controller('RegisterModalInstanceController', function (
+      $scope, $rootScope, $modalInstance, $location, $interval, $q,
+      api, activationInfo, configuration, authService, activationTracking
+    ) {
+
     var activationUpdateInterval;
     var previouslyValid = false;
 
@@ -34,10 +36,12 @@ angular
       return api.activation.updateActivation(keyText)
       .then(
         function(res) {
+          var previousActivationInfo = $scope.activationInfo;
           $scope.activationInfo = res.data;
           if ($scope.activationInfo && $scope.activationInfo.info.valid) {
             $scope.operationDone = true;
             $scope.common.errors = [];
+            activationTracking.trackActivationEvent($scope.activationInfo, previousActivationInfo);
           } else {
             $scope.common.errors = ['Uploaded activation key is not valid'];
           }
@@ -47,9 +51,9 @@ angular
           var ERROR_CANNOT_VERIFY = 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Could not verify signature';
           var ERROR_INVALID = 'java.lang.RuntimeException: java.io.IOException: com.streamsets.datacollector.activation.signed.VerifierException: Invalid value, cannot verify';
           if (err.data) {
-            if (err.data.RemoteException && 
+            if (err.data.RemoteException &&
                 err.data.RemoteException.message &&
-                (err.data.RemoteException.message === ERROR_CANNOT_VERIFY || 
+                (err.data.RemoteException.message === ERROR_CANNOT_VERIFY ||
                   err.data.RemoteException.message === ERROR_INVALID)) {
               $scope.common.errors = ['The entered activation code is invalid, verify that it is the same as what you were emailed'];
             } else if (err.status === 403) {
@@ -62,7 +66,7 @@ angular
           } else {
             $scope.common.errors = ['Unable to verify activation code'];
           }
-          
+
           $scope.operationDone = false;
           $scope.operationInProgress = false;
           throw err;
@@ -77,8 +81,8 @@ angular
     function getInitialActivationStep(activationInfo) {
       if (getActivationKeyFromURL()) {
         return 2;
-      } else if (activationInfo.info && 
-        activationInfo.info.valid && 
+      } else if (activationInfo.info &&
+        activationInfo.info.valid &&
         authService.daysUntilProductExpiration(activationInfo.info.expiration) > 0) {
         return 3;
       } else {
