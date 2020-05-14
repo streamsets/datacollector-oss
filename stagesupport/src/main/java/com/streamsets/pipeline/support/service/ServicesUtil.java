@@ -57,18 +57,21 @@ public final class ServicesUtil {
     List<Record> records = new ArrayList<>();
     try (DataParser parser = stageContext.getService(DataFormatParserService.class).getParser(messageId, payload)) {
       Record record = null;
+      boolean recoverableExceptionHit;
       do {
         try {
+          recoverableExceptionHit = false;
           record = parser.parse();
         } catch (RecoverableDataParserException e) {
           handleException(stageContext, toErrorContext, messageId, e, e.getUnparsedRecord());
+          recoverableExceptionHit = true;
           //Go to next record
           continue;
         }
         if (record != null) {
           records.add(record);
         }
-      } while (record != null);
+      } while (record != null || recoverableExceptionHit);
     } catch (IOException |DataParserException ex) {
       Record record = stageContext.createRecord(messageId);
       record.set(Field.create(payload));
