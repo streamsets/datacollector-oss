@@ -19,7 +19,9 @@ import com.google.common.net.HostAndPort;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BaseSource;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -37,6 +39,7 @@ import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -277,33 +280,47 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     }
 
     try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
-      Record record = parser.parse();
-      while (record != null) {
-        if (timestamp != 0) {
-          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
-          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
-        }
-        record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
-        record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
-        record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
 
+      Record record = null;
+      boolean recoverableExceptionHit;
+      do {
         try {
-          MessageKeyUtil.handleMessageKey(messageKey, conf.keyCaptureMode, record, conf.keyCaptureField, conf.keyCaptureAttribute);
-        } catch (Exception e) {
-          throw new OnRecordErrorException(
-              record,
-              KafkaErrors.KAFKA_201,
-              partition,
-              offset,
-              e.getMessage(),
-              e
-          );
+          recoverableExceptionHit = false;
+          record = parser.parse();
+        } catch (RecoverableDataParserException e) {
+          recoverableExceptionHit = true;
+          handleException(getContext(), getContext(), messageId, e, e.getUnparsedRecord());
+
+          //Go to next record
+          continue;
         }
 
-        records.add(record);
-        record = parser.parse();
-      }
-    } catch (IOException|DataParserException ex) {
+        if (record != null) {
+          if (timestamp != 0) {
+            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
+            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+          }
+          record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
+          record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
+          record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+
+          try {
+            MessageKeyUtil.handleMessageKey(messageKey, conf.keyCaptureMode, record, conf.keyCaptureField, conf.keyCaptureAttribute);
+          } catch (Exception e) {
+            throw new OnRecordErrorException(
+                record,
+                KafkaErrors.KAFKA_201,
+                partition,
+                offset,
+                e.getMessage(),
+                e
+            );
+          }
+
+          records.add(record);
+        }
+      } while (record != null || recoverableExceptionHit);
+    } catch (IOException | DataParserException ex) {
       Record record = getContext().createRecord(messageId);
       record.set(Field.create(payload));
       errorRecordHandler.onError(
@@ -332,5 +349,29 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   @Override
   public void destroy() {
     kafkaKerberosUtil.deleteUserKeytabIfExists(keytabFileName, getContext());
+  }
+
+  private static void handleException(
+      Stage.Context stageContext,
+      ToErrorContext errorContext,
+      String messageId,
+      Exception ex,
+      Record record
+  ) throws StageException {
+    switch (stageContext.getOnErrorRecord()) {
+      case DISCARD:
+        break;
+      case TO_ERROR:
+        errorContext.toError(record, KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
+        break;
+      case STOP_PIPELINE:
+        if (ex instanceof StageException) {
+          throw (StageException) ex;
+        } else {
+          throw new StageException(KafkaErrors.KAFKA_37, messageId, ex.toString(), ex);
+        }
+      default:
+        throw new IllegalStateException(Utils.format("Unknown on error value '{}'", stageContext, ex));
+    }
   }
 }
