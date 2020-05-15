@@ -20,8 +20,10 @@
 angular
   .module('dataCollectorApp.home')
 
-  .controller('DataRulesController', function ($scope, $rootScope, $modal, pipelineConstant,
-                                               pipelineService, previewService) {
+  .controller('DataRulesController', function (
+      $scope, $rootScope, $modal, pipelineConstant,
+      pipelineService, previewService, tracking
+    ) {
     var stageInstances = $scope.stageInstances;
 
     angular.extend($scope, {
@@ -83,6 +85,7 @@ angular
         modalInstance.result.then(function (newDataRuleDefn) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Save Data Rule', 1);
           $scope.pipelineRules.dataRuleDefinitions.push(newDataRuleDefn);
+          tracking.mixpanel.track('Rule Created', {'Pipeline ID': $scope.pipelineConfig.pipelineId});
         }, function () {
 
         });

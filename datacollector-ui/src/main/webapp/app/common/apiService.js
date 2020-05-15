@@ -625,6 +625,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
+        tracking.mixpanel.track('Pipeline Exported', {'Pipeline ID': name});
       },
 
       /**
@@ -690,6 +691,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
+        tracking.mixpanel.track('Pipelines Bulk Exported', {'Pipeline IDs': pipelineIds});
       },
 
       /**

@@ -19,7 +19,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DeleteModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api) {
+  .controller('DeleteModalInstanceController', function (
+      $scope, $modalInstance, pipelineInfo, api, tracking
+    ) {
     angular.extend($scope, {
       common: {
         errors: []
@@ -30,9 +32,11 @@ angular
       yes: function() {
         $scope.operationInProgress = true;
         if ($scope.isList) {
-          api.pipelineAgent.deletePipelines(_.pluck(pipelineInfo, 'pipelineId'))
+          var pipelineIds = _.pluck(pipelineInfo, 'pipelineId');
+          api.pipelineAgent.deletePipelines(pipelineIds)
             .then(function() {
               $modalInstance.close(pipelineInfo);
+              tracking.mixpanel.track('Pipelines Bulk Deleted', {'Pipeline IDs': pipelineIds});
             })
             .catch(function(res) {
               $scope.operationInProgress = false;
@@ -43,6 +47,7 @@ angular
           api.pipelineAgent.deletePipelineConfig(pipelineInfo.pipelineId)
             .then(function() {
               $modalInstance.close(pipelineInfo);
+              tracking.mixpanel.track('Pipeline Deleted', {'Pipeline ID': pipelineInfo.pipelineId});
             })
             .catch(function(res) {
               $scope.operationInProgress = false;

@@ -18,7 +18,8 @@
 angular
   .module('dataCollectorApp.home')
   .controller('DetailController', function (
-    $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal, authService, userRoles, configuration
+    $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal,
+    authService, userRoles, configuration, tracking
   ) {
     var infoTab = {
       name: 'info',
@@ -409,6 +410,20 @@ angular
             break;
           case pipelineConstant.LINK:
             $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane] = tab.name;
+        }
+        var trackingData = {
+          'Tab Viewed': tab.name,
+          'Is Pipeline Running': $scope.isPipelineRunning,
+          'Selected Type': $scope.selectedType
+        };
+        if ($scope.pipelineConfig) {
+          trackingData['Pipeline ID'] = $scope.pipelineConfig.info.pipelineId;
+        }
+        tracking.mixpanel.track('Tab Selected', trackingData);
+        if (tab.name === 'history') {
+          tracking.mixpanel.track('Pipeline History Viewed', {
+            'Pipeline ID': $scope.pipelineConfig.info.pipelineId
+          });
         }
       },
 
