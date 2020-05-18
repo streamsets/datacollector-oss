@@ -18,7 +18,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService) {
+  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService, tracking) {
 
     // pre-populate with some static configurations
     var helpIds = {
