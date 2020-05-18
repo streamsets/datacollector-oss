@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector Data Collector Edge The Kafka Producer destination writes data to a Kafka cluster. The destination can also send responses to a microservice origin when used ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Producer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_oq2_5jl_zq" /><title>Kafka Producer</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_oq2_5jl_zq-d46e132843" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector Data Collector Edge The Kafka Producer destination writes data to a Kafka cluster. The destination can also send responses to a microservice origin when used ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Producer" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_oq2_5jl_zq" /><title>Kafka Producer</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_oq2_5jl_zq-d46e136313" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -43,7 +43,7 @@
                             'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
                             See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
                     -->
-                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
                     <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
                     
                 </div>
@@ -98,166 +98,166 @@
                     
                         <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
                             <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
-   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
-   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e10015" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e12422" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e22146" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e29405" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e31246" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e33962" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e36222" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e103196" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e120631" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e120653" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e119966" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_gyq_rpr_4cb-d46e120677" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a></span></span></li>
-         <li><span data-tocid="concept_avx_bnq_rt-d46e120731" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></span></span></li>
-         <li><span data-tocid="concept_jzm_kf4_zx-d46e121667" class="topicref" data-id="concept_jzm_kf4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage (Legacy) (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_xzc_wfq_xhb-d46e122600" class="topicref" data-id="concept_xzc_wfq_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html#concept_xzc_wfq_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e119990" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a></span></span></li>
+         <li><span data-tocid="concept_avx_bnq_rt-d46e120044" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_jzm_kf4_zx-d46e120980" class="topicref" data-id="concept_jzm_kf4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage (Legacy) (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_xzc_wfq_xhb-d46e121913" class="topicref" data-id="concept_xzc_wfq_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html#concept_xzc_wfq_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ajp_1d2_vhb-d46e123534" class="topicref" data-id="concept_ajp_1d2_vhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G2-D.html#concept_ajp_1d2_vhb">Azure Data Lake Storage Gen2</a></span></span></li>
-         <li><span data-tocid="concept_xq5_d5q_1bb-d46e124467" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_pnd_jkq_1bb-d46e124563" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
-         <li><span data-tocid="concept_hfy_mfd_sr-d46e124719" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a></span></span></li>
-         <li><span data-tocid="concept_hw5_s3n_sz-d46e125001" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></span></span></li>
-         <li><span data-tocid="concept_ahq_1wq_h2b-d46e125098" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a></span></span></li>
-         <li><span data-tocid="concept_u5t_vpv_4r-d46e125310" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a></span></span></li>
-         <li><span data-tocid="concept_hlx_r53_rx-d46e125600" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a></span></span></li>
-         <li><span data-tocid="concept_pzn_hl4_yr-d46e125885" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a></span></span></li>
-         <li><span data-tocid="concept_hj4_brk_dbb-d46e125981" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
-         <li><span data-tocid="concept_pl5_tmq_tx-d46e126272" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
-         <li><span data-tocid="concept_p4n_jrl_nbb-d46e126853" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
-         <li><span data-tocid="concept_qsj_hk1_v1b-d46e127783" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
-         <li><span data-tocid="concept_qjf_xdz_q3b-d46e128068" class="topicref" data-id="concept_qjf_xdz_q3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GPSS.html#concept_qjf_xdz_q3b">GPSS Producer</a></span></span></li>
-         <li><span data-tocid="concept_awl_4km_zq-d46e128635" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
-         <li><span data-tocid="concept_wsz_5t5_vr-d46e130027" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a></span></span></li>
-         <li><span data-tocid="concept_gcr_z2t_zv-d46e130408" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e131000" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a></span></span></li>
-         <li><span data-tocid="concept_khl_sg5_lz-d46e131096" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></span></span></li>
-         <li><span data-tocid="concept_inf_db_sr-d46e132047" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e132101" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a></span></span></li>
-         <li><span data-tocid="concept_sfz_ww5_n1b-d46e132475" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
-         <li class="active"><span data-tocid="concept_oq2_5jl_zq-d46e132843" class="topicref" data-id="concept_oq2_5jl_zq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_a2p_t4l_zq-d46e132976" class="topicref" data-id="concept_a2p_t4l_zq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_a2p_t4l_zq">Broker List</a></span></span></li>
-               <li><span data-tocid="concept_ok1_cwr_xr-d46e132998" class="topicref" data-id="concept_ok1_cwr_xr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_ok1_cwr_xr">Runtime Topic Resolution</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ajp_1d2_vhb-d46e122847" class="topicref" data-id="concept_ajp_1d2_vhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G2-D.html#concept_ajp_1d2_vhb">Azure Data Lake Storage Gen2</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e123780" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e123876" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hjv_5nn_r3b-d46e124032" class="topicref" data-id="concept_hjv_5nn_r3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureSynapse.html#concept_hjv_5nn_r3b">Azure Synapse (SQL Pool)</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e126009" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a></span></span></li>
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e126292" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></span></span></li>
+         <li><span data-tocid="concept_ahq_1wq_h2b-d46e126388" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a></span></span></li>
+         <li><span data-tocid="concept_ddy_cdz_clb-d46e126600" class="topicref" data-id="concept_ddy_cdz_clb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_ddy_cdz_clb">Databricks Delta Lake</a></span></span></li>
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e128780" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a></span></span></li>
+         <li><span data-tocid="concept_hlx_r53_rx-d46e129070" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a></span></span></li>
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e129355" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e129451" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e129742" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li><span data-tocid="concept_p4n_jrl_nbb-d46e130323" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e131253" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_qjf_xdz_q3b-d46e131538" class="topicref" data-id="concept_qjf_xdz_q3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GPSS.html#concept_qjf_xdz_q3b">GPSS Producer</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e132106" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e133498" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a></span></span></li>
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e133878" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e134470" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a></span></span></li>
+         <li><span data-tocid="concept_khl_sg5_lz-d46e134566" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_inf_db_sr-d46e135517" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e135571" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a></span></span></li>
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e135945" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li class="active"><span data-tocid="concept_oq2_5jl_zq-d46e136313" class="topicref" data-id="concept_oq2_5jl_zq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_a2p_t4l_zq-d46e136416" class="topicref" data-id="concept_a2p_t4l_zq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_a2p_t4l_zq">Broker List</a></span></span></li>
+               <li><span data-tocid="concept_ok1_cwr_xr-d46e136438" class="topicref" data-id="concept_ok1_cwr_xr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_ok1_cwr_xr">Runtime Topic Resolution</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Kafka Producer can write a record to the topic based on an expression. When Kafka   Producer evaluates a record, it calculates
                               the expression based on record values and writes the   record to the resulting topic. 
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_qpm_xp4_4r-d46e133033" class="topicref" data-id="concept_qpm_xp4_4r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_qpm_xp4_4r">Partition Strategy</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_qpm_xp4_4r-d46e136473" class="topicref" data-id="concept_qpm_xp4_4r" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_qpm_xp4_4r">Partition Strategy</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The partition strategy determines how to write data to Kafka partitions. You can use a     partition strategy to balance the
                               work load or to write data semantically.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_jlq_btd_rfb-d46e133078" class="topicref" data-id="concept_jlq_btd_rfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_jlq_btd_rfb">Send Microservice Responses</a></span></span></li>
-               <li><span data-tocid="concept_wnp_gfc_rw-d46e133130" class="topicref" data-id="concept_wnp_gfc_rw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_wnp_gfc_rw">Additional Kafka Properties</a></span></span></li>
-               <li><span data-tocid="concept_znr_b3c_rw-d46e133192" class="topicref" data-id="concept_znr_b3c_rw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_znr_b3c_rw">Enabling Security</a></span></span></li>
-               <li><span data-tocid="concept_lww_3b3_kr-d46e133543" class="topicref" data-id="concept_lww_3b3_kr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_lww_3b3_kr">Data Formats</a></span></span></li>
-               <li><span data-tocid="task_q4d_4yl_zq-d46e133656" class="topicref" data-id="task_q4d_4yl_zq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#task_q4d_4yl_zq">Configuring a Kafka Producer Destination</a></span></span></li>
+               <li><span data-tocid="concept_jlq_btd_rfb-d46e136518" class="topicref" data-id="concept_jlq_btd_rfb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_jlq_btd_rfb">Send Microservice Responses</a></span></span></li>
+               <li><span data-tocid="concept_wnp_gfc_rw-d46e136570" class="topicref" data-id="concept_wnp_gfc_rw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_wnp_gfc_rw">Additional Kafka Properties</a></span></span></li>
+               <li><span data-tocid="concept_znr_b3c_rw-d46e136632" class="topicref" data-id="concept_znr_b3c_rw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_znr_b3c_rw">Kafka Security</a></span></span></li>
+               <li><span data-tocid="concept_lww_3b3_kra-d46e136704" class="topicref" data-id="concept_lww_3b3_kra" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_lww_3b3_kra">Data Formats</a></span></span></li>
+               <li><span data-tocid="task_q4d_4yl_zq-d46e136787" class="topicref" data-id="task_q4d_4yl_zq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#task_q4d_4yl_zq">Configuring a Kafka Producer Destination</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_bjv_dpk_kv-d46e133779" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></span></span></li>
-         <li><span data-tocid="concept_swk_h1j_yr-d46e133998" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></span></span></li>
-         <li><span data-tocid="concept_hxh_5xg_qbb-d46e134214" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
-         <li><span data-tocid="concept_chy_xxg_4v-d46e134362" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a></span></span></li>
-         <li><span data-tocid="concept_zvc_bv5_1r-d46e134575" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
-         <li><span data-tocid="concept_vxg_w2z_yv-d46e135249" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a></span></span></li>
-         <li><span data-tocid="concept_i4h_2kj_dy-d46e135629" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
-         <li><span data-tocid="concept_spv_xlc_fv-d46e136000" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a></span></span></li>
-         <li><span data-tocid="concept_cfj_qbn_2v-d46e137083" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a></span></span></li>
-         <li><span data-tocid="concept_kvs_3hh_ht-d46e137378" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MemSQLLoader.html#concept_kvs_3hh_ht">MemSQL Fast Loader</a></span></span></li>
-         <li><span data-tocid="concept_eth_k5n_4v-d46e137839" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
-         <li><span data-tocid="concept_odz_txt_lz-d46e138210" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></span></span></li>
-         <li><span data-tocid="concept_pl5_tdg_gcb-d46e138423" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a></span></span></li>
-         <li><span data-tocid="concept_fq3_kpc_r2b-d46e138806" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a></span></span></li>
-         <li><span data-tocid="concept_pxj_rvy_dv-d46e138957" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a></span></span></li>
-         <li><span data-tocid="concept_ktc_gw2_gw-d46e139054" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a></span></span></li>
-         <li><span data-tocid="concept_rlb_rt3_rx-d46e139336" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a></span></span></li>
-         <li><span data-tocid="concept_lfk_hx2_ct-d46e139549" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a></span></span></li>
-         <li><span data-tocid="concept_eyd_zx4_q2b-d46e139703" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
-         <li><span data-tocid="concept_sgt_m2m_xhb-d46e139757" class="topicref" data-id="concept_sgt_m2m_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SFTP.html#concept_sgt_m2m_xhb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e136880" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></span></span></li>
+         <li><span data-tocid="concept_swk_h1j_yr-d46e137099" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></span></span></li>
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e137316" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e137464" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a></span></span></li>
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e137676" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li><span data-tocid="concept_vxg_w2z_yv-d46e138350" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a></span></span></li>
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e138730" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e139101" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a></span></span></li>
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e140184" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e140479" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MemSQLLoader.html#concept_kvs_3hh_ht">MemSQL Fast Loader</a></span></span></li>
+         <li><span data-tocid="concept_eth_k5n_4v-d46e140940" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e141311" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e141524" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a></span></span></li>
+         <li><span data-tocid="concept_fq3_kpc_r2b-d46e141908" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a></span></span></li>
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e142059" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a></span></span></li>
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e142155" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a></span></span></li>
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e142437" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e142650" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a></span></span></li>
+         <li><span data-tocid="concept_eyd_zx4_q2b-d46e142804" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
+         <li><span data-tocid="concept_sgt_m2m_xhb-d46e142858" class="topicref" data-id="concept_sgt_m2m_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SFTP.html#concept_sgt_m2m_xhb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_vxl_zzc_1gb-d46e140051" class="topicref" data-id="concept_vxl_zzc_1gb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Snowflake.html#concept_vxl_zzc_1gb">Snowflake</a></span></span></li>
-         <li><span data-tocid="concept_z2g_q1r_wr-d46e142662" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a></span></span></li>
-         <li><span data-tocid="concept_zzr_pqn_xdb-d46e142819" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a></span></span></li>
-         <li><span data-tocid="concept_hjv_5nn_r3b-d46e143038" class="topicref" data-id="concept_hjv_5nn_r3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SQLServerBDCBulk.html#concept_hjv_5nn_r3b">SQL Server 2019 BDC Bulk Loader</a></span></span></li>
-         <li><span data-tocid="concept_idr_ct5_w2b-d46e144132" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a></span></span></li>
-         <li><span data-tocid="concept_ryn_v3z_lr-d46e144420" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+         <li><span data-tocid="concept_vxl_zzc_1gb-d46e143149" class="topicref" data-id="concept_vxl_zzc_1gb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Snowflake.html#concept_vxl_zzc_1gb">Snowflake</a></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e145760" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a></span></span></li>
+         <li><span data-tocid="concept_zzr_pqn_xdb-d46e145917" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a></span></span></li>
+         <li><span data-tocid="concept_hjv_5nn_r3b-d46e146136" class="topicref" data-id="concept_hjv_5nn_r3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SQLServerBDCBulk.html#concept_hjv_5nn_r3b">SQL Server 2019 BDC Bulk Loader</a></span></span></li>
+         <li><span data-tocid="concept_idr_ct5_w2b-d46e147231" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a></span></span></li>
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e147519" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_htf_ydj_wq-d46e144445" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_htf_ydj_wq-d46e147543" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_l4d_mjn_lz-d46e144469" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a></span></span></li>
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e147567" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e144566" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e153031" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e155634" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e159203" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e161394" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e161595" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e164421" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e165220" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e165802" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e166179" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e166334" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e166815" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e168280" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e169236" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e171864" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e173122" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e174775" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e180223" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e181428" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e186871" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e186926" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e187149" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e190850" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e191072" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -301,7 +301,7 @@
                         response to send.</span></p>
 
         <p class="p">You can add additional Kafka configuration properties as needed. You can also configure
-            the origin to use Kafka security features.</p>
+            the destination to use Kafka security features.</p>
 
         <p class="p">You can configure the Kafka Producer to work with the Confluent Schema Registry. The
             Confluent Schema Registry is a distributed storage layer for Avro schemas which uses
@@ -408,7 +408,7 @@
                         use the destination in a microservice pipeline.</span></p>
 
         <div class="p">When sending responses to a microservice origin, the
-                  destination can send one of the following:<ul class="ul" id="concept_jlq_btd_rfb__d51e2562">
+                  destination can send one of the following:<ul class="ul" id="concept_jlq_btd_rfb__d54e2698">
                         <li class="li">All successfully written records.</li>
 
                         <li class="li">Responses from the destination system - For information about the
@@ -428,15 +428,15 @@
         <p class="p">You can add custom Kafka configuration
             properties to the Kafka Producer destination. </p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d1094e28">When you add a Kafka configuration property, enter the exact property name and
+        <p class="p" id="concept_wnp_gfc_rw__d1097e28">When you add a Kafka configuration property, enter the exact property name and
             the value. The stage does not validate the property names or values.</p>
 
-        <p class="p" id="concept_wnp_gfc_rw__d1094e31">Several properties are defined by default, you can edit or remove the properties
+        <p class="p" id="concept_wnp_gfc_rw__d1097e31">Several properties are defined by default, you can edit or remove the properties
             as necessary.</p>
 
         <div class="p">
-            <div class="note note" id="concept_wnp_gfc_rw__d1094e36"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
-                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d1094e38">
+            <div class="note note" id="concept_wnp_gfc_rw__d1097e36"><span class="notetitle">Note:</span> Because the stage uses several configuration properties, it ignores
+                user-defined values for the following properties:<ul class="ul" id="concept_wnp_gfc_rw__d1097e38">
                     <li class="li">key.serializer.class</li>
 
                     <li class="li">metadata.broker.list</li>
@@ -456,390 +456,27 @@
 
 </article>
 <article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_znr_b3c_rw">
- <h2 class="title topictitle2" id="ariaid-title7">Enabling Security</h2>
+    <h2 class="title topictitle2" id="ariaid-title7">Kafka Security</h2>
 
     <div class="body conbody">
-        <p class="p">You can configure the Kafka Producer to connect
-            securely to Kafka through SSL/TLS, Kerberos, or both. </p>
+        <p class="p">You can configure the Kafka Producer
+            destination <span class="ph">to connect securely to Kafka through SSL/TLS, Kerberos, or both.
+                For more information about the methods and details on how to configure each method,
+                see <a class="xref" href="../Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb">Security in Kafka Stages</a>.</span></p>
 
-        <p class="p"><span class="ph"><img class="image" id="concept_znr_b3c_rw__d21e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> the Kafka Producer destination supports only SSL/TLS.</p>
+        <p class="p"><span class="ph"><img class="image" id="concept_znr_b3c_rw__d21e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> the Kafka Producer destination supports only SSL/TLS. </p>
 
-        
-    </div>
-
-<article class="topic concept nested2" aria-labelledby="ariaid-title8" id="concept_czm_55c_rw">
-    <h3 class="title topictitle3" id="ariaid-title8">Enabling SSL/TLS</h3>
-
-    <div class="body conbody">
-        <p class="p">Perform the following steps to enable the Kafka
-            Producer to use SSL/TLS to connect to Kafka.</p>
-
-        <p class="p"><span class="ph"><img class="image" id="concept_czm_55c_rw__d21e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> only the <span class="ph uicontrol">security.protocol</span>,
-                <span class="ph uicontrol">ssl.truststore.location</span>, and
-                <span class="ph uicontrol">ssl.keystore.location</span> Kafka configuration properties are
-            valid. For the truststore and keystore locations, enter an absolute path for the
-            truststore and keystore files that use the PEM format. In <span class="ph">Data Collector Edge</span> pipelines, do not add any of the other SSL Kafka properties listed in these
-            instructions.</p>
-
-        <div class="p">
-            <ol class="ol" id="concept_czm_55c_rw__d1276e27">
-                <li class="li" id="concept_czm_55c_rw__d1276e29">To use SSL/TLS to connect, first make sure Kafka is
-                    configured for SSL/TLS as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">Kafka documentation</a>. </li>
-
-                <li class="li" id="concept_czm_55c_rw__d1276e35">On the <span class="ph uicontrol">General</span> tab of the stage, set
-                    the <span class="ph uicontrol">Stage Library</span> property to the appropriate Apache
-                    Kafka version.</li>
-
-                <li class="li" id="concept_czm_55c_rw__d1276e44">On the <strong class="ph b">Kafka</strong> tab, add the
-                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property and
-                    set it to <strong class="ph b">SSL</strong>.</li>
-
-                <li class="li" id="concept_czm_55c_rw__d1276e56">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_czm_55c_rw__d1276e58">
-                        <li class="li">ssl.truststore.location</li>
-
-                        <li class="li">ssl.truststore.password</li>
-
-                    </ul>
-<div class="p">When the Kafka broker requires client authentication - when the
-                        ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_czm_55c_rw__d1276e68">
-                            <li class="li">ssl.keystore.location</li>
-
-                            <li class="li">ssl.keystore.password</li>
-
-                            <li class="li">ssl.key.password</li>
-
-                        </ul>
-</div>
-<div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_czm_55c_rw__d1276e81">
-                            <li class="li">ssl.enabled.protocols</li>
-
-                            <li class="li">ssl.truststore.type</li>
-
-                            <li class="li">ssl.keystore.type</li>
-
-                        </ul>
-</div>
-<p class="p">For details about these properties, see the Kafka
-                        documentation.</p>
-</li>
-
-            </ol>
-
-        </div>
-
-        <p class="p">For example, the following properties allow the stage to use SSL/TLS to
-            connect to Kafka with client authentication:</p>
-
-        <img class="image" id="concept_czm_55c_rw__image_dvs_4zc_rw" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-SSLoptions.png" height="179" width="549" />
     </div>
 
 </article>
-<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_vtc_rvc_rw">
- <h3 class="title topictitle3" id="ariaid-title9">Enabling Kerberos (SASL)</h3>
-
- <div class="body conbody">
-        <p class="p">When
-            you use Kerberos authentication, <span class="ph">Data Collector</span> uses the Kerberos
-            principal and keytab to connect to Kafka. Perform the following steps to enable the
-            Kafka Producer destination to use Kerberos to connect to Kafka. </p>
-
-        <p class="p"><span class="ph"><img class="image" id="concept_vtc_rvc_rw__d21e190" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not valid in <span class="ph">Data Collector Edge</span> pipelines.</span> In <span class="ph">Data Collector Edge</span> pipelines, the Kafka Producer destination supports only SSL/TLS.</p>
-
-        <div class="p">
-            <ol class="ol">
-                <li class="li" id="concept_vtc_rvc_rw__d1231e41">To use Kerberos, first make sure Kafka is configured for
-                    Kerberos as described in the <a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">Kafka documentation</a>.</li>
-
-                <li class="li" id="concept_vtc_rvc_rw__d1231e47">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
-                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
-
-                <li class="li" id="concept_vtc_rvc_rw__d1231e54">Add the Java Authentication and Authorization
-                    Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_vtc_rvc_rw__d1231e56">
-                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
-                                authentication</span> - If <span class="ph">Data Collector</span> does
-                            not use LDAP authentication, create a separate JAAS configuration file
-                            on the <span class="ph">Data Collector</span>
-                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
-                            the
-                                file:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="&lt;keytab path&gt;"
-    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="/etc/security/keytabs/sdc.keytab"
-    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</code></pre></div>
-<div class="p">Then
-                                modify the SDC_JAVA_OPTS environment variable to include the
-                                following option that defines the path to the JAAS configuration
-                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
-<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
-                  type.</p>
-</li>
-
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
-                                authentication</span> - If LDAP authentication is enabled in an
-                            RPM or tarball installation, add the properties to the JAAS
-                            configuration file used by <span class="ph">Data Collector</span> - the
-                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
-                                <code class="ph codeph">KafkaClient</code> login section to the end of the
-                                <code class="ph codeph">ldap-login.conf</code>
-                                file:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="&lt;keytab path&gt;"
-    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="/etc/security/keytabs/sdc.keytab"
-    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</code></pre></div>
-</li>
-
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
-                                authentication</span> - If LDAP authentication is enabled in a
-                            Cloudera Manager installation, enable the LDAP Config File Substitutions
-                            (ldap.login.file.allow.substitutions) property for the StreamSets
-                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
-                                Information (use.ldap.login.file) property is enabled and LDAP
-                                authentication is configured in the Data Collector Advanced
-                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
-                                add the JAAS configuration properties to the same ldap-login.conf
-                                safety valve.</p>
-<p class="p">If LDAP authentication is configured through the
-                                LDAP properties rather than the ldap-login.conf safety value, add
-                                the JAAS configuration properties to the Data Collector Advanced
-                                Configuration Snippet (Safety Valve) for
-                                generated-ldap-login-append.conf field.</p>
-<p class="p">Add the following
-                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
-                                field as
-                                follows:</p>
-<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="_KEYTAB_PATH"
-    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="_KEYTAB_PATH"
-    principal="sdc/_HOST@EXAMPLE.COM";
-};</code></pre></div>
-<p class="p">Cloudera
-                                Manager generates the appropriate keytab path and host name.
-                            </p>
-</li>
-
-                    </ul>
-</li>
-
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
-                        Library</span> property to the appropriate Apache Kafka version.</li>
-
-                <li class="li" id="concept_vtc_rvc_rw__d1231e137">On the <span class="keyword wintitle">Kafka</span> tab, add the
-                        <span class="ph uicontrol">security.protocol</span> Kafka configuration property, and
-                    set it to <span class="ph uicontrol">SASL_PLAINTEXT</span>.</li>
-
-                <li class="li" id="concept_vtc_rvc_rw__d1231e150">Then, add the
-                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
-                    and set it to <span class="ph uicontrol">kafka</span>. </li>
-
-            </ol>
-
-        </div>
-
-        <p class="p">For example, the following Kafka properties enable connecting to Kafka
-            with Kerberos:</p>
-
-        <p class="p"><img class="image" id="concept_vtc_rvc_rw__d1231e165" src="../../../reusable-content/datacollector/reusable-topics/../../../datacollector/UserGuide/Graphics/Kafka-Kerberos.png" height="95" width="639" /></p>
-
- </div>
-
-</article>
-<article class="topic concept nested2" aria-labelledby="ariaid-title10" id="concept_ksm_svc_rw">
- <h3 class="title topictitle3" id="ariaid-title10">Enabling SSL/TLS and Kerberos</h3>
-
- <div class="body conbody">
-        <p class="p">You
-            can enable Kafka Producer to use SSL/TLS and Kerberos to connect to Kafka.</p>
-
-        <p class="p"><span class="ph"><img class="image" id="concept_ksm_svc_rw__d21e190" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not valid in <span class="ph">Data Collector Edge</span> pipelines.</span> In <span class="ph">Data Collector Edge</span> pipelines, the Kafka Producer destination supports using <a class="xref" href="KProducer.html#concept_czm_55c_rw">only SSL/TLS</a> to connect
-            to Kafka.</p>
-
-        <div class="p"><span class="ph" id="concept_ksm_svc_rw__d1390e30">To use SSL/TLS and Kerberos, combine the required
-                steps to enable each and set the security.protocol property as follows:</span>
-            <ol class="ol" id="concept_ksm_svc_rw__d1390e33">
-                <li class="li" id="concept_ksm_svc_rw__d1390e35">Make sure Kafka is configured to use SSL/TLS and
-                    Kerberos (SASL) as described in the following Kafka documentation:<ul class="ul" id="concept_ksm_svc_rw__d1390e37">
-                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_ssl" target="_blank">http://kafka.apache.org/documentation.html#security_ssl</a></li>
-
-                        <li class="li"><a class="xref" href="http://kafka.apache.org/documentation.html#security_sasl" target="_blank">http://kafka.apache.org/documentation.html#security_sasl</a></li>
-
-                    </ul>
-</li>
-
-                <li class="li">Make sure that Kerberos authentication is enabled for <span class="ph">Data Collector</span>, as described
-                    in <a class="xref" href="../Configuration/DCConfig.html#concept_hnm_n4l_xs" title="You can use Kerberos authentication to connect to external systems as well as YARN clusters.">Kerberos Authentication</a>.</li>
-
-                <li class="li">Add the Java Authentication and Authorization
-                    Service (JAAS) configuration properties required for Kafka clients based on your
-                    installation and authentication type:<ul class="ul" id="concept_ksm_svc_rw__d1231e56">
-                        <li class="li"><span class="ph uicontrol">RPM, tarball, or Cloudera Manager installation without LDAP
-                                authentication</span> - If <span class="ph">Data Collector</span> does
-                            not use LDAP authentication, create a separate JAAS configuration file
-                            on the <span class="ph">Data Collector</span>
-                            machine. Add the following <code class="ph codeph">KafkaClient</code> login section to
-                            the
-                                file:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="&lt;keytab path&gt;"
-    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="/etc/security/keytabs/sdc.keytab"
-    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</code></pre></div>
-<div class="p">Then
-                                modify the SDC_JAVA_OPTS environment variable to include the
-                                following option that defines the path to the JAAS configuration
-                                file:<pre class="pre codeblock"><code>-Djava.security.auth.login.config=&lt;JAAS config path&gt;</code></pre></div>
-<p class="p"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_zhl_rb3_qcb">Modify environment variables</a> using the method required by your installation
-                  type.</p>
-</li>
-
-                        <li class="li"><span class="ph uicontrol">RPM or tarball installation with LDAP
-                                authentication</span> - If LDAP authentication is enabled in an
-                            RPM or tarball installation, add the properties to the JAAS
-                            configuration file used by <span class="ph">Data Collector</span> - the
-                                <code class="ph codeph">$SDC_CONF/ldap-login.conf</code> file. Add the following
-                                <code class="ph codeph">KafkaClient</code> login section to the end of the
-                                <code class="ph codeph">ldap-login.conf</code>
-                                file:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="&lt;keytab path&gt;"
-    principal="&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="/etc/security/keytabs/sdc.keytab"
-    principal="sdc/sdc-01.streamsets.net@EXAMPLE.COM";
-};</code></pre></div>
-</li>
-
-                        <li class="li"><span class="ph uicontrol">Cloudera Manager installation with LDAP
-                                authentication</span> - If LDAP authentication is enabled in a
-                            Cloudera Manager installation, enable the LDAP Config File Substitutions
-                            (ldap.login.file.allow.substitutions) property for the StreamSets
-                            service in Cloudera Manager.<p class="p">If the Use Safety Valve to Edit LDAP
-                                Information (use.ldap.login.file) property is enabled and LDAP
-                                authentication is configured in the Data Collector Advanced
-                                Configuration Snippet (Safety Valve) for ldap-login.conf field, then
-                                add the JAAS configuration properties to the same ldap-login.conf
-                                safety valve.</p>
-<p class="p">If LDAP authentication is configured through the
-                                LDAP properties rather than the ldap-login.conf safety value, add
-                                the JAAS configuration properties to the Data Collector Advanced
-                                Configuration Snippet (Safety Valve) for
-                                generated-ldap-login-append.conf field.</p>
-<p class="p">Add the following
-                                    <code class="ph codeph">KafkaClient</code> login section to the appropriate
-                                field as
-                                follows:</p>
-<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="_KEYTAB_PATH"
-    principal="&lt;principal name&gt;/_HOST@&lt;realm&gt;";
-};</code></pre><div class="p">For
-                                example:<pre class="pre codeblock"><code>KafkaClient {
-    com.sun.security.auth.module.Krb5LoginModule required
-    useKeyTab=true
-    keyTab="_KEYTAB_PATH"
-    principal="sdc/_HOST@EXAMPLE.COM";
-};</code></pre></div>
-<p class="p">Cloudera
-                                Manager generates the appropriate keytab path and host name.
-                            </p>
-</li>
-
-                    </ul>
-</li>
-
-                <li class="li">On the <span class="keyword wintitle">General</span> tab of the stage, set the <span class="ph uicontrol">Stage
-                        Library</span> property to the appropriate Apache Kafka version.</li>
-
-                <li class="li" id="concept_ksm_svc_rw__d1390e59">On the <span class="keyword wintitle">Kafka</span> tab, add the
-                        <span class="ph uicontrol">security.protocol</span> property and set it to
-                        <span class="ph uicontrol">SASL_SSL</span>.</li>
-
-                <li class="li">Then, add the
-                        <span class="ph uicontrol">sasl.kerberos.service.name</span> configuration property,
-                    and set it to <span class="ph uicontrol">kafka</span>. </li>
-
-                <li class="li">Then add and configure the following SSL Kafka
-                        properties:<ul class="ul" id="concept_ksm_svc_rw__d1276e58">
-                        <li class="li">ssl.truststore.location</li>
-
-                        <li class="li">ssl.truststore.password</li>
-
-                    </ul>
-<div class="p">When the Kafka broker requires client authentication - when the
-                        ssl.client.auth broker property is set to "required" - add and configure the
-                        following properties: <ul class="ul" id="concept_ksm_svc_rw__d1276e68">
-                            <li class="li">ssl.keystore.location</li>
-
-                            <li class="li">ssl.keystore.password</li>
-
-                            <li class="li">ssl.key.password</li>
-
-                        </ul>
-</div>
-<div class="p">Some brokers might require adding the following properties as
-                            well:<ul class="ul" id="concept_ksm_svc_rw__d1276e81">
-                            <li class="li">ssl.enabled.protocols</li>
-
-                            <li class="li">ssl.truststore.type</li>
-
-                            <li class="li">ssl.keystore.type</li>
-
-                        </ul>
-</div>
-<p class="p">For details about these properties, see the Kafka
-                        documentation.</p>
-</li>
-
-            </ol>
-</div>
-
- </div>
-
-</article>
-</article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_lww_3b3_kr">
-  <h2 class="title topictitle2" id="ariaid-title11">Data Formats</h2>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_lww_3b3_kra">
+  <h2 class="title topictitle2" id="ariaid-title8">Data Formats</h2>
 
   <div class="body conbody">
     <p class="p">The Kafka Producer destination writes data to Kafka
       based on the data format that you select. </p>
 
-    <p class="p"><span class="ph"><img class="image" id="concept_lww_3b3_kr__d21e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span>
+    <p class="p"><span class="ph"><img class="image" id="concept_lww_3b3_kra__d21e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span>
             the destination supports only the Binary, JSON, SDC Record, and Text data formats.</p>
 
     <div class="p">The Kafka Producer destination processes data formats as follows::<dl class="dl">
@@ -852,7 +489,7 @@
                                     of the Avro schema definition:</dd>
 
                               <dd class="dd ddexpand">
-                                    <ul class="ul" id="concept_lww_3b3_kr__d51e3918">
+                                    <ul class="ul" id="concept_lww_3b3_kra__d54e4054">
                                           <li class="li"><span class="ph uicontrol">In Pipeline Configuration</span> - Use
                                                 the schema that you provide in the stage
                                                 configuration.</li>
@@ -893,19 +530,19 @@
         
                               <dt class="dt dlterm">Binary</dt>
 
-                              <dd class="dd">The stage writes <span class="ph" id="concept_lww_3b3_kr__d51e4007">binary data to a single
+                              <dd class="dd">The stage writes <span class="ph" id="concept_lww_3b3_kra__d54e4143">binary data to a single
                                           field in the record. </span></dd>
 
                         
         
                               <dt class="dt dlterm">Delimited</dt>
 
-                              <dd class="dd"><span class="ph" id="concept_lww_3b3_kr__d51e4017">The destination writes records as
+                              <dd class="dd"><span class="ph" id="concept_lww_3b3_kra__d54e4153">The destination writes records as
                                           delimited data. When you use this data format, the root
                                           field must be list or list-map.</span></dd>
 
                               <dd class="dd ddexpand">
-                                    <div class="p">You can use the following delimited format types: <ul class="ul" id="concept_lww_3b3_kr__ul_jtv_5sl_mcb">
+                                    <div class="p">You can use the following delimited format types: <ul class="ul" id="concept_lww_3b3_kra__ul_jtv_5sl_mcb">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -942,7 +579,7 @@
                               <dt class="dt dlterm">JSON</dt>
 
                               <dd class="dd">The destination writes records as JSON data. You can use one of
-                                    the following formats:<ul class="ul" id="concept_lww_3b3_kr__d51e4038">
+                                    the following formats:<ul class="ul" id="concept_lww_3b3_kra__d54e4174">
                                           <li class="li">Array - Each file includes a single array. In the
                                                 array, each element is a JSON representation of each
                                                 record.</li>
@@ -998,7 +635,7 @@
                                     destination requires the record to have a single root field that
                                     contains the rest of the record data. For details and
                                     suggestions for how to accomplish this, see <a class="xref" href="../Data_Formats/WritingXML.html#concept_cmn_hml_r1b">Record Structure Requirement</a>.<p class="p">The destination can include indentation to produce
-                                          human-readable documents. It can also validate <span class="ph" id="concept_lww_3b3_kr__d51e4262">that the generated
+                                          human-readable documents. It can also validate <span class="ph" id="concept_lww_3b3_kra__d54e4398">that the generated
                                                 XML conforms to the specified schema definition.
                                                 Records with invalid schemas are handled based on
                                                 the error handling configured for the
@@ -1012,8 +649,8 @@
   </div>
 
 </article>
-<article class="topic task nested1" aria-labelledby="ariaid-title12" id="task_q4d_4yl_zq">
-    <h2 class="title topictitle2" id="ariaid-title12">Configuring a Kafka Producer Destination</h2>
+<article class="topic task nested1" aria-labelledby="ariaid-title9" id="task_q4d_4yl_zq">
+    <h2 class="title topictitle2" id="ariaid-title9">Configuring a Kafka Producer Destination</h2>
 
     <div class="body taskbody">
         <section class="section context">
@@ -1027,41 +664,41 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e7110" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e7192" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e1322">General Property</th>
+                                    <th class="entry cellrowborder" id="d149055e774">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e1325">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e777">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
-                                <tr id="task_q4d_4yl_zq__d22e7132">
-                                    <td class="entry cellrowborder" headers="d140440e1322 ">Name</td>
+                                <tr id="task_q4d_4yl_zq__d22e7214">
+                                    <td class="entry cellrowborder" headers="d149055e774 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_q4d_4yl_zq__d22e7141">
-                                    <td class="entry cellrowborder" headers="d140440e1322 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_q4d_4yl_zq__d22e7150">
-                                    <td class="entry cellrowborder" headers="d140440e1322 ">Stage Library</td>
+                                <tr id="task_q4d_4yl_zq__d22e7223">
+                                    <td class="entry cellrowborder" headers="d149055e774 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Library version that you want to use. </td>
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_q4d_4yl_zq__d22e7232">
+                                    <td class="entry cellrowborder" headers="d149055e774 ">Stage Library</td>
+
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1322 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+                                    <td class="entry cellrowborder" headers="d149055e774 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -1073,9 +710,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1322 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+                                    <td class="entry cellrowborder" headers="d149055e774 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -1085,10 +722,10 @@
 
                                 </tr>
 
-                                <tr id="task_q4d_4yl_zq__d22e7189">
-                                    <td class="entry cellrowborder" headers="d140440e1322 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                <tr id="task_q4d_4yl_zq__d22e7271">
+                                    <td class="entry cellrowborder" headers="d149055e774 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1325 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d22e7197">
+                                    <td class="entry cellrowborder" headers="d149055e777 ">Error record handling for the stage: <ul class="ul" id="task_q4d_4yl_zq__d22e7279">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1113,20 +750,20 @@
                 <div class="itemgroup info">
                     <div class="p">
                         
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e10213" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e10295" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d140440e1442">Kafka Properties</th>
+                                        <th class="entry cellrowborder" id="d149055e894">Kafka Properties</th>
 
-                                        <th class="entry cellrowborder" id="d140440e1445">Description</th>
+                                        <th class="entry cellrowborder" id="d149055e897">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
-                                    <tr id="task_q4d_4yl_zq__d22e10235">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Broker URI</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10317">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Broker URI</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -1135,37 +772,37 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10249">
-                                        <td class="entry cellrowborder" headers="d140440e1442 "><a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
+                                    <tr id="task_q4d_4yl_zq__d22e10331">
+                                        <td class="entry cellrowborder" headers="d149055e894 "><a class="xref" href="KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
 
-                                        <td class="entry cellrowborder" id="task_q4d_4yl_zq__d22e10255" headers="d140440e1445 ">Evaluates an expression at
+                                        <td class="entry cellrowborder" id="task_q4d_4yl_zq__d22e10337" headers="d149055e897 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10259">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Topic</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10341">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Topic</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10270">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Topic Expression</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10352">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Topic Expression</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Expression used to determine where each record is
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10279">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Topic White List</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10361">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Topic White List</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">List of valid topic names to write to when using
+                                        <td class="entry cellrowborder" headers="d149055e897 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -1175,10 +812,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10291">
-                                        <td class="entry cellrowborder" headers="d140440e1442 "><a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
+                                    <tr id="task_q4d_4yl_zq__d22e10373">
+                                        <td class="entry cellrowborder" headers="d149055e894 "><a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d22e10299">
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Strategy to use to write to partitions:<ul class="ul" id="task_q4d_4yl_zq__d22e10381">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -1199,10 +836,10 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10315">
-                                        <td class="entry cellrowborder" headers="d140440e1442 "><a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
+                                    <tr id="task_q4d_4yl_zq__d22e10397">
+                                        <td class="entry cellrowborder" headers="d149055e894 "><a class="xref" href="KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
 
-                                        <td class="entry cellrowborder" id="task_q4d_4yl_zq__d22e10321" headers="d140440e1445 ">Expression to use with the
+                                        <td class="entry cellrowborder" id="task_q4d_4yl_zq__d22e10403" headers="d149055e897 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -1219,32 +856,67 @@
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10330">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">One Message per Batch</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10412">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">One Message per Batch</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">For each batch, writes the records to each partition
+                                        <td class="entry cellrowborder" headers="d149055e897 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
-                                    <tr id="task_q4d_4yl_zq__d22e10339">
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Kafka Configuration</td>
+                                    <tr id="task_q4d_4yl_zq__d22e10421">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Kafka Configuration</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Additional Kafka properties to use. Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
                                                 broker.list property.</p>
 <p class="p">For information about
-                                                enabling secure connections to Kafka, see <a class="xref" href="KProducer.html#concept_znr_b3c_rw">Enabling Security</a>.</p>
+                                                enabling secure connections to Kafka, see <a class="xref" href="KProducer.html#concept_znr_b3c_rw">Kafka Security</a>.</p>
 </td>
 
                                     </tr>
 
-                                    <tr>
-                                        <td class="entry cellrowborder" headers="d140440e1442 "><a class="xref" href="KProducer.html#concept_lww_3b3_kr">Key Serializer</a></td>
+                                    <tr id="task_q4d_4yl_zq__d22e10442">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Provide Keytab</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Method used to serialize the Kafka message key when
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Enables providing credentials for Kerberos
+                                            authentication. For more information, see <a class="xref" href="../Pipeline_Configuration/KafkaSecurity.html#concept_vwr_v2v_klb__stageprops">Providing Kerberos Credentials</a>.<div class="p">
+                                                <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Configuring Kerberos credentials in
+                                stage properties is not supported in cluster pipelines at this
+                                time.</span></div>
+
+                                            </div>
+</td>
+
+                                    </tr>
+
+                                    <tr id="task_q4d_4yl_zq__d22e10459">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Keytab</td>
+
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Keytab for Kerberos authentication. Enter a
+                                            Base64-encoded keytab or a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns a
+                                            Base64-encoded keytab. <p class="p"><span class="ph">Be sure to remove unnecessary
+                                characters, such as newline characters, before encoding the
+                                keytab.</span></p>
+</td>
+
+                                    </tr>
+
+                                    <tr id="task_q4d_4yl_zq__d22e10474">
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Principal</td>
+
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Principal for Kerberos authentication. Use the
+                                            following format:
+                                            <pre class="pre codeblock"><code>&lt;principal name&gt;/&lt;host name&gt;@&lt;realm&gt;</code></pre></td>
+
+                                    </tr>
+
+                                    <tr>
+                                        <td class="entry cellrowborder" headers="d149055e894 "><a class="xref" href="KProducer.html#concept_lww_3b3_kra">Key Serializer</a></td>
+
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Method used to serialize the Kafka message key when
                                             the configured data format is Avro. <p class="p">Set to Confluent
                                                 to embed the Avro schema ID in each message that
                                                 Kafka Producer writes. </p>
@@ -1253,9 +925,9 @@
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d140440e1442 ">Value Serializer</td>
+                                        <td class="entry cellrowborder" headers="d149055e894 ">Value Serializer</td>
 
-                                        <td class="entry cellrowborder" headers="d140440e1445 ">Method used to serialize the Kafka message value when
+                                        <td class="entry cellrowborder" headers="d149055e897 ">Method used to serialize the Kafka message value when
                                             the configured data format is Avro. <p class="p">Set to Confluent
                                                 to embed the Avro schema ID in each message that
                                                 Kafka Producer writes.</p>
@@ -1278,18 +950,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e1648">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1147">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e1651">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1150">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_q4d_4yl_zq__KP-DataFormats">
-                                    <td class="entry cellrowborder" headers="d140440e1648 "><a class="xref" href="KProducer.html#concept_lww_3b3_kr">Data Format</a></td>
+                                    <td class="entry cellrowborder" headers="d149055e1147 "><a class="xref" href="KProducer.html#concept_lww_3b3_kr">Data Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1651 ">Data format for messages. Use one of the following
+                                    <td class="entry cellrowborder" headers="d149055e1150 ">Data format for messages. Use one of the following
                                             formats:<ul class="ul" id="task_q4d_4yl_zq__ul_wlj_353_br">
                                             <li class="li">Avro</li>
 
@@ -1325,21 +997,21 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e7905" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e7986" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e1742">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1241">Avro Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e1745">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1244">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Avro Schema Location</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Avro Schema Location</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Location of the Avro schema definition to use when
-                                        writing data:<ul class="ul" id="task_q4d_4yl_zq__d22e7934">
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Location of the Avro schema definition to use when
+                                        writing data:<ul class="ul" id="task_q4d_4yl_zq__d22e8015">
                                             <li class="li">In Pipeline Configuration - Use the schema that you
                                                 provide in the stage configuration. </li>
 
@@ -1356,9 +1028,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Avro Schema</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Avro Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Avro schema definition used to write the data. <p class="p">You can
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Avro schema definition used to write the data. <p class="p">You can
                                             optionally use the <code class="ph codeph">runtime:loadResource</code>
                                             function to load a schema definition stored in a runtime
                                             resource file. </p>
@@ -1367,17 +1039,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Register Schema</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Register Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Registers a new Avro schema with the Confluent Schema
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Registers a new Avro schema with the Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Schema Registry URLs </td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Schema Registry URLs </td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Confluent Schema Registry URLs used to look up the schema
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Confluent Schema Registry URLs used to look up the schema
                                         or to register a new schema. To add a URL, click
                                             <span class="ph uicontrol">Add</span> and then enter the URL in the
                                         following
@@ -1386,27 +1058,27 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d140440e1742 ">Basic Auth User Info</td>
+              <td class="entry cellrowborder" headers="d149055e1241 ">Basic Auth User Info</td>
 
-              <td class="entry cellrowborder" headers="d140440e1745 ">User information needed to connect to Confluent Schema Registry when using
+              <td class="entry cellrowborder" headers="d149055e1244 ">User information needed to connect to Confluent Schema Registry when using
                 basic authentication. <p class="p">Enter the key and secret from the
                     <code class="ph codeph">schema.registry.basic.auth.user.info</code> setting in Schema Registry
                   using the following format: </p>
 <div class="p">
                   <pre class="pre codeblock"><code>&lt;key&gt;:&lt;secret&gt;</code></pre>
                 </div>
-<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_q4d_4yl_zq__d51e6095">To
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_q4d_4yl_zq__d54e6232">To
                         secure sensitive information such as user names and passwords, you can use
-                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b" title="Data Collector pipeline stages communicate with external systems to read and write data. Many of these external systems require credentials - user names or passwords - to access the data. When you configure pipeline stages for these external systems, you define the credentials that the stage uses to connect to the system.">credential stores.</a></span></span></div>
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Look Up Schema By</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Look Up Schema By</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Method used to look up the schema in Confluent Schema
-                                            Registry:<ul class="ul" id="task_q4d_4yl_zq__d22e8000">
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Method used to look up the schema in Confluent Schema
+                                            Registry:<ul class="ul" id="task_q4d_4yl_zq__d22e8081">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
 
@@ -1419,9 +1091,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Schema Subject</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Schema Subject</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Avro schema subject to look up or to register in
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Avro schema subject to look up or to register in
                                         Confluent Schema Registry.<p class="p">If the specified subject to
                                             look up has multiple schema versions, the destination
                                             uses the latest schema version for that subject. To use
@@ -1433,17 +1105,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Schema ID</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Schema ID</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Avro schema ID to look up in Confluent Schema
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Avro schema ID to look up in Confluent Schema
                                         Registry.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Include Schema</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Include Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> If you
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">Includes the schema in each message. <div class="note note"><span class="notetitle">Note:</span> If you
                                             configured Kafka Producer to embed the Avro schema ID in
                                             each message that it writes, clear this
                                         property.</div>
@@ -1452,9 +1124,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1742 ">Avro Compression Codec</td>
+                                    <td class="entry cellrowborder" headers="d149055e1241 ">Avro Compression Codec</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1745 ">The Avro compression type to use. <p class="p">When using Avro
+                                    <td class="entry cellrowborder" headers="d149055e1244 ">The Avro compression type to use. <p class="p">When using Avro
                                             compression, do not enable other compression available
                                             in the destination. </p>
 </td>
@@ -1472,20 +1144,20 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8081" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8163" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e1944">Binary Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1438">Binary Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e1947">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1441">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1944 ">Binary Field Path</td>
+                                    <td class="entry cellrowborder" headers="d149055e1438 ">Binary Field Path</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1947 ">Field that contains the binary data.</td>
+                                    <td class="entry cellrowborder" headers="d149055e1441 ">Field that contains the binary data.</td>
 
                                 </tr>
 
@@ -1500,20 +1172,20 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8138" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8220" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e1991">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1485">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e1994">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1488">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Delimiter Format</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Delimiter Format</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Format for delimited data:<ul class="ul" id="task_q4d_4yl_zq__ul_k3j_vvf_jr">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
 
@@ -1542,16 +1214,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Indicates whether to create a header line.</td>
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Indicates whether to create a header line.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Replace New Line Characters</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Replace New Line Characters</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Replaces new line characters with the configured
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Replaces new line characters with the configured
                                             string.<p class="p">Recommended when writing data as a single line
                                             of text.</p>
 </td>
@@ -1559,9 +1231,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">New Line Character Replacement</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">New Line Character Replacement</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">String to replace each new line character. For example,
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">String to replace each new line character. For example,
                                         enter a space to replace each new line character with a
                                         space. <p class="p">Leave empty to remove the new line
                                         characters.</p>
@@ -1570,9 +1242,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">You can enter a Unicode control character
                                             using the format \u<em class="ph i">NNNN</em>, where ​<em class="ph i">N</em> is a
@@ -1587,9 +1259,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Escape Character </td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Escape Character </td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Escape character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Escape character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the backslash character ( \
                                         ).</p>
@@ -1598,9 +1270,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e1991 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d149055e1485 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e1994 ">Quote character for a custom delimiter format. Select one
+                                    <td class="entry cellrowborder" headers="d149055e1488 ">Quote character for a custom delimiter format. Select one
                                         of the available options or use Other to enter a custom
                                         character. <p class="p">Default is the quotation mark character ( "
                                             ).</p>
@@ -1609,9 +1281,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d140440e1991 ">Charset</td>
+              <td class="entry cellrowborder" headers="d149055e1485 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d140440e1994 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d149055e1488 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1626,20 +1298,20 @@
                     following property:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8278" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8359" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e2162">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1656">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e2165">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1659">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2162 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d149055e1656 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2165 ">Method to write JSON data:<ul class="ul" id="task_q4d_4yl_zq__d22e8307">
+                                    <td class="entry cellrowborder" headers="d149055e1659 ">Method to write JSON data:<ul class="ul" id="task_q4d_4yl_zq__d22e8388">
                                             <li class="li">JSON Array of Objects - Each file includes a single
                                                 array. In the array, each element is a JSON
                                                 representation of each record.</li>
@@ -1654,9 +1326,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d140440e2162 ">Charset</td>
+              <td class="entry cellrowborder" headers="d149055e1656 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d140440e2165 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d149055e1659 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1671,20 +1343,20 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8350" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8432" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e2225">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1719">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e2228">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1722">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2225 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d149055e1719 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2228 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d149055e1722 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span> For information about generating the descriptor file,
@@ -1694,9 +1366,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2225 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d149055e1719 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2228 ">Fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d149055e1722 ">Fully-qualified name for the message type to use when
                                         writing data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -1716,28 +1388,28 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8524" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8605" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e2307">Text Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1801">Text Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e2310">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1804">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2307 ">Text Field Path</td>
+                                    <td class="entry cellrowborder" headers="d149055e1801 ">Text Field Path</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2310 ">Field that contains the text data to be written. All data
+                                    <td class="entry cellrowborder" headers="d149055e1804 ">Field that contains the text data to be written. All data
                                         must be incorporated into the specified field. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2307 ">Record Separator</td>
+                                    <td class="entry cellrowborder" headers="d149055e1801 ">Record Separator</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2310 ">Characters to use to separate records. Use any valid Java
+                                    <td class="entry cellrowborder" headers="d149055e1804 ">Characters to use to separate records. Use any valid Java
                                         string literal. For example, when writing to Windows, you
                                         might use <kbd class="ph userinput">\r\n</kbd> to separate records.
                                             <p class="p">By default, the destination uses
@@ -1747,18 +1419,18 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2307 ">On Missing Field</td>
+                                    <td class="entry cellrowborder" headers="d149055e1801 ">On Missing Field</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2310 ">When a record does not include the text field, determines
+                                    <td class="entry cellrowborder" headers="d149055e1804 ">When a record does not include the text field, determines
                                         whether the destination reports the missing field as an
                                         error or ignores the missing field.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2307 ">Insert Record Separator if No Text</td>
+                                    <td class="entry cellrowborder" headers="d149055e1801 ">Insert Record Separator if No Text</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2310 ">When configured to ignore a missing text field, inserts
+                                    <td class="entry cellrowborder" headers="d149055e1804 ">When configured to ignore a missing text field, inserts
                                         the configured record separator string to create an empty
                                             line.<p class="p">When not selected, discards records without the
                                             text field.</p>
@@ -1767,9 +1439,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d140440e2307 ">Charset</td>
+              <td class="entry cellrowborder" headers="d149055e1801 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d140440e2310 ">Character set to use when writing data. </td>
+              <td class="entry cellrowborder" headers="d149055e1804 ">Character set to use when writing data. </td>
 
             </tr>
 
@@ -1784,29 +1456,29 @@ Use a message type defined in the
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8742" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__d22e8824" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d140440e2399">XML Property</th>
+                                    <th class="entry cellrowborder" id="d149055e1893">XML Property</th>
 
-                                    <th class="entry cellrowborder" id="d140440e2402">Description</th>
+                                    <th class="entry cellrowborder" id="d149055e1896">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2399 ">Pretty Format</td>
+                                    <td class="entry cellrowborder" headers="d149055e1893 ">Pretty Format</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2402 ">Adds indentation to make the resulting XML document
+                                    <td class="entry cellrowborder" headers="d149055e1896 ">Adds indentation to make the resulting XML document
                                         easier to read. Increases the record size
                                         accordingly.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2399 ">Validate Schema</td>
+                                    <td class="entry cellrowborder" headers="d149055e1893 ">Validate Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2402 ">Validates <span class="ph">that the generated
+                                    <td class="entry cellrowborder" headers="d149055e1896 ">Validates <span class="ph">that the generated
                                                 XML conforms to the specified schema definition.
                                                 Records with invalid schemas are handled based on
                                                 the error handling configured for the
@@ -1822,9 +1494,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d140440e2399 ">XML Schema</td>
+                                    <td class="entry cellrowborder" headers="d149055e1893 ">XML Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d140440e2402 ">The XML schema to use to validate records.</td>
+                                    <td class="entry cellrowborder" headers="d149055e1896 ">The XML schema to use to validate records.</td>
 
                                 </tr>
 
@@ -1842,26 +1514,26 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_q4d_4yl_zq__table_mxm_kyd_rfb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d140440e2474"><a class="xref" href="KProducer.html#concept_jlq_btd_rfb">Response Property</a></th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d149055e1968"><a class="xref" href="KProducer.html#concept_jlq_btd_rfb">Response Property</a></th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d140440e2479">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d149055e1973">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d140440e2474 ">Send Response to Origin</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d149055e1968 ">Send Response to Origin</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d140440e2479 ">Enables sending a response to a microservice
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d149055e1973 ">Enables sending a response to a microservice
                                                 origin.</td>
 
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d140440e2474 ">Response Type</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d149055e1968 ">Response Type</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d140440e2479 ">The response to send to a microservice origin:<ul class="ul" id="task_q4d_4yl_zq__d51e2618">
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d149055e1973 ">The response to send to a microservice origin:<ul class="ul" id="task_q4d_4yl_zq__d54e2753">
                                                   <li class="li">Successfully written records.</li>
 
                                                   <li class="li">Responses from the destination system.</li>

@@ -1,0 +1,2071 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Databricks Delta Lake destination writes data to one or more Delta Lake tables on Databricks. Important: The Databricks Delta Lake destination requires a ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Databricks Delta Lake" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Destinations-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ddy_cdz_clb" /><title>Databricks Delta Lake</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ddy_cdz_clb-d46e126600" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_agj_cfj_br"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_ddy_cdz_clb"><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_ddy_cdz_clb">Databricks Delta Lake</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b" title="Couchbase"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r" title="Elasticsearch"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e119966" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations_overview.html#concept_hpr_twm_jq">Destinations</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_gyq_rpr_4cb-d46e119990" class="topicref" data-id="concept_gyq_rpr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Aerospike.html#concept_gyq_rpr_4cb">Aerospike</a></span></span></li>
+         <li><span data-tocid="concept_avx_bnq_rt-d46e120044" class="topicref" data-id="concept_avx_bnq_rt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_jzm_kf4_zx-d46e120980" class="topicref" data-id="concept_jzm_kf4_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DataLakeStore.html#concept_jzm_kf4_zx">Azure Data Lake Storage (Legacy) (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_xzc_wfq_xhb-d46e121913" class="topicref" data-id="concept_xzc_wfq_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G1-D.html#concept_xzc_wfq_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ajp_1d2_vhb-d46e122847" class="topicref" data-id="concept_ajp_1d2_vhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ADLS-G2-D.html#concept_ajp_1d2_vhb">Azure Data Lake Storage Gen2</a></span></span></li>
+         <li><span data-tocid="concept_xq5_d5q_1bb-d46e123780" class="topicref" data-id="concept_xq5_d5q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">Azure Event Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_pnd_jkq_1bb-d46e123876" class="topicref" data-id="concept_pnd_jkq_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureIoTHub.html#concept_pnd_jkq_1bb">Azure IoT Hub Producer</a></span></span></li>
+         <li><span data-tocid="concept_hjv_5nn_r3b-d46e124032" class="topicref" data-id="concept_hjv_5nn_r3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/AzureSynapse.html#concept_hjv_5nn_r3b">Azure Synapse (SQL Pool)</a></span></span></li>
+         <li><span data-tocid="concept_hfy_mfd_sr-d46e126009" class="topicref" data-id="concept_hfy_mfd_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Cassandra.html#concept_hfy_mfd_sr">Cassandra</a></span></span></li>
+         <li><span data-tocid="concept_hw5_s3n_sz-d46e126292" class="topicref" data-id="concept_hw5_s3n_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></span></span></li>
+         <li><span data-tocid="concept_ahq_1wq_h2b-d46e126388" class="topicref" data-id="concept_ahq_1wq_h2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Couchbase.html#concept_ahq_1wq_h2b">Couchbase</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ddy_cdz_clb-d46e126600" class="topicref" data-id="concept_ddy_cdz_clb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_ddy_cdz_clb">Databricks Delta Lake</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_xnp_y5f_dlb-d46e126804" class="topicref" data-id="concept_xnp_y5f_dlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_xnp_y5f_dlb">Prerequisites</a></span></span></li>
+               <li><span data-tocid="concept_xcn_ymg_dlb-d46e127095" class="topicref" data-id="concept_xcn_ymg_dlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_xcn_ymg_dlb">Load Methods</a></span></span></li>
+               <li><span data-tocid="concept_snl_cfc_2lb-d46e127271" class="topicref" data-id="concept_snl_cfc_2lb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_snl_cfc_2lb">Tables</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">To write to Delta Lake, you specify the database and table to write data to. The         destination writes data from record
+                              fields to the table columns based on matching names. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_ckh_wcd_2lb-d46e127377" class="topicref" data-id="concept_ckh_wcd_2lb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_ckh_wcd_2lb">Creating Columns and Tables for Data Drift</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Databricks Delta Lake destination can compensate for changes in column or table         requirements, also known as <em class="ph i">data drift</em>.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_e2g_2gs_2lb-d46e127496" class="topicref" data-id="concept_e2g_2gs_2lb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_e2g_2gs_2lb">Performance Optimization</a></span></span></li>
+               <li><span data-tocid="concept_yms_p4v_dlb-d46e127619" class="topicref" data-id="concept_yms_p4v_dlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_yms_p4v_dlb">Staging Location</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The Databricks Delta Lake destination first stages the pipeline data in text files in         Amazon S3 or Azure Data Lake
+                              Storage Gen2. Then, the destination sends  the COPY or MERGE         command to Databricks to process the staged files. 
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_qmj_xld_2lb-d46e128057" class="topicref" data-id="concept_qmj_xld_2lb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_qmj_xld_2lb">Row Generation</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When writing a record to a table, the Databricks Delta Lake destination includes all         record fields in the resulting
+                              row, by default. The destination uses the root field,             <code class="ph codeph">/</code>, as the basis for the resulting row.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_izy_zks_2lb-d46e128403" class="topicref" data-id="concept_izy_zks_2lb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#concept_izy_zks_2lb">Databricks Data Types</a></span></span></li>
+               <li><span data-tocid="task_bv5_3wz_vkb-d46e128586" class="topicref" data-id="task_bv5_3wz_vkb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/DeltaLake.html#task_bv5_3wz_vkb">Configuring a Databricks Delta Lake Destination</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_u5t_vpv_4r-d46e128780" class="topicref" data-id="concept_u5t_vpv_4r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Elasticsearch.html#concept_u5t_vpv_4r">Elasticsearch</a></span></span></li>
+         <li><span data-tocid="concept_hlx_r53_rx-d46e129070" class="topicref" data-id="concept_hlx_r53_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WaveAnalytics.html#concept_hlx_r53_rx">Einstein Analytics</a></span></span></li>
+         <li><span data-tocid="concept_pzn_hl4_yr-d46e129355" class="topicref" data-id="concept_pzn_hl4_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Flume.html#concept_pzn_hl4_yr">Flume</a></span></span></li>
+         <li><span data-tocid="concept_hj4_brk_dbb-d46e129451" class="topicref" data-id="concept_hj4_brk_dbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/BigQuery.html#concept_hj4_brk_dbb">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tmq_tx-d46e129742" class="topicref" data-id="concept_pl5_tmq_tx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Bigtable.html#concept_pl5_tmq_tx">Google Bigtable</a></span></span></li>
+         <li><span data-tocid="concept_p4n_jrl_nbb-d46e130323" class="topicref" data-id="concept_p4n_jrl_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GCS.html#concept_p4n_jrl_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_qsj_hk1_v1b-d46e131253" class="topicref" data-id="concept_qsj_hk1_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">Google Pub/Sub Publisher</a></span></span></li>
+         <li><span data-tocid="concept_qjf_xdz_q3b-d46e131538" class="topicref" data-id="concept_qjf_xdz_q3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/GPSS.html#concept_qjf_xdz_q3b">GPSS Producer</a></span></span></li>
+         <li><span data-tocid="concept_awl_4km_zq-d46e132106" class="topicref" data-id="concept_awl_4km_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HadoopFS-destination.html#concept_awl_4km_zq">Hadoop FS</a></span></span></li>
+         <li><span data-tocid="concept_wsz_5t5_vr-d46e133498" class="topicref" data-id="concept_wsz_5t5_vr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HBase.html#concept_wsz_5t5_vr">HBase</a></span></span></li>
+         <li><span data-tocid="concept_gcr_z2t_zv-d46e133878" class="topicref" data-id="concept_gcr_z2t_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HiveMetastore.html#concept_gcr_z2t_zv">Hive Metastore</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e134470" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Hive.html#concept_kvs_3hh_ht">Hive Streaming</a></span></span></li>
+         <li><span data-tocid="concept_khl_sg5_lz-d46e134566" class="topicref" data-id="concept_khl_sg5_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_inf_db_sr-d46e135517" class="topicref" data-id="concept_inf_db_sr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e135571" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JDBCProducer.html#concept_kvs_3hh_ht">JDBC Producer</a></span></span></li>
+         <li><span data-tocid="concept_sfz_ww5_n1b-d46e135945" class="topicref" data-id="concept_sfz_ww5_n1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/JMSProducer.html#concept_sfz_ww5_n1b">JMS Producer</a></span></span></li>
+         <li><span data-tocid="concept_oq2_5jl_zq-d46e136313" class="topicref" data-id="concept_oq2_5jl_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></span></span></li>
+         <li><span data-tocid="concept_bjv_dpk_kv-d46e136880" class="topicref" data-id="concept_bjv_dpk_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></span></span></li>
+         <li><span data-tocid="concept_swk_h1j_yr-d46e137099" class="topicref" data-id="concept_swk_h1j_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></span></span></li>
+         <li><span data-tocid="concept_hxh_5xg_qbb-d46e137316" class="topicref" data-id="concept_hxh_5xg_qbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/KineticaDB.html#concept_hxh_5xg_qbb">KineticaDB</a></span></span></li>
+         <li><span data-tocid="concept_chy_xxg_4v-d46e137464" class="topicref" data-id="concept_chy_xxg_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Kudu.html#concept_chy_xxg_4v">Kudu </a></span></span></li>
+         <li><span data-tocid="concept_zvc_bv5_1r-d46e137676" class="topicref" data-id="concept_zvc_bv5_1r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/LocalFS.html#concept_zvc_bv5_1r">Local FS</a></span></span></li>
+         <li><span data-tocid="concept_vxg_w2z_yv-d46e138350" class="topicref" data-id="concept_vxg_w2z_yv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDB.html#concept_vxg_w2z_yv">MapR DB</a></span></span></li>
+         <li><span data-tocid="concept_i4h_2kj_dy-d46e138730" class="topicref" data-id="concept_i4h_2kj_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRDBJSON.html#concept_i4h_2kj_dy">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_spv_xlc_fv-d46e139101" class="topicref" data-id="concept_spv_xlc_fv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRFS.html#concept_spv_xlc_fv">MapR FS </a></span></span></li>
+         <li><span data-tocid="concept_cfj_qbn_2v-d46e140184" class="topicref" data-id="concept_cfj_qbn_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MapRStreamsProd.html#concept_cfj_qbn_2v">MapR Streams Producer</a></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e140479" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MemSQLLoader.html#concept_kvs_3hh_ht">MemSQL Fast Loader</a></span></span></li>
+         <li><span data-tocid="concept_eth_k5n_4v-d46e140940" class="topicref" data-id="concept_eth_k5n_4v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MongoDB.html#concept_eth_k5n_4v">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_odz_txt_lz-d46e141311" class="topicref" data-id="concept_odz_txt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></span></span></li>
+         <li><span data-tocid="concept_pl5_tdg_gcb-d46e141524" class="topicref" data-id="concept_pl5_tdg_gcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/NamedPipe.html#concept_pl5_tdg_gcb">Named Pipe</a></span></span></li>
+         <li><span data-tocid="concept_fq3_kpc_r2b-d46e141908" class="topicref" data-id="concept_fq3_kpc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/PulsarProducer.html#concept_fq3_kpc_r2b">Pulsar Producer</a></span></span></li>
+         <li><span data-tocid="concept_pxj_rvy_dv-d46e142059" class="topicref" data-id="concept_pxj_rvy_dv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/RabbitMQ.html#concept_pxj_rvy_dv">RabbitMQ Producer</a></span></span></li>
+         <li><span data-tocid="concept_ktc_gw2_gw-d46e142155" class="topicref" data-id="concept_ktc_gw2_gw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Redis.html#concept_ktc_gw2_gw">Redis</a></span></span></li>
+         <li><span data-tocid="concept_rlb_rt3_rx-d46e142437" class="topicref" data-id="concept_rlb_rt3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Salesforce.html#concept_rlb_rt3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_lfk_hx2_ct-d46e142650" class="topicref" data-id="concept_lfk_hx2_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SDC_RPCdest.html#concept_lfk_hx2_ct">SDC RPC</a></span></span></li>
+         <li><span data-tocid="concept_eyd_zx4_q2b-d46e142804" class="topicref" data-id="concept_eyd_zx4_q2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SendResponse.html#concept_eyd_zx4_q2b">Send Response to Origin</a></span></span></li>
+         <li><span data-tocid="concept_sgt_m2m_xhb-d46e142858" class="topicref" data-id="concept_sgt_m2m_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SFTP.html#concept_sgt_m2m_xhb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vxl_zzc_1gb-d46e143149" class="topicref" data-id="concept_vxl_zzc_1gb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Snowflake.html#concept_vxl_zzc_1gb">Snowflake</a></span></span></li>
+         <li><span data-tocid="concept_z2g_q1r_wr-d46e145760" class="topicref" data-id="concept_z2g_q1r_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Solr.html#concept_z2g_q1r_wr">Solr</a></span></span></li>
+         <li><span data-tocid="concept_zzr_pqn_xdb-d46e145917" class="topicref" data-id="concept_zzr_pqn_xdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Splunk.html#concept_zzr_pqn_xdb">Splunk</a></span></span></li>
+         <li><span data-tocid="concept_hjv_5nn_r3b-d46e146136" class="topicref" data-id="concept_hjv_5nn_r3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/SQLServerBDCBulk.html#concept_hjv_5nn_r3b">SQL Server 2019 BDC Bulk Loader</a></span></span></li>
+         <li><span data-tocid="concept_idr_ct5_w2b-d46e147231" class="topicref" data-id="concept_idr_ct5_w2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Syslog.html#concept_idr_ct5_w2b">Syslog</a></span></span></li>
+         <li><span data-tocid="concept_ryn_v3z_lr-d46e147519" class="topicref" data-id="concept_ryn_v3z_lr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/ToError.html">To Error </a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_htf_ydj_wq-d46e147543" class="topicref" data-id="concept_htf_ydj_wq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Trash.html#concept_htf_ydj_wq">Trash</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_l4d_mjn_lz-d46e147567" class="topicref" data-id="concept_l4d_mjn_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ddy_cdz_clb">
+    <h1 class="title topictitle1" id="ariaid-title1">Databricks Delta Lake</h1>
+
+    <div class="body conbody">
+        <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_ddy_cdz_clb__simpletable_bc1_rxh_sgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_ddy_cdz_clb__d21e112">
+                        <li class="li">
+                            <p class="p"><img class="image" id="concept_ddy_cdz_clb__d21e117" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+
+                        </li>
+
+                    </ul>
+</td>
+
+            </tr>
+</tbody></table>
+</div>The Databricks Delta Lake destination writes
+            data to one or more Delta Lake tables on Databricks.  </div>
+<div class="note important"><span class="importanttitle">Important:</span> The Databricks Delta Lake destination requires a Databricks cluster <span class="ph">version 6.3 or
+                    later</span>. </div>
+
+        <p class="p">Use the Databricks Delta Lake destination for the following use cases:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Bulk load new data into Delta Lake tables</dt>
+
+                    <dd class="dd">Build a pipeline that bulk loads new data into Delta Lake tables on
+                        Databricks. When processing new data, the destination uses the COPY command
+                        to load data into Delta Lake tables. For a detailed solution of how to
+                        design this pipeline, see <a class="xref" href="../Solutions/DeltaLake.html#concept_ml2_1vv_yjb" title="This solution describes how to build a pipeline that bulk loads Salesforce data into a Delta Lake table on Databricks.">Bulk Loading Data into a Delta Lake Table</a>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Merge changed data into Delta Lake tables</dt>
+
+                    <dd class="dd">Build a pipeline that reads change data capture (CDC) data from a database
+                        and replicates the changes to Delta Lake tables on Databricks. When
+                        processing CDC data, the destination uses the MERGE command to load data
+                        into Delta Lake tables. For a detailed solution of how to design this
+                        pipeline, see <a class="xref" href="../Solutions/DeltaLake.html#concept_uk4_fvv_yjb" title="This solution describes how to design a pipeline that reads change data capture (CDC) data from a database and replicates the changes to a Delta Lake table on Databricks.">Merging Changed Data into a Delta Lake Table</a>.</dd>
+
+                
+            </dl>
+
+        </div>
+
+        <p class="p">The Databricks Delta Lake destination first stages the pipeline data in text files in
+            Amazon S3 or Azure Data Lake Storage Gen2. Then, the destination sends the COPY or MERGE
+            command to Databricks to process the staged files. </p>
+
+        <p class="p">The Databricks Delta Lake destination uses a JDBC URL to connect to the Databricks
+            cluster. When you configure the destination, you specify the JDBC URL and credentials to
+            use to connect to the cluster. You also define the connection information that the
+            executor uses to connect to the staging location in Amazon S3 or Azure Data Lake Storage
+            Gen2. </p>
+
+        <p class="p">You specify the tables in Delta Lake to write the data to. The destination writes data
+            from record fields to table columns based on matching names. You can configure the
+            destination to compensate for data drift by creating new columns in existing database
+            tables when new fields appear in records or by creating new database tables. </p>
+
+        <p class="p">You can configure the root field for the row, and any first-level fields that you want to
+            exclude from the record. You can also configure the destination to replace missing
+            fields or fields with invalid data types with user-defined default values.</p>
+
+        <p class="p">The Databricks Delta Lake destination can use CRUD operations defined in the
+                <code class="ph codeph">sdc.operation.type</code> record header attribute to write data. <span class="ph">For information about <span class="ph">Data Collector</span> change data
+                        processing and a list of CDC-enabled origins, see <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+        <p class="p">Before you use the Databricks Delta Lake destination, you must install the Databricks
+            stage library and complete other <a class="xref" href="DeltaLake.html#concept_xnp_y5f_dlb">prerequisite tasks</a>. The Databricks <span class="ph">stage library is an <span class="ph"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_s1r_1gg_dhb">Enterprise stage library</a></span>. Releases of Enterprise stage libraries occur
+                        separately from <span class="ph">Data Collector</span> releases. </span></p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_xnp_y5f_dlb">
+    <h2 class="title topictitle2" id="ariaid-title2">Prerequisites</h2>
+
+    <div class="body conbody">
+        <div class="p">Before you configure the
+            Databricks Delta Lake destination, complete the following prerequisites:<ol class="ol" id="concept_xnp_y5f_dlb__ol_nbm_kjf_mjb">
+                <li class="li"><a class="xref" href="DeltaLake.html#concept_sxp_nxf_dlb" title="You must install the Databricks stage library before using the Databricks Delta Lake destination. The Databricks stage library includes the Databricks JDBC driver that the destination uses to access Delta Lake tables on Databricks.">Install
+                        the Databricks stage library</a>.</li>
+
+                <li class="li"><a class="xref" href="DeltaLake.html#concept_cq5_tjg_dlb" title="Before you configure the Databricks Delta Lake destination, prepare your Databricks cluster.">Prepare the
+                        Databricks cluster</a>.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title3" id="concept_sxp_nxf_dlb">
+    <h3 class="title topictitle3" id="ariaid-title3">Install the Databricks Stage Library</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">You must install the Databricks stage library before using the Databricks Delta Lake
+        destination. The Databricks stage library includes the Databricks JDBC driver that the
+        destination uses to access Delta Lake tables on Databricks.</p>
+
+            <div class="p">The Databricks <span class="ph">stage library is an Enterprise stage library.
+                        Releases of Enterprise stage libraries occur separately from <span class="ph">Data Collector</span> releases. As
+                        a result, you must install Enterprise stage libraries on both full and core
+                              <span class="ph">Data Collector</span>
+                        installations.</span><div class="note note"><span class="notetitle">Note:</span> <span class="ph"><span class="ph">Data Collector</span> installed
+                        through a cloud service provider marketplace automatically includes the
+                        latest version of this Enterprise stage library.</span></div>
+</div>
+
+            <p class="p"><span class="ph">You can install Enterprise stage libraries using
+                        Package Manager for a tarball <span class="ph">Data Collector</span> installation
+                        or as custom stage libraries for a tarball, RPM, or Cloudera Manager <span class="ph">Data Collector</span>
+                        installation.</span>
+            </p>
+
+        </div>
+
+<article class="topic concept nested3" aria-labelledby="ariaid-title4" id="concept_atg_byf_dlb">
+    <h4 class="title topictitle4" id="ariaid-title4">Supported Versions</h4>
+
+    <div class="body conbody">
+        <div class="p">The following table lists the
+            versions of the Databricks Enterprise stage library to use with specific <span class="ph">Data Collector</span>
+                versions:
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_atg_byf_dlb__table_kkl_5p1_2gb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:40%" /><col style="width:60%" /></colgroup><thead class="thead" style="text-align:left;">
+                        <tr>
+                            <th class="entry cellrowborder" style="text-align:left;" id="d111823e493"><span class="ph">Data Collector</span> Version</th>
+
+                            <th class="entry cellrowborder" style="text-align:left;" id="d111823e498">Supported Stage Library Version</th>
+
+                        </tr>
+
+                    </thead>
+<tbody class="tbody">
+                        <tr>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d111823e493 "><span class="ph">Data Collector</span> 3.14.x and later</td>
+
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d111823e498 ">Databricks Enterprise Library 1.0.0</td>
+
+                        </tr>
+
+                    </tbody>
+</table>
+</div>
+</div>
+
+    </div>
+
+</article>
+<article class="topic task nested3" aria-labelledby="ariaid-title5" id="task_stc_lzf_dlb">
+    <h4 class="title topictitle4" id="ariaid-title5">Installing with Package Manager</h4>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">You can use Package Manager to install the
+                Databricks stage library on a tarball <span class="ph">Data Collector</span>
+                installation.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_stc_lzf_dlb__steps_hcb_ck9_3lk"><li class="li step stepexpand">
+                <span class="ph cmd">Click the Package Manager icon: <img class="image" id="task_stc_lzf_dlb__d22e791" src="../../../reusable-content/datacollector/../../datacollector/UserGuide/Graphics/icon_PackageManager.png" height="15" width="18" />.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the Navigation panel, click <span class="ph uicontrol">Enterprise Stage
+                        Libraries</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select <span class="ph uicontrol">Databricks Enterprise Library</span>, then click the
+                        <span class="ph uicontrol">Install</span> icon: <img class="image" id="task_stc_lzf_dlb__image_tjs_sv4_3gb" src="../Graphics/icon_InstallLib.png" height="18" width="19" />.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click <span class="ph uicontrol">Install</span>.</span>
+                <div class="itemgroup info"><span class="ph">Data Collector</span> installs the
+                    selected stage library.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Restart <span class="ph">Data Collector</span>.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested3" aria-labelledby="ariaid-title6" id="task_sq5_jfg_dlb">
+    <h4 class="title topictitle4" id="ariaid-title6">Installing as a Custom Stage Library</h4>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <section class="section context">
+            <p class="p">You can install the Databricks <span class="ph">Enterprise stage library as a custom stage library on
+                        a tarball, RPM, or Cloudera Manager <span class="ph">Data Collector</span>
+                        installation.</span></p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">To download the stage library, go to the <a class="xref" href="https://archives.streamsets.com/index.html" target="_blank">StreamSets archives page</a>. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Under <span class="ph">StreamSets</span>
+                    Enterprise Connectors, click <span class="ph uicontrol">Enterprise Connectors</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the Enterprise stage library name and version that you want to
+                    download.</span>
+                <div class="itemgroup info">The stage library downloads.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Install and manage the Enterprise stage library as a custom stage library. </span>
+                <div class="itemgroup info">For more information, see <span class="ph"><a class="xref" href="../Configuration/CustomStageLibraries.html#concept_pmc_jk1_1x">Custom Stage Libraries</a></span>.</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title7" id="concept_cq5_tjg_dlb">
+    <h3 class="title topictitle3" id="ariaid-title7">Prepare the Databricks Cluster</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">Before you configure the Databricks Delta Lake destination, prepare your Databricks
+        cluster.</p>
+
+        <p class="p">In Databricks, configure and start your Databricks cluster <span class="ph">version 6.3 or
+                    later</span>, generate a personal access token, and locate the JDBC URL used to access the
+            cluster.</p>
+
+        <div class="p">For detailed
+                prerequisite steps, see one of the following Databricks articles depending on your
+                staging location:<ul class="ul" id="concept_cq5_tjg_dlb__d261e50">
+                    <li class="li">When using Amazon S3 as the staging location, see this <a class="xref" href="https://docs.databricks.com/integrations/ingestion/streamsets.html" target="_blank">Databricks article</a>.</li>
+
+                    <li class="li">When using Azure Data Lake Storage Gen2 as the staging location, see this
+                            <a class="xref" href="https://docs.microsoft.com/en-us/azure/databricks/integrations/ingestion/streamsets" target="_blank">Azure Databricks article</a>. </li>
+
+                </ul>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title8" id="concept_xcn_ymg_dlb">
+    <h2 class="title topictitle2" id="ariaid-title8">Load Methods</h2>
+
+    <div class="body conbody">
+        <p class="p">The Databricks Delta Lake
+            destination can load data to Delta Lake tables using the following methods: </p>
+
+        <dl class="dl">
+            
+                <dt class="dt dlterm">COPY command for new data</dt>
+
+                <dd class="dd">The COPY command, the default load method, performs a bulk synchronous load to
+                    Delta Lake, treating all records as INSERTS. Use this method to write new data
+                    to Delta Lake tables. </dd>
+
+                <dd class="dd ddexpand">When using the COPY command, the destination first stages the pipeline data in
+                    text files in Amazon S3 or Azure Data Lake Storage Gen2, then copies the staged
+                    data to the target Delta Lake tables. </dd>
+
+                <dd class="dd ddexpand">Since the COPY command is the default load method, you do not need to configure
+                    the destination to use this command.</dd>
+
+                <dd class="dd ddexpand">For more information about the COPY command, see the <a class="xref" href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/copy-into.html" target="_blank">Databricks documentation</a>.</dd>
+
+            
+            
+                <dt class="dt dlterm">MERGE command for CDC data</dt>
+
+                <dd class="dd">Instead of treating all records as INSERT, the MERGE command inserts, updates,
+                    upserts, and deletes changed data to Delta Lake tables as appropriate. Use this
+                    method to write change data capture (CDC) data to Delta Lake tables using CRUD
+                    operations. </dd>
+
+                <dd class="dd ddexpand">When using the MERGE command, the destination first stages the pipeline data in
+                    text files in Amazon S3 or Azure Data Lake Storage Gen2. Then the destination
+                    runs the COPY command to load the data to a temporary Delta Lake table, and then
+                    finally runs a MERGE command that uses the temporary table to merge the changed
+                    data into the target Delta Lake table.</dd>
+
+                <dd class="dd ddexpand">
+                    <div class="note important"><span class="importanttitle">Important:</span> To maintain the original order of data, do not use
+                        multiple threads or cluster execution mode when processing CDC data.</div>
+
+                </dd>
+
+                <dd class="dd ddexpand">To use the MERGE command to load CDC data, select the <span class="ph uicontrol">Merge CDC
+                        Data</span> property on the <span class="keyword wintitle">Data</span> tab of the
+                    destination. Then, enter the columns in the Delta Lake table to use as key
+                    columns.</dd>
+
+                <dd class="dd ddexpand">For more information about the MERGE command, see the <a class="xref" href="https://docs.databricks.com/spark/latest/spark-sql/language-manual/merge-into.html" target="_blank">Databricks documentation</a>.</dd>
+
+            
+        </dl>
+
+        <p class="p">Use the <a class="xref" href="DeltaLake.html#concept_e2g_2gs_2lb">recommended
+                guidelines</a> to optimize for performance and cost-effectiveness. </p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title9" id="concept_llr_d3s_2lb">
+    <h3 class="title topictitle3" id="ariaid-title9">Defining the CRUD Operation for CDC Data</h3>
+
+    <div class="body conbody">
+        <p class="p">When you configure the Databricks
+            Delta Lake destination to use the MERGE command to load CDC data, the destination can
+            insert, update, upsert, or delete data.</p>
+
+        <div class="p">When writing CDC data, the destination uses the CRUD operation specified in the
+                <code class="ph codeph">sdc.operation.type</code> record header attribute. The destination
+            performs operations based on the following numeric values:<ul class="ul" id="concept_llr_d3s_2lb__ul_vvx_wgj_ggb">
+                <li class="li">1 for INSERT</li>
+
+                <li class="li">2 for DELETE</li>
+
+                <li class="li">3 for UPDATE</li>
+
+                <li class="li">4 for UPSERT</li>
+
+            </ul>
+</div>
+
+        <p class="p"><span class="ph">If your
+                                    pipeline includes a CRUD-enabled origin that processes changed
+                                    data, the destination simply reads the operation type from the
+                                          <code class="ph codeph">sdc.operation.type</code> header attribute that
+                                    the origin generates. If your pipeline uses a non-CDC origin,
+                                    you can use the Expression Evaluator or a scripting processor to
+                                    define the record header attribute. For more information about
+                                          <span class="ph">Data Collector</span>
+                                    changed data processing and a list of CDC-enabled origins, see
+                                          <a class="xref" href="../Pipeline_Design/CDC-Overview.html#concept_apw_l2c_ty">Processing Changed Data</a>.</span></p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title10" id="concept_snl_cfc_2lb">
+    <h2 class="title topictitle2" id="ariaid-title10">Tables</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">To write to Delta Lake, you specify the database and table to write data to. The
+        destination writes data from record fields to the table columns based on matching names. </p>
+
+        <p class="p">Enter the database and table to write to in the
+                <span class="ph uicontrol">Table Name</span> property on the <span class="ph uicontrol">Databricks Delta
+                Lake</span> tab using the following format:</p>
+
+        <p class="p"><code class="ph codeph"><em class="ph i">&lt;database_name&gt;</em>.&lt;table_name&gt;</code></p>
+
+        <p class="p">For example, enter <code class="ph codeph">sales.accounts</code> to write data to the
+                <code class="ph codeph">accounts</code> table in the <code class="ph codeph">sales</code> database. </p>
+
+        <p class="p">To write to a table in the default <code class="ph codeph">delta</code> database, enter the table name
+            only. </p>
+
+        <div class="p">The destination can write data to one or more tables:<dl class="dl">
+                
+                    <dt class="dt dlterm">Single table</dt>
+
+                    <dd class="dd">To write data to a single table, enter the name of the database and
+                        table.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Multiple tables</dt>
+
+                    <dd class="dd">To write data to multiple tables, specify a field in the record that defines
+                        the database and tables.</dd>
+
+                    <dd class="dd ddexpand">For example, say you have tables named after departments in your company,
+                        such as Operations, Sales, and Marketing. The records being processed have a
+                            <code class="ph codeph">dept</code> field with matching values. You configure the
+                        destination to write records to the various tables by entering the following
+                        expression in the <span class="ph uicontrol">Table Name</span> property:
+                            <code class="ph codeph">${record:value('/dept')}</code>. When the
+                            <code class="ph codeph">dept</code> field contains just the table name, each table is
+                        written to the default <code class="ph codeph">delta</code> database. When the
+                            <code class="ph codeph">dept</code> field contains the database and table name, such
+                        as <code class="ph codeph">Canada.Operations</code>, then each table is written to the
+                        specified database.</dd>
+
+                    <dd class="dd ddexpand">Or, say that you want to replicate data from multiple tables in a SQL Server
+                        database. You use a JDBC Multitable Consumer origin which captures the name
+                        of each source table in the <code class="ph codeph">jdbc.tables</code> record header
+                        attribute. To write data to tables based on the source table names, enter
+                        the following expression in the <span class="ph uicontrol">Table Name</span> property:
+                            <code class="ph codeph">${record:attribute('jdbc.tables')}</code>.</dd>
+
+                    <dd class="dd ddexpand">When writing data to multiple tables, you might also increase the number of
+                        connections that the destination uses. For more information, see <a class="xref" href="DeltaLake.html#concept_e2g_2gs_2lb">Performance
+                            Optimization</a>.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title11" id="concept_ckh_wcd_2lb">
+    <h2 class="title topictitle2" id="ariaid-title11">Creating Columns and Tables for Data Drift</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">The Databricks Delta Lake destination can compensate for changes in column or table
+        requirements, also known as <em class="ph i">data drift</em>.</p>
+
+        <div class="p">The destination can handle data drift in the
+            following ways:<dl class="dl">
+                
+                    <dt class="dt dlterm">Create new columns</dt>
+
+                    <dd class="dd">The destination can create new columns in Delta Lake tables when new
+                            fields appear in records. For example, if a record suddenly includes a
+                            new <code class="ph codeph">Address2</code> field, the destination creates a new
+                        <code class="ph codeph">Address2</code> column in the target table.</dd>
+
+                        <dd class="dd ddexpand">By default, the destination creates new columns based on the data in the
+                            new fields, such as creating an Int column for integer data. You can,
+                            however, configure the destination to create all new columns as String. </dd>
+
+                        <dd class="dd ddexpand">To enable the automatic creation of new columns, select the
+                                <span class="ph uicontrol">Enable Data Drift</span> property on the
+                                <span class="keyword wintitle">Databricks Delta Lake</span> tab.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Create new tables</dt>
+
+                    <dd class="dd">When data drift is enabled, you can also configure the destination to
+                            create new tables as needed. For example, say the destination writes
+                            data to tables based on the region name in the <code class="ph codeph">Region</code>
+                            field. When a new <code class="ph codeph">SW-3</code> region shows up in a record, the
+                            destination creates a new <code class="ph codeph">SW-3</code> table in Delta Lake and
+                            writes the record to the new table.</dd>
+
+                        <dd class="dd ddexpand">To enable the creation of new
+                            tables, first enable data drift, and then select the <span class="ph uicontrol">Auto
+                                Create Table</span> property on the <span class="keyword wintitle">Databricks Delta
+                                Lake</span> tab.</dd>
+
+                    <dd class="dd ddexpand">When creating a new table, you can optionally enter the directory for the
+                        Delta table location, specified as a path on Databricks File System (DBFS).
+                        Enter the location in the <span class="ph uicontrol">Directory for Table
+                            Location</span> property.<p class="p">The destination adds
+            the specified Table Name value as a subdirectory to create the final table location. For
+            example, if you enter <span class="ph filepath">/mnt/deltalake</span> as the directory for the table
+            location and you enter <code class="ph codeph">sales.accounts</code> as the table name, the final
+                table location is <span class="ph filepath">/mnt/deltalake/sales.accounts</span>.</p>
+</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">When you specify a location, the destination creates
+                an unmanaged Delta table. When you do not specify a location, the destination
+                creates a managed Delta table. For more information, see the <a class="xref" href="https://docs.databricks.com/delta/delta-batch.html#control-data-location" target="_blank">Delta Lake
+                documentation</a>.</p>
+
+                    </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title12" id="concept_e2g_2gs_2lb">
+    <h2 class="title topictitle2" id="ariaid-title12">Performance Optimization</h2>
+
+    <div class="body conbody">
+        <p class="p">Use the following tips to optimize for
+            performance and cost-effectiveness when using the Databricks Delta Lake destination:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Increase the batch size</dt>
+
+                    <dd class="dd">The maximum batch size is determined by the origin in the pipeline and
+                        typically has a default value of 1,000 records. To take advantage of the
+                        Databricks loading abilities when writing to Delta Lake tables using the
+                        COPY or MERGE commands, increase the maximum batch size in the pipeline
+                        origin to 20,000-50,000 records. Be sure to increase the <span class="ph">Data Collector</span>
+                        <span class="ph"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">java heap size</a></span>, as needed.</dd>
+
+                    <dd class="dd ddexpand">
+                        <div class="note important"><span class="importanttitle">Important:</span> Increasing the batch size is strongly recommended.
+                            Using the default batch size can be slow and costly.</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Use multiple threads</dt>
+
+                    <dd class="dd">When writing to Delta Lake tables using the COPY command, you can use
+                        multiple threads to improve performance by including a <a class="xref" href="../Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wcz_tpd_py">multithreaded origin</a> in the pipeline. When <span class="ph">Data Collector</span> resources allow, using multiple threads enables processing multiple
+                        batches of data concurrently. As with increasing the batch size, when using
+                        multiple threads, you should make sure that the <span class="ph">Data Collector</span>
+                        <span class="ph"><a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_mdc_shg_qr" title="Increase or decrease the Data Collector Java heap size as necessary, based on the resources available on the host machine. By default, the Java heap size is 1024 MB.">java heap size</a></span> is sized appropriately.</dd>
+
+                    <dd class="dd ddexpand">
+                        <div class="note note"><span class="notetitle">Note:</span> Do not use multiple threads to write CDC data to Delta Lake tables
+                            with the MERGE command. When using multiple threads to process data, the
+                            original order of the data is not retained.</div>
+
+                    </dd>
+
+                
+                
+                    <dt class="dt dlterm">Enable additional connections to Databricks</dt>
+
+                    <dd class="dd">When writing to multiple Delta Lake tables using the COPY or MERGE commands,
+                        increase the number of connections that the Databricks Delta Lake
+                        destination makes to Databricks. Each additional connection allows the
+                        destination to write to an additional table, concurrently. </dd>
+
+                    <dd class="dd ddexpand">For example, when writing to 10 tables with only one connection, the
+                        destination can only write to one table at a time. With 5 connections, the
+                        destination can write to 5 tables at a time. 10 connections enables writing
+                        to all 10 tables at the same time.</dd>
+
+                    <dd class="dd ddexpand">
+                        <p class="p">By default, the destination uses one connection for standard
+                            single-threaded pipelines. In multithreaded pipelines, the destination
+                            matches the number of threads used by the pipeline. That is, when a
+                            multithreaded origin is configured to use up to 3 threads, then by
+                            default, the Databricks Delta Lake destination uses 3 connections to
+                            write to Delta Lake tables, one for each thread. </p>
+
+                        <p class="p">Note that the number of connections is for the entire pipeline, not for
+                            each thread. So when using multiple threads to write to multiple tables,
+                            you can also improve performance by allocating additional connections.
+                            For example, when using 3 threads to write to 3 tables, you might
+                            increase the number of connections to 9 for maximum throughput.</p>
+
+                        <p class="p">Use the Connection Pool Size property to specify the maximum number of
+                            connections that the destination can use. </p>
+
+                    </dd>
+
+                
+            </dl>
+
+        </div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title13" id="concept_yms_p4v_dlb">
+    <h2 class="title topictitle2" id="ariaid-title13">Staging Location</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">The Databricks Delta Lake destination first stages the pipeline data in text files in
+        Amazon S3 or Azure Data Lake Storage Gen2. Then, the destination sends  the COPY or MERGE
+        command to Databricks to process the staged files. </p>
+
+        <div class="p">Configure one of the following
+            staging locations:<dl class="dl">
+                
+                    <dt class="dt dlterm">Amazon S3</dt>
+
+                    <dd class="dd">After selecting Amazon S3 as the staging location, specify the existing S3
+                        bucket to stage the files to. You also specify the <a class="xref" href="DeltaLake.html#concept_m2s_c1r_jlb" title="When you configure the destination to connect to an Amazon S3 staging location, the destination must pass credentials to Amazon Web Services.">credentials</a>
+                        that the destination uses to connect to Amazon S3.</dd>
+
+                
+                
+                    <dt class="dt dlterm">ADLS Gen2</dt>
+
+                    <dd class="dd">After selecting ADLS Gen2 as the staging location, specify the name of the
+                        existing Azure account and storage container to stage the files to. You then
+                        configure the destination to use the appropriate <a class="xref" href="DeltaLake.html#concept_mpf_pxv_dlb" title="When you configure the destination to connect to an ADLS Gen2 staging location, you select the authentication method that the destination uses to connect to Azure Data Lake Storage Gen2.">authentication
+                            method</a> to connect to Azure Data Lake Storage Gen2.</dd>
+
+                
+            </dl>
+</div>
+
+        <p class="p">For both staging locations, you specify the stage file name prefix and whether the
+            destination removes a staged file after its data is written to Delta Lake tables.</p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title14" id="concept_m2s_c1r_jlb">
+    <h3 class="title topictitle3" id="ariaid-title14">Amazon S3 Credentials</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you configure the destination to connect to an Amazon S3 staging location, the
+        destination must pass credentials to Amazon Web Services. </p>
+
+        <div class="p">Use one of the following methods to pass AWS
+            credentials: <dl class="dl">
+                
+                    <dt class="dt dlterm">IAM role</dt>
+
+                    <dd class="dd"><span class="ph">When <span class="ph">Data Collector</span>
+                                    runs on an Amazon EC2 instance, you can use the AWS Management
+                                    Console to configure an IAM role for the EC2 instance. <span class="ph" id="concept_m2s_c1r_jlb__d54e6073"><span class="ph">Data Collector</span> uses the IAM instance profile credentials to
+                                          automatically connect to AWS.</span></span></dd>
+
+                    <dd class="dd ddexpand">To configure the destination to use IAM roles, select <span class="ph uicontrol">Use IAM
+                            Roles</span> in the destination. </dd>
+
+                    <dd class="dd ddexpand"><span class="ph">For more information about assigning an
+                                    IAM role to an EC2 instance, see the Amazon EC2
+                                    documentation.</span></dd>
+
+                
+                
+                        <dt class="dt dlterm">AWS access key pair</dt>
+
+                        <dd class="dd">When <span class="ph">Data Collector</span> does
+                              not run on an Amazon EC2 instance or when the EC2 instance doesn’t
+                              have an IAM role, you must specify the <span class="ph uicontrol">Access Key
+                                    ID</span> and <span class="ph uicontrol">Secret Access Key</span>
+                              properties in the destination.</dd>
+
+                        <dd class="dd ddexpand">
+                              <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
+
+                        </dd>
+
+                  
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title15" id="concept_mpf_pxv_dlb">
+    <h3 class="title topictitle3" id="ariaid-title15">ADLS Gen2 Authentication Information</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">When you configure the destination to connect to an ADLS Gen2 staging location, you
+        select the authentication method that the destination uses to connect to Azure Data Lake
+        Storage Gen2.</p>
+
+        <div class="p">Select one of the following authentication methods:<dl class="dl">
+                
+                    <dt class="dt dlterm">OAuth 2.0</dt>
+
+                    <dd class="dd">Connections made with OAuth 2.0 authentication require the following
+                            information:<ul class="ul" id="concept_mpf_pxv_dlb__ul_trh_vvb_2lb">
+                            <li class="li">Application ID - <span class="ph">Application
+                                                  ID for the Azure Active Directory <span class="ph">Data Collector</span> application. Also known as the client ID.
+                                                  </span><p class="p">For information on
+                                                  accessing the application ID from the Azure
+                                                  portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+</li>
+
+                            <li class="li">Application Key - <span class="ph">Authentication key for the Azure Active Directory
+                                                  <span class="ph">Data Collector</span> application. Also known as the client
+                                                  key.</span><p class="p">For
+                                                  information on accessing the application key from
+                                                  the Azure portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+</li>
+
+                            <li class="li">Auth Token Endpoint - <span class="ph">OAuth 2.0 token
+                                                  endpoint for the Azure Active Directory v1.0
+                                                  application for <span class="ph">Data Collector</span>. For example:
+                                                  <code class="ph codeph">https://login.microsoftonline.com/&lt;uuid&gt;/oauth2/token.</code></span></li>
+
+                        </ul>
+</dd>
+
+                
+                
+                              <dt class="dt dlterm">Shared Key</dt>
+
+                              <dd class="dd">Connections made with Shared Key authentication require the
+                                    following information:<ul class="ul" id="concept_mpf_pxv_dlb__d54e4638">
+                                          <li class="li">Account Shared Key - <span class="ph" id="concept_mpf_pxv_dlb__d54e4642">Shared access key that Azure generated for the
+                                                  storage account.</span><p class="p" id="concept_mpf_pxv_dlb__d54e4644">For more information on accessing the shared
+                                                  access key from the Azure portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-manage#access-keys" target="_blank">Azure
+                                                  documentation</a>. </p>
+</li>
+
+                                    </ul>
+</dd>
+
+                        
+            </dl>
+</div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title16" id="concept_qmj_xld_2lb">
+    <h2 class="title topictitle2" id="ariaid-title16">Row Generation</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">When writing a record to a table, the Databricks Delta Lake destination includes all
+        record fields in the resulting row, by default. The destination uses the root field,
+            <code class="ph codeph">/</code>, as the basis for the resulting row.</p>
+
+        <p class="p">You can configure the Row Field property on the
+            Data tab to specify a map or list-map field in the record as the basis for the row. The
+            resulting record includes only the data from the specified map or list-map field and
+            excludes all other record data. Use this functionality when the data that you want to
+            write to Delta Lake tables exists in a single map or list-map field within the record. </p>
+
+        <p class="p">When you want to use the root field, but do not want to include all fields in the
+            resulting row, configure the destination to ignore all specified first-level fields.</p>
+
+        <div class="p">The Databricks Delta Lake destination cannot convert map or list-map fields nested within
+            the specified root field. The destination treats these fields as having an invalid data
+            type. For example, say that you configure the destination to use the root field,
+                <code class="ph codeph">/</code>, as the basis for the resulting row. A record contains the
+            following
+            fields:<pre class="pre codeblock"><code>{
+    "name": "Jane Smith",
+    "id": "557",
+    "address": {
+        "street": "101 3rd St",
+        "city": "Huntsville",
+        "state": "NC",
+        "zipcode": "27023"
+     }
+}</code></pre></div>
+
+        <p class="p">The destination treats the <code class="ph codeph">address</code> map field as a field with an invalid
+            data type, processing the field as an error record by default. You can configure the
+            destination to ignore the field and process the remaining record data, as described in
+                <a class="xref" href="DeltaLake.html#concept_zh1_k5d_2lb" title="By default, the destination treats records with missing fields or with invalid data types in fields as error records.">Missing Fields and Fields with Invalid Types</a>.</p>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> To write all fields in a record including nested map or list-map
+                fields, use a <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener processor</a> in the pipeline to flatten the entire record
+                to produce a record with no nested fields.</div>
+
+        </div>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title17" id="concept_zh1_k5d_2lb">
+    <h3 class="title topictitle3" id="ariaid-title17">Missing Fields and Fields with Invalid Types</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc">By default, the destination treats records with missing fields or with invalid data
+        types in fields as error records.</p>
+
+        <p class="p">You can configure the destination to ignore missing fields or fields with invalid data
+            types, replacing the data in the field with an empty value. </p>
+
+        <p class="p">The default for each data type is <kbd class="ph userinput">\N</kbd>, which represents an empty
+            value in Delta Lake. You can specify a different default value to use for each data type
+            on the Data Advanced tab. For example, you might define the default value for a missing
+            String field or a String field with an invalid data type as <code class="ph codeph">none</code> or
+                <code class="ph codeph">not_applicable</code>.</p>
+
+        <p class="p">To configure the destination to ignore missing fields and fields with invalid data types,
+            select the <span class="ph uicontrol">Ignore Missing Fields</span> and the <span class="ph uicontrol">Ignore Fields
+                with Invalid Types</span> properties on the <span class="keyword wintitle">Data Advanced</span>
+            tab. </p>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title18" id="concept_izy_zks_2lb">
+    <h2 class="title topictitle2" id="ariaid-title18">Databricks Data Types</h2>
+
+    <div class="body conbody">
+        <p class="p">The Databricks Delta Lake destination converts <span class="ph">Data Collector</span>
+            data types into Databricks data types before writing data to Delta Lake tables.</p>
+
+        <p class="p">When you configure the destination to compensate for <a class="xref" href="DeltaLake.html#concept_ckh_wcd_2lb" title="The Databricks Delta Lake destination can compensate for changes in column or table requirements, also known as data drift.">data drift</a>, you can also
+            configure the destination to create all new columns as String. However, by default, the
+            destination converts record data to the appropriate data type. </p>
+
+        <p class="p">The destination does not support nested <span class="ph">Data Collector</span>
+            data types: List, List-Map, and Map. By default, the destination treats fields with
+            invalid data types as an error record. You can configure the destination to ignore
+            fields with invalid data types, as described in <a class="xref" href="DeltaLake.html#concept_zh1_k5d_2lb" title="By default, the destination treats records with missing fields or with invalid data types in fields as error records.">Missing Fields and Fields with Invalid Types</a>. </p>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> To process fields in a record including nested list, list-map or map
+                fields, use a <a class="xref" href="../Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener processor</a> to flatten the entire record to produce a
+                record with no nested fields.</div>
+
+        </div>
+
+        <p class="p">The destination converts the following <span class="ph">Data Collector</span>
+            data types into these Databricks data types: </p>
+
+        
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_izy_zks_2lb__table_klk_lgs_fjb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:25%" /><col style="width:75%" /></colgroup><thead class="thead" style="text-align:left;">
+                    <tr>
+                        <th class="entry cellrowborder" id="d111823e1653"><span class="ph">Data Collector</span> Data Type</th>
+
+                        <th class="entry cellrowborder" id="d111823e1658">Databricks Data Type</th>
+
+                    </tr>
+
+                </thead>
+<tbody class="tbody">
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Boolean</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Boolean</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Byte</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Tinyint</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Byte_Array</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Binary</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Char</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">String</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Date</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Date</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Datetime</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Timestamp</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Decimal</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Decimal</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Double</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Double</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Float</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Float</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Integer</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Int</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Long</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Bigint</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Short</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Smallint</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">String</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">String</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Time</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Timestamp</td>
+
+                    </tr>
+
+                    <tr>
+                        <td class="entry cellrowborder" headers="d111823e1653 ">Zoned_Datetime</td>
+
+                        <td class="entry cellrowborder" headers="d111823e1658 ">Date</td>
+
+                    </tr>
+
+                </tbody>
+</table>
+</div>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title19" id="task_bv5_3wz_vkb">
+    <h2 class="title topictitle2" id="ariaid-title19">Configuring a Databricks Delta Lake Destination</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure a Databricks
+                Delta Lake destination to write data to one or more Delta Lake tables on Databricks.
+                Be sure to complete the necessary <a class="xref" href="DeltaLake.html#concept_xnp_y5f_dlb">prerequisites</a> before
+                you configure the destination.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__d22e7075" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d111823e1857">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d111823e1860">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1857 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1860 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1857 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1860 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1857 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1860 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1857 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1860 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1857 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1860 ">Error record handling for the stage: <ul class="ul" id="task_bv5_3wz_vkb__d22e7152">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Databricks Delta Lake</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__table_dwg_yty_2lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d111823e1965">Databricks Delta Lake Property</th>
+
+                                    <th class="entry cellrowborder" id="d111823e1968">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 ">JDBC URL</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">JDBC URL used to connect to the Databricks cluster.<p class="p">For example:
+                                                <code class="ph codeph">jdbc:spark://dbc-7g9hba4d-a123.cloud.databricks.com:443/default;transportMode=http</code>
+                                            <code class="ph codeph">:ssl=1;httpPath=sql/protocolv1/o/89266567230988377/1123-1001003-abc1;AuthMech=3;UID=token;</code></p>
+<div class="note tip"><span class="tiptitle">Tip:</span> In Databricks, you can locate the
+                                            JDBC URL for your cluster on the
+                                                <span class="keyword wintitle">JDBC/ODBC</span> tab in the cluster
+                                            configuration details. As a best practice, remove the
+                                                <code class="ph codeph">PWD</code> parameter from the URL, and
+                                            then enter the personal access token value in the Token
+                                            property below. </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 ">Token</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Personal access token used to connect to the Databricks
+                                            cluster.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as tokens,
+                  you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 "><a class="xref" href="DeltaLake.html#concept_snl_cfc_2lb" title="To write to Delta Lake, you specify the database and table to write data to. The destination writes data from record fields to the table columns based on matching names.">Table Name</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Table to write data to, entered in the following format:
+                                                <code class="ph codeph"><em class="ph i">&lt;database_name&gt;</em>.&lt;table_name&gt;</code>.
+                                        When you specify a table name only, the destination locates
+                                        the table in the default <code class="ph codeph">delta</code>
+                                            database.<p class="p">To write data to a single table, enter the
+                                            table name. To write data to multiple tables, enter an
+                                            expression that evaluates to the field in the record
+                                            that contains the table name. </p>
+<p class="p">For example:
+                                                <code class="ph codeph">${record:value('/table')}</code></p>
+<p class="p">Or,
+                                            to write data to tables based on the table name in the <code class="ph codeph">jdbc.tables</code> record header attribute
+                                            generated by an origin that reads from a relational database, you can use the following expression:
+                                                <code class="ph codeph">${record:attribute('jdbc.tables')}</code></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 "><a class="xref" href="DeltaLake.html#concept_e2g_2gs_2lb">Connection Pool Size</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Maximum number of connections that the destination uses
+                                        to write data to Delta Lake tables. Default is 0, which
+                                        ensures that the destination uses the same number of
+                                        connections as threads used by the pipeline.<p class="p">When writing
+                                            to multiple tables, increasing this property can improve
+                                            performance.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 "><a class="xref" href="DeltaLake.html#concept_ckh_wcd_2lb" title="The Databricks Delta Lake destination can compensate for changes in column or table requirements, also known as data drift.">Enable Data Drift</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Creates new columns in existing tables when new fields
+                                        appear in records. <p class="p">When not enabled, the destination
+                                            treats records that have new fields as error
+                                            records.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 "><a class="xref" href="DeltaLake.html#concept_ckh_wcd_2lb" title="The Databricks Delta Lake destination can compensate for changes in column or table requirements, also known as data drift.">Auto Create Table</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Automatically creates tables in Delta Lake if the tables
+                                        specified in the destination do not exist.<p class="p">When not
+                                            enabled, the destination treats a record attempting to
+                                            write to a table that doesn't exist as an error
+                                            record.</p>
+<p class="p">Available when data drift is
+                                        enabled.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 "><a class="xref" href="DeltaLake.html#concept_ckh_wcd_2lb" title="The Databricks Delta Lake destination can compensate for changes in column or table requirements, also known as data drift.">Directory for Table Location</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Directory for the Delta table location, specified as a
+                                        path on Databricks File System (DBFS). <p class="p">The destination adds
+            the specified Table Name value as a subdirectory to create the final table location. For
+            example, if you enter <span class="ph filepath">/mnt/deltalake</span> as the directory for the table
+            location and you enter <code class="ph codeph">sales.accounts</code> as the table name, the final
+                table location is <span class="ph filepath">/mnt/deltalake/sales.accounts</span>.</p>
+<p class="p">When you specify a location, the destination creates
+                an unmanaged Delta table. When you do not specify a location, the destination
+                creates a managed Delta table. For more information, see the <a class="xref" href="https://docs.databricks.com/delta/delta-batch.html#control-data-location" target="_blank">Delta Lake
+                documentation</a>.</p>
+<p class="p">Available when data drift and automatic table
+                                            creation are enabled.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e1965 ">Create New Columns as String</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e1968 ">Creates all new columns as String. <p class="p">By default, the
+                                            destination infers the data type based on the <a class="xref" href="DeltaLake.html#concept_izy_zks_2lb">type of data</a> in the field. For example, if a
+                                            new field contains an integer, the destination creates a
+                                            column with the IntegerType data type.</p>
+<p class="p">Available
+                                            when data drift is enabled.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Staging</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__table_wxq_dyy_2lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d111823e2193">Staging Property</th>
+
+                                    <th class="entry cellrowborder" id="d111823e2196">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 "><a class="xref" href="DeltaLake.html#concept_yms_p4v_dlb" title="The Databricks Delta Lake destination first stages the pipeline data in text files in Amazon S3 or Azure Data Lake Storage Gen2. Then, the destination sends the COPY or MERGE command to Databricks to process the staged files.">Staging Location</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Staging location to connect to and copy or merge data from:<ul class="ul">
+                                            <li class="li">Amazon S3 - Connects to an Amazon S3 staging
+                                                location.</li>
+
+                                            <li class="li">ADLS Gen2 - Connects to an Azure Data Lake Storage
+                                                Gen2 staging location.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Bucket</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Bucket name or path to the existing Amazon S3 location to
+                                        write the staged files.<p class="p">Enter the bucket name or enter the
+                                            full bucket path in the following
+                                                format:</p>
+<p class="p"><code class="ph codeph">&lt;bucket&gt;/&lt;prefix&gt;</code></p>
+<p class="p">Available
+                                            when using the Amazon S3 staging location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 "><a class="xref" href="DeltaLake.html#concept_m2s_c1r_jlb" title="When you configure the destination to connect to an Amazon S3 staging location, the destination must pass credentials to Amazon Web Services.">Use IAM Roles</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Uses the IAM role assigned to the EC2 instance where <span class="ph">Data Collector</span> runs to connect to Amazon S3. <p class="p">Available when using the
+                                            Amazon S3 staging location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 "><a class="xref" href="DeltaLake.html#concept_m2s_c1r_jlb" title="When you configure the destination to connect to an Amazon S3 staging location, the destination must pass credentials to Amazon Web Services.">Access Key ID</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">AWS access key ID. <p class="p">Required when not using IAM roles
+                                            with IAM instance profile credentials.</p>
+<p class="p">Available
+                                            when using the Amazon S3 staging location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 "><a class="xref" href="DeltaLake.html#concept_m2s_c1r_jlb" title="When you configure the destination to connect to an Amazon S3 staging location, the destination must pass credentials to Amazon Web Services.">Secret Access Key</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">AWS secret access key. <p class="p">Required when not using IAM
+                                            roles with IAM instance profile
+                                            credentials.</p>
+<div class="p">Available when using the Amazon S3
+                                            staging location.<div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  access key pairs, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Account FQDN</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Fully qualified domain name of the Azure storage account.
+                                        The destination can access Azure Data Lake Storage Gen2 or
+                                        Blob storage accounts.<p class="p">For example, valid domain names
+                                            include
+                                                <code class="ph codeph">&lt;account-name&gt;.dfs.core.windows.net</code>
+                                            or
+                                                <code class="ph codeph">&lt;account-name&gt;.blob.core.windows.net</code></p>
+<p class="p">Available
+                                            when using the ADLS Gen2 staging location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Storage Container / File System</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Name of the existing Azure storage container or file
+                                        system to stage the files to. <p class="p">Available when using the
+                                            ADLS Gen2 staging location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 "><a class="xref" href="DeltaLake.html#concept_mpf_pxv_dlb" title="When you configure the destination to connect to an ADLS Gen2 staging location, you select the authentication method that the destination uses to connect to Azure Data Lake Storage Gen2.">Azure Authentication Method</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Authentication method used to connect to Azure: <ul class="ul" id="task_bv5_3wz_vkb__ul_f22_dnj_xhb">
+                                            <li class="li">OAuth 2.0</li>
+
+                                            <li class="li">Shared Key </li>
+
+                                        </ul>
+<p class="p">Available when using the ADLS Gen2 storage
+                                            location.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Application ID</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 "><span class="ph">Application
+                                                  ID for the Azure Active Directory <span class="ph">Data Collector</span> application. Also known as the client ID.
+                                                  </span><p class="p">For information on
+                                                  accessing the application ID from the Azure
+                                                  portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+<p class="p">Available when using the OAuth 2.0 authentication
+                                            method for Azure.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Application Key</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 "><span class="ph">Authentication key for the Azure Active Directory
+                                                  <span class="ph">Data Collector</span> application. Also known as the client
+                                                  key.</span><p class="p">For information on
+                                                  accessing the application ID from the Azure
+                                                  portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-create-service-principal-portal#get-application-id-and-authentication-key" target="_blank">Azure
+                                                  documentation</a>.</p>
+<p class="p">Available when using the OAuth 2.0 authentication
+                                            method for Azure.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Auth Token Endpoint</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 "><span class="ph">OAuth 2.0 token
+                                                  endpoint for the Azure Active Directory v1.0
+                                                  application for <span class="ph">Data Collector</span>. For example:
+                                                  <code class="ph codeph">https://login.microsoftonline.com/&lt;uuid&gt;/oauth2/token.</code></span><p class="p">Available when using the OAuth 2.0 authentication
+                                            method for Azure.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Account Shared Key</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 "><span class="ph">Shared access key that Azure generated for the
+                                                  storage account.</span><p class="p">For more information on accessing the shared
+                                                  access key from the Azure portal, see the <a class="xref" href="https://docs.microsoft.com/en-us/azure/storage/common/storage-account-manage#access-keys" target="_blank">Azure
+                                                  documentation</a>. </p>
+<p class="p">Available when using the Shared Key authentication
+                                            method for Azure.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Purge Stage File After Ingesting</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Purges a staged file after its data is successfully
+                                        written to a Delta Lake table.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2193 ">Stage File Prefix</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2196 ">Prefix to use for the name of the staged files.<p class="p">To
+                                            create a unique name for each staged file, the
+                                            destination appends a unique number to the prefix. For
+                                            example, if you define the prefix as
+                                                <code class="ph codeph">sdc</code>, the destination might name one
+                                            of the staged files
+                                                <code class="ph codeph">sdc-69021a22-1474-4926-856f-eb4589d14cca</code>.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When using Amazon S3 as the staging location, on the <span class="keyword wintitle">Staging
+                        Advanced</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__table_kle_lpq_ggb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                            <tr>
+                                <th class="entry cellrowborder" id="d111823e2496">Staging Advanced Property</th>
+
+                                <th class="entry cellrowborder" id="d111823e2499">Description</th>
+
+                            </tr>
+
+                        </thead>
+<tbody class="tbody">
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Connection Timeout</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Seconds to wait for a response before closing the connection.
+                <p class="p">Default is 10 seconds.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Socket Timeout</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Seconds to wait for a response to a query.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Max Error Retry</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Maximum number of times to retry requests.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Uploading Threads</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Size of the thread pool for parallel uploads. Used when
+              writing to multiple partitions and writing large objects in multiple parts.<p class="p">When
+                writing to multiple partitions, setting this property up to the number of partitions
+                being written to can improve performance. </p>
+<p class="p">For more information about this and
+                the following properties, see the Amazon S3 TransferManager
+              documentation.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Minimum Upload Part Size (MB)</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Minimum part size in bytes for multipart uploads.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Multipart Upload Threshold (MB)</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Minimum batch size in bytes for the destination to use
+              multipart uploads.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy Enabled</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Specifies whether to use a proxy to connect.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy Host</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Proxy host.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy Port</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Proxy port.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy Authentication Enabled</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Indicates that proxy authentication is used.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy User</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">S3 proxy user.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Proxy Password</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">S3 proxy password.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Encryption</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Option that Amazon S3 uses to manage the encryption
+                                    keys:<ul class="ul" id="task_bv5_3wz_vkb__ul_erv_1w1_mw">
+                                        <li class="li">None</li>
+
+                                        <li class="li">SSE-S3 - Use Amazon S3-managed keys.</li>
+
+                                        <li class="li">SSE-KMS - Use Amazon Web Services KMS-managed
+                                            keys.</li>
+
+                                    </ul>
+<p class="p">Default is None.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Encryption KMS ID</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Amazon resource name (ARN) of the AWS KMS master encryption key.
+                Use the following
+                  format:<pre class="pre codeblock"><code>&lt;arn&gt;:&lt;aws&gt;:&lt;kms&gt;:&lt;region&gt;:&lt;acct ID&gt;:&lt;key&gt;/&lt;key ID&gt;</code></pre><p class="p">Used
+                  for SSE-KMS encryption only.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2496 ">S3 Encryption Context</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2499 ">Key-value pairs to use for the encryption context.
+                Click <span class="ph uicontrol">Add</span> to add key-value pairs.<p class="p">Used for SSE-KMS
+                  encryption only.</p>
+</td>
+
+                            </tr>
+
+                        </tbody>
+</table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__table_irh_hlk_1dl" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                            <tr>
+                                <th class="entry cellrowborder" id="d111823e2696">Data Property</th>
+
+                                <th class="entry cellrowborder" id="d111823e2699">Description</th>
+
+                            </tr>
+
+                        </thead>
+<tbody class="tbody">
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2696 ">Row Field</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2699 ">Map or list-map field to use as the basis for the <a class="xref" href="DeltaLake.html#concept_qmj_xld_2lb" title="When writing a record to a table, the Databricks Delta Lake destination includes all record fields in the resulting row, by default. The destination uses the root field, /, as the basis for the resulting row.">generated row</a>. Default is <code class="ph codeph">/</code>,
+                                        which includes all record fields in the resulting
+                                        row.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2696 ">Column Fields to Ignore</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2699 ">List of fields to ignore when writing to the Delta Lake
+                                        table. You can enter a comma-separated list of first level
+                                        fields to ignore.</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2696 ">Null Value</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2699 ">Characters to use to represent null values. <p class="p">Default is
+                                                <code class="ph codeph">\N</code>. </p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2696 ">Merge CDC Data</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2699 ">Enables performing CRUD operations and using the MERGE
+                                        command to write to Delta Lake tables. Select to process CDC
+                                        data. <div class="p">
+                                            <div class="note important"><span class="importanttitle">Important:</span> To maintain the original order of
+                                                data, do not use multiple threads or cluster
+                                                execution mode when processing CDC data.</div>
+
+                                        </div>
+<p class="p">For more information about the MERGE command, see
+                                                <a class="xref" href="DeltaLake.html#concept_xcn_ymg_dlb">Load Methods</a>. For information about optimizing pipeline
+                                            performance, see <a class="xref" href="DeltaLake.html#concept_e2g_2gs_2lb">Performance Optimization</a>.</p>
+</td>
+
+                            </tr>
+
+                            <tr>
+                                <td class="entry cellrowborder" headers="d111823e2696 ">Key Columns</td>
+
+                                <td class="entry cellrowborder" headers="d111823e2699 ">Key columns in each Delta Lake table used to evaluate the
+                                        MERGE condition. Click the <span class="ph uicontrol">Add</span> icon
+                                        to add additional tables.<p class="p">Click the
+                                                <span class="ph uicontrol">Add</span> icon in the
+                                                <span class="ph uicontrol">Key Columns</span> field to add
+                                            additional key columns for a table. </p>
+</td>
+
+                            </tr>
+
+                        </tbody>
+</table>
+</div>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Data Advanced</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_bv5_3wz_vkb__table_jkz_ykz_2lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d111823e2822">Data Advanced Property</th>
+
+                                    <th class="entry cellrowborder" id="d111823e2825">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 "><a class="xref" href="DeltaLake.html#concept_zh1_k5d_2lb" title="By default, the destination treats records with missing fields or with invalid data types in fields as error records.">Ignore Missing Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Allows writing records with missing fields to tables.
+                                        Uses the specified default value for the data type of the
+                                        missing field.<p class="p">When not enabled, records with missing
+                                            fields are treated as error records.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 "><a class="xref" href="DeltaLake.html#concept_zh1_k5d_2lb" title="By default, the destination treats records with missing fields or with invalid data types in fields as error records.">Ignore Fields with Invalid Types</a></td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Allows replacing fields that contain data of an invalid
+                                        type with the specified default value for the data
+                                            type.<p class="p">When not enabled, records with data of invalid
+                                            types are treated as error records.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Boolean Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Boolean
+                                        fields or Boolean fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Numeric Types Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing fields or
+                                        fields with invalid data that use one of the numeric data
+                                        types. Numeric data types include Tinyint, Smallint, Int,
+                                        and Bigint.<p class="p">Default is a <kbd class="ph userinput">\N</kbd>, which
+                                            represents an empty value in Delta Lake. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Double Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Double fields
+                                        or Double fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Float Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Float fields
+                                        or Float fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Decimal Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Decimal
+                                        fields or Decimal fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Date Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Date fields
+                                        or Date fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Timestamp Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Timestamp
+                                        fields or Timestamp fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">String Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing String fields
+                                        or String fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Binary Default</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Default value to use when replacing missing Binary fields
+                                        or Binary fields with invalid data. <p class="p">Default is
+                                                <kbd class="ph userinput">\N</kbd>, which represents an empty
+                                            value in Delta Lake.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Replace Newlines</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Replaces newline characters in string fields with the
+                                        specified replacement character. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Newline Replacement Character</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Character to use to replace newline characters.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d111823e2822 ">Trim Spaces</td>
+
+                                    <td class="entry cellrowborder" headers="d111823e2825 ">Trims leading and trailing spaces from field
+                                        data.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

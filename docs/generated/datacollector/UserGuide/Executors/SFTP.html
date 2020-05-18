@@ -1,0 +1,808 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="SFTP/FTP/FTPS Client" /><meta name="abstract" content="" /><meta name="description" content="The SFTP/FTP/FTPS Client executor moves or removes a file on an SFTP/FTP/FTPS server each time it receives an event. You cannot perform multiple tasks in the same executor. To perform more than one ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_kcf_sn2_jlb" /><title>SFTP/FTP/FTPS Client</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_kcf_sn2_jlb-d46e156196" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_umc_1lk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_kcf_sn2_jlb"><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" title="Pipeline Finisher"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz" title="Shell"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e147686" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zhp_ldk_xhb-d46e147710" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_i22_k2k_xhb-d46e148796" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e149882" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_fdc_qrx_jz-d46e150355" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
+         <li><span data-tocid="concept_bzl_3fq_zjb-d46e150645" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e151740" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e151950" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_kjw_llk_fx-d46e153176" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e153634" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e154011" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e155237" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e155914" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
+         <li class="active"><span data-tocid="concept_kcf_sn2_jlb-d46e156196" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_o31_wfz_jlb-d46e156240" class="topicref" data-id="concept_o31_wfz_jlb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_o31_wfz_jlb">Credentials</a></span></span></li>
+               <li><span data-tocid="task_s1r_vjd_hlb-d46e156262" class="topicref" data-id="task_s1r_vjd_hlb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#task_s1r_vjd_hlb">Configuring an SFTP/FTP/FTPS Client Executor</a></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e156294" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e156524" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_kcf_sn2_jlb">
+    <h1 class="title topictitle1" id="ariaid-title1">SFTP/FTP/FTPS Client</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">The SFTP/FTP/FTPS Client
+            executor moves or removes a file on an SFTP/FTP/FTPS server each time it receives an
+            event. You cannot perform multiple tasks in the same executor. To perform more than one
+            task, use additional executors. </p>
+
+        <p class="p">Use the SFTP/FTP/FTPS Client executor as part of an event stream. You can use the
+            executor in any logical way, such as moving a file after receiving a file-processed
+            event from the SFTP/FTP/FTPS Client origin or a file-closure event from the
+            SFTP/FTP/FTPS Client destination.</p>
+
+        <p class="p">When you configure the SFTP/FTP/FTPS Client executor, you specify the URL of the server
+            to connect to. You also specify the task to perform. When deleting a file, you specify
+            the file path of the file to delete. When moving a file, you specify both the file path
+            and the target directory.</p>
+
+        <p class="p">If the server requires authentication, configure the credentials for the protocol you are
+            using. For the SFTP protocol, the executor can require that the server be listed in a
+            known hosts file. For the FTPS protocol, the executor can authenticate with the server
+            using a client certificate and can authenticate the certificate from the FTPS
+            server.</p>
+
+        <p class="p">For a solution that describes how an executor can move output files after they are
+            written, see <a class="xref" href="../Solutions/FileManagement.html#concept_d1q_xl4_lx" title="This solution describes how to design a pipeline that writes output files to a destination, moves the files to a different location, and then changes the permissions for the files.">Managing Output Files</a>.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_o31_wfz_jlb">
+    <h2 class="title topictitle2" id="ariaid-title2">Credentials</h2>
+
+    <div class="body conbody">
+        <p class="p">The SFTP/FTP/FTPS
+            Client executor can use several methods to authenticate with the remote server. From the
+            Credentials tab, configure the authentication required by the remote server.</p>
+
+        <div class="p">Authentication options differ for each
+                        protocol:<ul class="ul" id="concept_o31_wfz_jlb__d26e7983">
+                        <li class="li">For all protocols, select an authentication method to log in to the
+                              remote server. Choose the method based on the protocol and remote
+                              server requirements: <ul class="ul" id="concept_o31_wfz_jlb__d26e7987">
+                                    <li class="li">None - The stage does not authenticate with the server.</li>
+
+                                    <li class="li">Password - The stage authenticates with the server using a
+                                          user name and password. You must specify the user name and
+                                          password. </li>
+
+                                    <li class="li">Private key - The stage authenticates using a private key.
+                                          Use only with the SFTP protocol. You must specify the
+                                          private key, either in a local file or in plain text.
+                                    </li>
+
+                              </ul>
+</li>
+
+                        <li class="li">For the SFTP protocol, the stage can require that the server be listed
+                              in a known hosts file. You must specify the path to the known hosts
+                              file that contains the host keys for the approved SFTP servers.</li>
+
+                        <li class="li">For the FTPS protocol, the stage can use certificates to authenticate
+                              with the server. You must specify the keystore file and password. You
+                              can also configure the stage to authenticate the server by specifying
+                              a truststore provider. For more information about keystores and
+                              truststores, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Keystore and Truststore Configuration</a>.</li>
+
+                  </ul>
+</div>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title3" id="task_s1r_vjd_hlb">
+    <h2 class="title topictitle2" id="ariaid-title3">Configuring an SFTP/FTP/FTPS Client Executor</h2>
+
+    <div class="body taskbody">
+        <section class="section context">
+            <p class="p">Configure an SFTP/FTP/FTPS
+                Client executor to move or delete a file on an SFTP, FTP, or FTPS server upon
+                receiving an event.</p>
+
+        </section>
+
+        <ol class="ol steps" id="task_s1r_vjd_hlb__steps_sr2_sgz_jlb"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_s1r_vjd_hlb__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d256298e209">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d256298e212">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e209 ">Name</td>
+
+              <td class="entry cellrowborder" headers="d256298e212 ">Stage name.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e209 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d256298e212 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e209 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+              <td class="entry cellrowborder" headers="d256298e212 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+                  uses.</div>
+<p class="p">Records that do not include all required fields are processed based
+                  on the error handling configured for the pipeline.</p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e209 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+
+              <td class="entry cellrowborder" headers="d256298e212 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+                processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
+                  <p class="p">Records that do not meet all preconditions are processed based on the error
+                  handling configured for the stage.</p>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e209 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+              <td class="entry cellrowborder" headers="d256298e212 ">Error record handling for the stage: <ul class="ul" id="task_s1r_vjd_hlb__d170e806">
+                  <li class="li">Discard - Discards the record.</li>
+
+                  <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
+
+                  <li class="li">Stop Pipeline - Stops the pipeline. </li>
+
+                </ul>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">SFTP/FTP/FTPS</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_s1r_vjd_hlb__table_utf_vfs_wv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d256298e317">SFTP/FTP/FTPS Property</th>
+
+                                    <th class="entry cellrowborder" id="d256298e320">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d256298e317 ">Resource URL</td>
+
+                                    <td class="entry cellrowborder" headers="d256298e320 ">URL to access the remote server. Use the appropriate
+                                            format:<ul class="ul" id="task_s1r_vjd_hlb__ul_ajb_ghr_c3b">
+                                            <li class="li">SFTP protocol:
+                                                <pre class="pre codeblock"><code>sftp://&lt;host name&gt;:&lt;port number&gt;/&lt;path&gt;</code></pre></li>
+
+                                            <li class="li">FTP
+                                                protocol:<pre class="pre codeblock"><code>ftp://&lt;host name&gt;:&lt;port number&gt;/&lt;path&gt; </code></pre></li>
+
+                                            <li class="li">FTPS
+                                                protocol:<pre class="pre codeblock"><code>ftps://&lt;host name&gt;:&lt;port number&gt;/&lt;path&gt; </code></pre></li>
+
+                                        </ul>
+<p class="p">You can omit the port number from the URL if the
+                                            server uses the standard port number: 22 for SFTP, or 21
+                                            for FTP or FTPS.</p>
+<div class="p">You can optionally include the
+                                            user name to log in to the SFTP, FTP, or FTPS server in
+                                            the URL. For example, for the FTP protocol, you can use
+                                            the following
+                                            format:<pre class="pre codeblock"><code>ftp://&lt;user name&gt;:&lt;password&gt;@&lt;host name&gt;/&lt;path&gt;</code></pre></div>
+<p class="p">You
+                                            can enter an email address as a user name. </p>
+<div class="note note"><span class="notetitle">Note:</span> If
+                                            you enter a user name in the resource URL and configure
+                                            password or private key authentication on the
+                                            Credentials tab, the value entered in the URL takes
+                                            precedence.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d256298e317 ">Path Relative to User Home Directory</td>
+
+                                    <td class="entry cellrowborder" headers="d256298e320 ">Interprets the path entered in the resource URL as
+                                        relative to the home directory of the user that logs in to
+                                        the remote server.<p class="p">You specify the user name in the URL or
+                                            when you configure password or private key
+                                            authentication on the Credentials tab.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e317 ">FTPS Mode</td>
+
+              <td class="entry cellrowborder" headers="d256298e320 ">Encryption negotiation mode to use for the FTPS protocol:<ul class="ul" id="task_s1r_vjd_hlb__d170e6403">
+                  <li class="li">Implicit - Uses encryption immediately.</li>
+
+                  <li class="li">Explicit - Uses plain FTP to connect to the server and then negotiates
+                    encryption with the server.</li>
+
+                </ul>
+
+              </td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e317 ">FTPS Data Channel Protection Level</td>
+
+              <td class="entry cellrowborder" headers="d256298e320 ">Protection level to use for the FTPS data channel:<ul class="ul" id="task_s1r_vjd_hlb__d170e6421">
+                  <li class="li">Clear - Encrypts only communication with the server, not data sent to the
+                    server.</li>
+
+                  <li class="li">Private - Encrypts both communication with the server and data sent to the
+                    server. </li>
+
+                </ul>
+</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e317 ">Socket Timeout</td>
+
+              <td class="entry cellrowborder" headers="d256298e320 ">Maximum number of seconds allowed between TCP packets. 0 indicates no
+                limit.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e317 ">Connection Timeout</td>
+
+              <td class="entry cellrowborder" headers="d256298e320 ">Maximum number of seconds allowed to initiate a connection to the SFTP, FTP, or
+                FTPS server. 0 indicates no limit.</td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e317 ">Data Timeout</td>
+
+              <td class="entry cellrowborder" headers="d256298e320 ">Maximum number of seconds allowed between transferred data files. 0 indicates
+                no limit.</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_s1r_vjd_hlb__table_ssb_1sr_c3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d256298e464"><a class="xref" href="SFTP.html#concept_o31_wfz_jlb">Credentials Property</a></th>
+
+                                    <th class="entry cellrowborder" id="d256298e469">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Authentication</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Authentication method to use to log in to the remote server:<ul class="ul" id="task_s1r_vjd_hlb__d170e6466">
+                  <li class="li">None - Does not authenticate with remote server.</li>
+
+                  <li class="li">Password - Authenticates with the remote server using a user name and
+                    password. </li>
+
+                  <li class="li">Private key - Authenticates with an SFTP server using a private key.</li>
+
+                </ul>
+<p class="p">Default is None.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Username</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">User name to log in to the remote server. <div class="p">Available for password and private
+                  key authentication.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_s1r_vjd_hlb__d26e6232">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
+</div>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Password</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Password to log in to the remote server. <p class="p">Available for password
+                  authentication.</p>
+<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_s1r_vjd_hlb__d26e6232">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Private Key Provider</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Source that provides the private key: <ul class="ul" id="task_s1r_vjd_hlb__d170e6512">
+                  <li class="li">File - Reads the private key from a local file.</li>
+
+                  <li class="li">Plain-Text - Reads the private key from a plain-text field. </li>
+
+                </ul>
+<p class="p">Available when using private key authentication.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Private Key File</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Full path to the local private key file used to log in to the remote server.
+                  <p class="p">Available for private key authentication when the provider is a
+                file.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Private Key</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Private key used to log in to the remote server. <p class="p">Available for private key
+                  authentication when the provider is plain text.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Private Key Passphrase</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Passphrase used to open the private key. <p class="p">Available for private key
+                  authentication if the private key is protected with a passphrase.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Strict Host Checking</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Requires that the SFTP server is listed in the known hosts file. When enabled,
+                the destination connects to the server only if the server is listed in the known
+                hosts file. <p class="p">Requires the known hosts file to include an RSA key.</p>
+<p class="p">Only used
+                  for the SFTP protocol.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Known Hosts File</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Full path to the local known hosts file. Required if strict host checking is
+                  selected.<p class="p">Available when using strict host checking.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">Use Client Certificate for FTPS</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Authenticates with the FTPS server using a client certificate. <p class="p">Select this
+                  option when the FTPS server requires mutual authentication. You must provide a
+                  keystore file that contains the client certificate.</p>
+<p class="p">Only used for the FTPS
+                  protocol.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Client Certificate Keystore File</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Full path to the keystore file that contains the client certificate.
+                  <p class="p">Available when using a client certificate for FTPS. </p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Client Certificate Keystore Type</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Type of keystore file that contains the client certificate.<p class="p">Available when
+                  using a client certificate for FTPS. </p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Client Certificate Keystore Password</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Password to the keystore file that contains the client certificate. A password
+                is optional, but recommended.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_s1r_vjd_hlb__d26e6232">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
+<p class="p">Available when using a client certificate for FTPS. </p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Truststore Provider</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Method that the destination uses to authenticate the certificate from the FTPS
+                  server:<ul class="ul" id="task_s1r_vjd_hlb__d170e6637">
+                  <li class="li">Allow All - Allows any certificate, skipping authentication.</li>
+
+                  <li class="li">File - Authenticates certificate with a specified truststore file.</li>
+
+                  <li class="li">JVM Default - Authenticates certificate with the JVM default truststore.</li>
+
+                </ul>
+<p class="p">Only used for the FTPS protocol.</p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Truststore File</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Full path to the truststore file that contains the server certificate.
+                  <p class="p">Available when using a file as the FTPS truststore provider. </p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Truststore Type</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Type of truststore:<ul class="ul" id="task_s1r_vjd_hlb__d170e6670">
+                  <li class="li">Java Keystore file (JKS)</li>
+
+                  <li class="li">PKCS-12 (p12 file)</li>
+
+                </ul>
+<p class="p">Available when using a file as the FTPS truststore provider. </p>
+</td>
+
+            </tr>
+<tr>
+              <td class="entry cellrowborder" headers="d256298e464 ">FTPS Truststore Password</td>
+
+              <td class="entry cellrowborder" headers="d256298e469 ">Password to the truststore file. A password is optional, but recommended.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_s1r_vjd_hlb__d26e6232">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
+<p class="p">Available when using a file as the FTPS truststore provider. </p>
+</td>
+
+            </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="ph uicontrol">Task</span> tab. configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_s1r_vjd_hlb__table_xj4_q3z_jlb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d256298e785">Task Property</th>
+
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d256298e788">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e785 ">File Name Expression</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e788 ">Expression that specifies the location of the file to act
+                                            upon.<p class="p">The default,
+                                                <code class="ph codeph">${record:value('/filepath')}</code>,
+                                            performs a task on the file specified in the
+                                                <code class="ph codeph">filepath</code> field of the event
+                                            record.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e785 ">Task</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e788 ">Task to perform:<ul class="ul" id="task_s1r_vjd_hlb__ul_lg1_2jz_jlb">
+                                            <li class="li">Delete File - Removes the file from the server.</li>
+
+                                            <li class="li">Move File - Moves the file to the specified
+                                                location.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e785 ">Target Directory</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e788 ">Directory to move the file to. Enter a directory relative
+                                        to the SFTP/FTP/FTPS root directory of the user specified on
+                                        the Credentials tab.<p class="p">Available only when moving
+                                        files.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e785 ">File Exists Action</td>
+
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d256298e788 ">Action to take when a file of the same name already
+                                        exists in the specified target directory:<ul class="ul" id="task_s1r_vjd_hlb__ul_tmw_dkz_jlb">
+                                            <li class="li">Overwrite - Overwrites the existing file.</li>
+
+                                            <li class="li">Send to Error - Handles the records in the file
+                                                based on the configured stage error handling. </li>
+
+                                        </ul>
+<p class="p">Available only when moving files.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>
