@@ -106,7 +106,7 @@ import java.util.Map;
 public class PreviewResource {
   private static final Logger LOG = LoggerFactory.getLogger(PreviewResource.class);
   private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
-  private static final int MAX_BATCH_SIZE_DEFAULT = 10;
+  private static final int MAX_BATCH_SIZE_DEFAULT = 1000;
   private static final String MAX_BATCHES_KEY = "preview.maxBatches";
   private static final int MAX_BATCHES_DEFAULT = 10;
 

@@ -25,7 +25,7 @@ public class Constants {
   public static final String SDC_ID = "sdc.id";
   public static final String PIPELINE_CLUSTER_TOKEN_KEY = "pipeline.cluster.token";
   public static final String MAX_BATCH_SIZE_KEY = "production.maxBatchSize";
-  public static final int MAX_BATCH_SIZE_DEFAULT = 1000;
+  public static final int MAX_BATCH_SIZE_DEFAULT = 50000;
   public static final String DELIVERY_GUARANTEE = "deliveryGuarantee";
   public static final String MAX_ERROR_FILE_SIZE_KEY = "production.maxErrorFileSize";
   public static final String MAX_ERROR_FILE_SIZE_DEFAULT = "1024MB";
