@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an event record. Use the MapReduce executor as part of an event stream. You can use the MapReduce executor to ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapReduce Executor" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="version" content="1" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="release" content="0" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="modification" content="0 Beta 2" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bj2_zlk_fx" /><title>MapReduce Executor</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_bj2_zlk_fx-d46e151044" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The MapReduce executor starts a MapReduce job in HDFS or MapR FS each time it receives an event record. Use the MapReduce executor as part of an event stream. You can use the MapReduce executor to ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="MapReduce" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_bj2_zlk_fx" /><title>MapReduce</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_bj2_zlk_fx-d46e155237" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -43,7 +43,7 @@
                             'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
                             See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
                     -->
-                    <a href="../../../index.html" class=" wh_logo hidden-xs "></a>
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
                     <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
                     
                 </div>
@@ -78,14 +78,14 @@
                 <nav class="wh_tools hidden-print">
                     <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
    <li><span class="topicref" data-id="concept_umc_1lk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li class="active"><span class="topicref" data-id="concept_bj2_zlk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_bj2_zlk_fx"><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
 </ol></div>
 
                     <div class="wh_right_tools hidden-sm hidden-xs">
                         <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
   
-<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b" title="MapR FS File Metadata Executor"></a></span>  
-<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" title="Pipeline Finisher Executor"></a></span>  </span></div>
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b" title="MapR FS File Metadata"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz" title="Pipeline Finisher"></a></span>  </span></div>
                         <button class="wh_hide_highlight" title="Toggle search highlights"></button>
                         <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
                         <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
@@ -98,102 +98,105 @@
                     
                         <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
                             <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
-   <li><span data-tocid="concept_htw_ghg_jq-d46e54" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
-   <li><span data-tocid="concept_hz3_5fk_fy-d46e804" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e10015" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e12422" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e22146" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e29405" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e31246" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e33962" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e36222" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e103196" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e120631" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e144566" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_stt_2lk_fx-d46e144588" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e147686" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zhp_ldk_xhb-d46e144612" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_i22_k2k_xhb-d46e145698" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zhp_ldk_xhb-d46e147710" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_i22_k2k_xhb-d46e148796" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_mvh_bnm_f1b-d46e146784" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3 Executor</a></span></span></li>
-         <li><span data-tocid="concept_fdc_qrx_jz-d46e147257" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Executor</a></span></span></li>
-         <li><span data-tocid="concept_sjs_sfp_qz-d46e147547" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email Executor</a></span></span></li>
-         <li><span data-tocid="concept_wgj_slk_fx-d46e147757" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata Executor</a></span></span></li>
-         <li><span data-tocid="concept_kjw_llk_fx-d46e148983" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query Executor</a></span></span></li>
-         <li><span data-tocid="concept_j3r_gcv_sx-d46e149441" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query Executor</a></span></span></li>
-         <li><span data-tocid="concept_ohx_r5h_z1b-d46e149817" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata Executor</a></span></span></li>
-         <li class="active"><span data-tocid="concept_bj2_zlk_fx-d46e151044" class="topicref" data-id="concept_bj2_zlk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce Executor</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_yjr_q1m_zx-d46e151157" class="topicref" data-id="concept_yjr_q1m_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_yjr_q1m_zx">Prerequisites</a></span></span></li>
-               <li><span data-tocid="concept_gdt_v5d_nx-d46e151179" class="topicref" data-id="concept_gdt_v5d_nx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_gdt_v5d_nx">Related Event Generating Stages</a></span></span></li>
-               <li><span data-tocid="concept_jqk_g4y_mx-d46e151211" class="topicref" data-id="concept_jqk_g4y_mx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_jqk_g4y_mx">MapReduce Jobs and Job Configuration Properties</a></span></span></li>
-               <li><span data-tocid="concept_e1s_sm5_sx-d46e151308" class="topicref" data-id="concept_e1s_sm5_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_e1s_sm5_sx">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_kry_p3y_mx-d46e151442" class="topicref" data-id="concept_kry_p3y_mx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_kry_p3y_mx">Kerberos Authentication</a></span></span></li>
-               <li><span data-tocid="concept_akp_p3m_zx-d46e151525" class="topicref" data-id="concept_akp_p3m_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_akp_p3m_zx">Using a MapReduce User</a></span></span></li>
-               <li><span data-tocid="task_olh_bmk_fx-d46e151618" class="topicref" data-id="task_olh_bmk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#task_olh_bmk_fx">Configuring a MapReduce Executor</a></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e149882" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_fdc_qrx_jz-d46e150355" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
+         <li><span data-tocid="concept_bzl_3fq_zjb-d46e150645" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e151740" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e151950" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_kjw_llk_fx-d46e153176" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e153634" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e154011" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
+         <li class="active"><span data-tocid="concept_bj2_zlk_fx-d46e155237" class="topicref" data-id="concept_bj2_zlk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_yjr_q1m_zx-d46e155350" class="topicref" data-id="concept_yjr_q1m_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_yjr_q1m_zx">Prerequisites</a></span></span></li>
+               <li><span data-tocid="concept_gdt_v5d_nx-d46e155372" class="topicref" data-id="concept_gdt_v5d_nx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_gdt_v5d_nx">Related Event Generating Stages</a></span></span></li>
+               <li><span data-tocid="concept_jqk_g4y_mx-d46e155404" class="topicref" data-id="concept_jqk_g4y_mx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_jqk_g4y_mx">MapReduce Jobs and Job Configuration Properties</a></span></span></li>
+               <li><span data-tocid="concept_e1s_sm5_sx-d46e155501" class="topicref" data-id="concept_e1s_sm5_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_e1s_sm5_sx">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_kry_p3y_mx-d46e155635" class="topicref" data-id="concept_kry_p3y_mx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_kry_p3y_mx">Kerberos Authentication</a></span></span></li>
+               <li><span data-tocid="concept_akp_p3m_zx-d46e155718" class="topicref" data-id="concept_akp_p3m_zx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_akp_p3m_zx">Using a MapReduce User</a></span></span></li>
+               <li><span data-tocid="task_olh_bmk_fx-d46e155811" class="topicref" data-id="task_olh_bmk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#task_olh_bmk_fx">Configuring a MapReduce Executor</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_qzm_l4r_kz-d46e151721" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher Executor</a></span></span></li>
-         <li><span data-tocid="concept_jsr_zpw_tz-d46e152003" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell Executor</a></span></span></li>
-         <li><span data-tocid="concept_cvy_vxb_1z-d46e152233" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark Executor</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e155914" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
+         <li><span data-tocid="concept_kcf_sn2_jlb-d46e156196" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e156294" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e156524" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e153031" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e155634" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e159203" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e161394" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_fjj_zcf_2w-d46e161595" class="topicref" data-id="concept_fjj_zcf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Hive_Drift_Solution/HiveDriftSolution_title.html#concept_fjj_zcf_2w">Drift Synchronization Solution for Hive</a></span></span></li>
-   <li><span data-tocid="concept_kgt_pnr_4cb-d46e164421" class="topicref" data-id="concept_kgt_pnr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/JDBC_DriftSolution/JDBC_DriftSyncSolution_title.html#concept_kgt_pnr_4cb">Drift Synchronization Solution for PostgreSQL</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e165220" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e165802" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e166179" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e166334" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e166815" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e168280" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e169236" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e171864" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e173122" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e174775" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e180223" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e181428" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e186871" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e186926" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e187149" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e190850" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e191072" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -203,7 +206,7 @@
                     
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
                         <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_bj2_zlk_fx">
-    <h1 class="title topictitle1" id="ariaid-title1">MapReduce Executor</h1>
+    <h1 class="title topictitle1" id="ariaid-title1">MapReduce</h1>
 
     <div class="body conbody">
         <p class="p">The
@@ -220,7 +223,7 @@
                         MapReduce jobs after the Hadoop FS or MapR FS destination closes files.</span> For example, you can use the Avro to ORC job to convert Avro files to ORC files after
             a MapR FS destination closes a file. Or, you might use the Avro to Parquet job to
             convert Avro files to Parquet after the Hadoop FS destination closes a file as part of
-            the <a class="xref" href="../Hive_Drift_Solution/HiveDriftSolution_title.html#concept_phk_bdf_2w">Drift
+            the <a class="xref" href="../Solutions/HiveDrift-Overview.html#concept_phk_bdf_2w" title="The Drift Synchronization Solution for Hive detects drift in incoming data and updates corresponding Hive tables.">Drift
                 Synchronization Solution for Hive</a>. </p>
 
         <div class="p">
@@ -241,7 +244,7 @@
             properties as needed. </p>
 
         <p class="p">You can also configure the executor to generate events for
-                  another event stream. <span class="ph" id="concept_bj2_zlk_fx__d26e2781">For more information about dataflow
+                  another event stream. <span class="ph" id="concept_bj2_zlk_fx__d26e2917">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
         <p class="p">For a solution that describes how to use the MapReduce executor, see <a class="xref" href="../Solutions/Parquet.html#concept_jkm_rnz_kx" title="This solution describes how to convert Avro files to the columnar format, Parquet.">Converting Data to the Parquet Data Format</a>.</p>
@@ -265,7 +268,7 @@
                               <dt class="dt dlterm">Configure the YARN Minimum User ID property, min.user.id</dt>
 
                               <dd class="dd">The min.user.id property is set to 1000 by default. To allow job
-                                          submission:<ol class="ol" id="concept_yjr_q1m_zx__d26e6444">
+                                          submission:<ol class="ol" id="concept_yjr_q1m_zx__d26e6590">
                                           <li class="li">Verify the user ID being used by the <span class="ph">Data Collector</span> user, typically named "sdc".</li>
 
                                           <li class="li">In Hadoop, configure the YARN min.user.id property.
@@ -282,7 +285,7 @@
                                     allowed.system.users</dt>
 
                               <dd class="dd">The allowed.system.users property lists allowed user names. To
-                                    allow job submission: <ol class="ol" id="concept_yjr_q1m_zx__d26e6467">
+                                    allow job submission: <ol class="ol" id="concept_yjr_q1m_zx__d26e6613">
                                           <li class="li"> In Hadoop, configure the YARN allowed.system.users
                                                 property. <p class="p">Add the <span class="ph">Data Collector</span> user name, typically "sdc", to the list of
                                                   allowed users.</p>
@@ -428,18 +431,18 @@
             attributes. Record header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vjr_cn5_sx__table_smk_gp5_sx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d242583e509">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d253554e515">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d242583e512">Description</th>
+                            <th class="entry cellrowborder" id="d253554e518">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d242583e509 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d253554e515 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d242583e512 ">Event type. Uses one of the following types:<ul class="ul" id="concept_vjr_cn5_sx__ul_tmk_gp5_sx">
+                            <td class="entry cellrowborder" headers="d253554e518 ">Event type. Uses one of the following types:<ul class="ul" id="concept_vjr_cn5_sx__ul_tmk_gp5_sx">
                                     <li class="li">job-created - Generated when the executor creates and starts
                                         a MapReduce job.</li>
 
@@ -449,16 +452,16 @@
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d242583e509 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d253554e515 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d242583e512 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d253554e518 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d242583e509 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d253554e515 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_vjr_cn5_sx__d171e2526" headers="d242583e512 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_vjr_cn5_sx__d170e2542" headers="d253554e518 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -471,25 +474,25 @@
         <div class="p">Event records generated by the MapReduce executor have the following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_vjr_cn5_sx__table_umk_gp5_sx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d242583e568">Event Field Name</th>
+                            <th class="entry cellrowborder" id="d253554e574">Event Field Name</th>
 
-                            <th class="entry cellrowborder" id="d242583e571">Description</th>
+                            <th class="entry cellrowborder" id="d253554e577">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d242583e568 ">tracking-url</td>
+                            <td class="entry cellrowborder" headers="d253554e574 ">tracking-url</td>
 
-                            <td class="entry cellrowborder" headers="d242583e571 ">Tracking URL for the MapReduce job.</td>
+                            <td class="entry cellrowborder" headers="d253554e577 ">Tracking URL for the MapReduce job.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d242583e568 ">job-id</td>
+                            <td class="entry cellrowborder" headers="d253554e574 ">job-id</td>
 
-                            <td class="entry cellrowborder" headers="d242583e571 ">Job ID of the MapReduce job.</td>
+                            <td class="entry cellrowborder" headers="d253554e577 ">Job ID of the MapReduce job.</td>
 
                         </tr>
 
@@ -574,48 +577,48 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d242583e774">General Property</th>
+                                    <th class="entry cellrowborder" id="d253554e780">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d242583e777">Description</th>
+                                    <th class="entry cellrowborder" id="d253554e783">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d242583e774 ">Name</td>
+              <td class="entry cellrowborder" headers="d253554e780 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d242583e777 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d242583e774 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d242583e777 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d253554e783 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d242583e774 ">Stage Library</td>
+              <td class="entry cellrowborder" headers="d253554e780 ">Description</td>
 
-              <td class="entry cellrowborder" headers="d242583e777 ">Library version that you want to use. </td>
+              <td class="entry cellrowborder" headers="d253554e783 ">Optional description.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e774 ">Produce Events <a class="xref" href="MapReduce.html#concept_e1s_sm5_sx">
+              <td class="entry cellrowborder" headers="d253554e780 ">Stage Library</td>
+
+              <td class="entry cellrowborder" headers="d253554e783 ">Library version that you want to use. </td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d253554e780 ">Produce Events <a class="xref" href="MapReduce.html#concept_e1s_sm5_sx">
                                             <img class="image" id="task_olh_bmk_fx__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d242583e777 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d253554e783 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d242583e774 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+              <td class="entry cellrowborder" headers="d253554e780 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-              <td class="entry cellrowborder" headers="d242583e777 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+              <td class="entry cellrowborder" headers="d253554e783 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
                   uses.</div>
 <p class="p">Records that do not include all required fields are processed based
                   on the error handling configured for the pipeline.</p>
@@ -624,9 +627,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d242583e774 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+              <td class="entry cellrowborder" headers="d253554e780 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-              <td class="entry cellrowborder" headers="d242583e777 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+              <td class="entry cellrowborder" headers="d253554e783 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
                 processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
                   <p class="p">Records that do not meet all preconditions are processed based on the error
                   handling configured for the stage.</p>
@@ -647,18 +650,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_wzt_zdy_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d242583e887">MapReduce Property</th>
+                                    <th class="entry cellrowborder" id="d253554e893">MapReduce Property</th>
 
-                                    <th class="entry cellrowborder" id="d242583e890">Description</th>
+                                    <th class="entry cellrowborder" id="d253554e896">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e887 ">MapReduce Configuration Directory</td>
+                                    <td class="entry cellrowborder" headers="d253554e893 ">MapReduce Configuration Directory</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e890 ">Absolute path to the directory containing the Hive and
+                                    <td class="entry cellrowborder" headers="d253554e896 ">Absolute path to the directory containing the Hive and
                                         Hadoop configuration files. For a Cloudera Manager
                                         installation, enter hive-conf. <div class="p">The stage uses the
                                             following configuration files:<ul class="ul" id="task_olh_bmk_fx__ul_bhl_zfy_mx">
@@ -681,9 +684,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e887 ">MapReduce Configuration</td>
+                                    <td class="entry cellrowborder" headers="d253554e893 ">MapReduce Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e890 ">
+                                    <td class="entry cellrowborder" headers="d253554e896 ">
                                         <p class="p">Additional properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -695,10 +698,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e887 ">MapReduce User <a class="xref" href="MapReduce.html#concept_akp_p3m_zx">
+                                    <td class="entry cellrowborder" headers="d253554e893 ">MapReduce User <a class="xref" href="MapReduce.html#concept_akp_p3m_zx">
                                             <img class="image" id="task_olh_bmk_fx__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d242583e890 ">
+                                    <td class="entry cellrowborder" headers="d253554e896 ">
                                         <p class="p">The MapReduce user to use to connect to the external
                                             system. When using this property, make sure the external
                                             system is configured appropriately. </p>
@@ -714,10 +717,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e887 ">Kerberos Authentication <a class="xref" href="MapReduce.html#concept_kry_p3y_mx">
+                                    <td class="entry cellrowborder" headers="d253554e893 ">Kerberos Authentication <a class="xref" href="MapReduce.html#concept_kry_p3y_mx">
                                             <img class="image" id="task_olh_bmk_fx__image_a5x_jzn_vs" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d242583e890 ">Uses Kerberos credentials to connect to the external
+                                    <td class="entry cellrowborder" headers="d253554e896 ">Uses Kerberos credentials to connect to the external
                                         system. <p class="p">When selected, uses the Kerberos principal and
                                             keytab defined in the <span class="ph">Data Collector</span> configuration file,
                                                 <code class="ph codeph">$SDC_CONF/sdc.properties</code>.
@@ -739,18 +742,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_k31_14y_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d242583e1021">Job Property</th>
+                                    <th class="entry cellrowborder" id="d253554e1027">Job Property</th>
 
-                                    <th class="entry cellrowborder" id="d242583e1024">Description</th>
+                                    <th class="entry cellrowborder" id="d253554e1030">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1021 ">Job Name</td>
+                                    <td class="entry cellrowborder" headers="d253554e1027 ">Job Name</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1024 ">Display name for the MapReduce job. <p class="p">This name displays
+                                    <td class="entry cellrowborder" headers="d253554e1030 ">Display name for the MapReduce job. <p class="p">This name displays
                                             in Hadoop web applications and other reporting tools
                                             that list MapReduce jobs.</p>
 </td>
@@ -758,10 +761,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1021 ">Job Type <a class="xref" href="MapReduce.html#concept_jqk_g4y_mx">
+                                    <td class="entry cellrowborder" headers="d253554e1027 ">Job Type <a class="xref" href="MapReduce.html#concept_jqk_g4y_mx">
                                             <img class="image" id="task_olh_bmk_fx__image_ogb_4rk_wx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1024 ">Type of MapReduce job to run:<ul class="ul" id="task_olh_bmk_fx__ul_llg_rrk_wx">
+                                    <td class="entry cellrowborder" headers="d253554e1030 ">Type of MapReduce job to run:<ul class="ul" id="task_olh_bmk_fx__ul_llg_rrk_wx">
                                             <li class="li">Custom - Use a custom job creator interface and job
                                                 configuration properties to define the job.</li>
 
@@ -787,17 +790,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1021 ">Custom JobCreator</td>
+                                    <td class="entry cellrowborder" headers="d253554e1027 ">Custom JobCreator</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1024 ">MapReduce Job Creator interface to use for custom jobs.
+                                    <td class="entry cellrowborder" headers="d253554e1030 ">MapReduce Job Creator interface to use for custom jobs.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1021 ">Job Configuration</td>
+                                    <td class="entry cellrowborder" headers="d253554e1027 ">Job Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1024 ">Key-value pairs of configuration properties to define the
+                                    <td class="entry cellrowborder" headers="d253554e1030 ">Key-value pairs of configuration properties to define the
                                         job. You can use expressions in both keys and values.
                                             <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add additional
@@ -819,19 +822,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_fzs_1py_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d242583e1123">Avro Conversion Property</th>
+                                    <th class="entry cellrowborder" id="d253554e1129">Avro Conversion Property</th>
 
-                                    <th class="entry cellrowborder" id="d242583e1126">Description</th>
+                                    <th class="entry cellrowborder" id="d253554e1132">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1123 ">Input Avro File <a class="xref" href="MapReduce.html#concept_cnx_hqy_mx" title="The MapReduce executor includes two predefined jobs: Avro to ORC and Avro to Parquet.">
+                                    <td class="entry cellrowborder" headers="d253554e1129 ">Input Avro File <a class="xref" href="MapReduce.html#concept_cnx_hqy_mx" title="The MapReduce executor includes two predefined jobs: Avro to ORC and Avro to Parquet.">
                                             <img class="image" id="task_olh_bmk_fx__image_jqd_xz2_nx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1126 ">Expression that evaluates to the name and location of the
+                                    <td class="entry cellrowborder" headers="d253554e1132 ">Expression that evaluates to the name and location of the
                                         Avro file to process. <p class="p">By default, processes the file with
                                             the name and location specified in the filepath field of
                                             the event record.</p>
@@ -840,25 +843,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1123 ">Keep Input File</td>
+                                    <td class="entry cellrowborder" headers="d253554e1129 ">Keep Input File</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1126 ">Leaves the processed Avro file in place. By default, the
+                                    <td class="entry cellrowborder" headers="d253554e1132 ">Leaves the processed Avro file in place. By default, the
                                         executor removes the file after processing.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1123 ">Output Directory</td>
+                                    <td class="entry cellrowborder" headers="d253554e1129 ">Output Directory</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1126 ">Location to write the resulting ORC or Parquet file. Use
+                                    <td class="entry cellrowborder" headers="d253554e1132 ">Location to write the resulting ORC or Parquet file. Use
                                         an absolute path. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d242583e1123 ">Overwrite Temporary File</td>
+                                    <td class="entry cellrowborder" headers="d253554e1129 ">Overwrite Temporary File</td>
 
-                                    <td class="entry cellrowborder" headers="d242583e1126 ">Enables overwriting any existing temporary files that
+                                    <td class="entry cellrowborder" headers="d253554e1132 ">Enables overwriting any existing temporary files that
                                         remain from a previous run of the job. </td>
 
                                 </tr>
@@ -876,47 +879,47 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_ekl_trn_n2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" style="text-align:left;" id="d242583e1205">Avro to Parquet Property</th>
+              <th class="entry cellrowborder" style="text-align:left;" id="d253554e1211">Avro to Parquet Property</th>
 
-              <th class="entry cellrowborder" style="text-align:left;" id="d242583e1208">Description</th>
+              <th class="entry cellrowborder" style="text-align:left;" id="d253554e1214">Description</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1205 ">Compression Codec</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1211 ">Compression Codec</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1208 ">Compression codec to use. If you do not enter a compression code, the executor
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1214 ">Compression codec to use. If you do not enter a compression code, the executor
                 uses the default compression codec for Parquet.</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1205 ">Row Group Size</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1211 ">Row Group Size</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1208 ">Parquet row group size. Use -1 to use the Parquet default. </td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1205 ">Page Size</td>
-
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1208 ">Parquet page size. Use -1 to use the Parquet default.</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1214 ">Parquet row group size. Use -1 to use the Parquet default. </td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1205 ">Dictionary Page Size</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1211 ">Page Size</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1208 ">Parquet dictionary page size. Use -1 to use the Parquet default. </td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1214 ">Parquet page size. Use -1 to use the Parquet default.</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1205 ">Max Padding Size</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1211 ">Dictionary Page Size</td>
 
-              <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1208 ">Parquet maximum padding size. Use -1 to use the Parquet default.</td>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1214 ">Parquet dictionary page size. Use -1 to use the Parquet default. </td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1211 ">Max Padding Size</td>
+
+              <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1214 ">Parquet maximum padding size. Use -1 to use the Parquet default.</td>
 
             </tr>
 
@@ -933,18 +936,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_olh_bmk_fx__table_yn1_vdz_hdb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d242583e1288">Avro to ORC Property</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d253554e1294">Avro to ORC Property</th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d242583e1291">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d253554e1297">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1288 ">ORC Batch Size</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1294 ">ORC Batch Size</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d242583e1291 ">The maximum number of records written to ORC files at one
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d253554e1297 ">The maximum number of records written to ORC files at one
                                         time.</td>
 
                                 </tr>
