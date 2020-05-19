@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -25,20 +26,36 @@ import com.streamsets.pipeline.common.InterfaceStability;
 public class AWSConfig {
 
   @ConfigDef(
-      required = false,
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Authentication Method",
+      defaultValue = "WITH_IAM_ROLES",
+      displayPosition = -120,
+      group = "#0"
+  )
+  @ValueChooserModel(AWSCredentialModeChooserValues.class)
+  public AWSCredentialMode credentialMode = AWSCredentialMode.WITH_IAM_ROLES;
+
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Access Key ID",
       displayPosition = -110,
-      group = "#0"
+      group = "#0",
+      dependsOn = "credentialMode",
+      triggeredByValue = "WITH_CREDENTIALS"
   )
   public CredentialValue awsAccessKeyId;
 
   @ConfigDef(
-      required = false,
+      required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Secret Access Key",
       displayPosition = -100,
-      group = "#0"
+      group = "#0",
+      dependsOn = "credentialMode",
+      triggeredByValue = "WITH_CREDENTIALS"
   )
   public CredentialValue awsSecretAccessKey;
 }

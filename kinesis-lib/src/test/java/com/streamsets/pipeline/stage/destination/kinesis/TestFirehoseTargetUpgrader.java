@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,32 +24,23 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestKinesisTargetUpgrader {
+public class TestFirehoseTargetUpgrader {
 
   @Test
-  public void testUpgradeV3toV4() throws Exception {
-    List<Config> configs = new ArrayList<>();
-    KinesisTargetUpgrader kafkaTargetUpgrader = new KinesisTargetUpgrader();
-    kafkaTargetUpgrader.upgrade("a", "b", "c", 6, 7, configs);
-    assertEquals("responseConf.sendResponseToOrigin", configs.get(0).getName());
-    assertEquals("responseConf.responseType", configs.get(1).getName());
-  }
-
-  @Test
-  public void testUpgradeV8toV9() {
-    KinesisTargetUpgrader kafkaTargetUpgrader = new KinesisTargetUpgrader();
+  public void testUpgradeV4toV5() {
+    FirehoseTargetUpgrader  firehoseTargetUpgrader = new FirehoseTargetUpgrader();
 
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", null));
     configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", null));
-    kafkaTargetUpgrader.upgrade("a", "b", "c", 8, 9, configs);
+    firehoseTargetUpgrader.upgrade("a", "b", "c", 4, 5, configs);
     assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
     assertEquals(AWSCredentialMode.WITH_IAM_ROLES, configs.get(2).getValue());
 
     configs = new ArrayList<>();
     configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", "key"));
     configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", "secret"));
-    kafkaTargetUpgrader.upgrade("a", "b", "c", 8, 9, configs);
+    firehoseTargetUpgrader.upgrade("a", "b", "c", 4, 5, configs);
     assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
     assertEquals(AWSCredentialMode.WITH_CREDENTIALS, configs.get(2).getValue());
   }

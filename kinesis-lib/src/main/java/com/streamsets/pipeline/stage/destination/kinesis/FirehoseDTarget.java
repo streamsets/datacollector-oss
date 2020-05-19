@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Kinesis Firehose",
     description = "Writes data to Amazon Kinesis Firehose",
     icon = "kinesisfirehose.png",

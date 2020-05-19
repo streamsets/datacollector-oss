@@ -27,7 +27,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 8,
+    version = 9,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",

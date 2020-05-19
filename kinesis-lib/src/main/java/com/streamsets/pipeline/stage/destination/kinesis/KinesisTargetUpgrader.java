@@ -62,6 +62,9 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 7:
         upgradeV7toV8(configs);
+        // fall through
+      case 8:
+        upgradeV8toV9(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -139,6 +142,10 @@ public class KinesisTargetUpgrader extends KinesisBaseUpgrader {
         }
       }
     }
+  }
+
+  private void upgradeV8toV9(List<Config> configs) {
+    updateCredentialMode(configs);
   }
 
 }

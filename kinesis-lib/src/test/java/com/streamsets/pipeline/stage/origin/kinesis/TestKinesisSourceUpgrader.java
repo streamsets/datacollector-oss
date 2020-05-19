@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +28,8 @@ import org.mockito.Mockito;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestKinesisSourceUpgrader {
 
@@ -52,5 +55,24 @@ public class TestKinesisSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
+  }
+
+  @Test
+  public void testUpgradeV7toV8() {
+    KinesisSourceUpgrader kinesisSourceUpgrader = new KinesisSourceUpgrader();
+
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", null));
+    configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", null));
+    kinesisSourceUpgrader.upgrade("a", "b", "c", 7, 8, configs);
+    assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
+    assertEquals(AWSCredentialMode.WITH_IAM_ROLES, configs.get(2).getValue());
+
+    configs = new ArrayList<>();
+    configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", "key"));
+    configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", "secret"));
+    kinesisSourceUpgrader.upgrade("a", "b", "c", 7, 8, configs);
+    assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
+    assertEquals(AWSCredentialMode.WITH_CREDENTIALS, configs.get(2).getValue());
   }
 }
