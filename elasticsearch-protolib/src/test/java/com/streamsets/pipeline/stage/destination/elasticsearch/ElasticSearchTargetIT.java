@@ -177,6 +177,100 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+
+    conf.rawAdditionalProperties =  "{${record:value('/text')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+  }
+
+  @Test
+  public void testAdditionalPropertiesValidationWithRecordLabel() throws Exception {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "docId";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.UPDATE;
+    conf.useSecurity = false;
+    conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{}";
+
+    Target target = new ElasticsearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":${record:value(\'/text\')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":record:value(\'/text\'),\"_retry_on_conflict\":3}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+
+    conf.rawAdditionalProperties =  "{${record:value(\'/text\')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+  }
+
+  @Test
+  public void testAdditionalPropertiesValidationWithoutRecordLabel() throws Exception {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "docId";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.UPDATE;
+    conf.useSecurity = false;
+    conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{}";
+
+    Target target = new ElasticsearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_retry_on_conflict\":3}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":record:value(\'/text\'),\"_retry_on_conflict\":3}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
   }
 
   private Target createTarget() {

@@ -40,6 +40,7 @@ import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactoryBuilder;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFormat;
 import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.lib.parser.shaded.com.google.code.regexp.Pattern;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
@@ -64,7 +65,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
 
 public class ElasticsearchTarget extends BaseTarget {
@@ -82,6 +82,9 @@ public class ElasticsearchTarget extends BaseTarget {
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private ElasticsearchStageDelegate delegate;
+  private static final Pattern elVarPattern = Pattern.compile(".*\\$\\{.*:.*\\(.*\\)\\}.*");
+  private String additionalProperties;
+  private boolean additionalPropertiesIsEval;
 
   public ElasticsearchTarget(ElasticsearchTargetConfig conf) {
     this.conf = conf;
@@ -107,6 +110,16 @@ public class ElasticsearchTarget extends BaseTarget {
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, evalError, ex.toString(), ex));
     }
+  }
+
+  /**
+   * This method analyze the Additional Properties for recognize record-labels and modify it to a correct format for
+   * JSON conversion. Adds "in front of and behind the every record-label.
+   */
+  private String validateAdditionalProperties(String additionalProperties) {
+    additionalProperties = additionalProperties.replace("${record:", "\"${record:");
+    additionalProperties = additionalProperties.replace(")}", ")}\"");
+    return additionalProperties;
   }
 
   @Override
@@ -173,39 +186,42 @@ public class ElasticsearchTarget extends BaseTarget {
     }
     if (!StringUtils.isEmpty(conf.parentIdTemplate)) {
       validateEL(
-              typeEval,
-              conf.parentIdTemplate,
-              "elasticSearchConfig.parentIdTemplate",
-              Errors.ELASTICSEARCH_27,
-              Errors.ELASTICSEARCH_28,
-              issues
+          typeEval,
+          conf.parentIdTemplate,
+          "elasticSearchConfig.parentIdTemplate",
+          Errors.ELASTICSEARCH_27,
+          Errors.ELASTICSEARCH_28,
+          issues
       );
     }
     if (!StringUtils.isEmpty(conf.routingTemplate)) {
       validateEL(
-              typeEval,
-              conf.routingTemplate,
-              "elasticSearchConfig.routingTemplate",
-              Errors.ELASTICSEARCH_29,
-              Errors.ELASTICSEARCH_30,
-              issues
+          typeEval,
+          conf.routingTemplate,
+          "elasticSearchConfig.routingTemplate",
+          Errors.ELASTICSEARCH_29,
+          Errors.ELASTICSEARCH_30,
+          issues
       );
     }
-    if (!StringUtils.isEmpty(conf.rawAdditionalProperties)) {
-      validateEL(
-          additionalPropertiesEval,
+    additionalPropertiesIsEval = elVarPattern.matcher(conf.rawAdditionalProperties).matches();
+    if (additionalPropertiesIsEval) {
+      validateEL(additionalPropertiesEval,
           conf.rawAdditionalProperties,
           "elasticSearchConfig.rawAdditionalProperties",
           Errors.ELASTICSEARCH_36,
           Errors.ELASTICSEARCH_37,
           issues
       );
+      additionalProperties = validateAdditionalProperties(conf.rawAdditionalProperties);
+    } else {
+      additionalProperties = conf.rawAdditionalProperties;
     }
 
     try{
       // try to create JSONObject from input, validation issue if it fails.
       JsonParser parser = new JsonParser();
-      parser.parse(conf.rawAdditionalProperties).getAsJsonObject();
+      parser.parse(additionalProperties).getAsJsonObject();
     }catch (Exception e){
       issues.add(getContext().createConfigIssue(
           Groups.ELASTIC_SEARCH.name(),
@@ -288,8 +304,8 @@ public class ElasticsearchTarget extends BaseTarget {
           routing = routingEval.eval(elVars, conf.routingTemplate, String.class);
         }
         String additionalPropertiesName = null;
-        if (!StringUtils.isEmpty(conf.rawAdditionalProperties)) {
-          additionalPropertiesName = additionalPropertiesEval.eval(elVars, conf.rawAdditionalProperties, String.class);
+        if (additionalPropertiesIsEval) {
+          additionalPropertiesName = additionalPropertiesEval.eval(elVars, additionalProperties, String.class);
         }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataGenerator generator = generatorFactory.getGenerator(baos);
@@ -310,31 +326,37 @@ public class ElasticsearchTarget extends BaseTarget {
                 LOG.debug("Discarding record with unsupported operation {}", opType);
                 break;
               case SEND_TO_ERROR:
-                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ELASTICSEARCH_13, ex.getMessage(), ex));
+                errorRecordHandler.onError(new OnRecordErrorException(
+                    record,
+                    Errors.ELASTICSEARCH_13,
+                    ex.getMessage(),
+                    ex
+                ));
                 break;
               case USE_DEFAULT:
                 opCode = conf.defaultOperation.code;
                 break;
               default: //unknown action
-                errorRecordHandler.onError(new OnRecordErrorException(record, Errors.ELASTICSEARCH_14, ex.getMessage(), ex));
+                errorRecordHandler.onError(new OnRecordErrorException(
+                    record,
+                    Errors.ELASTICSEARCH_14,
+                    ex.getMessage(),
+                    ex
+                ));
             }
           }
         } else {
           // No header attribute set. Use default.
           opCode = conf.defaultOperation.code;
         }
-        bulkRequest.append(getOperation(index, type, id, parent, routing, additionalPropertiesName, recordJson,
-            opCode));
+        bulkRequest.append(getOperation(index, type, id, parent, routing, additionalPropertiesName, recordJson, opCode));
       } catch (IOException ex) {
-        errorRecordHandler.onError(
-            new OnRecordErrorException(
-                record,
-                Errors.ELASTICSEARCH_15,
-                record.getHeader().getSourceId(),
-                ex.toString(),
-                ex
-            )
-        );
+        errorRecordHandler.onError(new OnRecordErrorException(record,
+            Errors.ELASTICSEARCH_15,
+            record.getHeader().getSourceId(),
+            ex.toString(),
+            ex
+        ));
       }
     }
 
@@ -372,13 +394,11 @@ public class ElasticsearchTarget extends BaseTarget {
               errorItems = extractErrorItems(json);
               throw new StageException(Errors.ELASTICSEARCH_17, errorItems.size(), "One or more operations failed");
             default:
-              throw new IllegalStateException(
-                  Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord())
-              );
+              throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord()));
           }
         }
       } catch (IOException ex) {
-        errorRecordHandler.onError(records, new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex));
+        errorRecordHandler.onError( records, new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex));
       }
     }
   }
@@ -392,7 +412,7 @@ public class ElasticsearchTarget extends BaseTarget {
     return batchTime;
   }
 
-  private String getOperation(String index, String type, String id, String parent, String routing,
+  private String getOperation( String index, String type, String id, String parent, String routing,
       String additionalProperties, String record, int opCode) {
     StringBuilder op = new StringBuilder();
     switch (opCode) {
@@ -422,7 +442,7 @@ public class ElasticsearchTarget extends BaseTarget {
     return op.toString();
   }
 
-  private void getOperationMetadata(String operation, String index, String type, String id, String parent,
+  private void getOperationMetadata( String operation, String index, String type, String id, String parent,
       String routing, String additionalPropertiesValue, StringBuilder sb) {
     sb.append(String.format("{\"%s\":{\"_index\":\"%s\",\"_type\":\"%s\"", operation, index, type));
     if (!StringUtils.isEmpty(id)) {
@@ -435,8 +455,8 @@ public class ElasticsearchTarget extends BaseTarget {
       sb.append(String.format(",\"routing\":\"%s\"", routing));
     }
     // Add additional properties from JSON editor.
-    String additionalProperties = addAdditionalProperties(additionalPropertiesValue);
-    if (!StringUtils.isEmpty(additionalProperties)){
+    if (!StringUtils.isEmpty(additionalPropertiesValue)) {
+      String additionalProperties = addAdditionalProperties(additionalPropertiesValue);
       sb.append(additionalProperties);
     }
     sb.append(String.format("}}%n"));
