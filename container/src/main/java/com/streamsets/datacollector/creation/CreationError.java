@@ -79,8 +79,10 @@ public enum CreationError implements ErrorCode {
   // Cluster Type support
   CREATION_1000("Invalid cluster manager type '{}'"),
 
-  CREATION_1100("Connection object failed to load"),
-  CREATION_1101("Blob store object not loaded correctly")
+  CREATION_1100("Failed to load connection from blob store: {}"),
+  CREATION_1101("Blob store object not loaded correctly"),
+  CREATION_1102("Connection type from blob store is '{}' which does not match connection type from stage configuration ('{}')"),
+  CREATION_1103("Connection definition requires at least version '{}' which is higher then available library supports ('{}')"),
   ;
 
   private final String msg;

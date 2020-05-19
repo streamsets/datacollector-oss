@@ -63,8 +63,8 @@ public class TestConfigInjector {
       label = "My Connection",
       description = "",
       type = "MYCONN",
-      version = 1,
-      upgraderDef = "abcd/dne.yaml",
+      version = 2,
+      upgraderDef = "upgrader/MyConnUpgrader.yaml",
       verifier = MyConnection.MyConnectionVerifier.class,
       supportedEngines = ConnectionEngine.COLLECTOR
   )
@@ -77,6 +77,9 @@ public class TestConfigInjector {
         required = true
     )
     public String URL = "http://location.place";
+
+    @ConfigDefBean
+    public SubBean beanSubBean;
 
     public static class MyConnectionVerifier extends ConnectionVerifier {
       @Override
@@ -403,7 +406,21 @@ public class TestConfigInjector {
         Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
         Mockito.eq(connectionId),
         Mockito.eq(1L)
-    )).thenReturn("{\"URL\":\"http://new.place\"}");
+    )).thenReturn("{\n" +
+        "  \"library\" : \"lib\",\n" +
+        "  \"type\" : \"MYCONN\",\n" +
+        "  \"version\" : \"2\",\n" +
+        "  \"configuration\" : [ {\n" +
+        "    \"name\" : \"URL\",\n" +
+        "    \"value\" : \"http://new.place\"\n" +
+        "  }, {\n" +
+        "    \"name\" : \"extra.non-existent.config\",\n" +
+        "    \"value\" : \"foo\"\n" +
+        "  }, {\n" +
+        "    \"name\" : \"beanSubBean.subBeanString\",\n" +
+        "    \"value\" : \"StreamSets\"\n" +
+        "  } ]\n" +
+        "}");
     ConfigInjector.setBlobStore(mockBlobStore);
 
     StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
@@ -421,7 +438,147 @@ public class TestConfigInjector {
 
     Assert.assertEquals(connectionId, context.getConnection("MYCONN"));
     Assert.assertEquals(connectionId, stage.connectionSelection);
+    // These two come from the Connection configs in the blobstore
     Assert.assertEquals("http://new.place", stage.myConnection.URL);
+    Assert.assertEquals("StreamSets", stage.myConnection.beanSubBean.subBeanString);
+    // This one isn't in the Connection configs, so it's default value is picked up
+    Assert.assertEquals(1, stage.bean.beanSubBean.subBeanList.size());
+    Assert.assertEquals("3", stage.bean.beanSubBean.subBeanList.get(0));
+
+    Mockito.verify(mockBlobStore).retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    );
+  }
+
+  @Test
+  public void testInjectConfigsToObjectConnectionUpgrade() {
+    String connectionId = "abcd-1234-efgh-5678";
+    Map<String, Object> values = ImmutableMap.<String, Object>builder()
+        .put("connectionSelection", connectionId)
+        .build();
+
+    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
+    Mockito.when(mockBlobStore.retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    )).thenReturn("{\n" +
+        "  \"library\" : \"lib\",\n" +
+        "  \"type\" : \"MYCONN\",\n" +
+        "  \"version\" : \"1\",\n" +    // connection definition is older version
+        "  \"configuration\" : [ {\n" +
+        "    \"name\" : \"URL\",\n" +
+        "    \"value\" : \"http://new.place\"\n" +
+        "  } ]\n" +
+        "}");
+    ConfigInjector.setBlobStore(mockBlobStore);
+
+    StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
+      String name = (String)invocation.getArguments()[0];
+      return new Config(name, values.get(name));
+    });
+
+    ConfigInjector.Context context = new ConfigInjector.StageInjectorContext(stageDef, configuration, constants, issues);
+
+    MySource stage = new MySource();
+    ConfigInjector.get().injectConfigsToObject(stage, context);
+
+    Assert.assertTrue(issues.isEmpty());
+
+    Assert.assertEquals(connectionId, context.getConnection("MYCONN"));
+    Assert.assertEquals(connectionId, stage.connectionSelection);
+    // This comes from the Connection configs in the blobstore
+    Assert.assertEquals("http://new.place", stage.myConnection.URL);
+    // This one comes from the upgrader
+    Assert.assertEquals("fromUpgrader", stage.myConnection.beanSubBean.subBeanString);
+    // This one isn't in the Connection configs, so it's default value is picked up
+    Assert.assertEquals(1, stage.bean.beanSubBean.subBeanList.size());
+    Assert.assertEquals("3", stage.bean.beanSubBean.subBeanList.get(0));
+
+    Mockito.verify(mockBlobStore).retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    );
+  }
+
+  @Test
+  public void testInjectConfigsToObjectConnectionWrongType() {
+    String connectionId = "abcd-1234-efgh-5678";
+    Map<String, Object> values = ImmutableMap.<String, Object>builder()
+        .put("connectionSelection", connectionId)
+        .build();
+
+    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
+    Mockito.when(mockBlobStore.retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    )).thenReturn("{\n" +
+        "  \"library\" : \"lib\",\n" +
+        "  \"type\" : \"WRONG_TYPE\",\n" +
+        "  \"version\" : \"1\",\n" +
+        "  \"configuration\" : []\n" +
+        "}");
+    ConfigInjector.setBlobStore(mockBlobStore);
+
+    StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
+      String name = (String)invocation.getArguments()[0];
+      return new Config(name, values.get(name));
+    });
+
+    ConfigInjector.Context context = new ConfigInjector.StageInjectorContext(stageDef, configuration, constants, issues);
+
+    MySource stage = new MySource();
+    ConfigInjector.get().injectConfigsToObject(stage, context);
+
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).getMessage().contains("CREATION_1102"));
+
+    Mockito.verify(mockBlobStore).retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    );
+  }
+
+  @Test
+  public void testInjectConfigsToObjectConnectionTooNew() {
+    String connectionId = "abcd-1234-efgh-5678";
+    Map<String, Object> values = ImmutableMap.<String, Object>builder()
+        .put("connectionSelection", connectionId)
+        .build();
+
+    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
+    Mockito.when(mockBlobStore.retrieve(
+        Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),
+        Mockito.eq(connectionId),
+        Mockito.eq(1L)
+    )).thenReturn("{\n" +
+        "  \"library\" : \"lib\",\n" +
+        "  \"type\" : \"MYCONN\",\n" +
+        "  \"version\" : \"3\",\n" +    // connection definition is newer version
+        "  \"configuration\" : []\n" +
+        "}");
+    ConfigInjector.setBlobStore(mockBlobStore);
+
+    StageConfiguration configuration = Mockito.mock(StageConfiguration.class);
+    Mockito.when(configuration.getConfig(Mockito.anyString())).then(invocation -> {
+      String name = (String)invocation.getArguments()[0];
+      return new Config(name, values.get(name));
+    });
+
+    ConfigInjector.Context context = new ConfigInjector.StageInjectorContext(stageDef, configuration, constants, issues);
+
+    MySource stage = new MySource();
+    ConfigInjector.get().injectConfigsToObject(stage, context);
+
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).getMessage().contains("CREATION_1103"));
 
     Mockito.verify(mockBlobStore).retrieve(
         Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),

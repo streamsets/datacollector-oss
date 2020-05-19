@@ -18,14 +18,18 @@ package com.streamsets.datacollector.creation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.ModelType;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
+import com.streamsets.datacollector.configupgrade.ConnectionUpgradeContext;
 import com.streamsets.datacollector.connection.ConnectionConstants;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
@@ -35,8 +39,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ErrorCode;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +56,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * General config injector that will work with various object types.
@@ -256,6 +263,64 @@ public class ConfigInjector {
     }
   }
 
+  public static class ConnectionOverlayInjectorContext implements Context {
+
+    private Context parentContext;
+    private Map<String, Config> connConfigs;
+
+    public ConnectionOverlayInjectorContext(Context parentContext, String connPrefix, List<Config> connConfigs) {
+      this.parentContext = parentContext;
+      this.connConfigs = connConfigs.stream().collect(
+              Collectors.toMap(config -> connPrefix + config.getName(), config -> config));
+    }
+
+    @Override
+    public ConfigDefinition getConfigDefinition(String configName) {
+      return parentContext.getConfigDefinition(configName);
+    }
+
+    @Override
+    public Object getConfigValue(String configName) {
+      Config config = connConfigs.get(configName);
+
+      if(config == null) {
+        return null;
+      }
+
+      return config.getValue();
+    }
+
+    @Override
+    public void createIssue(ErrorCode error, Object... args) {
+      parentContext.createIssue(error, args);
+    }
+
+    @Override
+    public void createIssue(String configGroup, String configName, ErrorCode error, Object... args) {
+      parentContext.createIssue(configGroup, configName, error, args);
+    }
+
+    @Override
+    public String errorDescription() {
+      return parentContext.errorDescription();
+    }
+
+    @Override
+    public Map<String, Object> getPipelineConstants() {
+      return parentContext.getPipelineConstants();
+    }
+
+    @Override
+    public String getConnection(String type) {
+      return parentContext.getConnection(type);
+    }
+
+    @Override
+    public void putConnection(String type, String connectionId) {
+      parentContext.putConnection(type, connectionId);
+    }
+  }
+
   public static class ServiceInjectorContext implements Context {
 
     private final String stageName;
@@ -399,24 +464,53 @@ public class ConfigInjector {
         }
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
         boolean injected = false;
-        // if ConfigDefBean is also a ConnectionDef, check if it needs to get pulled from blob
-        if (field.getType().getAnnotation(ConnectionDef.class) != null) {
-          String connType = field.getType().getAnnotation(ConnectionDef.class).type();
-          // if the connection ID was populated in the context earlier, we need to pull the connection object from blobstore
-          if (context.getConnection(connType) != null) {
+        // if ConfigDefBean is also a ConnectionDef, check if it needs to get pulled from blobstore
+        ConnectionDef connectionDef = field.getType().getAnnotation(ConnectionDef.class);
+        if (connectionDef != null) {
+          // if the connection ID was populated in the context earlier, we need to pull the connection from blobstore
+          String connectionId = context.getConnection(connectionDef.type());
+          if (connectionId != null) {
             try {
               if (blobStore == null) {
                 context.createIssue(CreationError.CREATION_1101);
               } else {
-                ///TODO add strict bean class type enforcement (hard)
-                // set the ConnectionDef ConfigDefBean (ie connection configs) to the values pulled from blobstore
-                field.set(obj, mapper.readValue(
-                    blobStore.retrieve(ConnectionConstants.CONNECTION_NAMESPACE, context.getConnection(connType), 1),
-                    field.getType()
-                ));
+                String connBeanString = blobStore.retrieve(ConnectionConstants.CONNECTION_NAMESPACE, connectionId, 1);
+                ConnectionConfigurationJson ccj = mapper.readValue(connBeanString, ConnectionConfigurationJson.class);
+                ConnectionConfiguration cc = BeanHelper.unwrapConnectionConfiguration(ccj);
+                List<Config> configs = cc.getConfiguration();
+                if (!cc.getType().equals(connectionDef.type())) {
+                  // Somehow connection type mismatch
+                  context.createIssue(CreationError.CREATION_1102, cc.getType(), connectionDef.type());
+                } else if (cc.getVersion() > connectionDef.version()) {
+                  // Installed lib has older version of connection definition
+                  context.createIssue(CreationError.CREATION_1103, cc.getVersion(), connectionDef.version());
+                } else {
+                  // Everything is good
+                  if (cc.getVersion() < connectionDef.version()) {
+                    // Do an upgrade
+                    StageUpgrader upgrader = new YamlStageUpgraderLoader(cc.getType(),
+                        obj.getClass().getClassLoader().getResource(connectionDef.upgraderDef())
+                    ).get();
+                    ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(cc.getLibrary(),
+                        cc.getType(),
+                        connectionId,
+                        cc.getVersion(),
+                        connectionDef.version()
+                    );
+                    configs = upgrader.upgrade(configs, upgradeContext);
+                  }
+                  // Inject the connection's configs into the stage's configs
+                  String connConfigPrefix = configName + ".";
+                  Context connContext = new ConnectionOverlayInjectorContext(
+                      context,
+                      connConfigPrefix,
+                      configs
+                  );
+                  injectConfigs(field.get(obj), connConfigPrefix, connContext);
+                }
               }
             } catch (IllegalAccessException | IOException e) {
-              context.createIssue(CreationError.CREATION_1100);
+              context.createIssue(CreationError.CREATION_1100, e.getMessage());
             }
             injected = true;
           }
