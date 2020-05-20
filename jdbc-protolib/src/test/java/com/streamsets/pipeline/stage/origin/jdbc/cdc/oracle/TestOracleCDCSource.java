@@ -24,8 +24,23 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class TestOracleCDCSource {
+
+  @Test
+  public void testExclusionPattern() {
+    OracleCDCConfigBean configBean = new OracleCDCConfigBean();
+    OracleCDCSource stage = new OracleCDCSource(null, configBean);
+
+    Pattern pattern1 = stage.createRegexFromSqlLikePattern("%PATT.ERN%");
+    Assert.assertFalse(pattern1.matcher("PATTERN1").matches());
+    Assert.assertTrue(pattern1.matcher("MY_PATT.ERN_23").matches());
+
+    Pattern pattern2 = stage.createRegexFromSqlLikePattern("PATT!!._ERN%");
+    Assert.assertFalse(pattern2.matcher("PATT!!.ERN").matches());
+    Assert.assertTrue(pattern2.matcher("PATT!!.?ERN_ACCEPTED").matches());
+  }
 
   @Test
   public void testBuildTableConditionTablePatterns() {

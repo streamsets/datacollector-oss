@@ -254,6 +254,7 @@ public class OracleCDCSource extends BaseSource {
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
+  private final List<TableFilter> tableFilters = new ArrayList<>();
   private final Map<SchemaAndTable, Map<String, Integer>> tableSchemas = new HashMap<>();
   private final Map<SchemaAndTable, Map<String, String>> dateTimeColumns = new HashMap<>();
   private final Map<SchemaAndTable, Map<String, PrecisionAndScale>> decimalColumns = new HashMap<>();
@@ -772,7 +773,9 @@ public class OracleCDCSource extends BaseSource {
               // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
               DDL_EVENT type = getDdlType(queryString);
               if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
-                sendSchema = refreshCachedSchema(scnDecimal, schemaAndTable);
+                if (validateWithNameFilters(schemaAndTable)) {
+                  sendSchema = refreshCachedSchema(scnDecimal, schemaAndTable);
+                }
               } else if (type == DDL_EVENT.DROP) {
                 removedSchema = removeCachedSchema(schemaAndTable);
               }
@@ -1248,6 +1251,20 @@ public class OracleCDCSource extends BaseSource {
   }
 
   /**
+   * Validate the given schema and table names match one of the name filters configured in the stage.
+   *
+   * @param schemaAndTable The schema and table name to validate.
+   * @return True if one of the schema and table patterns
+   */
+  private boolean validateWithNameFilters(SchemaAndTable schemaAndTable) {
+    return tableFilters.stream().anyMatch(filter ->
+      filter.schemaPattern.matcher(schemaAndTable.getSchema()).matches()
+          && filter.tablePattern.matcher(schemaAndTable.getTable()).matches()
+          && (filter.exclusionPattern == null || !filter.exclusionPattern.matcher(schemaAndTable.getTable()).matches())
+    );
+  }
+
+  /**
    * Refresh the schema for the table if the last update of this table was before the given SCN.
    * Returns true if it was updated, else returns false. When returning false, it is caused by either:
    * - The given SCN is older than the cached schema for this table.
@@ -1346,7 +1363,15 @@ public class OracleCDCSource extends BaseSource {
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
     String container = configBean.pdb;
 
-    List<SchemaAndTable> schemasAndTables;
+    int majorVersion = getDBVersion(issues);
+    if (majorVersion == -1) {
+      return issues;
+    }
+    continuousMine = (majorVersion < 19);
+
+    // This must be invoked after configuring some stage attributes and the database connection. Check the
+    // prepareLogMinerSession implementation.
+    logMinerSession = prepareLogMinerSession();
 
     try {
       initializeStatements();
@@ -1363,12 +1388,11 @@ public class OracleCDCSource extends BaseSource {
     }
     zoneId = ZoneId.of(configBean.dbTimeZone);
     dateTimeColumnHandler = new DateTimeColumnHandler(zoneId, configBean.convertTimestampToString);
-    String commitScnField;
-    BigDecimal scn = null;
+
     try {
       switch (configBean.startValue) {
         case SCN:
-          scn = getEndingSCN();
+          BigDecimal scn = getEndingSCN();
           if (new BigDecimal(configBean.startSCN).compareTo(scn) > 0) {
             issues.add(
                 getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startSCN", JDBC_47, scn.toPlainString()));
@@ -1397,99 +1421,28 @@ public class OracleCDCSource extends BaseSource {
       issues.add(getContext().createConfigIssue(CREDENTIALS.name(), USERNAME, JDBC_42));
     }
 
-    try (Statement reusedStatement = connection.createStatement()) {
-      int majorVersion = getDBVersion(issues);
-      // If version is 12+, then the check for table presence must be done in an alternate container!
-      if (majorVersion == -1) {
-        return issues;
+    for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+      tables.schema = configBean.baseConfigBean.caseSensitive ? tables.schema : tables.schema.toUpperCase();
+      tables.table = configBean.baseConfigBean.caseSensitive ? tables.table : tables.table.toUpperCase();
+      if (tables.excludePattern != null) {
+        tables.excludePattern = configBean.baseConfigBean.caseSensitive ?
+                                tables.excludePattern : tables.excludePattern.toUpperCase();
       }
 
-      continuousMine = (majorVersion < 19);
+      Pattern schemaPattern = createRegexFromSqlLikePattern(tables.schema);
+      Pattern tablePattern = createRegexFromSqlLikePattern(tables.table);
+      Pattern exclusionPattern = StringUtils.isEmpty(tables.excludePattern) ?
+                                 null : Pattern.compile(tables.excludePattern);
 
-      if (majorVersion >= 12) {
-        if (!StringUtils.isEmpty(container)) {
-          String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
-          try {
-            reusedStatement.execute(switchToPdb);
-          } catch (SQLException ex) {
-            LOG.error("Error while switching to container: " + container, ex);
-            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
-            return issues;
-          }
-          containerized = true;
-        }
-      }
+      tableFilters.add(new TableFilter(schemaPattern, tablePattern, exclusionPattern));
+    }
 
-      schemasAndTables = new ArrayList<>();
-      for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
-
-        tables.schema = configBean.baseConfigBean.caseSensitive ? tables.schema : tables.schema.toUpperCase();
-        tables.table = configBean.baseConfigBean.caseSensitive ? tables.table : tables.table.toUpperCase();
-        if (tables.excludePattern != null) {
-          tables.excludePattern =
-              configBean.baseConfigBean.caseSensitive ? tables.excludePattern : tables.excludePattern.toUpperCase();
-        }
-        Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
-
-        try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
-          while (rs.next()) {
-            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
-            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-            if (p == null || !p.matcher(tableName).matches()) {
-              schemaName = schemaName.trim();
-              tableName = tableName.trim();
-              schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
-            }
-          }
-        }
-      }
-
-      if (!issues.isEmpty()) {
-        return issues;
-      }
-      for (SchemaAndTable schemaAndTable : schemasAndTables) {
-        try {
-          tableSchemas.put(schemaAndTable, getTableSchema(schemaAndTable));
-          if (scn != null) {
-            tableSchemaLastUpdate.put(schemaAndTable, scn);
-          }
-        } catch (SQLException ex) {
-          LOG.error("Error while switching to container: " + container, ex);
-          issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_50));
-        }
-      }
-      container = CDB_ROOT;
-      if (majorVersion >= 12) {
-        try {
-          switchContainer.execute();
-          LOG.info("Switched to CDB$ROOT to start LogMiner.");
-        } catch (SQLException ex) {
-          // Fatal only if we switched to a PDB earlier
-          if (containerized) {
-            LOG.error("Error while switching to container: " + container, ex);
-            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
-            return issues;
-          }
-          // Log it anyway
-          LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
-        }
-      }
-      commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
-    } catch (SQLException ex) {
-      LOG.error("Error while creating statement", ex);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.JDBC.name(),
-              CONNECTION_STR,
-              JDBC_00, hikariConfigBean.getConnectionString()
-          )
-      );
+    initializeTableSchemasCache(majorVersion, issues);
+    if (issues.size() > 0) {
       return issues;
     }
 
-    // This must be invoked after configuring some stage attributes and the database connection. Check the
-    // prepareLogMinerSession implementation.
-    logMinerSession = prepareLogMinerSession();
+    String commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
 
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
@@ -1506,7 +1459,6 @@ public class OracleCDCSource extends BaseSource {
 
     final String restartNonBufferCondition = Utils.format("((" + commitScnField + " = ? AND SEQUENCE# > ?) OR "
         + commitScnField + "  > ?)" + (shouldTrackDDL ? " OR (OPERATION_CODE = {} AND SCN > ?)" : ""), DDL_CODE);
-
 
     if (useLocalBuffering) {
       selectString = String
@@ -1571,14 +1523,129 @@ public class OracleCDCSource extends BaseSource {
   }
 
   /**
-   * Returns if the given string is a pattern, according to the {@link java.sql.DatabaseMetaData} rules: '%'
+   * Populates the table schemas cache with the existing database tables matching the table name filters configured
+   * in the stage.
+   *
+   * Depending on the database version, it tries to connect to the configured pluggable database to
+   * retrieve the info.
+   *
+   */
+  private void initializeTableSchemasCache(int databaseVersion, List<ConfigIssue> issues) {
+    try (Statement reusedStatement = connection.createStatement()) {
+      // If version is 12+, then the check for table presence must be done in an alternate container!
+      if (databaseVersion >= 12) {
+        if (!StringUtils.isEmpty(configBean.pdb)) {
+          String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
+          try {
+            reusedStatement.execute(switchToPdb);
+          } catch (SQLException ex) {
+            LOG.error("Error while switching to container: " + configBean.pdb, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, configBean.pdb));
+            return;
+          }
+          containerized = true;
+        }
+      }
+
+      BigDecimal lastSCN = null;
+      try {
+        lastSCN = getEndingSCN();
+      } catch (SQLException ex) {
+        LOG.warn("Could not retrieve the last SCN from database", ex);
+      }
+
+      for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+        Pattern exclusionPattern = Pattern.compile(tables.excludePattern);
+        try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+          while (rs.next()) {
+            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+
+            if (tables.excludePattern == null || !exclusionPattern.matcher(tableName).matches()) {
+              SchemaAndTable table = new SchemaAndTable(schemaName.trim(), tableName.trim());
+              try {
+                tableSchemas.put(table, getTableSchema(table));
+                if (lastSCN != null) {
+                  tableSchemaLastUpdate.put(table, lastSCN);
+                }
+              } catch (SQLException ex) {
+                LOG.error("Error while switching to container: " + configBean.pdb, ex);
+                issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_50));
+              }
+            }
+          }
+        }
+      }
+
+      if (!issues.isEmpty()) {
+        return;
+      }
+
+      if (databaseVersion >= 12) {
+        try {
+          switchContainer.execute();
+          LOG.info("Switched to CDB$ROOT to start LogMiner.");
+        } catch (SQLException ex) {
+          // Fatal only if we switched to a PDB earlier
+          if (containerized) {
+            LOG.error("Error while switching to container: " + CDB_ROOT, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, CDB_ROOT));
+            return;
+          }
+          // Log it anyway
+          LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
+        }
+      }
+
+    } catch (SQLException ex) {
+      LOG.error("Error while creating statement", ex);
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JDBC_00, hikariConfigBean.getConnectionString()
+          )
+      );
+    }
+  }
+
+  /**
+   * Returns if the given string is a SQL LIKE pattern, according to the {@link java.sql.DatabaseMetaData} rules: '%'
    * indicates any substring of zero or more characters, and '_' means any single character.
    *
    * @param s The string to test.
    * @return True if <tt>s</tt> is a pattern, false otherwise.
    */
-  boolean isSqlPattern(String s) {
+  private boolean isSqlLikePattern(String s) {
     return s.contains("%") || s.contains("_");
+  }
+
+  @VisibleForTesting
+  Pattern createRegexFromSqlLikePattern(String pattern) {
+    StringBuilder regex = new StringBuilder();
+    StringBuilder token = new StringBuilder();
+
+    for (int i = 0; i < pattern.length(); i++) {
+      char c = pattern.charAt(i);
+      if (c == '%' || c == '_') {
+        if (token.length() > 0) {
+          regex.append("\\Q" + token.toString() + "\\E");
+          token.setLength(0);
+        }
+        if (c == '%') {
+          regex.append(".*");
+        } else {
+          regex.append('.');
+        }
+      } else {
+        token.append(c);
+      }
+    }
+    if (token.length() > 0) {
+      regex.append("\\Q" + token.toString() + "\\E");
+    }
+
+    return Pattern.compile(regex.toString());
   }
 
   @VisibleForTesting
@@ -1597,7 +1664,7 @@ public class OracleCDCSource extends BaseSource {
       List<String> tableNames = new ArrayList<>();
 
       for (String table: schemaTablesMap.get(schema)) {
-        if (isSqlPattern(table)) {
+        if (isSqlLikePattern(table)) {
           tableConditions.add(String.format("TABLE_NAME LIKE '%s'", table));
         } else {
           tableNames.add(String.format("'%s'", table));
@@ -1612,7 +1679,7 @@ public class OracleCDCSource extends BaseSource {
         tableConditions.add(String.format("TABLE_NAME IN (%s)", String.join(",", tableNames)));
       }
 
-      if (isSqlPattern(schema)) {
+      if (isSqlLikePattern(schema)) {
         schemaTableConditions.add(String.format("(SEG_OWNER LIKE '%s' AND (%s))", schema, tableConditions));
       } else {
         schemaTableConditions.add(String.format("(SEG_OWNER = '%s' AND (%s))", schema, tableConditions));
@@ -2033,6 +2100,18 @@ public class OracleCDCSource extends BaseSource {
     private ErrorAndCause(JdbcErrors error, Throwable ex) {
       this.error = error;
       this.ex = ex;
+    }
+  }
+
+  private class TableFilter {
+    final Pattern schemaPattern;
+    final Pattern tablePattern;
+    final Pattern exclusionPattern;
+
+    public TableFilter(Pattern schemaPattern, Pattern tablePattern, Pattern exclusionPattern) {
+      this.schemaPattern = schemaPattern;
+      this.tablePattern = tablePattern;
+      this.exclusionPattern = exclusionPattern;
     }
   }
 
