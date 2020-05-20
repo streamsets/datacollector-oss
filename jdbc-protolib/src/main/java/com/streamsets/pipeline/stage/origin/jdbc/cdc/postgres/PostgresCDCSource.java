@@ -38,6 +38,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.postgresql.replication.LogSequenceNumber;
@@ -175,7 +176,6 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
   private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime, boolean isNewRecordNull) {
     return getContext().isStopped() ||
         currentBatchSize >= maxBatchSize || // batch is full
-        (currentBatchSize > 0 && isNewRecordNull) || // newRecordNull = no more data from origin
         System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime;
   }
 
@@ -208,7 +208,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
-        ThreadUtil.sleep(configBean.pollInterval);
+        ThreadUtil.sleep(configBean.pollInterval * 1000);
       }
       else {
         String recordLsn = postgresWalRecord.getLsn().asString();
@@ -287,6 +287,15 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
       this.getConfigBean().replicationType = "database";
     }
 
+    if (TimeUnit.SECONDS.toMillis(configBean.pollInterval) > configBean.maxBatchWaitTime) {
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.CDC.name(),
+              "postgresCDCConfigBean.pollInterval",
+              JdbcErrors.JDBC_412, configBean.pollInterval, configBean.maxBatchWaitTime)
+      );
+    }
+
     switch(configBean.startValue) {
 
       case LSN:
@@ -297,7 +306,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         ) {
           issues.add(
               getContext().createConfigIssue(Groups.CDC.name(),
-                  configBean.startLSN+" is invalid LSN.",
+                  "postgresCDCConfigBean.startLSN",
                   JdbcErrors.JDBC_408)
           );
         } else {
@@ -320,7 +329,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
           issues.add(
               getContext().createConfigIssue(
                   Groups.CDC.name(),
-                  configBean.startDate+" doesn't parse as DateTime.",
+                  "postgresCDCConfigBean.startDate",
                   JdbcErrors.JDBC_408
               )
           );
@@ -336,7 +345,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         issues.add(
             getContext().createConfigIssue(
                 Groups.CDC.name(),
-                configBean.startValue.getLabel(),
+                "postgresCDCConfigBean.startValue",
                 JdbcErrors.JDBC_408
             )
         );
