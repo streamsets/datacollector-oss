@@ -191,7 +191,7 @@ angular
             $scope.$apply(function() {
               $scope.common.errors = [errorMsg];
             });
-            tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(e)});
+            tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': e.toString()});
           }
         };
         reader.readAsText($scope.uploadFile);
