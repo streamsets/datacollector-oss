@@ -149,6 +149,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_410("Failed to parse column '{}' to field with value {}."),
   JDBC_411("Filter schema values cannot be empty."),
   JDBC_412("Poll interval (s) '{}' cannot be greater than Batch Time Wait (ms) '{}'"), //Postgres
+  JDBC_413("Could not create the WAL receiver: {}"), //Postgres
 
   JDBC_500("The JDBC URL must be 'jdbc:<vendor>://<HOST>[:<PORT>][/<DB>]...'"),
   JDBC_501("Connection must be secured, either by SSL encryption or SSH Tunneling"),
