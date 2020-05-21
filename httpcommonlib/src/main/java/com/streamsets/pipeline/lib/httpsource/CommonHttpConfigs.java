@@ -93,9 +93,9 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       displayPosition = 10,
       group = "HTTP",
       min = 1,
-      max = 65535,
+      max = 65535/**,
       dependsOn = "useApiGateway",
-      triggeredByValue = "false"
+      triggeredByValue = "false"*/
   )
   public int port;
 
