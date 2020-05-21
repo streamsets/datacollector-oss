@@ -23,4 +23,4 @@ upgrades:
     actions:
       - setConfig:
           name: postgresCDCConfigBean.maxBatchWaitTime
-          value: 1000
+          value: 15000
