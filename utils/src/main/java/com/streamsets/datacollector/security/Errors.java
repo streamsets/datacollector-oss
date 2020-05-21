@@ -23,6 +23,7 @@ public enum  Errors implements ErrorCode {
   SECURITY_003("Could not add X.509 certificate to KeyStore: {}"),
   SECURITY_004("Could not save KeyStore to file: {}"),
   SECURITY_005("Could not create KeyStore file: {}"),
+  SECURITY_006("Could not create a Private Key out of the PEM: {}"),
   ;
 
   private final String msg;
