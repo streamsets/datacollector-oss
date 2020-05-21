@@ -21,6 +21,7 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -62,6 +63,7 @@ public class PreviewPipelineBuilder {
   }
 
   private final StageLibraryTask stageLib;
+  private final BuildInfo buildInfo;
   private final Configuration configuration;
   private final String name;
   private final String rev;
@@ -84,6 +86,7 @@ public class PreviewPipelineBuilder {
    */
   public PreviewPipelineBuilder(
     StageLibraryTask stageLib,
+    BuildInfo buildInfo,
     Configuration configuration,
     String name,
     String rev,
@@ -96,6 +99,7 @@ public class PreviewPipelineBuilder {
     List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
+    this.buildInfo = buildInfo;
     this.configuration = configuration;
     this.name = name;
     this.rev = rev;
@@ -158,7 +162,7 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, buildInfo, name, pipelineConf);
     pipelineConf = validator.validate();
     if (!validator.getIssues().hasIssues() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();

@@ -19,6 +19,7 @@ import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Observer;
 import com.streamsets.datacollector.runner.Pipeline;
@@ -51,6 +52,7 @@ public class ProductionPipelineBuilder {
   private final String rev;
   private final Configuration configuration;
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private final BlobStoreTask blobStoreTask;
   private final LineagePublisherTask lineagePublisherTask;
   private final StatsCollector statsCollector;
@@ -63,6 +65,7 @@ public class ProductionPipelineBuilder {
       @Named("rev") String rev,
       Configuration configuration,
       RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
       StageLibraryTask stageLib,
       ProductionPipelineRunner runner,
       Observer observer,
@@ -74,6 +77,7 @@ public class ProductionPipelineBuilder {
     this.rev = rev;
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
     this.stageLib = stageLib;
     this.runner = runner;
     this.observer = observer;
@@ -97,7 +101,7 @@ public class ProductionPipelineBuilder {
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Map<String, Object> runtimeParameters
   ) throws PipelineRuntimeException, StageException {
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, name, pipelineConf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, buildInfo, name, pipelineConf);
     pipelineConf = validator.validate();
     if (validator.getIssues().hasIssues()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, validator.getIssues().getIssues().size());

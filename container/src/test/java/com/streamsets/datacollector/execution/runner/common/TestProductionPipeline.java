@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.StateListener;
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -97,6 +98,7 @@ public class TestProductionPipeline {
   private static final String SNAPSHOT_NAME = "snapshot";
   private MetricRegistry runtimeInfoMetrics;
   private RuntimeInfo runtimeInfo;
+  private BuildInfo buildInfo;
   private ProductionPipelineRunner lastCreatedRunner;
 
   // Private enum for this testcase to figure out which pipeline should be used for test
@@ -132,6 +134,8 @@ public class TestProductionPipeline {
     );
     runtimeInfo.init();
     MetricsConfigurator.registerJmxMetrics(runtimeInfoMetrics);
+    buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
 
     MockStages.setSourceCapture(null);
     MockStages.setPushSourceCapture(null);
@@ -424,6 +428,7 @@ public class TestProductionPipeline {
       REVISION,
       config,
       runtimeInfo,
+      buildInfo,
       MockStages.createStageLibrary(),
       runner,
       null,

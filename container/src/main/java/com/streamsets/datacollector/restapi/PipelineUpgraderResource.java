@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -24,6 +25,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import net.sf.cglib.asm.$Attribute;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -38,10 +40,15 @@ import javax.ws.rs.core.Response;
 public class PipelineUpgraderResource {
 
   private final StageLibraryTask stageLibrary;
+  private final BuildInfo buildInfo;
 
   @Inject
-  public PipelineUpgraderResource(StageLibraryTask stageLibrary) {
+  public PipelineUpgraderResource(
+      StageLibraryTask stageLibrary,
+      BuildInfo buildInfo
+  ) {
     this.stageLibrary = stageLibrary;
+    this.buildInfo = buildInfo;
   }
 
   @Path("/pipeline-upgrader")
@@ -52,7 +59,7 @@ public class PipelineUpgraderResource {
   public Response upgrade(@ApiParam(name = "pipeline", required = true) PipelineConfigurationJson pipeline) {
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     String name = pipelineConfig.getTitle();
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
     pipelineConfig = validator.validate();
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }

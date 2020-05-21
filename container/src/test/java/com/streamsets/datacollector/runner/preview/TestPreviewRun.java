@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -54,6 +55,7 @@ import java.util.List;
 public class TestPreviewRun {
   private Configuration configuration;
   private RuntimeInfo runtimeInfo;
+  private BuildInfo buildInfo;
 
   private static class ReturnNumberSource extends BaseSource {
     @Override
@@ -70,6 +72,8 @@ public class TestPreviewRun {
     MockStages.resetStageCaptures();
     configuration = new Configuration();
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
   }
 
   @Test
@@ -153,6 +157,7 @@ public class TestPreviewRun {
 
     PreviewPipeline pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",
@@ -190,6 +195,7 @@ public class TestPreviewRun {
 
     PreviewPipeline pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",
@@ -214,6 +220,7 @@ public class TestPreviewRun {
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",
@@ -236,6 +243,7 @@ public class TestPreviewRun {
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",
@@ -258,6 +266,7 @@ public class TestPreviewRun {
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name1",
         "0",
@@ -278,6 +287,7 @@ public class TestPreviewRun {
     pipelineConfiguration = MockStages.createPipelineConfigurationComplexSourceProcessorTarget();
     pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name1",
         "0",
@@ -316,6 +326,7 @@ public class TestPreviewRun {
 
     PreviewPipeline pipeline = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",
@@ -356,6 +367,7 @@ public class TestPreviewRun {
         1, true, true, false);
     PreviewPipeline pp = new PreviewPipelineBuilder(
         MockStages.createStageLibrary(),
+        buildInfo,
         configuration,
         "name",
         "0",

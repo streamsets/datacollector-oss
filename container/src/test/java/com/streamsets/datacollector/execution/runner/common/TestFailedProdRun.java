@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner.common;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -61,6 +62,8 @@ public class TestFailedProdRun {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn("target/" + UUID.randomUUID());
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     MockStages.setSourceCapture(new BaseSource() {
       @Override
       public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
@@ -91,6 +94,7 @@ public class TestFailedProdRun {
       REVISION,
       conf,
       runtimeInfo,
+      buildInfo,
       MockStages.createStageLibrary(),
       runner,
       null,
@@ -138,6 +142,8 @@ public class TestFailedProdRun {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn("target/" + UUID.randomUUID());
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     MockStages.setSourceCapture(new ErrorListeningSource());
     SourceOffsetTracker tracker = Mockito.mock(SourceOffsetTracker.class);
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
@@ -153,6 +159,7 @@ public class TestFailedProdRun {
       REVISION,
       conf,
       runtimeInfo,
+      buildInfo,
       MockStages.createStageLibrary(),
       runner,
       null,

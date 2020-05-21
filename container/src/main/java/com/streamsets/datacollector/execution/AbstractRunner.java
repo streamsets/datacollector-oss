@@ -31,6 +31,7 @@ import com.streamsets.datacollector.event.json.PipelineStartEventJson;
 import com.streamsets.datacollector.execution.alerts.EmailNotifier;
 import com.streamsets.datacollector.execution.alerts.WebHookNotifier;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -76,6 +77,7 @@ public abstract  class AbstractRunner implements Runner {
   @Inject StageLibraryTask stageLibrary;
   @Inject CredentialStoresTask credentialStoresTask;
   @Inject RuntimeInfo runtimeInfo;
+  @Inject BuildInfo buildInfo;
   @Inject Configuration configuration;
 
   // Start Pipeline Context that was used during last start() and will be reused on pipeline retry
@@ -90,6 +92,7 @@ public abstract  class AbstractRunner implements Runner {
       String name,
       String rev,
       RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
       Configuration configuration,
       PipelineStateStore pipelineStateStore,
       PipelineStoreTask pipelineStore,
@@ -101,6 +104,7 @@ public abstract  class AbstractRunner implements Runner {
     this.aclStoreTask = aclStore;
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
     this.pipelineStateStore = pipelineStateStore;
     this.pipelineStore = pipelineStore;
     this.stageLibrary = stageLibrary;
@@ -143,6 +147,10 @@ public abstract  class AbstractRunner implements Runner {
 
   protected RuntimeInfo getRuntimeInfo() {
     return runtimeInfo;
+  }
+
+  protected BuildInfo getBuildInfo() {
+    return buildInfo;
   }
 
   protected Configuration getConfiguration() {
@@ -247,7 +255,7 @@ public abstract  class AbstractRunner implements Runner {
 
   protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
     PipelineConfiguration load = pipelineStore.load(name, rev);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, load);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, load);
     PipelineConfiguration validate = validator.validate();
     if(validator.getIssues().hasIssues()) {
       LOG.error("Can't run pipeline due to issues: {}", validator.getIssues().getIssueCount());

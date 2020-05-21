@@ -26,6 +26,7 @@ import com.streamsets.datacollector.execution.PreviewerListener;
 import com.streamsets.datacollector.execution.RawPreview;
 import com.streamsets.datacollector.execution.preview.sync.SyncPreviewer;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -87,6 +88,7 @@ public abstract class TestPreviewer {
   @Module(
     injects = {
       RuntimeInfo.class,
+      BuildInfo.class,
       Configuration.class,
       StageLibraryTask.class,
       PipelineStoreTask.class,
@@ -107,6 +109,14 @@ public abstract class TestPreviewer {
           new MetricRegistry(),
           Arrays.asList(TestPreviewer.class.getClassLoader())
       );
+    }
+
+    @Provides
+    @Singleton
+    public BuildInfo providesBuildInfo() {
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
+      return buildInfo;
     }
 
     @Provides @Singleton

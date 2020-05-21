@@ -27,6 +27,7 @@ import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.provider.SlaveRunnerProviderImpl;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -88,6 +89,14 @@ public class TestSlaveManager {
     public RuntimeInfo providesRuntimeInfo() {
       return new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestSlaveManager.class.getClassLoader()));
+    }
+
+    @Provides
+    @Singleton
+    public BuildInfo providesBuildInfo() {
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("2.0.0.0");
+      return buildInfo;
     }
 
     @Provides

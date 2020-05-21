@@ -25,6 +25,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -550,6 +551,7 @@ public class TestPipelineStoreResource extends JerseyTest {
       bindFactory(TestUtil.PrincipalTestInjector.class).to(Principal.class);
       bindFactory(TestUtil.URITestInjector.class).to(URI.class);
       bindFactory(RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+      bindFactory(BuildInfoTestInjector.class).to(BuildInfo.class);
       bindFactory(ManagerTestInjector.class).to(Manager.class);
       bindFactory(TestUtil.UserGroupManagerTestInjector.class).to(UserGroupManager.class);
       bindFactory(TestUtil.CredentialStoreTaskTestInjector.class).to(CredentialStoresTask.class);
@@ -961,6 +963,18 @@ public class TestPipelineStoreResource extends JerseyTest {
     }
   }
 
+  public static class BuildInfoTestInjector implements Factory<BuildInfo> {
+    @Singleton
+    @Override
+    public BuildInfo provide() {
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      return buildInfo;
+    }
+
+    @Override
+    public void dispose(BuildInfo buildInfo) {
+    }
+  }
 
   static Manager manager;
 

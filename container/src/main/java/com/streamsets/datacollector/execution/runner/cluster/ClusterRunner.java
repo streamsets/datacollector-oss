@@ -58,6 +58,7 @@ import com.streamsets.datacollector.execution.runner.common.ProductionPipelineRu
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.IssuesJson;
 import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
@@ -180,6 +181,7 @@ public class ClusterRunner extends AbstractRunner {
       String name,
       String rev,
       RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
       Configuration configuration,
       PipelineStoreTask pipelineStore,
       PipelineStateStore pipelineStateStore,
@@ -196,6 +198,7 @@ public class ClusterRunner extends AbstractRunner {
       name,
       rev,
       runtimeInfo,
+      buildInfo,
       configuration,
       pipelineStateStore,
       pipelineStore,
@@ -821,6 +824,7 @@ public class ClusterRunner extends AbstractRunner {
       rev,
       getConfiguration(),
       getRuntimeInfo(),
+      getBuildInfo(),
       getStageLibrary(),
       runner,
       null,

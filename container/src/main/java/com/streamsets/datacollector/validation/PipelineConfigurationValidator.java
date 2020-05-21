@@ -31,6 +31,7 @@ import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -63,20 +64,22 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
 
   public PipelineConfigurationValidator(
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       String name,
       PipelineConfiguration pipelineConfiguration
   ) {
-    this(stageLibrary, name, pipelineConfiguration, null, null);
+    this(stageLibrary, buildInfo, name, pipelineConfiguration, null, null);
   }
 
   public PipelineConfigurationValidator(
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       String name,
       PipelineConfiguration pipelineConfiguration,
       Configuration dataCollectorConfiguration,
       RuntimeInfo runtimeInfo
   ) {
-    super(stageLibrary, name, pipelineConfiguration);
+    super(stageLibrary, buildInfo, name, pipelineConfiguration);
     this.pipelineConfiguration = pipelineConfiguration;
     this.dataCollectorConfiguration = dataCollectorConfiguration;
     this.runtimeInfo = runtimeInfo;
@@ -87,6 +90,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
     validated = true;
     LOG.trace("Pipeline '{}' starting validation", name);
     resolveLibraryAliases();
+
 
     // We want to run addMissingConfigs only if upgradePipeline was a success to not perform any side-effects when the
     // upgrade is not successful.

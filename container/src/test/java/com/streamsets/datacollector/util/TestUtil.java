@@ -723,15 +723,21 @@ public class TestUtil {
     }
 
     @Provides @Singleton
-    public com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder provideProductionPipelineBuilder(@Named("name") String name,
-                                                                      @Named("rev") String rev,
-                                                                      RuntimeInfo runtimeInfo, StageLibraryTask stageLib,
-                                                                      PipelineRunner runner, Observer observer) {
+    public com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder provideProductionPipelineBuilder(
+        @Named("name") String name,
+        @Named("rev") String rev,
+        RuntimeInfo runtimeInfo,
+        BuildInfo buildInfo,
+        StageLibraryTask stageLib,
+        PipelineRunner runner,
+        Observer observer
+    ) {
       return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineBuilder(
         name,
         rev,
         new Configuration(),
         runtimeInfo,
+        buildInfo,
         stageLib,
         (ProductionPipelineRunner)runner,
         observer,

@@ -35,6 +35,7 @@ import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.execution.preview.common.RawPreviewImpl;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
@@ -96,6 +97,7 @@ public class SyncPreviewer implements Previewer {
   @Inject StageLibraryTask stageLibrary;
   @Inject PipelineStoreTask pipelineStore;
   @Inject RuntimeInfo runtimeInfo;
+  @Inject BuildInfo buildInfo;
   @Inject BlobStoreTask blobStoreTask;
   @Inject LineagePublisherTask lineagePublisherTask;
   @Inject StatsCollector statsCollector;
@@ -381,6 +383,7 @@ public class SyncPreviewer implements Previewer {
     );
     return new PreviewPipelineBuilder(
         stageLibrary,
+        buildInfo,
         configuration,
         name,
         rev,
