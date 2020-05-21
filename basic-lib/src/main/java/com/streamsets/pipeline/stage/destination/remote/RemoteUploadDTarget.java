@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "SFTP/FTP/FTPS Client",
     description = "Uses an SFTP/FTP/FTPS client to send data to a URL.",
     icon = "sftp-client.png",

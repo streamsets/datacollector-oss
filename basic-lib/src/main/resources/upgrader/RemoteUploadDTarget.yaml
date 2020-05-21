@@ -17,4 +17,18 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: conf.remoteConfig.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: conf.remoteConfig.ftpsPrivateKey
+          value: ""
+      - setConfig:
+          name: conf.remoteConfig.ftpsCertificateChain
+          value: []
+      - setConfig:
+          name: conf.remoteConfig.trustedCertificates
+          value: []

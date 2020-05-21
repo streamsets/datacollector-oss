@@ -118,4 +118,18 @@ public class TestRemoteDownloadSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV5ToV6() {
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    String remoteConfigPrefix = "conf.remoteConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsPrivateKey", "");
+    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsCertificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "trustedCertificates", new ArrayList<>());
+  }
 }

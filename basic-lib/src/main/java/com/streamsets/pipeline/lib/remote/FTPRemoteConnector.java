@@ -15,11 +15,12 @@
  */
 package com.streamsets.pipeline.lib.remote;
 
+import com.streamsets.datacollector.security.KeyStoreBuilder;
 import com.streamsets.pipeline.api.ConfigIssueContext;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import org.apache.commons.net.util.KeyManagerUtils;
 import org.apache.commons.net.util.TrustManagerUtils;
@@ -45,6 +46,7 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles all of the logic about connecting to an FTP server, including config verification.  Subclasses can get
@@ -117,26 +119,82 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
           remoteConfig.ftpsDataChannelProtectionLevel.getLevel()
       );
       if (remoteConfig.useFTPSClientCert) {
-        setFtpsUserKeyManagerOrTrustManager(
-            remoteConfig.ftpsClientCertKeystoreFile,
-            CONF_PREFIX + "ftpsClientCertKeystoreFile",
+        String keyStorePassword = resolveCredential(
             remoteConfig.ftpsClientCertKeystorePassword,
             CONF_PREFIX + "ftpsClientCertKeystorePassword",
-            remoteConfig.ftpsClientCertKeystoreType,
-            true,
             issues,
             context,
             credGroup
         );
+        KeyStore keyStore = null;
+        if (remoteConfig.useRemoteKeyStore) {
+          if (remoteConfig.ftpsCertificateChain.isEmpty()){
+            issues.add(context.createConfigIssue(
+                credGroup.getLabel(),
+                CONF_PREFIX + "ftpsCertificateChain",
+                Errors.REMOTE_16
+            ));
+          } else {
+            keyStore = new KeyStoreBuilder().addCertificatePem(remoteConfig.ftpsCertificateChain.get(0).get()).addPrivateKey(
+                remoteConfig.ftpsPrivateKey.get(),
+                "",
+                remoteConfig.ftpsCertificateChain.stream().map(CredentialValueBean::get).collect(Collectors.toList())
+            ).build();
+          }
+        } else {
+          keyStore = loadKeyStore(
+              remoteConfig.ftpsClientCertKeystoreFile,
+              CONF_PREFIX + "ftpsClientCertKeystoreFile",
+              keyStorePassword,
+              remoteConfig.ftpsClientCertKeystoreType,
+              true,
+              issues,
+              context,
+              credGroup
+          );
+        }
+        if (keyStore != null) {
+          setFtpsUserKeyManagerOrTrustManager(keyStore,
+              CONF_PREFIX + "ftpsClientCertKeystoreFile",
+              keyStorePassword,
+              true,
+              issues,
+              context,
+              credGroup
+          );
+        }
       }
+      String trustStorePassword = resolveCredential(
+          remoteConfig.ftpsTruststorePassword,
+          CONF_PREFIX + "ftpsTruststorePassword",
+          issues,
+          context,
+          credGroup
+      );
       switch (remoteConfig.ftpsTrustStoreProvider) {
         case FILE:
+        case REMOTE_TRUSTSTORE:
+          KeyStore trustStore;
+          if (remoteConfig.ftpsTrustStoreProvider == FTPSTrustStore.REMOTE_TRUSTSTORE) {
+            KeyStoreBuilder builder = new KeyStoreBuilder();
+            remoteConfig.ftpsTrustedCertificates.forEach(cert -> builder.addCertificatePem(cert.get()));
+            trustStore = builder.build();
+          } else {
+            trustStore = loadKeyStore(
+                remoteConfig.ftpsTruststoreFile,
+                CONF_PREFIX + "ftpsTruststoreFile",
+                trustStorePassword,
+                remoteConfig.ftpsClientCertKeystoreType,
+                false,
+                issues,
+                context,
+                credGroup
+            );
+          }
           setFtpsUserKeyManagerOrTrustManager(
-              remoteConfig.ftpsTruststoreFile,
+              trustStore,
               CONF_PREFIX + "ftpsTruststoreFile",
-              remoteConfig.ftpsTruststorePassword,
-              CONF_PREFIX + "ftpsTruststorePassword",
-              remoteConfig.ftpsTruststoreType,
+              trustStorePassword,
               false,
               issues,
               context,
@@ -262,53 +320,58 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
   }
 
   private void setFtpsUserKeyManagerOrTrustManager(
-      String file,
+      KeyStore keystore,
       String fileConfigName,
-      CredentialValue password,
-      String passwordConfigName,
-      KeyStoreType keyStoreType,
-      boolean isKeystore, // or truststore
+      String keyStorePassword,
+      boolean isKeyStore, // or truststore
       List<Stage.ConfigIssue> issues,
       ConfigIssueContext context,
       Label group
   ) {
+    try {
+      if (isKeyStore) {
+        FtpsFileSystemConfigBuilder.getInstance().setKeyManager(
+            options,
+            KeyManagerUtils.createClientKeyManager(keystore, null, keyStorePassword)
+        );
+      } else {
+        FtpsFileSystemConfigBuilder.getInstance().setTrustManager(
+            options,
+            TrustManagerUtils.getDefaultTrustManager(keystore)
+        );
+      }
+    } catch (GeneralSecurityException e) {
+      issues.add(context.createConfigIssue(group.getLabel(),
+          fileConfigName,
+          Errors.REMOTE_15,
+          isKeyStore ? "key" : "trust",
+          e.getMessage(),
+          e
+      ));
+    }
+  }
+
+  private KeyStore loadKeyStore(
+      String file,
+      String fileConfigName,
+      String password,
+      KeyStoreType keyStoreType,
+      boolean isKeystore,
+      List<Stage.ConfigIssue> issues,
+      ConfigIssueContext context,
+      Label group
+  ) {
+    KeyStore keyStore;
     if (file != null && !file.isEmpty()) {
       File keystoreFile = new File(file);
-      String keystorePassword = resolveCredential(
-          password,
-          passwordConfigName,
-          issues,
-          context,
-          group
-      );
       try {
-        KeyStore keystore = loadKeystore(
-            keystoreFile,
-            keyStoreType.getJavaValue(),
-            keystorePassword
-        );
-          try {
-            if (isKeystore) {
-              FtpsFileSystemConfigBuilder.getInstance().setKeyManager(
-                  options,
-                  KeyManagerUtils.createClientKeyManager(keystore, null, keystorePassword)
-              );
-            } else {
-              FtpsFileSystemConfigBuilder.getInstance().setTrustManager(
-                  options,
-                  TrustManagerUtils.getDefaultTrustManager(keystore)
-              );
-            }
-          } catch (GeneralSecurityException e) {
-            issues.add(context.createConfigIssue(group.getLabel(),
-                fileConfigName,
-                Errors.REMOTE_15,
-                isKeystore ? "key" : "trust",
-                e.getMessage(),
-                e
-            ));
-          }
+        keyStore = KeyStore.getInstance(keyStoreType.getJavaValue());
+        char[] passwordArr = password != null ? password.toCharArray() : null;
+        try (FileInputStream fin = new FileInputStream(file)) {
+          keyStore.load(fin, passwordArr);
+        }
       } catch (IOException | GeneralSecurityException e) {
+        keyStore = null;
         issues.add(context.createConfigIssue(
             group.getLabel(),
             fileConfigName,
@@ -320,21 +383,13 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
         ));
       }
     } else {
+      keyStore = null;
       if (isKeystore) {
         issues.add(context.createConfigIssue(group.getLabel(), fileConfigName, Errors.REMOTE_12));
       } else {
         issues.add(context.createConfigIssue(group.getLabel(), fileConfigName, Errors.REMOTE_13));
       }
     }
-  }
-
-  private KeyStore loadKeystore(File file, String type, String password)
-      throws IOException, GeneralSecurityException {
-    KeyStore keystore = KeyStore.getInstance(type);
-    char[] passwordArr = password != null ? password.toCharArray() : null;
-    try (FileInputStream fin = new FileInputStream(file)) {
-      keystore.load(fin, passwordArr);
-    }
-    return keystore;
+    return keyStore;
   }
 }
