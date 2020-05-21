@@ -1,5 +1,5 @@
 #
-# Copyright 2019 StreamSets Inc.
+# Copyright 2020 StreamSets Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,28 +17,7 @@
 upgraderVersion: 1
 
 upgrades:
-  - toVersion: 12
-    actions:
-      - setConfig:
-          name: dataFormatConfig.preserveRootElement
-          value: false
-  - toVersion: 13
-    actions:
-      - setConfig:
-          lookForName: httpConfigs.spnegoConfigBean.spnegoEnabled
-          elseName: httpConfigs.spnegoConfigBean.spnegoEnabled
-          elseValue: false
-      - setConfig:
-          lookForName: httpConfigs.spnegoConfigBean.kerberosRealm
-          elseName: httpConfigs.spnegoConfigBean.kerberosRealm
-          elseValue: ""
-      - setConfig:
-          name: httpConfigs.spnegoConfigBean.spnegoPrincipal
-          value: ""
-      - setConfig:
-          name: httpConfigs.spnegoConfigBean.spnegoKeytabFilePath
-          value: ""
-  - toVersion: 14
+  - toVersion: 6
     actions:
       - iterateListConfig:
           name: httpConfigs.appIds

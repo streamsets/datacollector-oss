@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.httpsource;
+package com.streamsets.pipeline.lib.tls;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.StageException;
@@ -28,18 +28,18 @@ public class CredentialValueBean implements CredentialValue {
       label = "",
       displayPosition = 20
   )
-  public CredentialValue appId;
+  public CredentialValue credential;
 
-  public CredentialValueBean(String appId){
-    this.appId = () -> appId;
+  public CredentialValueBean(String credential){
+    this.credential = () -> credential;
   }
 
   public CredentialValueBean(){
-    this.appId = () -> "";
+    this.credential = () -> "";
   }
 
   @Override
   public String get() throws StageException {
-    return appId.get();
+    return credential.get();
   }
 }

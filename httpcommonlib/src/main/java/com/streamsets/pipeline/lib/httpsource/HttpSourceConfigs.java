@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.httpsource;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 
 import java.util.ArrayList;
 import java.util.Arrays;
