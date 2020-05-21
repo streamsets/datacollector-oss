@@ -24,7 +24,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.microsoft.aad.adal4j.AuthenticationException;
 import com.microsoft.azure.keyvault.KeyVaultClient;
-import com.microsoft.azure.keyvault.models.SecretBundle;
+import com.microsoft.azure.keyvault.models.CertificateBundle;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
 import com.streamsets.pipeline.api.credential.CredentialStoreDef;
@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -54,6 +55,8 @@ public class AzureKeyVaultCredentialStore implements CredentialStore {
   private static final String OPTION_URL = "url";
   private static final String REFRESH_OPTION = "refresh";
   private static final String RETRY_OPTION = "retry";
+  private static final String CREDENTIAL_TYPE = "credentialType";
+  private static final String CERTIFICATE = "certificate";
 
   public static final String CACHE_EXPIRATION_PROP = "cache.inactivityExpiration.millis";
   public static final long CACHE_EXPIRATION_DEFAULT = TimeUnit.MINUTES.toMillis(30);
@@ -61,6 +64,9 @@ public class AzureKeyVaultCredentialStore implements CredentialStore {
   public static final long CREDENTIAL_REFRESH_DEFAULT = TimeUnit.SECONDS.toMillis(30);
   public static final String CREDENTIAL_RETRY_PROP = "credential.retry.millis";
   public static final long CREDENTIAL_RETRY_DEFAULT = TimeUnit.SECONDS.toMillis(15);
+
+  private static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
+  private static final String END_CERT = "-----END CERTIFICATE-----";
 
   private Context context;
   private String clientID;
@@ -202,7 +208,6 @@ public class AzureKeyVaultCredentialStore implements CredentialStore {
     private volatile long lastFetch;
     private volatile long currentInterval;
     private volatile String value;
-    private volatile SecretBundle secret;
     private boolean throwException;
 
     private long refreshMillis = getCredentialRefreshMillis();
@@ -277,8 +282,12 @@ public class AzureKeyVaultCredentialStore implements CredentialStore {
       if (now - lastFetch > currentInterval) {
         try {
           LOG.debug("Store '{}' credential '{}' fetching value", getContext().getId(), name);
-          secret = getAzureClient().getSecret(vaultUrl, name);
-          value = secret.value();
+          if (options.containsKey(CREDENTIAL_TYPE) && options.get(CREDENTIAL_TYPE).equals(CERTIFICATE)) {
+            CertificateBundle certificate = getAzureClient().getCertificate(vaultUrl, name);
+            value = BEGIN_CERT + new String(Base64.getEncoder().encode(certificate.cer())) + END_CERT;
+          } else {
+            value = getAzureClient().getSecret(vaultUrl, name).value();
+          }
           lastFetch = now();
           currentInterval = getRefreshMillis();
           throwException = false;
