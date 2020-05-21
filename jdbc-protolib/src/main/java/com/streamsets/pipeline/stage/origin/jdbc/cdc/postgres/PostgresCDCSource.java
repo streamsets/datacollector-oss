@@ -168,6 +168,17 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
       );
 
       return issues;
+    } catch (Exception ex) {
+      LOG.error("Error while trying to create the WAL receiver: {}", ex, ex);
+      issues.add(getContext()
+          .createConfigIssue(
+              Groups.CDC.name(),
+              "",
+              JdbcErrors.JDBC_413,
+              ex.toString()
+          )
+      );
+
     }
 
     return issues;
@@ -339,17 +350,20 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void destroy() {
-    if (configBean.removeSlotOnClose) {
+    if (getWalReceiver() != null) {
+      if (configBean.removeSlotOnClose) {
+        try {
+          getWalReceiver().dropReplicationSlot(configBean.slot);
+        } catch (StageException e) {
+          LOG.error(JdbcErrors.JDBC_406.getMessage(), configBean.slot);
+        }
+      }
       try {
-        getWalReceiver().dropReplicationSlot(configBean.slot);
-      } catch (StageException e) {
-        LOG.error(JdbcErrors.JDBC_406.getMessage(), configBean.slot);
+        getWalReceiver().closeConnection();
+      } catch (SQLException ex) {
+        LOG.error("Error while closing connection: {}", ex.toString(), ex);
       }
     }
-    try {
-      getWalReceiver().closeConnection();
-    } catch (SQLException ex) {
-      LOG.error("Error while closing connection: {}", ex.toString(), ex);
-    }
   }
+
 }
