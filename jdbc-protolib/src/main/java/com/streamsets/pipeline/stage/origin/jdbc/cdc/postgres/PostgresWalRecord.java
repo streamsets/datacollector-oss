@@ -119,6 +119,11 @@ public class PostgresWalRecord {
     return entry.getValueAsString();
   }
 
+  public String getNextLSN() {
+    Field entry  = getEntryFromField("nextlsn");
+    return entry.getValueAsString();
+  }
+
   public String getTimestamp() {
     Field entry = getEntryFromField("timestamp");
     return entry.getValueAsString();

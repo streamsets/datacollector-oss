@@ -204,63 +204,41 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         )
     ) {
 
-      postgresWalRecord = getNextRecordFromWalReceiver();
+      postgresWalRecord = getWalReceiver().read();
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
-        ThreadUtil.sleep(configBean.pollInterval * 1000);
+        ThreadUtil.sleep((long) configBean.pollInterval * 1000);
       }
       else {
-        String recordLsn = postgresWalRecord.getLsn().asString();
-        LOG.debug("Received CDC with LSN {} from stream", recordLsn);
+        // filter out non data records or old data records
+        PostgresWalRecord dataRecord = WalRecordFilteringUtils.filterRecord(postgresWalRecord, this);
+        if (dataRecord == null) {
+          LOG.debug("Received CDC with LSN {} from stream value filtered out", postgresWalRecord.getLsn().asString());
+        } else {
+         String recordLsn = dataRecord.getLsn().asString();
+          LOG.debug("Received CDC with LSN {} from stream value - {}", recordLsn, dataRecord.getChanges());
 
-        if (LOG.isTraceEnabled()) {
-          LOG.trace("Valid CDC: {} ", postgresWalRecord);
+          if (LOG.isTraceEnabled()) {
+            LOG.trace("Valid CDC: {} ", dataRecord);
+          }
+
+          final Record record = processWalRecord(dataRecord);
+
+          Record.Header header = record.getHeader();
+
+          header.setAttribute(LSN, recordLsn);
+          header.setAttribute(XID, dataRecord.getXid());
+          header.setAttribute(TIMESTAMP_HEADER, dataRecord.getTimestamp());
+
+          batchMaker.addRecord(record);
+          currentBatchSize++;
         }
-
-        final Record record = processWalRecord(postgresWalRecord);
-
-        Record.Header header = record.getHeader();
-
-        header.setAttribute(LSN, recordLsn);
-        header.setAttribute(XID, postgresWalRecord.getXid());
-        header.setAttribute(TIMESTAMP_HEADER, postgresWalRecord.getTimestamp());
-
-        batchMaker.addRecord(record);
-        currentBatchSize++;
       }
     }
     // we report the current position of the WAL reader.
-    return getWalReceiver().getCurrentLSN().asString();
+    return "dummy-not-used";
   }
-
-
-  // we filter out all postgres wal records that do not produce data records. still we advance the LSN
-  private PostgresWalRecord getNextRecordFromWalReceiver() {
-    PostgresWalRecord ret = null;
-    try {
-      ByteBuffer buffer = getWalReceiver().readNonBlocking();
-      if(buffer != null) {
-
-        PostgresWalRecord postgresWalRecord = new PostgresWalRecord(
-            buffer,
-            getWalReceiver().getCurrentLSN(),
-            getConfigBean().decoderValue
-        );
-
-        ret = WalRecordFilteringUtils.filterRecord(postgresWalRecord, this);
-
-        if(ret == null && LOG.isDebugEnabled()) {
-          LOG.debug("Filtered out CDC: {} ", postgresWalRecord.toString());
-        }
-      }
-
-    } catch (SQLException e) {
-      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage(), e);
-    }
-    return ret;
-  }
-
 
   private Record processWalRecord(PostgresWalRecord postgresWalRecord) {
     Source.Context context = getContext();
