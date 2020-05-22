@@ -51,7 +51,7 @@ public class TestPostgresCDCSourceUpgrader {
 
     Config configValue = configs.get(0);
     Assert.assertEquals("postgresCDCConfigBean.maxBatchWaitTime", configValue.getName());
-    Assert.assertEquals(1000, configValue.getValue());
+    Assert.assertEquals(15000, configValue.getValue());
 
   }
 }
