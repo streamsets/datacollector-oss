@@ -51,8 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
@@ -146,7 +144,7 @@ public class PostgresCDCWalReceiver {
     }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
-        jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+             jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -165,7 +163,7 @@ public class PostgresCDCWalReceiver {
 
   public void createReplicationSlot(String slotName) throws StageException {
     try (PreparedStatement preparedStatement =
-        connection.prepareStatement("SELECT * FROM pg_create_logical_replication_slot(?, ?)")) {
+             connection.prepareStatement("SELECT * FROM pg_create_logical_replication_slot(?, ?)")) {
       preparedStatement.setString(1, slotName);
       preparedStatement.setString(2, outputPlugin.getLabel());
       try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -203,25 +201,53 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true);
 
+    LogSequenceNumber streamLsn;
+    LogSequenceNumber serverFlushedLsn = LogSequenceNumber.valueOf(confirmedFlushLSN);
     if (newSlot) {
-      // if the replication slot was just created, we need to set the start offset to the stream as postgress
-      // does not know yet what is the starting point. we use the initial offset by configuration.
-      LogSequenceNumber lsn = getLogSequenceNumber(startOffset);
-      streamBuilder.withStartPosition(lsn);
-    } else if (confirmedFlushLSN != null){
-      //https://www.postgresql.org/docs/10/view-pg-replication-slots.html
-      // As per the above and the withStartPosition documentation, if we dn't specify
-      // starts from restart_lsn, so explicitly setting confirmedFlushLSN
-      streamBuilder.withStartPosition(LogSequenceNumber.valueOf(confirmedFlushLSN));
+      //if the replication slot was just created setting the start offset to an older LSN is a NO OP
+      //setting it to a future LSN is risky as the LSN could be invalid (we have to consider the LSN an opaque value).
+      //we set the offset then to the 'confirmed_flush_lsn' of the replication slot, that happens to be the
+      //the starting point of the newly created replication slot.
+      //
+      //NOTE that the DATE filter, if a date in the future, it will work as expected because we filter  by DATE.
+      streamLsn = serverFlushedLsn;
+    } else {
+
+      switch (configBean.startValue) {
+        case LATEST:
+          // we pick up what is in the replication slot
+          streamLsn = serverFlushedLsn;
+          break;
+        case LSN:
+        case DATE:
+          LogSequenceNumber configStartLsn = LogSequenceNumber.valueOf(startOffset);
+          if (configStartLsn.asLong() > serverFlushedLsn.asLong()) {
+            // the given LSN is newer than the last flush, we can safely forward the stream to it,
+            // referenced data (by the given configStartLsn should be there)
+            streamLsn = configStartLsn;
+          } else {
+            // we ignore the config start LSN as it is before the last flushed, not in the server anymore
+            // this is the normal scenario on later pipeline restarts
+            streamLsn = serverFlushedLsn;
+            LOG.debug(
+                "Configuration Start LSN '{}' is older than server Flushed LSN '{}', this is expected after the first pipeline run",
+                configStartLsn,
+                serverFlushedLsn
+            );
+          }
+          break;
+        default:
+          throw new IllegalStateException("Should not happen startValue enum not handled" + configBean.startValue);
+      }
     }
+    streamBuilder.withStartPosition(streamLsn);
 
     stream = streamBuilder.start();
 
-    LogSequenceNumber lsnStart = getCurrentLSN();
+    LOG.debug("Starting the Stream with LSN : {}", streamLsn);
 
-    LOG.debug("Starting fromLSN: {}", lsnStart);
     heartBeatSender.scheduleAtFixedRate(this::sendUpdates, 1, 900, TimeUnit.MILLISECONDS);
-    return lsnStart;
+    return streamLsn;
   }
 
   private LogSequenceNumber getLogSequenceNumber(String startOffset) {
@@ -262,9 +288,9 @@ public class PostgresCDCWalReceiver {
       throws StageException
   {
     try (Connection localConnection = DriverManager.getConnection(
-            hikariConfigBean.getConnectionString(),
-            hikariConfigBean.getUsername().get(),
-            hikariConfigBean.getPassword().get()
+        hikariConfigBean.getConnectionString(),
+        hikariConfigBean.getUsername().get(),
+        hikariConfigBean.getPassword().get()
     )) {
       if (isReplicationSlotActive(slotName)) {
         try (PreparedStatement preparedStatement = localConnection.prepareStatement(
@@ -277,10 +303,10 @@ public class PostgresCDCWalReceiver {
       }
 
       try (PreparedStatement preparedStatement = localConnection
-            .prepareStatement("select pg_drop_replication_slot(slot_name) "
-                + "from pg_replication_slots where slot_name = ?")) {
-          preparedStatement.setString(1, slotName);
-          preparedStatement.execute();
+          .prepareStatement("select pg_drop_replication_slot(slot_name) "
+              + "from pg_replication_slots where slot_name = ?")) {
+        preparedStatement.setString(1, slotName);
+        preparedStatement.execute();
       }
     } catch (SQLException e) {
       throw new StageException(JDBC_407, slotName, e);
