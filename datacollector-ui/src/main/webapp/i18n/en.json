@@ -610,10 +610,12 @@
     },
     "previewPane": {
       "batchSize": "Preview Batch Size",
+      "batchSizeTooltip": "Number of records to use in the preview",
       "cancelPreview": "Cancel Preview",
       "configTitle": "Preview Configuration",
       "configuredSource": "Configured Origin",
       "previewSource": "Preview Source",
+      "previewSourceTooltip": "Source data to use for the preview",
       "previewStage": "Preview Stage",
       "previewSingleStage": "Preview Single Stage",
       "previewMultipleStages": "Preview Multiple Stages",
@@ -625,7 +627,7 @@
       "rawPreviewData": {
         "modalTitle": "Raw Preview Data"
       },
-      "rememberMe": "Remember the configuration",
+      "rememberMe": "Remember the Configuration",
       "runPreview": "Run Preview",
       "showFieldType": "Show Field Type",
       "showHeader": "Show Record/Field Header",
@@ -638,8 +640,8 @@
       "timeout": "Preview Timeout (in milliseconds)",
       "writeToDestinations": "Write to Destinations and Executors",
       "writeToDestinationsTooltip": "Writes preview data to destination systems (both executors and destinations)",
-      "executeLifecycleEvents": "Execute pipeline lifecycle events.",
-      "executeLifecycleEventsTooltip": "Generates and processes pipeline lifecycle events as the pipeline would be normally running.",
+      "executeLifecycleEvents": "Execute Pipeline Lifecycle Events",
+      "executeLifecycleEventsTooltip": "Generates and processes pipeline lifecycle events",
       "userProvider": "User Provided"
     },
     "library": {
