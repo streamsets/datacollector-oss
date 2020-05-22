@@ -418,6 +418,13 @@ public class PostgresCDCWalReceiver {
 
   public void closeConnection() throws SQLException {
     heartBeatSender.shutdown();
+    try {
+      //Awaiting 10 seconds only as frequency is ~1 seconds
+      heartBeatSender.awaitTermination(10, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      LOG.warn("Interrupted the await of heart beat sender shutdown");
+      Thread.currentThread().interrupt();
+    }
     if (connection != null) {
       connection.close();
     }
