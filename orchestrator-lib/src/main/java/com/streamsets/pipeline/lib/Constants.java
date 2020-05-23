@@ -29,6 +29,7 @@ public class Constants {
   public static final String JOB_RESULTS_FIELD = "jobResults";
   public static final String JOB_STATUS_FIELD = "jobStatus";
   public static final String JOB_STATUS_COLOR_FIELD = "jobStatusColor";
+  public static final String JOB_METRICS_FIELD = "jobMetrics";
 
   public static final String PIPELINE_ID_FIELD = "pipelineId";
   public static final String PIPELINE_TITLE_FIELD = "pipelineTitle";
@@ -36,6 +37,7 @@ public class Constants {
   public static final String PIPELINE_RESULTS_FIELD = "pipelineResults";
   public static final String PIPELINE_STATUS_FIELD = "pipelineStatus";
   public static final String PIPELINE_STATUS_MESSAGE_FIELD = "pipelineStatusMessage";
+  public static final String PIPELINE_METRICS_FIELD = "pipelineMetrics";
   public static final String COMMITTED_OFFSET_STR = "committedOffsetsStr";
 
   public static final String TEMPLATE_JOB_ID_FIELD = "templateJobId";

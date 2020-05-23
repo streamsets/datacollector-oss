@@ -15,12 +15,14 @@
  */
 package com.streamsets.pipeline.stage.processor.waitForJobCompletion;
 
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -133,6 +135,14 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
               startOutput.put(Constants.JOB_STATUS_FIELD, Field.create(status));
               startOutput.put(Constants.JOB_STATUS_COLOR_FIELD, Field.create(statusColor));
               startOutput.put(Constants.ERROR_MESSAGE_FIELD, Field.create(errorMessage));
+
+              MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
+                  clientBuilder,
+                  conf.baseUrl,
+                  jobId,
+                  userAuthToken
+              );
+              startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
 
               taskSuccess &= success;
             }

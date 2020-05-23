@@ -17,10 +17,13 @@
 package com.streamsets.pipeline.lib;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.startJob.StartJobErrors;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -31,6 +34,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ControlHubApiUtil {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ControlHubApiUtil.class);
 
   public static String getUserAuthToken(ClientBuilder clientBuilder, String baseUrl, String username, String password) {
     // 1. Login to DPM to get user auth token
@@ -142,6 +147,29 @@ public class ControlHubApiUtil {
     }
 
     return jobStatusList;
+  }
+
+  public static MetricRegistryJson getJobMetrics(
+      ClientBuilder clientBuilder,
+      String baseUrl,
+      String jobId,
+      String userAuthToken
+  ) {
+    String jobStartUrl = baseUrl + "jobrunner/rest/v1/metrics/job/" + jobId;
+    try (Response response = clientBuilder.build()
+        .target(jobStartUrl)
+        .register(new CsrfProtectionFilter("CSRF"))
+        .request()
+        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
+        .get()) {
+      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+        return null;
+      }
+      return response.readEntity(MetricRegistryJson.class);
+    } catch (Exception ex) {
+      LOG.warn("Failed to fetch job metrics: {}", ex.toString(), ex);
+      return null;
+    }
   }
 
   public static boolean determineJobSuccess(String status, String statusColor) {

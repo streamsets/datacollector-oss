@@ -18,12 +18,14 @@ package com.streamsets.pipeline.lib.startPipeline;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.api.StoreApi;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.datacollector.client.model.PipelineConfigurationJson;
 import com.streamsets.datacollector.client.model.PipelineInfoJson;
 import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.datacollector.client.model.SourceOffsetJson;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -142,6 +144,9 @@ public class StartPipelineSupplier implements Supplier<Field> {
           Constants.FINISHED_SUCCESSFULLY_FIELD,
           Field.create(Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus()))
       );
+
+      MetricRegistryJson jobMetrics = StartPipelineCommon.getPipelineMetrics(objectMapper, pipelineStateJson);
+      startOutput.put(Constants.PIPELINE_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
     }
     startOutput.put(Constants.PIPELINE_STATUS_FIELD, Field.create(pipelineStateJson.getStatus().toString()));
     startOutput.put(Constants.PIPELINE_STATUS_MESSAGE_FIELD, Field.create(pipelineStateJson.getMessage()));
