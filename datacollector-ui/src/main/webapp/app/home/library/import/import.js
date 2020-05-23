@@ -135,6 +135,7 @@ angular
                     newPipelineObject.stopEventStages = jsonConfigObj.stopEventStages;
                     newPipelineObject.testOriginStage = jsonConfigObj.testOriginStage;
                     newPipelineObject.fragments = jsonConfigObj.fragments;
+                    newPipelineObject.info.sdcVersion = jsonConfigObj.info.sdcVersion;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
