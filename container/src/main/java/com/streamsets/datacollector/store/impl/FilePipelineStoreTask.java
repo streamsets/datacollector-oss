@@ -413,7 +413,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
           uuid,
           pipeline.isValid(),
           pipeline.getMetadata(),
-          buildInfo.getVersion(),
+          pipeline.getInfo().getSdcVersion(),
           runtimeInfo.getId()
       );
       if (encryptCredentials) {
