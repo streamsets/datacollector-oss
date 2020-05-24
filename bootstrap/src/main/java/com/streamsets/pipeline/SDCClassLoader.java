@@ -22,11 +22,13 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
  * A {@link URLClassLoader} for application isolation. There are two
@@ -145,7 +147,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
   }
 
   /**
-   * Arranges the urls in the following order:
+   * Sorts and arranges the urls in the following order:
    * <ul>
    *   <li>stage lib jars</li>
    *   <li>protolib jars</li>
@@ -160,6 +162,7 @@ public class SDCClassLoader extends BlackListURLClassLoader {
     List<URL> otherJars = new ArrayList<>();
     List<URL> protolibJars = new ArrayList<>();
     List<URL> stageLibjars = new ArrayList<>();
+    urls = urls.stream().sorted(Comparator.comparing(URL::toExternalForm)).collect(Collectors.toList());
     for (URL url : urls) {
       String str = url.toExternalForm();
       if (str.endsWith(".jar")) {
