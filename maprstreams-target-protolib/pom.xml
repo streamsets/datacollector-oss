@@ -73,6 +73,19 @@
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-schema-registry-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <!--
+            Confluent brings it's own version of kafka-clients jar which is actually a problem. MapR stage
+            libraries do not have the full classpath defined in this file, we have extra script that user
+            must run to install all the important jars 'from the cluster'. MapR is shipping their own custom
+            version of kafka-clients that must be taken from the 'cluster' jars and not any version we
+            downloaded from the internet.
+          -->
+          <groupId>org.apache.kafka</groupId>
+          <artifactId>kafka-clients</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
