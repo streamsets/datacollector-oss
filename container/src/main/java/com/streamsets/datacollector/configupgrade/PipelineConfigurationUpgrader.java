@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineConfigUpgrader;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
@@ -69,6 +70,7 @@ public class PipelineConfigurationUpgrader {
    */
   public PipelineConfiguration upgradeIfNecessary(
       StageLibraryTask library,
+      BuildInfo buildInfo,
       PipelineConfiguration pipelineConf,
       List<Issue> issues
   ) {

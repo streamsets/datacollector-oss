@@ -186,6 +186,7 @@ public class PipelineFragmentConfigurationValidator {
 
     PipelineFragmentConfiguration fConf = getFragmentUpgrader().upgradeIfNecessary(
         stageLibrary,
+        buildInfo,
         pipelineFragmentConfiguration,
         upgradeIssues
     );

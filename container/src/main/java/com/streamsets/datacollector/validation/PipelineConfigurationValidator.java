@@ -221,6 +221,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
 
     PipelineConfiguration pConf = getUpgrader().upgradeIfNecessary(
         stageLibrary,
+        buildInfo,
         pipelineConfiguration,
         upgradeIssues
     );

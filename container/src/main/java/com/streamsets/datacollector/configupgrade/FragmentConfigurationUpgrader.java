@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.validation.Issue;
@@ -46,6 +47,7 @@ public class FragmentConfigurationUpgrader {
 
   public PipelineFragmentConfiguration upgradeIfNecessary(
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       PipelineFragmentConfiguration fragmentConfiguration,
       List<Issue> issues
   ) {

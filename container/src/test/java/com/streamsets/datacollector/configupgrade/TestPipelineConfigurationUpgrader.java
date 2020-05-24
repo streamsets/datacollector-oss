@@ -26,6 +26,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.definition.ServiceDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
 import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -144,6 +145,12 @@ public class TestPipelineConfigurationUpgrader {
       Mockito.when(library.getServiceDefinition(serviceDef.getProvides(), false)).thenReturn(serviceDef);
     }
     return library;
+  }
+
+  static BuildInfo getBuildInfo() {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
+    return buildInfo;
   }
 
   @Test
@@ -651,7 +658,7 @@ public class TestPipelineConfigurationUpgrader {
 
     List<Issue> issues = new ArrayList<>();
 
-    pipelineConf = up2.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), pipelineConf, issues);
+    pipelineConf = up2.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), getBuildInfo(), pipelineConf, issues);
 
     Assert.assertNotNull(pipelineConf);
     Assert.assertTrue(issues.isEmpty());
@@ -689,7 +696,7 @@ public class TestPipelineConfigurationUpgrader {
     PipelineConfigurationUpgrader up = getPipelineV2Upgrader();
 
     List<Issue> issues = new ArrayList<>();
-    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), pipelineConf, issues);
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), getBuildInfo(), pipelineConf, issues);
 
     Assert.assertNotNull(pipelineConf);
     Assert.assertTrue(issues.isEmpty());
@@ -720,7 +727,7 @@ public class TestPipelineConfigurationUpgrader {
     Assert.assertNull(pipelineConf.getStartEventStages());
     Assert.assertNull(pipelineConf.getStopEventStages());
 
-    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), pipelineConf, issues);
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), getBuildInfo(), pipelineConf, issues);
 
     Assert.assertNotNull(pipelineConf);
     Assert.assertTrue(issues.isEmpty());
