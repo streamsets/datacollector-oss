@@ -95,7 +95,7 @@ public class TestSlaveManager {
     @Singleton
     public BuildInfo providesBuildInfo() {
       BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
-      Mockito.when(buildInfo.getVersion()).thenReturn("2.0.0.0");
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       return buildInfo;
     }
 

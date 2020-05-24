@@ -831,7 +831,9 @@ public class TestPipelineConfigurationValidator {
     }
     final PipelineConfiguration conf = MockStages.createPipelineConfigurationSourceTarget();
     updatePipelineConfigs.apply(conf);
-    return new PipelineConfigurationValidator(lib, Mockito.mock(BuildInfo.class), "name", conf, dataCollectorConfig, Mockito.mock(RuntimeInfo.class));
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
+    return new PipelineConfigurationValidator(lib, buildInfo, "name", conf, dataCollectorConfig, Mockito.mock(RuntimeInfo.class));
   }
 
   private static Path createDummyTempKeytabFile() {

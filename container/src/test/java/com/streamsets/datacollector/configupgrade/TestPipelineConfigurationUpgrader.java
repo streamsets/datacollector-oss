@@ -29,6 +29,7 @@ import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchMaker;
@@ -48,6 +49,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -129,7 +131,7 @@ public class TestPipelineConfigurationUpgrader {
                                                                                                Source2.class, "");
   static final StageDefinition SOURCE2_V2_DEF;
 
-  private static final ServiceDefinition SERVICE_DEF = ServiceDefinitionExtractor.get().extract(LIBRARY_DEF, RunnableService.class);
+  static final ServiceDefinition SERVICE_DEF = ServiceDefinitionExtractor.get().extract(LIBRARY_DEF, RunnableService.class);
 
   static {
     SOURCE2_V2_DEF = Mockito.spy(SOURCE2_V1_DEF);
@@ -588,7 +590,23 @@ public class TestPipelineConfigurationUpgrader {
         .withStageVersion(SOURCE2_V1_DEF.getVersion())
         .build();
 
-     return new PipelineConfiguration(
+    PipelineInfo info = new PipelineInfo(
+        "pipelineId",
+        "Title",
+        "Description",
+        new Date(),
+        new Date(),
+        "jenkins",
+        "jenkins",
+        "10",
+        UUID.randomUUID(),
+        true,
+        Collections.emptyMap(),
+        "3.17.0",
+        "sdcId"
+    );
+
+     PipelineConfiguration pipelineConfiguration = new PipelineConfiguration(
         1,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -605,6 +623,9 @@ public class TestPipelineConfigurationUpgrader {
         Collections.singletonList(stopEvent),
         testOrigin
     );
+
+     pipelineConfiguration.setInfo(info);
+     return pipelineConfiguration;
   }
 
   @Test
@@ -740,4 +761,42 @@ public class TestPipelineConfigurationUpgrader {
     Assert.assertTrue(pipelineConf.getStopEventStages().isEmpty());
   }
 
+  /**
+   * Ensure that upgrading from a future version dies in a clear way.
+   */
+  @Test
+  public void testUpgradeFromTheFuture() throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineToUpgrade();
+    pipelineConf.getInfo().setSdcVersion("99.99.99");
+    PipelineConfigurationUpgrader up = getPipelineV2Upgrader();
+
+    List<Issue> issues = new ArrayList<>();
+
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), getBuildInfo(), pipelineConf, issues);
+
+    Assert.assertNull(pipelineConf);
+    Assert.assertFalse(issues.isEmpty());
+
+    Assert.assertEquals(1, issues.size());
+    Assert.assertEquals("VALIDATION_0096", issues.get(0).getErrorCode());
+  }
+
+  /**
+   * Ensure that we update the sdc version field on upgrade.
+   */
+  @Test
+  public void testUpgradeFromThePast() throws Exception {
+    PipelineConfiguration pipelineConf = getPipelineToUpgrade();
+    pipelineConf.getInfo().setSdcVersion("1.0.0");
+    PipelineConfigurationUpgrader up = getPipelineV2Upgrader();
+
+    List<Issue> issues = new ArrayList<>();
+
+    pipelineConf = up.upgradeIfNecessary(getLibrary(SOURCE2_V2_DEF, SERVICE_DEF), getBuildInfo(), pipelineConf, issues);
+
+    Assert.assertNotNull(pipelineConf);
+    Assert.assertTrue(issues.isEmpty());
+
+    Assert.assertEquals("3.17.0", pipelineConf.getInfo().getSdcVersion());
+  }
 }

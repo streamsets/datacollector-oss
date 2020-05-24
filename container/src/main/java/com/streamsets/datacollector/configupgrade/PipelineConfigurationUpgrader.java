@@ -30,6 +30,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
+import com.streamsets.datacollector.util.Version;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
@@ -38,6 +39,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,8 +77,29 @@ public class PipelineConfigurationUpgrader {
       List<Issue> issues
   ) {
     Preconditions.checkArgument(issues.isEmpty(), "Given list of issues must be empty.");
-    boolean upgrade;
 
+    // Check that this pipeline wasn't created by a higher version
+    // SDC version was only added in 3.7.0 to the pipeline bean, so for really ancient pipelines, this field wouldn't
+    // exists. But that is actually fine for purpose of this check - those old pipelines are always created on SDC
+    // version lower then this one.
+    if(!StringUtils.isEmpty(pipelineConf.getInfo().getSdcVersion())) {
+      Version createdVersion = new Version(pipelineConf.getInfo().getSdcVersion());
+      if (createdVersion.isGreaterThan(buildInfo.getVersion())) {
+        LOG.error("Validation failed: {} vs {}", pipelineConf.getInfo().getSdcVersion(), buildInfo.getVersion());
+        IssueCreator issueCreator = IssueCreator.getPipeline();
+        issues.add(issueCreator.create(
+            ValidationError.VALIDATION_0096,
+            pipelineConf.getInfo().getSdcVersion(),
+            buildInfo.getVersion()
+        ));
+
+        // In case that the version is higher then the one we can work with, we don't upgrade the rest (too many
+        // unrelated errors would be displayed in that case).
+        return null;
+      }
+    }
+
+    boolean upgrade;
     // Firstly upgrading schema if needed, then data
     upgrade = needsSchemaUpgrade(pipelineConf, issues);
     if(upgrade && issues.isEmpty()) {
@@ -94,6 +117,12 @@ public class PipelineConfigurationUpgrader {
       // we try to upgrade only if we have all defs for the pipelineConf
       pipelineConf = upgrade(library, pipelineConf, issues);
     }
+
+    // And lastly update the SDC version (since the pipeline was just changed)
+    if(issues.isEmpty()) {
+      pipelineConf.getInfo().setSdcVersion(buildInfo.getVersion());
+    }
+
     return (issues.isEmpty()) ? pipelineConf : null;
   }
 

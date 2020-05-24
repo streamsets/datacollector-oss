@@ -81,6 +81,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -1346,7 +1347,7 @@ public class MockStages {
         .withInputLanes("a")
         .build();
     stages.add(target);
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -1372,6 +1373,9 @@ public class MockStages {
         Collections.emptyList(),
         Collections.emptyList()
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 
   @SuppressWarnings("unchecked")
@@ -1425,6 +1429,24 @@ public class MockStages {
     return pipelineConfig;
   }
 
+  private static PipelineInfo createPipelineInfo() {
+    return new PipelineInfo(
+        "pipelineId",
+        "Title",
+        "Description",
+        new Date(),
+        new Date(),
+        "jenkins",
+        "jenkins",
+        "10",
+        UUID.randomUUID(),
+        true,
+        Collections.emptyMap(),
+        "3.17.0",
+        "sdcId"
+    );
+  }
+
   @SuppressWarnings("unchecked")
   public static PipelineConfiguration createPipelineConfigurationSourceProcessorTarget(int schemaVersion) {
     List<StageConfiguration> stages = new ArrayList<>();
@@ -1461,6 +1483,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1537,6 +1560,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1653,6 +1677,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1674,6 +1699,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1699,6 +1725,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1724,6 +1751,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1750,6 +1778,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1771,6 +1800,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1797,6 +1827,7 @@ public class MockStages {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put("a", "A");
     pipelineConfiguration.setMetadata(metadata);
+    pipelineConfiguration.setInfo(createPipelineInfo());
     return pipelineConfiguration;
   }
 
@@ -1877,7 +1908,7 @@ public class MockStages {
       .build();
     stages.add(target);
 
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
         schemaVersion,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -1892,6 +1923,9 @@ public class MockStages {
         Collections.emptyList(),
         Collections.emptyList()
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 
   @SuppressWarnings("unchecked")
@@ -2085,7 +2119,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target);
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -2103,6 +2137,9 @@ public class MockStages {
         Collections.emptyList(),
         Collections.emptyList()
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 
   public static PipelineConfiguration createPipelineWith2OffsetCommitController(ExecutionMode executionMode) {
@@ -2119,7 +2156,7 @@ public class MockStages {
       .withInputLanes("b")
       .build();
     stages.add(target2);
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -2138,6 +2175,9 @@ public class MockStages {
         Collections.emptyList(),
         Collections.emptyList()
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 
   public static PipelineConfiguration createPipelineWithOffsetCommitController(ExecutionMode executionMode) {
@@ -2150,7 +2190,7 @@ public class MockStages {
       .withInputLanes("a")
       .build();
     stages.add(target2);
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
       PipelineStoreTask.SCHEMA_VERSION,
       PipelineConfigBean.VERSION,
         "pipelineId",
@@ -2169,6 +2209,9 @@ public class MockStages {
       Collections.emptyList(),
       Collections.emptyList()
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 
   @SuppressWarnings("unchecked")
@@ -2274,7 +2317,7 @@ public class MockStages {
     StageConfiguration errorStageConfig,
     StageConfiguration statsAggregatorStageConfig
   ) {
-    return new PipelineConfiguration(
+    PipelineConfiguration conf = new PipelineConfiguration(
         PipelineStoreTask.SCHEMA_VERSION,
         PipelineConfigBean.VERSION,
         "pipelineId",
@@ -2289,5 +2332,8 @@ public class MockStages {
         startStages,
         stopStages
     );
+
+    conf.setInfo(createPipelineInfo());
+    return conf;
   }
 }

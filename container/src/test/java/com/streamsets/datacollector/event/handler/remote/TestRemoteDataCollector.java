@@ -79,6 +79,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -1100,7 +1101,7 @@ public class TestRemoteDataCollector {
         "foo", "0",
         "",
         sourceOffset,
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         acl,
         new HashMap<String, Object>()
@@ -1168,7 +1169,7 @@ public class TestRemoteDataCollector {
         "0",
         "",
         new SourceOffset(),
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         new Acl(),
         Collections.emptyMap()
@@ -1213,7 +1214,7 @@ public class TestRemoteDataCollector {
         "foo", "0",
         "",
         sourceOffset,
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         new Acl(),
         new HashMap<String, Object>()
@@ -1414,5 +1415,14 @@ public class TestRemoteDataCollector {
     lastPreviewer.stop();
     assertThat(this.afterActionsFunctionParam, equalTo(lastPreviewer));
     assertTrue(lastPreviewer.previewStopped);
+  }
+
+  private PipelineConfiguration mockPipelineConfiguration() {
+    PipelineInfo info = Mockito.mock(PipelineInfo.class);
+    Mockito.when(info.getSdcVersion()).thenReturn("3.17.0");
+    PipelineConfiguration pipelineConfiguration = Mockito.mock(PipelineConfiguration.class);
+    Mockito.when(pipelineConfiguration.getInfo()).thenReturn(info);
+
+    return pipelineConfiguration;
   }
 }

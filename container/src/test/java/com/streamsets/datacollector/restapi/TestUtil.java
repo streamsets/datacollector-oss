@@ -233,7 +233,7 @@ public class TestUtil {
     @Override
     public BuildInfo provide() {
       BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
-      Mockito.when(buildInfo.getVersion()).thenReturn("2.0.0.0");
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       return buildInfo;
     }
 
