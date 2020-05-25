@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Couchbase Lookup",
     description = "Performs lookups to enrich records",
     icon = "couchbase.png",

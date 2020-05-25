@@ -17,4 +17,18 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: config.couchbase.tls.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: config.couchbase.tls.privateKey
+          value: ""
+      - setConfig:
+          name: config.couchbase.tls.certificateChain
+          value: []
+      - setConfig:
+          name: config.couchbase.tls.trustedCertificates
+          value: []

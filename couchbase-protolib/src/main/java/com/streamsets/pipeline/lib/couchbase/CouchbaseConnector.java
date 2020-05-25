@@ -74,10 +74,18 @@ public class CouchbaseConnector {
       LOG.debug("Enabling TLS");
       builder.sslEnabled(true);
 
-      LOG.debug("Using keystore: {}", config.couchbase.tls.keyStoreFilePath);
+      if (config.couchbase.tls.useRemoteKeyStore) {
+        LOG.debug("Using remote keystore");
+      } else {
+        LOG.debug("Using keystore: {}", config.couchbase.tls.keyStoreFilePath);
+      }
       builder.sslKeystore(config.couchbase.tls.getKeyStore());
 
-      LOG.debug("Using truststore: {}", config.couchbase.tls.keyStoreFilePath);
+      if (config.couchbase.tls.useRemoteTrustStore) {
+        LOG.debug("Using remote truststore");
+      } else {
+        LOG.debug("Using truststore: {}", config.couchbase.tls.keyStoreFilePath);
+      }
       builder.sslTruststore(config.couchbase.tls.getTrustStore());
     }
 
