@@ -28,7 +28,7 @@ import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 2,
+  version = 3,
   label = "HTTP to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives data via HTTP and writes every HTTP request payload to Kafka",
@@ -80,7 +80,9 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "conf.singleMessagePerBatch",
         "conf.topicExpression",
         "conf.topicWhiteList",
+        "configs.tlsConfigBean.useRemoteTrustStore",
         "configs.tlsConfigBean.trustStoreFilePath",
+        "configs.tlsConfigBean.trustedCertificates",
         "configs.tlsConfigBean.trustStoreType",
         "configs.tlsConfigBean.trustStorePassword",
         "configs.tlsConfigBean.trustStoreAlgorithm",

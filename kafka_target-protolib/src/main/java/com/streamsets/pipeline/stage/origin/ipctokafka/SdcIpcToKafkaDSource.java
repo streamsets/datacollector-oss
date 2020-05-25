@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 4,
+  version = 5,
   label = "SDC RPC to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination and " +
@@ -80,7 +80,9 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
         "conf.singleMessagePerBatch",
         "conf.topicExpression",
         "conf.topicWhiteList",
+        "configs.tlsConfigBean.useRemoteTrustStore",
         "configs.tlsConfigBean.trustStoreFilePath",
+        "configs.tlsConfigBean.trustedCertificates",
         "configs.tlsConfigBean.trustStoreType",
         "configs.tlsConfigBean.trustStorePassword",
         "configs.tlsConfigBean.trustStoreAlgorithm"
