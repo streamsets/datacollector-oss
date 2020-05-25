@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class TestStartPipelineDSourceUpgrader {
 
   @Before
   public void setUp() {
-    upgrader = new SelectorStageUpgrader("stage", new StartPipelineDSourceUpgrader(), null);
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/StartPipelineDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new StartPipelineDSourceUpgrader(), yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
@@ -50,5 +52,19 @@ public class TestStartPipelineDSourceUpgrader {
         configs,
         "conf.taskName"
     );
+  }
+
+  @Test
+  public void testV2ToV3() {
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    String configPrefix = "conf.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
 }

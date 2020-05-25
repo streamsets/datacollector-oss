@@ -26,18 +26,22 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.startPipeline.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Wait for Pipeline Completion",
     description = "Wait for a Data Collector, Transformer, or Edge pipeline to complete",
     icon="pipeline.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_whc_d43_plb"
+    onlineHelpRefUrl ="index.html?contextID=task_whc_d43_plb",
+    upgraderDef = "upgrader/WaitForPipelineCompletionDProcessor.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
     "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"

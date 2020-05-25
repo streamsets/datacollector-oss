@@ -26,18 +26,22 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Wait for Job Completion",
     description = "Wait for Control Hub job completion",
     icon="job.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_rlz_yn3_plb"
+    onlineHelpRefUrl ="index.html?contextID=task_rlz_yn3_plb",
+    upgraderDef = "upgrader/WaitForJobCompletionDProcessor.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
     "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"

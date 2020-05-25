@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.processor.startPipeline;
+package com.streamsets.pipeline.stage.processor.controlHub;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestStartPipelineDProcessorUpgrader {
+public class TestControlHubApiDProcessorUpgrader {
 
   private StageUpgrader upgrader;
   private List<Config> configs;
@@ -36,8 +36,8 @@ public class TestStartPipelineDProcessorUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/StartPipelineDProcessor.yaml");
-    upgrader = new SelectorStageUpgrader("stage", new StartPipelineDProcessorUpgrader(), yamlResource);
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/ControlHubApiDProcessor.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
@@ -47,19 +47,7 @@ public class TestStartPipelineDProcessorUpgrader {
     Mockito.doReturn(1).when(context).getFromVersion();
     Mockito.doReturn(2).when(context).getToVersion();
 
-    upgrader.upgrade(configs, context);
-    UpgraderTestUtils.assertAllExist(
-        configs,
-        "conf.taskName"
-    );
-  }
-
-  @Test
-  public void testV2ToV3() {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
-
-    String configPrefix = "conf.tlsConfig.";
+    String configPrefix = "conf.client.tlsConfig.";
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
