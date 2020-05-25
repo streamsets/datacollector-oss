@@ -75,4 +75,18 @@ public class TestMqttClientSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String configPrefix = "commonConf.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
+  }
 }

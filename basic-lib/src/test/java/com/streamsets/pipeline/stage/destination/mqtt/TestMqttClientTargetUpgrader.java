@@ -19,14 +19,30 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.stage.origin.mqtt.MqttClientSourceUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.LinkedList;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestMqttClientTargetUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MqttClientDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new MqttClientTargetUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testV1ToV2() throws Exception {
@@ -39,9 +55,6 @@ public class TestMqttClientTargetUpgrader {
 
   @Test
   public void testV2ToV3() throws Exception {
-    final List<Config> configs = new LinkedList<>();
-    final MqttClientTargetUpgrader upgrader = new MqttClientTargetUpgrader();
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(2).when(context).getFromVersion();
     Mockito.doReturn(3).when(context).getToVersion();
     assertCleanSessionFlagAdded(upgrader.upgrade(configs, context));
@@ -49,15 +62,26 @@ public class TestMqttClientTargetUpgrader {
 
   @Test
   public void testV3ToV4() throws StageException {
-    List<Config> configs = new LinkedList<>();
-    final MqttClientTargetUpgrader upgrader = new MqttClientTargetUpgrader();
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(3).when(context).getFromVersion();
     Mockito.doReturn(4).when(context).getToVersion();
     configs = upgrader.upgrade(configs, context);
     UpgraderTestUtils.assertExists(configs, "publisherConf.runtimeTopicResolution", false);
     UpgraderTestUtils.assertExists(configs, "publisherConf.topicExpression", "${record:value('/topic')}");
     UpgraderTestUtils.assertExists(configs, "publisherConf.topicWhiteList", "*");
+  }
+
+  @Test
+  public void testV4ToV5() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String configPrefix = "commonConf.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
 
   public static void assertCleanSessionFlagAdded(List<Config> configs) {

@@ -452,6 +452,20 @@ public class TestHttpClientSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "errorResponseField", "outErrorBody");
   }
 
+  @Test
+  public void testV17ToV18() {
+    Mockito.doReturn(17).when(context).getFromVersion();
+    Mockito.doReturn(18).when(context).getToVersion();
+
+    String configPrefix = "conf.client.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
+  }
+
   private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
     HashMap<String, Object> map = new HashMap<>();
     for (Config c : configs) {

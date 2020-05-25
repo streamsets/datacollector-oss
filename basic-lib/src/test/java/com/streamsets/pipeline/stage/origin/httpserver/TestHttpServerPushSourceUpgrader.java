@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
@@ -28,6 +29,8 @@ import org.mockito.Mockito;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -109,5 +112,30 @@ public class TestHttpServerPushSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, configPrefix + "kerberosRealm", "");
     UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoPrincipal", "");
     UpgraderTestUtils.assertExists(configs, configPrefix + "spnegoKeytabFilePath", "");
+  }
+
+  @Test
+  public void testV13ToV14() {
+    Mockito.doReturn(13).when(context).getFromVersion();
+    Mockito.doReturn(14).when(context).getToVersion();
+
+    List<Config> configs = new ArrayList<>();
+    List<Map<String, Object>> appIds = new ArrayList<>();
+    appIds.add(Collections.singletonMap("appId", "idFoo"));
+    configs.add(new Config("httpConfigs.appIds", appIds));
+
+    String configPrefix = "httpConfigs.tlsConfigBean.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "httpConfigs.appIds");
+    Config appIdsConfig = UpgraderUtils.getConfigWithName(configs, "httpConfigs.appIds");
+    Map<String, Object> appId = ((List<Map<String, Object>>) appIdsConfig.getValue()).get(0);
+    Assert.assertTrue(appId.containsKey("credential"));
+    Assert.assertFalse(appId.containsKey("appId"));
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
 }

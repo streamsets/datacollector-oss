@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Dev SDC RPC with Buffering",
     description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination. " +
         "It buffers records in memory/disk. In case of failure/stop records may be lost.",
@@ -40,7 +40,9 @@ import com.streamsets.pipeline.stage.origin.sdcipc.Configs;
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
+    "configs.tlsConfigBean.useRemoteTrustStore",
     "configs.tlsConfigBean.trustStoreFilePath",
+    "configs.tlsConfigBean.trustedCertificates",
     "configs.tlsConfigBean.trustStoreType",
     "configs.tlsConfigBean.trustStorePassword",
     "configs.tlsConfigBean.trustStoreAlgorithm"

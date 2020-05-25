@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.origin.sdcipc;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestSdcIpcSourceUpgrader {
+public class TestSplunkTargetUpgrader {
 
   private StageUpgrader upgrader;
   private List<Config> configs;
@@ -36,25 +35,16 @@ public class TestSdcIpcSourceUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SdcIpcDSource.yaml");
-    upgrader = new SelectorStageUpgrader("stage", new SdcIpcSourceUpgrader(), yamlResource);
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SplunkDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
 
   @Test
   public void testV1ToV2() throws Exception {
-    TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
-        "configs.",
-        new SdcIpcSourceUpgrader(),
-        2
-    );
-  }
-
-  @Test
-  public void testV2ToV3() {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
 
     String configPrefix = "configs.tlsConfigBean.";
     configs = upgrader.upgrade(configs, context);

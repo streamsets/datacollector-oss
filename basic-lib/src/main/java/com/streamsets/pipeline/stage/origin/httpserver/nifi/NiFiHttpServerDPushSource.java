@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.origin.lib.FlowFileVersionsChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.OuterDataParserFormatConfig;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "NiFi HTTP Server",
     description = "Listens for requests from a NiFi HTTP endpoint",
     icon="Apache-nifi-logo.png",
@@ -46,7 +46,9 @@ import com.streamsets.pipeline.stage.origin.lib.OuterDataParserFormatConfig;
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {
+    "httpConfigs.tlsConfigBean.useRemoteTrustStore",
     "httpConfigs.tlsConfigBean.trustStoreFilePath",
+    "httpConfigs.tlsConfigBean.trustedCertificates",
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
     "httpConfigs.tlsConfigBean.trustStoreAlgorithm",

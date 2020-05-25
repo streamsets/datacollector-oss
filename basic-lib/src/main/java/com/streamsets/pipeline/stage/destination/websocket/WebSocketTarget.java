@@ -136,11 +136,16 @@ public class WebSocketTarget extends BaseTarget {
         SslContextFactory sslContextFactory = new SslContextFactory();
         final TlsConfigBean tlsConf = conf.tlsConfig;
 
-        if (tlsConf.trustStoreFilePath != null) {
-          sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
+        if (tlsConf.getTrustStore() != null) {
+          sslContextFactory.setTrustStore(tlsConf.getTrustStore());
         }
-        if (tlsConf.trustStoreType != null) {
-          sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
+        else {
+          if (tlsConf.trustStoreFilePath != null) {
+            sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
+          }
+          if (tlsConf.trustStoreType != null) {
+            sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
+          }
         }
         if (tlsConf.trustStorePassword != null) {
           sslContextFactory.setTrustStorePassword(tlsConf.trustStorePassword.get());

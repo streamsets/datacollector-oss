@@ -53,4 +53,18 @@ public class TestNiFiHttpServerPushSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
   }
+
+  @Test
+  public void testV2ToV3() {
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    String configPrefix = "httpConfigs.tlsConfigBean.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
+  }
 }

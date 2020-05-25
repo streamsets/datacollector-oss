@@ -47,7 +47,9 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 @HideConfigs(value = {
     "dataFormatConfig.verifyChecksum",
     "dataFormatConfig.avroSchemaSource",
+    "httpConfigs.tlsConfigBean.useRemoteTrustStore",
     "httpConfigs.tlsConfigBean.trustStoreFilePath",
+    "httpConfigs.tlsConfigBean.trustedCertificates",
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
     "httpConfigs.tlsConfigBean.trustStoreAlgorithm",

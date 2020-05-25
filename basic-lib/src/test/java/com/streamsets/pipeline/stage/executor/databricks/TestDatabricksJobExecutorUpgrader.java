@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.sdcipc;
+
+package com.streamsets.pipeline.stage.processor.controlHub;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestSdcIpcSourceUpgrader {
+public class TestDatabricksJobExecutorUpgrader {
 
   private StageUpgrader upgrader;
   private List<Config> configs;
@@ -36,27 +36,18 @@ public class TestSdcIpcSourceUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SdcIpcDSource.yaml");
-    upgrader = new SelectorStageUpgrader("stage", new SdcIpcSourceUpgrader(), yamlResource);
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/DatabricksJobLauncherDExecutor.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
 
   @Test
-  public void testV1ToV2() throws Exception {
-    TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
-        "configs.",
-        new SdcIpcSourceUpgrader(),
-        2
-    );
-  }
+  public void testV2ToV3Upgrade() {
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
 
-  @Test
-  public void testV2ToV3() {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
-
-    String configPrefix = "configs.tlsConfigBean.";
+    String configPrefix = "conf.tlsConfigBean.";
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);

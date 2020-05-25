@@ -22,3 +22,17 @@ upgrades:
       - setConfig:
           name: dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.privateKey
+          value: ""
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.certificateChain
+          value: []
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.trustedCertificates
+          value: []

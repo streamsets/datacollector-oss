@@ -46,3 +46,15 @@ upgrades:
             - renameConfig:
                 oldNamePattern: appId
                 newNamePattern: credential
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.privateKey
+          value: ""
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.certificateChain
+          value: []
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.trustedCertificates
+          value: []
