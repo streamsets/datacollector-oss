@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.rabbitmq.config.Groups;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "RabbitMQ Producer",
     description = "Writes data to RabbitMQ",
     icon = "rabbitmq.png",
