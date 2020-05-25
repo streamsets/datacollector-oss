@@ -251,47 +251,51 @@ public class JdbcSource extends BaseSource {
       return issues;
     }
 
-    try (Connection validationConnection = dataSource.getConnection()) { // NOSONAR
-      DatabaseMetaData dbMetadata = validationConnection.getMetaData();
-      // If CDC is enabled, scrollable cursors must be supported by JDBC driver.
-      supportsScrollableCursor(issues, context, dbMetadata);
-      try (Statement statement = validationConnection.createStatement()) {
-        statement.setFetchSize(1);
-        statement.setMaxRows(1);
-        final String preparedQuery = prepareQuery(query, initialOffset);
-        executeValidationQuery(issues, context, statement, preparedQuery);
+    if(!disableValidation) {
+      try (Connection validationConnection = dataSource.getConnection()) { // NOSONAR
+        DatabaseMetaData dbMetadata = validationConnection.getMetaData();
+        // If CDC is enabled, scrollable cursors must be supported by JDBC driver.
+        supportsScrollableCursor(issues, context, dbMetadata);
+        try (Statement statement = validationConnection.createStatement()) {
+          statement.setFetchSize(1);
+          statement.setMaxRows(1);
+          final String preparedQuery = prepareQuery(query, initialOffset);
+          executeValidationQuery(issues, context, statement, preparedQuery);
+        }
+      } catch (SQLException e) {
+        String formattedError = jdbcUtil.formatSqlException(e);
+        LOG.error(formattedError);
+        LOG.debug(formattedError, e);
+        issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
       }
-    } catch (SQLException e) {
-      String formattedError = jdbcUtil.formatSqlException(e);
-      LOG.error(formattedError);
-      LOG.debug(formattedError, e);
-      issues.add(context.createConfigIssue(Groups.JDBC.name(), CONNECTION_STRING, JdbcErrors.JDBC_00, formattedError));
     }
 
-    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
-    // TODO: add the per-event specific details here.
-    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
-    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
-    Map<String, String> props = new HashMap<>();
-    props.put("Connection String", hikariConfigBean.getConnectionString());
-    props.put("Offset Column", offsetColumn);
-    props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
-    if (!StringUtils.isEmpty(tableNames)) {
-      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME,
-          hikariConfigBean.getConnectionString() + " " + tableNames
-      );
-      props.put("Table Names", tableNames);
+    if(issues.isEmpty()) {
+      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+      // TODO: add the per-event specific details here.
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, query);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.JDBC.name());
+      Map<String, String> props = new HashMap<>();
+      props.put("Connection String", hikariConfigBean.getConnectionString());
+      props.put("Offset Column", offsetColumn);
+      props.put("Is Incremental Mode", isIncrementalMode ? "true" : "false");
+      if (!StringUtils.isEmpty(tableNames)) {
+        event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME,
+            hikariConfigBean.getConnectionString() + " " + tableNames
+        );
+        props.put("Table Names", tableNames);
 
-    } else {
-      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.getConnectionString());
+      } else {
+        event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, hikariConfigBean.getConnectionString());
+      }
 
+      for (final String n : driverProps.stringPropertyNames()) {
+        props.put(n, driverProps.getProperty(n));
+      }
+      event.setProperties(props);
+      getContext().publishLineageEvent(event);
     }
 
-    for (final String n : driverProps.stringPropertyNames()) {
-      props.put(n, driverProps.getProperty(n));
-    }
-    event.setProperties(props);
-    getContext().publishLineageEvent(event);
     shouldFire = true;
     firstTime = true;
 
