@@ -28,6 +28,7 @@ public enum TlsConfigErrors implements ErrorCode {
   TLS_23("Error attempting to initialize key store with key manager: {}"),
   TLS_50("Error attempting to load trust manager algorithm {}: {}"),
   TLS_51("Error attempting to initialize trust store with key manager: {}"),
+  TLS_60("Certificate Chain must contain at least one certificate"),
   ;
 
   TlsConfigErrors(String msg) {

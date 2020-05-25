@@ -94,6 +94,11 @@
       <version>${bouncycastle.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-utils</artifactId>
+      <version>${project.version}</version>
+    </dependency>
   </dependencies>
 
   <build>
