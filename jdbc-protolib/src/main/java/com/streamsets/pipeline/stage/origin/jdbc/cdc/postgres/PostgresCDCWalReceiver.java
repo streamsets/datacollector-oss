@@ -459,7 +459,7 @@ public class PostgresCDCWalReceiver {
         //sets next LSN
         setNextLSN(LogSequenceNumber.valueOf(ret.getNextLSN()));
       } else {
-        LOG.info("Buffer null");
+        LOG.debug("Buffer null");
       }
 
     } catch (SQLException e) {
