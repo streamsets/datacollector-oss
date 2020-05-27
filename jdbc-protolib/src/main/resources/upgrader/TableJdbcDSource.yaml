@@ -24,9 +24,12 @@ upgrades:
           value: true
   - toVersion: 9
     actions:
-      - setConfig:
-          name: tableJdbcConfigBean.isTablePatternListProvided
-          value: false
-      - setConfig:
-          name: tableJdbcConfigBean.tablePatternList
-          value: []
+      - iterateListConfig:
+          name: tableJdbcConfigBean.tableConfigs
+          actions:
+            - setConfig:
+                name: isTablePatternListProvided
+                value: false
+            - setConfig:
+                name: tablePatternList
+                value: []
