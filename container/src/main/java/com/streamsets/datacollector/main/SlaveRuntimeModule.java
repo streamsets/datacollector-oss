@@ -22,10 +22,10 @@ import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.metrics.MetricsModule;
-import com.streamsets.datacollector.restapi.UserManagementResource;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.api.impl.Utils;
 import dagger.Module;
 import dagger.Provides;
@@ -66,7 +66,7 @@ public class SlaveRuntimeModule {
   @Provides
   @Singleton
   public BuildInfo provideBuildInfo() {
-    return new DataCollectorBuildInfo();
+    return ProductBuildInfo.getDefault();
   }
 
   @Provides

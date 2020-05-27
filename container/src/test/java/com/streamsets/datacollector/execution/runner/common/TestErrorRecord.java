@@ -193,6 +193,7 @@ public class TestErrorRecord {
         "0",
         null,
         new Configuration(),
+        buildInfo,
         runtimeInfo,
         new MetricRegistry(),
         null,

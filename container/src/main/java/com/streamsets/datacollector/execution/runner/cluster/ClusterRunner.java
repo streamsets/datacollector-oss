@@ -810,6 +810,7 @@ public class ClusterRunner extends AbstractRunner {
       rev,
       supportBundleManager,
       getConfiguration(),
+      getBuildInfo(),
       getRuntimeInfo(),
       new MetricRegistry(),
       null,

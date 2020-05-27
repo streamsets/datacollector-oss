@@ -53,7 +53,7 @@ import com.streamsets.datacollector.execution.store.CachePipelineStateStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -72,6 +72,7 @@ import com.streamsets.datacollector.store.impl.FileAclStoreTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Config;
@@ -361,13 +362,15 @@ public class TestUtil {
 
     @Provides @Singleton
     public PipelineStoreTask providePipelineStore(
-        RuntimeInfo info,
+        BuildInfo buidInfo,
+        RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
         PipelineStateStore pipelineStateStore
     ) {
       FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
-          info,
+          buidInfo,
+          runtimeInfo,
           stageLibraryTask,
           pipelineStateStore,
           eventListenerManager,
@@ -549,7 +552,7 @@ public class TestUtil {
 
     @Provides @Singleton
     public BuildInfo provideBuildInfo() {
-      return new DataCollectorBuildInfo();
+      return ProductBuildInfo.getDefault();
     }
 
     @Provides @Singleton
@@ -713,13 +716,29 @@ public class TestUtil {
     }
 
     @Provides @Singleton
-    public PipelineRunner provideProductionPipelineRunner(@Named("name") String name,
-                                                                    @Named("rev") String rev, Configuration configuration, RuntimeInfo runtimeInfo,
-                                                                    MetricRegistry metrics, SnapshotStore snapshotStore,
-                                                                    ThreadHealthReporter threadHealthReporter,
-                                                                    SourceOffsetTracker sourceOffsetTracker) {
-      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner(name, rev, null, configuration, runtimeInfo, metrics, snapshotStore,
-        threadHealthReporter, null);
+    public PipelineRunner provideProductionPipelineRunner(
+        @Named("name") String name,
+        @Named("rev") String rev,
+        Configuration configuration,
+        BuildInfo buildInfo,
+        RuntimeInfo runtimeInfo,
+        MetricRegistry metrics,
+        SnapshotStore snapshotStore,
+        ThreadHealthReporter threadHealthReporter,
+        SourceOffsetTracker sourceOffsetTracker
+    ) {
+      return new com.streamsets.datacollector.execution.runner.common.ProductionPipelineRunner(
+          name,
+          rev,
+          null,
+          configuration,
+          buildInfo,
+          runtimeInfo,
+          metrics,
+          snapshotStore,
+          threadHealthReporter,
+          null
+      );
     }
 
     @Provides @Singleton

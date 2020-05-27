@@ -16,10 +16,13 @@
 package com.streamsets.datacollector.event.handler.remote;
 
 import com.streamsets.datacollector.event.client.api.EventClient;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -41,10 +44,14 @@ public class TestRemoteEventHandlerTask {
     StageLibraryTask stageLibrary = Mockito.mock(StageLibraryTask.class);
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    final BuildInfo buildInfo = ProductBuildInfo.getDefault();
     Configuration conf = new Configuration();
-    RemoteEventHandlerTask task = new RemoteEventHandlerTask(remoteDataCollector, executorService,
+    RemoteEventHandlerTask task = new RemoteEventHandlerTask(
+        remoteDataCollector,
+        executorService,
         executorService,
         stageLibrary,
+        buildInfo,
         runtimeInfo,
         conf
     );

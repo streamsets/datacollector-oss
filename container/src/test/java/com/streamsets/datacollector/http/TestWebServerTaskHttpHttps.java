@@ -18,7 +18,7 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.NopActivation;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -30,6 +30,7 @@ import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.lib.security.http.SSOService;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -124,7 +125,8 @@ public class TestWebServerTaskHttpHttps {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new DataCollectorWebServerTask(new DataCollectorBuildInfo(),
+    return new DataCollectorWebServerTask(
+        ProductBuildInfo.getDefault(),
         runtimeInfo,
         conf,
         new NopActivation(),

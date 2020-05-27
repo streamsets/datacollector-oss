@@ -18,13 +18,14 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.http.TestWebServerTaskHttpHttps.PingServlet;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.BootstrapMain;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -76,7 +77,7 @@ public class SlaveWebServerTaskIT {
     }
     UsersManager usersManager = new TrxUsersManager(file);
     return new SlaveWebServerTask(
-        new DataCollectorBuildInfo(),
+        ProductBuildInfo.getDefault(),
         runtimeInfo,
         conf,
         new NopActivation(),

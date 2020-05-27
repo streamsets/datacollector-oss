@@ -26,6 +26,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.el.PipelineEL;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.event.json.MetricRegistryJson;
@@ -82,6 +83,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   private static final Logger LOG = LoggerFactory.getLogger(PreviewPipelineRunner.class);
 
+  private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final SourceOffsetTracker offsetTracker;
   private final int batchSize;
@@ -111,6 +113,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   public PreviewPipelineRunner(
       String name,
       String rev,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       SourceOffsetTracker offsetTracker,
       int batchSize,
@@ -121,6 +124,7 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
   ) {
     this.name = name;
     this.rev = rev;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.offsetTracker = offsetTracker;
     this.batchSize = batchSize;
@@ -141,6 +145,11 @@ public class PreviewPipelineRunner implements PipelineRunner, PushSourceContextD
 
   @Override
   public void errorNotification(SourcePipe originPipe, List<PipeRunner> pipes, Throwable throwable) {
+  }
+
+  @Override
+  public BuildInfo getBuildInfo() {
+    return buildInfo;
   }
 
   @Override

@@ -127,8 +127,18 @@ public class TestProdPipelineRunnable {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", null, conf, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null, null);
+      new ProductionPipelineRunner(
+          TestUtil.MY_PIPELINE,
+          "0",
+          null,
+          conf,
+          buildInfo,
+          runtimeInfo,
+          new MetricRegistry(),
+          snapshotStore,
+          null,
+          null
+      );
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);

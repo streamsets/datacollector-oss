@@ -15,11 +15,20 @@
  */
 package com.streamsets.datacollector.main;
 
-public class DataCollectorBuildInfo extends BuildInfo {
-  private static final String BUILD_INFO_FILE = "datacollector-buildinfo.properties";
+import com.streamsets.pipeline.BootstrapMain;
 
-  public DataCollectorBuildInfo() {
-    super(BUILD_INFO_FILE);
+public class ProductBuildInfo extends BuildInfo {
+  public static final String DEFAULT_PRODUCT_NAME = BootstrapMain.DEFAULT_PRODUCT_NAME;
+
+  private static final String BUILD_INFO_FILE = "%s-buildinfo.properties";
+
+  public ProductBuildInfo(String productName) {
+    super(String.format(BUILD_INFO_FILE, productName));
   }
 
+  private static final ProductBuildInfo DEFAULT_INSTANCE = new ProductBuildInfo(DEFAULT_PRODUCT_NAME);
+
+  public static BuildInfo getDefault() {
+    return DEFAULT_INSTANCE;
+  }
 }

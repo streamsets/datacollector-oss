@@ -35,6 +35,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.PipelineCreator;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.SDCClassLoader;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Command;
@@ -59,7 +60,7 @@ import java.util.Properties;
 
 public class MetadataGeneratorMain {
 
-  private static final BuildInfo BUILD_INFO = new DataCollectorBuildInfo();
+  private static final BuildInfo BUILD_INFO = ProductBuildInfo.getDefault();
 
   @SuppressWarnings("unchecked")
   public static void main(String[] args) {
@@ -250,7 +251,7 @@ public class MetadataGeneratorMain {
 
       DefinitionsJson definitions = new DefinitionsJson();
 
-      definitions.setExecutorVersion(new DataCollectorBuildInfo().getVersion());
+      definitions.setExecutorVersion(ProductBuildInfo.getDefault().getVersion());
 
       // Populate the definitions with the PipelineDefinition
       List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);

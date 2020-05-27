@@ -90,7 +90,7 @@
       <resource>
         <directory>${basedir}/src/main/resources</directory>
         <includes>
-          <include>datacollector-buildinfo.properties</include>
+          <include>sdc-buildinfo.properties</include>
         </includes>
         <filtering>true</filtering>
       </resource>

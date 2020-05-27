@@ -79,7 +79,7 @@ public class RuntimeModule {
 
   @Provides @Singleton
   public BuildInfo provideBuildInfo() {
-    return new DataCollectorBuildInfo();
+    return new ProductBuildInfo(productName);
   }
 
   @Provides @Singleton

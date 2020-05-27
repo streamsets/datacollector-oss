@@ -147,6 +147,7 @@ public class TestClusterRunner {
     eventListenerManager = new EventListenerManager();
     stageLibraryTask = MockStages.createStageLibrary(emptyCL);
     pipelineStoreTask = new FilePipelineStoreTask(
+        buildInfo,
         runtimeInfo,
         stageLibraryTask,
         pipelineStateStore,
@@ -672,6 +673,7 @@ public class TestClusterRunner {
     eventListenerManager.addStateEventListener(resourceManager);
 
     PipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
+        buildInfo,
         runtimeInfo,
         stageLibraryTask,
         pipelineStateStore,

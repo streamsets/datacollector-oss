@@ -69,7 +69,7 @@ import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -156,6 +156,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private final SafeScheduledExecutorService executorService;
   private final SafeScheduledExecutorService syncEventsExecutorService;
   private final StageLibraryTask stageLibrary;
+  private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final List<String> appDestinationList;
   private final List<String> processAppDestinationList;
@@ -192,10 +193,20 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       SafeScheduledExecutorService executorService,
       SafeScheduledExecutorService syncEventsExecutorService,
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf
   ) {
-    this(remoteDataCollector, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null);
+    this(
+        remoteDataCollector,
+        executorService,
+        syncEventsExecutorService,
+        stageLibrary,
+        buildInfo,
+        runtimeInfo,
+        conf,
+        null
+    );
   }
 
   public RemoteEventHandlerTask(
@@ -203,6 +214,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       SafeScheduledExecutorService executorService,
       SafeScheduledExecutorService syncEventsExecutorService,
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
       DataStore disconnectedSsoCredentialsDataStore
@@ -214,6 +226,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     this.executorService = executorService;
     this.syncEventsExecutorService = syncEventsExecutorService;
     this.stageLibrary = stageLibrary;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.conf = conf;
     this.attempts = conf.get(SEND_METRIC_ATTEMPTS, DEFAULT_SEND_METRIC_ATTEMPTS);
@@ -354,7 +367,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     for (StageDefinition stageDef : stageLibrary.getStages()) {
       stageInfoList.add(new StageInfo(stageDef.getName(), stageDef.getVersion(), stageDef.getLibrary()));
     }
-    BuildInfo buildInfo = new DataCollectorBuildInfo();
     Runtime runtime = Runtime.getRuntime();
     SDCInfoEvent sdcInfoEvent = new SDCInfoEvent(
         runtimeInfo.getId(),

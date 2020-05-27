@@ -18,9 +18,11 @@ package com.streamsets.datacollector.main;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.InputStream;
 import java.util.Properties;
 
+@ThreadSafe
 public abstract class BuildInfo {
   private final Properties info;
 
@@ -47,7 +49,8 @@ public abstract class BuildInfo {
   }
 
   public Properties getInfo() {
-    return info;
+    // return new instance to avoid possibility of modification
+    return new Properties(info);
   }
 
   public String getVersion() {

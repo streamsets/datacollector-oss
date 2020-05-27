@@ -18,6 +18,7 @@ package com.streamsets.datacollector.runner;
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.event.json.MetricRegistryJson;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
@@ -34,6 +35,8 @@ import java.util.List;
  * standalone and cluster modes).
  */
 public interface PipelineRunner extends PipelineFinisherDelegate {
+
+  BuildInfo getBuildInfo();
 
   public RuntimeInfo getRuntimeInfo();
 

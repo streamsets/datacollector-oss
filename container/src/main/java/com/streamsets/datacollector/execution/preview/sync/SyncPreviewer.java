@@ -373,6 +373,7 @@ public class SyncPreviewer implements Previewer {
     PreviewPipelineRunner runner = new PreviewPipelineRunner(
         name,
         rev,
+        buildInfo,
         runtimeInfo,
         tracker,
         batchSize,

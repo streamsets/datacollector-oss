@@ -37,7 +37,7 @@ import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
@@ -55,6 +55,7 @@ import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
@@ -115,6 +116,7 @@ public class TestStandalonePipelineManager {
       StandaloneRunner.class,
       EventListenerManager.class,
       LockCache.class,
+      BuildInfo.class,
       RuntimeInfo.class
     },
     includes = LockCacheModule.class,
@@ -132,7 +134,7 @@ public class TestStandalonePipelineManager {
 
     @Provides @Singleton
     public BuildInfo provideBuildInfo() {
-      return new DataCollectorBuildInfo();
+      return ProductBuildInfo.getDefault();
     }
 
     @Provides @Singleton
@@ -177,6 +179,7 @@ public class TestStandalonePipelineManager {
 
     @Provides @Singleton
     public PipelineStoreTask providePipelineStoreTask(
+        BuildInfo buildInfo,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -184,6 +187,7 @@ public class TestStandalonePipelineManager {
         PipelineCredentialHandler pipelineCredentialsHandler
     ) {
       FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(
+          buildInfo,
           runtimeInfo,
           stageLibraryTask,
           pipelineStateStore,

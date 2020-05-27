@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.runner;
 
 import com.codahale.metrics.MetricRegistry;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
@@ -25,7 +24,8 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
@@ -93,6 +93,7 @@ public class StageContext extends ProtoContext implements
   private final long startTime;
   private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
+  private BuildInfo buildInfo;
   private RuntimeInfo runtimeInfo;
   private final Map services;
   private final boolean isErrorStage;
@@ -209,6 +210,7 @@ public class StageContext extends ProtoContext implements
       Stage.Info stageInfo,
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       EmailSender emailSender,
       Configuration configuration,
@@ -251,6 +253,7 @@ public class StageContext extends ProtoContext implements
     this.onRecordError = onRecordError;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.sdcId = runtimeInfo.getId();
     this.sharedRunnerMap = sharedRunnerMap;
@@ -323,7 +326,7 @@ public class StageContext extends ProtoContext implements
 
   @Override
   public String getEnvironmentVersion() {
-    return new DataCollectorBuildInfo().getVersion();
+    return buildInfo.getVersion();
   }
 
   @Override

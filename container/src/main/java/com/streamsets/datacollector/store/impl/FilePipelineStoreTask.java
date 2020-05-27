@@ -36,7 +36,7 @@ import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -105,6 +105,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
 
   @Inject
   public FilePipelineStoreTask(
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       StageLibraryTask stageLibrary,
       PipelineStateStore pipelineStateStore,
@@ -114,12 +115,12 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     json = ObjectMapperFactory.get();
     pipelineToRuleDefinitionMap = new ConcurrentHashMap<>();
     this.pipelineStateStore = pipelineStateStore;
     this.lockCache = lockCache;
-    buildInfo = new DataCollectorBuildInfo();
     pipelineCreator = new PipelineCreator(
         stageLibrary.getPipeline(),
         SCHEMA_VERSION,
