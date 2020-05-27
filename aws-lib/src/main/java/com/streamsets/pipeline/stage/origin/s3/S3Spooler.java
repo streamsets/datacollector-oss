@@ -149,8 +149,10 @@ public class S3Spooler {
   }
 
   private void addObjectToQueue(S3ObjectSummary objectSummary) {
-    Preconditions.checkNotNull(objectSummary, "file cannot be null");
-    if (!objectQueue.contains(objectSummary)) {
+  Preconditions.checkNotNull(objectSummary, "file cannot be null");
+  if (objectSummary.getKey().endsWith("/")) {
+    LOG.warn("Object '{}' is a directory, ignoring", objectSummary.getKey());
+  } else if (!objectQueue.contains(objectSummary)) {
       objectQueue.add(objectSummary);
       spoolQueueMeter.mark(objectQueue.size());
     } else {
