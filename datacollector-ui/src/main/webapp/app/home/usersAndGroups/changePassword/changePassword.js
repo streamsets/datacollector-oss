@@ -19,7 +19,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ChangePasswordModalInstanceController', function ($rootScope, $scope, $modalInstance, $translate, api) {
+  .controller('ChangePasswordModalInstanceController', function ($rootScope, $scope, $modalInstance, api) {
     angular.extend($scope, {
       showLoading: false,
       isOffsetResetSucceed: false,
@@ -36,6 +36,9 @@ angular
         $scope.operationInProgress = true;
         api.admin.changeUserPassword($rootScope.common.userName, $scope.userModel.oldPwd, $scope.userModel.newPwd)
           .then(function() {
+            $rootScope.common.infoList = [{
+              message: 'Password updated'
+            }];
             $modalInstance.close(null);
           })
           .catch(function(res) {
