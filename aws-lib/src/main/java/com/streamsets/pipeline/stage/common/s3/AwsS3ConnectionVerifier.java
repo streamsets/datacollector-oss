@@ -16,9 +16,13 @@
 package com.streamsets.pipeline.stage.common.s3;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
+import com.streamsets.pipeline.stage.origin.s3.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +30,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@StageDef(
+    version = 1,
+    label = "Amazon S3 Connection Verifier",
+    description = "Verifies connections for Amazon S3",
+    upgraderDef = "upgrader/AwsS3ConnectionVerifier.yaml",
+    onlineHelpRefUrl = ""
+)
+@HideStage(HideStage.Type.CONNECTION_VERIFIER)
+@ConfigGroups(Groups.class)
 public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   private final static Logger LOG = LoggerFactory.getLogger(AwsS3ConnectionVerifier.class);
 
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String BUCKET_EXIST_PREFIX = "streamsets-s3-conn-veri-";
 
-  @ConfigDefBean(groups = "S3")
+  @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public AwsS3Connection connection;
 
   @Override
