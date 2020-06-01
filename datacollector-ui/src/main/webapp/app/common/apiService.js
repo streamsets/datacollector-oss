@@ -1324,6 +1324,15 @@ angular.module('dataCollectorApp.common')
           method: 'DELETE',
           url: url
         });
+      },
+
+      /**
+       * Fetch list of static stage icons
+       *
+       * @returns {*}
+       */
+      getStageAssetIcons: function() {
+        return $http.get('/assets/stage/stageIcons.json');
       }
     };
 

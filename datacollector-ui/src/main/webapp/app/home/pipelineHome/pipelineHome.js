@@ -151,6 +151,43 @@ angular
           return;
         }
 
+        if (stage.notInstalled) {
+          var stageInfo = pipelineService.getAllLibraryList(stage.name);
+          if (stageInfo && stageInfo.libraryList && stageInfo.libraryList.length) {
+            var modalInstance = $modal.open({
+              templateUrl: 'app/home/packageManager/install_missing_stage_library/install_missing_stage_library.tpl.html',
+              controller: 'InstallMissingLibraryModalInstanceController',
+              size: '',
+              backdrop: 'static',
+              resolve: {
+                customRepoUrl: function () {
+                  return $rootScope.$storage.customPackageManagerRepoUrl;
+                },
+                missingStageInfo: function() {
+                  return stageInfo;
+                },
+                libraryList: function () {
+                  return [{
+                    stageLibraryManifest: {
+                      stageLibId: stageInfo.libraryList[0].libraryId,
+                      stageLibLabel: stageInfo.libraryList[0].libraryLabel
+                    }
+                  }];
+                },
+                withStageLibVersion: function () {
+                  return false;
+                }
+              }
+            });
+            modalInstance.result.then(function() {
+              angular.forEach(libraryList, function(library) {
+                library.installed = true;
+              });
+            });
+          }
+          return;
+        }
+
         if (stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
           angular.forEach($scope.stageInstances, function (sourceStageInstance) {

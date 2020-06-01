@@ -139,7 +139,8 @@ angular.module('dataCollectorApp')
         showNameColumn: true
       },
       runPreviewForFieldPaths: true,
-      lineWrapping: true
+      lineWrapping: true,
+      dontShowMissingStages: false
     });
 
     $rootScope.common = $rootScope.common || {

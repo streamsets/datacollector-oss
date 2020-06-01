@@ -910,6 +910,7 @@
     "value": "Value"
   },
   "sdcSettings": {
+    "dontShowMissingStages": "Hide missing stage library stages inside the pipeline canvas > stage library list",
     "title": "Settings",
     "helpBar": "Hide Pipeline Creation Help Bar",
     "lineWrapping": "Wrap long lines in properties",

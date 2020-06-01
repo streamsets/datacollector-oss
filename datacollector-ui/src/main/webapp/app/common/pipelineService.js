@@ -16,7 +16,7 @@
 
 // Service for providing access to the Pipeline utility functions.
 angular.module('dataCollectorApp.common')
-  .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _, $window) {
+  .service('pipelineService', function(pipelineConstant, api, $q, $translate, $modal, $location, $route, _) {
 
     var self = this;
     var translations = {};
@@ -49,13 +49,55 @@ angular.module('dataCollectorApp.common')
         self.initializeDefer = $q.defer();
 
         $q.all([
-          api.pipelineAgent.getDefinitions()
+          api.pipelineAgent.getDefinitions(),
+          api.pipelineAgent.getLibraries(null, false),
+          api.pipelineAgent.getStageAssetIcons()
         ])
           .then(function (results) {
             var definitions = results[0].data;
+            var repositoryManifestList = results[1].data;
+            var stageAssetIcons = results[2].data;
             var rulesElMetadata = definitions.rulesElMetadata;
             var elFunctionDefinitions = [];
             var elConstantDefinitions = [];
+
+            // Process not installed stage libraries
+            var stageNameToLibraryListMap = {};
+            angular.forEach(repositoryManifestList, function (value) {
+              if (value.stageLibraries && value.stageLibraries.length) {
+                angular.forEach(value.stageLibraries, function (stageLibrary) {
+                  if (stageLibrary.stageLibraryManifest && stageLibrary.stageLibraryManifest.stages &&
+                    stageLibrary.stageLibraryManifest.stages.length) {
+                    angular.forEach(stageLibrary.stageLibraryManifest.stages, function(stage) {
+                      if (!stageNameToLibraryListMap[stage.name]) {
+                        stageNameToLibraryListMap[stage.name] = {
+                          definition: stage,
+                          libraryList: [],
+                          available: false
+                        };
+                      }
+                      stageNameToLibraryListMap[stage.name].libraryList.push({
+                        libraryId: stageLibrary.stageLibraryManifest.stageLibId,
+                        libraryLabel: stageLibrary.stageLibraryManifest.stageLibLabel,
+                        installed: stageLibrary.stageLibraryManifest.installed
+                      });
+                      if (stageLibrary.stageLibraryManifest.installed) {
+                        stageNameToLibraryListMap[stage.name].available = true;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+
+            self.stageNameToLibraryListMap = stageNameToLibraryListMap;
+
+            if (stageAssetIcons) {
+              self.stageAssetIconsMap = {};
+              angular.forEach(stageAssetIcons, function(icon) {
+                self.stageAssetIconsMap[icon] = true;
+              });
+            }
 
             // Definitions
             self.pipelineConfigDefinition = definitions.pipeline[0];
@@ -96,6 +138,22 @@ angular.module('dataCollectorApp.common')
                 });
               }
 
+            });
+
+            // merge not installed stages
+            angular.forEach(stageNameToLibraryListMap, function (d, stageName) {
+              if (!d.available) {
+                d.definition.notInstalled = true;
+                d.definition.hideStage = [];
+                d.definition.executionModes = [
+                  "STANDALONE",
+                  "CLUSTER_BATCH",
+                  "CLUSTER_YARN_STREAMING",
+                  "CLUSTER_MESOS_STREAMING",
+                  "EMR_BATCH"
+                ];
+                self.stageDefinitions.push(d.definition);
+              }
             });
 
             self.serviceDefinitionsMap = {};
@@ -984,7 +1042,17 @@ angular.module('dataCollectorApp.common')
      */
     this.getStageIconURL = function(stage) {
       if (stage.icon) {
-        return 'rest/' + api.apiVersion + '/definitions/stages/' + stage.library + '/' + stage.name + '/icon';
+        if (stage.notInstalled) {
+          if (this.stageAssetIconsMap[stage.icon]) {
+            return 'assets/stage/' + stage.icon;
+          } else {
+            console.warn('Statge Icon is missing in assets folder - ', stage.icon);
+            return 'assets/stage/sdcipc.png';
+          }
+        } else {
+          return 'rest/' + api.apiVersion + '/definitions/stages/' + stage.library + '/' + stage.name + '/icon';
+        }
+
       } else {
         switch(stage.type) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
@@ -2078,6 +2146,7 @@ angular.module('dataCollectorApp.common')
             return;
           }
           if (s.type === type && !s.errorStage && !s.statsAggregatorStage &&
+            !s.notInstalled &&
             s.hideStage.length === 0 &&
             s.name.indexOf('_fragment_') === -1 &&
             s.library !== 'streamsets-datacollector-stats-lib' &&
@@ -2097,5 +2166,11 @@ angular.module('dataCollectorApp.common')
 
     this.isBetaStage = function(stageName) {
       return this.betaStages[stageName];
+    };
+
+    this.getAllLibraryList = function(stageName) {
+      if (this.stageNameToLibraryListMap[stageName]) {
+        return this.stageNameToLibraryListMap[stageName];
+      }
     };
   });
