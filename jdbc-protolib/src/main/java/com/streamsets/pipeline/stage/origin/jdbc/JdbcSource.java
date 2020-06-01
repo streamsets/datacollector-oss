@@ -377,7 +377,7 @@ public class JdbcSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && commonSourceConfigBean.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && commonSourceConfigBean.maxBatchSize > maxBatchSize) {
       getContext().reportError(JdbcErrors.JDBC_502, maxBatchSize);
       checkBatchSize = false;
     }

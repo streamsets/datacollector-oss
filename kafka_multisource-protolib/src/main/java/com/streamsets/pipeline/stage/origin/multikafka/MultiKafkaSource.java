@@ -448,7 +448,7 @@ public class MultiKafkaSource extends BasePushSource {
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     shutdownCalled.set(false);
     batchSize = Math.min(maxBatchSize, conf.maxBatchSize);
-    if (conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(KafkaErrors.KAFKA_78, maxBatchSize);
     }
 

@@ -216,7 +216,7 @@ public abstract class MysqlSource extends BaseSource {
 
     int recordCounter = 0;
     int batchSize = getConfig().maxBatchSize > maxBatchSize ? maxBatchSize : getConfig().maxBatchSize;
-    if (checkBatchSize && getConfig().maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && getConfig().maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.MYSQL_010, maxBatchSize);
       checkBatchSize = false;
     }

@@ -108,7 +108,7 @@ public class MongoDBSource extends AbstractMongoDBSource {
 
     try {
       int batchSize = Math.min(configBean.batchSize, maxBatchSize);
-      if (checkBatchSize && configBean.batchSize > maxBatchSize) {
+      if (!getContext().isPreview() && checkBatchSize && configBean.batchSize > maxBatchSize) {
         getContext().reportError(Errors.MONGODB_43, maxBatchSize);
         checkBatchSize = false;
       }

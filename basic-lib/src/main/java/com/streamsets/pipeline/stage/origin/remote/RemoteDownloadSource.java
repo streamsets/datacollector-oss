@@ -221,7 +221,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // This method returns NOTHING_READ when only no events have ever been read
     final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
-    if (checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.REMOTE_DOWNLOAD_09, maxBatchSize);
       checkBatchSize = false;
     }

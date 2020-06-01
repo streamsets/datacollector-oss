@@ -17,7 +17,9 @@
 package com.streamsets.pipeline.stage.origin.pulsar;
 
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseStage;
 import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,6 +28,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
+import java.lang.reflect.Field;
 import java.util.Collections;
 
 import static com.streamsets.pipeline.stage.Utils.TestUtilsPulsar.getBasicConfig;
@@ -76,27 +79,27 @@ public class TestPulsarSource {
   }
 
   @Test
-  public void testInitNoIssues() {
+  public void testInitNoIssues() throws Exception {
     createPulsarSourceNoIssues();
     Assert.assertEquals(0, pulsarSource.init().size());
   }
 
   @Test
-  public void testInitWithPulsarMessageConverterIssues() {
+  public void testInitWithPulsarMessageConverterIssues() throws Exception {
     createPulsarSourceNoIssues();
     Mockito.when(pulsarMessageConverterMock.init(Mockito.any())).thenReturn(getStageConfigIssues());
     Assert.assertTrue(!pulsarSource.init().isEmpty());
   }
 
   @Test
-  public void testInitWithPulsarMessageConsumerIssues() {
+  public void testInitWithPulsarMessageConsumerIssues() throws Exception {
     createPulsarSourceNoIssues();
     Mockito.when(pulsarMessageConsumerMock.init(Mockito.any())).thenReturn(getStageConfigIssues());
     Assert.assertTrue(!pulsarSource.init().isEmpty());
   }
 
   @Test
-  public void testProduceSuccess() {
+  public void testProduceSuccess() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
 
@@ -112,7 +115,7 @@ public class TestPulsarSource {
   }
 
   @Test(expected = StageException.class)
-  public void testProduceStageException() throws StageException {
+  public void testProduceStageException() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
 
@@ -126,7 +129,7 @@ public class TestPulsarSource {
   }
 
   @Test
-  public void testCommitSuccess() {
+  public void testCommitSuccess() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
     try {
@@ -137,7 +140,7 @@ public class TestPulsarSource {
   }
 
   @Test(expected = StageException.class)
-  public void testCommitStageException() throws StageException {
+  public void testCommitStageException() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
 
@@ -147,24 +150,27 @@ public class TestPulsarSource {
   }
 
   @Test
-  public void testDestroyPulsarMessageConsumerNotNull() {
+  public void testDestroyPulsarMessageConsumerNotNull() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
     pulsarSource.destroy();
   }
 
   @Test
-  public void testDestroyPulsarMessageConsumerNull() {
+  public void testDestroyPulsarMessageConsumerNull() throws Exception {
     createPulsarSourceNoIssues();
     pulsarSource.init();
     pulsarSource.setPulsarMessageConsumer(null);
     pulsarSource.destroy();
   }
 
-  private void createPulsarSourceNoIssues() {
+  private void createPulsarSourceNoIssues() throws Exception {
     pulsarMessageConverterMock = Mockito.mock(PulsarMessageConverter.class);
     pulsarMessageConsumerFactoryMock = Mockito.mock(PulsarMessageConsumerFactory.class);
     pulsarMessageConsumerMock = Mockito.mock(PulsarMessageConsumer.class);
+
+    Source.Context context = Mockito.mock(Source.Context.class);
+    Mockito.when(context.isPreview()).thenReturn(false);
 
     Mockito.when(pulsarMessageConsumerFactoryMock.create(Mockito.any(), Mockito.any(), Mockito.any()))
         .thenReturn(pulsarMessageConsumerMock);
@@ -173,6 +179,10 @@ public class TestPulsarSource {
 
     pulsarSource = new PulsarSource(getBasicConfig(), getSourceConfig(), pulsarMessageConsumerFactoryMock,
         pulsarMessageConverterMock);
+
+    Field contextField = BaseStage.class.getDeclaredField("context");
+    contextField.setAccessible(true);
+    contextField.set(pulsarSource, context);
   }
 
 }

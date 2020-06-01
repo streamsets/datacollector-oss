@@ -93,7 +93,7 @@ public abstract class AbstractAmazonS3Source extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastSourceOffset, int maxBatchSize) throws StageException {
     int batchSize = Math.min(s3ConfigBean.basicConfig.maxBatchSize, maxBatchSize);
-    if (s3ConfigBean.basicConfig.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && s3ConfigBean.basicConfig.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.S3_SPOOLDIR_27, maxBatchSize);
     }
 

@@ -301,7 +301,7 @@ public class OracleCDCSource extends BaseSource {
       dummyRecord = getContext().createRecord("DUMMY");
     }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
       getContext().reportError(JDBC_502, maxBatchSize);
       checkBatchSize = false;
     }

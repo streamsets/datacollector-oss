@@ -118,7 +118,7 @@ public class RabbitSource extends BaseSource implements OffsetCommitter {
 
     long maxTime = System.currentTimeMillis() + conf.basicConfig.maxWaitTime;
     int maxRecords = Math.min(maxBatchSize, conf.basicConfig.maxBatchSize);
-    if (checkBatchSize && conf.basicConfig.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.basicConfig.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.RABBITMQ_11, maxBatchSize);
       checkBatchSize = false;
     }

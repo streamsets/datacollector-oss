@@ -387,7 +387,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     sshTunnelService.healthCheck();
     int batchSize = Math.min(maxBatchSize, commonSourceConfigBean.maxBatchSize);
-    if (commonSourceConfigBean.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && commonSourceConfigBean.maxBatchSize > maxBatchSize) {
       getContext().reportError(JdbcErrors.JDBC_502, maxBatchSize);
     }
 

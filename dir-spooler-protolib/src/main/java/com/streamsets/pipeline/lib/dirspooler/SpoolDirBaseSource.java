@@ -346,7 +346,7 @@ public abstract class SpoolDirBaseSource extends BasePushSource {
   @Override
   public void produce(Map<String, String> lastSourceOffset, int maxBatchSize) throws StageException {
     int batchSize = Math.min(conf.batchSize, maxBatchSize);
-    if (conf.batchSize > maxBatchSize) {
+    if (!getContext().isPreview() && conf.batchSize > maxBatchSize) {
       getContext().reportError(Errors.SPOOLDIR_37, maxBatchSize);
     }
 

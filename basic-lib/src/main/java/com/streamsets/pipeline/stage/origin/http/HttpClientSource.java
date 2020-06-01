@@ -289,7 +289,7 @@ public class HttpClientSource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     long start = System.currentTimeMillis();
     int chunksToFetch = Math.min(conf.basic.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.HTTP_35, maxBatchSize);
       checkBatchSize = false;
     }

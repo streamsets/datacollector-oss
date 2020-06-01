@@ -104,7 +104,7 @@ public class UDPSource extends BaseSource {
     Utils.checkNotNull(incomingQueue, "Incoming queue is null");
 
     maxBatchSize = Math.min(conf.batchSize, maxBatchSize);
-    if (checkBatchSize && conf.batchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.batchSize > maxBatchSize) {
       getContext().reportError(Errors.UDP_09, maxBatchSize);
       checkBatchSize = false;
     }

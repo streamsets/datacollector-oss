@@ -73,7 +73,7 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
     int batchSize = conf.maxBatchSize > maxBatchSize ? maxBatchSize : conf.maxBatchSize;
-    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(KafkaErrors.KAFKA_78, maxBatchSize);
       checkBatchSize = false;
     }
