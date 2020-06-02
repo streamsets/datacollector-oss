@@ -18,18 +18,24 @@ package com.streamsets.pipeline.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum  WholeFileExistsAction implements Label{
-  TO_ERROR("Send to Error"),
-  OVERWRITE("Overwrite"),
+  TO_ERROR("Send to Error", com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction.TO_ERROR),
+  OVERWRITE("Overwrite", com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction.OVERWRITE),
   ;
 
   private final String label;
+  private final com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction api;
 
-  WholeFileExistsAction(String label) {
+  WholeFileExistsAction(String label, com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction api) {
     this.label = label;
+    this.api = api;
   }
 
   @Override
   public String getLabel() {
     return label;
+  }
+
+  public com.streamsets.pipeline.api.service.dataformats.WholeFileExistsAction toApi() {
+    return api;
   }
 }

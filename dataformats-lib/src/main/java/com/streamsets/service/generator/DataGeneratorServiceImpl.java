@@ -130,17 +130,17 @@ public class DataGeneratorServiceImpl extends BaseService implements DataFormatG
 
   @Override
   public WholeFileExistsAction wholeFileExistsAction() {
-    return null;
+    return dataGeneratorFormatConfig.wholeFileExistsAction.toApi();
   }
 
   @Override
   public boolean wholeFileIncludeChecksumInTheEvents() {
-    return false;
+    return dataGeneratorFormatConfig.includeChecksumInTheEvents;
   }
 
   @Override
   public WholeFileChecksumAlgorithm wholeFileChecksumAlgorithm() {
-    return null;
+    return dataGeneratorFormatConfig.checksumAlgorithm.toApi();
   }
 
   /**

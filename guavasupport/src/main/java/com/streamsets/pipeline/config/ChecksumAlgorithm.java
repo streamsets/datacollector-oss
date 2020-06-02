@@ -21,18 +21,20 @@ import com.streamsets.pipeline.lib.hashing.HashingUtil;
 
 public enum ChecksumAlgorithm implements Label {
   //Adler32, Siphash24, CRC and CRC32 are not supported for guavas < 14.0 (There are some stages which use guavas 11)
-  MD5(HashingUtil.HashType.MD5),
-  SHA1(HashingUtil.HashType.SHA1),
-  SHA256(HashingUtil.HashType.SHA256),
-  SHA512(HashingUtil.HashType.SHA512),
-  MURMUR3_32(HashingUtil.HashType.MURMUR3_32),
-  MURMUR3_128(HashingUtil.HashType.MURMUR3_128),
+  MD5(HashingUtil.HashType.MD5, WholeFileChecksumAlgorithm.MD5),
+  SHA1(HashingUtil.HashType.SHA1, WholeFileChecksumAlgorithm.SHA1),
+  SHA256(HashingUtil.HashType.SHA256, WholeFileChecksumAlgorithm.SHA256),
+  SHA512(HashingUtil.HashType.SHA512, WholeFileChecksumAlgorithm.SHA512),
+  MURMUR3_32(HashingUtil.HashType.MURMUR3_32, WholeFileChecksumAlgorithm.MURMUR3_32),
+  MURMUR3_128(HashingUtil.HashType.MURMUR3_128, WholeFileChecksumAlgorithm.MURMUR3_128),
   ;
 
   HashingUtil.HashType hashType;
+  WholeFileChecksumAlgorithm api;
 
-  ChecksumAlgorithm(HashingUtil.HashType hashType) {
+  ChecksumAlgorithm(HashingUtil.HashType hashType, WholeFileChecksumAlgorithm api) {
     this.hashType = hashType;
+    this.api = api;
   }
 
   public String getLabel() {
@@ -41,6 +43,10 @@ public enum ChecksumAlgorithm implements Label {
 
   public HashingUtil.HashType getHashType() {
     return this.hashType;
+  }
+
+  public WholeFileChecksumAlgorithm toApi() {
+    return api;
   }
 
   public static ChecksumAlgorithm forApi(WholeFileChecksumAlgorithm other) {
