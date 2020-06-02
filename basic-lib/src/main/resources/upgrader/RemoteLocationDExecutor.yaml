@@ -32,5 +32,5 @@ upgrades:
           name: conf.remoteConfig.ftpsCertificateChain
           value: []
       - setConfig:
-          name: conf.remoteConfig.trustedCertificates
+          name: conf.remoteConfig.ftpsTrustedCertificates
           value: []

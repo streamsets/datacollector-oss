@@ -52,6 +52,6 @@ public class TestRemoteLocationExecutorUpgrader {
     UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "useRemoteKeyStore", false);
     UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsPrivateKey", "");
     UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsCertificateChain", new ArrayList<>());
-    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "trustedCertificates", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsTrustedCertificates", new ArrayList<>());
   }
 }

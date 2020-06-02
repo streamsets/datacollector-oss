@@ -56,7 +56,7 @@ public class TestStatsSdcIpcTargetUpgrader {
     Mockito.doReturn(2).when(context).getFromVersion();
     Mockito.doReturn(3).when(context).getToVersion();
 
-    String configPrefix = "configs.tlsConfigBean.";
+    String configPrefix = "config.tlsConfigBean.";
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
