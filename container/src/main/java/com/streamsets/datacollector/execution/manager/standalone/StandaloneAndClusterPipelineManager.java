@@ -62,9 +62,15 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
@@ -75,6 +81,16 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneAndClusterPipelineManager.class);
   private static final String PIPELINE_MANAGER = "PipelineManager";
+
+  @VisibleForTesting
+  static final Set<PosixFilePermission> GLOBAL_ALL_PERM = PosixFilePermissions.fromString(
+      "rwxrwxrwx"
+  );
+
+  @VisibleForTesting
+  static final Set<PosixFilePermission> USER_ONLY_PERM = PosixFilePermissions.fromString(
+      "rwx------"
+  );
 
   private final ObjectGraph objectGraph;
 
@@ -104,10 +120,15 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private final long runnerExpiryInitialDelay;
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
-  private static final String KAFKA_KEYTAB_LOCATION_KEY = "stage.conf_kafka.keytab.location";
-  private static final String KAFKA_KEYTAB_LOCATION_DEFAULT = "/tmp/sdc";
-  private static final String KAFKA_KEYTAB_DIR = "kafka-keytabs";
 
+  /**
+   * These properties need to be kept in sync with KafkaKerberosUtil
+   */
+  @VisibleForTesting
+  static final String KAFKA_KEYTAB_LOCATION_KEY = "stage.conf_kafka.keytab.location";
+  private static final String KAFKA_KEYTAB_LOCATION_DEFAULT = "/tmp/sdc";
+  @VisibleForTesting
+  static final String KAFKA_KEYTAB_DIR = "kafka-keytabs";
 
   public StandaloneAndClusterPipelineManager(ObjectGraph objectGraph) {
     super(PIPELINE_MANAGER);
@@ -377,13 +398,90 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     createAndRestrictKafkaKeytabDir();
   }
 
-  private File getKafkaKeytabDir() {
+  private Path keytabDirHelper(Path path, Set<PosixFilePermission> permissions, String label, boolean create) {
+    final File dir = path.toFile();
+
+    final boolean exists = dir.exists();
+    if (!exists) {
+      if (create) {
+        LOG.debug("Attempting to create {} directory at: {}", label, path.toString());
+        try {
+          final Path directories = Files.createDirectories(path);
+          Files.setPosixFilePermissions(path, permissions);
+          return directories;
+        } catch (IOException e) {
+          throw new IllegalStateException(String.format(
+              "Failed to create %s directory at %s: %s",
+              label,
+              path.toString(),
+              e.getMessage()
+          ), e);
+        }
+      } else {
+        // doesn't exist, but shouldn't be created either; return the path as it was passed in
+        return path;
+      }
+    } else /* exists = true */ {
+      final boolean isDirectory = dir.isDirectory();
+      if (!isDirectory) {
+        throw new IllegalStateException(String.format(
+            "%s directory is not a directory, but a file: %s",
+            label,
+            dir.toString()
+        ));
+      } else /* isDirectory = true */ {
+        LOG.trace("{} directory already exists at: {}", label, path.toString());
+        try {
+          final Set<PosixFilePermission> existingPermissions = Files.getPosixFilePermissions(path);
+          if (!GLOBAL_ALL_PERM.equals(existingPermissions)) {
+            if (LOG.isWarnEnabled()) {
+              LOG.warn(
+                  "Existing permissions for top-level Kafka keytab dir at {} were {}; changing them to {}",
+                  path.toString(),
+                  PosixFilePermissions.toString(existingPermissions),
+                  PosixFilePermissions.toString(GLOBAL_ALL_PERM)
+              );
+            }
+            Files.setPosixFilePermissions(path, GLOBAL_ALL_PERM);
+          }
+        } catch (IOException e) {
+          throw new RuntimeException("Failed to get existing permissions for top level keytab dir", e);
+        }
+        return path;
+      }
+    }
+  }
+
+  /**
+   * Creates the global top-level dir for all Kafka keytabs. The path is based on the configuration properties, and
+   * the permission will be globally readable/writeable. Individual subdirectories will be restricted to only
+   * the user who is running the container.
+   *
+   * @param create whether the directory should be created, if it doesn't exist
+   * @return the {@link Path} to the top level Kafka keytab dir
+   */
+  private Path getOrCreateTopKeytabDir(boolean create) {
     String kafkaKeytabDirPath = configuration.get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_KEYTAB_LOCATION_DEFAULT);
-    return Paths.get(kafkaKeytabDirPath).resolve(KAFKA_KEYTAB_DIR).toFile();
+    final Path path = Paths.get(kafkaKeytabDirPath).resolve(KAFKA_KEYTAB_DIR);
+    return keytabDirHelper(path, GLOBAL_ALL_PERM, "top level Kafka keytab", create);
+  }
+
+  /**
+   * Creates the user-specific Kafka keytab dir, directly underneath the top level directory. It will
+   * only be readable and writeable by the user running the container.
+   *
+   * @param create whether the directory should be created, if it doesn't exist
+   * @return the {@link Path} to the user-specific Kafka keytab dir
+   */
+  private File getOrCreateKafkaKeytabDir(boolean create) {
+    final Path topLevelDir = getOrCreateTopKeytabDir(create);
+    final Path userLevelDir = topLevelDir.resolve(System.getProperty("user.name"));
+
+    return keytabDirHelper(userLevelDir, USER_ONLY_PERM, "user level Kafka keytab", create).toFile();
   }
 
   private void cleanUpKafkaKeytabDir() {
-    File kafkaKeytabDir = getKafkaKeytabDir();
+    File kafkaKeytabDir = getOrCreateKafkaKeytabDir(false);
     if (kafkaKeytabDir.exists()) {
       if (kafkaKeytabDir.isDirectory()) {
         boolean canRead = kafkaKeytabDir.canRead();
@@ -418,12 +516,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   }
 
   private void createAndRestrictKafkaKeytabDir() {
-    File kafkaKeytabDir = getKafkaKeytabDir();
-    boolean created = kafkaKeytabDir.exists() || kafkaKeytabDir.mkdirs();
-    if (!created || !kafkaKeytabDir.setReadable(false, false)) {
-      LOG.warn("Failed to create directory {} with restricted read permissions", kafkaKeytabDir.getName());
-      throw new RuntimeException("Can't start SDC without creating secure directory for Kafka Keytabs");
-    }
+    getOrCreateKafkaKeytabDir(true);
   }
 
   @Override
