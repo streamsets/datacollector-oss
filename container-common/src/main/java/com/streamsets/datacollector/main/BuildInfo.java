@@ -50,7 +50,9 @@ public abstract class BuildInfo {
 
   public Properties getInfo() {
     // return new instance to avoid possibility of modification
-    return new Properties(info);
+    final Properties propertiesClone = new Properties();
+    propertiesClone.putAll(this.info);
+    return propertiesClone;
   }
 
   public String getVersion() {
