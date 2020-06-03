@@ -20,7 +20,16 @@ import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 public class SparkClusterTypeChooserValues extends BaseEnumChooserValues<SparkClusterType> {
 
   public SparkClusterTypeChooserValues() {
-    super(SparkClusterType.class);
+    super( // Everything except DATAPROC
+      SparkClusterType.AZURE_HD_INSIGHT,
+      SparkClusterType.DATABRICKS,
+      SparkClusterType.EMR,
+      SparkClusterType.YARN,
+      SparkClusterType.KUBERNETES,
+      SparkClusterType.LOCAL,
+      SparkClusterType.STANDALONE_SPARK_CLUSTER,
+      SparkClusterType.SQL_SERVER_BIG_DATA_CLUSTER
+    );
   }
 
 }
