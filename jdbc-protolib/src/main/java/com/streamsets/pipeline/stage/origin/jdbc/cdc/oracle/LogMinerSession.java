@@ -15,10 +15,16 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +42,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
+
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.COMMIT_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DDL_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DELETE_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.INSERT_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.ROLLBACK_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.SELECT_FOR_UPDATE_CODE;
+import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.UPDATE_CODE;
 
 
 /**
@@ -68,6 +83,16 @@ public class LogMinerSession {
   private static final String END_SCN_ARG = "ENDSCN => {},";
   private static final String DATETIME_FORMAT = "dd-MM-yyyy HH:mm:ss";  // Must match START_TIME_ARG and END_TIME_ARG.
   private static final String TO_DATE_FORMAT = "DD-MM-YYYY HH24:MI:SS";
+
+  // Template to query LogMiner content after a session was started. Placeholders for the COMMIT_SCN column and the
+  // where conditions.
+  private static final String SELECT_LOGMNR_CONTENT_QUERY =
+      "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, {}, SEQUENCE#, CSF,"
+      + " XIDUSN, XIDSLT, XIDSQN, RS_ID, SSN, SEG_OWNER, ROLLBACK, ROW_ID "
+      + " FROM V$LOGMNR_CONTENTS "
+      + " WHERE {}";
+  private static final String COMMIT_SCN_COLUMN = "COMMIT_SCN";
+  private static final String COMMIT_SCN_COLUMN_OLD = "CSCN";  // Oracle version < 11
 
   // Templates to manually manage the LogMiner redo log list.
   private static final String ADD_LOGFILE_NEWLIST_CMD = "BEGIN DBMS_LOGMNR.ADD_LOGFILE(?, DBMS_LOGMNR.NEW); END;";
@@ -139,12 +164,15 @@ public class LogMinerSession {
   private final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
 
   private final Connection connection;
+  private final int databaseVersion;
   private final String configOptions;
   private final boolean continuousMine;
   private final boolean dictionaryFromRedoLogs;
   private final boolean ddlDictTracking;
+  private final boolean commitedDataOnly;
   private final DateTimeFormatter dateTimeFormatter;
   private final List<RedoLog> currentLogList;
+  private final PreparedStatement queryContentStatement;
   private boolean activeSession;
 
   /**
@@ -157,10 +185,13 @@ public class LogMinerSession {
     private boolean continuousMine;
     private boolean committedDataOnly;
     private boolean ddlDictTracking;
+    private int databaseVersion;
+    private List<SchemaTableConfigBean> tablesForMining;
+    private List<ChangeTypeValues> trackedOperations;
 
-
-    public Builder(Connection connection) {
+    public Builder(Connection connection, int databaseVersion) {
       this.connection = Preconditions.checkNotNull(connection);
+      this.databaseVersion = databaseVersion;
     }
 
     public Builder setContinuousMine(boolean continuousMine) {
@@ -183,12 +214,31 @@ public class LogMinerSession {
       return this;
     }
 
-    public LogMinerSession build() {
+    public Builder setTablesForMining(List<SchemaTableConfigBean> tables) {
+      tablesForMining = tables;
+      return this;
+    }
+
+    public Builder setTrackedOperations(List<ChangeTypeValues> operations) {
+      trackedOperations = operations;
+      return this;
+    }
+
+    public LogMinerSession build() throws SQLException {
       List<String> configOptions = new ArrayList<>();
       configOptions.add(NO_SQL_DELIMITER_OPTION);
       configOptions.add("DBMS_LOGMNR." + dictionarySource.name());
 
+      if (tablesForMining == null || tablesForMining.size() == 0) {
+        throw new IllegalArgumentException("At least a table must be configured for mining");
+      }
+      if (trackedOperations == null || trackedOperations.size() == 0) {
+        throw new IllegalArgumentException("At least a database operation to be tracked must be configured");
+      }
       if (continuousMine) {
+        if (databaseVersion >= 19) {
+          throw new IllegalArgumentException("CONTINUOUS_MINE option not supported from Oracle 19 onwards");
+        }
         configOptions.add(CONTINUOUS_MINE_OPTION);
       }
       if (committedDataOnly) {
@@ -201,17 +251,132 @@ public class LogMinerSession {
         configOptions.add(DDL_DICT_TRACKING_OPTION);
       }
 
-      return new LogMinerSession(connection, configOptions);
+      return new LogMinerSession(connection, databaseVersion, createQueryContentStatement(), configOptions);
     }
 
+    /**
+     * Creates a PreparedStatement to query V$LOGMNR_CONTENT view. The where conditions are built according to the
+     * configuration passed through the Builder.
+     */
+    private PreparedStatement createQueryContentStatement() throws SQLException {
+      String tablesCondition = buildTablesCondition(tablesForMining);
+      String opsCondition = buildOperationsCondition(trackedOperations);
+      String commitScnColumn = databaseVersion >= 11 ? COMMIT_SCN_COLUMN : COMMIT_SCN_COLUMN_OLD;
+      PreparedStatement result;
+
+      if (committedDataOnly) {
+        String restartCondition = Utils.format(
+            "(({} = ? AND SEQUENCE# > ?) OR {} > ?) {}",
+            commitScnColumn,
+            commitScnColumn,
+            ddlDictTracking ? Utils.format(" OR (OPERATION_CODE = {} AND SCN > ?)", DDL_CODE) : ""
+        );
+        String conditions = Utils.format("TIMESTAMP >= ? AND {} AND {} AND ({})",
+            tablesCondition, opsCondition, restartCondition);
+
+        result = connection.prepareStatement(Utils.format(SELECT_LOGMNR_CONTENT_QUERY, commitScnColumn, conditions));
+
+      } else {
+        String tnxOps = Utils.format("OPERATION_CODE IN ({},{})", COMMIT_CODE, ROLLBACK_CODE);
+        String conditions = Utils.format("TIMESTAMP >= ? AND (({} AND {}) OR {})",
+            tablesCondition, opsCondition, tnxOps);
+
+        result = connection.prepareStatement(Utils.format(SELECT_LOGMNR_CONTENT_QUERY, commitScnColumn, conditions));
+      }
+
+      return result;
+    }
+
+    @VisibleForTesting
+    String buildTablesCondition(List<SchemaTableConfigBean> schemaAndTableConfigs) {
+      final int maxInClauseElements = 1000;  // Oracle limit for the number of elements in a IN clause.
+
+      Multimap<String, String> schemaTablesMap = ArrayListMultimap.create();
+      for (SchemaTableConfigBean config : schemaAndTableConfigs) {
+        schemaTablesMap.put(config.schema, config.table);
+      }
+
+      StringJoiner schemaTableConditions = new StringJoiner(" OR ", "(", ")");
+
+      for (String schema : schemaTablesMap.keySet()) {
+        StringJoiner tableConditions = new StringJoiner(" OR ");
+        List<String> tableNames = new ArrayList<>();
+
+        for (String table: schemaTablesMap.get(schema)) {
+          if (isSqlLikePattern(table)) {
+            tableConditions.add(String.format("TABLE_NAME LIKE '%s'", table));
+          } else {
+            tableNames.add(String.format("'%s'", table));
+            if (tableNames.size() == maxInClauseElements) {
+              tableConditions.add(String.format("TABLE_NAME IN (%s)", String.join(",", tableNames)));
+              tableNames.clear();
+            }
+          }
+        }
+
+        if (!tableNames.isEmpty()) {
+          tableConditions.add(String.format("TABLE_NAME IN (%s)", String.join(",", tableNames)));
+        }
+
+        if (isSqlLikePattern(schema)) {
+          schemaTableConditions.add(String.format("(SEG_OWNER LIKE '%s' AND (%s))", schema, tableConditions));
+        } else {
+          schemaTableConditions.add(String.format("(SEG_OWNER = '%s' AND (%s))", schema, tableConditions));
+        }
+      }
+
+      return schemaTableConditions.toString();
+    }
+
+    private String buildOperationsCondition(List<ChangeTypeValues> operations) {
+      List<Integer> supportedOps = new ArrayList<>();
+
+      for (ChangeTypeValues change : operations) {
+        switch (change) {
+          case INSERT:
+            supportedOps.add(INSERT_CODE);
+            break;
+          case UPDATE:
+            supportedOps.add(UPDATE_CODE);
+            break;
+          case DELETE:
+            supportedOps.add(DELETE_CODE);
+            break;
+          case SELECT_FOR_UPDATE:
+            supportedOps.add(SELECT_FOR_UPDATE_CODE);
+            break;
+          default:
+        }
+      }
+      if (ddlDictTracking) {
+        supportedOps.add(DDL_CODE);
+      }
+
+      return Utils.format("OPERATION_CODE IN ({})", Joiner.on(',').join(supportedOps));
+    }
+
+    /**
+     * Returns if the given string is a SQL LIKE pattern: '%' indicates any substring of zero or more characters,
+     * and '_' means any single character.
+     *
+     * @param s The string to test.
+     * @return True if <tt>s</tt> is a pattern, false otherwise.
+     */
+    private boolean isSqlLikePattern(String s) {
+      return s.contains("%") || s.contains("_");
+    }
   }
 
-  private LogMinerSession(Connection connection, List<String> configOptions) {
+  private LogMinerSession(Connection connection, int databaseVersion, PreparedStatement queryContentStatement,
+      List<String> configOptions) {
     this.connection = connection;
+    this.databaseVersion = databaseVersion;
+    this.queryContentStatement = queryContentStatement;
     this.configOptions = String.join(" + ", configOptions);
     continuousMine = configOptions.contains(CONTINUOUS_MINE_OPTION);
     dictionaryFromRedoLogs = configOptions.contains(DICT_FROM_REDO_LOGS_OPTION);
     ddlDictTracking = configOptions.contains(DDL_DICT_TRACKING_OPTION);
+    commitedDataOnly = configOptions.contains(COMMITTED_DATA_ONLY_OPTION);
     dateTimeFormatter = new DateTimeFormatterBuilder()
         .parseLenient()
         .appendPattern(DATETIME_FORMAT)
@@ -423,6 +588,66 @@ public class LogMinerSession {
         throw e;
       }
     }
+  }
+
+  /**
+   * Retrieves CDC records by querying the V$LOGMNR_CONTENTS view. Use this method when COMMITED_DATA_ONLY is not
+   * enabled.
+   *
+   * LogMinerSession must have been started with {@link LogMinerSession#start} before invoking this function. The CDC
+   * records returned are limited to the range specified by the {@link LogMinerSession#start} invocation and the
+   * arguments passed to this function.
+   *
+   * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
+   * @return A wrapper over the ResultSet with the CDC records retrieved.
+   * @throws SQLException LogMinerSession is not active, COMMITED_DATA_ONLY is enabled, or a database connection error
+   *     happened.
+   */
+  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime) throws SQLException {
+    if (!activeSession) {
+      throw new SQLException("No LogMiner session started");
+    }
+    if (commitedDataOnly) {
+      throw new SQLException("Operation only supported when COMMITED_DATA_ONLY is not enabled.");
+    }
+    queryContentStatement.setString(1, startTime.format(dateTimeFormatter));
+    queryContentStatement.setFetchSize(1);
+    return new LogMinerResultSetWrapper(queryContentStatement.executeQuery(), databaseVersion);
+  }
+
+  /**
+   * Retrieves CDC records by querying the V$LOGMNR_CONTENTS view. Use this method when COMMITED_DATA_ONLY is enabled.
+   *
+   * LogMinerSession must have been started with {@link LogMinerSession#start} before invoking this function. The CDC
+   * records returned are limited to the range specified by the {@link LogMinerSession#start} invocation and the
+   * arguments passed to this function.
+   *
+   * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
+   * @param lastCommitSCN Filter for the COMMIT_SCN column in V$LOGMNR_CONTENTS. Rows returned satisfy the condition
+   *     (COMMIT_SCN > lastCommitSCN) OR (COMMIT_SCN = lastCommitSCN AND SEQUENCE# > lastSequence).
+   * @param lastSequence See {@code lastCommitSCN} above.
+   * @return A wrapper over the ResultSet with the CDC records retrieved.
+   * @throws SQLException LogMinerSession is not active, COMMITED_DATA_ONLY is not enabled, or a database connection
+   *     error happened.
+   */
+  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime, BigDecimal lastCommitSCN, int lastSequence) throws SQLException {
+    if (!activeSession) {
+      throw new SQLException("No LogMiner session started");
+    }
+    if (!commitedDataOnly) {
+      throw new SQLException("Operation only supported when COMMITED_DATA_ONLY is enabled.");
+    }
+
+    queryContentStatement.setString(1, startTime.format(dateTimeFormatter));
+    queryContentStatement.setBigDecimal(2, lastCommitSCN);
+    queryContentStatement.setInt(3, lastSequence);
+    queryContentStatement.setBigDecimal(4, lastCommitSCN);
+    if (ddlDictTracking) {
+      queryContentStatement.setBigDecimal(5, lastCommitSCN);
+    }
+
+    queryContentStatement.setFetchSize(1);
+    return new LogMinerResultSetWrapper(queryContentStatement.executeQuery(), databaseVersion);
   }
 
   /**
