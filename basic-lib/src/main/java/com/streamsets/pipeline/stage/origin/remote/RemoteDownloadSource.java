@@ -280,15 +280,22 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.getFilePath()));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
-            FileRef fileRef = new RemoteSourceFileRef.Builder()
-                .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
-                .totalSizeInBytes(size)
-                .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
-                .remoteFile(next)
-                .remoteUri(remoteURI)
-                .createMetrics(true)
-                .build();
-            parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
+            if (!next.isReadable()) {
+              getContext().reportError(Errors.REMOTE_DOWNLOAD_10, next.getFilePath());
+              //Skip over this file
+              currentOffset.setOffset(MINUS_ONE);
+              return currentOffset.offsetStr;
+            } else {
+              FileRef fileRef = new RemoteSourceFileRef.Builder()
+                  .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
+                  .totalSizeInBytes(size)
+                  .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
+                  .remoteFile(next)
+                  .remoteUri(remoteURI)
+                  .createMetrics(true)
+                  .build();
+              parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
+            }
           } else {
             currentStream = next.createInputStream();
             LOG.info("Started reading file: {}", next.getFilePath());

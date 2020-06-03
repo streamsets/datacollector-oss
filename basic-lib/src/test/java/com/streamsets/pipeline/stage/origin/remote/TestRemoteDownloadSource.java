@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.remote;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Files;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.EventRecord;
@@ -68,14 +69,17 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.nio.file.attribute.PosixFilePermission;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -528,6 +532,73 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     Assert.assertEquals("/sloth.txt::17000000000::-1", op.getNewOffset());
     actual = op.getRecords().get("lane");
     Assert.assertEquals(0, actual.size());
+
+    destroyAndValidate(runner);
+  }
+
+  @Test
+  public void testPermissions() throws Exception {
+    File tempDir = testFolder.getRoot();
+
+    java.nio.file.Files.setPosixFilePermissions(Paths.get(tempDir.getAbsolutePath()), ImmutableSet.of(
+        PosixFilePermission.OWNER_READ, PosixFilePermission.OWNER_WRITE, PosixFilePermission.OWNER_EXECUTE));
+
+    File file1 = testFolder.newFile("a.txt");
+    File file2 = testFolder.newFile("b.txt");
+    File file3 = testFolder.newFile("c.txt");
+
+    Path file1Path = Paths.get(file1.getAbsolutePath());
+    Path file2Path = Paths.get(file2.getAbsolutePath());
+    Path file3Path = Paths.get(file3.getAbsolutePath());
+
+    Files.write("abc".getBytes(), file1);
+    Files.write("abc".getBytes(), file2);
+    Files.write("abc".getBytes(), file3);
+
+    java.nio.file.Files.setPosixFilePermissions(file1Path, Collections.emptySet());
+    java.nio.file.Files.setPosixFilePermissions(file2Path, ImmutableSet.of(PosixFilePermission.OWNER_READ));
+    java.nio.file.Files.setPosixFilePermissions(file3Path, ImmutableSet.of(PosixFilePermission.OWNER_READ));
+
+    path = tempDir.getAbsolutePath();
+    setupServer(path, true);
+    RemoteDownloadSource origin = new TestRemoteDownloadSourceBuilder(scheme, port)
+        .withDataFormat(DataFormat.WHOLE_FILE).build();
+    SourceRunner runner = new SourceRunner.Builder(RemoteDownloadDSource.class, origin)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.DISCARD)
+        .build();
+    runner.runInit();
+
+    List<Record> listOfRecords = new ArrayList<>();
+    List<String> errors = new ArrayList<>();
+
+    StageRunner.Output op = runner.runProduce(RemoteDownloadSource.NOTHING_READ, 1000);
+    List<Record> actual = op.getRecords().get("lane");
+    errors.addAll(runner.getErrors());
+    listOfRecords.addAll(actual);
+    runner.clearErrors();
+
+    op = runner.runProduce(op.getNewOffset(), 1000);
+    actual = op.getRecords().get("lane");
+    listOfRecords.addAll(actual);
+    errors.addAll(runner.getErrors());
+    runner.clearErrors();
+
+    op = runner.runProduce(op.getNewOffset(), 1000);
+    actual = op.getRecords().get("lane");
+    listOfRecords.addAll(actual);
+    errors.addAll(runner.getErrors());
+    runner.clearErrors();
+
+    Assert.assertEquals(2, listOfRecords.size());
+
+    List<Object> readableFiles = listOfRecords.stream().map(r -> r.get("/fileInfo/filename").getValueAsString()).collect(Collectors.toList());
+    Assert.assertTrue(readableFiles.contains("b.txt"));
+    Assert.assertTrue(readableFiles.contains("c.txt"));
+
+    Assert.assertEquals(1,  errors.size());
+    Assert.assertTrue(errors.get(0).contains(Errors.REMOTE_DOWNLOAD_10.getCode()));
+    Assert.assertTrue(errors.get(0).contains("a.txt"));
 
     destroyAndValidate(runner);
   }
