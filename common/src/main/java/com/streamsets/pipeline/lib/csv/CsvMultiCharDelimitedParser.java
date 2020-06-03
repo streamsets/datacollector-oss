@@ -95,10 +95,10 @@ public class CsvMultiCharDelimitedParser implements DelimitedDataParser {
     if (inputReader != null) {
       if (StringUtils.equals(lineSeparator, "\n") || StringUtils.equals(lineSeparator, "\r\n")) {
         // we can use the OverrunLineReader implementation, since it will handle such line endings
-        this.wrappingReader = new OverrunLineReader(inputReader, maxRecordSize);
+        this.wrappingReader = new OverrunLineReader(inputReader, maxRecordSize, quoteChar, escapeChar);
       } else {
         // we should use the OverrunCustomDelimiterReader to handle arbitrary line endings
-        this.wrappingReader = new OverrunCustomDelimiterReader(inputReader, maxRecordSize, lineSeparator, false);
+        this.wrappingReader = new OverrunCustomDelimiterReader(inputReader, maxRecordSize, lineSeparator, false, quoteChar, escapeChar);
       }
     } else {
       this.wrappingReader = null;

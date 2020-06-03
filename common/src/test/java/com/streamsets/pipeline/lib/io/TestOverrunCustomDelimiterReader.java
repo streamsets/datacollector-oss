@@ -136,4 +136,36 @@ public class TestOverrunCustomDelimiterReader {
     delimiterReader.close();
   }
 
+  @Test
+  public void testQuotedDelimiter() throws Exception {
+    Reader reader = new StringReader("\"1234xxx567\"89xxxABC");
+    OverrunCustomDelimiterReader delimiterReader = new OverrunCustomDelimiterReader(reader, 30, "xxx", false, '"', '\\');
+    StringBuilder sb = new StringBuilder();
+
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("\"1234xxx567\"89", sb.toString());
+
+    sb.setLength(0);
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("ABC", sb.toString());
+
+    delimiterReader.close();
+  }
+
+  @Test
+  public void testQuotedDelimiterEscapeQuote() throws Exception {
+    Reader reader = new StringReader("\"123\\\"4xxx567\"89xxxABC");
+    OverrunCustomDelimiterReader delimiterReader = new OverrunCustomDelimiterReader(reader, 30, "xxx", false, '"', '\\');
+    StringBuilder sb = new StringBuilder();
+
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("\"123\\\"4xxx567\"89", sb.toString());
+
+    sb.setLength(0);
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("ABC", sb.toString());
+
+    delimiterReader.close();
+  }
+
 }
