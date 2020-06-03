@@ -35,12 +35,25 @@ public abstract class AbstractOverrunDelimitedReader extends ProxyReader {
   protected char[] cb;
   protected int nChars;
   protected int nextChar;
+  protected Character quoteChar;
+  protected Character escapeChar;
 
   AbstractOverrunDelimitedReader(Reader reader, int maxLine, int bufferSize) {
     super(reader);
     this.countingReader = (reader instanceof CountingReader) ? (CountingReader) reader : null;
     this.maxLine = maxLine;
     this.cb = new char[bufferSize];
+    this.quoteChar = null;
+    this.escapeChar = null;
+  }
+
+  AbstractOverrunDelimitedReader(Reader reader, int maxLine, int bufferSize, char quoteChar, char escapeChar) {
+    super(reader);
+    this.countingReader = (reader instanceof CountingReader) ? (CountingReader) reader : null;
+    this.maxLine = maxLine;
+    this.cb = new char[bufferSize];
+    this.quoteChar = quoteChar;
+    this.escapeChar = escapeChar;
   }
 
 

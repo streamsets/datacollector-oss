@@ -130,4 +130,36 @@ public class TestOverrunLineReader {
     Assert.assertEquals(20, lr.getPos());
   }
 
+  @Test
+  public void testQuotedDelimiter() throws Exception {
+    Reader reader = new StringReader("\"1234\n567\"89\nABC");
+    OverrunLineReader delimiterReader = new OverrunLineReader(new OverrunReader(reader, 100, false, false), 1024, '"', '\\');
+    StringBuilder sb = new StringBuilder();
+
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("\"1234\n567\"89", sb.toString());
+
+    sb.setLength(0);
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("ABC", sb.toString());
+
+    delimiterReader.close();
+  }
+
+  @Test
+  public void testQuotedDelimiterEscapeQuote() throws Exception {
+    Reader reader = new StringReader("\"123\\\"4\n567\"89\nABC");
+    OverrunLineReader delimiterReader = new OverrunLineReader(new OverrunReader(reader, 100, false, false), 1024, '"', '\\');
+    StringBuilder sb = new StringBuilder();
+
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("\"123\\\"4\n567\"89", sb.toString());
+
+    sb.setLength(0);
+    delimiterReader.readLine(sb);
+    Assert.assertEquals("ABC", sb.toString());
+
+    delimiterReader.close();
+  }
+
 }

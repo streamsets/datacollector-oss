@@ -32,6 +32,10 @@ public class OverrunLineReader extends AbstractOverrunDelimitedReader {
     super(reader, maxLine, 8192 * 2);
   }
 
+  public OverrunLineReader(Reader reader, int maxLine, char quoteChar, char escapeChar) {
+    super(reader, maxLine, 8192 * 2, quoteChar, escapeChar);
+  }
+
   /**
    * If the next character is a line feed, skip it
    */
@@ -60,7 +64,7 @@ public class OverrunLineReader extends AbstractOverrunDelimitedReader {
     int overrun = 0;
     int startChar;
 
-    boolean omitLF = skipLF;
+    boolean omitLF = skipLF, quote = false;
 
     for (; ; ) {
 
@@ -80,7 +84,7 @@ public class OverrunLineReader extends AbstractOverrunDelimitedReader {
       int i;
 
       /* Skip a leftover '\n', if necessary */
-      if (omitLF && (cb[nextChar] == '\n')) {
+      if (!quote && omitLF && (cb[nextChar] == '\n')) {
         nextChar++;
       }
       skipLF = false;
@@ -88,7 +92,11 @@ public class OverrunLineReader extends AbstractOverrunDelimitedReader {
 
       for (i = nextChar; i < nChars; i++) {
         c = cb[i];
-        if ((c == '\n') || (c == '\r')) {
+        boolean escaped = escapeChar != null && i != 0 && cb[i - 1] == escapeChar;
+        if (!escaped && quoteChar != null && c == quoteChar) {
+          quote = !quote;
+        }
+        if (!quote && ((c == '\n') || (c == '\r'))) {
           eol = true;
           break;
         }

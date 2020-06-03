@@ -39,9 +39,23 @@ public class OverrunCustomDelimiterReader extends AbstractOverrunDelimitedReader
     this.includeDelimiterInTheText = includeDelimiterInTheText;
   }
 
+  public OverrunCustomDelimiterReader(
+      Reader reader,
+      int maxLine,
+      String customDelimiter,
+      boolean includeDelimiterInTheText,
+      char quoteChar,
+      char escapeChar
+  ) {
+    super(reader, maxLine, 8192 * 2, quoteChar, escapeChar);
+    this.customDelimiter = customDelimiter;
+    this.includeDelimiterInTheText = includeDelimiterInTheText;
+  }
+
   @Override
   public int readLine(StringBuilder s) throws IOException {
     int initialLen = s.length(), overrun = 0, delimiterIndexToBeMatched = 0, startChar;
+    boolean quoted = false;
 
     for (; ; ) {
       if (nextChar >= nChars) {
@@ -62,26 +76,34 @@ public class OverrunCustomDelimiterReader extends AbstractOverrunDelimitedReader
       while (searchIdx < nChars) {
         c = cb[searchIdx];
 
-        //Optimization for starting the search again.
-        //In stream if we see a match for first character in delimiter, we can start the search from there,
-        //if the current search for delimiter is not successful
-        if (nextPossibleMatch == -1 && searchIdx != 0 && c == customDelimiter.charAt(0)) {
-          nextPossibleMatch = searchIdx;
+        boolean escaped = escapeChar != null && searchIdx != 0 && cb[searchIdx - 1] == escapeChar;
+
+        if (quoteChar != null && !escaped && c == quoteChar) {
+          quoted = !quoted;
         }
 
-        if (c == customDelimiter.charAt(delimiterIndexToBeMatched)) {
-          delimiterIndexToBeMatched++;
-        } else if (delimiterIndexToBeMatched > 0) {
-          delimiterIndexToBeMatched = 0;
-          if (nextPossibleMatch > 0) {
-            searchIdx = nextPossibleMatch;
+        if (!quoted) {
+          //Optimization for starting the search again.
+          //In stream if we see a match for first character in delimiter, we can start the search from there,
+          //if the current search for delimiter is not successful
+          if (nextPossibleMatch == -1 && searchIdx != 0 && c == customDelimiter.charAt(0)) {
+            nextPossibleMatch = searchIdx;
           }
-          nextPossibleMatch = -1;
+
+          if (c == customDelimiter.charAt(delimiterIndexToBeMatched)) {
+            delimiterIndexToBeMatched++;
+          } else if (delimiterIndexToBeMatched > 0) {
+            delimiterIndexToBeMatched = 0;
+            if (nextPossibleMatch > 0) {
+              searchIdx = nextPossibleMatch;
+            }
+            nextPossibleMatch = -1;
+          }
         }
 
         searchIdx++;
 
-        if (delimiterIndexToBeMatched == customDelimiter.length()) {
+        if (!quoted && delimiterIndexToBeMatched == customDelimiter.length()) {
           eol = true;
           delimiterIndexToBeMatched = 0;
           nextPossibleMatch = -1;
