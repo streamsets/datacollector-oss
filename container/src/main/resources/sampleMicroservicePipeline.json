@@ -769,7 +769,10 @@
         "name" : "httpConfigs.spnegoConfigBean.kerberosRealm",
         "value" : null
       }, {
-        "name" : "httpConfigs.spnegoConfigBean.spnegoPropertiesFilePath",
+        "name" : "httpConfigs.spnegoConfigBean.spnegoPrincipal",
+        "value" : null
+      }, {
+        "name" : "httpConfigs.spnegoConfigBean.spnegoKeytabFilePath",
         "value" : null
       }, {
         "name" : "httpConfigs.basicAuthUsers",

@@ -792,7 +792,7 @@ public class PipelineStoreResource {
               pipelineConfig.getInfo().getLastRev(),
               microServiceTemplate.getDescription(),
               microServiceTemplate,
-              true
+              false
           );
         } else {
           microServiceTemplate.setInfo(pipelineConfig.getInfo());
