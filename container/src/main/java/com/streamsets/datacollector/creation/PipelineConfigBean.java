@@ -66,7 +66,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 18;
+  public static final int VERSION = 17;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -542,17 +542,6 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDefBean
   public com.streamsets.transformer.config.AmazonEMRConfig transformerEMRConfig;
-
-  @ConfigDefBean(dependencies = {
-    @Dependency(configName = "clusterConfig.clusterType", triggeredByValues = "DATAPROC")
-  }, groups = "DATAPROC")
-  // The dependency does not resolve corrrectly if this inside another bean, so adding it here.
-  public GoogleCloudCredentialsConfig googleCloudCredentialsConfig = new GoogleCloudCredentialsConfig();
-
-  @ConfigDefBean(dependencies = {
-    @Dependency(configName = "clusterConfig.clusterType", triggeredByValues = "DATAPROC")
-  })
-  public GoogleCloudConfig googleCloudConfig;
 
   @Override
   public List<ConfigIssue> init(Info info, Context context) {

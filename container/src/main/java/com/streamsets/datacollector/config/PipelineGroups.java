@@ -24,7 +24,6 @@ public enum PipelineGroups implements Label {
   BAD_RECORDS("Error Records"),
   STATS("Statistics"),
   EMR("EMR"),
-  DATAPROC("Dataproc"),
   ADVANCED("Advanced"),
   ;
 
