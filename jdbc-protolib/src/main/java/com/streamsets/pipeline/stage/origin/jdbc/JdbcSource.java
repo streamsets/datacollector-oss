@@ -100,6 +100,7 @@ public class JdbcSource extends BaseSource {
   private ErrorRecordHandler errorRecordHandler;
   private long queryIntervalMillis = Long.MIN_VALUE;
   private HikariDataSource dataSource = null;
+  private Connection connection = null;
   private ResultSet resultSet = null;
   private long lastQueryCompletedTime = 0L;
   private String preparedQuery;
@@ -367,6 +368,7 @@ public class JdbcSource extends BaseSource {
   @Override
   public void destroy() {
     closeQuietly(resultSet);
+    closeQuietly(connection);
     closeQuietly(dataSource);
     if (sshTunnelService != null){
       sshTunnelService.stop();
@@ -395,9 +397,11 @@ public class JdbcSource extends BaseSource {
       Statement statement = null;
       sshTunnelService.healthCheck();
       Hasher hasher = HF.newHasher();
-      try (Connection connection = dataSource.getConnection()) {
+      try {
         if (null == resultSet || resultSet.isClosed()) {
           // The result set got closed outside of us, so we also clean up the connection (if any)
+          closeQuietly(connection);
+          connection = dataSource.getConnection();
 
           if (!txnColumnName.isEmpty()) {
             // CDC requires scrollable cursors.
@@ -478,6 +482,7 @@ public class JdbcSource extends BaseSource {
           statement = resultSet.getStatement();
           closeQuietly(resultSet);
           closeQuietly(statement);
+          closeQuietly(connection);
           lastQueryCompletedTime = System.currentTimeMillis();
           LOG.debug("Query completed at: {}", lastQueryCompletedTime);
           JDBCQuerySuccessEvent.EVENT_CREATOR.create(getContext())
@@ -522,6 +527,7 @@ public class JdbcSource extends BaseSource {
           closeQuietly(resultSet);
           closeQuietly(statement);
         }
+        closeQuietly(connection);
         lastQueryCompletedTime = System.currentTimeMillis();
         JDBCQueryFailureEvent.EVENT_CREATOR.create(getContext())
             .with(QUERY, preparedQuery)
