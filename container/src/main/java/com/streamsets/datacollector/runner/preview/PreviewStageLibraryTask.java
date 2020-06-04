@@ -17,6 +17,7 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -219,5 +220,10 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public StageLibraryDefinition getStageLibraryDefinition(String libraryName) {
     return library.getStageLibraryDefinition(libraryName);
+  }
+
+  @Override
+  public List<ConnectionDefinition> getConnections() {
+    return library.getConnections();
   }
 }

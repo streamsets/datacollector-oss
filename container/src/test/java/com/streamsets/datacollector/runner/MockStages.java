@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.CredentialType;
 import com.streamsets.datacollector.config.InterceptorDefinition;
@@ -788,6 +789,11 @@ public class MockStages {
     @Override
     public StageLibraryDefinition getStageLibraryDefinition(String libraryName) {
       return stageLibraryDefinition;
+    }
+
+    @Override
+    public List<ConnectionDefinition> getConnections() {
+      return Collections.emptyList();
     }
 
     @Override

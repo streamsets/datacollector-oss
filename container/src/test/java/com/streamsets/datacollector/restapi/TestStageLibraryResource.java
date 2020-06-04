@@ -15,17 +15,23 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.gson.Gson;
 import com.streamsets.datacollector.el.RuleELRegistry;
+import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.util.JSONPObject;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
@@ -94,4 +100,13 @@ public class TestStageLibraryResource extends JerseyTest {
     Assert.assertTrue(response.getEntity() != null);
   }
 
+  @Test
+  public void testGetConnections() throws IOException {
+    Response response = target("/v1/definitions/connections").request().get();
+    Assert.assertNotNull(response.getEntity());
+    ConnectionsJson connectionsJson =
+        ObjectMapperFactory.get().readValue((InputStream) response.getEntity(), ConnectionsJson.class);
+    Assert.assertNotNull(connectionsJson);
+    Assert.assertNotNull(connectionsJson.getConnections());
+  }
 }

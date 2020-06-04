@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
@@ -27,6 +28,8 @@ import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
@@ -513,4 +516,17 @@ public class StageLibraryResource {
     List<ClasspathValidatorResult> results = stageLibrary.validateStageLibClasspath();
     return Response.ok().entity(results).build();
   }
+
+  @GET
+  @Path("/definitions/connections")
+  @ApiOperation(value = "Returns connection definitions", response = ConnectionsJson.class,
+      authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @PermitAll
+  public Response getConnections() {
+    List<ConnectionDefinition> connectionDefs = stageLibrary.getConnections();
+    ConnectionsJson connectionDefinitions = new ConnectionsJson(connectionDefs);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(connectionDefinitions).build();
+  }
+
 }

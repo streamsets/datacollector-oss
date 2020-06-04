@@ -22,6 +22,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.Stage;
@@ -49,6 +50,7 @@ import java.util.List;
     verifier = AwsS3ConnectionVerifier.class,
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )
+@ConfigGroups(Groups.class)
 public class AwsS3Connection {
 
   public static final String TYPE = "AWS_S3";

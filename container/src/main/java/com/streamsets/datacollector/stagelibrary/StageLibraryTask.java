@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.stagelibrary;
 
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -49,6 +50,8 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
 
   String DELEGATE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.DELEGATE_LIST_FILE;
+
+  String CONNECTIONS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CONNECTIONS_LIST_FILE;
 
   PipelineDefinition getPipeline();
 
@@ -93,4 +96,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   Map<String, EventDefinitionJson> getEventDefinitions();
 
   StageLibraryDefinition getStageLibraryDefinition(String libraryName);
+
+  List<ConnectionDefinition> getConnections();
 }

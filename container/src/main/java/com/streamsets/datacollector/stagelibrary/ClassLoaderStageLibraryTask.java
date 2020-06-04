@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.classpath.ClasspathValidator;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.InterceptorDefinition;
@@ -42,6 +43,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
+import com.streamsets.datacollector.definition.ConnectionDefinitionExtractor;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.definition.EventDefinitionExtractor;
 import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
@@ -172,6 +174,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<InterceptorDefinition> interceptorList;
   private List<StageLibraryDelegateDefinitition> delegateList;
   private Map<String, StageLibraryDelegateDefinitition> delegateMap;
+  private List<ConnectionDefinition> connectionList;
+  private Map<String, ConnectionDefinition> connectionMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
   private Map<String, Object> gaugeMap;
@@ -288,6 +292,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = new ArrayList<>();
     delegateList = new ArrayList<>();
     delegateMap = new HashMap<>();
+    connectionList = new ArrayList<>();
+    connectionMap = new HashMap<>();
     loadStages();
     stageLibraries = ImmutableList.copyOf(stageLibraries);
     stageLibraryMap = ImmutableMap.copyOf(stageLibraryMap);
@@ -301,6 +307,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = ImmutableList.copyOf(interceptorList);
     delegateList = ImmutableList.copyOf(delegateList);
     delegateMap = ImmutableMap.copyOf(delegateMap);
+    connectionList = ImmutableList.copyOf(connectionList);
+    connectionMap = ImmutableMap.copyOf(connectionMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -535,6 +543,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       int services = 0;
       int interceptors = 0;
       int delegates = 0;
+      int connections = 0;
       long start = System.currentTimeMillis();
       LocaleInContext.set(Locale.getDefault());
       for (ClassLoader cl : stageClassLoaders) {
@@ -635,13 +644,24 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
             delegateList.add(def);
             delegateMap.put(key, def);
           }
+
+          // Load Connections
+          for(Class klass : loadClassesFromResource(libDef, cl, CONNECTIONS_DEFINITION_RESOURCE)) {
+            connections++;
+            ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(libDef, klass);
+            String key = createKey(libDef.getName(), def.getName());
+            LOG.debug("Loaded stage '{}'  version {}", key, def.getVersion());
+            connectionList.add(def);
+            connectionMap.put(key, def);
+          }
         } catch (IOException | ClassNotFoundException ex) {
           throw new RuntimeException(
               Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
         }
       }
       LOG.info(
-        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, '{}' services, '{}' interceptors, '{}' delegates and '{}' credentialStores in '{}ms'",
+        "Loaded '{}' libraries with a total of '{}' stages, '{}' lineage publishers, " +
+                "'{}' services, '{}' interceptors, '{}' delegates, '{}' credentialStores and {} connections in '{}ms'",
         libs,
         stages,
         lineagePublishers,
@@ -649,6 +669,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         interceptors,
         delegates,
         credentialStores,
+        connections,
         System.currentTimeMillis() - start
       );
     } finally {
@@ -1139,4 +1160,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return this.stageLibraryMap.get(libraryName);
   }
 
+  @Override
+  public List<ConnectionDefinition> getConnections() {
+    return connectionList;
+  }
 }
