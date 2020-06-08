@@ -649,7 +649,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           for(Class klass : loadClassesFromResource(libDef, cl, CONNECTIONS_DEFINITION_RESOURCE)) {
             connections++;
             ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(libDef, klass);
-            String key = createKey(libDef.getName(), def.getName());
+            String key = createKey(libDef.getName(), def.getType());
             LOG.debug("Loaded stage '{}'  version {}", key, def.getVersion());
             connectionList.add(def);
             connectionMap.put(key, def);
@@ -1163,5 +1163,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public List<ConnectionDefinition> getConnections() {
     return connectionList;
+  }
+
+  @Override
+  public ConnectionDefinition getConnection(String library, String type) {
+    return connectionMap.get(createKey(library, type));
   }
 }

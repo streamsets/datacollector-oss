@@ -578,7 +578,7 @@ public class TestConfigInjector {
     ConfigInjector.get().injectConfigsToObject(stage, context);
 
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).getMessage().contains("CREATION_1103"));
+    Assert.assertTrue(issues.get(0).getMessage().contains("CONTAINER_0902"));
 
     Mockito.verify(mockBlobStore).retrieve(
         Mockito.eq(ConnectionConstants.CONNECTION_NAMESPACE),

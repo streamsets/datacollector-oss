@@ -20,6 +20,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.KeytabSource;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
@@ -161,6 +163,33 @@ public class ValidationUtil {
   }
 
   /**
+   * Add any missing configs to the connection configuration.
+   */
+  public static void addMissingConfigsToConnection(
+    StageLibraryTask stageLibrary,
+    ConnectionConfiguration connectionConf
+  ) {
+    ConnectionDefinition connDef = stageLibrary.getConnection(connectionConf.getLibrary(), connectionConf.getType());
+    if (connDef != null) {
+      for (ConfigDefinition configDef : connDef.getConfigDefinitions()) {
+        String configName = configDef.getName();
+        Config config = connectionConf.getConfig(configName);
+        if (config == null) {
+          Object defaultValue = configDef.getDefaultValue();
+          LOG.warn(
+              "Connection '{}' missing configuration '{}', adding with '{}' as default",
+              connectionConf.getType(),
+              configName,
+              defaultValue
+          );
+          config = new Config(configName, defaultValue);
+          connectionConf.addConfig(config);
+        }
+      }
+    }
+  }
+
+  /**
    * Add any missing configs to the service configuration.
    */
   public static void addMissingConfigsToService(StageLibraryTask stageLibrary, StageConfiguration stageConf, ServiceConfiguration serviceConf) {
@@ -183,6 +212,41 @@ public class ValidationUtil {
         }
       }
     }
+  }
+
+  /**
+   * Validate given connection configuration.
+   */
+  public static boolean validateConnectionConfiguration(
+      StageLibraryTask stageLibrary,
+      ConnectionConfiguration connConf,
+      IssueCreator issueCreator,
+      List<Issue> issues
+  ) {
+    boolean valid;
+    ConnectionDefinition connDef = stageLibrary.getConnection(connConf.getLibrary(), connConf.getType());
+    if (connDef == null) {
+      issues.add(issueCreator.create(
+          ValidationError.VALIDATION_0038,
+          connConf.getLibrary(),
+          connConf.getType(),
+          connConf.getVersion()
+      ));
+      valid = false;
+    } else {
+      // Validate connection configuration
+      valid = validateComponentConfigs(
+          connConf,
+          connDef.getConfigDefinitions(),
+          connDef.getConfigDefinitionsMap(),
+          Collections.emptySet(),
+          false,
+          Collections.emptyMap(),
+          issueCreator,
+          issues
+      );
+    }
+    return valid;
   }
 
   /**

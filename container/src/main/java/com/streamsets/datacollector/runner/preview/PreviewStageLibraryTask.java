@@ -226,4 +226,9 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   public List<ConnectionDefinition> getConnections() {
     return library.getConnections();
   }
+
+  @Override
+  public ConnectionDefinition getConnection(String library, String type) {
+    return this.library.getConnection(library, type);
+  }
 }

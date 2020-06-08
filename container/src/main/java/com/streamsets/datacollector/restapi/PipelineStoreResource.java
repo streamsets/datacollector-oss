@@ -23,6 +23,7 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DetachedConnectionConfiguration;
 import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -45,6 +46,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DetachedConnectionConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -69,6 +71,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.DetachedConnectionValidator;
 import com.streamsets.datacollector.validation.DetachedStageValidator;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
@@ -1626,6 +1629,25 @@ public class PipelineStoreResource {
     DetachedStageConfiguration stageConf = detachedStage.getDetachedStageConfiguration();
     DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
     return Response.ok().entity(new DetachedStageConfigurationJson(validator.validate())).build();
+  }
+
+  @Path("/detachedconnection")
+  @POST
+  @ApiOperation(value = "Validates given detached connection and performs any necessary upgrade.",
+    response = DetachedConnectionConfigurationJson.class,
+    authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response validateDetachedConnection(
+      @ApiParam(name="connection", required = true) DetachedConnectionConfigurationJson detachedConnection
+  ) {
+    DetachedConnectionConfiguration connectionConf = detachedConnection.getDetachedConnectionConfiguration();
+    DetachedConnectionValidator validator = new DetachedConnectionValidator(stageLibrary, connectionConf);
+    return Response.ok().entity(new DetachedConnectionConfigurationJson(validator.validate())).build();
   }
 
   private void setStreamingModeDefaults(PipelineConfiguration pipelineConfig) {

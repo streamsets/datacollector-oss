@@ -98,4 +98,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   StageLibraryDefinition getStageLibraryDefinition(String libraryName);
 
   List<ConnectionDefinition> getConnections();
+
+  ConnectionDefinition getConnection(String library, String type);
 }

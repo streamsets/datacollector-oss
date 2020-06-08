@@ -797,6 +797,16 @@ public class MockStages {
     }
 
     @Override
+    public ConnectionDefinition getConnection(String library, String type) {
+      for (ConnectionDefinition conn : getConnections()) {
+        if (conn.getLibrary().equals(library) && conn.getType().equals(type)) {
+          return conn;
+        }
+      }
+      return null;
+    }
+
+    @Override
     public void releaseStageClassLoader(ClassLoader classLoader) {
     }
 

@@ -57,7 +57,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final String type;
   private final List<ConfigDefinition> configDefinitions;
   private final Map<String, ConfigDefinition> configDefinitionsMap;
-  private String yamlUpgrader;
+  private final String yamlUpgrader;
   private final String verifierClass;
 
   @SuppressWarnings("unchecked")

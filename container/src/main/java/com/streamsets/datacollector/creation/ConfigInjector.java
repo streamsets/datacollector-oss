@@ -24,7 +24,7 @@ import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.configupgrade.ConnectionUpgradeContext;
+import com.streamsets.datacollector.configupgrade.ConnectionConfigurationUpgrader;
 import com.streamsets.datacollector.connection.ConnectionConstants;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
@@ -39,10 +39,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ErrorCode;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,6 +103,12 @@ public class ConfigInjector {
     void createIssue(String configGroup, String configName, ErrorCode error, Object... args);
 
     /**
+     * Add issues.
+     * @param issues
+     */
+    void addIssues(List<Issue> issues);
+
+    /**
      * Error description to identify the injecting component (like 'Stage "JDBC Origin"'). Will be used
      * in exceptions and logs.
      */
@@ -161,6 +165,11 @@ public class ConfigInjector {
     @Override
     public void createIssue(String configGroup, String configName, ErrorCode error, Object... args) {
       parent.createIssue(configGroup, configName, error, args);
+    }
+
+    @Override
+    public void addIssues(List<Issue> issues) {
+      parent.addIssues(issues);
     }
 
     @Override
@@ -234,6 +243,11 @@ public class ConfigInjector {
     }
 
     @Override
+    public void addIssues(List<Issue> issues) {
+      this.issues.addAll(issues);
+    }
+
+    @Override
     public String errorDescription() {
       return Utils.format("Stage '{}'", configuration.getInstanceName());
     }
@@ -298,6 +312,11 @@ public class ConfigInjector {
     @Override
     public void createIssue(String configGroup, String configName, ErrorCode error, Object... args) {
       parentContext.createIssue(configGroup, configName, error, args);
+    }
+
+    @Override
+    public void addIssues(List<Issue> issues) {
+      parentContext.addIssues(issues);
     }
 
     @Override
@@ -369,6 +388,11 @@ public class ConfigInjector {
     @Override
     public void createIssue(String configGroup, String configName, ErrorCode error, Object... args) {
       issues.add(issueCreator.create(configGroup, configName, error, args));
+    }
+
+    @Override
+    public void addIssues(List<Issue> issues) {
+      this.issues.addAll(issues);
     }
 
     @Override
@@ -477,36 +501,24 @@ public class ConfigInjector {
                 String connBeanString = blobStore.retrieve(ConnectionConstants.CONNECTION_NAMESPACE, connectionId, 1);
                 ConnectionConfigurationJson ccj = mapper.readValue(connBeanString, ConnectionConfigurationJson.class);
                 ConnectionConfiguration cc = BeanHelper.unwrapConnectionConfiguration(ccj);
-                List<Config> configs = cc.getConfiguration();
                 if (!cc.getType().equals(connectionDef.type())) {
                   // Somehow connection type mismatch
                   context.createIssue(CreationError.CREATION_1102, cc.getType(), connectionDef.type());
-                } else if (cc.getVersion() > connectionDef.version()) {
-                  // Installed lib has older version of connection definition
-                  context.createIssue(CreationError.CREATION_1103, cc.getVersion(), connectionDef.version());
                 } else {
-                  // Everything is good
-                  if (cc.getVersion() < connectionDef.version()) {
-                    // Do an upgrade
-                    StageUpgrader upgrader = new YamlStageUpgraderLoader(cc.getType(),
-                        obj.getClass().getClassLoader().getResource(connectionDef.upgraderDef())
-                    ).get();
-                    ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(cc.getLibrary(),
-                        cc.getType(),
-                        connectionId,
-                        cc.getVersion(),
-                        connectionDef.version()
+                  // Do an upgrade if necessary
+                  List<Issue> issues = new ArrayList<>();
+                  ConnectionConfigurationUpgrader.get().upgradeIfNecessary(connectionDef, cc, connectionId, issues);
+                  context.addIssues(issues);
+                  if (issues.isEmpty()) {
+                    // Inject the connection's configs into the stage's configs
+                    String connConfigPrefix = configName + ".";
+                    Context connContext = new ConnectionOverlayInjectorContext(
+                        context,
+                        connConfigPrefix,
+                        cc.getConfiguration()
                     );
-                    configs = upgrader.upgrade(configs, upgradeContext);
+                    injectConfigs(field.get(obj), connConfigPrefix, connContext);
                   }
-                  // Inject the connection's configs into the stage's configs
-                  String connConfigPrefix = configName + ".";
-                  Context connContext = new ConnectionOverlayInjectorContext(
-                      context,
-                      connConfigPrefix,
-                      configs
-                  );
-                  injectConfigs(field.get(obj), connConfigPrefix, connContext);
                 }
               }
             } catch (IllegalAccessException | IOException e) {
