@@ -99,6 +99,7 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -546,15 +547,19 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
   }
 
   @Override
-  public List<Record> getErrorRecords(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
-    return prodPipeline.getErrorRecords(stage, max);
+  public List<Record> getErrorRecords(String stage, int max) {
+    if (prodPipeline != null) {
+      return prodPipeline.getErrorRecords(stage, max);
+    }
+    return Collections.emptyList();
   }
 
   @Override
-  public List<ErrorMessage> getErrorMessages(String stage, int max) throws PipelineRunnerException, PipelineStoreException {
-    checkState(getState().getStatus().isActive(), ContainerError.CONTAINER_0106);
-    return prodPipeline.getErrorMessages(stage, max);
+  public List<ErrorMessage> getErrorMessages(String stage, int max) {
+    if (prodPipeline != null) {
+      return prodPipeline.getErrorMessages(stage, max);
+    }
+    return Collections.emptyList();
   }
 
   @Override

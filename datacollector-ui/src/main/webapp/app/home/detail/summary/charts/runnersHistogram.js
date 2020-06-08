@@ -64,8 +64,8 @@ angular
       }
     });
 
-    $scope.$on('summaryDataUpdated', function() {
-      var histograms = $rootScope.common.pipelineMetrics.histograms;
+    var refreshData = function() {
+      var histograms = $scope.detailPaneMetrics.histograms;
       var list = $scope.timerData;
       list.splice(0, list.length);
       if (histograms && histograms['pipeline.runners.histogramM5']) {
@@ -85,6 +85,12 @@ angular
           color: '#1f77b4'
         });
       }
+    };
+
+    $scope.$on('summaryDataUpdated', function() {
+      refreshData();
     });
+
+    refreshData();
 
   });

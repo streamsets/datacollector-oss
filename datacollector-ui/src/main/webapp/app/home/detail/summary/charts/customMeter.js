@@ -69,7 +69,7 @@ angular
 
     function updateChartData() {
       var customStageMeter = $scope.customStageMeter,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $scope.detailPaneMetrics;
 
       if(pipelineMetrics && pipelineMetrics.meters) {
         var meterData = pipelineMetrics.meters[customStageMeter.meterKey];
@@ -94,9 +94,8 @@ angular
       }
     }
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if($scope.detailPaneMetrics &&
         $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
         !$scope.monitoringPaused) {
         updateChartData();

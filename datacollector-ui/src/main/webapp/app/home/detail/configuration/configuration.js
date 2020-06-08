@@ -117,7 +117,6 @@ angular
                 cm.setOption('fullScreen', !cm.getOption('fullScreen'));
               },
               'Esc': function(cm) {
-                console.log('fsfsdfsdf');
                 cm.setOption('fullScreen', !cm.getOption('fullScreen'));
               }
             }

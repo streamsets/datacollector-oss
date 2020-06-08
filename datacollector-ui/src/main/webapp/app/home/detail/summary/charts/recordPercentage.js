@@ -82,7 +82,7 @@ angular
 
     var refreshChartData = function() {
       var stageInstance = $scope.detailPaneConfig;
-      var pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var pipelineMetrics = $scope.detailPaneMetrics;
       $scope.allDataZero = true;
       if ($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
         angular.forEach($scope.pieChartData, function(chartData) {

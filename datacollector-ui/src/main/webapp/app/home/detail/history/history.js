@@ -13,24 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/**
- * Controller for History.
- */
 
+// Controller for History.
 angular
   .module('dataCollectorApp.home')
-  .controller('HistoryController', function ($rootScope, $scope, _, api, $modal) {
+  .controller('HistoryController', function ($rootScope, $scope, _, api, pipelineService, $modal) {
 
     angular.extend($scope, {
       showLoading: false,
-      runHistory: [],
-
-      /**
-       * Refresh the History by fetching from server.
-       */
-      refreshHistory: function() {
-        updateHistory($scope.activeConfigInfo.pipelineId);
-      },
 
       /**
        * Show summary of the pipeline run.
@@ -39,12 +29,12 @@ angular
        * @param $index
        */
       viewSummary: function(history, $index) {
-        var prevHistory,
-          runHistory = $scope.runHistory;
+        var prevHistory;
+        var pipelineStateHistory = $scope.pipelineStateHistory;
 
-        while($index + 1 < $scope.runHistory.length) {
-          if(runHistory[$index + 1].status === 'STARTING') {
-            prevHistory = runHistory[$index + 1];
+        while($index + 1 < $scope.pipelineStateHistory.length) {
+          if(pipelineStateHistory[$index + 1].status === 'STARTING') {
+            prevHistory = pipelineStateHistory[$index + 1];
             break;
           }
           $index++;
@@ -76,80 +66,27 @@ angular
        */
       clearHistory: function($event) {
         var modalInstance = $modal.open({
-            templateUrl: 'app/home/detail/history/clearHistory/clearHistory.tpl.html',
-            controller: 'ClearHistoryModalInstanceController',
-            size: '',
-            backdrop: 'static',
-            resolve: {
-              pipelineInfo: function () {
-                return $scope.pipelineConfig.info;
-              }
+          templateUrl: 'app/home/detail/history/clearHistory/clearHistory.tpl.html',
+          controller: 'ClearHistoryModalInstanceController',
+          size: '',
+          backdrop: 'static',
+          resolve: {
+            pipelineInfo: function () {
+              return $scope.pipelineConfig.info;
             }
-          });
+          }
+        });
 
         if($event) {
           $event.stopPropagation();
         }
 
         modalInstance.result.then(function () {
-          updateHistory($scope.pipelineConfig.info.pipelineId);
-        }, function () {
-
+          $scope.updateHistory($scope.pipelineConfig.info.pipelineId);
         });
       },
-
-      /**
-       * Create modal window and display the details for exception.
-       */
-      showStackTrace: function(history) {
-        $modal.open({
-          templateUrl: 'errorModalContent.html',
-          controller: 'ErrorModalInstanceController',
-          size: 'lg',
-          backdrop: true,
-          resolve: {
-            errorObj: function () {
-              return {
-                RemoteException: {
-                  antennaDoctorMessages: history.attributes['ANTENNA_DOCTOR_MESSAGES'],
-                  localizedMessage: history.attributes['ERROR_MESSAGE'],
-                  stackTrace: history.attributes['ERROR_STACKTRACE']
-                }
-              };
-            }
-          }
-        });
-      }
-
-    });
-
-    var updateHistory = function(pipelineName) {
-      $scope.showLoading = true;
-      api.pipelineAgent.getHistory(pipelineName)
-        .then(function(res) {
-          if(res.data && res.data.length) {
-            $scope.runHistory = res.data;
-          } else {
-            $scope.runHistory = [];
-          }
-          $scope.showLoading = false;
-        })
-        .catch(function(res) {
-          $scope.showLoading = false;
-          $rootScope.common.errors = [res.data];
-        });
-    };
-
-    $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
-      if(configInfo) {
-        updateHistory(configInfo.pipelineId);
+      showStackTraceFromParams: function (errorMessage, errorStackTrace) {
+        pipelineService.showStackTraceFromParams(errorMessage, errorStackTrace);
       }
     });
-
-    $scope.$watch('isPipelineRunning', function(newValue) {
-      if($scope.pipelineConfig) {
-        updateHistory($scope.pipelineConfig.info.pipelineId);
-      }
-    });
-
   });

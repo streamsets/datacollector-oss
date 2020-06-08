@@ -18,89 +18,88 @@
  */
 
 angular
-    .module('dataCollectorApp.home')
-    .controller('CustomBarChartController', function($scope, $rootScope, pipelineConstant) {
+  .module('dataCollectorApp.home')
+  .controller('CustomBarChartController', function($scope, $rootScope, pipelineConstant) {
 
-        angular.extend($scope, {
-            chartOptions: {
-                chart: {
-                    type: 'multiBarChart',
-                    height: 220,
-                    showLabels: true,
-                    duration: 0,
-                    x: function(d) {
-                        return d[0];
-                    },
-                    y: function(d) {
-                        return d[1];
-                    },
-                    //showLegend: true,
-                    staggerLabels: false,
-                    showValues: true,
-                    yAxis: {
-                        tickValues: 0,
-                        axisLabel: "",
-                        axisLabelDistance: -10
-                    },
-                    xAxis: {
-                        axisLabel: "",
-                    },
-                    valueFormat: function(d) {
-                        return d3.format(',d')(d);
-                    },
-                    margin: {
-                        left: 55,
-                        top: 5,
-                        bottom: 25,
-                        right: 20
-                    },
-                    tooltip: {
-                        valueFormatter: function(d) {
-                            return d.toFixed(4);
-                        }
-                    }
-                }
-            },
-            chartData: [],
-            count: 0
-        });
+      angular.extend($scope, {
+          chartOptions: {
+              chart: {
+                  type: 'multiBarChart',
+                  height: 220,
+                  showLabels: true,
+                  duration: 0,
+                  x: function(d) {
+                      return d[0];
+                  },
+                  y: function(d) {
+                      return d[1];
+                  },
+                  //showLegend: true,
+                  staggerLabels: false,
+                  showValues: true,
+                  yAxis: {
+                      tickValues: 0,
+                      axisLabel: "",
+                      axisLabelDistance: -10
+                  },
+                  xAxis: {
+                      axisLabel: "",
+                  },
+                  valueFormat: function(d) {
+                      return d3.format(',d')(d);
+                  },
+                  margin: {
+                      left: 55,
+                      top: 5,
+                      bottom: 25,
+                      right: 20
+                  },
+                  tooltip: {
+                      valueFormatter: function(d) {
+                          return d.toFixed(4);
+                      }
+                  }
+              }
+          },
+          chartData: [],
+          count: 0
+      });
 
-        function updateChartData() {
-            $scope.chartData.splice(0, $scope.chartData.length);
-            var customStageGauge = $scope.customStageGauge,
-                pipelineMetrics = $rootScope.common.pipelineMetrics;
+      function updateChartData() {
+          $scope.chartData.splice(0, $scope.chartData.length);
+          var customStageGauge = $scope.customStageGauge,
+            pipelineMetrics = $scope.detailPaneMetrics;
 
-            if(pipelineMetrics && pipelineMetrics.gauges) {
-                var gaugeData = pipelineMetrics.gauges[customStageGauge.gaugeKey].value;
-                if(gaugeData) {
-                    $scope.chartTitle = gaugeData.title;
-                    $scope.chartOptions.chart.yAxis.axisLabel = gaugeData.yAxis;
-                    for (var data in gaugeData.data) {
-                        for (var key in gaugeData.data[data]) {
-                            var mapData = {};
-                            mapData['key'] = key;
-                            mapData['values'] = [];
-                            for (var x in gaugeData.data[data][key]) {
-                                var arrayVal = [];
-                                arrayVal.push(moment(Number(x)).format("DD-MM-YYYY h:mm:ss"));
-                                arrayVal.push(gaugeData.data[data][key][x]);
-                                mapData['values'].push(arrayVal);
-                            }
-                            $scope.chartData.push(mapData);
-                        }
-                    }
-                }
-            }
-        }
+          if(pipelineMetrics && pipelineMetrics.gauges) {
+              var gaugeData = pipelineMetrics.gauges[customStageGauge.gaugeKey].value;
+              if(gaugeData) {
+                  $scope.chartTitle = gaugeData.title;
+                  $scope.chartOptions.chart.yAxis.axisLabel = gaugeData.yAxis;
+                  for (var data in gaugeData.data) {
+                      for (var key in gaugeData.data[data]) {
+                          var mapData = {};
+                          mapData['key'] = key;
+                          mapData['values'] = [];
+                          for (var x in gaugeData.data[data][key]) {
+                              var arrayVal = [];
+                              arrayVal.push(moment(Number(x)).format("DD-MM-YYYY h:mm:ss"));
+                              arrayVal.push(gaugeData.data[data][key][x]);
+                              mapData['values'].push(arrayVal);
+                          }
+                          $scope.chartData.push(mapData);
+                      }
+                  }
+              }
+          }
+      }
 
-        $rootScope.$watch('common.pipelineMetrics', function() {
-            if($scope.isPipelineRunning &&
-                $rootScope.common.pipelineMetrics &&
-                $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
-                !$scope.monitoringPaused) {
-                updateChartData();
-            }
-        });
+      $scope.$watch('detailPaneMetrics', function() {
+          if($scope.detailPaneMetrics &&
+            $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
+            !$scope.monitoringPaused) {
+              updateChartData();
+          }
+      });
 
-        updateChartData();
-    });
+      updateChartData();
+  });

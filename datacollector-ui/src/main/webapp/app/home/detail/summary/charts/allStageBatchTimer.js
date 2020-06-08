@@ -19,8 +19,7 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('AllStageBatchTimerChartController', function($rootScope, $scope, api, pipelineConstant) {
-    var baseQuery = "select mean,metric from timers where (pipeline='" + $scope.pipelineConfig.info.pipelineId + "') and ";
+  .controller('AllStageBatchTimerChartController', function($rootScope, $scope) {
 
     angular.extend($scope, {
       allDataZero: true,
@@ -144,9 +143,9 @@ angular
       value: 0
     });
 
-    $scope.$on('summaryDataUpdated', function() {
-      var pipelineMetrics = $rootScope.common.pipelineMetrics,
-        values = [];
+    var refreshData = function() {
+      var pipelineMetrics = $scope.detailPaneMetrics;
+      var values = [];
 
       $scope.allDataZero = true;
 
@@ -187,61 +186,11 @@ angular
       if($scope.totalValue > 0) {
         $scope.totalValue = $scope.totalValue.toFixed(2);
       }
-    });
-
-    var refreshTimeSeriesData = function() {
-      var query = baseQuery + '(';
-      var timeRangeCondition = $scope.getTimeRangeWhereCondition();
-      var labelMap = {};
-
-      angular.forEach(stages, function(stage, index) {
-        var stageTimer = 'stage.' + stage.instanceName + '.batchProcessing.timer';
-
-        if(index !== 0) {
-          query += ' or ';
-        }
-
-        query += "metric = '" + stageTimer + "'";
-        labelMap[stageTimer] = stage.uiInfo.label;
-      });
-
-      query += ") and " + timeRangeCondition;
-
-      api.timeSeries.getTimeSeriesData(query).then(
-        function(res) {
-          if(res && res.data) {
-            var chartData = $scope.timeSeriesChartData;
-            chartData.splice(0, chartData.length);
-            angular.forEach(res.data.results[0].series, function(d, index) {
-              chartData.push({
-                key: labelMap[d.tags.metric],
-                columns: d.columns,
-                values: d.values
-              });
-            });
-          }
-        },
-        function(res) {
-          $rootScope.common.errors = [res.data];
-        }
-      );
     };
 
-    $scope.$watch('timeRange', function() {
-      if($scope.timeRange !== 'latest') {
-        refreshTimeSeriesData();
-      }
+    $scope.$on('summaryDataUpdated', function() {
+      refreshData();
     });
 
-    $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning && $scope.timeRange !== 'latest' &&
-        options.type !== pipelineConstant.LINK) {
-        refreshTimeSeriesData();
-      }
-    });
-
-    if($scope.timeRange !== 'latest') {
-      refreshTimeSeriesData();
-    }
-
+    refreshData();
   });

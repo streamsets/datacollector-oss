@@ -137,7 +137,6 @@ angular
        * @param configDefinitions
        */
       addToCustomField: function(stageInstance, config, configDefinitions) {
-        console.log('addToCustomField');
         var complexFieldObj = {};
         angular.forEach(configDefinitions, function (complexFiledConfigDefinition) {
           var complexFieldConfig = pipelineService.setDefaultValueForConfig(

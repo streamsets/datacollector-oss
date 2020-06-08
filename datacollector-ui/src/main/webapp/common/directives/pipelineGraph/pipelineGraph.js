@@ -25,7 +25,7 @@ angular.module('pipelineGraphDirectives', [])
     };
   })
   .controller('PipelineGraphController', function(
-    $scope, $rootScope, $element, _, $filter, $location, $modal, 
+    $scope, $rootScope, $element, _, $filter, $location, $modal,
     pipelineConstant, $translate, pipelineService, tracking
   ) {
 
@@ -1532,6 +1532,7 @@ angular.module('pipelineGraphDirectives', [])
             state.selectedEdge = null;
             $scope.$emit('onRemoveNodeSelection', {
               selectedObject: undefined,
+              detailTabName: undefined,
               type: pipelineConstant.PIPELINE
             });
             graph.updateGraph();
@@ -1751,6 +1752,7 @@ angular.module('pipelineGraphDirectives', [])
         state.selectedNode = null;
         $scope.$emit('onRemoveNodeSelection', {
           selectedObject: undefined,
+          detailTabName: undefined,
           type: pipelineConstant.PIPELINE
         });
         graph.updateGraph();
