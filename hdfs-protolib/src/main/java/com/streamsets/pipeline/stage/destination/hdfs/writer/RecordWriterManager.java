@@ -232,11 +232,11 @@ public class RecordWriterManager {
       return Long.MAX_VALUE;
     }
     // we up the record date to the greatest one based on the template
-    recordDate = pathResolver.getCeilingDate(recordDate);
-    if (recordDate != null) {
-      return preventOverflow(recordDate.getTime() + cutOffMillis) - now.getTime();
+    Date newRecordDate = pathResolver.getCeilingDate(recordDate);
+    if (newRecordDate != null) {
+      return preventOverflow(newRecordDate.getTime() + cutOffMillis) - now.getTime();
     } else {
-      return Long.MAX_VALUE;
+      return recordDate.getTime() + cutOffMillis - now.getTime();
     }
   }
 

@@ -29,13 +29,14 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
 public class ActiveRecordWriters {
-  private final static Logger LOG = LoggerFactory.getLogger(ActiveRecordWriters.class);
-  private final static boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
+  private static final Logger LOG = LoggerFactory.getLogger(ActiveRecordWriters.class);
+  private static final boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
 
   private static class DelayedRecordWriter implements Delayed {
     private final RecordWriter writer;
@@ -74,7 +75,7 @@ public class ActiveRecordWriters {
 
   @VisibleForTesting
   Map<String, RecordWriter> writers;
-  private DelayQueue<DelayedRecordWriter> cutOffQueue;
+  private Queue<DelayedRecordWriter> cutOffQueue;
 
   public ActiveRecordWriters(RecordWriterManager manager) {
     writers = new HashMap<>();
