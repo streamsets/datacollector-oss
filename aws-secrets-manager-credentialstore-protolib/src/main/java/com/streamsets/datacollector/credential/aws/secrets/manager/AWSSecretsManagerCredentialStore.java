@@ -23,6 +23,7 @@ import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.secretsmanager.caching.SecretCache;
 import com.amazonaws.secretsmanager.caching.SecretCacheConfiguration;
 import com.amazonaws.services.secretsmanager.AWSSecretsManagerClientBuilder;
+import com.amazonaws.services.secretsmanager.model.AWSSecretsManagerException;
 import com.amazonaws.services.secretsmanager.model.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Splitter;
@@ -90,15 +91,7 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
     if (issues.isEmpty()) {
       LOG.debug("Creating Secret Cache for region '{}'", region);
       secretCache = createSecretCache(accessKey, secretKey, region, cacheSize, cacheTTL);
-      // Verify we can connect
-      try {
-        secretCache.getSecretString("test-AWSSecretsManagerCredentialStore");
-      } catch (ResourceNotFoundException ex) {
-        // expected: ignore
-      } catch (Exception ex) {
-        LOG.error(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01.getMessage(), ex.getMessage(), ex);
-        issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01, ex.getMessage(), ex));
-      }
+      validateCredentialStoreConnection(context, issues);
     }
 
     return issues;
@@ -163,11 +156,8 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
       ));
     }
 
-    boolean alwaysRefresh = false;
     String alwaysRefreshStr = optionsMap.get(ALWAYS_REFRESH_OPTION);
-    if (alwaysRefreshStr != null && alwaysRefreshStr.equals("true")) {
-      alwaysRefresh = true;
-    }
+    boolean alwaysRefresh = (alwaysRefreshStr != null && alwaysRefreshStr.equals("true"));
 
     CredentialValue credential = new AWSSecretsManagerCredentialValue(splits[0], splits[1], alwaysRefresh);
     credential.get();
@@ -178,6 +168,30 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
   public void destroy() {
     if (secretCache != null) {
       secretCache.close();
+    }
+  }
+
+  /**
+   * Verify connectivity to AWS Secrets Manager credential store and appends any issue found to the issues list.
+   */
+  private void validateCredentialStoreConnection(Context context, List<ConfigIssue> issues) {
+    try {
+      // The only way to verify the connection is just to try to perform an operation on a dummy, nonexistent secret
+      // and expect a ResourceNotFoundException or an AccessDeniedException. The former is expected
+      // when reading permissions (i.e. GetSecretValue/DescribeSecret actions) are allowed for any resource;
+      // otherwise, the latter is expected.
+      secretCache.getSecretString("test-AWSSecretsManagerCredentialStore");
+    } catch (ResourceNotFoundException ex) {
+      // Ignore.
+    } catch (AWSSecretsManagerException ex) {
+      // Ignore only for AccessDeniedException (there is no specific class, checking ErrorCode).
+      if (!ex.getErrorCode().equals("AccessDeniedException")) {
+        LOG.error(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01.getMessage(), ex.getMessage(), ex);
+        issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01, ex.getMessage(), ex));
+      }
+    } catch (Exception ex) {
+      LOG.error(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01.getMessage(), ex.getMessage(), ex);
+      issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_01, ex.getMessage(), ex));
     }
   }
 
@@ -232,7 +246,7 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
         } catch (IOException ioe) {
           throw new StageException(Errors.AWS_SECRETS_MANAGER_CRED_STORE_04, key, name, ioe);
         }
-      } catch (ResourceNotFoundException ex) {
+      } catch (AWSSecretsManagerException ex) {
         throw new StageException(Errors.AWS_SECRETS_MANAGER_CRED_STORE_03, name, ex);
       }
     }
