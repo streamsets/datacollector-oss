@@ -199,9 +199,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Configuration conf,
       BlobStoreTask blobStoreTask
   ) {
-<<<<<<< HEAD
-    this(remoteDataCollector, executorService, syncEventsExecutorService, stageLibrary, runtimeInfo, conf, null, blobStoreTask);
-=======
     this(
         remoteDataCollector,
         executorService,
@@ -210,9 +207,9 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         buildInfo,
         runtimeInfo,
         conf,
-        null
+        null,
+        blobStoreTask
     );
->>>>>>> master
   }
 
   public RemoteEventHandlerTask(

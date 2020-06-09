@@ -152,10 +152,6 @@ public class TestFilePipelineStoreTask {
         PipelineCredentialHandler encryptingCredentialsHandler,
         BlobStoreTask blobStoreTask
     ) {
-<<<<<<< HEAD
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
-          eventListenerManager, lockCache, encryptingCredentialsHandler, blobStoreTask);
-=======
       return new FilePipelineStoreTask(
           buildInfo,
           runtimeInfo,
@@ -163,9 +159,9 @@ public class TestFilePipelineStoreTask {
           pipelineStateStore,
           eventListenerManager,
           lockCache,
-          encryptingCredentialsHandler
+          encryptingCredentialsHandler,
+          blobStoreTask
       );
->>>>>>> master
     }
   }
 

@@ -125,14 +125,10 @@ public class TestStandalonePipelineManager {
       StandaloneRunner.class,
       EventListenerManager.class,
       LockCache.class,
-<<<<<<< HEAD
-      RuntimeInfo.class,
-      BlobStoreTask.class
-=======
       BuildInfo.class,
       RuntimeInfo.class,
-      Configuration.class
->>>>>>> master
+      Configuration.class,
+      BlobStoreTask.class
     },
     includes = LockCacheModule.class,
     library = true

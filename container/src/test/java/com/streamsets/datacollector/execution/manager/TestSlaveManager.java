@@ -133,26 +133,16 @@ public class TestSlaveManager {
         PipelineStateStore pipelineStateStore,
         BlobStoreTask blobStoreTask
     ) {
-<<<<<<< HEAD
-      return new SlavePipelineStoreTask(
-            new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
-                runtimeInfo,
-                stageLibraryTask,
-                eventListenerManager,
-                new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
-                blobStoreTask)
-        );
-=======
       PipelineStoreTask pipelineStoreTask =
         new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
             buildInfo,
             runtimeInfo,
             stageLibraryTask,
             eventListenerManager,
-            new FilePipelineStateStore(runtimeInfo, provideConfiguration())
+            new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
+            blobStoreTask
         ));
       return pipelineStoreTask;
->>>>>>> master
     }
 
     @Provides

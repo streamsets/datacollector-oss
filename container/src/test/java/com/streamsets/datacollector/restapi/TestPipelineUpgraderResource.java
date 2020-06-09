@@ -42,11 +42,8 @@ public class TestPipelineUpgraderResource extends JerseyTest {
     @Override
     protected void configure() {
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
-<<<<<<< HEAD
-      bindFactory(BlobStoreTaskTestInjector.class).to(BlobStoreTask.class);
-=======
       bindFactory(TestUtil.BuildInfoTestInjector.class).to(BuildInfo.class);
->>>>>>> master
+      bindFactory(BlobStoreTaskTestInjector.class).to(BlobStoreTask.class);
     }
 
   }

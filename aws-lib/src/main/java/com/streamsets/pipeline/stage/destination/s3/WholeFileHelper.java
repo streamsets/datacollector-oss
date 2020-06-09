@@ -76,12 +76,8 @@ final class WholeFileHelper extends FileHelper {
   }
 
   private void checkForWholeFileExistence(String bucket, String objectKey) throws OnRecordErrorException {
-<<<<<<< HEAD
     boolean fileExists = s3TargetConfigBean.s3Config.connection.getS3Client().doesObjectExist(bucket, objectKey);
-=======
-    boolean fileExists = s3TargetConfigBean.s3Config.getS3Client().doesObjectExist(bucket, objectKey);
     LOGGER.debug("Validating object existence for '{}' = {}", objectKey, fileExists);
->>>>>>> master
     WholeFileExistsAction wholeFileExistsAction = generatorService.wholeFileExistsAction();
     if (fileExists && wholeFileExistsAction == WholeFileExistsAction.TO_ERROR) {
       throw new OnRecordErrorException(Errors.S3_51, objectKey);

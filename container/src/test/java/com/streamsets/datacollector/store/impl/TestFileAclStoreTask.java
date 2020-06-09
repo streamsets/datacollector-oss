@@ -124,10 +124,6 @@ public class TestFileAclStoreTask {
         LockCache<String> lockCache,
         BlobStoreTask blobStoreTask
     ) {
-<<<<<<< HEAD
-      return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
-          eventListenerManager, lockCache, Mockito.mock(PipelineCredentialHandler.class), blobStoreTask);
-=======
       return new FilePipelineStoreTask(
           buildInfo,
           runtimeInfo,
@@ -135,9 +131,9 @@ public class TestFileAclStoreTask {
           pipelineStateStore,
           eventListenerManager,
           lockCache,
-          Mockito.mock(PipelineCredentialHandler.class)
+          Mockito.mock(PipelineCredentialHandler.class),
+          blobStoreTask
       );
->>>>>>> master
     }
 
     @Provides

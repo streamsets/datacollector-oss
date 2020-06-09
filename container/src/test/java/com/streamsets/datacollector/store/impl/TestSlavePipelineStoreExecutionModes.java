@@ -65,11 +65,6 @@ public class TestSlavePipelineStoreExecutionModes {
       new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-<<<<<<< HEAD
-    FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-      new SlavePipelineStateStore(), new EventListenerManager(), new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class), Mockito.mock(BlobStoreTask.class));
-=======
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
         buildInfo,
         runtimeInfo,
@@ -77,9 +72,9 @@ public class TestSlavePipelineStoreExecutionModes {
         new SlavePipelineStateStore(),
         new EventListenerManager(),
         new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        Mockito.mock(BlobStoreTask.class)
     );
->>>>>>> master
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());
@@ -93,11 +88,6 @@ public class TestSlavePipelineStoreExecutionModes {
       new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         Arrays.asList(TestPipelineStateStore.class.getClassLoader()));
     StageLibraryTask stageLibraryTask = MockStages.createStageLibrary(emptyCL);
-<<<<<<< HEAD
-    FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(runtimeInfo, stageLibraryTask,
-        new SlavePipelineStateStore(), new EventListenerManager(),
-        new LockCache<>(), Mockito.mock(PipelineCredentialHandler.class), Mockito.mock(BlobStoreTask.class));
-=======
     FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
         buildInfo,
         runtimeInfo,
@@ -105,9 +95,9 @@ public class TestSlavePipelineStoreExecutionModes {
         new SlavePipelineStateStore(),
         new EventListenerManager(),
         new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        Mockito.mock(BlobStoreTask.class)
     );
->>>>>>> master
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
     assertEquals(Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR), pipelineStoreTask.getStoreDir());

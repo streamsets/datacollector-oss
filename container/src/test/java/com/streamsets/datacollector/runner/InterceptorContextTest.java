@@ -25,11 +25,6 @@ import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.util.Configuration;
-<<<<<<< HEAD
-=======
-import com.streamsets.pipeline.BootstrapMain;
-import com.streamsets.pipeline.api.BlobStore;
->>>>>>> master
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Processor;
