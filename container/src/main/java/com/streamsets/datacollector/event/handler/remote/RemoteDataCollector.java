@@ -41,6 +41,7 @@ import com.streamsets.datacollector.execution.PreviewStatus;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.StageOutput;
@@ -107,6 +108,7 @@ public class RemoteDataCollector implements DataCollector {
   private final AclStoreTask aclStoreTask;
   private final AclCacheHelper aclCacheHelper;
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private final StageLibraryTask stageLibrary;
   private final BlobStoreTask blobStoreTask;
   private final SafeScheduledExecutorService eventHandlerExecutor;
@@ -126,6 +128,7 @@ public class RemoteDataCollector implements DataCollector {
       AclStoreTask aclStoreTask,
       RemoteStateEventListener stateEventListener,
       RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
       AclCacheHelper aclCacheHelper,
       StageLibraryTask stageLibrary,
       BlobStoreTask blobStoreTask,
@@ -138,6 +141,7 @@ public class RemoteDataCollector implements DataCollector {
     this.validatorIdList = new ArrayList<>();
     this.stateEventListener = stateEventListener;
     this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
     this.aclStoreTask = aclStoreTask;
     this.aclCacheHelper = aclCacheHelper;
     this.stageLibrary = stageLibrary;
@@ -256,6 +260,7 @@ public class RemoteDataCollector implements DataCollector {
         pipelineConfiguration.setUuid(uuidRet);
         pipelineConfiguration.setPipelineId(name);
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
+            buildInfo,
             name,
             pipelineConfiguration
         );

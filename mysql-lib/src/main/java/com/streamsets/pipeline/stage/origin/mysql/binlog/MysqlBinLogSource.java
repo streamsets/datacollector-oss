@@ -298,7 +298,7 @@ public abstract class MysqlBinLogSource extends BaseSource {
 
     int recordCounter = 0;
     int batchSize = config.maxBatchSize > maxBatchSize ? maxBatchSize : config.maxBatchSize;
-    if (checkBatchSize && config.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && config.maxBatchSize > maxBatchSize) {
       getContext().reportError(MySQLBinLogErrors.MYSQL_BIN_LOG_018, maxBatchSize);
       checkBatchSize = false;
     }

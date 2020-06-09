@@ -132,7 +132,8 @@ public class PostgresCDCConfigBean {
       type = ConfigDef.Type.NUMBER,
       description = "Maximum amount of time to wait for data before sending a partial or empty batch",
       label = "Batch Wait Time (ms)",
-      defaultValue = "1000",
+      // Greater than poll time
+      defaultValue = "15000",
       min = 1,
       group = "CDC",
       displayPosition = 90

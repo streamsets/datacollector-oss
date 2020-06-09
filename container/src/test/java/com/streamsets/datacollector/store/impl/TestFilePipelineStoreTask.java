@@ -32,6 +32,8 @@ import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
@@ -46,6 +48,7 @@ import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
+import com.streamsets.pipeline.BootstrapMain;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.After;
@@ -94,11 +97,18 @@ public class TestFilePipelineStoreTask {
     }
     @Provides
     @Singleton
+    public BuildInfo provideBuildInfo() {
+      return ProductBuildInfo.getDefault();
+    }
+
+    @Provides
+    @Singleton
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
       Mockito.when(mock.getDataDir()).thenReturn("target/" + UUID.randomUUID());
       return mock;
     }
+
 
     @Provides
     @Singleton
@@ -133,6 +143,7 @@ public class TestFilePipelineStoreTask {
     @Provides
     @Singleton
     public FilePipelineStoreTask providePipelineStoreTask(
+        BuildInfo buildInfo,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -141,8 +152,20 @@ public class TestFilePipelineStoreTask {
         PipelineCredentialHandler encryptingCredentialsHandler,
         BlobStoreTask blobStoreTask
     ) {
+<<<<<<< HEAD
       return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
           eventListenerManager, lockCache, encryptingCredentialsHandler, blobStoreTask);
+=======
+      return new FilePipelineStoreTask(
+          buildInfo,
+          runtimeInfo,
+          stageLibraryTask,
+          pipelineStateStore,
+          eventListenerManager,
+          lockCache,
+          encryptingCredentialsHandler
+      );
+>>>>>>> master
     }
   }
 

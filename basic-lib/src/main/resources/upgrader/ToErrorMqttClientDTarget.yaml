@@ -17,4 +17,18 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: commonConf.tlsConfig.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: commonConf.tlsConfig.privateKey
+          value: ""
+      - setConfig:
+          name: commonConf.tlsConfig.certificateChain
+          value: []
+      - setConfig:
+          name: commonConf.tlsConfig.trustedCertificates
+          value: []

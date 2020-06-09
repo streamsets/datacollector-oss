@@ -25,6 +25,7 @@ import com.streamsets.datacollector.creation.StageBean;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
@@ -68,6 +69,7 @@ public abstract class DetachedStage {
     MetricRegistry metrics,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
+    BuildInfo buildInfo,
     RuntimeInfo runtimeInfo,
     EmailSender emailSender,
     Configuration configuration,
@@ -100,6 +102,7 @@ public abstract class DetachedStage {
       metrics,
       executionMode,
       deliveryGuarantee,
+      buildInfo,
       runtimeInfo,
       emailSender,
       configuration,
@@ -123,6 +126,7 @@ public abstract class DetachedStage {
     MetricRegistry metrics,
     ExecutionMode executionMode,
     DeliveryGuarantee deliveryGuarantee,
+    BuildInfo buildInfo,
     RuntimeInfo runtimeInfo,
     EmailSender emailSender,
     Configuration configuration,
@@ -199,6 +203,7 @@ public abstract class DetachedStage {
       stageInfo,
       executionMode,
       deliveryGuarantee,
+      buildInfo,
       runtimeInfo,
       emailSender,
       configuration,
@@ -209,7 +214,8 @@ public abstract class DetachedStage {
       false,
       null,
       null,
-      null
+      null,
+      false
     );
 
     return DetachedStageRuntime.create(stageBean, stageInfo, context, klass);

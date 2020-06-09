@@ -135,6 +135,7 @@ angular
                     newPipelineObject.stopEventStages = jsonConfigObj.stopEventStages;
                     newPipelineObject.testOriginStage = jsonConfigObj.testOriginStage;
                     newPipelineObject.fragments = jsonConfigObj.fragments;
+                    newPipelineObject.info.sdcVersion = jsonConfigObj.info.sdcVersion;
                     return api.pipelineAgent.savePipelineConfig(name, newPipelineObject);
                   })
                   .then(function(res) {
@@ -191,7 +192,7 @@ angular
             $scope.$apply(function() {
               $scope.common.errors = [errorMsg];
             });
-            tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': JSON.stringify(e)});
+            tracking.mixpanel.track('Import Pipeline Failed', {'Failure Reason': e.toString()});
           }
         };
         reader.readAsText($scope.uploadFile);

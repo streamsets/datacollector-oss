@@ -19,7 +19,9 @@ import com.codahale.metrics.Gauge;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterators;
+import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.EventRecord;
@@ -83,6 +85,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -99,9 +102,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_16;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_40;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_404;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_405;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_41;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_42;
@@ -166,6 +167,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String SCHEMA = "schema";
   private static final int MAX_RECORD_GENERATION_ATTEMPTS = 100;
   private static final int MINING_WAIT_TIME_MS = 1500;
+  private static final int ORA_ERROR_TABLE_NOT_EXIST = 942;
 
   // What are all these constants?
   // String templates used in debug logging statements. To avoid unnecessarily creating new strings,
@@ -252,6 +254,7 @@ public class OracleCDCSource extends BaseSource {
 
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
+  private final List<TableFilter> tableFilters = new ArrayList<>();
   private final Map<SchemaAndTable, Map<String, Integer>> tableSchemas = new HashMap<>();
   private final Map<SchemaAndTable, Map<String, String>> dateTimeColumns = new HashMap<>();
   private final Map<SchemaAndTable, Map<String, PrecisionAndScale>> decimalColumns = new HashMap<>();
@@ -298,7 +301,7 @@ public class OracleCDCSource extends BaseSource {
       dummyRecord = getContext().createRecord("DUMMY");
     }
     final int batchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && configBean.baseConfigBean.maxBatchSize > maxBatchSize) {
       getContext().reportError(JDBC_502, maxBatchSize);
       checkBatchSize = false;
     }
@@ -568,209 +571,231 @@ public class OracleCDCSource extends BaseSource {
 
           // CSF is 1 if the query is incomplete, so read the next row before parsing
           // CSF being 0 means query is complete, generate the record
-          if (resultSet.getInt(9) == 0) {
-            if (query.length() == 0) {
-              LOG.debug(READ_NULL_QUERY_FROM_ORACLE, scn, xid);
+          if (resultSet.getInt(9) == 1) {
+            continue;
+          }
+          if (query.length() == 0) {
+            LOG.debug(READ_NULL_QUERY_FROM_ORACLE, scn, xid);
+            continue;
+          }
+
+          String queryString = query.toString();
+          query.setLength(0);
+          String username = resultSet.getString(2);
+          short op = resultSet.getShort(3);
+          String timestamp = resultSet.getString(4);
+          LocalDateTime tsDate = Timestamp.valueOf(timestamp).toLocalDateTime();
+          delay.getValue().put("delay", getDelay(tsDate));
+          String table = resultSet.getString(6);
+          BigDecimal commitSCN = resultSet.getBigDecimal(7);
+          int seq = resultSet.getInt(8);
+
+          String rsId = resultSet.getString(13);
+          Object ssn = resultSet.getObject(14);
+          String schema = String.valueOf(resultSet.getString(15));
+          int rollback = resultSet.getInt(16);
+          String rowId = resultSet.getString(17);
+          SchemaAndTable schemaAndTable = new SchemaAndTable(schema, table);
+          TransactionIdKey key = new TransactionIdKey(xid);
+
+          int bufferedRecordsSize = 0;
+          int totRecs = 0;
+          bufferedRecordsLock.lock();
+          try {
+            if (useLocalBuffering &&
+                bufferedRecords.containsKey(key) &&
+                bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0, rsId, ssn, null))) {
               continue;
             }
-            String queryString = query.toString();
-            query.setLength(0);
-            String username = resultSet.getString(2);
-            short op = resultSet.getShort(3);
-            String timestamp = resultSet.getString(4);
-            LocalDateTime tsDate = Timestamp.valueOf(timestamp).toLocalDateTime();
-            delay.getValue().put("delay", getDelay(tsDate));
-            String table = resultSet.getString(6);
-            BigDecimal commitSCN = resultSet.getBigDecimal(7);
-            int seq = resultSet.getInt(8);
+            if (LOG.isDebugEnabled()) {
+              bufferedRecordsSize = bufferedRecords.size();
+              for (Map.Entry<OracleCDCSource.TransactionIdKey, HashQueue<RecordSequence>> r :
+                  bufferedRecords.entrySet()) {
+                totRecs += r.getValue().size();
+              }
+            }
+          } finally {
+            bufferedRecordsLock.unlock();
+          }
+          Offset offset = null;
+          if (LOG.isDebugEnabled()) {
+            LOG.debug(
+                "Num Active Txns = {} Total Cached Records = {} Commit SCN = {}, SCN = {}, Operation = {}, Txn Id =" +
+                    " {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
+                bufferedRecordsSize,
+                totRecs,
+                commitSCN,
+                scn,
+                op,
+                xid,
+                tsDate,
+                rowId,
+                queryString
+            );
+          }
 
-            String rsId = resultSet.getString(13);
-            Object ssn = resultSet.getObject(14);
-            String schema = String.valueOf(resultSet.getString(15));
-            int rollback = resultSet.getInt(16);
-            String rowId = resultSet.getString(17);
-            SchemaAndTable schemaAndTable = new SchemaAndTable(schema, table);
-            TransactionIdKey key = new TransactionIdKey(xid);
-
-            int bufferedRecordsSize = 0;
-            int totRecs = 0;
-            bufferedRecordsLock.lock();
-            try {
-              if (useLocalBuffering &&
-                  bufferedRecords.containsKey(key) &&
-                  bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0, rsId, ssn, null))) {
+          if (op != DDL_CODE && op != COMMIT_CODE && op != ROLLBACK_CODE) {
+            if (!tableSchemas.containsKey(schemaAndTable)) {
+              // If the table is not cached it means that was dropped prior to reaching this CDC record. In that
+              // case, discard this change.
+              continue;
+            }
+            if (!useLocalBuffering) {
+              offset = new Offset(version, tsDate, commitSCN.toPlainString(), seq, xid);
+            }
+            Map<String, String> attributes = new HashMap<>();
+            attributes.put(SCN, scn);
+            attributes.put(USER, username);
+            attributes.put(TIMESTAMP_HEADER, timestamp);
+            attributes.put(TABLE, table);
+            attributes.put(SEQ, String.valueOf(seq));
+            attributes.put(XID, xid);
+            attributes.put(RS_ID, rsId);
+            attributes.put(SSN, ssn.toString());
+            attributes.put(SCHEMA, schema);
+            attributes.put(ROLLBACK, String.valueOf(rollback));
+            attributes.put(ROWID_KEY, rowId);
+            if (!useLocalBuffering || getContext().isPreview()) {
+              if (commitSCN.compareTo(lastCommitSCN) < 0 ||
+                  (commitSCN.compareTo(lastCommitSCN) == 0 && seq < sequenceNumber)) {
                 continue;
               }
-              if (LOG.isDebugEnabled()) {
-                bufferedRecordsSize = bufferedRecords.size();
-                for (Map.Entry<OracleCDCSource.TransactionIdKey, HashQueue<RecordSequence>> r :
-                    bufferedRecords.entrySet()) {
-                  totRecs += r.getValue().size();
-                }
+              lastCommitSCN = commitSCN;
+              sequenceNumber = seq;
+              if (configBean.keepOriginalQuery) {
+                attributes.put(QUERY_KEY, queryString);
               }
-            } finally {
-              bufferedRecordsLock.unlock();
-            }
-            Offset offset = null;
-            if (LOG.isDebugEnabled()) {
-              LOG.debug(
-                  "Num Active Txns = {} Total Cached Records = {} Commit SCN = {}, SCN = {}, Operation = {}, Txn Id =" +
-                      " {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
-                  bufferedRecordsSize,
-                  totRecs,
-                  commitSCN,
-                  scn,
-                  op,
-                  xid,
-                  tsDate,
-                  rowId,
-                  queryString
-              );
-            }
-
-            if (op != DDL_CODE && op != COMMIT_CODE && op != ROLLBACK_CODE) {
-              if (!useLocalBuffering) {
-                offset = new Offset(version, tsDate, commitSCN.toPlainString(), seq, xid);
-              }
-              Map<String, String> attributes = new HashMap<>();
-              attributes.put(SCN, scn);
-              attributes.put(USER, username);
-              attributes.put(TIMESTAMP_HEADER, timestamp);
-              attributes.put(TABLE, table);
-              attributes.put(SEQ, String.valueOf(seq));
-              attributes.put(XID, xid);
-              attributes.put(RS_ID, rsId);
-              attributes.put(SSN, ssn.toString());
-              attributes.put(SCHEMA, schema);
-              attributes.put(ROLLBACK, String.valueOf(rollback));
-              attributes.put(ROWID_KEY, rowId);
-              if (!useLocalBuffering || getContext().isPreview()) {
-                if (commitSCN.compareTo(lastCommitSCN) < 0 ||
-                    (commitSCN.compareTo(lastCommitSCN) == 0 && seq < sequenceNumber)) {
-                  continue;
+              try {
+                Record record = generateRecord(queryString, attributes, op);
+                if (record != null && record.getEscapedFieldPaths().size() > 0) {
+                  recordQueue.put(new RecordOffset(record, offset));
                 }
-                lastCommitSCN = commitSCN;
-                sequenceNumber = seq;
-                if (configBean.keepOriginalQuery) {
-                  attributes.put(QUERY_KEY, queryString);
-                }
-                try {
-                  Record record = generateRecord(queryString, attributes, op);
-                  if (record != null && record.getEscapedFieldPaths().size() > 0) {
-                    recordQueue.put(new RecordOffset(record, offset));
-                  }
-                } catch (UnparseableSQLException ex) {
-                  LOG.error("Parsing failed", ex);
-                  unparseable.offer(queryString);
-                }
-              } else {
-                bufferedRecordsLock.lock();
-                try {
-                  HashQueue<RecordSequence> records =
-                      bufferedRecords.computeIfAbsent(key, x -> {
-                        x.setTxnStartTime(tsDate);
-                        return createTransactionBuffer(key.txnId);
-                      });
-
-                  int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
-                  RecordSequence node =
-                      new RecordSequence(attributes, queryString, nextSeq, op, rsId, ssn, tsDate);
-
-                  //check for SAVEPOINT/ROLLBACK here...
-                  // when we get a record with the ROLLBACK indicator set,
-                  // we go through all records in the transaction,
-                  // find the last one with the matching rowId.
-                  // save it's position if and only if, it has
-                  // not previously been marked as a record to SKIP.
-                  //
-                  // ONLY use this code when we are using the new version of addRecordsToQueue()
-                  // the old version of addRecordsToQueue() includes the rollback code
-                  // and does not support "SKIP"ping Records.
-                  if(node.headers.get(ROLLBACK).equals(ONE) && useNewAddRecordsToQueue) {
-                    int lastOne = -1;
-                    int count = 0;
-                    for(RecordSequence rs : records) {
-                      if(rs.headers.get(ROWID_KEY).equals(node.headers.get(ROWID_KEY))
-                      && rs.headers.get(SKIP) == null) {
-                        lastOne = count;
-                      }
-                      count++;
-                    }
-                    // go through the records again, and
-                    // update the lastOne that has the specific
-                    // rowId to indicate we should not process it.
-                    // the original "ROLLBACK" record will *not* be
-                    // added to the transaction.
-                    count = 0;
-                    for(RecordSequence rs : records) {
-                      if(count == lastOne) {
-                        rs.headers.put(SKIP, ONE);
-                        break;
-                      }
-                      count++;
-                    }
-                  } else {
-                    records.add(node);
-                  }
-                } finally {
-                  bufferedRecordsLock.unlock();
-                }
-              }
-            } else if (!getContext().isPreview() &&
-                useLocalBuffering &&
-                (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
-              // so this commit was previously processed or it is a rollback, so don't care.
-              if (op == ROLLBACK_CODE || scnDecimal.compareTo(lastCommitSCN) < 0) {
-                bufferedRecordsLock.lock();
-                try {
-                  bufferedRecords.remove(key);
-                  LOG.info(ROLLBACK_MESSAGE, key.txnId);
-                } finally {
-                  bufferedRecordsLock.unlock();
-                }
-              } else {
-                bufferedRecordsLock.lock();
-                try {
-                  HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
-                  if (lastCommitSCN.equals(scnDecimal) && xid.equals(lastTxnId)) {
-                    removeProcessedRecords(records, sequenceNumber);
-                  }
-                  int bufferedRecordsToBeRemoved = records.size();
-                  LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved, xid);
-                  lastCommitSCN = scnDecimal;
-                  lastTxnId = xid;
-
-                  if(useNewAddRecordsToQueue) {
-                    sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
-                  } else {
-                    sequenceNumber = addRecordsToQueueOLD(tsDate, scn, xid);
-                  }
-
-                } finally {
-                  bufferedRecordsLock.unlock();
-                }
+              } catch (UnparseableSQLException ex) {
+                LOG.error("Parsing failed", ex);
+                unparseable.offer(queryString);
               }
             } else {
-              offset = new Offset(version, tsDate, scn, 0, xid);
-              boolean sendSchema = false;
-              // Commit/rollback in Preview will also end up here, so don't really do any of the following in preview
-              // Don't bother with DDL events here.
-              if (!getContext().isPreview()) {
-                // Event is sent on every DDL, but schema is not always sent.
-                // Schema sending logic:
-                // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
-                // (which we would have sent as an event earlier, at the last alter)
-                // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
-                DDL_EVENT type = getDdlType(queryString);
-                if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
-                  sendSchema = refreshSchema(scnDecimal, new SchemaAndTable(schema, table));
+              bufferedRecordsLock.lock();
+              try {
+                HashQueue<RecordSequence> records =
+                    bufferedRecords.computeIfAbsent(key, x -> {
+                      x.setTxnStartTime(tsDate);
+                      return createTransactionBuffer(key.txnId);
+                    });
+
+                int nextSeq = records.isEmpty() ? 1 : records.tail().seq + 1;
+                RecordSequence node =
+                    new RecordSequence(attributes, queryString, nextSeq, op, rsId, ssn, tsDate);
+
+                //check for SAVEPOINT/ROLLBACK here...
+                // when we get a record with the ROLLBACK indicator set,
+                // we go through all records in the transaction,
+                // find the last one with the matching rowId.
+                // save it's position if and only if, it has
+                // not previously been marked as a record to SKIP.
+                //
+                // ONLY use this code when we are using the new version of addRecordsToQueue()
+                // the old version of addRecordsToQueue() includes the rollback code
+                // and does not support "SKIP"ping Records.
+                if(node.headers.get(ROLLBACK).equals(ONE) && useNewAddRecordsToQueue) {
+                  int lastOne = -1;
+                  int count = 0;
+                  for(RecordSequence rs : records) {
+                    if(rs.headers.get(ROWID_KEY).equals(node.headers.get(ROWID_KEY))
+                        && rs.headers.get(SKIP) == null) {
+                      lastOne = count;
+                    }
+                    count++;
+                  }
+                  // go through the records again, and
+                  // update the lastOne that has the specific
+                  // rowId to indicate we should not process it.
+                  // the original "ROLLBACK" record will *not* be
+                  // added to the transaction.
+                  count = 0;
+                  for(RecordSequence rs : records) {
+                    if(count == lastOne) {
+                      rs.headers.put(SKIP, ONE);
+                      break;
+                    }
+                    count++;
+                  }
+                } else {
+                  records.add(node);
                 }
-                recordQueue.put(new RecordOffset(
-                    createEventRecord(type, queryString, schemaAndTable, offset.toString(), sendSchema, timestamp), offset));
+              } finally {
+                bufferedRecordsLock.unlock();
               }
             }
-            query.setLength(0);
+          } else if (!getContext().isPreview() && useLocalBuffering && (op == COMMIT_CODE || op == ROLLBACK_CODE)) {
+            // so this commit was previously processed or it is a rollback, so don't care.
+            if (op == ROLLBACK_CODE || scnDecimal.compareTo(lastCommitSCN) < 0) {
+              bufferedRecordsLock.lock();
+              try {
+                bufferedRecords.remove(key);
+                LOG.info(ROLLBACK_MESSAGE, key.txnId);
+              } finally {
+                bufferedRecordsLock.unlock();
+              }
+            } else {
+              bufferedRecordsLock.lock();
+              try {
+                HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+                if (lastCommitSCN.equals(scnDecimal) && xid.equals(lastTxnId)) {
+                  removeProcessedRecords(records, sequenceNumber);
+                }
+                int bufferedRecordsToBeRemoved = records.size();
+                LOG.debug(FOUND_RECORDS_IN_TRANSACTION, bufferedRecordsToBeRemoved, xid);
+                lastCommitSCN = scnDecimal;
+                lastTxnId = xid;
+
+                if(useNewAddRecordsToQueue) {
+                  sequenceNumber = addRecordsToQueue(tsDate, scn, xid);
+                } else {
+                  sequenceNumber = addRecordsToQueueOLD(tsDate, scn, xid);
+                }
+
+              } finally {
+                bufferedRecordsLock.unlock();
+              }
+            }
+          } else {
+            offset = new Offset(version, tsDate, scn, 0, xid);
+            boolean sendSchema = false;
+            boolean removedSchema = false;
+            // Commit/rollback in Preview will also end up here, so don't really do any of the following in preview
+            // Don't bother with DDL events here.
+            if (!getContext().isPreview()) {
+              // Event is sent on every DDL, but schema is not always sent.
+              // Schema sending logic:
+              // CREATE/ALTER: Schema is sent if the schema after the ALTER is newer than the cached schema
+              // (which we would have sent as an event earlier, at the last alter)
+              // DROP/TRUNCATE: Schema is not sent, since they don't change schema.
+              DDL_EVENT type = getDdlType(queryString);
+              if (type == DDL_EVENT.ALTER || type == DDL_EVENT.CREATE) {
+                if (validateWithNameFilters(schemaAndTable)) {
+                  sendSchema = refreshCachedSchema(scnDecimal, schemaAndTable);
+                }
+              } else if (type == DDL_EVENT.DROP) {
+                removedSchema = removeCachedSchema(schemaAndTable);
+              }
+
+              // Only send DDL events for the tracked tables in the database. Tracked tables are those that existed
+              // during the pipeline initialization or were created after that.
+              if (tableSchemas.containsKey(schemaAndTable) || removedSchema) {
+                EventRecord event = createEventRecord(
+                    type,
+                    queryString,
+                    schemaAndTable,
+                    offset.toString(),
+                    sendSchema,
+                    timestamp
+                );
+                recordQueue.put(new RecordOffset(event, offset));
+              }
+            }
           }
+          query.setLength(0);
         }
       } catch (SQLException ex) {
         error = true;
@@ -1187,6 +1212,11 @@ public class OracleCDCSource extends BaseSource {
     if (redoSQL != null) {
       event.getHeader().setAttribute(DDL_TEXT, redoSQL);
     }
+    if (timestamp != null) {
+      event.getHeader().setAttribute(TIMESTAMP_HEADER, timestamp);
+    }
+
+    Map<String, Field> fields = new HashMap<>();
     if (sendSchema) {
       // Note that the schema inserted is the *current* schema and not the result of the DDL.
       // Getting the schema as a result of the DDL is not possible.
@@ -1194,19 +1224,13 @@ public class OracleCDCSource extends BaseSource {
       // trying to figure out the schema at the time of the DDL is not really possible since this DDL could have occured
       // before the source started. Since we allow only types to be bigger and no column drops, this is ok.
       Map<String, Integer> schema = tableSchemas.get(schemaAndTable);
-      Map<String, Field> fields = new HashMap<>();
       for (Map.Entry<String, Integer> column : schema.entrySet()) {
         fields.put(column.getKey(), Field.create(JDBCTypeNames.get(column.getValue())));
       }
-      event.set(Field.create(fields));
     }
-    if (timestamp != null) {
-      event.getHeader().setAttribute(TIMESTAMP_HEADER, timestamp);
-    }
+    event.set(Field.create(fields));
+    LOG.debug("Event produced: " + event);
 
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Event produced: " + event);
-    }
     return event;
   }
 
@@ -1227,12 +1251,32 @@ public class OracleCDCSource extends BaseSource {
   }
 
   /**
-   * Refresh the schema for the table if the last update of this table was before the given SCN.
-   * Returns true if it was updated, else returns false.
+   * Validate the given schema and table names match one of the name filters configured in the stage.
+   *
+   * @param schemaAndTable The schema and table name to validate.
+   * @return True if one of the schema and table patterns
    */
-  private boolean refreshSchema(BigDecimal scnDecimal, SchemaAndTable schemaAndTable) throws SQLException {
+  private boolean validateWithNameFilters(SchemaAndTable schemaAndTable) {
+    return tableFilters.stream().anyMatch(filter ->
+      filter.schemaPattern.matcher(schemaAndTable.getSchema()).matches()
+          && filter.tablePattern.matcher(schemaAndTable.getTable()).matches()
+          && (filter.exclusionPattern == null || !filter.exclusionPattern.matcher(schemaAndTable.getTable()).matches())
+    );
+  }
+
+  /**
+   * Refresh the schema for the table if the last update of this table was before the given SCN.
+   * Returns true if it was updated, else returns false. When returning false, it is caused by either:
+   * - The given SCN is older than the cached schema for this table.
+   * - The table currently does not exist in the database.
+   *
+   * To disambiguate between them, you can check the table schema cache ({@link OracleCDCSource#tableSchemas} map). If
+   * it does not have an entry for the given table, then the table does not exist.
+   */
+  private boolean refreshCachedSchema(BigDecimal scnDecimal, SchemaAndTable schemaAndTable) throws SQLException {
     try {
-      if (!tableSchemaLastUpdate.containsKey(schemaAndTable) || scnDecimal.compareTo(tableSchemaLastUpdate.get(schemaAndTable)) > 0) {
+      if (!tableSchemaLastUpdate.containsKey(schemaAndTable)
+          || scnDecimal.compareTo(tableSchemaLastUpdate.get(schemaAndTable)) > 0) {
         if (containerized) {
           try (Statement switchToPdb = connection.createStatement()) {
             switchToPdb.execute("ALTER SESSION SET CONTAINER = " + configBean.pdb);
@@ -1242,10 +1286,25 @@ public class OracleCDCSource extends BaseSource {
         tableSchemaLastUpdate.put(schemaAndTable, scnDecimal);
         return true;
       }
-      return false;
+    } catch (SQLException e) {
+      if (e.getErrorCode() != ORA_ERROR_TABLE_NOT_EXIST) {
+        throw e;
+      }
     } finally {
       alterSession();
     }
+    return false;
+  }
+
+  /**
+   * Delete the cached schema for a given table.
+   *
+   * @param schemaAndTable The table to be removed from the cache.
+   * @return True if the table was removed, false if the table did not existed in the cache.
+   */
+  private boolean removeCachedSchema(SchemaAndTable schemaAndTable) {
+    tableSchemaLastUpdate.remove(schemaAndTable);
+    return tableSchemas.remove(schemaAndTable) != null;
   }
 
   private void addToStageExceptionsQueue(StageException ex) {
@@ -1304,7 +1363,15 @@ public class OracleCDCSource extends BaseSource {
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
     String container = configBean.pdb;
 
-    List<SchemaAndTable> schemasAndTables;
+    int majorVersion = getDBVersion(issues);
+    if (majorVersion == -1) {
+      return issues;
+    }
+    continuousMine = (majorVersion < 19);
+
+    // This must be invoked after configuring some stage attributes and the database connection. Check the
+    // prepareLogMinerSession implementation.
+    logMinerSession = prepareLogMinerSession();
 
     try {
       initializeStatements();
@@ -1321,12 +1388,11 @@ public class OracleCDCSource extends BaseSource {
     }
     zoneId = ZoneId.of(configBean.dbTimeZone);
     dateTimeColumnHandler = new DateTimeColumnHandler(zoneId, configBean.convertTimestampToString);
-    String commitScnField;
-    BigDecimal scn = null;
+
     try {
       switch (configBean.startValue) {
         case SCN:
-          scn = getEndingSCN();
+          BigDecimal scn = getEndingSCN();
           if (new BigDecimal(configBean.startSCN).compareTo(scn) > 0) {
             issues.add(
                 getContext().createConfigIssue(CDC.name(), "oracleCDCConfigBean.startSCN", JDBC_47, scn.toPlainString()));
@@ -1355,101 +1421,28 @@ public class OracleCDCSource extends BaseSource {
       issues.add(getContext().createConfigIssue(CREDENTIALS.name(), USERNAME, JDBC_42));
     }
 
-    try (Statement reusedStatement = connection.createStatement()) {
-      int majorVersion = getDBVersion(issues);
-      // If version is 12+, then the check for table presence must be done in an alternate container!
-      if (majorVersion == -1) {
-        return issues;
+    for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+      tables.schema = configBean.baseConfigBean.caseSensitive ? tables.schema : tables.schema.toUpperCase();
+      tables.table = configBean.baseConfigBean.caseSensitive ? tables.table : tables.table.toUpperCase();
+      if (tables.excludePattern != null) {
+        tables.excludePattern = configBean.baseConfigBean.caseSensitive ?
+                                tables.excludePattern : tables.excludePattern.toUpperCase();
       }
 
-      continuousMine = (majorVersion < 19);
+      Pattern schemaPattern = createRegexFromSqlLikePattern(tables.schema);
+      Pattern tablePattern = createRegexFromSqlLikePattern(tables.table);
+      Pattern exclusionPattern = StringUtils.isEmpty(tables.excludePattern) ?
+                                 null : Pattern.compile(tables.excludePattern);
 
-      if (majorVersion >= 12) {
-        if (!StringUtils.isEmpty(container)) {
-          String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
-          try {
-            reusedStatement.execute(switchToPdb);
-          } catch (SQLException ex) {
-            LOG.error("Error while switching to container: " + container, ex);
-            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
-            return issues;
-          }
-          containerized = true;
-        }
-      }
+      tableFilters.add(new TableFilter(schemaPattern, tablePattern, exclusionPattern));
+    }
 
-      schemasAndTables = new ArrayList<>();
-      for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
-
-        tables.schema = configBean.baseConfigBean.caseSensitive ? tables.schema : tables.schema.toUpperCase();
-        tables.table = configBean.baseConfigBean.caseSensitive ? tables.table : tables.table.toUpperCase();
-        if (tables.excludePattern != null) {
-          tables.excludePattern =
-              configBean.baseConfigBean.caseSensitive ? tables.excludePattern : tables.excludePattern.toUpperCase();
-        }
-        Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
-
-        try (ResultSet rs =
-                 jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
-          while (rs.next()) {
-            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
-            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-            if (p == null || !p.matcher(tableName).matches()) {
-              schemaName = schemaName.trim();
-              tableName = tableName.trim();
-              schemasAndTables.add(new SchemaAndTable(schemaName, tableName));
-            }
-          }
-        }
-      }
-
-      validateTablePresence(reusedStatement, schemasAndTables, issues);
-      if (!issues.isEmpty()) {
-        return issues;
-      }
-      for (SchemaAndTable schemaAndTable : schemasAndTables) {
-        try {
-          tableSchemas.put(schemaAndTable, getTableSchema(schemaAndTable));
-          if (scn != null) {
-            tableSchemaLastUpdate.put(schemaAndTable, scn);
-          }
-        } catch (SQLException ex) {
-          LOG.error("Error while switching to container: " + container, ex);
-          issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_50));
-        }
-      }
-      container = CDB_ROOT;
-      if (majorVersion >= 12) {
-        try {
-          switchContainer.execute();
-          LOG.info("Switched to CDB$ROOT to start LogMiner.");
-        } catch (SQLException ex) {
-          // Fatal only if we switched to a PDB earlier
-          if (containerized) {
-            LOG.error("Error while switching to container: " + container, ex);
-            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, container));
-            return issues;
-          }
-          // Log it anyway
-          LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
-        }
-      }
-      commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
-    } catch (SQLException ex) {
-      LOG.error("Error while creating statement", ex);
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.JDBC.name(),
-              CONNECTION_STR,
-              JDBC_00, hikariConfigBean.getConnectionString()
-          )
-      );
+    initializeTableSchemasCache(majorVersion, issues);
+    if (issues.size() > 0) {
       return issues;
     }
 
-    // This must be invoked after configuring some stage attributes and the database connection. Check the
-    // prepareLogMinerSession implementation.
-    logMinerSession = prepareLogMinerSession();
+    String commitScnField = majorVersion >= 11 ? "COMMIT_SCN" : "CSCN";
 
     final String base =
         "SELECT SCN, USERNAME, OPERATION_CODE, TIMESTAMP, SQL_REDO, TABLE_NAME, " + commitScnField +
@@ -1457,7 +1450,7 @@ public class OracleCDCSource extends BaseSource {
             " FROM V$LOGMNR_CONTENTS" +
             " WHERE TIMESTAMP >= ? AND ";
 
-    final String tableCondition = getListOfSchemasAndTables(schemasAndTables);
+    final String tableCondition = buildTableCondition(configBean.baseConfigBean.schemaTableConfigs);
 
     final String commitRollbackCondition = Utils.format("OPERATION_CODE = {} OR OPERATION_CODE = {}",
         COMMIT_CODE, ROLLBACK_CODE);
@@ -1466,7 +1459,6 @@ public class OracleCDCSource extends BaseSource {
 
     final String restartNonBufferCondition = Utils.format("((" + commitScnField + " = ? AND SEQUENCE# > ?) OR "
         + commitScnField + "  > ?)" + (shouldTrackDDL ? " OR (OPERATION_CODE = {} AND SCN > ?)" : ""), DDL_CODE);
-
 
     if (useLocalBuffering) {
       selectString = String
@@ -1531,38 +1523,170 @@ public class OracleCDCSource extends BaseSource {
   }
 
   /**
-   * This method needs to get SQL like string with all required schemas and tables.
-   * @param schemaAndTables List of SchemaAndTable objects
-   * @return SQL string of schemas and tables
+   * Populates the table schemas cache with the existing database tables matching the table name filters configured
+   * in the stage.
+   *
+   * Depending on the database version, it tries to connect to the configured pluggable database to
+   * retrieve the info.
+   *
    */
+  private void initializeTableSchemasCache(int databaseVersion, List<ConfigIssue> issues) {
+    try (Statement reusedStatement = connection.createStatement()) {
+      // If version is 12+, then the check for table presence must be done in an alternate container!
+      if (databaseVersion >= 12) {
+        if (!StringUtils.isEmpty(configBean.pdb)) {
+          String switchToPdb = "ALTER SESSION SET CONTAINER = " + configBean.pdb;
+          try {
+            reusedStatement.execute(switchToPdb);
+          } catch (SQLException ex) {
+            LOG.error("Error while switching to container: " + configBean.pdb, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, configBean.pdb));
+            return;
+          }
+          containerized = true;
+        }
+      }
+
+      BigDecimal lastSCN = null;
+      try {
+        lastSCN = getEndingSCN();
+      } catch (SQLException ex) {
+        LOG.warn("Could not retrieve the last SCN from database", ex);
+      }
+
+      for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+        Pattern exclusionPattern = Pattern.compile(tables.excludePattern);
+        try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+          while (rs.next()) {
+            String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+            String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+
+            if (tables.excludePattern == null || !exclusionPattern.matcher(tableName).matches()) {
+              SchemaAndTable table = new SchemaAndTable(schemaName.trim(), tableName.trim());
+              try {
+                tableSchemas.put(table, getTableSchema(table));
+                if (lastSCN != null) {
+                  tableSchemaLastUpdate.put(table, lastSCN);
+                }
+              } catch (SQLException ex) {
+                LOG.error("Error while switching to container: " + configBean.pdb, ex);
+                issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_50));
+              }
+            }
+          }
+        }
+      }
+
+      if (!issues.isEmpty()) {
+        return;
+      }
+
+      if (databaseVersion >= 12) {
+        try {
+          switchContainer.execute();
+          LOG.info("Switched to CDB$ROOT to start LogMiner.");
+        } catch (SQLException ex) {
+          // Fatal only if we switched to a PDB earlier
+          if (containerized) {
+            LOG.error("Error while switching to container: " + CDB_ROOT, ex);
+            issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(), USERNAME, JDBC_40, CDB_ROOT));
+            return;
+          }
+          // Log it anyway
+          LOG.info("Switching containers failed, ignoring since there was no PDB switch", ex);
+        }
+      }
+
+    } catch (SQLException ex) {
+      LOG.error("Error while creating statement", ex);
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JDBC_00, hikariConfigBean.getConnectionString()
+          )
+      );
+    }
+  }
+
+  /**
+   * Returns if the given string is a SQL LIKE pattern, according to the {@link java.sql.DatabaseMetaData} rules: '%'
+   * indicates any substring of zero or more characters, and '_' means any single character.
+   *
+   * @param s The string to test.
+   * @return True if <tt>s</tt> is a pattern, false otherwise.
+   */
+  private boolean isSqlLikePattern(String s) {
+    return s.contains("%") || s.contains("_");
+  }
+
   @VisibleForTesting
-  String getListOfSchemasAndTables(List<SchemaAndTable> schemaAndTables) {
-    Map<String, List<String>> schemas = new HashMap<>();
-    for (SchemaAndTable schemaAndTable : schemaAndTables) {
-      if (schemas.containsKey(schemaAndTable.getSchema())) {
-        schemas.get(schemaAndTable.getSchema()).add(schemaAndTable.getTable());
+  Pattern createRegexFromSqlLikePattern(String pattern) {
+    StringBuilder regex = new StringBuilder();
+    StringBuilder token = new StringBuilder();
+
+    for (int i = 0; i < pattern.length(); i++) {
+      char c = pattern.charAt(i);
+      if (c == '%' || c == '_') {
+        if (token.length() > 0) {
+          regex.append("\\Q" + token.toString() + "\\E");
+          token.setLength(0);
+        }
+        if (c == '%') {
+          regex.append(".*");
+        } else {
+          regex.append('.');
+        }
       } else {
-        List<String> tbls = new ArrayList<>();
-        tbls.add(schemaAndTable.getTable());
-        schemas.put(schemaAndTable.getSchema(), tbls);
+        token.append(c);
       }
     }
-    List<String> queries = new ArrayList<>();
-    for (Map.Entry<String, List<String>> entry : schemas.entrySet()) {
-      List<String> tables = new ArrayList<>();
-      int fromIndex = 0;
-      int range = 1000;
-      int maxIndex = entry.getValue().size();
-      int toIndex = range < maxIndex ? range : maxIndex;
-      while (fromIndex < toIndex) {
-        tables.add(Utils.format(
-            "TABLE_NAME IN ({})", formatTableList(entry.getValue().subList(fromIndex, toIndex))));
-        fromIndex = toIndex;
-        toIndex = (toIndex + range) < maxIndex ? (toIndex + range) : maxIndex;
-      }
-      queries.add(Utils.format("(SEG_OWNER='{}' AND ({}))", entry.getKey(), String.join(" OR ", tables)));
+    if (token.length() > 0) {
+      regex.append("\\Q" + token.toString() + "\\E");
     }
-    return "( " + String.join(" OR ", queries) + " )";
+
+    return Pattern.compile(regex.toString());
+  }
+
+  @VisibleForTesting
+  String buildTableCondition(List<SchemaTableConfigBean> schemaAndTableConfigs) {
+    final int maxInClauseElements = 1000;  // Oracle limit for the number of elements in a IN clause.
+
+    Multimap<String, String> schemaTablesMap = ArrayListMultimap.create();
+    for (SchemaTableConfigBean config : schemaAndTableConfigs) {
+      schemaTablesMap.put(config.schema, config.table);
+    }
+
+    StringJoiner schemaTableConditions = new StringJoiner(" OR ", "(", ")");
+
+    for (String schema : schemaTablesMap.keySet()) {
+      StringJoiner tableConditions = new StringJoiner(" OR ");
+      List<String> tableNames = new ArrayList<>();
+
+      for (String table: schemaTablesMap.get(schema)) {
+        if (isSqlLikePattern(table)) {
+          tableConditions.add(String.format("TABLE_NAME LIKE '%s'", table));
+        } else {
+          tableNames.add(String.format("'%s'", table));
+          if (tableNames.size() == maxInClauseElements) {
+            tableConditions.add(String.format("TABLE_NAME IN (%s)", String.join(",", tableNames)));
+            tableNames.clear();
+          }
+        }
+      }
+
+      if (!tableNames.isEmpty()) {
+        tableConditions.add(String.format("TABLE_NAME IN (%s)", String.join(",", tableNames)));
+      }
+
+      if (isSqlLikePattern(schema)) {
+        schemaTableConditions.add(String.format("(SEG_OWNER LIKE '%s' AND (%s))", schema, tableConditions));
+      } else {
+        schemaTableConditions.add(String.format("(SEG_OWNER = '%s' AND (%s))", schema, tableConditions));
+      }
+    }
+
+    return schemaTableConditions.toString();
   }
 
   @NotNull
@@ -1634,35 +1758,6 @@ public class OracleCDCSource extends BaseSource {
         LOG.debug(CURRENT_LATEST_SCN_IS, scn.toPlainString());
       }
       return scn;
-    }
-  }
-
-  private void validateTablePresence(Statement statement, List<SchemaAndTable> schemaAndTables,
-                                     List<ConfigIssue> issues) {
-    if (schemaAndTables.isEmpty()) {
-      LOG.error(JDBC_404.getMessage());
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.CDC.name(),
-              "oracleCDCConfigBean.baseConfigBean.tables",
-              JDBC_404
-          )
-      );
-    }
-    for (SchemaAndTable schemaAndTable : schemaAndTables) {
-      LOG.info("Found table: '{}' in schema: '{}'", schemaAndTable.getTable(), schemaAndTable.getSchema());
-      try {
-        statement.execute("SELECT * FROM \"" + schemaAndTable.getSchema() + "\".\"" + schemaAndTable.getTable() +
-                "\" WHERE 1 = 0");
-      } catch (SQLException ex) {
-        StringBuilder sb = new StringBuilder("Table: ").append(schemaAndTable).append(" does not exist.");
-        if (StringUtils.isEmpty(configBean.pdb)) {
-          sb.append(" PDB was not specified. If the database was created inside a PDB, please specify PDB");
-        }
-        LOG.error(sb.toString(), ex);
-        issues.add(getContext().createConfigIssue(Groups.CDC.name(), "oracleCDCConfigBean.baseConfigBean.tables",
-                JDBC_16, schemaAndTable));
-      }
     }
   }
 
@@ -2005,6 +2100,18 @@ public class OracleCDCSource extends BaseSource {
     private ErrorAndCause(JdbcErrors error, Throwable ex) {
       this.error = error;
       this.ex = ex;
+    }
+  }
+
+  private class TableFilter {
+    final Pattern schemaPattern;
+    final Pattern tablePattern;
+    final Pattern exclusionPattern;
+
+    public TableFilter(Pattern schemaPattern, Pattern tablePattern, Pattern exclusionPattern) {
+      this.schemaPattern = schemaPattern;
+      this.tablePattern = tablePattern;
+      this.exclusionPattern = exclusionPattern;
     }
   }
 

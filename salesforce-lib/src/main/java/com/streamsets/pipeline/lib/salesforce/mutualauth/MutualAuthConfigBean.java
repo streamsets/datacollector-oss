@@ -16,15 +16,19 @@
 package com.streamsets.pipeline.lib.salesforce.mutualauth;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.lib.tls.KeyStoreTypeChooserValues;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -50,16 +54,61 @@ public class MutualAuthConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use Remote Keystore",
+      description = "Use a keystore built from a specified private key and certificate chain instead of loading from a local file",
+      displayPosition = 505,
+      group = "#0",
+      dependsOn = "useMutualAuth",
+      triggeredByValue = "true"
+  )
+  public boolean useRemoteKeyStore;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.STRING,
       label = "Keystore File",
       description = "The path to the keystore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
       displayPosition = 510,
-      dependsOn = "useMutualAuth",
-      triggeredByValue = "true",
+      dependencies = {
+          @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      },
       group = "ADVANCED"
   )
   public String keyStoreFilePath = "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      description = "Private key used in the keystore",
+      label = "Private Key",
+      displayPosition = 520,
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
+      }
+  )
+  public CredentialValue privateKey;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Certificate chain used in the keystore",
+      label = "Certificate Chain",
+      displayPosition = 530,
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
+      },
+      defaultValue = "[]"
+  )
+  @ListBeanModel
+  public List<CredentialValueBean> certificateChain = new ArrayList<>();
 
   @ConfigDef(
       required = true,
@@ -67,9 +116,11 @@ public class MutualAuthConfigBean {
       defaultValue = "JKS",
       label = "Keystore Type",
       description = "The type of certificate/key scheme to use for the key tore.",
-      displayPosition = 520,
-      dependsOn = "useMutualAuth",
-      triggeredByValue = "true",
+      displayPosition = 540,
+      dependencies = {
+          @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      },
       group = "ADVANCED"
   )
   @ValueChooserModel(KeyStoreTypeChooserValues.class)
@@ -81,9 +132,11 @@ public class MutualAuthConfigBean {
       label = "Keystore Password",
       description = "The password to the keystore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
-      displayPosition = 530,
-      dependsOn = "useMutualAuth",
-      triggeredByValue = "true",
+      displayPosition = 550,
+      dependencies = {
+          @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      },
       group = "ADVANCED"
   )
   public CredentialValue keyStorePassword = () -> "";
@@ -94,7 +147,7 @@ public class MutualAuthConfigBean {
       label = "Keystore Key Algorithm",
       description = "The key manager algorithm to use with the keystore.",
       defaultValue = TlsConfigBean.DEFAULT_KEY_MANAGER_ALGORITHM,
-      displayPosition = 540,
+      displayPosition = 560,
       dependsOn = "useMutualAuth",
       triggeredByValue = "true",
       group = "ADVANCED"
@@ -115,6 +168,9 @@ public class MutualAuthConfigBean {
     if (useMutualAuth) {
       underlyingConfig.keyStorePassword = keyStorePassword;
       underlyingConfig.keyStoreFilePath = keyStoreFilePath;
+      underlyingConfig.useRemoteKeyStore = useRemoteKeyStore;
+      underlyingConfig.privateKey = privateKey;
+      underlyingConfig.certificateChain = certificateChain;
       underlyingConfig.keyStoreAlgorithm = keyStoreAlgorithm;
       underlyingConfig.keyStoreType = keyStoreType;
       underlyingConfig.init(context, "TLS", prefix, issues);

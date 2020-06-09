@@ -17,4 +17,18 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: conf.tlsConfigBean.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: conf.tlsConfigBean.privateKey
+          value: ""
+      - setConfig:
+          name: conf.tlsConfigBean.certificateChain
+          value: []
+      - setConfig:
+          name: conf.tlsConfigBean.trustedCertificates
+          value: []

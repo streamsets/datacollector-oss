@@ -1,0 +1,1532 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Loading Data into Databricks Delta Lake" /><meta name="abstract" content="You can use several solutions to load data into a Delta Lake table on Databricks." /><meta name="description" content="You can use several solutions to load data into a Delta Lake table on Databricks." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Solutions/Solutions-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Solutions/EventStorage.html#concept_ocb_nnl_px" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Solutions/HiveDrift-Overview.html#concept_phk_bdf_2w" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_a5b_wvk_ckb" /><title>Loading Data into Databricks Delta Lake</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_a5b_wvk_ckb-d46e165875" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_zq5_pb4_flb"><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_a5b_wvk_ckb"><span class="title"><a href="../../../datacollector/UserGuide/Solutions/DeltaLake.html#concept_a5b_wvk_ckb">Loading Data into Databricks Delta Lake</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use several solutions to load data into a Delta Lake table on Databricks. </p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Solutions/EventStorage.html#concept_ocb_nnl_px" title="Preserving an Audit Trail of Events"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Solutions/HiveDrift-Overview.html#concept_phk_bdf_2w" title="Drift Synchronization Solution for Hive"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_aw1_p1q_plb-d46e165675" class="topicref" data-id="concept_aw1_p1q_plb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Overview.html#concept_aw1_p1q_plb">Solutions Overview </a></span></span></li>
+         <li><span data-tocid="concept_jkm_rnz_kx-d46e165697" class="topicref" data-id="concept_jkm_rnz_kx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Parquet.html#concept_jkm_rnz_kx">Converting Data to the Parquet Data Format</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to convert Avro files to the columnar format,         Parquet.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_szz_xwm_lx-d46e165722" class="topicref" data-id="concept_szz_xwm_lx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Impala.html#concept_szz_xwm_lx">Automating Impala Metadata Updates for Drift Synchronization for Hive</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to configure a <span class="ph">Drift Synchronization Solution for Hive</span> pipeline to automatically refresh the Impala metadata cache each time changes occur in         the Hive metastore.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_d1q_xl4_lx-d46e165750" class="topicref" data-id="concept_d1q_xl4_lx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/FileManagement.html#concept_d1q_xl4_lx">Managing Output Files</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to design a pipeline that writes output files to a         destination, moves the files to a different
+                        location, and then changes the permissions for         the files.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kff_ykv_lz-d46e165775" class="topicref" data-id="concept_kff_ykv_lz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/StopPipeline.html#concept_kff_ykv_lz">Stopping a Pipeline After Processing All Available Data</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to design a pipeline that stops automatically after it         finishes processing all available
+                        data.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_vrh_jrs_bbb-d46e165800" class="topicref" data-id="concept_vrh_jrs_bbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/SqoopReplacement.html#concept_vrh_jrs_bbb">Offloading Data from Relational Sources to Hadoop</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to offload data from relational database tables to         Hadoop.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_t2t_lp5_xz-d46e165825" class="topicref" data-id="concept_t2t_lp5_xz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/SendEmail.html#concept_t2t_lp5_xz">Sending Email During Pipeline Processing</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to design a pipeline to send email notifications at         different moments during pipeline
+                        processing.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ocb_nnl_px-d46e165850" class="topicref" data-id="concept_ocb_nnl_px" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/EventStorage.html#concept_ocb_nnl_px">Preserving an Audit Trail of Events</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to design a pipeline that preserves an audit trail of         pipeline and stage events that occur.</p>
+                     </span></span></span></li>
+         <li class="active"><span data-tocid="concept_a5b_wvk_ckb-d46e165875" class="topicref" data-id="concept_a5b_wvk_ckb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/DeltaLake.html#concept_a5b_wvk_ckb">Loading Data into Databricks Delta Lake</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">You can use several solutions to load data into a Delta Lake table on Databricks. </p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_ml2_1vv_yjb-d46e166001" class="topicref" data-id="concept_ml2_1vv_yjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/DeltaLake.html#concept_ml2_1vv_yjb">Bulk Loading Data into a Delta Lake Table</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to build a pipeline that bulk loads Salesforce data into         a Delta Lake table on Databricks.</p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_uk4_fvv_yjb-d46e166229" class="topicref" data-id="concept_uk4_fvv_yjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/DeltaLake.html#concept_uk4_fvv_yjb">Merging Changed Data into a Delta Lake Table</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">This solution describes how to design a pipeline that reads change data capture (CDC)         data from a database and replicates
+                              the changes to a Delta Lake table on         Databricks.
+                              
+                           </p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_phk_bdf_2w-d46e166711" class="topicref" data-id="concept_phk_bdf_2w" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/HiveDrift-Overview.html#concept_phk_bdf_2w">Drift Synchronization Solution for Hive</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The <span class="ph">Drift Synchronization Solution for Hive</span> detects drift in incoming data and updates corresponding Hive tables. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ljq_knr_4cb-d46e169308" class="topicref" data-id="concept_ljq_knr_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/JDBC_DriftSyncSolution.html#concept_ljq_knr_4cb"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">Drift Synchronization Solution for PostgreSQL</span></a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The <span class="ph">Drift Synchronization Solution for PostgreSQL</span> detects drift in incoming data and automatically creates or alters corresponding         PostgreSQL tables as needed before
+                        the data is written.
+                        
+                     </p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_a5b_wvk_ckb">
+    <h1 class="title topictitle1" id="ariaid-title1">Loading Data into Databricks Delta Lake</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc">You can use several solutions to load data into a Delta Lake table on Databricks. </p>
+
+        <p class="p">Before continuing with one of the solutions, ensure that you have completed all of the
+            required prerequisites in Databricks, including generating a personal access token,
+            configuring and starting your Databricks cluster <span class="ph">version 6.3 or
+                    later</span>, and then locating the JDBC URL used to access the cluster. </p>
+
+        <div class="p">For detailed
+                prerequisite steps, see one of the following Databricks articles depending on your
+                staging location:<ul class="ul" id="concept_a5b_wvk_ckb__d109e50">
+                    <li class="li">When using Amazon S3 as the staging location, see this <a class="xref" href="https://docs.databricks.com/integrations/ingestion/streamsets.html" target="_blank">Databricks article</a>.</li>
+
+                    <li class="li">When using Azure Data Lake Storage Gen2 as the staging location, see this
+                            <a class="xref" href="https://docs.microsoft.com/en-us/azure/databricks/integrations/ingestion/streamsets" target="_blank">Azure Databricks article</a>. </li>
+
+                </ul>
+</div>
+
+        <div class="p">Then use one of the following solutions to build a pipeline that loads data into a Delta
+            Lake table on Databricks:<ul class="ul" id="concept_a5b_wvk_ckb__ul_vwx_fdx_bkb">
+                <li class="li"><a class="xref" href="DeltaLake.html#concept_ml2_1vv_yjb" title="This solution describes how to build a pipeline that bulk loads Salesforce data into a Delta Lake table on Databricks.">Bulk load data into a
+                        Delta Lake table</a><p class="p">Build a pipeline that reads new Salesforce data,
+                        cleans some of the input data, and then passes the data to the Databricks
+                        Delta Lake destination. The Databricks Delta Lake destination first stages
+                        the data in an Amazon S3 staging location, and then uses the COPY command to
+                        copy the data from the staging location to a Delta Lake table.</p>
+</li>
+
+                <li class="li"><a class="xref" href="DeltaLake.html#concept_uk4_fvv_yjb" title="This solution describes how to design a pipeline that reads change data capture (CDC) data from a database and replicates the changes to a Delta Lake table on Databricks.">Merge changed data into a
+                        Delta Lake table</a><p class="p">Build a pipeline that processes change data
+                        capture (CDC) data using the MySQL Binary Log origin and then passes the
+                        changed data to the Databricks Delta Lake destination. The Databricks Delta
+                        Lake destination first stages the changed data in an Amazon S3 staging
+                        location, and then uses the MERGE command to merge the changed data from the
+                        staging location to a Delta Lake table.</p>
+</li>
+
+            </ul>
+</div>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_ml2_1vv_yjb">
+    <h2 class="title topictitle2" id="ariaid-title2">Bulk Loading Data into a Delta Lake Table</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">This solution describes how to build a pipeline that bulk loads Salesforce data into
+        a Delta Lake table on Databricks.</p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> You can download the sample pipeline named <code class="ph codeph">Salesforce Accounts to
+                Delta Lake.json</code> from the <a class="xref" href="https://github.com/streamsets/pipeline-library/tree/master/datacollector/databricks-delta-lake" target="_blank"><span class="ph">StreamSets</span>
+                <span class="ph">Data Collector</span>
+                pipeline library</a>, import the pipeline into <span class="ph">Data Collector</span>,
+            and then follow these steps for more details on the solution.</div>
+
+        
+        <p class="p">Let's say that you want to bulk
+            load Salesforce account data into Databricks Delta Lake for further analysis. You'd like
+            the pipeline to clean some of the account data before loading it into Delta Lake. When
+            the pipeline passes the cleaned data to the Databricks Delta Lake destination, the
+            destination first stages the data in an Amazon S3 staging location, and then uses the
+            COPY command to copy the data from the staging location to a Delta Lake table.</p>
+
+        <div class="p">To build this pipeline, complete the following tasks:<ol class="ol" id="concept_ml2_1vv_yjb__ul_e3k_z2w_bkb">
+                <li class="li">Create the pipeline and configure a Salesforce origin to read account data from
+                    Salesforce.</li>
+
+                <li class="li">Configure an Expression Evaluator processor to clean the input data.</li>
+
+                <li class="li">Configure a Databricks Delta Lake destination to stage the pipeline data in text
+                    files in Amazon S3 and then copy the staged data to the target Delta Lake
+                    table.</li>
+
+                <li class="li">Run the pipeline to move the data from Salesforce to Delta Lake.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title3" id="task_xjr_mrw_bkb">
+    <h3 class="title topictitle3" id="ariaid-title3">Create the Pipeline and Configure the Salesforce Origin</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Create the pipeline and then configure the Salesforce origin to read account data
+        from Salesforce.</p>
+
+        <section class="section context">
+            <p class="p">For more detailed information about this origin, see <a class="xref" href="../Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce origin</a>. </p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">After logging into <span class="ph">Data Collector</span>, click the <span class="ph uicontrol">Home</span> icon (<img class="image" id="task_xjr_mrw_bkb__image_brs_yz5_3lb" src="../Graphics/icon_OverHome.png" height="14" width="18" />) in
+                    the top toolbar, and then click <span class="ph uicontrol">Create New
+                    Pipeline</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter a title for the pipeline, such as
+                        <kbd class="ph userinput">BulkLoadDeltaLake</kbd>, and then click
+                        <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">An empty pipeline opens in the pipeline canvas.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Salesforce</span></span>, as follows:</span>
+                <div class="itemgroup info"><img class="image" id="task_xjr_mrw_bkb__image_ogs_f22_jlb" src="../Graphics/DeltaLake-BulkLoadHelpBar.png" height="161" width="709" /><p class="p">The origin is added to the canvas.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Salesforce</span> tab, enter your Salesforce user name and
+                    password.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Clear the <span class="ph uicontrol">Subscribe for Notifications</span> checkbox.</span>
+                <div class="itemgroup info">
+                    <p class="p">This way, the origin runs a query to process existing data and is not
+                        subscribed to notifications.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Salesforce</span> tab should be configured as follows: </p>
+
+                    <p class="p"><img class="image" id="task_xjr_mrw_bkb__image_fdl_c3x_bkb" src="../Graphics/DeltaLake-BulkLoadSalesforceTab.png" height="520" width="633" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Query</span> tab and enter the following query for the
+                        <span class="ph uicontrol">SOQL Query</span> property so that the origin reads only
+                    these attributes from the Salesforce <code class="ph codeph">account</code> object:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>SELECT Id,
+Name,
+Type,
+BillingStreet,
+BillingCity,
+BillingState,
+BillingPostalCode,
+BillingCountry,
+ShippingStreet,
+ShippingCity,
+ShippingState,
+ShippingPostalCode,
+ShippingCountry,
+Phone,
+Fax
+FROM Account
+WHERE Id &gt; '${OFFSET}'
+ORDER BY Id</code></pre>
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the error icon (<img class="image" id="task_xjr_mrw_bkb__image_jsb_dl1_3lb" src="../Graphics/icon_ConfigPipeError.png" height="15" width="17" />) in the empty pipeline canvas.</span>
+                <div class="itemgroup info">
+                    <p class="p">The properties panel displays the <span class="keyword wintitle">Error Records</span> tab for
+                        the pipeline.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select <span class="ph uicontrol">Discard</span> for the error records.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the toolbar above the pipeline canvas, click the
+                        <span class="ph uicontrol">Preview</span> icon: <img class="image" id="task_xjr_mrw_bkb__image_uc3_tyx_sjb" src="../Graphics/icon_Preview.png" height="15" width="20" />. </span>
+                <div class="itemgroup info">
+                    <p class="p">When you preview the pipeline, you can verify that you correctly entered the
+                        Salesforce connection information and you can view several records of data
+                        read from Salesforce.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Preview Configuration</span> dialog box, accept the
+                    defaults and then click <span class="ph uicontrol">Run Preview</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">If the Salesforce connection information is valid, the preview displays
+                        several records of Salesforce data, as follows:</p>
+
+                    <p class="p"><img class="image" id="task_xjr_mrw_bkb__image_bzv_dfc_ckb" src="../Graphics/DeltaLake-BulkLoadPreviewOrigin.png" height="323" width="711" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Close Preview</span> icon (<img class="image" id="task_xjr_mrw_bkb__image_krt_1y1_3lb" src="../Graphics/icon_PrevClose.png" height="16" width="20" />)
+                    to close the preview and continue building the pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title4" id="task_cmk_5cy_bkb">
+    <h3 class="title topictitle3" id="ariaid-title4">Configure the Expression Evaluator Processor</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Next you add and configure the Expression Evaluator processor to clean some of the
+        account data.</p>
+
+        <section class="section context">
+            <p class="p">The <code class="ph codeph">Type</code> field contains either <code class="ph codeph">Customer - Direct</code> or
+                    <code class="ph codeph">Customer - Channel</code> as the value. You'd like to clean this data
+                by keeping only <code class="ph codeph">Direct</code> or <code class="ph codeph">Channel</code> as the value
+                before loading the data into a Delta Lake table. </p>
+
+            <p class="p">So you add an Expression Evaluator processor to the pipeline and define an expression
+                that uses the <code class="ph codeph">str:regExCapture()</code> function to replace the value of
+                the <code class="ph codeph">Type</code> field with only <kbd class="ph userinput">Direct</kbd> or
+                    <kbd class="ph userinput">Channel</kbd>.</p>
+
+            <div class="p">
+                <div class="note note"><span class="notetitle">Note:</span> The Expression Evaluator processor performs calculations using the <span class="ph">StreamSets</span> expression language and writes the results to new or existing fields. For
+                    more detailed information about this processor, see <a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator
+                        processor</a>.</div>
+
+            </div>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Expression Evaluator</span></span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">The processor is added to the canvas and connected to the origin.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the Expression Evaluator processor in the pipeline canvas, and then
+                    click the <span class="ph uicontrol">Expressions</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Field Expressions</span> section, enter
+                        <kbd class="ph userinput">/Type</kbd> for the <span class="ph uicontrol">Output Field</span> and
+                    then enter the following expression for the <span class="ph uicontrol">Field
+                        Expression</span>:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>${str:regExCapture(record:value('/Type'),'(.*) - (.*)',2)}</code></pre>
+                    <p class="p">The <span class="keyword wintitle">Expressions</span> tab should be configured as follows: </p>
+
+                    <p class="p"><img class="image" id="task_cmk_5cy_bkb__image_xgx_xtd_ckb" src="../Graphics/DeltaLake-BulkLoadExpressionTab.png" height="389" width="855" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To verify that the expression cleans the data as expected, click the
+                        <span class="ph uicontrol">Preview</span> icon (<img class="image" id="task_cmk_5cy_bkb__image_uc3_tyx_sjb" src="../Graphics/icon_Preview.png" height="15" width="20" />) and
+                    then click <span class="ph uicontrol">Run Preview</span> in the dialog box. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">When the preview starts, select the Expression Evaluator processor in the
+                    pipeline canvas.</span>
+                <div class="itemgroup info">
+                    <p class="p">The preview displays the input and output data of the processor, highlighting
+                        the changed data in the <code class="ph codeph">Type</code> field and confirming that the
+                        expression correctly removes the string <kbd class="ph userinput">Customer -</kbd>
+                        from field values, as follows: </p>
+
+                    <p class="p"><img class="image" id="task_cmk_5cy_bkb__image_lsb_sxd_ckb" src="../Graphics/DeltaLake-BulkLoadExpressionPreview.png" height="410" width="863" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Close Preview</span> icon (<img class="image" id="task_cmk_5cy_bkb__image_krt_1y1_3lb" src="../Graphics/icon_PrevClose.png" height="16" width="20" />)
+                    to close the preview and continue configuring the next stage in the
+                    pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title5" id="task_uvc_zv2_ckb">
+    <h3 class="title topictitle3" id="ariaid-title5">Configure the Databricks Delta Lake Destination</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Add and configure the Databricks Delta Lake destination to bulk load the Salesforce
+        data into a Delta Lake table. </p>
+
+        <section class="section context">
+            <p class="p">To bulk load data, the Databricks Delta Lake destination first stages the pipeline
+                data in text files in Amazon S3 or Azure Data Lake Storage Gen2. Then, the
+                destination sends the COPY command to Databricks to process the staged files.</p>
+
+            <div class="note important"><span class="importanttitle">Important:</span> The Databricks Delta Lake destination is an Enterprise
+                stage library. If you installed <span class="ph">Data Collector</span> through a cloud
+                service provider marketplace, <span class="ph">Data Collector</span> automatically
+                includes the Databricks stage library. However, if you downloaded and installed a
+                core or full version of <span class="ph">Data Collector</span>, you must <a class="xref" href="../Destinations/DeltaLake.html#concept_sxp_nxf_dlb" title="You must install the Databricks stage library before using the Databricks Delta Lake destination. The Databricks stage library includes the Databricks JDBC driver that the destination uses to access Delta Lake tables on Databricks.">install the Databricks stage library</a> before using the Databricks Delta
+                Lake destination.</div>
+
+            <p class="p">For more detailed information about this destination, see <a class="xref" href="../Destinations/DeltaLake.html#concept_ddy_cdz_clb">Databricks Delta Lake
+                    destination</a>.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Destination</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Databricks Delta Lake</span></span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">The destination is added to the canvas.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the destination, and then click the <span class="ph uicontrol">Databricks Delta
+                        Lake</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uvc_zv2_ckb__table_s5c_lgv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e787">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e790">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr id="task_uvc_zv2_ckb__d109e128">
+                                    <td class="entry cellrowborder" headers="d650044e787 ">JDBC URL</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e790 ">Enter the JDBC URL that the destination uses to connect
+                                        to the Databricks cluster. Remove the <code class="ph codeph">PWD</code>
+                                        parameter from the URL, and then enter the personal access
+                                        token value for the Token property below.<p class="p" id="task_uvc_zv2_ckb__d109e138">For example:
+                                                <code class="ph codeph">jdbc:spark://dbc-7g9hba4d-a123.cloud.databricks.com:443/default;transportMode=http</code>
+                                            <code class="ph codeph">:ssl=1;httpPath=sql/protocolv1/o/89266567230988377/1123-1001003-abc1;AuthMech=3;UID=token;</code></p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_uvc_zv2_ckb__d109e147">
+                                    <td class="entry cellrowborder" headers="d650044e787 ">Token</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e790 ">Enter the personal access token that you generated as a
+                                        prerequisite in Databricks. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e787 ">Table Name</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e790 ">Enter <kbd class="ph userinput">sales.accounts</kbd> to write the
+                                        data to the <code class="ph codeph">accounts</code> Delta Lake table in
+                                        the <code class="ph codeph">sales</code> database.</td>
+
+                                </tr>
+
+                                <tr id="task_uvc_zv2_ckb__d109e174">
+                                    <td class="entry cellrowborder" headers="d650044e787 ">Enable Data Drift</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e790 ">Select to compensate for data drift and automatically
+                                        create new columns or tables.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e787 ">Auto Create Table</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e790 ">Select to automatically create the new
+                                            <kbd class="ph userinput">accounts</kbd> table in Delta
+                                        Lake.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Databricks Delta Lake</span> tab should be configured as
+                        follows:</p>
+
+                    <p class="p"><img class="image" id="task_uvc_zv2_ckb__image_qxl_v3v_3lb" src="../Graphics/DeltaLake-BulkLoadDeltaLake.png" height="516" width="695" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Staging</span> tab, and then set the
+                        <span class="ph uicontrol">Staging Location</span> to <span class="ph uicontrol">Amazon S3</span>. </span>
+                <div class="itemgroup info">
+                    <p class="p">The Staging tab defines how the destination connects to the staging location
+                        in Amazon S3 or Azure Data Lake Storage Gen2. This solution uses Amazon S3
+                        as the staging location and assumes that <span class="ph">Data Collector</span> runs on an
+                        EC2 instance with a configured IAM role. If you prefer, you can configure
+                        the destination to use an Azure Data Lake Storage Gen2 staging location
+                        instead. </p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uvc_zv2_ckb__table_az3_lkv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e931">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e934">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e931 ">Purge Stage File After Ingesting</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e934 ">Select to enable purging a staged file after its data is
+                                        successfully written to a Delta Lake table.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e931 ">Bucket</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e934 ">Enter the path to the existing Amazon S3 location to
+                                        write the staged files. Use the following format:
+                                                <p class="p"><code class="ph codeph"> &lt;bucket&gt;/&lt;prefix&gt;
+                                        </code></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e931 ">Use IAM Roles</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e934 ">Select to use the IAM role assigned to the EC2 instance
+                                        where Data Collector runs to connect to Amazon S3.<p class="p">If not
+                                            using IAM roles, clear and enter your AWS secret access
+                                            key pair.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Staging</span> tab should be configured as follows: </p>
+
+                    <p class="p"><img class="image" id="task_uvc_zv2_ckb__image_h4z_hlv_3lb" src="../Graphics/DeltaLake-BulkLoadDeltaLakeStaging.png" height="522" width="827" /></p>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title6" id="task_v4g_zrj_ckb">
+    <h3 class="title topictitle3" id="ariaid-title6">Run the Pipeline</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc"><span class="ph">Run the pipeline</span> to move the data from Salesforce to Delta Lake.</p>
+
+        <section class="section context"></section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the toolbar above the pipeline canvas, click
+                    <span class="ph uicontrol">Start</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">When the pipeline successfully starts, <span class="ph">Data Collector</span> displays the pipeline in Monitor mode. In Monitor mode, you can monitor
+                        the health and performance of the pipeline by viewing real-time statistics
+                        and errors as data moves through the pipeline, as displayed in the following
+                        image:</p>
+
+                    <p class="p"><img class="image" id="task_v4g_zrj_ckb__image_ctq_vmk_ckb" src="../Graphics/DeltaLake-BulkLoadMonitor.png" height="271" width="650" /></p>
+
+                    <p class="p">Because the Salesforce origin is configured to read all account data in bulk,
+                        the pipeline automatically stops after reading all account data. </p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Verify that the pipeline loaded data into the Delta Lake table by running a SQL
+                    query in your Databricks notebook.</span>
+                <div class="itemgroup info">
+                    <div class="p">For example, if you run the following SQL
+                        query:<pre class="pre codeblock"><code>select * from sales.accounts</code></pre></div>
+
+                    <p class="p">Databricks displays the following results:</p>
+
+                    <p class="p"><img class="image" id="task_v4g_zrj_ckb__image_tyh_nnk_ckb" src="../Graphics/DeltaLake-BulkLoadDatabricksResults.png" height="343" width="1639" /></p>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_uk4_fvv_yjb">
+    <h2 class="title topictitle2" id="ariaid-title7">Merging Changed Data into a Delta Lake Table</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">This solution describes how to design a pipeline that reads change data capture (CDC)
+        data from a database and replicates the changes to a Delta Lake table on
+        Databricks.</p>
+
+        <div class="note tip"><span class="tiptitle">Tip:</span> You can download the sample pipelines named <code class="ph codeph">MySQL Schema
+                Replication to Delta Lake.json</code> and <code class="ph codeph">MySQL CDC (Binary Log) to
+                DeltaLake.json</code> from the <a class="xref" href="https://github.com/streamsets/pipeline-library/tree/master/datacollector/databricks-delta-lake" target="_blank"><span class="ph">StreamSets</span>
+                <span class="ph">Data Collector</span>
+                pipeline library</a>, import the pipelines into <span class="ph">Data Collector</span>,
+            and then follow these steps for more details on the solution.</div>
+
+        <p class="p">Let's say that you want to track
+            customer transactions in a MySQL table and apply those changes to a Delta Lake table for
+            further analysis. That is, you need to apply the same set of updates, deletes, and
+            inserts made to the MySQL table to the Delta Lake table. You first design and run a
+            pipeline to <a class="xref" href="DeltaLake.html#concept_ml2_1vv_yjb" title="This solution describes how to build a pipeline that bulk loads Salesforce data into a Delta Lake table on Databricks.">bulk load</a>
+            the initial set of transactions in the MySQL table into the Delta Lake table. Then you
+            design the CDC pipeline that processes subsequent changes.</p>
+
+        <p class="p">In the CDC pipeline, you use a MySQL Binary Log origin to capture the changes from the
+            MySQL master database. Due to the structure of the MySQL binary log records, you need to
+            add processors to the pipeline to restructure the record and keep only the necessary
+            fields. When the pipeline passes the data to the Databricks Delta Lake destination, the
+            destination first stages the changed data in an Amazon S3 staging location, and then
+            uses the MERGE command to merge the changed data from the staging location to a Delta
+            Lake table.</p>
+
+        <div class="p">To build this CDC pipeline, complete the following tasks:<ol class="ol" id="concept_uk4_fvv_yjb__ul_e3k_z2w_bkb">
+                <li class="li">Create the pipeline and configure a MySQL Binary Log origin to read CDC
+                    information provided by MySQL in binary logs.</li>
+
+                <li class="li">Configure several processors to restructure the record based on the type of
+                    operation performed: INSERT, UPDATE, or DELETE.</li>
+
+                <li class="li">Configure a Databricks Delta Lake destination to stage the changed data in text
+                    files in Amazon S3 and then merge the staged data to the target Delta Lake
+                    table.</li>
+
+                <li class="li">Run the pipeline to replicate data from MySQL binary logs to the Delta Lake
+                    target table.</li>
+
+            </ol>
+</div>
+
+    </div>
+
+<article class="topic task nested2" aria-labelledby="ariaid-title8" id="task_n3z_5sq_ckb">
+    <h3 class="title topictitle3" id="ariaid-title8">Create the Pipeline and Configure the MySQL Binary Log Origin</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Create the pipeline and then configure the MySQL Binary Log origin to read CDC
+        information provided by MySQL in binary logs.</p>
+
+        <section class="section context">
+            <div class="p">
+                <div class="note important"><span class="importanttitle">Important:</span> Before you use the MySQL Binary Log origin, you must <a class="xref" href="../Origins/MySQLBinaryLog.html#concept_wps_52k_qy">install the MySQL JDBC driver</a>. You cannot access the database until
+                    you install the required driver.</div>
+
+            </div>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">After logging into <span class="ph">Data Collector</span>, click the <span class="ph uicontrol">Home</span> icon (<img class="image" id="task_n3z_5sq_ckb__image_brs_yz5_3lb" src="../Graphics/icon_OverHome.png" height="14" width="18" />) in
+                    the top toolbar, and then click <span class="ph uicontrol">Create New
+                    Pipeline</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter a title for the pipeline, such as <kbd class="ph userinput">CDCDeltaLake</kbd>,
+                    and then click <span class="ph uicontrol">Save</span>.</span>
+                <div class="itemgroup info">An empty pipeline opens in the pipeline canvas.</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Origin</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">MySQL Binary Log</span></span>, as follows:</span>
+                <div class="itemgroup info"><img class="image" id="task_n3z_5sq_ckb__image_ogs_f22_jlb" src="../Graphics/DeltaLake-CDCHelpBar.png" height="158" width="718" /><p class="p">The origin is added to the canvas.</p>
+</div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">MySQL Binary Log</span> tab, enter the MySQL server host
+                    name and port number.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Optionally enter the replication server ID that the origin uses to connect to
+                    the master MySQL server.</span>
+                <div class="itemgroup info">
+                    <p class="p">This solution assumes that the MySQL database is enabled for GTID which does
+                        not require that you configure the server ID. </p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select <span class="ph uicontrol">Start from Beginning</span>.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">MySQL Binary Log</span> tab should be configured as
+                        follows:</p>
+
+                    <p class="p"><img class="image" id="task_n3z_5sq_ckb__image_jt5_w5q_ckb" src="../Graphics/DeltaLake-CDCMySQLBinLogTab.png" height="365" width="638" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="keyword wintitle">Credentials</span> tab and enter the user name and
+                    password to connect to MySQL.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the error icon (<img class="image" id="task_n3z_5sq_ckb__image_jsb_dl1_3lb" src="../Graphics/icon_ConfigPipeError.png" height="15" width="17" />) in the empty pipeline canvas.</span>
+                <div class="itemgroup info">
+                    <p class="p">The properties panel displays the <span class="keyword wintitle">Error Records</span> tab for
+                        the pipeline.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select <span class="ph uicontrol">Discard</span> for the error records.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the toolbar above the pipeline canvas, click the
+                        <span class="ph uicontrol">Preview</span> icon: <img class="image" id="task_n3z_5sq_ckb__image_uc3_tyx_sjb" src="../Graphics/icon_Preview.png" height="15" width="20" />. </span>
+                <div class="itemgroup info">
+                    <p class="p">When you preview the pipeline, you can verify that you correctly entered the
+                        MySQL connection information, and you can view several records of data read
+                        from the binary logs.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">In the <span class="ph uicontrol">Preview Configuration</span> dialog box, accept the
+                    defaults and then click <span class="ph uicontrol">Run Preview</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">If the MySQL connection information is valid and if the binary log contains
+                        pending transactions, the preview displays the pending transactions, as
+                        follows:</p>
+
+                    <p class="p"><img class="image" id="task_n3z_5sq_ckb__image_ywm_gt4_kkb" src="../Graphics/DeltaLake-CDCPreviewOrigin.png" height="305" width="714" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Close Preview</span> icon (<img class="image" id="task_n3z_5sq_ckb__image_krt_1y1_3lb" src="../Graphics/icon_PrevClose.png" height="16" width="20" />)
+                    to close the preview and continue building the pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title9" id="task_ppg_r3r_ckb">
+    <h3 class="title topictitle3" id="ariaid-title9">Configure Processors to Restructure the Record</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Due to the structure of the MySQL binary log records, you need to add several
+        processors to the pipeline to restructure the record and keep only the necessary
+        fields.</p>
+
+        <section class="section context">
+            <p class="p">Each record generated by the MySQL Binary Log origin includes the following
+                information:</p>
+
+            <ul class="ul" id="task_ppg_r3r_ckb__ul_mhx_xjr_ckb">
+                <li class="li">CRUD operation type in the <code class="ph codeph">Type</code> field: INSERT, UPDATE, or
+                    DELETE.</li>
+
+                <li class="li">Change data capture information such as the table, server ID, and timestamp in
+                    various fields.</li>
+
+                <li class="li">
+                    <p class="p">New data to be inserted or updated in the <code class="ph codeph">Data</code> map
+                        field.</p>
+
+                </li>
+
+                <li class="li">Old data to be deleted in the <code class="ph codeph">OldData</code> map field.</li>
+
+            </ul>
+
+            <p class="p">For example, the origin might generate the following record for data that needs to be
+                inserted:</p>
+
+            <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_pvn_d54_kkb" src="../Graphics/DeltaLake-CDCMySQLBinLogSampleRecord.png" height="413" width="343" /></p>
+
+            <p class="p">You need to restructure the records differently, based on the operation type. You add
+                a Stream Selector processor to the pipeline to route records with a DELETE operation
+                in the <code class="ph codeph">Type</code> field to one processing stream and to route records
+                with an INSERT or UPDATE operation in the <code class="ph codeph">Type</code> field to another
+                processing stream. Then for each stream, you add a Field Remover processor to keep
+                only the necessary fields and a Field Flattener processor to flatten the fields in
+                the <code class="ph codeph">Data</code> or <code class="ph codeph">OldData</code> map fields.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Processor</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Stream Selector</span></span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">The processor is added to the canvas.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the Stream Selector processor in the pipeline canvas, and then click the
+                        <span class="ph uicontrol">Conditions</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Add</span> icon (<img class="image" id="task_ppg_r3r_ckb__image_mfz_vwb_jlb" src="../Graphics/icon_ConfigAddIcon.png" height="18" width="18" />) to add a condition.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Enter the following expression for the condition:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>${record:value('/Type') == 'DELETE'}</code></pre>
+                </div>
+                <div class="itemgroup info">
+                    <p class="p">This condition uses the <a class="xref" href="../Expression_Language/ExpressionLanguage_overview.html#concept_p54_4kl_vq"><span class="ph">StreamSets</span> expression language</a> to route records with a DELETE operation
+                        in the <code class="ph codeph">Type</code> field to the first output stream of the
+                        processor. All other records, with an INSERT or UPDATE operation in the
+                            <code class="ph codeph">Type</code> field, route to the default output stream.</p>
+
+                    <p class="p">The configured <span class="ph uicontrol">Conditions</span> tab and the pipeline should
+                        look like this. Note that the Stream Selector processor has two output
+                        streams:</p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_yjd_vpr_ckb" src="../Graphics/DeltaLake-CDCLinkOriginStreamSelector.png" height="274" width="666" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add a Field Remover processor, and connect the first output stream of the
+                    Stream Selector processor to the new processor.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the Field Remover processor in the pipeline canvas, and then on the
+                        <span class="ph uicontrol">General</span> tab, enter <kbd class="ph userinput">Keep OldData Fields to
+                        DELETE</kbd> for the processor name.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Remove/Keep</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For <span class="ph uicontrol">Action</span>, select <span class="ph uicontrol">Keep Listed
+                        Fields</span>, and then enter the following field paths for the
+                        <span class="ph uicontrol">Fields</span> property:</span>
+                <ul class="ul choices" id="task_ppg_r3r_ckb__choices_ukm_nqr_ckb">
+                    <li class="li choice"><kbd class="ph userinput">/OldData</kbd></li>
+
+                    <li class="li choice"><kbd class="ph userinput">/Type</kbd></li>
+
+                </ul>
+
+                <div class="itemgroup info">
+                    <p class="p">This configuration keeps only the <code class="ph codeph">OldData</code> and
+                            <code class="ph codeph">Type</code> fields for records with a DELETE operation, and
+                        removes all other fields. The pipeline and the configured
+                            <span class="ph uicontrol">Remove/Keep</span> tab should look like this:</p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_mps_h5r_ckb" src="../Graphics/DeltaLake-CDCKeepOldData.png" height="363" width="665" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the Stream Selector processor in the pipeline canvas, and then add
+                    another Field Remover processor.</span>
+                <div class="itemgroup info">
+                    <p class="p">The processor is added to the canvas, connected to the second output stream
+                        of the Stream Selector processor.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the second Field Remover processor in the pipeline canvas, and then on
+                    the <span class="ph uicontrol">General</span> tab, enter <kbd class="ph userinput">Keep Data Fields to
+                        INSERT/UPDATE</kbd> for the processor name.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Remove/Keep</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">For <span class="ph uicontrol">Action</span>, select <span class="ph uicontrol">Keep Listed
+                        Fields</span>, and then enter the following field paths for the
+                        <span class="ph uicontrol">Fields</span> property:</span>
+                <ul class="ul choices" id="task_ppg_r3r_ckb__choices_ycw_m5r_ckb">
+                    <li class="li choice"><kbd class="ph userinput">/Data</kbd></li>
+
+                    <li class="li choice"><kbd class="ph userinput">/Type</kbd></li>
+
+                </ul>
+
+                <div class="itemgroup info">
+                    <p class="p">This configuration keeps only the <code class="ph codeph">Data</code> and
+                            <code class="ph codeph">Type</code> fields for records with an INSERT or UPDATE
+                        operation, and removes all other fields. The configured
+                            <span class="ph uicontrol">Remove/Keep</span> tab and the pipeline should look like
+                        this:</p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_ayp_pvr_ckb" src="../Graphics/DeltaLake-CDCKeepData.png" height="375" width="659" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Add two Field Flattener processors to the pipeline, connecting each to one of
+                    the Field Remover processors.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the Field Flattener processor in the stream that keeps the
+                        <code class="ph codeph">OldData</code> field, and then click the
+                        <span class="ph uicontrol">Flatten</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties with the required values:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ppg_r3r_ckb__table_ejb_2t2_ckb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e1701">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e1704">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1701 ">Flatten</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1704 ">Select <span class="ph uicontrol">Flatten specific
+                                        fields</span>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1701 ">Fields</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1704 ">Enter <kbd class="ph userinput">/OldData</kbd>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1701 ">Flatten in Place</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1704 ">Clear the property.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1701 ">Target Field</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1704 ">Enter <kbd class="ph userinput">/</kbd> to write the flattened
+                                        data to the root field.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Flatten</span> tab should be configured as follows:</p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_m1q_m1s_ckb" src="../Graphics/DeltaLake-CDCFlattenOldData.png" height="464" width="665" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the second Field Flattener processor in the stream that keeps the
+                        <code class="ph codeph">Data</code> field, and then configure it the same way as the first
+                    Field Flattener processor, except enter <kbd class="ph userinput">/Data</kbd> for the
+                        <span class="ph uicontrol">Fields</span> property.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To verify that you've restructured the data as expected, click the
+                        <span class="ph uicontrol">Preview</span> icon (<img class="image" id="task_ppg_r3r_ckb__image_uc3_tyx_sjb" src="../Graphics/icon_Preview.png" height="15" width="20" />) and
+                    then click <span class="ph uicontrol">Confirm</span> in the dialog box. </span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Assuming that the binary log contains pending insert or update transactions,
+                    select the Field Remover processor that keeps the <code class="ph codeph">Data</code>
+                    field.</span>
+                <div class="itemgroup info">
+                    <p class="p">The preview displays the input and output data of the processor, highlighting
+                        that only the <code class="ph codeph">Data</code> and <code class="ph codeph">Type</code> fields are
+                        included in the output, as follows: </p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_vm3_vqr_lkb" src="../Graphics/DeltaLake-CDCFieldRemoverData.png" height="441" width="637" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Next, select the Field Flattener processor connected to this Field Remover
+                    processor.</span>
+                <div class="itemgroup info">
+                    <p class="p">The preview displays the input and output data of the Field Flattener
+                        processor, showing that the fields in the <code class="ph codeph">Data</code> map field
+                        have been flattened to the root field, as follows: </p>
+
+                    <p class="p"><img class="image" id="task_ppg_r3r_ckb__image_m2z_lsr_lkb" src="../Graphics/DeltaLake-CDCFieldFlattenerData.png" height="460" width="697" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Close Preview</span> icon (<img class="image" id="task_ppg_r3r_ckb__image_krt_1y1_3lb" src="../Graphics/icon_PrevClose.png" height="16" width="20" />)
+                    to close the preview and continue configuring the next stage in the
+                    pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title10" id="task_vh5_vws_ckb">
+    <h3 class="title topictitle3" id="ariaid-title10">Configure the Databricks Delta Lake Destination</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc">Add and configure the Databricks Delta Lake destination to merge the changed data to
+        a Delta Lake table.</p>
+
+        <section class="section context">
+            <p class="p">To merge changed data, the Databricks Delta Lake destination first stages the
+                pipeline data in text files in Amazon S3 or Azure Data Lake Storage Gen2. Then, the
+                destination runs the COPY command to load the data to a temporary Delta Lake table,
+                and then finally runs a MERGE command that uses the temporary table to merge the
+                changed data into the target Delta Lake table.</p>
+
+            <div class="note important"><span class="importanttitle">Important:</span> The Databricks Delta Lake destination is an Enterprise
+                stage library. If you installed <span class="ph">Data Collector</span> through a cloud
+                service provider marketplace, <span class="ph">Data Collector</span> automatically
+                includes the Databricks stage library. However, if you downloaded and installed a
+                core or full version of <span class="ph">Data Collector</span>, you must <a class="xref" href="../Destinations/DeltaLake.html#concept_sxp_nxf_dlb" title="You must install the Databricks stage library before using the Databricks Delta Lake destination. The Databricks stage library includes the Databricks JDBC driver that the destination uses to access Delta Lake tables on Databricks.">install the Databricks stage library</a> before using the Databricks Delta
+                Lake destination.</div>
+
+            <p class="p">For more detailed information about this destination, see <a class="xref" href="../Destinations/DeltaLake.html#concept_ddy_cdz_clb">Databricks Delta Lake
+                    destination</a>.</p>
+
+        </section>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">From the pipeline creation help bar, click <span class="ph menucascade"><span class="ph uicontrol">Select Destination</span><abbr title="and then"> &gt; </abbr><span class="ph uicontrol">Databricks Delta Lake</span></span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">The destination is added to the canvas.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Use your cursor to connect both Field Flattener processors to the
+                    destination.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select the destination, and then click the <span class="ph uicontrol">Databricks Delta
+                        Lake</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_orr_jj2_jlb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e1969">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e1972">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1969 ">JDBC URL</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1972 ">Enter the JDBC URL that the destination uses to connect
+                                        to the Databricks cluster. Remove the <code class="ph codeph">PWD</code>
+                                        parameter from the URL, and then enter the personal access
+                                        token value for the Token property below.<p class="p" id="task_vh5_vws_ckb__d109e138">For example:
+                                                <code class="ph codeph">jdbc:spark://dbc-7g9hba4d-a123.cloud.databricks.com:443/default;transportMode=http</code>
+                                            <code class="ph codeph">:ssl=1;httpPath=sql/protocolv1/o/89266567230988377/1123-1001003-abc1;AuthMech=3;UID=token;</code></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1969 ">Token</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1972 ">Enter the personal access token that you generated as a
+                                        prerequisite in Databricks. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1969 ">Table Name</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1972 ">Enter <kbd class="ph userinput">customers_cdc</kbd> to write the
+                                        changed data to a <code class="ph codeph">customers_cdc</code> table in
+                                        the default <code class="ph codeph">delta</code> database.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1969 ">Enable Data Drift</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1972 ">Select to compensate for data drift and automatically
+                                        create new columns or tables.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e1969 ">Auto Create Table</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e1972 ">Select so that the destination can automatically create
+                                        the new <kbd class="ph userinput">customers_cdc</kbd> table in Delta
+                                        Lake.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Databricks Delta Lake</span> tab should be configured as
+                        follows:</p>
+
+                    <p class="p"><img class="image" id="task_vh5_vws_ckb__image_qxl_v3v_3lb" src="../Graphics/DeltaLake-CDCDeltaLake.png" height="581" width="791" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Staging</span> tab, and then set the
+                        <span class="ph uicontrol">Staging Location</span> to <span class="ph uicontrol">Amazon S3</span>. </span>
+                <div class="itemgroup info">
+                    <p class="p">The Staging tab defines how the destination connects to the staging location
+                        in Amazon S3 or Azure Data Lake Storage Gen2. This solution uses Amazon S3
+                        as the staging location and assumes that <span class="ph">Data Collector</span> runs on an
+                        EC2 instance with a configured IAM role. If you prefer, you can configure
+                        the destination to use an Azure Data Lake Storage Gen2 staging location
+                        instead. </p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_az3_lkv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e2113">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e2116">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e2113 ">Purge Stage File After Ingesting</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e2116 ">Select to enable purging a staged file after its data is
+                                        successfully written to a Delta Lake table.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e2113 ">Bucket</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e2116 ">Enter the path to the existing Amazon S3 location to
+                                        write the staged files. Use the following format:
+                                                <p class="p"><code class="ph codeph"> &lt;bucket&gt;/&lt;prefix&gt;
+                                        </code></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e2113 ">Use IAM Roles</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e2116 ">Select to use the IAM role assigned to the EC2 instance
+                                        where Data Collector runs to connect to Amazon S3.<p class="p">If not
+                                            using IAM roles, clear and enter your AWS secret access
+                                            key pair.</p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Leave the default values for the remaining properties.</span>
+                <div class="itemgroup info">
+                    <p class="p">The <span class="keyword wintitle">Staging</span> tab should be configured as follows:</p>
+
+                    <p class="p"><img class="image" id="task_vh5_vws_ckb__image_h4z_hlv_3lb" src="../Graphics/DeltaLake-CDCDeltaLakeStaging.png" height="501" width="816" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph uicontrol">Data</span> tab.</span>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Select <span class="ph uicontrol">Merge CDC Data</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">Enabling this property configures the destination to use the MERGE command to
+                        insert, update, or delete the changed data in Delta Lake tables as
+                        appropriate.</p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Configure the following properties for the <span class="ph uicontrol">Key Columns</span>
+                    section.</span>
+                <div class="itemgroup info">
+                    <p class="p">The destination uses the key columns to evaluate the MERGE condition.</p>
+
+                </div>
+                <div class="itemgroup info">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_ocx_mw2_jlb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d650044e2229">Property</th>
+
+                                    <th class="entry cellrowborder" id="d650044e2232">Value</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e2229 ">Table</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e2232 ">Enter <kbd class="ph userinput">customers_cdc</kbd>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d650044e2229 ">Key Columns</td>
+
+                                    <td class="entry cellrowborder" headers="d650044e2232 ">Enter <kbd class="ph userinput">customer_id</kbd>.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+The <span class="keyword wintitle">Data</span> tab should be configured as
+                            follows:<p class="p"><img class="image" id="task_vh5_vws_ckb__image_ydl_jx2_jlb" src="../Graphics/DeltaLake-CDCDeltaLakeData.png" height="539" width="891" /></p>
+</div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+<article class="topic task nested2" aria-labelledby="ariaid-title11" id="task_ftn_q2t_ckb">
+    <h3 class="title topictitle3" id="ariaid-title11">Run the Pipeline</h3>
+
+    
+    <div class="body taskbody"><p class="shortdesc"><span class="ph">Run the pipeline</span> to move the changed data from MySQL binary logs to Delta
+        Lake.</p>
+
+        <ol class="ol steps"><li class="li step stepexpand">
+                <span class="ph cmd">In the toolbar above the pipeline canvas, click
+                    <span class="ph uicontrol">Start</span>.</span>
+                <div class="itemgroup info">
+                    <p class="p">When the pipeline successfully starts, <span class="ph">Data Collector</span> displays the pipeline in Monitor mode. In Monitor mode, you can monitor
+                        the health and performance of the pipeline by viewing real-time statistics
+                        and errors as data moves through the pipeline, as displayed in the following
+                        image: </p>
+
+                    <p class="p"><img class="image" id="task_ftn_q2t_ckb__image_ctq_vmk_ckb" src="../Graphics/DeltaLake-CDCMonitor.png" height="343" width="685" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Next, verify that the pipeline loaded the data into the target table in Delta
+                    Lake by running a SQL query in your Databricks notebook.</span>
+                <div class="itemgroup info">
+                    <div class="p">For example, if you run the following SQL
+                        query:<pre class="pre codeblock"><code>select * from customers_cdc</code></pre></div>
+
+                    <p class="p">Databricks displays the following results:</p>
+
+                    <p class="p"><img class="image" id="task_ftn_q2t_ckb__image_ylg_dmt_ckb" src="../Graphics/DeltaLake-CDCDatabricksResults.png" height="138" width="932" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Verify that the pipeline successfully applies update operations to the Delta
+                    Lake table by running the following command on the MySQL database to update one
+                    of the rows:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>update retail.customers_cdc set address='10 Downing ST' where customer_id=6;</code></pre>
+                    <p class="p">Then in your Databricks notebook, verify that the Delta Lake table has been
+                        updated with the changed address for that customer ID:</p>
+
+                    <p class="p"><img class="image" id="task_ftn_q2t_ckb__image_knw_nnt_ckb" src="../Graphics/DeltaLake-CDCDatabricksUpdate.png" height="135" width="936" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Verify that the pipeline successfully applies delete operations to the Delta
+                    Lake table by running the following command on the MySQL database to delete one
+                    of the rows:</span>
+                <div class="itemgroup info">
+                    <pre class="pre codeblock"><code>delete from retail.customers_cdc where customer_id=7;</code></pre>
+                    <p class="p">Then in your Databricks notebook, verify that the row for that customer ID
+                        has been deleted from the Delta Lake table:</p>
+
+                    <p class="p"><img class="image" id="task_ftn_q2t_ckb__image_zvc_j4t_ckb" src="../Graphics/DeltaLake-CDCDatabricksDelete.png" height="126" width="940" /></p>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">Click the <span class="ph"><span class="ph uicontrol">Stop</span></span> icon (<img class="image" id="task_ftn_q2t_ckb__image_kfp_w1z_sjb" src="../Graphics/icon_MonStop.png" height="19" width="21" />) to
+                    stop the pipeline.</span>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

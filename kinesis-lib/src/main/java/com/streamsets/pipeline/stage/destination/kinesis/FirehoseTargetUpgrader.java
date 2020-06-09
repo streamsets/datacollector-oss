@@ -47,11 +47,18 @@ public class FirehoseTargetUpgrader extends KinesisBaseUpgrader {
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        // fall through
+      case 4:
+        upgradeV4toV5(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
     return configs;
+  }
+
+  private void upgradeV4toV5(List<Config> configs) {
+    updateCredentialMode(configs);
   }
 
   private static void upgradeV3toV4(List<Config> configs) {

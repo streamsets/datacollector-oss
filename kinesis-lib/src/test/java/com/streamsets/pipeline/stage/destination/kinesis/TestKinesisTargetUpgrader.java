@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -32,6 +33,25 @@ public class TestKinesisTargetUpgrader {
     kafkaTargetUpgrader.upgrade("a", "b", "c", 6, 7, configs);
     assertEquals("responseConf.sendResponseToOrigin", configs.get(0).getName());
     assertEquals("responseConf.responseType", configs.get(1).getName());
+  }
+
+  @Test
+  public void testUpgradeV8toV9() {
+    KinesisTargetUpgrader kafkaTargetUpgrader = new KinesisTargetUpgrader();
+
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", null));
+    configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", null));
+    kafkaTargetUpgrader.upgrade("a", "b", "c", 8, 9, configs);
+    assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
+    assertEquals(AWSCredentialMode.WITH_IAM_ROLES, configs.get(2).getValue());
+
+    configs = new ArrayList<>();
+    configs.add(new Config("kinesisConfig.awsConfig.awsAccessKeyId", "key"));
+    configs.add(new Config("kinesisConfig.awsConfig.awsSecretAccessKey", "secret"));
+    kafkaTargetUpgrader.upgrade("a", "b", "c", 8, 9, configs);
+    assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
+    assertEquals(AWSCredentialMode.WITH_CREDENTIALS, configs.get(2).getValue());
   }
 
 }

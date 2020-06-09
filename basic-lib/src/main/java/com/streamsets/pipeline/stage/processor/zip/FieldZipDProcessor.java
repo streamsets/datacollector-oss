@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Field Zip",
     description = "Zips two lists together into one.",
     icon = "zipper.png",
+    recordsByRef = true,
     upgrader = FieldZipProcessorUpgrader.class,
     upgraderDef = "upgrader/FieldZipDProcessor.yaml",
     flags = StageBehaviorFlags.PURE_FUNCTION,

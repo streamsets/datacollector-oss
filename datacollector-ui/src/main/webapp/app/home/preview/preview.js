@@ -19,7 +19,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('PreviewController', function (
     $scope, $rootScope, $q, _, api, previewService, pipelineConstant,
-    pipelineService, $timeout, $modal, tracking
+    $timeout, $modal, tracking, pipelineTracking
   ) {
     var previewDataBackup, previewStatusTimer, currentPreviewerId, currentStage;
 
@@ -395,7 +395,7 @@ angular
       var testOrigin = false;
       var firstStageInstance = $scope.stageInstances[0];
 
-      var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+      var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
 
       $scope.stepExecuted = false;
       $scope.showLoading = true;
@@ -621,12 +621,12 @@ angular
       api.pipelineAgent.getPreviewData(pipelineId, previewerId, $scope.edgeHttpUrl)
         .then(function(res) {
           var previewData = res.data;
-          var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
+          var trackingData = pipelineTracking.getTrackingInfo($scope.pipelineConfig);
           if (previewData.status !== 'FINISHED') {
             if (previewData.issues) {
               $rootScope.common.errors = [previewData.issues];
               trackingData['Preview Successful'] = false;
-              var issueList = pipelineService.getFlatIssueList(previewData.issues);
+              var issueList = pipelineTracking.getFlatIssueList(previewData.issues);
               trackingData['Preview Error'] = issueList;
               tracking.mixpanel.track('Preview Complete', trackingData);
             } else if (previewData.message) {

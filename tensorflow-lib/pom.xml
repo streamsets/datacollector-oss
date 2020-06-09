@@ -35,7 +35,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <tensorflow.version>1.10.0</tensorflow.version>
+    <tensorflow.version>1.15.0</tensorflow.version>
     <commons-lang.version>3.4</commons-lang.version>
   </properties>
 

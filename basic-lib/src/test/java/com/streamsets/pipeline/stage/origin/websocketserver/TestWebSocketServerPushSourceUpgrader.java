@@ -89,4 +89,18 @@ public class TestWebSocketServerPushSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, "dataFormatConfig.preserveRootElement", false);
   }
+
+  @Test
+  public void testV13ToV14() {
+    Mockito.doReturn(13).when(context).getFromVersion();
+    Mockito.doReturn(14).when(context).getToVersion();
+
+    String configPrefix = "webSocketConfigs.tlsConfigBean.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
+  }
 }

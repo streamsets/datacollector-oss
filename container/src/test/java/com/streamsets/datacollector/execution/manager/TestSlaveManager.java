@@ -28,6 +28,7 @@ import com.streamsets.datacollector.execution.runner.common.Constants;
 import com.streamsets.datacollector.execution.runner.provider.SlaveRunnerProviderImpl;
 import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -95,6 +96,14 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
+    public BuildInfo providesBuildInfo() {
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
+      return buildInfo;
+    }
+
+    @Provides
+    @Singleton
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
       configuration.set(Constants.PIPELINE_CLUSTER_TOKEN_KEY, "sdcClusterToken");
@@ -117,12 +126,14 @@ public class TestSlaveManager {
     @Provides
     @Singleton
     public PipelineStoreTask providePipelineStoreTask(
+        BuildInfo buildInfo,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
         PipelineStateStore pipelineStateStore,
         BlobStoreTask blobStoreTask
     ) {
+<<<<<<< HEAD
       return new SlavePipelineStoreTask(
             new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
                 runtimeInfo,
@@ -131,6 +142,17 @@ public class TestSlaveManager {
                 new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
                 blobStoreTask)
         );
+=======
+      PipelineStoreTask pipelineStoreTask =
+        new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
+            buildInfo,
+            runtimeInfo,
+            stageLibraryTask,
+            eventListenerManager,
+            new FilePipelineStateStore(runtimeInfo, provideConfiguration())
+        ));
+      return pipelineStoreTask;
+>>>>>>> master
     }
 
     @Provides

@@ -32,13 +32,13 @@ public class AWSUtil {
   private AWSUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
-    AWSCredentialsProvider credentialsProvider;
-    if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
-      credentialsProvider = new AWSStaticCredentialsProvider(
-          new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
-      );
-    } else {
-      credentialsProvider = new DefaultAWSCredentialsProviderChain();
+    AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
+    if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
+      if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
+        credentialsProvider = new AWSStaticCredentialsProvider(
+            new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
+        );
+      }
     }
     return credentialsProvider;
   }

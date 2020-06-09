@@ -139,7 +139,8 @@ angular.module('dataCollectorApp')
         showNameColumn: true
       },
       runPreviewForFieldPaths: true,
-      lineWrapping: true
+      lineWrapping: true,
+      dontShowMissingStages: false
     });
 
     $rootScope.common = $rootScope.common || {
@@ -167,6 +168,8 @@ angular.module('dataCollectorApp')
       logEndingOffset: -1,
       fetchingLog: false,
       counters: {},
+      previousInputRecordCount: {},
+      previousBatchCount: {},
       serverTimeDifference: 0,
       remoteServerInfo: {
         registrationStatus: false

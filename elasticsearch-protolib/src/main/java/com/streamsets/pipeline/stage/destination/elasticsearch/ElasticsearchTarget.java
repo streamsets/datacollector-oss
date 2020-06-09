@@ -78,6 +78,7 @@ public class ElasticsearchTarget extends BaseTarget {
   private ELEval docIdEval;
   private ELEval parentIdEval;
   private ELEval routingEval;
+  private ELEval additionalPropertiesEval;
   private DataGeneratorFactory generatorFactory;
   private ErrorRecordHandler errorRecordHandler;
   private ElasticsearchStageDelegate delegate;
@@ -119,6 +120,7 @@ public class ElasticsearchTarget extends BaseTarget {
     parentIdEval = getContext().createELEval("parentIdTemplate");
     routingEval = getContext().createELEval("routingTemplate");
     timeDriverEval = getContext().createELEval("timeDriver");
+    additionalPropertiesEval = getContext().createELEval("rawAdditionalProperties");
 
     try {
       getRecordTime(getContext().createRecord("validateTimeDriver"));
@@ -187,6 +189,16 @@ public class ElasticsearchTarget extends BaseTarget {
               Errors.ELASTICSEARCH_29,
               Errors.ELASTICSEARCH_30,
               issues
+      );
+    }
+    if (!StringUtils.isEmpty(conf.rawAdditionalProperties)) {
+      validateEL(
+          additionalPropertiesEval,
+          conf.rawAdditionalProperties,
+          "elasticSearchConfig.rawAdditionalProperties",
+          Errors.ELASTICSEARCH_36,
+          Errors.ELASTICSEARCH_37,
+          issues
       );
     }
 
@@ -275,6 +287,10 @@ public class ElasticsearchTarget extends BaseTarget {
         if (!StringUtils.isEmpty(conf.routingTemplate)) {
           routing = routingEval.eval(elVars, conf.routingTemplate, String.class);
         }
+        String additionalPropertiesName = null;
+        if (!StringUtils.isEmpty(conf.rawAdditionalProperties)) {
+          additionalPropertiesName = additionalPropertiesEval.eval(elVars, conf.rawAdditionalProperties, String.class);
+        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         DataGenerator generator = generatorFactory.getGenerator(baos);
         generator.write(record);
@@ -307,7 +323,8 @@ public class ElasticsearchTarget extends BaseTarget {
           // No header attribute set. Use default.
           opCode = conf.defaultOperation.code;
         }
-        bulkRequest.append(getOperation(index, type, id, parent, routing, recordJson, opCode));
+        bulkRequest.append(getOperation(index, type, id, parent, routing, additionalPropertiesName, recordJson,
+            opCode));
       } catch (IOException ex) {
         errorRecordHandler.onError(
             new OnRecordErrorException(
@@ -375,27 +392,28 @@ public class ElasticsearchTarget extends BaseTarget {
     return batchTime;
   }
 
-  private String getOperation(String index, String type, String id, String parent, String routing, String record, int opCode) {
+  private String getOperation(String index, String type, String id, String parent, String routing,
+      String additionalProperties, String record, int opCode) {
     StringBuilder op = new StringBuilder();
     switch (opCode) {
       case OperationType.UPSERT_CODE:
-        getOperationMetadata("index", index, type, id, parent, routing, op);
+        getOperationMetadata("index", index, type, id, parent, routing, additionalProperties, op);
         op.append(String.format("%s%n", record));
         break;
       case OperationType.INSERT_CODE:
-        getOperationMetadata("create", index, type, id, parent, routing, op);
+        getOperationMetadata("create", index, type, id, parent, routing, additionalProperties, op);
         op.append(String.format("%s%n", record));
         break;
       case OperationType.UPDATE_CODE:
-        getOperationMetadata("update", index, type, id, parent, routing, op);
+        getOperationMetadata("update", index, type, id, parent, routing, additionalProperties, op);
         op.append(String.format("{\"doc\":%s}%n", record));
         break;
       case OperationType.MERGE_CODE:
-        getOperationMetadata("update", index, type, id, parent, routing, op);
+        getOperationMetadata("update", index, type, id, parent, routing, additionalProperties, op);
         op.append(String.format("{\"doc_as_upsert\": \"true\", \"doc\":%s}%n", record));
         break;
       case OperationType.DELETE_CODE:
-        getOperationMetadata("delete", index, type, id, parent, routing, op);
+        getOperationMetadata("delete", index, type, id, parent, routing, additionalProperties, op);
         break;
       default:
         LOG.error("Operation {} not supported", opCode);
@@ -404,7 +422,8 @@ public class ElasticsearchTarget extends BaseTarget {
     return op.toString();
   }
 
-  private void getOperationMetadata(String operation, String index, String type, String id, String parent, String routing, StringBuilder sb) {
+  private void getOperationMetadata(String operation, String index, String type, String id, String parent,
+      String routing, String additionalPropertiesValue, StringBuilder sb) {
     sb.append(String.format("{\"%s\":{\"_index\":\"%s\",\"_type\":\"%s\"", operation, index, type));
     if (!StringUtils.isEmpty(id)) {
       sb.append(String.format(",\"_id\":\"%s\"", id));
@@ -416,7 +435,7 @@ public class ElasticsearchTarget extends BaseTarget {
       sb.append(String.format(",\"routing\":\"%s\"", routing));
     }
     // Add additional properties from JSON editor.
-    String additionalProperties = addAdditionalProperties();
+    String additionalProperties = addAdditionalProperties(additionalPropertiesValue);
     if (!StringUtils.isEmpty(additionalProperties)){
       sb.append(additionalProperties);
     }
@@ -424,9 +443,9 @@ public class ElasticsearchTarget extends BaseTarget {
   }
 
   @VisibleForTesting
-  String addAdditionalProperties() {
+  String addAdditionalProperties(String additionalProperties) {
     JsonParser parser = new JsonParser();
-    JsonObject additionalPropertiesAsJson = parser.parse(conf.rawAdditionalProperties).getAsJsonObject();
+    JsonObject additionalPropertiesAsJson = parser.parse(additionalProperties).getAsJsonObject();
 
     StringBuilder sb = new StringBuilder();
     //Create a String appending all the input properties

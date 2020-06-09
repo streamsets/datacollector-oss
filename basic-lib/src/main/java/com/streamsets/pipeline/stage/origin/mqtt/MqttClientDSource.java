@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "MQTT Subscriber",
     description = "Uses an MQTT client to subscribe to a topic on the MQTT Broker",
     icon = "mqtt_multithreaded.png",

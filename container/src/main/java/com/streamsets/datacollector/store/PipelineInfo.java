@@ -138,4 +138,8 @@ public class PipelineInfo implements Serializable {
   public String getSdcId() {
     return sdcId;
   }
+
+  public void setSdcVersion(String sdcVersion) {
+    this.sdcVersion = sdcVersion;
+  }
 }

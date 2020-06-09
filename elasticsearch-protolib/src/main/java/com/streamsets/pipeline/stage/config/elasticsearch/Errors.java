@@ -57,6 +57,8 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_33("Endpoint cannot be empty"),
   ELASTICSEARCH_34("Invalid Json format"),
   ELASTICSEARCH_35("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  ELASTICSEARCH_36("Could not parse the additional properties expression: {}"),
+  ELASTICSEARCH_37("Could not evaluate the additional properties expression: {}"),
 
   ;
   private final String msg;

@@ -44,6 +44,8 @@ angular
     $rootScope.common.title = "Package Manager";
 
     var mlRegex = new RegExp('(TensorFlow)|(Databricks ML)|(PMML)|(MLeap)', 'i');
+    var awsRegex = new RegExp('(Amazon)|(AWS)', 'i');
+    var credentialStoresRegex = new RegExp('Credential Store', 'i');
     var pipelinesLimit = 60;
 
     angular.extend($scope, {
@@ -53,25 +55,29 @@ angular
         'Installed Stage Libraries',
         'Enterprise Stage Libraries',
         'Legacy Stage Libraries',
-        'Machine Learning',
-        'Amazon Web Services',
+
+        'Amazon Web Services (AWS)',
+        'Azure',
+        'Google Cloud',
+
         'Apache Kafka',
         'Apache Kudu',
         'Apache Solr',
-        'Azure',
         'CDH',
+        'Credential Stores',
         'Elasticsearch',
-        'Google Cloud',
         'Groovy',
         'HDP',
         'InfluxDB',
         'JDBC',
         'JMS',
         'Jython',
+        'Machine Learning',
         'MapR',
         'MongoDB',
         'MySql BinLog',
         'Omniture',
+        'Orchestrator',
         'RabbitMQ'
       ],
       extrasNavigationItem: 'EXTRAS',
@@ -136,6 +142,18 @@ angular
             $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
               return stageLibrary.stageLibraryManifest && regex.test(stageLibrary.stageLibraryManifest.stageLibLabel) &&
                 mlRegex.test(stageLibrary.stageLibraryManifest.stageLibLabel);
+            });
+            break;
+          case 'Amazon Web Services (AWS)':
+            $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
+              return stageLibrary.stageLibraryManifest && regex.test(stageLibrary.stageLibraryManifest.stageLibLabel) &&
+                awsRegex.test(stageLibrary.stageLibraryManifest.stageLibLabel);
+            });
+            break;
+          case 'Credential Stores':
+            $scope.filteredStageLibraries = _.filter($scope.stageLibraries, function(stageLibrary) {
+              return stageLibrary.stageLibraryManifest && regex.test(stageLibrary.stageLibraryManifest.stageLibLabel) &&
+                credentialStoresRegex.test(stageLibrary.stageLibraryManifest.stageLibLabel);
             });
             break;
           default:

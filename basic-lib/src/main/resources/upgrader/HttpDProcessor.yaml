@@ -32,3 +32,17 @@ upgrades:
           name: conf.client.readTimeoutMillis
           ifOldValueMatches: 0
           newValue: 30000
+  - toVersion: 15
+    actions:
+      - setConfig:
+          name: conf.client.tlsConfig.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: conf.client.tlsConfig.privateKey
+          value: ""
+      - setConfig:
+          name: conf.client.tlsConfig.certificateChain
+          value: []
+      - setConfig:
+          name: conf.client.tlsConfig.trustedCertificates
+          value: []

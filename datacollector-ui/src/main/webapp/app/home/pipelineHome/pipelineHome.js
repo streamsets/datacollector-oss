@@ -33,9 +33,9 @@ angular
       });
   }])
   .controller('PipelineHomeController', function (
-    $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, $localStorage, pipelineService,
-    pipelineConstant, visibilityBroadcaster, $translate, contextHelpService, $location, authService, userRoles,
-    Analytics, tracking
+    $scope, $rootScope, $routeParams, $timeout, api, configuration, _, $q, $modal, pipelineService,
+    pipelineConstant, $translate, contextHelpService, $location, authService, userRoles,
+    Analytics, tracking, pipelineTracking
   ) {
     var routeParamPipelineName = $routeParams.pipelineName;
     var configTimeout;
@@ -151,6 +151,43 @@ angular
           return;
         }
 
+        if (stage.notInstalled) {
+          var stageInfo = pipelineService.getAllLibraryList(stage.name);
+          if (stageInfo && stageInfo.libraryList && stageInfo.libraryList.length) {
+            var modalInstance = $modal.open({
+              templateUrl: 'app/home/packageManager/install_missing_stage_library/install_missing_stage_library.tpl.html',
+              controller: 'InstallMissingLibraryModalInstanceController',
+              size: '',
+              backdrop: 'static',
+              resolve: {
+                customRepoUrl: function () {
+                  return $rootScope.$storage.customPackageManagerRepoUrl;
+                },
+                missingStageInfo: function() {
+                  return stageInfo;
+                },
+                libraryList: function () {
+                  return [{
+                    stageLibraryManifest: {
+                      stageLibId: stageInfo.libraryList[0].libraryId,
+                      stageLibLabel: stageInfo.libraryList[0].libraryLabel
+                    }
+                  }];
+                },
+                withStageLibVersion: function () {
+                  return false;
+                }
+              }
+            });
+            modalInstance.result.then(function() {
+              angular.forEach(libraryList, function(library) {
+                library.installed = true;
+              });
+            });
+          }
+          return;
+        }
+
         if (stage.type === pipelineConstant.SOURCE_STAGE_TYPE) {
           var sourceExists = false;
           angular.forEach($scope.stageInstances, function (sourceStageInstance) {
@@ -252,37 +289,8 @@ angular
 
         $scope.$broadcast('addNode', stageInstance, edges, relativeXPos, relativeYPos);
 
-        // MixPanel data
-        var stageTrackingDetail = {
-          'Pipeline ID': $scope.pipelineConfig.pipelineId,
-          'Stage ID': stageInstance.instanceName,
-          'Stage Type Name': stageInstance.stageName,
-          'Library Name': stageInstance.library
-        };
+        pipelineTracking.trackStageAdded(stageInstance, $scope.pipelineConfig.pipelineId);
         $scope.trackEvent(pipelineConstant.STAGE_CATEGORY, pipelineConstant.ADD_ACTION, stage.label, 1);
-        if (stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          tracking.mixpanel.track('Origin Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Origin Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Processor Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Processor Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-          tracking.mixpanel.track('Destination Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Destination Added': true
-          });
-        } else if (stageInstance.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Executor Added', stageTrackingDetail);
-          tracking.mixpanel.people.set({
-            'Core Journey Stage - Executor Added': true
-          });
-        } else {
-          tracking.mixpanel.track('Stage with unknown type added', stageTrackingDetail);
-        }
       },
 
       /**
@@ -315,9 +323,7 @@ angular
         $rootScope.common.errors = [];
         if (!$scope.pipelineConfig.uiInfo.previewConfig.rememberMe || showPreviewConfig) {
           $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Preview Pipeline Configuration', 1);
-          trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
-          tracking.mixpanel.track('Preview Selected', trackingData);
-          tracking.FS.event('Preview Selected', trackingData);
+          pipelineTracking.trackPreviewSelected($scope.pipelineConfig);
 
           var modalInstance = $modal.open({
             templateUrl: 'app/home/preview/configuration/previewConfigModal.tpl.html',
@@ -349,7 +355,7 @@ angular
         $scope.previewMode = false;
         $scope.setGraphReadOnly(false);
         $scope.setGraphPreviewMode(false);
-        tracking.mixpanel.track('Preview Closed', {'Pipeline ID': $scope.pipelineConfig ? $scope.pipelineConfig.pipelineId : 'N/A'});
+        pipelineTracking.trackPreviewClosed($scope.pipelineConfig);
         if ($scope.pipelineConfig.uiInfo.previewConfig.previewSource === pipelineConstant.TEST_ORIGIN) {
           $scope.refreshGraph();
         }
@@ -813,6 +819,17 @@ angular
         $scope.refreshGraph();
       }
     });
+
+    /**
+     * Checks if status is one of the error statuses
+     * @param {string} status
+     */
+    function isErrorStatus(status) {
+      return _.contains(
+        ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'],
+        status
+        );
+    }
 
     /**
      * Fetch definitions for Pipeline and Stages, fetch all pipeline configuration info, status and metric.
@@ -1976,18 +1993,7 @@ angular
 
     var prepareForPreview = function() {
       $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Run Preview', 1);
-      var trackingData = pipelineService.getTrackingInfo($scope.pipelineConfig);
-      var previewConfig = $scope.pipelineConfig.uiInfo.previewConfig;
-      trackingData['Preview Source'] = previewConfig.previewSource;
-      trackingData['Preview Batch Size'] = previewConfig.batchSize;
-      trackingData['Preview Timeout'] = previewConfig.timeout;
-      trackingData['Has Write to Destinations'] = previewConfig.writeToDestinations;
-      trackingData['Has Pipeline Lifecycle Events'] = previewConfig.executeLifecycleEvents;
-      trackingData['Has Show Record Field Header'] = previewConfig.showHeader;
-      trackingData['Has Show Field Type'] = previewConfig.showFieldType;
-      trackingData['Has Remember The Configuration'] = previewConfig.rememberMe;
-      tracking.mixpanel.people.set({'Core Journey Stage - Preview Run': true});
-      tracking.mixpanel.track('Preview Config Complete', trackingData);
+      pipelineTracking.trackPreviewConfigComplete($scope.pipelineConfig, $scope.pipelineConfig.uiInfo.previewConfig);
 
       $scope.previewMode = true;
       $rootScope.$storage.maximizeDetailPane = false;
@@ -2296,7 +2302,7 @@ angular
         $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
 
         if (oldActiveConfigStatus.timeStamp && oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
-          _.contains(['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'], $scope.activeConfigStatus.status)
+          isErrorStatus($scope.activeConfigStatus.status)
         ) {
 
           var status = $scope.activeConfigStatus;
@@ -2316,6 +2322,10 @@ angular
             $scope.activeConfigStatus.message];
           }
 
+          // Track if this error status is new
+          if (!isErrorStatus(oldActiveConfigStatus.status)) {
+            pipelineTracking.pipelineError(status, oldActiveConfigStatus, $scope.pipelineConfig);
+          }
         }
 
         if ($scope.activeConfigStatus.status === 'RETRY') {
@@ -2326,6 +2336,13 @@ angular
           $scope.activeConfigStatus.attributes.IS_REMOTE_PIPELINE === true) {
           $scope.isRemotePipeline = true;
           $scope.isPipelineReadOnly = true;
+        }
+
+        if ($scope.activeConfigStatus.status === 'STOPPED' && oldActiveConfigStatus.status === 'STOPPING') {
+          pipelineTracking.trackPipelineStop(
+            $scope.pipelineConfig,
+            $rootScope.common.pipelineMetrics
+          );
         }
 
       });

@@ -27,19 +27,24 @@ import com.streamsets.pipeline.lib.startJob.Groups;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Start Job",
     description = "Starts a Control Hub job",
     icon="job.png",
+    recordsByRef = true,
     execution = {
         ExecutionMode.STANDALONE
     },
     onlineHelpRefUrl ="index.html?contextID=task_l3t_fvr_2jb",
-    upgrader = StartJobDProcessorUpgrader.class
+    upgrader = StartJobDProcessorUpgrader.class,
+    upgraderDef = "upgrader/StartJobDProcessor.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
     "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"

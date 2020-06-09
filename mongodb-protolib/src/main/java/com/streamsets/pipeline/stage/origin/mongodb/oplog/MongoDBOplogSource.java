@@ -103,7 +103,7 @@ public class MongoDBOplogSource extends AbstractMongoDBSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(maxBatchSize, configBean.batchSize);
-    if (checkBatchSize && configBean.batchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && configBean.batchSize > maxBatchSize) {
       getContext().reportError(Errors.MONGODB_43, maxBatchSize);
       checkBatchSize = false;
     }

@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 12,
+    version = 14,
     label = "HTTP Server",
     description = "Listens for requests on an HTTP endpoint",
     icon="httpserver_multithreaded.png",
@@ -47,7 +47,9 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 @HideConfigs(value = {
     "dataFormatConfig.verifyChecksum",
     "dataFormatConfig.avroSchemaSource",
+    "httpConfigs.tlsConfigBean.useRemoteTrustStore",
     "httpConfigs.tlsConfigBean.trustStoreFilePath",
+    "httpConfigs.tlsConfigBean.trustedCertificates",
     "httpConfigs.tlsConfigBean.trustStoreType",
     "httpConfigs.tlsConfigBean.trustStorePassword",
     "httpConfigs.tlsConfigBean.trustStoreAlgorithm",

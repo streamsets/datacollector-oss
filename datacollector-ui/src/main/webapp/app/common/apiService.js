@@ -625,6 +625,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
+        tracking.mixpanel.track('Pipeline Exported', {'Pipeline ID': name});
       },
 
       /**
@@ -690,6 +691,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
+        tracking.mixpanel.track('Pipelines Bulk Exported', {'Pipeline IDs': pipelineIds});
       },
 
       /**
@@ -963,11 +965,6 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipeline: function(pipelineName, rev, forceStop) {
-        tracking.mixpanel.track('Pipeline Stopped', {
-          'Pipeline ID': pipelineName,
-          'Stop Type': 'User',
-          'Force Stop': forceStop,
-        });
         var url = apiBase + '/pipeline/' + pipelineName + '/stop?rev=' + rev ;
         if (forceStop) {
           url = apiBase + '/pipeline/' + pipelineName + '/forceStop?rev=' + rev ;
@@ -986,13 +983,6 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       stopPipelines: function(pipelineIds, forceStop) {
-        pipelineIds.forEach(function (pId) {
-          tracking.mixpanel.track('Pipeline Stopped', {
-            'Pipeline ID': pId,
-            'Stop Type': 'User',
-            'Force Stop': forceStop,
-          });
-        });
         var url = apiBase + '/pipelines/stop';
         if (forceStop) {
           url = apiBase + '/pipelines/forceStop';
@@ -1334,6 +1324,15 @@ angular.module('dataCollectorApp.common')
           method: 'DELETE',
           url: url
         });
+      },
+
+      /**
+       * Fetch list of static stage icons
+       *
+       * @returns {*}
+       */
+      getStageAssetIcons: function() {
+        return $http.get('/assets/stage/stageIcons.json');
       }
     };
 

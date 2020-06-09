@@ -71,7 +71,7 @@ public class HdfsTarget extends BaseTarget {
   private static StageException throwStageException(Exception e) {
     // Hadoop libraries will wrap any non InterruptedException, RuntimeException, Error or IOException to
     // UndeclaredThrowableException so we manually unwrap it here and properly propagate it to user.
-    if(e instanceof UndeclaredThrowableException) {
+    if (e instanceof UndeclaredThrowableException) {
       e = (Exception)e.getCause();
     }
 
@@ -224,6 +224,9 @@ public class HdfsTarget extends BaseTarget {
                   hdfsTargetConfigBean.getLateWriters().get(getBatchTime(), getBatchTime(), record);
               try {
                 lateWriter.write(record);
+                if (hdfsTargetConfigBean.dataFormat == DataFormat.WHOLE_FILE) {
+                  hdfsTargetConfigBean.getLateWriters().release(lateWriter, false);
+                }
                 // To avoid double counting, in case of IdleClosedException
                 incrementAndMarkLateRecords();
                 //We anyway close the late record writers after writing,
@@ -231,7 +234,7 @@ public class HdfsTarget extends BaseTarget {
                 hdfsTargetConfigBean.getLateWriters().release(lateWriter, false);
               } catch (IdleClosedException ex) {
                 // Try to write again, this time with a new lateWriter
-                hdfsTargetConfigBean.getCurrentWriters().release(lateWriter, false);
+                hdfsTargetConfigBean.getLateWriters().release(lateWriter, false);
                 write = true;
                 // No use printing path, since it is a temp path - the real one is created later.
                 LOG.debug("Writer was idle closed. Retrying.. ");

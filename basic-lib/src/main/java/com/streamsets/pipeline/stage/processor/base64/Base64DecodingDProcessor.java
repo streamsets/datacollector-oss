@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Base64 Field Decoder",
     icon = "base64decoder.png",
     description = "Decodes a Base64 encoded Byte Array field",
+    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgraderDef = "upgrader/Base64DecodingDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pnn_5py_kv"

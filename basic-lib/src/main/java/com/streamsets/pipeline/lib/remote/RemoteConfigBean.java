@@ -16,10 +16,16 @@
 package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.lib.tls.KeyStoreTypeChooserValues;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RemoteConfigBean {
 
@@ -207,16 +213,60 @@ public class RemoteConfigBean {
   public boolean useFTPSClientCert;
 
   @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "FTPS Client Certificate Keystore File",
-      description = "Full path to the keystore file containing the client certificate",
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      description = "Use a keystore built from a specified private key and certificate chain instead of loading from a local file",
+      label = "Use Remote Keystore",
       displayPosition = 71,
       group = "#1",
       dependsOn = "useFTPSClientCert",
       triggeredByValue = "true"
   )
+  public boolean useRemoteKeyStore;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "FTPS Client Certificate Keystore File",
+      description = "Full path to the keystore file containing the client certificate",
+      displayPosition = 72,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      }
+  )
   public String ftpsClientCertKeystoreFile;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      description = "Private Key used in the keystore",
+      label = "Private Key",
+      displayPosition = 73,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
+      }
+  )
+  public CredentialValue ftpsPrivateKey;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      description = "Certificate chain used in the keystore",
+      label = "Certificate Chain",
+      displayPosition = 74,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
+      },
+      defaultValue = "[]"
+  )
+  @ListBeanModel
+  public List<CredentialValueBean> ftpsCertificateChain = new ArrayList<>();
 
   @ConfigDef(
       required = true,
@@ -224,10 +274,12 @@ public class RemoteConfigBean {
       defaultValue = "JKS",
       label = "FTPS Client Certificate Keystore Type",
       description = "The FTPS Client Certificate Keystore type",
-      displayPosition = 72,
+      displayPosition = 74,
       group = "#1",
-      dependsOn = "useFTPSClientCert",
-      triggeredByValue = "true"
+      dependencies = {
+          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      }
   )
   @ValueChooserModel(KeyStoreTypeChooserValues.class)
   public KeyStoreType ftpsClientCertKeystoreType = KeyStoreType.JKS;
@@ -238,10 +290,12 @@ public class RemoteConfigBean {
       label = "FTPS Client Certificate Keystore Password",
       description = "The password to the FTPS Client Certificate Keystore File, if applicable.  " +
           "Using a password is highly recommended for security reasons.",
-      displayPosition = 73,
+      displayPosition = 75,
       group = "#1",
-      dependsOn = "useFTPSClientCert",
-      triggeredByValue = "true"
+      dependencies = {
+          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
+      }
   )
   public CredentialValue ftpsClientCertKeystorePassword = () -> "";
 
@@ -253,6 +307,7 @@ public class RemoteConfigBean {
       description = "Providing a Truststore allows the client to verify the FTPS Server's certificate. " +
           "\"Allow All\" will allow any certificate, skipping validation. " +
           "\"File\" will allow providing a truststore file containing the certificate. " +
+          "\"Remote Truststore\" allows providing a list of trusted certificates to build the truststore" +
           "\"JVM Default\" will use the JVM's default truststore.",
       displayPosition = 80,
       group = "#1"
@@ -275,10 +330,23 @@ public class RemoteConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+      description = "Trusted certificates used in the truststore",
+      label = "Trusted Certificates",
+      displayPosition = 82,
+      group = "#1",
+      dependsOn = "ftpsTrustStoreProvider",
+      triggeredByValue = "REMOTE_TRUSTSTORE"
+  )
+  @ListBeanModel
+  public List<CredentialValueBean> ftpsTrustedCertificates = new ArrayList<>();
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
       defaultValue = "JKS",
       label = "FTPS Truststore Type",
       description = "The FTPS Truststore type",
-      displayPosition = 82,
+      displayPosition = 83,
       group = "#1",
       dependsOn = "ftpsTrustStoreProvider",
       triggeredByValue = "FILE"
@@ -292,10 +360,10 @@ public class RemoteConfigBean {
       label = "FTPS Truststore Password",
       description = "The password to the FTPS Truststore file, if applicable.  " +
           "Using a password is highly recommended for security reasons.",
-      displayPosition = 83,
+      displayPosition = 84,
       group = "#1",
       dependsOn = "ftpsTrustStoreProvider",
-      triggeredByValue = "FILE"
+      triggeredByValue = {"FILE"}
   )
   public CredentialValue ftpsTruststorePassword = () -> "";
 

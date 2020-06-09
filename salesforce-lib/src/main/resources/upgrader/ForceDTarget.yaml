@@ -17,4 +17,15 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: forceConfig.mutualAuth.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: forceConfig.mutualAuth.privateKey
+          value: ""
+      - setConfig:
+          name: forceConfig.mutualAuth.certificateChain
+          value: []

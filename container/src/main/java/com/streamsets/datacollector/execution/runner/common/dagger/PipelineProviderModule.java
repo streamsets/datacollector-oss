@@ -36,6 +36,7 @@ import com.streamsets.datacollector.execution.runner.common.RulesConfigLoader;
 import com.streamsets.datacollector.execution.runner.common.ThreadHealthReporter;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsModule;
 import com.streamsets.datacollector.runner.Observer;
@@ -206,6 +207,7 @@ public class PipelineProviderModule {
     @Named("rev") String rev,
     Configuration configuration,
     RuntimeInfo runtimeInfo,
+    BuildInfo buildInfo,
     StageLibraryTask stageLib,
     PipelineRunner runner,
     Observer observer,
@@ -218,6 +220,7 @@ public class PipelineProviderModule {
       rev,
       configuration,
       runtimeInfo,
+      buildInfo,
       stageLib,
       (ProductionPipelineRunner)runner,
       observer,

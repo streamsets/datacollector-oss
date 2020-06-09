@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.websocket.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "WebSocket Client",
     description = "Uses a WebSocket client to write data",
     icon = "websockets.png",
@@ -46,7 +46,10 @@ import com.streamsets.pipeline.lib.websocket.Groups;
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
     "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"

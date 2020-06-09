@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label="TensorFlow Evaluator",
     description="Uses TensorFlow models to generate predictions or classifications of data",
     icon="tensorflow.png",
+    recordsByRef = true,
     producesEvents = true,
     execution = {
         ExecutionMode.STANDALONE,

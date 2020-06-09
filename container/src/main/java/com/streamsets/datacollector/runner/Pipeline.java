@@ -1069,6 +1069,7 @@ public class Pipeline {
         pipelineRunner.getMetrics(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
+        pipelineRunner.getBuildInfo(),
         pipelineRunner.getRuntimeInfo(),
         emailSender,
         startTime,
@@ -1100,6 +1101,7 @@ public class Pipeline {
         pipelineRunner.getMetrics(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
+        pipelineRunner.getBuildInfo(),
         pipelineRunner.getRuntimeInfo(),
         emailSender,
         startTime,
@@ -1157,6 +1159,7 @@ public class Pipeline {
         stageRuntime.getInfo(),
         getExecutionMode(pipelineConfiguration),
         getDeliveryGuarantee(pipelineConfiguration),
+        pipelineRunner.getBuildInfo(),
         pipelineRunner.getRuntimeInfo(),
         emailSender,
         configuration,
@@ -1167,7 +1170,8 @@ public class Pipeline {
         isErrorStage,
         antennaDoctor,
         antennaDoctorContext,
-        statsCollector
+        statsCollector,
+        stageRuntime.getDefinition().getRecordsByRef()
       )
     );
 

@@ -15,14 +15,18 @@
  */
 package com.streamsets.pipeline.lib.remote;
 
+import org.apache.commons.vfs2.FileNotFoundException;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 public class FTPRemoteFile extends RemoteFile {
+  private static final Logger LOG = LoggerFactory.getLogger(FTPRemoteFile.class);
 
   private final FileObject fileObject;
   private FileObject tempFileObject;
@@ -54,5 +58,20 @@ public class FTPRemoteFile extends RemoteFile {
       throw new IOException("Cannot commit " + getFilePath() + " - it must be written first");
     }
     tempFileObject.moveTo(fileObject);
+  }
+
+  @Override
+  public boolean isReadable() throws IOException {
+    try (InputStream ignored = createInputStream()){
+      LOG.trace("File is readable");
+      return true;
+    } catch (IOException e) {
+      LOG.error("Error reading file", e);
+      if (e instanceof FileNotFoundException) {
+        // File is not found because its either deleted or don't have permissions
+        return false;
+      }
+     throw e;
+    }
   }
 }

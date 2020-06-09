@@ -25,6 +25,7 @@ public enum AuthenticationType implements Label {
   DIGEST("Digest"),
   UNIVERSAL("Universal"),
   OAUTH("OAuth"),
+  KERBEROS_SPNEGO("Kerberos/SPNEGO"),
   ;
 
   private final String label;

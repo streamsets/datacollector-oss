@@ -178,8 +178,18 @@ public class MySQLTableConfigBean implements TableConfigBean {
   }
 
   @Override
+  public boolean isTablePatternListProvided() {
+    return false;
+  }
+
+  @Override
   public String getTablePattern() {
     return tablePattern;
+  }
+
+  @Override
+  public List<String> getTablePatternList() {
+    return null;
   }
 
   @Override

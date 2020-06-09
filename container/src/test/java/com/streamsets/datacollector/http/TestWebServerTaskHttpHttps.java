@@ -18,7 +18,7 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.NopActivation;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -30,6 +30,7 @@ import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.lib.security.http.SSOService;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -124,7 +125,8 @@ public class TestWebServerTaskHttpHttps {
         context.addServlet(new ServletHolder(new PingServlet()), "/public-rest/v1/ping");
       }
     });
-    return new DataCollectorWebServerTask(new DataCollectorBuildInfo(),
+    return new DataCollectorWebServerTask(
+        ProductBuildInfo.getDefault(),
         runtimeInfo,
         conf,
         new NopActivation(),
@@ -283,28 +285,32 @@ public class TestWebServerTaskHttpHttps {
 
   @Test
   public void testHttps() throws Exception {
+    testHttpsWithKeyStore("sdc-keystore.jks");
+  }
+
+  @Test
+  public void testHttpsUsingKeystoreFileWithMultipleCerts() throws Exception {
+    testHttpsWithKeyStore("sdc-keystore-with-multiple-certs.jks");
+  }
+
+  public void testHttpsWithKeyStore(String keystoreFileName) throws Exception {
     Configuration conf = new Configuration();
     int httpsPort = NetworkUtils.getRandomPort();
     String confDir = createTestDir();
-    String keyStore = new File(confDir, "sdc-keystore.jks").getAbsolutePath();
+    String keyStore = new File(confDir, keystoreFileName).getAbsolutePath();
     OutputStream os = new FileOutputStream(keyStore);
-    IOUtils.copy(getClass().getClassLoader().getResourceAsStream("sdc-keystore.jks"),os);
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream(keystoreFileName),os);
     os.close();
     conf.set(WebServerTask.AUTHENTICATION_KEY, "none");
     conf.set(WebServerTask.HTTP_PORT_KEY, -1);
     conf.set(WebServerTask.HTTPS_PORT_KEY, httpsPort);
-    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, "sdc-keystore.jks");
+    conf.set(WebServerTask.HTTPS_KEYSTORE_PATH_KEY, keystoreFileName);
     conf.set(WebServerTask.HTTPS_KEYSTORE_PASSWORD_KEY, "password");
     conf.set(WebServerTask.HTTPS_TRUSTSTORE_PATH_KEY, "");
     final WebServerTask ws = createWebServerTask(confDir, conf);
     try {
       ws.initTask();
-      new Thread() {
-        @Override
-        public void run() {
-          ws.runTask();
-        }
-      }.start();
+      new Thread(ws::runTask).start();
       waitForStart(ws);
       HttpsURLConnection conn = (HttpsURLConnection) new URL("https://127.0.0.1:" + httpsPort + "/ping")
           .openConnection();

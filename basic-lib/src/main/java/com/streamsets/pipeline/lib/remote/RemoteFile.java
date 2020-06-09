@@ -50,4 +50,6 @@ public abstract class RemoteFile {
   public abstract OutputStream createOutputStream() throws IOException;
 
   public abstract void commitOutputStream() throws IOException;
+
+  public abstract boolean isReadable() throws IOException;
 }

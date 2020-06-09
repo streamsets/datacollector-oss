@@ -42,6 +42,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
@@ -205,6 +206,7 @@ public class PipelineStoreResource {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineStoreResource.class);
 
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private final Configuration configuration;
   private final Manager manager;
   private final PipelineStoreTask store;
@@ -222,6 +224,7 @@ public class PipelineStoreResource {
       CredentialStoresTask credentialStoresTask,
       PipelineStoreTask store,
       RuntimeInfo runtimeInfo,
+      BuildInfo buildInfo,
       Configuration configuration,
       Manager manager,
       UserGroupManager userGroupManager,
@@ -234,6 +237,7 @@ public class PipelineStoreResource {
     this.stageLibrary = stageLibrary;
     this.credentialStoresTask = credentialStoresTask;
     this.runtimeInfo = runtimeInfo;
+    this.buildInfo = buildInfo;
     this.configuration = configuration;
     this.manager = manager;
     this.activation = activation;
@@ -689,7 +693,7 @@ public class PipelineStoreResource {
     switch (get) {
       case "pipeline":
         PipelineConfiguration pipeline = store.load(name, rev);
-        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipeline);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipeline);
         pipeline = validator.validate();
         data = BeanHelper.wrapPipelineConfiguration(pipeline);
         title = pipeline.getTitle() != null ? pipeline.getTitle() : pipeline.getInfo().getPipelineId();
@@ -794,7 +798,7 @@ public class PipelineStoreResource {
               pipelineConfig.getInfo().getLastRev(),
               microServiceTemplate.getDescription(),
               microServiceTemplate,
-              true
+              false
           );
         } else {
           microServiceTemplate.setInfo(pipelineConfig.getInfo());
@@ -851,6 +855,7 @@ public class PipelineStoreResource {
 
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLibrary,
+        buildInfo,
         pipelineId,
         pipelineConfig
     );
@@ -941,6 +946,7 @@ public class PipelineStoreResource {
 
     PipelineFragmentConfigurationValidator validator = new PipelineFragmentConfigurationValidator(
         stageLibrary,
+        buildInfo,
         pipelineId,
         pipelineFragmentConfig
     );
@@ -1005,7 +1011,7 @@ public class PipelineStoreResource {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
     pipelineConfig = validator.validate();
     pipelineConfig = store.save(user, name, rev, description, pipelineConfig, encryptCredentials);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
@@ -1134,7 +1140,7 @@ public class PipelineStoreResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
 
     PipelineConfiguration pipelineConfig = store.load(name, rev);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
     pipelineConfig = validator.validate();
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     PipelineEnvelopeJson pipelineEnvelope = PipelineConfigurationUtil.getPipelineEnvelope(
@@ -1283,7 +1289,7 @@ public class PipelineStoreResource {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
     pipelineConfig = validator.validate();
 
     RuleDefinitionsJson ruleDefinitionsJson = pipelineEnvelope.getPipelineRules();
@@ -1382,6 +1388,7 @@ public class PipelineStoreResource {
 
     PipelineFragmentConfigurationValidator validator = new PipelineFragmentConfigurationValidator(
         stageLibrary,
+        buildInfo,
         fragmentId,
         fragmentConfig
     );
@@ -1438,8 +1445,7 @@ public class PipelineStoreResource {
 
         metadata.put("labels", metaLabels);
         RestAPIUtils.injectPipelineInMDC(pipelineConfig.getInfo().getTitle(), pipelineId);
-        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, pipelineId,
-            pipelineConfig);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, pipelineId, pipelineConfig);
         pipelineConfig = validator.validate();
         store.save(user, pipelineId, "0", pipelineConfig.getDescription(), pipelineConfig, false);
         successEntities.add(pipelineId);
@@ -1545,6 +1551,7 @@ public class PipelineStoreResource {
 
           PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
               stageLibrary,
+              buildInfo,
               pipelineConfig.getPipelineId(),
               pipelineConfig
           );

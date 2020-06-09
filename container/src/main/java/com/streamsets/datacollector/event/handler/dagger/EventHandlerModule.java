@@ -22,6 +22,7 @@ import com.streamsets.datacollector.event.handler.remote.ColonCompatibleRemoteDa
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.PipelineIdEncodedRemoteDatacollector;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -49,6 +50,7 @@ public class EventHandlerModule {
       @Named("syncEventsHandlerExecutor") SafeScheduledExecutorService syncEventsHandlerExecutor,
       Configuration conf,
       RemoteDataCollector remoteDataCollector,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       StageLibraryTask stageLibraryTask,
       BlobStoreTask blobStoreTask
@@ -67,6 +69,7 @@ public class EventHandlerModule {
           eventHandlerExecutor,
           syncEventsHandlerExecutor,
           stageLibraryTask,
+          buildInfo,
           runtimeInfo,
           conf,
           blobStoreTask

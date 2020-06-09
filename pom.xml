@@ -157,6 +157,7 @@
     <module>httpcommonlib</module>
     <module>net-commonlib</module>
 
+    <module>aws-secrets-manager-credentialstore-protolib</module>
     <module>azure-keyvault-credentialstore-protolib</module>
     <module>lookup-protolib</module>
 

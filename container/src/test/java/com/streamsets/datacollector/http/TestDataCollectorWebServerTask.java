@@ -18,13 +18,14 @@ package com.streamsets.datacollector.http;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.NopActivation;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.FileUserGroupManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.security.usermgnt.TrxUsersManager;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.SSOConstants;
+import com.streamsets.pipeline.BootstrapMain;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -45,7 +46,7 @@ public class TestDataCollectorWebServerTask {
     try (Writer writer = new FileWriter(file)) {
     }
     UsersManager usersManager = new TrxUsersManager(file);
-    BuildInfo buildInfo = new DataCollectorBuildInfo();
+    BuildInfo buildInfo = ProductBuildInfo.getDefault();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getBaseHttpUrl()).thenReturn("url");
     WebServerTask webServerTask = new DataCollectorWebServerTask(

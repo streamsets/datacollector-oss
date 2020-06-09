@@ -35,6 +35,7 @@ import java.util.List;
     description = "Separates unique and duplicate records based on field comparison",
     icon="dedup.png",
     outputStreams = OutputStreams.class,
+    recordsByRef = true,
     execution = ExecutionMode.STANDALONE,
     flags = StageBehaviorFlags.PASSTHROUGH,
     upgraderDef = "upgrader/DeDupDProcessor.yaml",

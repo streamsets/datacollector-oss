@@ -35,6 +35,7 @@ import java.util.List;
     description = "Converts the data type of a field(s)",
     icon = "converter.png",
     onlineHelpRefUrl ="index.html?contextID=task_g23_2tq_wq",
+    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgrader = FieldTypeConverterProcessorUpgrader.class,
     upgraderDef = "upgrader/FieldTypeConverterDProcessor.yaml"

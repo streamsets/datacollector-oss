@@ -74,7 +74,14 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
         }
         // fall through
       case 6:
-        return upgradeV6toV7(configs);
+        upgradeV6toV7(configs);
+        if (toVersion == 7) {
+          break;
+        }
+      // fall through
+      case 7:
+        upgradeV7toV8(configs);
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -135,5 +142,9 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
     return configs.stream()
         .filter(c -> !c.getName().endsWith("WaitTime")) // removes previewWaitTime and maxWaitTime
         .collect(Collectors.toList());
+  }
+
+  private void upgradeV7toV8(List<Config> configs) {
+    updateCredentialMode(configs);
   }
 }

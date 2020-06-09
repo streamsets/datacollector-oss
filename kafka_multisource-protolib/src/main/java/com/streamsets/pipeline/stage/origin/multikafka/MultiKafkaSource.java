@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.origin.multikafka;
 
 import com.google.common.base.Throwables;
+import com.google.protobuf.MapEntry;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -49,11 +50,15 @@ import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoade
 import org.apache.commons.lang.StringUtils;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
+import org.apache.kafka.common.TopicPartition;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -65,6 +70,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class MultiKafkaSource extends BasePushSource {
 
@@ -168,12 +174,21 @@ public class MultiKafkaSource extends BasePushSource {
         List<Record> records = new ArrayList<>();
         long startTime = System.currentTimeMillis();
 
+        Map<String, Long> offsetIncrements = new HashMap<>();
+        Map<String, Long> recordsSinceLastCommit = new HashMap<>();
+
         while (!getContext().isStopped() && !Thread.interrupted()) {
 
           // Xavi's awesome Deadman timer.
           long pollInterval = Math.max(MIN_CONSUMER_POLLING_INTERVAL_MS, conf.batchWaitTime - (System.currentTimeMillis() - startTime));
 
           ConsumerRecords<String, byte[]> messages = consumer.poll(pollInterval);
+
+          for (ConsumerRecord<String, byte[]> item : messages) {
+            String topicPartitionName = item.topic() + "-" + item.partition();
+            recordsSinceLastCommit.putIfAbsent(topicPartitionName, 0L);
+            recordsSinceLastCommit.put(topicPartitionName, recordsSinceLastCommit.get(topicPartitionName) + 1);
+          }
 
           if (!messages.isEmpty()) {
 
@@ -207,9 +222,16 @@ public class MultiKafkaSource extends BasePushSource {
                 timestampType
             ));
 
+            String topicPartitionName = item.topic() + "-" + item.partition();
+            offsetIncrements.putIfAbsent(topicPartitionName, 0L);
+            offsetIncrements.put(topicPartitionName, offsetIncrements.get(topicPartitionName) + 1);
+
             if (records.size() >= batchSize) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
-              commitSyncAndProcess(batchContext);
+              Map<TopicPartition, OffsetAndMetadata> offsets = getNewOffsets(offsetIncrements, recordsSinceLastCommit);
+              offsetIncrements.clear();
+              commitSyncAndProcess(batchContext, offsets);
+              recordsSinceLastCommit.clear();
               startTime = System.currentTimeMillis();
               recordsProcessed += records.size();
               records.clear();
@@ -220,13 +242,15 @@ public class MultiKafkaSource extends BasePushSource {
 
           messagesProcessed += messages.count();
 
-
           // Transmit remaining when batchWaitTime expired
           if (pollInterval <= MIN_CONSUMER_POLLING_INTERVAL_MS) {
             startTime = System.currentTimeMillis();
             if (!records.isEmpty() || (errorRecordHandler != null && errorRecordHandler.getErrorRecordCount() > 0)) {
               records.forEach(batchContext.getBatchMaker()::addRecord);
-              commitSyncAndProcess(batchContext);
+              Map<TopicPartition, OffsetAndMetadata> offsets = getNewOffsets(offsetIncrements, recordsSinceLastCommit);
+              offsetIncrements.clear();
+              commitSyncAndProcess(batchContext, offsets);
+              recordsSinceLastCommit.clear();
               batchContext = getContext().startBatch();
               errorRecordHandler = new CountingDefaultErrorRecordHandler(getContext(), batchContext);
               recordsProcessed += records.size();
@@ -252,16 +276,39 @@ public class MultiKafkaSource extends BasePushSource {
       return messagesProcessed;
     }
 
+    @NotNull
+    private Map<TopicPartition, OffsetAndMetadata> getNewOffsets(
+        Map<String, Long> offsetIncrements,
+        Map<String, Long> recordsSinceLastCommit
+    ) {
+      Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
+      for (Map.Entry<String, Long> offsetIncrement : offsetIncrements.entrySet()) {
+        String[] topicAndPartition = offsetIncrement.getKey().split("-");
+        TopicPartition topicPartition = new TopicPartition(
+            topicAndPartition[0],
+            Integer.parseInt(topicAndPartition[1])
+        );
+        long commitOffset;
+        Long committedOffset = consumer.getCommittedOffset(topicPartition);
+        if (committedOffset == null) {
+          commitOffset = consumer.getOffset(topicPartition) - recordsSinceLastCommit.get(offsetIncrement.getKey()) + offsetIncrement.getValue();
+        } else {
+          commitOffset = committedOffset + offsetIncrement.getValue();
+        }
+        offsets.put(topicPartition, new OffsetAndMetadata(commitOffset));
+      }
+      return offsets;
+    }
 
-    private void commitSyncAndProcess(BatchContext batchContext) {
+    private void commitSyncAndProcess(BatchContext batchContext, Map<TopicPartition, OffsetAndMetadata> offsets) {
       if (!getContext().isPreview() && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
-        consumer.commitSync();
+        consumer.commitSync(offsets);
       }
 
       boolean batchSuccessful = getContext().processBatch(batchContext);
 
       if (!getContext().isPreview() && batchSuccessful && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
-        consumer.commitSync();
+        consumer.commitSync(offsets);
       }
     }
 
@@ -401,7 +448,7 @@ public class MultiKafkaSource extends BasePushSource {
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     shutdownCalled.set(false);
     batchSize = Math.min(maxBatchSize, conf.maxBatchSize);
-    if (conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(KafkaErrors.KAFKA_78, maxBatchSize);
     }
 

@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
     description = "Parses a field with data",
     // from http://www.flaticon.com/free-icon/coding_408290
     icon="coding.png",
+    recordsByRef = true,
     services = @ServiceDependency(
       service = DataFormatParserService.class,
       configuration = {

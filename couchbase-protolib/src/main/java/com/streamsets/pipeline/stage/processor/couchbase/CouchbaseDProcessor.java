@@ -24,10 +24,11 @@ import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Couchbase Lookup",
     description = "Performs lookups to enrich records",
     icon = "couchbase.png",
+    recordsByRef = true,
     privateClassLoader = true,
     upgraderDef = "upgrader/CouchbaseDProcessor.yaml",
     onlineHelpRefUrl = "index.html?contextID=concept_rxk_1dq_2fb"

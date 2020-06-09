@@ -16,8 +16,10 @@
 package com.streamsets.pipeline.lib.startJob;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
@@ -105,7 +107,7 @@ public class StartJobSupplier implements Supplier<Field> {
 
   private void initializeJobId() {
     String fetchJobsUrl = conf.baseUrl + "jobrunner/rest/v1/jobs";
-    try (Response response = ClientBuilder.newClient()
+    try (Response response = clientBuilder.build()
         .target(fetchJobsUrl)
         .queryParam("filterText", jobIdConfig.jobId)
         .register(new CsrfProtectionFilter("CSRF"))
@@ -148,7 +150,7 @@ public class StartJobSupplier implements Supplier<Field> {
         );
       }
     }
-    try (Response response = ClientBuilder.newClient()
+    try (Response response = clientBuilder.build()
         .target(jobStartUrl)
         .register(new CsrfProtectionFilter("CSRF"))
         .request()
@@ -176,6 +178,13 @@ public class StartJobSupplier implements Supplier<Field> {
     startOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
     if (!conf.runInBackground) {
       startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
+      MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
+          clientBuilder,
+          conf.baseUrl,
+          jobIdConfig.jobId,
+          userAuthToken
+      );
+      startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
     }
     startOutput.put(Constants.JOB_STATUS_FIELD, Field.create(status));
     startOutput.put(Constants.JOB_STATUS_COLOR_FIELD, Field.create(statusColor));

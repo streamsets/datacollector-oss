@@ -19,6 +19,8 @@ import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
@@ -35,6 +37,7 @@ import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.Permission;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 import com.streamsets.lib.security.acl.dto.SubjectType;
+import com.streamsets.pipeline.BootstrapMain;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.After;
@@ -62,6 +65,13 @@ public class TestFileAclStoreTask {
   public static class Module {
     public Module() {
     }
+
+    @Provides
+    @Singleton
+    public BuildInfo provideBuildInfo() {
+      return ProductBuildInfo.getDefault();
+    }
+
     @Provides
     @Singleton
     public RuntimeInfo provideRuntimeInfo() {
@@ -106,6 +116,7 @@ public class TestFileAclStoreTask {
     @Provides
     @Singleton
     public PipelineStoreTask providePipelineStoreTask(
+        BuildInfo buildInfo,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -113,8 +124,20 @@ public class TestFileAclStoreTask {
         LockCache<String> lockCache,
         BlobStoreTask blobStoreTask
     ) {
+<<<<<<< HEAD
       return new FilePipelineStoreTask(runtimeInfo, stageLibraryTask, pipelineStateStore,
           eventListenerManager, lockCache, Mockito.mock(PipelineCredentialHandler.class), blobStoreTask);
+=======
+      return new FilePipelineStoreTask(
+          buildInfo,
+          runtimeInfo,
+          stageLibraryTask,
+          pipelineStateStore,
+          eventListenerManager,
+          lockCache,
+          Mockito.mock(PipelineCredentialHandler.class)
+      );
+>>>>>>> master
     }
 
     @Provides

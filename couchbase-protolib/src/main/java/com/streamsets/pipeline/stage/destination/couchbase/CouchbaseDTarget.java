@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Couchbase",
     description = "Writes data to Couchbase",
     icon = "couchbase.png",

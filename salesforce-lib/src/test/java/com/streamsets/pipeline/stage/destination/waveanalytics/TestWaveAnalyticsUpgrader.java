@@ -18,12 +18,17 @@ package com.streamsets.pipeline.stage.destination.waveanalytics;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.salesforce.SubscriptionType;
+import com.streamsets.pipeline.stage.processor.lookup.ForceLookupProcessorUpgrader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +38,18 @@ import static com.streamsets.pipeline.stage.destination.waveanalytics.WaveAnalyt
 
 public class TestWaveAnalyticsUpgrader {
   private static final String WAVE_ANALYTICS_APPEND_TIMESTAMP = WAVE_ANALYTICS_DESTINATION_CONFIG_BEAN_PREFIX + "." + APPEND_TIMESTAMP;
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/WaveAnalyticsDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new WaveAnalyticsUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testUpgradeV1toV2NoAppendTimestamp() throws StageException {
@@ -84,5 +101,18 @@ public class TestWaveAnalyticsUpgrader {
     Config config = configs.get(0);
     Assert.assertEquals(WAVE_ANALYTICS_APPEND_TIMESTAMP, config.getName());
     Assert.assertEquals(false, config.getValue());
+  }
+
+  @Test
+  public void testV2ToV3Upgrade() {
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    String configPrefix = "conf.mutualAuth.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
   }
 }

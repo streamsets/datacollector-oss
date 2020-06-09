@@ -18,16 +18,33 @@ package com.streamsets.pipeline.stage.processor.lookup;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.salesforce.TestForceInputUpgrader;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestForceLookupProcessorUpgrader extends TestForceInputUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/ForceLookupDProcessor.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new ForceLookupProcessorUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testUpgradeV1toV2() throws StageException {
     StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
@@ -69,5 +86,18 @@ public class TestForceLookupProcessorUpgrader extends TestForceInputUpgrader {
     Assert.assertEquals(1, configs.size());
     Assert.assertEquals("forceConfig.queryExistingData", configs.get(0).getName());
     Assert.assertEquals(true, configs.get(0).getValue());
+  }
+
+  @Test
+  public void testV3ToV4Upgrade() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    String configPrefix = "forceConfig.mutualAuth.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
   }
 }

@@ -27,11 +27,12 @@ import com.streamsets.datacollector.definition.StageLibraryDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.SdcConfiguration;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.ApplicationPackage;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.SystemPackage;
 import org.junit.Assert;
@@ -95,8 +96,13 @@ public class TestClassLoaderStageLibraryTask {
     RuntimeInfo runtimeInfo = mockRuntimeInfo(configDir);
     Mockito.when(runtimeInfo.getStageLibraryClassLoaders()).thenReturn((List) ImmutableList.of(cl));
     Mockito.when(runtimeInfo.getMetrics()).thenReturn(new MetricRegistry());
+    final BuildInfo buildInfo = ProductBuildInfo.getDefault();
 
-    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(runtimeInfo, new DataCollectorBuildInfo(), new Configuration());
+    ClassLoaderStageLibraryTask library = new ClassLoaderStageLibraryTask(
+        runtimeInfo,
+        buildInfo,
+        new Configuration()
+    );
     library.initTask();
 
     Assert.assertEquals(1, library.getStages().size());

@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "Databricks ML Evaluator",
     description = "Uses Spark-trained models to generate evaluations, scoring, or classification of data",
     icon = "databricks.png",
+    recordsByRef = true,
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,

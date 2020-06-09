@@ -91,7 +91,7 @@ public class BigQuerySource extends BaseSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     String sourceOffset = lastSourceOffset;
     long pageSize = (long) Math.min(conf.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(BIGQUERY_19, maxBatchSize);
       checkBatchSize = false;
     }

@@ -259,7 +259,7 @@ public class KinesisSource extends BasePushSource {
       getShardIteratorRequest.setTimestamp(new Date(conf.initialTimestamp));
     }
 
-    if (conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.KINESIS_18, maxBatchSize);
     }
 

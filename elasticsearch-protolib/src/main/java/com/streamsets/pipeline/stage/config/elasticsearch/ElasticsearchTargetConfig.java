@@ -156,10 +156,11 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       required = false,
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.JSON,
+      elDefs = {RecordEL.class},
       label = "Additional Properties",
       description = "Additional properties for the request",
       defaultValue = "{\n}",
-      evaluation = ConfigDef.Evaluation.IMPLICIT,
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 120,
       group = "ELASTIC_SEARCH"
   )

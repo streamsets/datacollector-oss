@@ -323,7 +323,7 @@ public class TestDelimitedDataGenerator {
     gen.write(record);
     gen.flush();
 
-    Assert.assertEquals("a^b^'!^'\r\n", byteArrayOutputStream.toString());
+    Assert.assertEquals("a^b^'!!^'\r\n", byteArrayOutputStream.toString());
     gen.close();
   }
 

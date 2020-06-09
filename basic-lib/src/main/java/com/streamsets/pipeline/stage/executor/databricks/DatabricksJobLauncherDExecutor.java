@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Databricks Job Launcher",
     description = "Execute Jobs on Databricks Cloud",
     icon = "spark-logo-hd.png",

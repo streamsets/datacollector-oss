@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h3 class="modal-title">Missing Stage Library</h3>
+</div>
+<div class="modal-body package-manager-modal-body">
+  <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+  <div ng-if="operationStatus === 'complete' && !hasErrors()">
+    <div   class="alert alert-success alert-dismissible" role="alert" translate="packageManager.install.successMessage"/>
+    <ng-include src="'common/administration/enableDPM/restartDPM.tpl.html'"></ng-include>
+  </div>
+
+  <div ng-if="operationStatus === 'restarting'"
+       class="alert alert-success alert-dismissible" role="alert"
+       translate="home.restart.successMessage">
+  </div>
+
+  <div ng-if="operationStatus !== 'complete'">
+    <div ng-if="registrationNeeded" class="alert alert-info" role="alert">
+      <p>To install additional libraries, you will need to register with StreamSets.</p>
+      <div class="register-button">
+        <button class="btn btn-primary" ng-click="register()">Register</button>
+      </div>
+    </div>
+    <div ng-if="maprStageLib" class="alert alert-info" role="alert">
+      You must perform additional steps to install MapR stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Installation/MapR-Prerequisites.html" target="_blank">MapR Prerequisites</a>.
+    </div>
+  </div>
+
+  <p>The stage library for the <strong>{{missingStageInfo.definition.label}}</strong> stage is not installed. </p>
+  <p>To use this stage in the pipeline, install the following stage library and restart Data Collector. </p>
+
+  <div class="controls col-lg-7 col-md-8">
+    <select class="form-control"
+            name="stageLibrary"
+            ng-model="selectedLibraryModel.libraryId"
+            ng-options="item.libraryId as item.libraryLabel for item in missingStageInfo.libraryList">
+    </select>
+  </div>
+
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" ng-click="cancel()"
+          ng-if="operationStatus !== 'installing' && operationStatus !== 'restarting'"
+          translate="global.form.cancel">Cancel</button>
+
+  <button type="button" class="btn btn-primary" ng-click="install()"
+          ng-if="operationStatus === 'incomplete'"
+          ng-disabled="registrationNeeded"
+          translate="global.form.install">Install</button>
+
+  <button type="button" class="btn btn-primary" ng-click="retry()"
+          ng-if="operationStatus === 'complete' && hasErrors()"
+          translate="global.form.retry">Retry</button>
+
+  <button type="button" class="btn btn-primary" disabled
+          ng-if="operationStatus === 'installing'"
+          translate="global.form.installing">Installing...</button>
+</div>

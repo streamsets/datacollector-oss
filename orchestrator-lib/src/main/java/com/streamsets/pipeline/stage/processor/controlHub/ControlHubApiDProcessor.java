@@ -24,14 +24,15 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Control Hub API",
     description = "Calls a Control Hub API",
     icon="streamsets.png",
     execution = {
         ExecutionMode.STANDALONE
     },
-    onlineHelpRefUrl ="index.html?contextID=task_oqs_4tr_2jb"
+    onlineHelpRefUrl ="index.html?contextID=task_oqs_4tr_2jb",
+    upgraderDef = "upgrader/ControlHubApiDProcessor.yaml"
 )
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)

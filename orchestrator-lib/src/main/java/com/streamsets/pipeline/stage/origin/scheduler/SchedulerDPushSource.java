@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
     label = "Cron Scheduler",
     description = "Generates a record with the current datetime based on a cron expression",
     icon="scheduler.png",
+    recordsByRef = true,
     execution = {ExecutionMode.STANDALONE},
     onlineHelpRefUrl ="index.html?contextID=task_hcz_x4r_2jb",
     upgraderDef = "upgrader/SchedulerDPushSource.yaml"

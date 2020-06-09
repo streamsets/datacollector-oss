@@ -29,6 +29,7 @@ import com.streamsets.pipeline.stage.pubsub.lib.Groups;
     label = "Google Pub Sub Subscriber",
     description = "Consumes messages from a Google Pub/Sub subscription",
     icon = "pubsub.png",
+    recordsByRef = true,
     execution = ExecutionMode.STANDALONE,
     upgraderDef = "upgrader/PubSubDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jvp_f5l_r1b"

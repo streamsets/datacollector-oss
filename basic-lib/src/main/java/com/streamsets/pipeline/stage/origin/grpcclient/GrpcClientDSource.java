@@ -19,13 +19,14 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "gRPC Client",
     description = "Processes data from a gRPC server by calling Unary RPC or Server Streaming RPC methods",
     execution = {ExecutionMode.EDGE},
@@ -34,6 +35,13 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     upgraderDef = "upgrader/GrpcClientDSource.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_dhb_d1t_yfb"
 )
+@HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
+    "conf.tlsConfig.useRemoteTrustStore",
+    "conf.tlsConfig.trustedCertificates"
+})
 @ConfigGroups(Groups.class)
 public class GrpcClientDSource extends DSource {
 

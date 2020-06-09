@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.startPipeline.Groups;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Start Pipeline",
     description = "Starts a Data Collector, Transformer, or Edge pipeline",
     icon="pipeline.png",
@@ -35,11 +35,15 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
         ExecutionMode.STANDALONE
     },
     onlineHelpRefUrl ="index.html?contextID=task_yh1_wxr_2jb",
-    upgrader = StartPipelineDProcessorUpgrader.class
+    upgrader = StartPipelineDProcessorUpgrader.class,
+    upgraderDef = "upgrader/StartPipelineDProcessor.yaml"
 )
 @GenerateResourceBundle
 @HideConfigs({
+    "conf.tlsConfig.useRemoteKeyStore",
     "conf.tlsConfig.keyStoreFilePath",
+    "conf.tlsConfig.privateKey",
+    "conf.tlsConfig.certificateChain",
     "conf.tlsConfig.keyStoreType",
     "conf.tlsConfig.keyStorePassword",
     "conf.tlsConfig.keyStoreAlgorithm"

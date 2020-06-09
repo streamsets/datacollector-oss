@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorServic
   description = "Serializes records to various different data formats.",
   icon="coding.png",
   flags = StageBehaviorFlags.PURE_FUNCTION,
+  recordsByRef = true,
   services = @ServiceDependency(
     service = DataFormatGeneratorService.class,
     configuration = {

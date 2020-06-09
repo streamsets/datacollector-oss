@@ -65,10 +65,16 @@ public class BatchContextImpl implements BatchContext {
    */
   private boolean processed;
 
-  public BatchContextImpl(FullPipeBatch pipeBatch) {
+  /**
+   * Record Cloner that knows how the records should be cloned (if even).
+   */
+  private final RecordCloner recordCloner;
+
+  public BatchContextImpl(FullPipeBatch pipeBatch, boolean recordByRef) {
     this.pipeBatch = pipeBatch;
     this.processed = false;
     this.startTime = System.currentTimeMillis();
+    this.recordCloner = new RecordCloner(recordByRef);
   }
 
   @Override
@@ -99,7 +105,7 @@ public class BatchContextImpl implements BatchContext {
   }
 
   private void toError(Record record, ErrorMessage errorMessage) {
-    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    RecordImpl recordImpl = recordCloner.cloneRecordIfNeeded(record);
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
@@ -110,7 +116,7 @@ public class BatchContextImpl implements BatchContext {
 
   @Override
   public void toEvent(EventRecord record) {
-    EventRecordImpl recordImpl = ((EventRecordImpl) record).clone();
+    EventRecordImpl recordImpl = recordCloner.cloneEventIfNeeded(record);
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);

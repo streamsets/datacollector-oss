@@ -55,6 +55,7 @@ import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -458,33 +459,40 @@ public class TableContextUtil {
     Pattern schemaExclusion =
         StringUtils.isEmpty(tableConfigBean.getSchemaExclusionPattern()) ?
             null : Pattern.compile(tableConfigBean.getSchemaExclusionPattern());
-    try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection,
-        tableConfigBean.getSchema(),
-        tableConfigBean.getTablePattern()
-    )) {
-      while (rs.next()) {
-        String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
-        String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
-        if (
-            (tableExclusion == null || !tableExclusion.matcher(tableName).matches()) &&
-            (schemaExclusion == null || !schemaExclusion.matcher(schemaName).matches())
-        ) {
-          TableContext tableContext = createTableContext(
-              vendor,
-              context,
-              issues,
-              connection,
-              schemaName,
-              tableName,
-              tableConfigBean,
-              tableJdbcELEvalContext,
-              quoteChar
-          );
-          if (tableContext != null) {
-            tableContextMap.put(
-                getQualifiedTableName(schemaName, tableName),
-                tableContext
+    List<String> tablePatternList =
+        tableConfigBean.isTablePatternListProvided() ?
+            tableConfigBean.getTablePatternList() : Collections.singletonList(tableConfigBean.getTablePattern());
+
+    // Iterate over all the table Patterns provided and create a LinkedHashMap of type <tableName, TableContext>
+    for (String tablePattern : tablePatternList) {
+      try (ResultSet rs = jdbcUtil.getTableAndViewMetadata(connection,
+          tableConfigBean.getSchema(),
+          tablePattern
+      )) {
+        while (rs.next()) {
+          String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
+          String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
+          if (
+              (tableExclusion == null || !tableExclusion.matcher(tableName).matches()) &&
+                  (schemaExclusion == null || !schemaExclusion.matcher(schemaName).matches())
+          ) {
+            TableContext tableContext = createTableContext(
+                vendor,
+                context,
+                issues,
+                connection,
+                schemaName,
+                tableName,
+                tableConfigBean,
+                tableJdbcELEvalContext,
+                quoteChar
             );
+            if (tableContext != null) {
+              tableContextMap.put(
+                  getQualifiedTableName(schemaName, tableName),
+                  tableContext
+              );
+            }
           }
         }
       }

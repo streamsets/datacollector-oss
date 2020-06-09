@@ -242,7 +242,7 @@ public class PubSubSource extends BasePushSource {
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
 
     int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
-    if (conf.basic.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && conf.basic.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.PUBSUB_10, maxBatchSize);
     }
 

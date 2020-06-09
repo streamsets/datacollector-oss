@@ -68,7 +68,6 @@ public class PulsarSourceConfig extends BasePulsarConfig {
           "Pattern format: {persistent|non-persistent}://<tenant>/<namespace>/<topic pattern> Example: " +
           "persistent://public/default/sdc-.* would match topics like 'sdc-topic' or 'sdc-data'",
       displayPosition = 70,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       defaultValue = "persistent://public/default/sdc-.*",
       dependencies = {
           @Dependency(configName = "pulsarTopicsSelector",
@@ -85,7 +84,6 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       description = "List of Pulsar topics from which messages have to be retrieved. Each topic should have next " +
           "format: {persistent|non-persistent}://<tenant>/<namespace>/<topic name>",
       displayPosition = 70,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
           @Dependency(configName = "pulsarTopicsSelector",
               triggeredByValues = "TOPICS_LIST"),
@@ -101,7 +99,6 @@ public class PulsarSourceConfig extends BasePulsarConfig {
       description = "Pulsar topic from which messages have to be retrieved. Topic should have next format: " +
           "{persistent|non-persistent}://<tenant>/<namespace>/<topic name>",
       displayPosition = 70,
-      evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependencies = {
           @Dependency(configName = "pulsarTopicsSelector",
               triggeredByValues = "SINGLE_TOPIC"),

@@ -59,7 +59,8 @@ public class TempKeytabManager {
   ) throws IllegalStateException {
 
     final String keytabDir = configuration.get(baseDirKey, baseDirDefaultValue);
-    tempKeytabDir = Paths.get(keytabDir).resolve(subdirName);
+    // the temp keytab directory is the subdir, then a user-specific (user named) directory underneath that
+    tempKeytabDir = Paths.get(keytabDir).resolve(subdirName).resolve(System.getProperty("user.name"));
     if (!Files.exists(tempKeytabDir) && !createAndRestrictKeytabSubdirIfNeeded(tempKeytabDir.toFile())) {
       throw new IllegalStateException(String.format(
           "Failed to create temporary keytab directory at: %s",

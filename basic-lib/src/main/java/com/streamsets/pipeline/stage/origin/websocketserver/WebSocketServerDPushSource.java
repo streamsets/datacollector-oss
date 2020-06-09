@@ -31,7 +31,7 @@ import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 @StageDef(
-    version = 13,
+    version = 14,
     label = "WebSocket Server",
     description = "Listens for requests on a WebSocket endpoint",
     icon="websockets_multithreaded.png",
@@ -46,7 +46,9 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 @HideConfigs(value = {
     "dataFormatConfig.verifyChecksum",
     "dataFormatConfig.avroSchemaSource",
+    "webSocketConfigs.tlsConfigBean.useRemoteTrustStore",
     "webSocketConfigs.tlsConfigBean.trustStoreFilePath",
+    "webSocketConfigs.tlsConfigBean.trustedCertificates",
     "webSocketConfigs.tlsConfigBean.trustStoreType",
     "webSocketConfigs.tlsConfigBean.trustStorePassword",
     "webSocketConfigs.tlsConfigBean.trustStoreAlgorithm"

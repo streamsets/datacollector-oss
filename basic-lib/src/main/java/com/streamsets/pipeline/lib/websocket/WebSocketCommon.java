@@ -47,20 +47,28 @@ public class WebSocketCommon {
       if (resourceUrl.startsWith("wss")) {
         SslContextFactory sslContextFactory = new SslContextFactory();
         if (tlsConf != null && tlsConf.isEnabled() && tlsConf.isInitialized()) {
-          if (tlsConf.keyStoreFilePath != null) {
-            sslContextFactory.setKeyStorePath(tlsConf.keyStoreFilePath);
-          }
-          if (tlsConf.keyStoreType != null) {
-            sslContextFactory.setKeyStoreType(tlsConf.keyStoreType.getJavaValue());
+          if (tlsConf.getKeyStore() != null) {
+            sslContextFactory.setKeyStore(tlsConf.getKeyStore());
+          } else {
+            if (tlsConf.keyStoreFilePath != null) {
+              sslContextFactory.setKeyStorePath(tlsConf.keyStoreFilePath);
+            }
+            if (tlsConf.keyStoreType != null) {
+              sslContextFactory.setKeyStoreType(tlsConf.keyStoreType.getJavaValue());
+            }
           }
           if (tlsConf.keyStorePassword != null) {
             sslContextFactory.setKeyStorePassword(tlsConf.keyStorePassword.get());
           }
-          if (tlsConf.trustStoreFilePath != null) {
-            sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
-          }
-          if (tlsConf.trustStoreType != null) {
-            sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
+          if (tlsConf.getTrustStore() != null) {
+            sslContextFactory.setTrustStore(tlsConf.getTrustStore());
+          } else {
+            if (tlsConf.trustStoreFilePath != null) {
+              sslContextFactory.setTrustStorePath(tlsConf.trustStoreFilePath);
+            }
+            if (tlsConf.trustStoreType != null) {
+              sslContextFactory.setTrustStoreType(tlsConf.trustStoreType.getJavaValue());
+            }
           }
           if (tlsConf.trustStorePassword != null) {
             sslContextFactory.setTrustStorePassword(tlsConf.trustStorePassword.get());

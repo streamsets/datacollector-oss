@@ -399,7 +399,7 @@ public class FileTailSource extends BaseSource {
     long startTime = System.currentTimeMillis();
 
     maxBatchSize = Math.min(conf.batchSize, maxBatchSize);
-    if (checkBatchSize && conf.batchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.batchSize > maxBatchSize) {
       getContext().reportError(Errors.TAIL_30, maxBatchSize);
       checkBatchSize = false;
     }

@@ -24,6 +24,7 @@ import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.execution.manager.standalone.StandaloneAndClusterPipelineManager;
 import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.record.RecordImpl;
@@ -85,6 +86,7 @@ public class TestErrorRecord {
   private Runner runner;
   private Manager manager;
   private RuntimeInfo runtimeInfo;
+  private BuildInfo buildInfo;
   private PipelineStateStore pipelineStateStore;
   private CountDownLatch latch;
 
@@ -103,6 +105,8 @@ public class TestErrorRecord {
     runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
   }
 
   @After
@@ -189,6 +193,7 @@ public class TestErrorRecord {
         "0",
         null,
         new Configuration(),
+        buildInfo,
         runtimeInfo,
         new MetricRegistry(),
         null,
@@ -203,6 +208,7 @@ public class TestErrorRecord {
         "0",
         new Configuration(),
         runtimeInfo,
+        buildInfo,
         MockStages.createStageLibrary(),
         runner,
         null,

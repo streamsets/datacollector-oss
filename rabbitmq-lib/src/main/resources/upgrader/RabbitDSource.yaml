@@ -63,3 +63,17 @@ upgrades:
       - setConfig:
           name: conf.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: conf.tlsConfig.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: conf.tlsConfig.privateKey
+          value: ""
+      - setConfig:
+          name: conf.tlsConfig.certificateChain
+          value: []
+      - setConfig:
+          name: conf.tlsConfig.trustedCertificates
+          value: []

@@ -60,13 +60,13 @@ public class ActiveStats {
   /** This should only be populated in version 1.1 or earlier (and earlier builds of 1.2). It is immediately rolled and
    * never populated again */
   @Deprecated
-  private Map<String, UsageTimer> deprecatedPipelines;
-  private Map<String, PipelineStats> pipelineStats;
-  private Map<String, UsageTimer> stages;
+  private ConcurrentHashMap<String, UsageTimer> deprecatedPipelines;
+  private ConcurrentHashMap<String, PipelineStats> pipelineStats;
+  private ConcurrentHashMap<String, UsageTimer> stages;
   private AtomicLong recordCount;
-  private Map<String, Long> errorCodes;
-  private Map<String, FirstPipelineUse> createToPreview;
-  private Map<String, FirstPipelineUse> createToRun;
+  private ConcurrentHashMap<String, Long> errorCodes;
+  private ConcurrentHashMap<String, FirstPipelineUse> createToPreview;
+  private ConcurrentHashMap<String, FirstPipelineUse> createToRun;
   private List<AbstractStatsExtension> extensions;
 
   /**
@@ -199,7 +199,8 @@ public class ActiveStats {
   }
 
   public ActiveStats setPipelineStats(Map<String, PipelineStats> pipelineStats) {
-    this.pipelineStats = pipelineStats;
+    this.pipelineStats.clear();
+    this.pipelineStats.putAll(pipelineStats);
     return this;
   }
 
@@ -259,7 +260,8 @@ public class ActiveStats {
   }
 
   public ActiveStats setErrorCodes(Map<String, Long> errorCodes) {
-    this.errorCodes = errorCodes;
+    this.errorCodes.clear();
+    this.errorCodes.putAll(errorCodes);
     return this;
   }
 
@@ -344,7 +346,7 @@ public class ActiveStats {
         previewStatus, previewer.getName());
 
     safeInvokeCallbacks("previewStatusChanged", c ->
-        c.previewStatusChanged(previewStatus, previewer));
+        c.previewStatusChanged(this, previewStatus, previewer));
     return this;
   }
 
@@ -360,7 +362,7 @@ public class ActiveStats {
       pipelineInactive(pipelineStatus, conf, pipeline);
     }
     safeInvokeCallbacks("pipelineStatusChanged", c ->
-        c.pipelineStatusChanged(pipelineStatus, conf, pipeline));
+        c.pipelineStatusChanged(this, pipelineStatus, conf, pipeline));
     return this;
   }
 

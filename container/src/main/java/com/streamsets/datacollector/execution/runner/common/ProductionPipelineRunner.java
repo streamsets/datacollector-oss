@@ -37,6 +37,7 @@ import com.streamsets.datacollector.execution.SnapshotInfo;
 import com.streamsets.datacollector.execution.SnapshotStore;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.event.json.HistogramJson;
@@ -113,6 +114,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
 
   private static final Logger LOG = LoggerFactory.getLogger(ProductionPipelineRunner.class);
 
+  private final BuildInfo buildInfo;
   private final RuntimeInfo runtimeInfo;
   private final com.streamsets.datacollector.util.Configuration configuration;
   private final MetricRegistry metrics;
@@ -193,12 +195,14 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
       @Named("rev") String revision,
       SupportBundleManager supportBundleManager,
       Configuration configuration,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       MetricRegistry metrics,
       SnapshotStore snapshotStore,
       ThreadHealthReporter threadHealthReporter,
       StatsCollector statsCollector
   ) {
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.configuration = configuration;
     this.metrics = metrics;
@@ -315,6 +319,11 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
   @Override
   public void setObserver(Observer observer) {
     this.observer = observer;
+  }
+
+  @Override
+  public BuildInfo getBuildInfo() {
+    return buildInfo;
   }
 
   @Override
@@ -467,7 +476,7 @@ public class ProductionPipelineRunner implements PipelineRunner, PushSourceConte
     }
 
     FullPipeBatch pipeBatch = createFullPipeBatch(null,null);
-    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch);
+    BatchContextImpl batchContext = new BatchContextImpl(pipeBatch, originPipe.getStage().getDefinition().getRecordsByRef());
 
     originPipe.prepareBatchContext(batchContext);
 

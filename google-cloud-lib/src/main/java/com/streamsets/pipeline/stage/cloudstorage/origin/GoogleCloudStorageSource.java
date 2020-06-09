@@ -123,7 +123,7 @@ public class GoogleCloudStorageSource extends BaseSource {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     maxBatchSize = Math.min(maxBatchSize, gcsOriginConfig.basicConfig.maxBatchSize);
-    if (checkBatchSize && gcsOriginConfig.basicConfig.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && gcsOriginConfig.basicConfig.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.GCS_07, maxBatchSize);
       checkBatchSize = false;
     }

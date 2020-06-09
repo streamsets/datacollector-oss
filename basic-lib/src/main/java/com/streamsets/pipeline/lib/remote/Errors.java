@@ -37,6 +37,7 @@ public enum Errors implements ErrorCode {
   REMOTE_13("FTPS Truststore Provider is File but FTPS Truststore File is not specified"),
   REMOTE_14("Error attempting to load {}store from {}: {}"),
   REMOTE_15("Error attempting to create {}manager: {}"),
+  REMOTE_16("Certificate Chain must contain at least one certificate"),
   ;
 
   private final String msg;

@@ -30,6 +30,7 @@ import org.mockito.Mockito;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -239,6 +240,23 @@ public class TestTableJdbcSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "createJDBCHeaders", true);
+  }
+
+  @Test
+  public void testUpgradeV8ToV9() {
+    Mockito.doReturn(8).when(context).getFromVersion();
+    Mockito.doReturn(9).when(context).getToVersion();
+
+    List<Map<String, Object>> tables = new ArrayList<>();
+    tables.add(new HashMap<>());
+    configs.add(new Config("tableJdbcConfigBean.tableConfigs", tables));
+
+    configs = upgrader.upgrade(configs, context);
+
+    Config tablesConfig = UpgraderUtils.getConfigWithName(configs, "tableJdbcConfigBean.tableConfigs");
+    Map<String, Object> tableConfig = ((List<Map<String, Object>>) tablesConfig.getValue()).get(0);
+    Assert.assertTrue(tableConfig.containsKey("isTablePatternListProvided"));
+    Assert.assertTrue(tableConfig.containsKey("tablePatternList"));
   }
 
   private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {

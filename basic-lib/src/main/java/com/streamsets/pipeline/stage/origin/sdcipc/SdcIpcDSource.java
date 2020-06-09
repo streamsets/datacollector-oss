@@ -25,18 +25,21 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "SDC RPC",
     execution = ExecutionMode.STANDALONE,
     description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination",
     icon="sdcipc.png",
     onlineHelpRefUrl ="index.html?contextID=task_lxh_1w2_ct",
     upgrader = SdcIpcSourceUpgrader.class,
+    recordsByRef = true,
     upgraderDef = "upgrader/SdcIpcDSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
+    "configs.tlsConfigBean.useRemoteTrustStore",
     "configs.tlsConfigBean.trustStoreFilePath",
+    "configs.tlsConfigBean.trustedCertificates",
     "configs.tlsConfigBean.trustStoreType",
     "configs.tlsConfigBean.trustStorePassword",
     "configs.tlsConfigBean.trustStoreAlgorithm"

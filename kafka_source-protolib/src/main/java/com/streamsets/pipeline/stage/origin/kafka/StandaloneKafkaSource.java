@@ -54,11 +54,13 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
         issues.add(getContext().createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
       }
     }
-    LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
-    event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
-    event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.topic);
-    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.consumerGroup);
-    getContext().publishLineageEvent(event);
+    if(issues.isEmpty()) {
+      LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
+      event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
+      event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, conf.topic);
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.consumerGroup);
+      getContext().publishLineageEvent(event);
+    }
 
     return issues;
   }
@@ -71,7 +73,7 @@ public class StandaloneKafkaSource extends BaseKafkaSource {
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int recordCounter = 0;
     int batchSize = conf.maxBatchSize > maxBatchSize ? maxBatchSize : conf.maxBatchSize;
-    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(KafkaErrors.KAFKA_78, maxBatchSize);
       checkBatchSize = false;
     }

@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,5 +60,24 @@ public abstract class KinesisBaseUpgrader implements StageUpgrader {
     }
 
     commitMove(configs);
+  }
+
+  protected void updateCredentialMode(List<Config> configs) {
+    // If awsAccessKeyId & awsSecretAccessKey configured, set credentialMode to WITH_CREDENTIALS
+    // otherwise set to WITH_IAM_ROLES
+    AWSCredentialMode credentialMode = AWSCredentialMode.WITH_IAM_ROLES;
+    Config awsAccessKeyIdConfig = configs.stream()
+        .filter(config -> config.getName().equals("kinesisConfig.awsConfig.awsAccessKeyId"))
+        .findFirst()
+        .orElse(null);
+    Config awsSecretAccessKeyConfig = configs.stream()
+        .filter(config -> config.getName().equals("kinesisConfig.awsConfig.awsSecretAccessKey"))
+        .findFirst()
+        .orElse(null);
+    if (awsAccessKeyIdConfig != null && awsAccessKeyIdConfig.getValue() != null &&
+        awsSecretAccessKeyConfig != null && awsSecretAccessKeyConfig.getValue() != null) {
+      credentialMode = AWSCredentialMode.WITH_CREDENTIALS;
+    }
+    configs.add(new Config("kinesisConfig.awsConfig.credentialMode", credentialMode));
   }
 }

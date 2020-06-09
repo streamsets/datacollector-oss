@@ -44,6 +44,7 @@ import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
 import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -78,6 +79,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -919,6 +921,8 @@ public class TestRemoteDataCollector {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
       Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       RemoteDataCollector dataCollector = new RemoteDataCollector(
           new Configuration(),
@@ -928,6 +932,7 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo,
+          buildInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
@@ -949,6 +954,8 @@ public class TestRemoteDataCollector {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
       Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       Configuration configuration = new Configuration();
       configuration.set(RemoteDataCollector.SEND_METRIC_ATTEMPTS, 1);
@@ -960,6 +967,7 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo,
+          buildInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
@@ -1002,6 +1010,8 @@ public class TestRemoteDataCollector {
       Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name", "rev").toPath());
       Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name1", "rev1").toPath());
       Files.createDirectories(PipelineDirectoryUtil.getPipelineDir(runtimeInfo, "ns:name2", "rev1").toPath());
+      BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+      Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
 
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name", "rev", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:100"));
       OffsetFileUtil.saveOffsets(runtimeInfo, "ns:name1", "rev1", Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "offset:101"));
@@ -1015,6 +1025,7 @@ public class TestRemoteDataCollector {
           aclStoreTask,
           new RemoteStateEventListener(new Configuration()),
           runtimeInfo,
+          buildInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
@@ -1062,6 +1073,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testAclOnSavePipeline() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(
         new Configuration(),
@@ -1071,6 +1084,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1087,7 +1101,7 @@ public class TestRemoteDataCollector {
         "foo", "0",
         "",
         sourceOffset,
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         acl,
         new HashMap<String, Object>()
@@ -1098,6 +1112,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testSyncAcl() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(
@@ -1108,6 +1124,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1126,6 +1143,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testEncryptCredentialsEnabledOnSave() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     PipelineStoreTask pipelineStoreTask = Mockito.spy(new MockPipelineStoreTask());
     RemoteDataCollector dataCollector = new RemoteDataCollector(
@@ -1136,6 +1155,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1149,7 +1169,7 @@ public class TestRemoteDataCollector {
         "0",
         "",
         new SourceOffset(),
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         new Acl(),
         Collections.emptyMap()
@@ -1167,6 +1187,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testSavePipelineOffset() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     RemoteDataCollector dataCollector = new RemoteDataCollector(
         new Configuration(),
@@ -1176,6 +1198,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1191,7 +1214,7 @@ public class TestRemoteDataCollector {
         "foo", "0",
         "",
         sourceOffset,
-        Mockito.mock(PipelineConfiguration.class),
+        mockPipelineConfiguration(),
         null,
         new Acl(),
         new HashMap<String, Object>()
@@ -1206,6 +1229,8 @@ public class TestRemoteDataCollector {
   @Test
   public void testRemotePipelines() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     RemoteStateEventListener remoteStateEventListener = Mockito.mock(RemoteStateEventListener.class);
     PipelineStoreTask pipelineStoreTask = Mockito.mock(MockPipelineStoreTask.class);
@@ -1217,6 +1242,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         remoteStateEventListener,
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1266,6 +1292,8 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testPipelineStateExists() throws Exception {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
     PipelineStoreTask pipelineStoreTask = Mockito.mock(PipelineStoreTask.class);
     PipelineStateStore pipelineStateStore = Mockito.mock(PipelineStateStore.class);
@@ -1279,6 +1307,7 @@ public class TestRemoteDataCollector {
         Mockito.mock(AclStoreTask.class),
         Mockito.mock(RemoteStateEventListener.class),
         Mockito.mock(RuntimeInfo.class),
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1289,6 +1318,8 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testRunnerCount() throws Exception {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     try {
       Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
       PipelineStoreTask pipelineStoreTask = Mockito.mock(PipelineStoreTask.class);
@@ -1300,6 +1331,7 @@ public class TestRemoteDataCollector {
           Mockito.mock(AclStoreTask.class),
           Mockito.mock(RemoteStateEventListener.class),
           Mockito.mock(RuntimeInfo.class),
+          buildInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
           Mockito.mock(BlobStoreTask.class),
@@ -1335,6 +1367,8 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testPreviewPipeline() throws Exception {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     final MockManager manager = new MockManager();
@@ -1346,6 +1380,7 @@ public class TestRemoteDataCollector {
         aclStoreTask,
         new RemoteStateEventListener(new Configuration()),
         runtimeInfo,
+        buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
         Mockito.mock(BlobStoreTask.class),
@@ -1380,5 +1415,14 @@ public class TestRemoteDataCollector {
     lastPreviewer.stop();
     assertThat(this.afterActionsFunctionParam, equalTo(lastPreviewer));
     assertTrue(lastPreviewer.previewStopped);
+  }
+
+  private PipelineConfiguration mockPipelineConfiguration() {
+    PipelineInfo info = Mockito.mock(PipelineInfo.class);
+    Mockito.when(info.getSdcVersion()).thenReturn("3.17.0");
+    PipelineConfiguration pipelineConfiguration = Mockito.mock(PipelineConfiguration.class);
+    Mockito.when(pipelineConfiguration.getInfo()).thenReturn(info);
+
+    return pipelineConfiguration;
   }
 }

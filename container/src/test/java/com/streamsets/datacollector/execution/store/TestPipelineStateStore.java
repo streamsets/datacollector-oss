@@ -24,6 +24,8 @@ import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.PipelineStatus;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
@@ -38,6 +40,7 @@ import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.TestUtil;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
+import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.api.ExecutionMode;
 import dagger.Module;
 import dagger.ObjectGraph;
@@ -111,6 +114,11 @@ public class TestPipelineStateStore {
   static class TestPipelineStateStoreModule {
 
     @Provides @Singleton
+    public BuildInfo provideBuildInfo() {
+      return ProductBuildInfo.getDefault();
+    }
+
+    @Provides @Singleton
     public SlaveRuntimeInfo provideRuntimeInfo() {
       return new SlaveRuntimeInfo(RuntimeModule.SDC_PROPERTY_PREFIX, new MetricRegistry(),
         ImmutableList.of(getClass().getClassLoader()));
@@ -135,6 +143,7 @@ public class TestPipelineStateStore {
     @Provides
     @Singleton
     public PipelineStoreTask providePipelineStore(
+        BuildInfo buildInfo,
         SlaveRuntimeInfo slaveRuntimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -142,6 +151,7 @@ public class TestPipelineStateStore {
         LockCache<String> lockCache
     ) {
       return new FilePipelineStoreTask(
+          buildInfo,
           slaveRuntimeInfo,
           stageLibraryTask,
           pipelineStateStore,

@@ -30,6 +30,7 @@ import com.streamsets.pipeline.stage.processor.schemagen.config.SchemaGeneratorC
   label = "Schema Generator",
   description = "Generate schema based on incoming records.",
   icon = "schemagen.png",
+  recordsByRef = true,
   flags = StageBehaviorFlags.PURE_FUNCTION,
   upgraderDef = "upgrader/SchemaGeneratorDProcessor.yaml",
   onlineHelpRefUrl = "index.html?contextID=task_szj_ms3_x1b"

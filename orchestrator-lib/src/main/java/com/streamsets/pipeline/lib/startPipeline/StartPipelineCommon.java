@@ -15,10 +15,13 @@
  */
 package com.streamsets.pipeline.lib.startPipeline;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.api.SystemApi;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
+import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
@@ -35,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -224,5 +228,20 @@ public class StartPipelineCommon {
     });
 
     return completableFuture.get();
+  }
+
+
+  public static MetricRegistryJson getPipelineMetrics(
+      ObjectMapper objectMapper,
+      PipelineStateJson pipelineStateJson
+  ) {
+    if (StringUtils.isNotEmpty(pipelineStateJson.getMetrics())) {
+      try {
+        return objectMapper.readValue(pipelineStateJson.getMetrics(), MetricRegistryJson.class);
+      } catch (IOException ex) {
+        LOG.warn("Error while serializing pipeline metrics JSON string: , {}", ex.toString(), ex);
+      }
+    }
+    return null;
   }
 }

@@ -81,7 +81,7 @@ public class PulsarSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     int batchSize = Math.min(basicConfig.maxBatchSize, maxBatchSize);
-    if (checkBatchSize && basicConfig.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && basicConfig.maxBatchSize > maxBatchSize) {
       getContext().reportError(PulsarErrors.PULSAR_18, maxBatchSize);
       checkBatchSize = false;
     }

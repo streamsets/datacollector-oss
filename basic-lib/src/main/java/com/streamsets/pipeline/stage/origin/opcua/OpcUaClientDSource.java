@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "OPC UA Client",
     description = "Uses an OPC UA Client to read data from an OPC UA Server.",
     icon = "opcua.png",
@@ -37,7 +37,9 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
+    "conf.tlsConfig.useRemoteTrustStore",
     "conf.tlsConfig.trustStoreFilePath",
+    "conf.tlsConfig.trustedCertificates",
     "conf.tlsConfig.trustStoreType",
     "conf.tlsConfig.trustStorePassword",
     "conf.tlsConfig.trustStoreAlgorithm"

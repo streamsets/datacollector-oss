@@ -34,7 +34,7 @@ import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "REST Service",
     description = "Listens for requests on an HTTP endpoint and sends response back",
     icon="api.png",
@@ -42,7 +42,8 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     recordsByRef = true,
     sendsResponse = true,
     onlineHelpRefUrl ="index.html?contextID=task_upp_lgp_q2b",
-    upgrader = RestServicePushSourceUpgrader.class
+    upgrader = RestServicePushSourceUpgrader.class,
+    upgraderDef = "upgrader/RestServiceDPushSource.yaml"
 )
 @ConfigGroups(Groups.class)
 @HideConfigs(value = {

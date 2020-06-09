@@ -78,4 +78,18 @@ public class TestCassandraTargetUpgrader {
     UpgraderTestUtils.assertNoneExist(configs, prefix + oldBatchesName);
     UpgraderTestUtils.assertExists(configs, prefix + newBatchesName, false);
   }
+
+  @Test
+  public void testV6ToV7Upgrade() {
+    Mockito.doReturn(6).when(context).getFromVersion();
+    Mockito.doReturn(7).when(context).getToVersion();
+
+    String configPrefix = "conf.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
+  }
 }

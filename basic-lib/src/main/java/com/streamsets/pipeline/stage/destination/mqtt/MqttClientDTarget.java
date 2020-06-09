@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.mqtt.Groups;
 import com.streamsets.pipeline.lib.mqtt.MqttClientConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "MQTT Publisher",
     description = "Uses an MQTT Client to publish data to a topic on the MQTT Broker",
     icon = "mqtt.png",

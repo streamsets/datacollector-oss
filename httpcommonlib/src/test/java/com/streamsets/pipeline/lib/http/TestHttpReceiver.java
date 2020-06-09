@@ -15,7 +15,7 @@
  */
 package com.streamsets.pipeline.lib.http;
 
-import com.streamsets.pipeline.lib.httpsource.CredentialValueBean;
+import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

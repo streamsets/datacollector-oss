@@ -221,7 +221,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) throws StageException {
     // This method returns NOTHING_READ when only no events have ever been read
     final int batchSize = Math.min(maxBatchSize, conf.basic.maxBatchSize);
-    if (checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.basic.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.REMOTE_DOWNLOAD_09, maxBatchSize);
       checkBatchSize = false;
     }
@@ -280,15 +280,22 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.getFilePath()));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
-            FileRef fileRef = new RemoteSourceFileRef.Builder()
-                .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
-                .totalSizeInBytes(size)
-                .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
-                .remoteFile(next)
-                .remoteUri(remoteURI)
-                .createMetrics(true)
-                .build();
-            parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
+            if (!next.isReadable()) {
+              getContext().reportError(Errors.REMOTE_DOWNLOAD_10, next.getFilePath());
+              //Skip over this file
+              currentOffset.setOffset(MINUS_ONE);
+              return currentOffset.offsetStr;
+            } else {
+              FileRef fileRef = new RemoteSourceFileRef.Builder()
+                  .bufferSize(conf.dataFormatConfig.wholeFileMaxObjectLen)
+                  .totalSizeInBytes(size)
+                  .rateLimit(FileRefUtil.evaluateAndGetRateLimit(rateLimitElEval, rateLimitElVars, conf.dataFormatConfig.rateLimit))
+                  .remoteFile(next)
+                  .remoteUri(remoteURI)
+                  .createMetrics(true)
+                  .build();
+              parser = conf.dataFormatConfig.getParserFactory().getParser(currentOffset.offsetStr, metadata, fileRef);
+            }
           } else {
             currentStream = next.createInputStream();
             LOG.info("Started reading file: {}", next.getFilePath());

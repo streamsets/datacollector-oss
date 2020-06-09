@@ -22,3 +22,39 @@ upgrades:
       - setConfig:
           name: dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 13
+    actions:
+      - setConfig:
+          lookForName: httpConfigs.spnegoConfigBean.spnegoEnabled
+          elseName: httpConfigs.spnegoConfigBean.spnegoEnabled
+          elseValue: false
+      - setConfig:
+          lookForName: httpConfigs.spnegoConfigBean.kerberosRealm
+          elseName: httpConfigs.spnegoConfigBean.kerberosRealm
+          elseValue: ""
+      - setConfig:
+          name: httpConfigs.spnegoConfigBean.spnegoPrincipal
+          value: ""
+      - setConfig:
+          name: httpConfigs.spnegoConfigBean.spnegoKeytabFilePath
+          value: ""
+  - toVersion: 14
+    actions:
+      - iterateListConfig:
+          name: httpConfigs.appIds
+          actions:
+            - renameConfig:
+                oldNamePattern: appId
+                newNamePattern: credential
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.privateKey
+          value: ""
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.certificateChain
+          value: []
+      - setConfig:
+          name: httpConfigs.tlsConfigBean.trustedCertificates
+          value: []

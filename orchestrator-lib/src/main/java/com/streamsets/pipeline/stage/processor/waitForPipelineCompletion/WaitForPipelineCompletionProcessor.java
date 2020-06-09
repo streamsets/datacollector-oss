@@ -15,10 +15,12 @@
  */
 package com.streamsets.pipeline.stage.processor.waitForPipelineCompletion;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.api.ManagerApi;
 import com.streamsets.datacollector.client.api.StoreApi;
 import com.streamsets.datacollector.client.api.SystemApi;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.datacollector.client.model.PipelineStateJson;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -26,6 +28,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.startPipeline.Groups;
 import com.streamsets.pipeline.lib.startPipeline.StartPipelineCommon;
@@ -46,6 +49,7 @@ import java.util.Map;
 public class WaitForPipelineCompletionProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(WaitForPipelineCompletionProcessor.class);
+  private final ObjectMapper objectMapper = new ObjectMapper();
   private final WaitForPipelineCompletionConfig conf;
   private ErrorRecordHandler errorRecordHandler;
   public ManagerApi managerApi;
@@ -157,6 +161,8 @@ public class WaitForPipelineCompletionProcessor extends SingleLaneProcessor {
                 );
                 startOutput.put(Constants.PIPELINE_STATUS_FIELD, Field.create(pipelineStateJson.getStatus().toString()));
                 startOutput.put(Constants.PIPELINE_STATUS_MESSAGE_FIELD, Field.create(pipelineStateJson.getMessage()));
+                MetricRegistryJson jobMetrics = StartPipelineCommon.getPipelineMetrics(objectMapper, pipelineStateJson);
+                startOutput.put(Constants.PIPELINE_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
                 taskSuccess &= success;
               }
             }

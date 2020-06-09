@@ -103,7 +103,7 @@ public class RedisSubscriptionSource extends BaseRedisSource {
     int recordCounter = 0;
     long startTime = System.currentTimeMillis();
     int maxRecords = Math.min(maxBatchSize, conf.maxBatchSize);
-    if (checkBatchSize && conf.maxBatchSize > maxBatchSize) {
+    if (!getContext().isPreview() && checkBatchSize && conf.maxBatchSize > maxBatchSize) {
       getContext().reportError(Errors.REDIS_06, maxBatchSize);
       checkBatchSize = false;
     }

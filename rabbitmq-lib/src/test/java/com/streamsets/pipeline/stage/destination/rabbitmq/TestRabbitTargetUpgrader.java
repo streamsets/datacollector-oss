@@ -19,8 +19,10 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
+import com.streamsets.pipeline.stage.origin.rabbitmq.RabbitSourceUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,6 +34,19 @@ import java.util.List;
 import java.util.Map;
 
 public class TestRabbitTargetUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/RabbitDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new RabbitTargetUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testUpgradeV1ToV2() {
     List<Config> configs = new ArrayList<>();
@@ -119,6 +134,20 @@ public class TestRabbitTargetUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.protocols", new LinkedList<String>());
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.useDefaultCiperSuites", true);
     UpgraderTestUtils.assertExists(configs, "conf.tlsConfig.cipherSuites", new LinkedList<String>());
+  }
+
+  @Test
+  public void testV4ToV5Upgrade() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    String configPrefix = "conf.tlsConfig.";
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, configPrefix + "useRemoteKeyStore", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "privateKey", "");
+    UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
+    UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
 
   private Map<String, Object> configListToMap(List<Config> configs) {

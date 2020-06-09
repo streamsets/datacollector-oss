@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 @StageDef(
   // We're reusing upgrader for both ToErrorSdcIpcDTarget and SdcIpcDTarget, make sure that you
   // upgrade both versions at the same time when changing.
-    version = 2,
+    version = 3,
     label = "SDC RPC",
     description = "Sends records via SDC RPC to a Data Collector pipeline that uses an SDC RPC origin",
     icon="sdcipc.png",
@@ -36,7 +36,10 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 )
 @ConfigGroups(Groups.class)
 @HideConfigs({
+    "config.tlsConfigBean.useRemoteKeyStore",
     "config.tlsConfigBean.keyStoreFilePath",
+    "config.tlsConfigBean.privateKey",
+    "config.tlsConfigBean.certificateChain",
     "config.tlsConfigBean.keyStoreType",
     "config.tlsConfigBean.keyStorePassword",
     "config.tlsConfigBean.keyStoreAlgorithm"

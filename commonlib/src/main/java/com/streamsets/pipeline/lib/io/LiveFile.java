@@ -206,17 +206,19 @@ public class LiveFile {
     if (changed) {
       try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path.getParent())) {
         for (Path path : directoryStream) {
-          BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
-          String iNode = attrs.fileKey().toString();
-          int headLen = (int) Math.min(this.headLen, attrs.size());
-          String headHash = computeHash(path, headLen);
-          if (iNode.equals(this.iNode) && headHash.equals(this.headHash)) {
-            if (headLen == 0) {
-              headLen = (int) Math.min(HEAD_LEN, attrs.size());
-              headHash = computeHash(path, headLen);
+          if (!Files.isDirectory(path)) {
+            BasicFileAttributes attrs = Files.readAttributes(path, BasicFileAttributes.class);
+            String iNode = attrs.fileKey().toString();
+            int headLen = (int) Math.min(this.headLen, attrs.size());
+            String headHash = computeHash(path, headLen);
+            if (iNode.equals(this.iNode) && headHash.equals(this.headHash)) {
+              if (headLen == 0) {
+                headLen = (int) Math.min(HEAD_LEN, attrs.size());
+                headHash = computeHash(path, headLen);
+              }
+              refresh = new LiveFile(path, iNode, headHash, headLen);
+              break;
             }
-            refresh = new LiveFile(path, iNode, headHash, headLen);
-            break;
           }
         }
       }

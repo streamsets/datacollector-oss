@@ -103,16 +103,24 @@ public abstract class AbstractHttpReceiverServer {
 
       TlsConfigBean tlsConfig = configs.getTlsConfigBean();
       try {
-        sslContextFactory.setKeyStorePath(resolvePath(tlsConfig.keyStoreFilePath, context));
-        sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
+        if (tlsConfig.getKeyStore() != null) {
+          sslContextFactory.setKeyStore(tlsConfig.getKeyStore());
+        } else {
+          sslContextFactory.setKeyStorePath(resolvePath(tlsConfig.keyStoreFilePath, context));
+          sslContextFactory.setKeyStoreType(tlsConfig.keyStoreType.getJavaValue());
+        }
         sslContextFactory.setKeyStorePassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setKeyManagerPassword(tlsConfig.keyStorePassword.get());
         sslContextFactory.setIncludeProtocols(tlsConfig.getFinalProtocols());
         sslContextFactory.setIncludeCipherSuites(tlsConfig.getFinalCipherSuites());
         if (configs.getNeedClientAuth()) {
           sslContextFactory.setNeedClientAuth(true);
-          sslContextFactory.setTrustStorePath(resolvePath(tlsConfig.trustStoreFilePath, context));
-          sslContextFactory.setTrustStoreType(tlsConfig.trustStoreType.getJavaValue());
+          if (tlsConfig.getTrustStore() != null) {
+            sslContextFactory.setTrustStore(tlsConfig.getTrustStore());
+          } else {
+            sslContextFactory.setTrustStorePath(resolvePath(tlsConfig.trustStoreFilePath, context));
+            sslContextFactory.setTrustStoreType(tlsConfig.trustStoreType.getJavaValue());
+          }
           sslContextFactory.setTrustStorePassword(tlsConfig.trustStorePassword.get());
           sslContextFactory.setTrustManagerFactoryAlgorithm(tlsConfig.trustStoreAlgorithm);
         }

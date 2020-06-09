@@ -29,6 +29,7 @@ import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.configupgrade.FragmentConfigurationUpgrader;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.impl.FilePipelineStoreTask;
 import com.streamsets.datacollector.util.ElUtil;
@@ -66,13 +67,16 @@ public class PipelineFragmentConfigurationValidator {
   protected boolean canPreview;
   protected final Map<String, Object> constants;
   private boolean isPipelineFragment = false;
+  protected final BuildInfo buildInfo;
 
   public PipelineFragmentConfigurationValidator(
       StageLibraryTask stageLibrary,
+      BuildInfo buildInfo,
       String name,
       PipelineFragmentConfiguration pipelineFragmentConfiguration
   ) {
     this.stageLibrary = Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
+    this.buildInfo = buildInfo;
     this.name = Preconditions.checkNotNull(name, "name cannot be null");
     this.pipelineFragmentConfiguration = Preconditions.checkNotNull(
         pipelineFragmentConfiguration,
@@ -182,6 +186,7 @@ public class PipelineFragmentConfigurationValidator {
 
     PipelineFragmentConfiguration fConf = getFragmentUpgrader().upgradeIfNecessary(
         stageLibrary,
+        buildInfo,
         pipelineFragmentConfiguration,
         upgradeIssues
     );

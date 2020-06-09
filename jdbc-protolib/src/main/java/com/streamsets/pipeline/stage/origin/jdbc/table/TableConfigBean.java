@@ -28,6 +28,7 @@ public interface TableConfigBean {
   String PARTITIONING_MODE_DEFAULT_VALUE_STR = "DISABLED";
   PartitioningMode PARTITIONING_MODE_DEFAULT_VALUE = PartitioningMode.valueOf(PARTITIONING_MODE_DEFAULT_VALUE_STR);
   String ENABLE_NON_INCREMENTAL_FIELD = "enableNonIncremental";
+  boolean IS_TABLE_PATTERN_LIST_PROVIDED_DEFAULT_VALUE = false;
   boolean ENABLE_NON_INCREMENTAL_DEFAULT_VALUE = true;
   String ALLOW_LATE_TABLE = "commonSourceConfigBean.allowLateTable";
   String QUERY_INTERVAL_FIELD = "commonSourceConfigBean.queryInterval";
@@ -36,7 +37,11 @@ public interface TableConfigBean {
 
   String getSchema();
 
+  boolean isTablePatternListProvided();
+
   String getTablePattern();
+
+  List<String> getTablePatternList();
 
   String getTableExclusionPattern();
 

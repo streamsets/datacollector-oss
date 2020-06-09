@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Write to MQTT",
     description = "Writes error records to MQTT broker",
     icon = "mqtt.png",
@@ -46,7 +46,10 @@ import com.streamsets.pipeline.config.DataFormat;
     preconditions = true,
     onErrorRecord = true,
     value = {
+        "commonConf.tlsConfig.useRemoteKeyStore",
         "commonConf.tlsConfig.keyStoreFilePath",
+        "commonConf.tlsConfig.privateKey",
+        "commonConf.tlsConfig.certificateChain",
         "commonConf.tlsConfig.keyStoreType",
         "commonConf.tlsConfig.keyStorePassword",
         "commonConf.tlsConfig.keyStoreAlgorithm",

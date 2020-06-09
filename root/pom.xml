@@ -63,7 +63,7 @@
     <commons-codec.version>1.10</commons-codec.version>
     <commons-compress.version>1.18</commons-compress.version>
     <commons-configuration.version>2.0</commons-configuration.version>
-    <commons-csv.version>1.5</commons-csv.version>
+    <commons-csv.version>1.8</commons-csv.version>
     <commons-el.version>1.0</commons-el.version>
     <commons-io.version>2.4</commons-io.version>
     <commons-pool.version>2.4.1</commons-pool.version>

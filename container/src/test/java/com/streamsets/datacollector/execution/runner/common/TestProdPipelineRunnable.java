@@ -27,6 +27,7 @@ import com.streamsets.datacollector.execution.runner.standalone.StandaloneRunner
 import com.streamsets.datacollector.execution.snapshot.common.SnapshotInfoImpl;
 import com.streamsets.datacollector.execution.snapshot.file.FileSnapshotStore;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.runner.MockStages;
@@ -114,6 +115,8 @@ public class TestProdPipelineRunnable {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getId()).thenReturn("id");
     Mockito.when(runtimeInfo.getDataDir()).thenReturn(testDir.getAbsolutePath());
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
 
     SourceOffsetTracker tracker = new TestUtil.SourceOffsetTrackerImpl(Collections.singletonMap(Source.POLL_SOURCE_OFFSET_KEY, "1"));
     FileSnapshotStore snapshotStore = Mockito.mock(FileSnapshotStore.class);
@@ -124,8 +127,18 @@ public class TestProdPipelineRunnable {
     BlockingQueue<Object> productionObserveRequests = new ArrayBlockingQueue<>(100, true /*FIFO*/);
     Configuration conf = new Configuration();
     ProductionPipelineRunner runner =
-      new ProductionPipelineRunner(TestUtil.MY_PIPELINE, "0", null, conf, runtimeInfo, new MetricRegistry(), snapshotStore,
-        null, null);
+      new ProductionPipelineRunner(
+          TestUtil.MY_PIPELINE,
+          "0",
+          null,
+          conf,
+          buildInfo,
+          runtimeInfo,
+          new MetricRegistry(),
+          snapshotStore,
+          null,
+          null
+      );
     runner.setDeliveryGuarantee(deliveryGuarantee);
     runner.setObserveRequests(productionObserveRequests);
     runner.setOffsetTracker(tracker);
@@ -135,6 +148,7 @@ public class TestProdPipelineRunnable {
       "0",
       conf,
       runtimeInfo,
+      buildInfo,
       MockStages.createStageLibrary(),
       runner,
       null,

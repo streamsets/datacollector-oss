@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "SFTP/FTP/FTPS Client",
     description = "Run event based task on SFTP/FTP/FTPS Client specified on URL",
     icon = "sftp-client.png",

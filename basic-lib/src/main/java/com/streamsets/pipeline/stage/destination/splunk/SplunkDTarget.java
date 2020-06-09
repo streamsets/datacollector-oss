@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.destination.http.HttpClientTargetConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Splunk",
     description = "Writes data to Splunk via its HTTP Collector.",
     icon = "splunk.png",

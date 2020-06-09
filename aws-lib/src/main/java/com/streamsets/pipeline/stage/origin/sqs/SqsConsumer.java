@@ -181,7 +181,7 @@ public class SqsConsumer extends BasePushSource {
   public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
     try {
       int batchSize = Math.min(conf.maxBatchSize, maxBatchSize);
-      if (conf.maxBatchSize > maxBatchSize) {
+      if (!getContext().isPreview() && conf.maxBatchSize > maxBatchSize) {
         getContext().reportError(Errors.SQS_12, maxBatchSize);
       }
 

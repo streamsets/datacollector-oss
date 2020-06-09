@@ -23,6 +23,7 @@ import org.apache.commons.vfs2.provider.ftps.FtpsDataChannelProtectionLevel;
 public enum FTPSTrustStore implements Label {
   ALLOW_ALL("Allow All"),
   FILE("File"),
+  REMOTE_TRUSTSTORE("Remote Truststore"),
   JVM_DEFAULT("JVM Default"),
   ;
 

@@ -15,23 +15,32 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
-import static java.sql.DriverManager.*;
-
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
+import static java.sql.DriverManager.getConnection;
+import org.apache.commons.lang3.StringUtils;
+import org.postgresql.PGConnection;
+import org.postgresql.PGProperty;
+import org.postgresql.replication.LogSequenceNumber;
+import org.postgresql.replication.PGReplicationStream;
+import org.postgresql.replication.fluent.logical.ChainedLogicalStreamBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,14 +54,6 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
-import org.apache.commons.lang3.StringUtils;
-import org.postgresql.PGConnection;
-import org.postgresql.PGProperty;
-import org.postgresql.replication.LogSequenceNumber;
-import org.postgresql.replication.PGReplicationStream;
-import org.postgresql.replication.fluent.logical.ChainedLogicalStreamBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PostgresCDCWalReceiver {
 
@@ -75,13 +76,51 @@ public class PostgresCDCWalReceiver {
   private Connection connection = null;
   private PGReplicationStream stream;
   private List<SchemaAndTable> schemasAndTables;
-  private PostgresCDCConfigBean configBean;
+  PostgresCDCConfigBean configBean;
   private HikariPoolConfigBean hikariConfigBean;
+
+  private volatile LogSequenceNumber nextLSN;
+  private final Object sendUpdatesMutex = new Object();
+  private SafeScheduledExecutorService heartBeatSender = new SafeScheduledExecutorService(1, "Postgres Heart Beat Sender");
 
   private final JdbcUtil jdbcUtil;
 
-  public PGReplicationStream getStream() {
-    return stream;
+  public PostgresCDCWalReceiver(
+      PostgresCDCConfigBean configBean,
+      HikariPoolConfigBean hikariConfigBean,
+      Stage.Context context
+  ) throws StageException {
+    this.jdbcUtil = UtilsProvider.getJdbcUtil();
+    this.configBean = configBean;
+    this.hikariConfigBean = hikariConfigBean;
+    this.context = context;
+
+    /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
+     with postgres replication connection - keeping HikariConfigBean for now */
+    try {
+      this.connection = getConnection(
+          hikariConfigBean.getConnectionString(),
+          hikariConfigBean.getUsername().get(),
+          hikariConfigBean.getPassword().get());
+    } catch (SQLException e) {
+      throw new StageException(JDBC_00, e.getMessage(), e);
+    }
+
+    this.slotName = configBean.slot;
+    this.outputPlugin = configBean.decoderValue;
+    this.uri = hikariConfigBean.getConnectionString();
+    this.configuredPlugin = null;
+    this.configuredSlotType = null;
+    this.slotActive = false;
+    this.restartLsn = null;
+    this.confirmedFlushLSN = null;
+
+    this.properties = new Properties();
+    PGProperty.USER.set(properties, hikariConfigBean.getUsername().get());
+    PGProperty.PASSWORD.set(properties, hikariConfigBean.getPassword().get());
+    PGProperty.ASSUME_MIN_SERVER_VERSION.set(properties, configBean.minVersion.getLabel());
+    PGProperty.REPLICATION.set(properties, configBean.replicationType);
+    PGProperty.PREFER_QUERY_MODE.set(properties, "simple");
   }
 
   public List<SchemaAndTable> getSchemasAndTables() {
@@ -105,7 +144,7 @@ public class PostgresCDCWalReceiver {
     }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
-        jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+             jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -124,7 +163,7 @@ public class PostgresCDCWalReceiver {
 
   public void createReplicationSlot(String slotName) throws StageException {
     try (PreparedStatement preparedStatement =
-        connection.prepareStatement("SELECT * FROM pg_create_logical_replication_slot(?, ?)")) {
+             connection.prepareStatement("SELECT * FROM pg_create_logical_replication_slot(?, ?)")) {
       preparedStatement.setString(1, slotName);
       preparedStatement.setString(2, outputPlugin.getLabel());
       try (ResultSet rs = preparedStatement.executeQuery()) {
@@ -140,13 +179,15 @@ public class PostgresCDCWalReceiver {
     }
   }
 
-  public String createReplicationStream(String startOffset)
+  public LogSequenceNumber createReplicationStream(String startOffset)
       throws StageException, InterruptedException, TimeoutException, SQLException {
 
-    if ( ! isReplicationSlotConfigured(slotName)) {
+    boolean newSlot = false;
+    if (!doesReplicationSlotExists(slotName)) {
       createReplicationSlot(slotName);
-      getReplicationSlot(slotName); //Sets restartLsn etc
+      newSlot = true;
     }
+    obtainReplicationSlotInfo(slotName);
 
     connection = getConnection(this.uri, this.properties);
     PGConnection pgConnection = connection.unwrap(PGConnection.class);
@@ -158,27 +199,55 @@ public class PostgresCDCWalReceiver {
         .withSlotName(slotName)
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
-        .withSlotOption("include-lsn", true)
-        .withStatusInterval(configBean.pollInterval, TimeUnit.SECONDS);
+        .withSlotOption("include-lsn", true);
 
-    LogSequenceNumber lsn = getLogSequenceNumber(startOffset);
-    if (lsn != null) {
-      streamBuilder.withStartPosition(lsn);
+    LogSequenceNumber streamLsn;
+    LogSequenceNumber serverFlushedLsn = LogSequenceNumber.valueOf(confirmedFlushLSN);
+    if (newSlot) {
+      //if the replication slot was just created setting the start offset to an older LSN is a NO OP
+      //setting it to a future LSN is risky as the LSN could be invalid (we have to consider the LSN an opaque value).
+      //we set the offset then to the 'confirmed_flush_lsn' of the replication slot, that happens to be the
+      //the starting point of the newly created replication slot.
+      //
+      //NOTE that the DATE filter, if a date in the future, it will work as expected because we filter  by DATE.
+      streamLsn = serverFlushedLsn;
+    } else {
+
+      switch (configBean.startValue) {
+        case LATEST:
+          // we pick up what is in the replication slot
+          streamLsn = serverFlushedLsn;
+          break;
+        case LSN:
+        case DATE:
+          LogSequenceNumber configStartLsn = LogSequenceNumber.valueOf(startOffset);
+          if (configStartLsn.asLong() > serverFlushedLsn.asLong()) {
+            // the given LSN is newer than the last flush, we can safely forward the stream to it,
+            // referenced data (by the given configStartLsn should be there)
+            streamLsn = configStartLsn;
+          } else {
+            // we ignore the config start LSN as it is before the last flushed, not in the server anymore
+            // this is the normal scenario on later pipeline restarts
+            streamLsn = serverFlushedLsn;
+            LOG.debug(
+                "Configuration Start LSN '{}' is older than server Flushed LSN '{}', this is expected after the first pipeline run",
+                configStartLsn,
+                serverFlushedLsn
+            );
+          }
+          break;
+        default:
+          throw new IllegalStateException("Should not happen startValue enum not handled" + configBean.startValue);
+      }
     }
+    streamBuilder.withStartPosition(streamLsn);
 
     stream = streamBuilder.start();
 
-    /* TODO - known issue with creation of replication API and potential NPE if
-    * forceUpdateStatus() called too soon. */
-    ThreadUtil.sleep(100L);
-    stream.forceUpdateStatus();
+    LOG.debug("Starting the Stream with LSN : {}", streamLsn);
 
-    String lsnFrom = lsn != null ? lsn.asString() : stream.getLastReceiveLSN().asString();
-    if (LOG.isDebugEnabled()) {
-      LOG.debug("Receiving changes from LSN: {}", lsnFrom);
-    }
-
-    return lsnFrom;
+    heartBeatSender.scheduleAtFixedRate(this::sendUpdates, 1, 900, TimeUnit.MILLISECONDS);
+    return streamLsn;
   }
 
   private LogSequenceNumber getLogSequenceNumber(String startOffset) {
@@ -187,6 +256,7 @@ public class PostgresCDCWalReceiver {
     switch(configBean.startValue) {
 
       case LATEST:
+        //startOffset is always NULL when LATEST per PostgresCDCSource.validatePostgresCDCConfigBean()
         if (startOffset == null) {
           startOffset = confirmedFlushLSN;
         }
@@ -197,7 +267,11 @@ public class PostgresCDCWalReceiver {
         break;
 
       case LSN:
+        //startOffset is config.lsn
       case DATE:
+        //startOffset is always 1L (which it is earliest avail)
+
+        // is never NULL here
         if (startOffset == null) {
           startOffset = PostgresCDCSource.SEED_LSN;
         }
@@ -205,17 +279,18 @@ public class PostgresCDCWalReceiver {
         break;
 
       default:
+        //should throw exception
     }
-    return lsn;
+    return lsn; //never NULL
   }
 
   public void dropReplicationSlot(String slotName)
       throws StageException
   {
     try (Connection localConnection = DriverManager.getConnection(
-            hikariConfigBean.getConnectionString(),
-            hikariConfigBean.getUsername().get(),
-            hikariConfigBean.getPassword().get()
+        hikariConfigBean.getConnectionString(),
+        hikariConfigBean.getUsername().get(),
+        hikariConfigBean.getPassword().get()
     )) {
       if (isReplicationSlotActive(slotName)) {
         try (PreparedStatement preparedStatement = localConnection.prepareStatement(
@@ -228,17 +303,17 @@ public class PostgresCDCWalReceiver {
       }
 
       try (PreparedStatement preparedStatement = localConnection
-            .prepareStatement("select pg_drop_replication_slot(slot_name) "
-                + "from pg_replication_slots where slot_name = ?")) {
-          preparedStatement.setString(1, slotName);
-          preparedStatement.execute();
+          .prepareStatement("select pg_drop_replication_slot(slot_name) "
+              + "from pg_replication_slots where slot_name = ?")) {
+        preparedStatement.setString(1, slotName);
+        preparedStatement.execute();
       }
     } catch (SQLException e) {
       throw new StageException(JDBC_407, slotName, e);
     }
   }
 
-  public  void getReplicationSlot(String slotName) throws StageException {
+  public void obtainReplicationSlotInfo(String slotName) throws StageException {
     try {
       try (Connection localConnection = DriverManager.getConnection(
           hikariConfigBean.getConnectionString(),
@@ -272,6 +347,7 @@ public class PostgresCDCWalReceiver {
               this.slotActive = rs.getBoolean("active");
               this.restartLsn = rs.getString("restart_lsn");
               this.confirmedFlushLSN = rs.getString(flushedLabel);
+              LOG.debug("Restart LSN - {}, Confirmed Flush LSN - {}", restartLsn, confirmedFlushLSN);
             }
           }
         }
@@ -282,22 +358,21 @@ public class PostgresCDCWalReceiver {
     }
   }
 
-  public  boolean isReplicationSlotActive(String slotName)
+  public boolean isReplicationSlotActive(String slotName)
       throws StageException
   {
-    getReplicationSlot(slotName);
+    obtainReplicationSlotInfo(slotName);
     return slotActive;
   }
 
-  public boolean isReplicationSlotConfigured(String slotName) throws
+  public boolean doesReplicationSlotExists(String slotName) throws
       StageException {
-    if (configuredPlugin == null) {
-      getReplicationSlot(slotName);
-    }
+    obtainReplicationSlotInfo(slotName);
+    // if replication slot does no exist we don't have a configured plugin
     return configuredPlugin != null;
   }
 
-  private  void waitStopReplicationSlot(String slotName)
+  private void waitStopReplicationSlot(String slotName)
       throws StageException
   {
     long startWaitTime = System.currentTimeMillis();
@@ -317,69 +392,80 @@ public class PostgresCDCWalReceiver {
     }
   }
 
-  public void setLsnFlushed(LogSequenceNumber lsn) throws StageException {
-
-    if (lsn == null) {
-      return;
-    }
-
-    stream.setAppliedLSN(lsn);
-    stream.setFlushedLSN(lsn);
-    try {
-      stream.forceUpdateStatus();
-    } catch (SQLException e) {
-      LOG.error("Error forcing update status: {}", e.getMessage());
-      throw new StageException(JDBC_00, " forceUpdateStatus failed :"+e.getMessage(), e);
+  public void commitCurrentOffset() throws StageException {
+    synchronized (sendUpdatesMutex) {
+      LogSequenceNumber lsn = getNextLSN();
+      if (lsn != null) {
+        LOG.debug("Flushing LSN END: {}", lsn.asString());
+        stream.setAppliedLSN(lsn);
+        stream.setFlushedLSN(lsn);
+        sendUpdates();
+      }
     }
   }
 
-  public void openReplicationConnection() throws Exception {
-    connection = getConnection(this.uri, this.properties);
+  private void sendUpdates() {
+    synchronized (sendUpdatesMutex) {
+      try {
+        LOG.debug("Sending status updates");
+        stream.forceUpdateStatus();
+      } catch (SQLException e) {
+        LOG.error("Error forcing update status: {}", e.getMessage());
+        throw new StageException(JDBC_00, " forceUpdateStatus failed :" + e.getMessage(), e);
+      }
+    }
   }
 
   public void closeConnection() throws SQLException {
+    heartBeatSender.shutdown();
+    try {
+      //Awaiting 10 seconds only as frequency is ~1 seconds
+      heartBeatSender.awaitTermination(10, TimeUnit.SECONDS);
+    } catch (InterruptedException e) {
+      LOG.warn("Interrupted the await of heart beat sender shutdown");
+      Thread.currentThread().interrupt();
+    }
     if (connection != null) {
       connection.close();
     }
   }
 
-  public PostgresCDCWalReceiver(
-      PostgresCDCConfigBean configBean,
-      HikariPoolConfigBean hikariConfigBean,
-      Stage.Context context
-  ) throws StageException {
-    this.jdbcUtil = UtilsProvider.getJdbcUtil();
-    this.configBean = configBean;
-    this.hikariConfigBean = hikariConfigBean;
-    this.context = context;
+  private ByteBuffer readNonBlocking() throws SQLException {
+    return stream.readPending();
+  }
 
-    /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
-     with postgres replication connection - keeping HikariConfigBean for now */
+  public LogSequenceNumber getCurrentLSN() {
+    return stream.getLastReceiveLSN();
+  }
+
+  public LogSequenceNumber getNextLSN() {
+    return nextLSN;
+  }
+
+  public void setNextLSN(LogSequenceNumber nextLSN) {
+    this.nextLSN = nextLSN;
+  }
+
+  public PostgresWalRecord read() {
+    PostgresWalRecord ret = null;
     try {
-      this.connection = getConnection(
-          hikariConfigBean.getConnectionString(),
-          hikariConfigBean.getUsername().get(),
-          hikariConfigBean.getPassword().get());
+      ByteBuffer buffer = readNonBlocking();
+      if(buffer != null) {
+        ret = new PostgresWalRecord(
+            buffer,
+            getCurrentLSN(),
+            configBean.decoderValue
+        );
+        //sets next LSN
+        setNextLSN(LogSequenceNumber.valueOf(ret.getNextLSN()));
+      } else {
+        LOG.debug("Buffer null");
+      }
+
     } catch (SQLException e) {
-      throw new StageException(JDBC_00, e.getMessage(), e);
+      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage(), e);
     }
-
-    this.slotName = configBean.slot;
-    this.outputPlugin = configBean.decoderValue;
-    this.uri = hikariConfigBean.getConnectionString();
-    this.configuredPlugin = null;
-    this.configuredSlotType = null;
-    this.slotActive = false;
-    this.restartLsn = null ;
-    this.confirmedFlushLSN = null ;
-
-    this.properties = new Properties();
-    PGProperty.USER.set(properties, hikariConfigBean.getUsername().get());
-    PGProperty.PASSWORD.set(properties, hikariConfigBean.getPassword().get());
-    PGProperty.ASSUME_MIN_SERVER_VERSION.set(properties, configBean.minVersion.getLabel());
-    PGProperty.REPLICATION.set(properties, configBean.replicationType);
-    PGProperty.PREFER_QUERY_MODE.set(properties, "simple");
-
+    return ret;
   }
 
 }

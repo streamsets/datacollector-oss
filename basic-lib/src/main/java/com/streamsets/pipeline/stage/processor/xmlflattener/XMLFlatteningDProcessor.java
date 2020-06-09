@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     version = 3,
     label = "XML Flattener",
     description = "Flatten XML data into fields of a record",
+    recordsByRef = true,
     upgrader = XMLFlatteningProcessorUpgrader.class,
     upgraderDef = "upgrader/XMLFlatteningDProcessor.yaml",
     icon = "xmlparser.png",

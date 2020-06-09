@@ -30,3 +30,17 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf.requestTimeout
           newNamePattern: conf.writeTimeout
+  - toVersion: 7
+    actions:
+      - setConfig:
+          name: conf.tlsConfig.useRemoteKeyStore
+          value: false
+      - setConfig:
+          name: conf.tlsConfig.privateKey
+          value: ""
+      - setConfig:
+          name: conf.tlsConfig.certificateChain
+          value: []
+      - setConfig:
+          name: conf.tlsConfig.trustedCertificates
+          value: []

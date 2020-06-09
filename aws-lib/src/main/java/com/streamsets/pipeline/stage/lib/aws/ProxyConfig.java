@@ -126,7 +126,11 @@ public class ProxyConfig {
       displayPosition = 5050,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+<<<<<<< HEAD
       group = "#0"
+=======
+      group = "ADVANCED"
+>>>>>>> master
   )
   public String proxyDomain;
 
@@ -138,7 +142,11 @@ public class ProxyConfig {
       displayPosition = 5060,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+<<<<<<< HEAD
       group = "#0"
+=======
+      group = "ADVANCED"
+>>>>>>> master
   )
   public String proxyWorkstation;
 }

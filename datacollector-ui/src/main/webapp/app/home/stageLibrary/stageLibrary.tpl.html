@@ -22,6 +22,7 @@
         <li draggable drag-data="stageLibrary"
             ng-repeat="stageLibrary in filteredStageLibraries | orderBy: 'label'"
             ng-init="icon=getStageIconURL(stageLibrary)"
+            ng-class="{'not-installed': stageLibrary.notInstalled}"
             tooltip-placement="{{$index < filteredStageLibraries.length - 2 ? 'bottom' : 'top'}}"
             tooltip="{{stageLibrary.description}}"
             tooltip-append-to-body="true"

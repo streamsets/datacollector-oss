@@ -24,7 +24,8 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
-import com.streamsets.datacollector.main.DataCollectorBuildInfo;
+import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
@@ -92,9 +93,11 @@ public class StageContext extends ProtoContext implements
   private final long startTime;
   private final LineagePublisherDelegator lineagePublisherDelegator;
   private PipelineFinisherDelegate pipelineFinisherDelegate;
+  private BuildInfo buildInfo;
   private RuntimeInfo runtimeInfo;
   private final Map services;
   private final boolean isErrorStage;
+  private final RecordCloner recordCloner;
 
   //for SDK
   public StageContext(
@@ -179,6 +182,7 @@ public class StageContext extends ProtoContext implements
     this.runtimeInfo = runtimeInfo;
     this.services = services;
     this.isErrorStage = false;
+    this.recordCloner = new RecordCloner(false);
 
     this.sourceResponseSink = new SourceResponseSinkImpl();
 
@@ -206,6 +210,7 @@ public class StageContext extends ProtoContext implements
       Stage.Info stageInfo,
       ExecutionMode executionMode,
       DeliveryGuarantee deliveryGuarantee,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       EmailSender emailSender,
       Configuration configuration,
@@ -216,7 +221,8 @@ public class StageContext extends ProtoContext implements
       boolean isErrorStage,
       AntennaDoctor antennaDoctor,
       AntennaDoctorStageContext antennaDoctorContext,
-      StatsCollector statsCollector
+      StatsCollector statsCollector,
+      boolean recordByRef
   ) {
     super(
       configuration,
@@ -247,6 +253,7 @@ public class StageContext extends ProtoContext implements
     this.onRecordError = onRecordError;
     this.executionMode = executionMode;
     this.deliveryGuarantee = deliveryGuarantee;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.sdcId = runtimeInfo.getId();
     this.sharedRunnerMap = sharedRunnerMap;
@@ -254,6 +261,7 @@ public class StageContext extends ProtoContext implements
     this.lineagePublisherDelegator = lineagePublisherDelegator;
     this.services = services;
     this.isErrorStage = isErrorStage;
+    this.recordCloner = new RecordCloner(recordByRef);
   }
 
   @Override
@@ -318,7 +326,7 @@ public class StageContext extends ProtoContext implements
 
   @Override
   public String getEnvironmentVersion() {
-    return new DataCollectorBuildInfo().getVersion();
+    return buildInfo.getVersion();
   }
 
   @Override
@@ -457,7 +465,7 @@ public class StageContext extends ProtoContext implements
 
   private void toError(Record record, ErrorMessage errorMessage) {
     String jobId = (String) getPipelineConstants().get(JOB_ID);
-    RecordImpl recordImpl = ((RecordImpl) record).clone();
+    RecordImpl recordImpl = recordCloner.cloneRecordIfNeeded(record);
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
@@ -583,7 +591,7 @@ public class StageContext extends ProtoContext implements
 
   @Override
   public void toEvent(EventRecord record) {
-    EventRecordImpl recordImpl = ((EventRecordImpl) record).clone();
+    EventRecordImpl recordImpl = recordCloner.cloneEventIfNeeded(record);
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
       recordImpl.setInitialRecord(false);
