@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -98,14 +99,14 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Base64 Encoded Key",
-      description = "The ${str:base64Encode()} EL function can be used to encode plain strings",
+      description = "Enter an encoded key, use a Base64 function to encode a string, or use a credential function to retrieve the key from a credential store.",
       displayPosition = 40,
       dependencies = {
           @Dependency(configName = "masterKeyProvider", triggeredByValues = {"USER"})
       },
       group = "PROVIDER"
   )
-  public String key;
+  public CredentialValue key;
 
   @ConfigDef(
       required = false,
@@ -236,7 +237,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
   }
 
   public String getKey() {
-    return key;
+    return key.get();
   }
 
   public String getKeyId() {
