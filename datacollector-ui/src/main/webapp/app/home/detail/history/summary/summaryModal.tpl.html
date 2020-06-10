@@ -77,14 +77,14 @@
                   {{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:
                 </span>
                 <span class="properties-value"
-                  ng-if="detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord">
-                  {{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}
+                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord">
+                  {{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}
                 </span>
               </li>
 
               <li>
                 <span class="properties-label">{{'home.detailPane.summaryTab.batchCount' | translate}}:</span>
-                <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
+                <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
               </li>
 
             </ul>

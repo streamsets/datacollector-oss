@@ -86,6 +86,12 @@ angular
       helpId: 'metric-rules-tab'
     };
 
+    var defaultTabName = {
+      PIPELINE: 'configuration',
+      STAGE_INSTANCE: 'configuration',
+      LINK: 'dataRules'
+    };
+
     /**
      * Returns list tabs based on type.
      *
@@ -205,7 +211,7 @@ angular
       monitorRun: function(history) {
         $scope.selectedRunHistory = history;
         if (history.metrics) {
-          $scope.detailPaneMetrics = JSON.parse(history.metrics);
+          $scope.detailPaneMetrics = history.metrics;
         } else if ($scope.selectedRunHistory === $scope.runHistory[0]) {
           $scope.detailPaneMetrics = $rootScope.common.pipelineMetrics;
         }
@@ -418,13 +424,24 @@ angular
             tab.active = true;
           }
         });
+      } else {
+        // Make sure at least one of the tab is active.
+        var activeTab = _.find($scope.detailPaneTabs, function (tab) {
+          return tab.active;
+        });
+        if (!activeTab) {
+          var defaultTab = defaultTabName[$scope.selectedType];
+          angular.forEach($scope.detailPaneTabs, function(tab) {
+            tab.active = (tab.name === defaultTab);
+          });
+        }
       }
     });
 
-    $scope.$watch('isPipelineRunning', function(newValue) {
+    $scope.$watch('isPipelineRunning', function(newValue, oldValue) {
       var tabs = $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
 
-      if (newValue || $scope.detailPaneTabs.length < 2 ) {
+      if (newValue || oldValue || $scope.detailPaneTabs.length < 2 ) {
         $scope.detailPaneMetrics = $rootScope.common.pipelineMetrics;
         angular.forEach(tabs, function(tab) {
           tab.active = (tab.name === 'summary');
@@ -526,17 +543,41 @@ angular
           (index === 0 && _.contains(pipelineConstant.ACTIVE_STATES, pipelineState.status))) {
 
           var  startTimeStamp = getStartTimestamp(pipelineStateHistory, index);
+
+          var metrics = JSON.parse(pipelineState.metrics);
+          var inputRecords = 0;
+          var outputRecords = 0;
+          var errorRecordsAndMessages = 0;
+
+          if (metrics && metrics.counters) {
+            if (metrics.counters['pipeline.batchInputRecords.counter']) {
+              inputRecords = metrics.counters['pipeline.batchInputRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchOutputRecords.counter']) {
+              outputRecords = metrics.counters['pipeline.batchOutputRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchErrorRecords.counter']) {
+              errorRecordsAndMessages += metrics.counters['pipeline.batchErrorRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchErrorMessages.counter']) {
+              errorRecordsAndMessages += metrics.counters['pipeline.batchErrorMessages.counter'].count;
+            }
+          }
+
           var run = {
             started: startTimeStamp,
             completed: pipelineState.timeStamp,
             message: pipelineState.message,
             errorStackTrace: pipelineState.attributes['errorStackTrace'],
-            metrics: pipelineState.metrics,
+            metrics: metrics,
             status: pipelineState.status,
             user: pipelineState.user,
             pipelineState: pipelineState,
             stateIndex: index,
-            isErrorState: pipelineConstant.ERROR_STATES.indexOf(pipelineState.status) !== -1
+            isErrorState: pipelineConstant.ERROR_STATES.indexOf(pipelineState.status) !== -1,
+            inputRecords: inputRecords,
+            outputRecords: outputRecords,
+            errorRecordsAndMessages: errorRecordsAndMessages
           };
 
           if (index === 0 && _.contains(pipelineConstant.ACTIVE_STATES, pipelineState.status)) {

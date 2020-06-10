@@ -84,7 +84,7 @@ angular
       var stageInstance = $scope.detailPaneConfig;
       var pipelineMetrics = $scope.detailPaneMetrics;
       $scope.allDataZero = true;
-      if ($scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
+      if ($scope.summaryMeters && $scope.summaryMeters.outputRecords && $scope.summaryMeters.errorRecords) {
         angular.forEach($scope.pieChartData, function(chartData) {
           if (chartData.key === 'goodRecords') {
             chartData.value = $scope.summaryMeters.outputRecords.count;

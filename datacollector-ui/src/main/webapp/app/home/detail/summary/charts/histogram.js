@@ -121,4 +121,6 @@ angular
       refreshData();
     });
 
+    refreshData();
+
   });

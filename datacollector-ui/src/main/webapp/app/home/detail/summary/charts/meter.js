@@ -147,7 +147,7 @@ angular
     });
 
     var updatedLatestData = function() {
-      if (!$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
+      if (!$scope.summaryMeters || !$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
         !$scope.summaryMeters.errorRecords) {
         return;
       }

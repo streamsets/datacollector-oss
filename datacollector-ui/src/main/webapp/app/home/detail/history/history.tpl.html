@@ -57,6 +57,9 @@
       <th translate="global.form.duration">Duration</th>
       <th translate="global.form.user">User</th>
       <th translate="global.form.status">Status</th>
+      <th translate="global.form.input">Input</th>
+      <th translate="global.form.output">Output</th>
+      <th translate="global.form.error">Error</th>
       <th translate="home.detailPane.summary">Summary</th>
     </tr>
     </thead>
@@ -87,6 +90,9 @@
         </a>
         </span>
       </td>
+      <td>{{history.metrics ? history.inputRecords : '--'}}</td>
+      <td>{{history.metrics ? history.outputRecords : '--'}}</td>
+      <td>{{history.metrics ? history.errorRecordsAndMessages : '--'}}</td>
       <td>
         <a href="javascript:"
            ng-if="history.metrics"
