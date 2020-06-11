@@ -50,7 +50,7 @@ import java.util.List;
     verifier = AwsS3ConnectionVerifier.class,
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )
-@ConfigGroups(Groups.class)
+@ConfigGroups(AwsS3ConnectionGroups.class)
 public class AwsS3Connection {
 
   public static final String TYPE = "AWS_S3";

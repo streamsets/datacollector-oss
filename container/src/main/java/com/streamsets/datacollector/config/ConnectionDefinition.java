@@ -57,6 +57,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final String type;
   private final List<ConfigDefinition> configDefinitions;
   private final Map<String, ConfigDefinition> configDefinitionsMap;
+  private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
   private final String verifierClass;
 
@@ -71,6 +72,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     type = def.type;
     configDefinitions = def.configDefinitions;
     configDefinitionsMap = def.configDefinitionsMap;
+    configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
     verifierClass = def.verifierClass;
   }
@@ -83,6 +85,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       String description,
       String type,
       List<ConfigDefinition> configDefinitions,
+      ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
       String verifierClass
   ) {
@@ -94,7 +97,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     this.description = description;
     this.type = type;
     this.configDefinitions = configDefinitions;
-    configDefinitionsMap = new HashMap<>();
+    this.configDefinitionsMap = new HashMap<>();
+    this.configGroupDefinition = configGroupDefinition;
     for (ConfigDefinition conf : configDefinitions) {
       configDefinitionsMap.put(conf.getName(), conf);
       ModelDefinition modelDefinition = conf.getModel();
@@ -170,6 +174,10 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
 
   public ConfigDefinition getConfigDefinition(String configName) {
     return configDefinitionsMap.get(configName);
+  }
+
+  public ConfigGroupDefinition getConfigGroupDefinition() {
+    return configGroupDefinition;
   }
 
   @JsonIgnore

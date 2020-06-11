@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.definition;
 
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -73,6 +74,8 @@ public abstract class ConnectionDefinitionExtractor {
       String description = conDef.description();
       String type = conDef.type();
       List<ConfigDefinition> configDefinitions = extractConfigDefinitions(klass);
+      String contextMsg = Utils.format("Connection='{}'", klass.getSimpleName());
+      ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
       String yamlUpgrader = conDef.upgraderDef();
       String verifier = conDef.verifier().getCanonicalName();
 
@@ -84,6 +87,7 @@ public abstract class ConnectionDefinitionExtractor {
               description,
               type,
               configDefinitions,
+              configGroupDefinition,
               yamlUpgrader,
               verifier
       );

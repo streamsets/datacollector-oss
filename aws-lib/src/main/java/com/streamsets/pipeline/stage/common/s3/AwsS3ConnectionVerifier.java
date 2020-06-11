@@ -38,14 +38,13 @@ import java.util.UUID;
     onlineHelpRefUrl = ""
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
-@ConfigGroups(Groups.class)
+@ConfigGroups(AwsS3ConnectionGroups.class)
 public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   private final static Logger LOG = LoggerFactory.getLogger(AwsS3ConnectionVerifier.class);
 
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String BUCKET_EXIST_PREFIX = "streamsets-s3-conn-veri-";
 
-  @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public AwsS3Connection connection;
 
   @Override

@@ -16,7 +16,6 @@
 
 package com.streamsets.datacollector.definition.connection;
 
-import com.streamsets.datacollector.restapi.bean.TestConfigDefinitionBean;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -36,11 +35,20 @@ import java.util.List;
 public class TestConnectionDef {
 
   public enum TestConnectionGroups implements Label {
-    G1;
+    G1("G1 Label"),
+    G2("G2 Label"),
+    G3("G3 Label"),
+    ;
+
+    private String label;
+
+    TestConnectionGroups(String label) {
+      this.label = label;
+    }
 
     @Override
     public String getLabel() {
-      return "G1";
+      return label;
     }
   }
 
