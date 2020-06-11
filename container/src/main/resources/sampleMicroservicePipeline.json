@@ -760,7 +760,7 @@
       }, {
         "name" : "httpConfigs.appIds",
         "value" : [ {
-          "appId" : "microservice"
+          "credential" : "microservice"
         } ]
       }, {
         "name" : "httpConfigs.spnegoConfigBean.spnegoEnabled",
