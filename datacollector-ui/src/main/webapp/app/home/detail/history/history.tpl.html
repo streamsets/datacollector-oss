@@ -90,9 +90,9 @@
         </a>
         </span>
       </td>
-      <td>{{history.metrics ? history.inputRecords : '--'}}</td>
-      <td>{{history.metrics ? history.outputRecords : '--'}}</td>
-      <td>{{history.metrics ? history.errorRecordsAndMessages : '--'}}</td>
+      <td class="input-records">{{history.metrics ? (history.inputRecords | number) : '--'}}</td>
+      <td class="output-records">{{history.metrics ? (history.outputRecords | number) : '--'}}</td>
+      <td class="error-records">{{history.metrics ? (history.errorRecordsAndMessages | number) : '--'}}</td>
       <td>
         <a href="javascript:"
            ng-if="history.metrics"
