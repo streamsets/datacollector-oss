@@ -596,11 +596,13 @@ angular.module('dataCollectorApp')
           tracking.mixpanel.people.set({
             'userName': $rootScope.common.userName,
             'UserID': USER_ID,
-            'sdcId': SDC_ID
+            'sdcId': SDC_ID,
+            'productName': 'Data Collector'
           });
           tracking.mixpanel.register({
             'userName': $rootScope.common.userName,
-            'sdcId': SDC_ID
+            'sdcId': SDC_ID,
+            'productName': 'Data Collector'
           });
           tracking.FS.setUserVars({
             'userName': $rootScope.common.userName,
