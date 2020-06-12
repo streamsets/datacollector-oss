@@ -38,12 +38,16 @@ public class Authenticate extends VaultEndpoint {
     return getSecret("/v1/auth/app-id/login", "POST", content);
   }
 
-  public Secret appRole(String roleId, String secretId) throws VaultException {
+  public Secret appRole(String roleId, String secretId, String namespace) throws VaultException {
     HttpContent content = new JsonHttpContent(
         getJsonFactory(),
         ImmutableMap.of("role_id", roleId, "secret_id", secretId)
     );
-    return getSecret("/v1/auth/approle/login", "POST", content);
+    namespace = namespace.replaceAll("\\s+","");
+    if (!namespace.endsWith("/")) {
+      namespace = namespace.concat("/");
+    }
+    return getSecret("/v1/" + namespace + "auth/approle/login", "POST", content);
   }
 
   public Secret renewSelf() throws VaultException {

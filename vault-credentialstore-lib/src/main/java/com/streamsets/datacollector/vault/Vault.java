@@ -85,6 +85,7 @@ public class Vault {
   private CredentialStore.Context context;
   private String csId;
   private String roleId;
+  private String namespace;
   private AuthBackend authBackend;
 
   private VaultConfiguration config;
@@ -364,6 +365,9 @@ public class Vault {
       throw new VaultRuntimeException(Utils.format("Version not allowed: {}", version));
     }
 
+    // Namespace by default is empty, if a new value is not assigned the path will remain the same.
+      path = namespace.concat(path);
+
     if (!secrets.containsKey(path)) {
       VaultClient vault = new VaultClient(getConfig());
       Secret secret;
@@ -429,11 +433,12 @@ public class Vault {
     if (authExpirationTime != Long.MAX_VALUE && authExpirationTime - System.currentTimeMillis() <= 1000) {
       VaultClient vault = new VaultClient(config);
       Secret auth;
+
       try {
         if (authBackend == AuthBackend.APP_ID) {
           auth = vault.authenticate().appId(roleId, calculateUserId(csId));
         } else {
-          auth = vault.authenticate().appRole(roleId, getSecretId());
+          auth = vault.authenticate().appRole(roleId, getSecretId(), namespace);
         }
       } catch (VaultException e) {
         LOG.error(e.toString(), e);
@@ -462,11 +467,11 @@ public class Vault {
   private VaultConfiguration parseVaultConfigs(Configuration configuration) {
     leaseExpirationBuffer = configuration.get("lease.expiration.buffer.sec", 120);
     renewalInterval = configuration.get("lease.renewal.interval.sec", 60);
+    namespace = configuration.get("namespace","");
 
     if (configuration.hasName("role.id")) {
       authBackend = AuthBackend.APP_ROLE;
       roleId = configuration.get("role.id", "");
-
       if (configuration.get("secret.id", "").isEmpty()) {
         throw new VaultRuntimeException("secret.id must be specified when using AppRole auth.");
       }
@@ -477,6 +482,9 @@ public class Vault {
           "CredentialStore '{}' Vault, the App ID authentication mode is deprecated, please migrate to AppRole",
           csId
       );
+      if (!namespace.isEmpty()) {
+        LOG.error("Vault namespaces are not supported for App ID authentication mode");
+      }
     }
 
     if (roleId.isEmpty()) {
