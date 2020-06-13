@@ -42,7 +42,6 @@ import java.util.List;
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
     upgrader = JdbcLookupProcessorUpgrader.class,
-    recordsByRef = true,
     upgraderDef = "upgrader/JdbcLookupDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kbr_2cy_hw"
 )
