@@ -270,7 +270,6 @@ public class AmazonS3Runnable implements Runnable {
               exOffset = S3Constants.MINUS_ONE;
             }
           }
-          offset = new S3Offset(offset, exOffset);
 
           switch (context.getOnErrorRecord()) {
             case DISCARD:
