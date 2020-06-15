@@ -47,7 +47,7 @@ public class InterceptorContextTest {
   @Before
   public void setUp() {
     MockStages.resetStageCaptures();
-    this.configuration = Mockito.mock(Configuration.class);
+    this.configuration = new Configuration();
 
     this.context = new InterceptorContext(
       InterceptorCreator.InterceptorType.PRE_STAGE,

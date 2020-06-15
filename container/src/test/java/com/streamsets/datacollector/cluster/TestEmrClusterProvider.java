@@ -220,6 +220,7 @@ public class TestEmrClusterProvider {
         "",
         "",
         "",
+        "",
         Collections.emptyList()
     );
     Assert.assertNotNull(applicationState);

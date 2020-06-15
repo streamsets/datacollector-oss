@@ -104,4 +104,11 @@ public class TestConnectionOverlayInjectorContext {
     Mockito.verify(parentContext).putConnection("type", "connId");
     Mockito.verifyNoMoreInteractions(parentContext);
   }
+
+  @Test
+  public void testgetUser() {
+    context.getUser();
+    Mockito.verify(parentContext).getUser();
+    Mockito.verifyNoMoreInteractions(parentContext);
+  }
 }

@@ -155,6 +155,7 @@ public abstract class DetachedStage {
       false,
       Collections.emptyMap(),
       null,
+      userContext.getUser(),
       errors
     );
     if(!errors.isEmpty()) {

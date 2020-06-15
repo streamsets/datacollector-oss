@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.creation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
@@ -25,11 +26,10 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.configupgrade.ConnectionConfigurationUpgrader;
-import com.streamsets.datacollector.connection.ConnectionConstants;
 import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.definition.ConfigValueExtractor;
-import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
@@ -61,8 +61,10 @@ import java.util.stream.Collectors;
  */
 public class ConfigInjector {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
-  private static BlobStore blobStore;
   private static final ObjectMapper mapper = new ObjectMapper();
+
+  private static BlobStore blobStore;
+  private static ConnectionRetriever connectionRetriever;
 
   private static final ConfigInjector INJECTOR = new ConfigInjector() {
     {
@@ -73,8 +75,14 @@ public class ConfigInjector {
     return INJECTOR;
   }
 
-  public static void setBlobStore(BlobStore blobStore) {
+  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo, BlobStore blobStore) {
+    prepareForConnections(new ConnectionRetriever(configuration, runtimeInfo), blobStore);
+  }
+
+  @VisibleForTesting
+  static void prepareForConnections(ConnectionRetriever connectionRetriever, BlobStore blobStore) {
     ConfigInjector.blobStore = blobStore;
+    ConfigInjector.connectionRetriever = connectionRetriever;
   }
 
   /**
@@ -130,6 +138,11 @@ public class ConfigInjector {
      * Register automated connection from stage config.
      */
     void putConnection(String type, String connectionId);
+
+    /**
+     * The user who is running this stage
+     */
+    String getUser();
   }
 
   /**
@@ -184,11 +197,18 @@ public class ConfigInjector {
 
     @Override
     public String getConnection(String type) {
-      return null;
+      return parent.getConnection(type);
     }
 
     @Override
-    public void putConnection(String type, String connectionId) {}
+    public void putConnection(String type, String connectionId) {
+      parent.putConnection(type, connectionId);
+    }
+
+    @Override
+    public String getUser() {
+      return parent.getUser();
+    }
   }
 
   /**
@@ -202,11 +222,13 @@ public class ConfigInjector {
     private final Map<String, Object> pipelineConstants;
     private final List<Issue> issues;
     private Map<String, String> connections;
+    private final String user;
 
     public StageInjectorContext(
         StageDefinition definition,
         StageConfiguration configuration,
         Map<String, Object> pipelineConstants,
+        String user,
         List<Issue> issues
     ) {
       this.definition = definition;
@@ -214,6 +236,7 @@ public class ConfigInjector {
       this.issueCreator = IssueCreator.getStage(configuration.getInstanceName());
       this.pipelineConstants = pipelineConstants;
       this.issues = issues;
+      this.user = user;
     }
 
     @Override
@@ -274,6 +297,11 @@ public class ConfigInjector {
         connections = new HashMap<>();
       }
       connections.put(type, connectionId);
+    }
+
+    @Override
+    public String getUser() {
+      return user;
     }
   }
 
@@ -337,6 +365,11 @@ public class ConfigInjector {
     @Override
     public void putConnection(String type, String connectionId) {
       parentContext.putConnection(type, connectionId);
+    }
+
+    @Override
+    public String getUser() {
+      return parentContext.getUser();
     }
   }
 
@@ -412,6 +445,11 @@ public class ConfigInjector {
 
     @Override
     public void putConnection(String type, String connectionId) {}
+
+    @Override
+    public String getUser() {
+      return null;
+    }
   }
 
   /**
@@ -421,6 +459,7 @@ public class ConfigInjector {
    * @param stageDef Definition for given stage
    * @param stageConf Actual configuration values
    * @param constants Pipeline constants (parameters)
+   * @param user The user
    * @param issues List into which issues will be added
    */
   public void injectStage(
@@ -428,9 +467,10 @@ public class ConfigInjector {
       StageDefinition stageDef,
       StageConfiguration stageConf,
       Map<String, Object> constants,
+      String user,
       List<Issue> issues
   ) {
-    injectConfigsToObject(stage, new StageInjectorContext(stageDef, stageConf, constants, issues));
+    injectConfigsToObject(stage, new StageInjectorContext(stageDef, stageConf, constants, user, issues));
   }
 
   public void injectService(Object service, String stageName, ServiceDefinition def, ServiceConfiguration conf, Map<String, Object> constants, List<Issue> issues) {
@@ -488,43 +528,38 @@ public class ConfigInjector {
         }
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
         boolean injected = false;
-        // if ConfigDefBean is also a ConnectionDef, check if it needs to get pulled from blobstore
+        // if ConfigDefBean is also a ConnectionDef, check if we need to get it
         ConnectionDef connectionDef = field.getType().getAnnotation(ConnectionDef.class);
         if (connectionDef != null) {
-          // if the connection ID was populated in the context earlier, we need to pull the connection from blobstore
+          // if the connection ID was populated in the context earlier, we need to get the connection
           String connectionId = context.getConnection(connectionDef.type());
-          if (connectionId != null) {
-            try {
-              if (blobStore == null) {
-                context.createIssue(CreationError.CREATION_1101);
+          if (connectionId != null && context.getUser() != null) {  // Don't even bother without a user
+            ConnectionConfiguration cc = connectionRetriever.get(connectionId, context);
+            if (cc != null) {
+              if (!cc.getType().equals(connectionDef.type())) {
+                // Somehow connection type mismatch
+                context.createIssue(CreationError.CREATION_1102, cc.getType(), connectionDef.type());
               } else {
-                String connBeanString = blobStore.retrieve(ConnectionConstants.CONNECTION_NAMESPACE, connectionId, 1);
-                ConnectionConfigurationJson ccj = mapper.readValue(connBeanString, ConnectionConfigurationJson.class);
-                ConnectionConfiguration cc = BeanHelper.unwrapConnectionConfiguration(ccj);
-                if (!cc.getType().equals(connectionDef.type())) {
-                  // Somehow connection type mismatch
-                  context.createIssue(CreationError.CREATION_1102, cc.getType(), connectionDef.type());
-                } else {
-                  // Do an upgrade if necessary
-                  List<Issue> issues = new ArrayList<>();
-                  ConnectionConfigurationUpgrader.get().upgradeIfNecessary(connectionDef, cc, connectionId, issues);
-                  context.addIssues(issues);
-                  if (issues.isEmpty()) {
-                    // Inject the connection's configs into the stage's configs
-                    String connConfigPrefix = configName + ".";
-                    Context connContext = new ConnectionOverlayInjectorContext(
-                        context,
-                        connConfigPrefix,
-                        cc.getConfiguration()
-                    );
+                // Do an upgrade if necessary
+                List<Issue> issues = new ArrayList<>();
+                ConnectionConfigurationUpgrader.get().upgradeIfNecessary(connectionDef, cc, connectionId, issues);
+                context.addIssues(issues);
+                if (issues.isEmpty()) {
+                  // Inject the connection's configs into the stage's configs
+                  String connConfigPrefix = configName + ".";
+                  Context connContext = new ConnectionOverlayInjectorContext(context,
+                      connConfigPrefix,
+                      cc.getConfiguration()
+                  );
+                  try {
                     injectConfigs(field.get(obj), connConfigPrefix, connContext);
+                    injected = true;
+                  } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    context.createIssue(CreationError.CREATION_003, ex.toString());
                   }
                 }
               }
-            } catch (IllegalAccessException | IOException e) {
-              context.createIssue(CreationError.CREATION_1100, e.getMessage());
             }
-            injected = true;
           }
         }
 

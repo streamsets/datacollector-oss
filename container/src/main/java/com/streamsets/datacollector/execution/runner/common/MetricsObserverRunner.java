@@ -23,8 +23,10 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluator;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class MetricsObserverRunner {
       MetricRegistry metrics,
       AlertManager alertManager,
       Map<String, Object> resolvedParameters,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo,
       BlobStoreTask blobStoreTask
   ) {
     this.metrics = metrics;
@@ -61,7 +65,7 @@ public class MetricsObserverRunner {
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
     this.resolvedParameters = resolvedParameters;
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
   public void setPipelineStartTime(long pipelineStartTime) {

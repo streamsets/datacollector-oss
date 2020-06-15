@@ -136,7 +136,7 @@ public class MetricsEventRunnable implements Runnable {
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
 
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
   public void onStopOrFinishPipeline() {
@@ -326,7 +326,7 @@ public class MetricsEventRunnable implements Runnable {
       isDPMPipeline = isRemotePipeline(state);
       if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(pipelineConfiguration, new ArrayList<>(), null);
+            .create(pipelineConfiguration, new ArrayList<>(), null, null);
         for (String key : pipelineConfigBean.constants.keySet()) {
           switch (key) {
             case PIPELINE_COMMIT_ID:

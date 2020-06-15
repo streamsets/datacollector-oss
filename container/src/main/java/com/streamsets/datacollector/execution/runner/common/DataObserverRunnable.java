@@ -20,6 +20,7 @@ import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.event.json.MetricRegistryJson;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -50,6 +51,7 @@ public class DataObserverRunnable implements Runnable {
       MetricRegistry metrics,
       AlertManager alertManager,
       Configuration configuration,
+      RuntimeInfo runtimeInfo,
       Map<String, Object> resolvedParameters,
       BlobStoreTask blobStoreTask
   ) {
@@ -62,7 +64,7 @@ public class DataObserverRunnable implements Runnable {
         resolvedParameters
     );
     this.threadHealthReporter = threadHealthReporter;
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
   public void setRequestQueue(BlockingQueue<Object> requestQueue) {

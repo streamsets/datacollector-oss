@@ -266,7 +266,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
     requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(conf, runtimeInfo, blobStoreTask);
     stopWatch = Stopwatch.createUnstarted();
     stopWatchForSyncEvents = Stopwatch.createUnstarted();
 
@@ -1228,7 +1228,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Runner runner = remoteDataCollector.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
       if (runner != null) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(runner.getPipelineConfiguration(), new ArrayList<>(), null);
+            .create(runner.getPipelineConfiguration(pipelineState.getUser()), new ArrayList<>(), null, null);
         SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
 
         Object metrics = runner.getMetrics();

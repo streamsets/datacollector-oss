@@ -223,7 +223,7 @@ public class TestRunner {
     }
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return null;
     }
   }
@@ -413,7 +413,7 @@ public class TestRunner {
     }
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return null;
     }
   }

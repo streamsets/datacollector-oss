@@ -94,7 +94,8 @@ public class MockClusterProvider implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   )
   throws TimeoutException {
     LOG.info("startPipeline");

@@ -36,6 +36,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
@@ -50,7 +51,6 @@ import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -162,7 +162,7 @@ public class Pipeline {
     this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
-    PipelineBeanCreator.setBlobStore(blobStore);
+    PipelineBeanCreator.prepareForConnections(configuration, runner.getRuntimeInfo(), blobStore);
   }
 
   public PipelineConfigBean getPipelineConfig() {
@@ -333,6 +333,7 @@ public class Pipeline {
               pipelineBean.getPipelineStageBeans(),
               interceptorContextBuilder,
               originPipe.getStage().getConstants(),
+              userContext.getUser(),
               localIssues
             );
 
@@ -567,6 +568,7 @@ public class Pipeline {
     public Builder(
         StageLibraryTask stageLib,
         Configuration configuration,
+        RuntimeInfo runtimeInfo,
         String name,
         String pipelineName,
         String rev,
@@ -595,7 +597,7 @@ public class Pipeline {
         configuration,
         interceptorConfs
       );
-      PipelineBeanCreator.setBlobStore(blobStore);
+      PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStore);
     }
 
     public Builder setObserver(Observer observer) {
@@ -617,7 +619,8 @@ public class Pipeline {
           pipelineConf,
           interceptorCreatorContextBuilder,
           errors,
-          runtimeParameters
+          runtimeParameters,
+          userContext.getUser()
       );
       StageRuntime errorStage;
       StageRuntime statsAggregator;

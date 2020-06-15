@@ -127,22 +127,23 @@ public class TestSlaveManager {
     @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
         PipelineStateStore pipelineStateStore,
         BlobStoreTask blobStoreTask
     ) {
-      PipelineStoreTask pipelineStoreTask =
-        new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
-            buildInfo,
-            runtimeInfo,
-            stageLibraryTask,
-            eventListenerManager,
-            new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
-            blobStoreTask
-        ));
-      return pipelineStoreTask;
+      return new SlavePipelineStoreTask(
+            new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
+                buildInfo,
+                configuration,
+                runtimeInfo,
+                stageLibraryTask,
+                eventListenerManager,
+                new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
+                blobStoreTask)
+        );
     }
 
     @Provides

@@ -61,6 +61,7 @@ public class PipelineFragmentConfigurationValidator {
   protected final StageLibraryTask stageLibrary;
   protected final String name;
   private PipelineFragmentConfiguration pipelineFragmentConfiguration;
+  protected final String user;
   protected final Issues issues;
   private final List<String> openLanes;
   boolean validated;
@@ -73,7 +74,8 @@ public class PipelineFragmentConfigurationValidator {
       StageLibraryTask stageLibrary,
       BuildInfo buildInfo,
       String name,
-      PipelineFragmentConfiguration pipelineFragmentConfiguration
+      PipelineFragmentConfiguration pipelineFragmentConfiguration,
+      String user
   ) {
     this.stageLibrary = Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
     this.buildInfo = buildInfo;
@@ -82,6 +84,7 @@ public class PipelineFragmentConfigurationValidator {
         pipelineFragmentConfiguration,
         "pipelineFragmentConfiguration cannot be null"
     );
+    this.user = user;
     issues = new Issues();
     openLanes = new ArrayList<>();
     this.constants = ElUtil.getConstants(pipelineFragmentConfiguration.getConfiguration());
@@ -363,6 +366,7 @@ public class PipelineFragmentConfigurationValidator {
         stageLibrary,
         pipelineConfiguration,
         null,
+        user,
         errors
     );
     if (pipelineFragmentConfiguration.getTitle() != null && pipelineFragmentConfiguration.getTitle().isEmpty()) {

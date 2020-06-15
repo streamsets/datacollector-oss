@@ -146,7 +146,7 @@ public class InterceptorContext implements Interceptor.Context {
     this.emailSender = emailSender;
     this.startTime = startTime;
     this.lineagePublisherDelegator = lineagePublisherDelegator;
-    PipelineBeanCreator.setBlobStore(getBlobStore());
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, getBlobStore());
   }
 
   @Override

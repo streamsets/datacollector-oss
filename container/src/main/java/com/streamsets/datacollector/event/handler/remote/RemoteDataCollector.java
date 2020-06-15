@@ -147,7 +147,7 @@ public class RemoteDataCollector implements DataCollector {
     this.stageLibrary = stageLibrary;
     this.blobStoreTask = blobStoreTask;
     this.eventHandlerExecutor = eventHandlerExecutor;
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
     String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
     ));
@@ -262,7 +262,8 @@ public class RemoteDataCollector implements DataCollector {
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
             buildInfo,
             name,
-            pipelineConfiguration
+            pipelineConfiguration,
+            user
         );
         PipelineConfiguration validatedPipelineConfig = validator.validate();
         //By default encrypt credentials from Remote data collector

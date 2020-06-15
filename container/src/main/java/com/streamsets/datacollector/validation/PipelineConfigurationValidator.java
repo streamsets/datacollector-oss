@@ -66,9 +66,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       StageLibraryTask stageLibrary,
       BuildInfo buildInfo,
       String name,
-      PipelineConfiguration pipelineConfiguration
+      PipelineConfiguration pipelineConfiguration,
+      String user
   ) {
-    this(stageLibrary, buildInfo, name, pipelineConfiguration, null, null);
+    this(stageLibrary, buildInfo, name, pipelineConfiguration, null, null, user);
   }
 
   public PipelineConfigurationValidator(
@@ -77,9 +78,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       String name,
       PipelineConfiguration pipelineConfiguration,
       Configuration dataCollectorConfiguration,
-      RuntimeInfo runtimeInfo
+      RuntimeInfo runtimeInfo,
+      String user
   ) {
-    super(stageLibrary, buildInfo, name, pipelineConfiguration);
+    super(stageLibrary, buildInfo, name, pipelineConfiguration, user);
     this.pipelineConfiguration = pipelineConfiguration;
     this.dataCollectorConfiguration = dataCollectorConfiguration;
     this.runtimeInfo = runtimeInfo;
@@ -348,6 +350,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       stageLibrary,
       pipelineConfiguration,
       null,
+      user,
       errors
     );
     StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineConfiguration);

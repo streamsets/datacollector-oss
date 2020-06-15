@@ -17,9 +17,6 @@ package com.streamsets.datacollector.cluster;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
-import com.streamsets.datacollector.config.StageConfiguration;
-import com.streamsets.datacollector.config.StageDefinition;
-import com.streamsets.datacollector.creation.PipelineBean;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -31,7 +28,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,7 +109,8 @@ public class ClusterProviderSelector implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   ) throws TimeoutException, IOException, StageException {
     return getProvider(pipelineConfiguration).startPipeline(
         tempDir, sourceInfo,
@@ -129,7 +126,8 @@ public class ClusterProviderSelector implements ClusterProvider {
         ruleDefinitions,
         acl,
         interceptorCreatorContextBuilder,
-        blobStoreResources
+        blobStoreResources,
+        user
     );
   }
 

@@ -158,8 +158,8 @@ public abstract  class AbstractRunner implements Runner {
   }
 
   @Override
-  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return getPipelineConf(getName(), getRev());
+  public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
+    return getPipelineConf(getName(), getRev(), user);
   }
 
   @Override
@@ -253,9 +253,15 @@ public abstract  class AbstractRunner implements Runner {
     return newContext;
   }
 
-  protected PipelineConfiguration getPipelineConf(String name, String rev) throws PipelineException {
+  protected PipelineConfiguration getPipelineConf(String name, String rev, String user) throws PipelineException {
     PipelineConfiguration load = pipelineStore.load(name, rev);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, load);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        name,
+        load,
+        user
+    );
     PipelineConfiguration validate = validator.validate();
     if(validator.getIssues().hasIssues()) {
       LOG.error("Can't run pipeline due to issues: {}", validator.getIssues().getIssueCount());

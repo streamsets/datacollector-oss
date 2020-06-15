@@ -806,7 +806,7 @@ public class TestRemoteEventHandler {
   public static class MockMetricsRunner extends TestRemoteDataCollector.MockRunner {
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return new PipelineConfiguration(
           1,
           1,

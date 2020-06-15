@@ -85,7 +85,7 @@ public interface Runner {
   // pipeline title
   public String getPipelineTitle() throws PipelineException;
 
-  PipelineConfiguration getPipelineConfiguration() throws PipelineException;
+  PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException;
 
   // resets the pipeline offset, only if the pipeline is not running
   // it must assert the current status

@@ -20,13 +20,11 @@ import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Singleton;
 
-import static org.mockito.Mockito.mock;
-
 public class ConfigurationTestInjector implements Factory<Configuration> {
   @Singleton
   @Override
   public Configuration provide() {
-    Configuration configuration = mock(Configuration.class);
+    Configuration configuration = new Configuration();
     return configuration;
   }
 

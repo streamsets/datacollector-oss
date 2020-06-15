@@ -144,6 +144,7 @@ public class TestPipelineStateStore {
     @Singleton
     public PipelineStoreTask providePipelineStore(
         BuildInfo buildInfo,
+        Configuration configuration,
         SlaveRuntimeInfo slaveRuntimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -158,6 +159,7 @@ public class TestPipelineStateStore {
           eventListenerManager,
           lockCache,
           Mockito.mock(PipelineCredentialHandler.class),
+          configuration,
           Mockito.mock(BlobStoreTask.class)
       );
     }

@@ -386,6 +386,7 @@ public class SyncPreviewer implements Previewer {
         stageLibrary,
         buildInfo,
         configuration,
+        runtimeInfo,
         name,
         rev,
         pipelineConf,

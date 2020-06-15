@@ -248,7 +248,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     this.objectGraph = objectGraph;
     this.errorListeners = new ArrayList<>();
     objectGraph.inject(this);
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo(), blobStoreTask);
   }
 
   public void addErrorListener(ErrorListener errorListener) {
@@ -677,7 +677,7 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
         retryFuture = scheduleForRetries(runnerExecutor);
       }
     }
-    statsCollector.pipelineStatusChanged(toStatus, getPipelineConfigurationIfExists(), getPipeline());
+    statsCollector.pipelineStatusChanged(toStatus, getPipelineConfigurationIfExists(user), getPipeline());
     getEventListenerManager().broadcastStateChange(
         fromState,
         pipelineState,
@@ -756,13 +756,14 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
        * Manager - responsible for creating alerts and sending email.
        */
 
-        PipelineConfiguration pipelineConfiguration = getPipelineConf(getName(), getRev());
+        PipelineConfiguration pipelineConfiguration = getPipelineConf(getName(), getRev(), runningUser.getUser());
         List<Issue> errors = new ArrayList<>();
         PipelineEL.setConstantsInContext(pipelineConfiguration, runningUser, getState().getTimeStamp());
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
             pipelineConfiguration,
             errors,
-            getStartPipelineContext().getRuntimeParameters()
+            getStartPipelineContext().getRuntimeParameters(),
+            context.getUser()
         );
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
@@ -1011,11 +1012,11 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
     return null;
   }
 
-  private PipelineConfiguration getPipelineConfigurationIfExists() {
+  private PipelineConfiguration getPipelineConfigurationIfExists(String user) {
     PipelineConfiguration pc;
     try {
       pc = getPipeline() != null ? getPipeline().getPipelineConf() : null;
-      pc = pc != null ? pc : getPipelineConfiguration();
+      pc = pc != null ? pc : getPipelineConfiguration(user);
     } catch (PipelineException e) {
       pc = null;
     }

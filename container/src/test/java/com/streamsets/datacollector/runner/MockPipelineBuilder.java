@@ -19,6 +19,7 @@ import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
@@ -34,6 +35,7 @@ import java.util.List;
 public class MockPipelineBuilder {
   private StageLibraryTask stageLib;
   private Configuration configuration;
+  private RuntimeInfo runtimeInfo;
   private String name;
   private String pipelineName;
   private String rev;
@@ -49,6 +51,7 @@ public class MockPipelineBuilder {
   public MockPipelineBuilder() {
     this.stageLib = MockStages.createStageLibrary();
     this.configuration = new Configuration();
+    this.runtimeInfo = Mockito.mock(RuntimeInfo.class);
     this.name = "name";
     this.pipelineName = "myPipeline";
     this.rev = "0";
@@ -126,6 +129,7 @@ public class MockPipelineBuilder {
     return new Pipeline.Builder(
       stageLib,
       configuration,
+      runtimeInfo,
       name,
       pipelineName,
       rev,

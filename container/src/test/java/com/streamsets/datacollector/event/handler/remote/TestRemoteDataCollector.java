@@ -310,7 +310,7 @@ public class TestRemoteDataCollector {
     }
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return null;
     }
 

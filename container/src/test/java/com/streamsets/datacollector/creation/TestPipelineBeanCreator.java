@@ -418,6 +418,7 @@ public class TestPipelineBeanCreator {
       s -> serviceDef,
       null,
       constants,
+      "user",
       issues
     );
 
@@ -482,6 +483,7 @@ public class TestPipelineBeanCreator {
       s -> serviceDef,
       null,
       constants,
+      "user",
       issues
     );
 
@@ -581,7 +583,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, "user", issues);
 
     Assert.assertNotNull(bean);
 
@@ -621,7 +623,7 @@ public class TestPipelineBeanCreator {
     // pass runtime parameters
     Map<String, Object> runtimeParameters = ImmutableMap.of("MEMORY_LIMIT", 2000);
     issues = new ArrayList<>();
-    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues, runtimeParameters);
+    bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues, runtimeParameters, "user");
     Assert.assertNotNull(bean);
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
@@ -633,6 +635,7 @@ public class TestPipelineBeanCreator {
       bean.getPipelineStageBeans(),
       null,
       Collections.emptyMap(),
+      "user",
       issues
     );
     Assert.assertNotNull(duplicate);
@@ -695,7 +698,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, "user", issues);
 
     Assert.assertNotNull(bean);
 
@@ -749,6 +752,7 @@ public class TestPipelineBeanCreator {
       s -> null,
       null,
       constants,
+      "user",
       issues
     );
 
@@ -804,7 +808,7 @@ public class TestPipelineBeanCreator {
     );
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, "user", issues);
 
     MySource source = (MySource) bean.getOrigin().getStage();
 
@@ -871,7 +875,7 @@ public class TestPipelineBeanCreator {
 
     List<Issue> issues = new ArrayList<>();
     InterceptorCreatorContextBuilder contextBuilder = new InterceptorCreatorContextBuilder(null, null);
-    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, contextBuilder, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, library, pipelineConf, contextBuilder, "user", issues);
 
     Assert.assertNotNull(bean.getOrigin());
     Assert.assertEquals(1, bean.getOrigin().getPreInterceptors().size());

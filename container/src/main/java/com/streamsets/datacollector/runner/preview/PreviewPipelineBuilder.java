@@ -23,6 +23,7 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.runner.PipelineRunner;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
@@ -66,6 +67,7 @@ public class PreviewPipelineBuilder {
   private final StageLibraryTask stageLib;
   private final BuildInfo buildInfo;
   private final Configuration configuration;
+  private final RuntimeInfo runtimeInfo;
   private final String name;
   private final String rev;
   private PipelineConfiguration pipelineConf;
@@ -89,6 +91,7 @@ public class PreviewPipelineBuilder {
     StageLibraryTask stageLib,
     BuildInfo buildInfo,
     Configuration configuration,
+    RuntimeInfo runtimeInfo,
     String name,
     String rev,
     PipelineConfiguration pipelineConf,
@@ -102,6 +105,7 @@ public class PreviewPipelineBuilder {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.buildInfo = buildInfo;
     this.configuration = configuration;
+    this.runtimeInfo = runtimeInfo;
     this.name = name;
     this.rev = rev;
     this.pipelineConf = pipelineConf;
@@ -111,7 +115,7 @@ public class PreviewPipelineBuilder {
     this.statsCollector = statsCollector;
     this.testOrigin = testOrigin;
     this.interceptorConfs = interceptorConfs;
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
   public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException {
@@ -164,7 +168,13 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, buildInfo, name, pipelineConf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLib,
+        buildInfo,
+        name,
+        pipelineConf,
+        userContext.getUser()
+    );
     pipelineConf = validator.validate();
     if (!validator.getIssues().hasIssues() || validator.canPreview()) {
       List<String> openLanes = validator.getOpenLanes();
@@ -178,6 +188,7 @@ public class PreviewPipelineBuilder {
      Pipeline.Builder builder = new Pipeline.Builder(
        stageLib,
        configuration,
+       runtimeInfo,
        name + ":preview",
        name,
        rev,

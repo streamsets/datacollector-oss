@@ -61,8 +61,8 @@ public class AclRunner implements Runner {
   }
 
   @Override
-  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return runner.getPipelineConfiguration();
+  public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
+    return runner.getPipelineConfiguration(user);
   }
 
   @Override

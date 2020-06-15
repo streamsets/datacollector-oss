@@ -368,6 +368,7 @@ public class TestUtil {
     @Provides @Singleton
     public PipelineStoreTask providePipelineStore(
         BuildInfo buidInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
@@ -382,6 +383,7 @@ public class TestUtil {
           eventListenerManager,
           new LockCache<>(),
           Mockito.mock(PipelineCredentialHandler.class),
+          configuration,
           blobStoreTask
       );
       pipelineStoreTask.init();

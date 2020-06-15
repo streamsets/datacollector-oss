@@ -194,6 +194,7 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -209,6 +210,7 @@ public class TestStandalonePipelineManager {
           new EventListenerManager(),
           lockCache,
           pipelineCredentialsHandler,
+          configuration,
           blobStoreTask
       );
       filePipelineStoreTask.init();

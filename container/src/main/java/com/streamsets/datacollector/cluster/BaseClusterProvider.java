@@ -182,6 +182,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
         stageLibraryTask,
         pipelineConfiguration,
         null,
+        null,
         new ArrayList<>()
     );
     StageConfiguration stageConf = pipelineBean.getOrigin().getConfiguration();
@@ -452,7 +453,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   ) throws IOException, TimeoutException, StageException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
@@ -478,7 +480,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
           ruleDefinitions,
           acl,
           interceptorCreatorContextBuilder,
-          blobStoreResources
+          blobStoreResources,
+          user
       );
     } finally {
       // in testing mode the staging dir is used by yarn
@@ -519,7 +522,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   ) throws IOException, TimeoutException, StageException {
     // create libs.tar.gz file for pipeline
     Map<String, List<URL>> streamsetsLibsCl = new HashMap<>();
@@ -536,6 +540,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
         stageLibrary,
         pipelineConfiguration,
         interceptorCreatorContextBuilder,
+        user,
         errors
     );
     if (!errors.isEmpty()) {
@@ -855,6 +860,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
 
         clusterBootstrapApiJar,
 
+        user,
+
         errors
     );
   }
@@ -914,6 +921,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       String mesosHostingJarDir,
       String mesosURL,
       String clusterBootstrapApiJar,
+
+      String user,
 
       List<Issue> errors
   ) throws IOException, StageException;

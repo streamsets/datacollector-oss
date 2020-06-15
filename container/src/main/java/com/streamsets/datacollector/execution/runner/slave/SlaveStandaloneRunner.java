@@ -83,8 +83,8 @@ public class SlaveStandaloneRunner implements Runner, PipelineInfo  {
   }
 
   @Override
-  public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
-    return standaloneRunner.getPipelineConfiguration();
+  public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
+    return standaloneRunner.getPipelineConfiguration(user);
   }
 
   @Override

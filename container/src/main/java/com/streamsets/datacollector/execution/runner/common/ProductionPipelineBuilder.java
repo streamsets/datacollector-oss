@@ -85,7 +85,7 @@ public class ProductionPipelineBuilder {
     this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
     this.statsCollector = statsCollector;
-    PipelineBeanCreator.setBlobStore(blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
   public ProductionPipeline build(
@@ -103,7 +103,13 @@ public class ProductionPipelineBuilder {
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Map<String, Object> runtimeParameters
   ) throws PipelineRuntimeException, StageException {
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLib, buildInfo, name, pipelineConf);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLib,
+        buildInfo,
+        name,
+        pipelineConf,
+        userContext.getUser()
+    );
     pipelineConf = validator.validate();
     if (validator.getIssues().hasIssues()) {
       throw new PipelineRuntimeException(ContainerError.CONTAINER_0158, validator.getIssues().getIssues().size());
@@ -111,6 +117,7 @@ public class ProductionPipelineBuilder {
     Pipeline pipeline = new Pipeline.Builder(
         stageLib,
         configuration,
+        runtimeInfo,
         name + PRODUCTION_PIPELINE_SUFFIX,
         name,
         rev,

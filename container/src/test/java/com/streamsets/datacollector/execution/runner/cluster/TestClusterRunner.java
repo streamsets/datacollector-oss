@@ -155,6 +155,7 @@ public class TestClusterRunner {
         eventListenerManager,
         new LockCache<String>(),
         Mockito.mock(PipelineCredentialHandler.class),
+        conf,
         Mockito.mock(BlobStoreTask.class)
     );
     pipelineStoreTask.init();
@@ -411,7 +412,7 @@ public class TestClusterRunner {
     attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
     setState(PipelineStatus.RUNNING);
     ClusterRunner clusterRunner = Mockito.spy(createClusterRunner());
-    Mockito.doReturn(Mockito.mock(PipelineConfiguration.class)).when(clusterRunner).getPipelineConfiguration();
+    Mockito.doReturn(Mockito.mock(PipelineConfiguration.class)).when(clusterRunner).getPipelineConfiguration("admin");
     clusterRunner.loadStartPipelineContextFromState("admin");
     clusterRunner.prepareForStop("admin");
     clusterRunner.stop("admin");
@@ -682,6 +683,7 @@ public class TestClusterRunner {
         eventListenerManager,
         new LockCache<String>(),
         Mockito.mock(PipelineCredentialHandler.class),
+        configuration,
         Mockito.mock(BlobStoreTask.class)
     );
     pipelineStoreTask.init();

@@ -789,7 +789,7 @@ public class TestPipelineCredentialHandler {
     pipelineCredentialHandler.handlePipelineConfigCredentials(pipelineConf);
 
     List<Issue> issues = new ArrayList<>();
-    PipelineBean bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, issues);
+    PipelineBean bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, null, issues);
 
     Assert.assertNotNull(bean);
 
@@ -842,7 +842,7 @@ public class TestPipelineCredentialHandler {
     // pass runtime parameters
     Map<String, Object> runtimeParameters = ImmutableMap.of("MEMORY_LIMIT", 2000);
     issues = new ArrayList<>();
-    bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, issues, runtimeParameters);
+    bean = PipelineBeanCreator.get().create(false, stageLibraryTask, pipelineConf, null, issues, runtimeParameters, null);
     Assert.assertNotNull(bean);
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
@@ -854,6 +854,7 @@ public class TestPipelineCredentialHandler {
         bean.getPipelineStageBeans(),
         null,
         Collections.emptyMap(),
+        null,
         issues
     );
     Assert.assertNotNull(duplicate);
