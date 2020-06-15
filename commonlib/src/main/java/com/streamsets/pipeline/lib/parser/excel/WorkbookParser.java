@@ -39,8 +39,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-import static com.streamsets.pipeline.config.ExcelHeader.NO_HEADER;
-import static com.streamsets.pipeline.config.ExcelHeader.WITH_HEADER;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
@@ -173,7 +171,12 @@ public class WorkbookParser extends AbstractDataParser {
       this.currentSheet = currentRow.getSheet().getSheetName();
       // if header is expected, then jump over this row
       if (settings.getHeader() == ExcelHeader.WITH_HEADER || settings.getHeader() == ExcelHeader.IGNORE_HEADER) {
-        currentRow = rowIterator.next();  // move to the next row to parse as data
+        if(rowIterator.hasNext()) {
+          currentRow = rowIterator.next();  // move to the next row to parse as data
+        } else {
+          eof = true;
+          return null;
+        }
       }
     }
 
