@@ -99,7 +99,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.Utils.CLUSTER_HDFS_CONFIG_BEAN_PREFIX;
 
@@ -219,9 +218,8 @@ public class ClusterHdfsSource extends BaseSource implements OffsetCommitter, Er
     }
 
     List<Path> hdfsDirPaths = validateAndGetHdfsDirPaths(issues);
-    List<String> hdfsDirFullPaths = hdfsDirPaths.stream().map(path -> conf.hdfsUri + path).collect(Collectors.toList());
 
-    hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirFullPaths, ","));
+    hadoopConf.set(FileInputFormat.INPUT_DIR, StringUtils.join(hdfsDirPaths, ","));
     hadoopConf.set(FileInputFormat.INPUT_DIR_RECURSIVE, Boolean.toString(conf.recursive));
 
     // CsvHeader.IGNORE_HEADER must be overridden to CsvHeader.NO_HEADER prior to building the parser.
