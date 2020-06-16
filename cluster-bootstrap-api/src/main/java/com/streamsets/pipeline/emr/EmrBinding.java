@@ -21,6 +21,7 @@ import com.streamsets.pipeline.Utils;
 import com.streamsets.pipeline.hadoop.HadoopMapReduceBinding;
 import com.streamsets.pipeline.hadoop.PipelineMapper;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.CommonConfigurationKeys;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.MRJobConfig;
@@ -45,7 +46,8 @@ public class EmrBinding implements ClusterBinding {
   private static final String TEXTINPUTFORMAT_RECORD_DELIMITER = "textinputformat.record.delimiter" ;
   private static final List<String> overriddenConfs = Arrays.asList(TEXTINPUTFORMAT_RECORD_DELIMITER,
       FileInputFormat.INPUT_DIR,
-      FileInputFormat.INPUT_DIR_RECURSIVE
+      FileInputFormat.INPUT_DIR_RECURSIVE,
+      CommonConfigurationKeys.FS_DEFAULT_NAME_KEY
   );
 
 
