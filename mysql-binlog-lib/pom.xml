@@ -22,12 +22,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.16.1</version>
+    <version>3.16.2-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-mysql-binlog-lib</artifactId>
-  <version>3.16.1</version>
+  <version>3.16.2-SNAPSHOT</version>
   <description>StreamSets Data Collector MySql BinLog Lib</description>
   <name>StreamSets Data Collector MySql BinLog Lib</name>
 
