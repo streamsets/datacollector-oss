@@ -26,10 +26,9 @@ import java.util.Map;
 
 
 public class HttpDPMAuth extends AbstractAuthentication {
-  private static String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
-  private static String AUTHENTICATION_COOKIE_PREFIX = "SS-SSO-";
+  private static final String X_USER_AUTH_TOKEN = "X-SS-User-Auth-Token";
+  private static final String AUTHENTICATION_COOKIE_PREFIX = "SS-SSO-";
   private String dpmBaseURL;
-  private String userAuthToken;
 
   @Override
   public void setDPMBaseURL(String dpmBaseURL) {
@@ -40,12 +39,12 @@ public class HttpDPMAuth extends AbstractAuthentication {
   }
 
   @Override
-  public void setHeader(Invocation.Builder builder) {
-    builder.header(X_USER_AUTH_TOKEN, userAuthToken);
+  public void setHeader(Invocation.Builder builder, String tokenStr) {
+    builder.header(X_USER_AUTH_TOKEN, tokenStr);
   }
 
   @Override
-  public void login() {
+  public String login() {
     Response response = null;
     try {
       Map<String, String> loginJson = new HashMap<>();
@@ -63,7 +62,7 @@ public class HttpDPMAuth extends AbstractAuthentication {
         );
       }
 
-      this.userAuthToken = response.getHeaderString(X_USER_AUTH_TOKEN);
+      return response.getHeaderString(X_USER_AUTH_TOKEN);
     } finally {
       if (response != null) {
         response.close();
@@ -72,7 +71,7 @@ public class HttpDPMAuth extends AbstractAuthentication {
   }
 
   @Override
-  public void logout() {
+  public void logout(String userAuthToken) {
     Response response = null;
     try {
       response = ClientBuilder.newClient()
@@ -87,7 +86,6 @@ public class HttpDPMAuth extends AbstractAuthentication {
         response.close();
       }
     }
-    this.userAuthToken = null;
   }
 
 }

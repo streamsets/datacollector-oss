@@ -27,9 +27,9 @@ public interface Authentication {
 
   void setFilter(WebTarget webTarget);
 
-  void setHeader(Invocation.Builder builder);
+  void setHeader(Invocation.Builder builder, String userAuthToken);
 
-  void login();
+  String login();
 
-  void logout();
+  void logout(String userAuthToken);
 }

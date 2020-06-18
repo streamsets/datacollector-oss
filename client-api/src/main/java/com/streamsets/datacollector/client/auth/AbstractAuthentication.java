@@ -43,17 +43,17 @@ public abstract class AbstractAuthentication implements Authentication {
   }
 
   @Override
-  public void setHeader(Invocation.Builder builder) {
+  public void setHeader(Invocation.Builder builder, String userAuthToken) {
 
   }
 
   @Override
-  public void login() {
-
+  public String login() {
+    return null;
   }
 
   @Override
-  public void logout() {
+  public void logout(String userAuthToken) {
 
   }
 }
