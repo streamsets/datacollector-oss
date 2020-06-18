@@ -54,6 +54,7 @@ import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 public class PostgresCDCWalReceiver {
 
@@ -133,7 +134,22 @@ public class PostgresCDCWalReceiver {
     for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
       validateSchemaAndTable(tables).ifPresent(issues::add);
     }
+    if (isThereAFilter() && schemasAndTables.isEmpty()) {
+      issues.add(context.createConfigIssue(Groups.CDC.name(),
+                  "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
+    }
     return Optional.ofNullable(issues);
+  }
+
+  private boolean isThereAFilter() {
+    //If there is any value configured for inclusion returns True else returns False
+    boolean filterExist = false;
+    Iterator it = configBean.baseConfigBean.schemaTableConfigs.iterator();
+    while (!filterExist && it.hasNext()) {
+      SchemaTableConfigBean tables = (SchemaTableConfigBean)it.next();
+      filterExist = !(tables.schema.isEmpty() && tables.table.isEmpty());
+    }
+    return filterExist;
   }
 
   private Optional<ConfigIssue> validateSchemaAndTable(SchemaTableConfigBean tables) {
