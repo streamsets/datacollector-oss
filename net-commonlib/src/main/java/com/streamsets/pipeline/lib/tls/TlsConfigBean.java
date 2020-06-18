@@ -667,6 +667,16 @@ public class TlsConfigBean {
       KeyStoreType type,
       String storeCategory
   ) {
+    if (keyStorePath.toString().contains(" ")) {
+      issues.add(context.createConfigIssue(
+          groupName,
+          configPrefix + storeCategory.toLowerCase() + "StoreFilePath",
+          TlsConfigErrors.TLS_02,
+          keyStorePath,
+          storeCategory.toLowerCase()
+      ));
+      return null;
+    }
     if (!keyStorePath.toFile().exists()) {
       issues.add(context.createConfigIssue(
           groupName,

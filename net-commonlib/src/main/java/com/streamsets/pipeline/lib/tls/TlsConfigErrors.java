@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum TlsConfigErrors implements ErrorCode {
   TLS_01("{}store file does not exist at {}"),
+  TLS_02("{} is a not valid path for {}store because it contains an empty space."),
   TLS_05("Key store and/or trust store file must be specified."),
   TLS_20("Error attempting to create {}store instance: {}"),
   TLS_21("Error attempting to load {}store at {}: {}"),
