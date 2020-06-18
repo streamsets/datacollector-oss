@@ -208,11 +208,12 @@ public class StatsInfo {
   }
 
   public boolean rollIfNeeded(
-      BuildInfo buildInfo,
-      RuntimeInfo runtimeInfo,
-      SysInfo sysInfo,
-      long rollFrequencyMillis,
-      boolean forceNextRoll) {
+          BuildInfo buildInfo,
+          RuntimeInfo runtimeInfo,
+          SysInfo sysInfo,
+          long rollFrequencyMillis,
+          boolean forceNextRoll,
+          long currentTimeMillis) {
     Map<String, Object> currentSys = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
 
     boolean existingStats = getActiveStats().getDataCollectorVersion() != null && !getActiveStats().getDataCollectorVersion().isEmpty();
@@ -220,9 +221,9 @@ public class StatsInfo {
     boolean sysChange = existingStats && !filterSystemInfoDynamicEntries(currentSys).equals(filteredNewSys);
 
     boolean overFrequency = existingStats &&
-        (System.currentTimeMillis() - getActiveStats().getStartTime() > (rollFrequencyMillis * 0.99));
+        (currentTimeMillis - getActiveStats().getStartTime() > (rollFrequencyMillis * 0.99));
     boolean roll = forceNextRoll || !existingStats || sysChange || overFrequency;
-    LOG.debug("Rolling {} due to isForceNextReport()={} || !existingStats={} || sysChange={} || overFrequency={}",
+    LOG.debug("Rolling {} due to isForceNextReport()={} || !(existingStats={}) || sysChange={} || overFrequency={}",
         roll, forceNextRoll, existingStats, sysChange, overFrequency);
     if (sysChange) {
       LOG.debug("previous sys, filtered: {}", filterSystemInfoDynamicEntries(currentSys));

@@ -152,7 +152,7 @@ public class TestStatsInfo {
     Assert.assertEquals(1, si.getActiveStats().getUpTime().getMultiplier());
     Assert.assertEquals(1, ext.getStartSystems());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo,1000, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo,1000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -191,7 +191,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -219,7 +219,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -247,7 +247,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -275,7 +275,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
-    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(0, ext.getRolls());
 
@@ -304,7 +304,7 @@ public class TestStatsInfo {
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -334,7 +334,7 @@ public class TestStatsInfo {
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -363,7 +363,7 @@ public class TestStatsInfo {
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, true));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, true, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -393,7 +393,7 @@ public class TestStatsInfo {
     si.getActiveStats().setDpmEnabled(false);
     ActiveStats as = si.getActiveStats();
 
-    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1000, false));
+    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(as, si.getActiveStats());
     Assert.assertEquals(0, ext.getRolls());
@@ -425,7 +425,7 @@ public class TestStatsInfo {
       collected.add(new StatsBean());
     }
     si.setCollectedStats(collected);
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, System.currentTimeMillis()));
     Assert.assertEquals(1, ext.getRolls());
     List<StatsBean> got = si.getCollectedStats();
 
@@ -456,7 +456,7 @@ public class TestStatsInfo {
       si.getActiveStats().setStartTime(System.currentTimeMillis());
 
       Whitebox.setInternalState(si.getActiveStats(), fieldToNull, null);
-      Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false));
+      Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
       Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
       Assert.assertEquals(1, ext.getRolls());
 

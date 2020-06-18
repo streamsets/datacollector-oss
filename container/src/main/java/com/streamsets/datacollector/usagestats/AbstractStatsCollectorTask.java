@@ -91,10 +91,10 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   static final String ROLL_PERIOD_CONFIG = "stats.rollFrequency.hours";
   static final long ROLL_PERIOD_CONFIG_MAX = 1;
 
-
-  private static final int REPORT_STATS_FAILED_COUNT_LIMIT = 31;
-
-  private static final int EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT = 30;
+  /**
+   * Maximum number of minutes to wait between reporting if there are errors in reporting
+   */
+  private static final long REPORT_STATS_MAX_BACK_OFF_MINUTES = TimeUnit.DAYS.toMinutes(1);
 
   static final String OPT_FILE = "opt-stats.json";
 
@@ -116,8 +116,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   private long lastReport;
   private ScheduledFuture future;
   private volatile StatsInfo statsInfo;
-  private int reportStatsFailedCount;
-  private int extendedReportStatsFailedCount;
+  private int reportStatsBackOffCount;
+  private long reportStatsBackOffUntil;
 
   public AbstractStatsCollectorTask(
       BuildInfo buildInfo,
@@ -137,8 +137,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     this.executorService = executorService;
     optFile = new File(runtimeInfo.getDataDir(), OPT_FILE);
     statsFile = new File(runtimeInfo.getDataDir(), STATS_FILE);
-    reportStatsFailedCount = 0;
-    extendedReportStatsFailedCount = 0;
+    reportStatsBackOffCount = 0;
+    reportStatsBackOffUntil = 0;
     this.sysInfo = sysInfo;
   }
 
@@ -150,7 +150,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
 
   /**
    * @return Live instances of stats extensions, which can be snapshotted, rolled, etc. as part of ActiveStats. Any
-   * modifications to these objects must use {@link AbstractStatsExtension#doWithLock(Runnable, boolean)}.
+   * modifications to these objects must use {@link AbstractStatsExtension#doWithStatsInfoStructuralLock(Runnable)}.
    */
   protected final List<AbstractStatsExtension> getStatsExtensions() {
     return statsInfo.getActiveStats().getExtensions();
@@ -337,7 +337,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
         On graceful shutdown, this is run one last time as well (mostly to guarantee save stats)
         */
         if (isActive()) {
-          if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis(), forceRollAndReport)) {
+          if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis(),
+                  forceRollAndReport, getCurrentTimeMillis())) {
             updateAfterRoll(getStatsInfo());
             LOG.debug("Stats collection data rolled");
           }
@@ -346,45 +347,35 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
             List<StatsBean> collectedStats = getStatsInfo().getCollectedStats();
             if (reportStats(collectedStats)) {
               LOG.debug("Reported");
-              reportStatsFailedCount = 0;
-              extendedReportStatsFailedCount = 0;
+              reportStatsBackOffCount = 0;
+              reportStatsBackOffUntil = 0;
               getStatsInfo().getCollectedStats().clear();
             } else {
-              reportStatsFailedCount++;
-              LOG.debug("Reporting has failed {} time(s) in a row", reportStatsFailedCount);
-              if (reportStatsFailedCount > REPORT_STATS_FAILED_COUNT_LIMIT) {
-                reportStatsFailedCount = 0;
-                extendedReportStatsFailedCount++;
-                long defaultReportPeriod = getReportPeriodSeconds();
-                if (extendedReportStatsFailedCount > EXTENDED_REPORT_STATS_FAILED_COUNT_LIMIT) {
-                  LOG.warn("Reporting has failed too many times and will be switched off", reportStatsFailedCount);
-                  extendedReportStatsFailedCount = 0;
-                  future.cancel(false);
-                  future = executorService.scheduleAtFixedRate(
-                      getRunnable(false),
-                      defaultReportPeriod,
-                      defaultReportPeriod,
-                      TimeUnit.SECONDS
-                  );
-                  setActive(false);
-                } else {
-                  int delay = (int) Math.pow(2, extendedReportStatsFailedCount - 1);
-                  LOG.warn("Reporting will back off for {} day(s)", delay);
-                  future.cancel(false);
-                  future = executorService.scheduleAtFixedRate(
-                      getRunnable(false),
-                      delay * defaultReportPeriod,
-                      defaultReportPeriod,
-                      TimeUnit.SECONDS
-                  );
-                }
-              }
+              reportStatsBackOffCount++;
+              LOG.debug("Reporting has failed {} times in a row (with exponential back off).", reportStatsBackOffCount);
+              // careful not to shift too many bits or it wraps around
+              long backOffMinutes = Math.min(
+                      REPORT_STATS_MAX_BACK_OFF_MINUTES,
+                      1L << Math.min(
+                              30,
+                              reportStatsBackOffCount));
+              LOG.warn("Due to reporting failures, reporting will back off for {} minutes", backOffMinutes);
+              reportStatsBackOffUntil = getCurrentTimeMillis() + TimeUnit.MINUTES.toMillis(backOffMinutes);
             }
           }
           saveStats();
         }
       }
     };
+  }
+
+  /**
+   * Mockable method to get current time in millis
+   * @return
+   */
+  @VisibleForTesting
+  long getCurrentTimeMillis() {
+    return System.currentTimeMillis();
   }
 
   private boolean shouldReport(boolean forceNextReport) {
@@ -395,8 +386,19 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
       LOG.debug("shouldReport because next report is forced");
       return true;
     }
+    long now = getCurrentTimeMillis();
+    if (reportStatsBackOffUntil > 0) {
+      if (reportStatsBackOffUntil > now) {
+        LOG.debug("shouldReport false until now ({}) >= reportStatsBackOffUntil({})", now, reportStatsBackOffUntil);
+        return false;
+      } else {
+        LOG.debug("shouldReport true since we need to retry a failure, now ({}) >= reportStatsBackOffUntil({})",
+                now, reportStatsBackOffUntil);
+        return true;
+      }
+    }
     long oldestStartTime = getStatsInfo().getCollectedStats().get(0).getStartTime();
-    long delta = System.currentTimeMillis() - oldestStartTime;
+    long delta = now - oldestStartTime;
     boolean report = delta > (TimeUnit.SECONDS.toMillis(getReportPeriodSeconds()) * 0.99);
     LOG.debug("shouldReport returning {} with oldest start time {} delta {}", report, oldestStartTime, delta);
     return report;
@@ -543,7 +545,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
       try (OutputStream os = new FileOutputStream(optFile)) {
         ObjectMapperFactory.get().writeValue(
             os,
-            ImmutableMap.of(STATS_ACTIVE_KEY, active, STATS_LAST_REPORT_KEY, System.currentTimeMillis())
+            ImmutableMap.of(STATS_ACTIVE_KEY, active, STATS_LAST_REPORT_KEY, getCurrentTimeMillis())
         );
         this.active = active;
         opted = true;

@@ -34,7 +34,6 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
@@ -492,134 +491,207 @@ public class TestStatsCollectorTask {
     task.stop();
   }
 
-  // Question to Tucu: How is this test trying to induce failures? How much of this test is really working?
-  // You can easily cause a failure by mocking reportStats to be return true or false
-  @Ignore("Must integrate new UPLOAD, then test")
   @Test
   public void testRunnableReportStatsException() throws Exception {
     File testDir = createTestDir();
 
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
 
     RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
 
     Configuration config = new Configuration();
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
-    ScheduledFuture future = Mockito.mock(ScheduledFuture.class);
-    Mockito.doReturn(future).when(scheduler).scheduleAtFixedRate(
-        Mockito.any(),
-        Mockito.anyLong(),
-        Mockito.anyLong(),
-        Mockito.any()
-    );
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
+
+    // though we pass true here, we will temporarily cause failures in other layers first, before we let it get here
     AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
-      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(AbstractStatsCollectorTask.STATS_ACTIVE_KEY, true));
+      ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
     }
 
-    try (OutputStream os = new FileOutputStream(task.getStatsFile())) {
-      StatsInfo statsInfo = new StatsInfo(task.provideStatsExtensions());
-      statsInfo.getActiveStats().setDataCollectorVersion("v0");
-      ObjectMapperFactory.get().writeValue(os, statsInfo);
-    }
+    // make it fail on first call
+    Mockito.doReturn(false).when(task).reportStats(Mockito.anyList());
 
-    // one time
     task.init();
+
     Assert.assertTrue(task.isOpted());
     Assert.assertTrue(task.isActive());
-    // TODO below assertion fails. Is it even correct?
-    Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
-    Mockito.verify(scheduler, Mockito.times(1)).scheduleAtFixedRate(
-        Mockito.any(),
-        Mockito.eq(60L),
-        Mockito.eq(60L),
-        Mockito.eq(TimeUnit.SECONDS)
-    );
 
-    // two times
+    int expectedRolls = 1;
+    int expectedReports = 1;
+    int expectedSaves = 1;
+
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    long initCompleteTime = System.currentTimeMillis();
     task.getRunnable(false).run();
-    Assert.assertTrue(task.isOpted());
-    Assert.assertTrue(task.isActive());
+    // we just rolled, should not roll again
+    // we are in back off, should not report
+    // always save
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
 
-    // count resets because it works now
+    // simulate 1 minute passing
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(1));
     task.getRunnable(false).run();
-    Assert.assertTrue(task.isOpted());
-    Assert.assertTrue(task.isActive());
-    Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
+    // only roll once per hour
+    // first back off period is 2 minutes, so we still skip it
+    // always save
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
 
-    task.getStatsInfo().getCollectedStats().add(new StatsBean());
+    // simulate 2 minutes passing since init
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(2));
+    task.getRunnable(false).run();
+    // only roll once per hour
+    // completed back off, should report
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
 
-    // It will retry 5 times, once a minute, before backing off for 1 day.  After 1 day, it will retry the 5 times again
-    // and if it continues to fail, it will back off for 2 days.  After that, 4 days.  Finally, it will give up and
-    // switch off.  Here, we run through all of this, but it manages to temporarily succeed after on the 4th try of the
-    // 3rd day (which resets all the retries and back offs).
-    int doOnceOnly = 0;
-    for (int k = 0; k < 4; k++) {
-      System.out.println("AAA k = " + k);
-
-      // one through five times
-      for (int i = 0; i < 5; i++) {
-        System.out.println("AAA k = " + k + " i = " + i);
-        if (doOnceOnly == 0 && k == 2 && i == 3) {
-
-          // count resets because it works now
-          task.getRunnable(false).run();
-          Assert.assertTrue(task.isOpted());
-          Assert.assertTrue(task.isActive());
-          Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
-
-          task.getStatsInfo().getCollectedStats().add(new StatsBean());
-
-          k = 0;
-          i = -1;
-          doOnceOnly = 1;
-        } else {
-          task.getRunnable(false).run();
-          Assert.assertTrue(task.isOpted());
-          Assert.assertTrue(task.isActive());
-          Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
-        }
-      }
-
-      // six times - we now try to back off
+    // simulate minutes 3 - 5
+    for (int mins = 3; mins <= 5; mins++) {
+      Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(mins));
       task.getRunnable(false).run();
-      Assert.assertTrue(task.isOpted());
-      // Keep backing off while it's less than 3
-      if (k < 3) {
-        Assert.assertTrue(task.isActive());
-        Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
-        int expectedTimes = k <= 1 ? doOnceOnly + 1 : 1;
-        Mockito.verify(scheduler, Mockito.times(expectedTimes)).scheduleAtFixedRate(
-            Mockito.any(),
-            Mockito.eq(60L * 60L * 24L * (int)Math.pow(2, k)),
-            Mockito.eq(60L),
-            Mockito.eq(TimeUnit.SECONDS)
-        );
-      // Otherwise, we'll just give up: switch it off
-      } else {
-        Assert.assertFalse(task.isActive());
-        Assert.assertEquals(0, task.getStatsInfo().getCollectedStats().size());
-        Mockito.verify(scheduler, Mockito.times(0)).scheduleAtFixedRate(
-            Mockito.any(),
-            Mockito.eq(60L * 60L * 24L * (int)Math.pow(2, k)),
-            Mockito.eq(60L),
-            Mockito.eq(TimeUnit.SECONDS)
-        );
-        Mockito.verify(scheduler, Mockito.times(2)).scheduleAtFixedRate(
-            Mockito.any(),
-            Mockito.eq(60L),
-            Mockito.eq(60L),
-            Mockito.eq(TimeUnit.SECONDS)
-        );
-      }
+      // only roll once per hour
+      // still in back off, skip report
+      expectedSaves++;
+      verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
     }
+
+    // minute 6, second back off completed
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(6));
+    task.getRunnable(false).run();
+    // only roll once per hour
+    // completed back off, should report
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // rather than simulating all minutes, skip to hour mark, which also exceeds back off
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(60));
+    task.getRunnable(false).run();
+    // hour's up, roll!
+    expectedRolls++;
+    // completed back off, should report
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // we aren't consistently using the mock time at all layers, so set this field otherwise we will roll again
+    task.getStatsInfo().getActiveStats().setStartTime(task.getCurrentTimeMillis());
+
+    // minute 61: still failing, still in back off
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(61));
+    task.getRunnable(false).run();
+    // only roll once per hour
+    // back off period is 16 minutes, so we still skip it
+    // always save
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // force a roll and report, which triggers back off again (for 32 mins)
+    task.getRunnable(true).run();
+    expectedRolls++;
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // we aren't consistently using the mock time at all layers, so set this field otherwise we will roll again
+    task.getStatsInfo().getActiveStats().setStartTime(task.getCurrentTimeMillis());
+
+    // track when this period started for later
+    long interestingPeriodStart = task.getCurrentTimeMillis();
+
+    // back off is now 61 + 32 = 93 minutes, try 92 to make sure it is still backing off after a forced roll
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(92));
+    task.getRunnable(false).run();
+    // only roll once per hour
+    // in back off
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // let the next report go through
+    Mockito.when(task.reportStats(Mockito.anyList())).thenCallRealMethod();
+
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(initCompleteTime + TimeUnit.MINUTES.toMillis(93));
+    task.getRunnable(false).run();
+    // only roll once per hour
+    // just left back off
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // next report in 24 hours from oldest period start. Try 30 mins short of that.
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(
+            interestingPeriodStart + TimeUnit.HOURS.toMillis(24) - TimeUnit.MINUTES.toMillis(30));
+    task.getRunnable(false).run();
+    // way overdue for a roll
+    expectedRolls++;
+    // not quite 24 hours since oldest period start
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // we aren't consistently using the mock time at all layers, so set this field otherwise we will roll again
+    task.getStatsInfo().getActiveStats().setStartTime(task.getCurrentTimeMillis());
+
+    // report after the full 24 hrs
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(interestingPeriodStart + TimeUnit.HOURS.toMillis(24));
+    task.getRunnable(false).run();
+    // just rolled 30m ago
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    interestingPeriodStart = task.getCurrentTimeMillis();
+
+    // make it fail again
+    Mockito.doReturn(false).when(task).reportStats(Mockito.anyList());
+
+    // pump the failure count up super high to trigger maximum back off duration of 1 day
+    for (long backOff = 1; backOff < TimeUnit.DAYS.toMinutes(1) ; backOff = backOff << 1) {
+      task.getRunnable(true).run();
+      expectedRolls++;
+      expectedReports++;
+      expectedSaves++;
+      verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+    }
+
+    // we aren't consistently using the mock time at all layers, so set this field manually
+    task.getStatsInfo().getActiveStats().setStartTime(interestingPeriodStart);
+
+    // 23 hours + 59 minutes later, should not report due to backoff (normally at 99% of a day if no back off)
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(
+            interestingPeriodStart + TimeUnit.HOURS.toMillis(23) + TimeUnit.MINUTES.toMillis(59));
+    task.getRunnable(false).run();
+    expectedRolls++;
+    // no report, barely too early
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
+
+    // we aren't consistently using the mock time at all layers, so set this field otherwise we will roll again
+    task.getStatsInfo().getActiveStats().setStartTime(task.getCurrentTimeMillis());
+
+    // 24 hours later, should report
+    Mockito.when(task.getCurrentTimeMillis()).thenReturn(interestingPeriodStart + TimeUnit.HOURS.toMillis(24));
+    task.getRunnable(false).run();
+    // just rolled
+    expectedReports++;
+    expectedSaves++;
+    verifyRollsReportsSaves(task, expectedRolls, expectedReports, expectedSaves);
 
     task.stop();
+  }
+
+  private void verifyRollsReportsSaves(AbstractStatsCollectorTask task, int expectedRolls, int expectedReports, int expectedSaves) {
+    Mockito.verify(task, Mockito.times(expectedRolls)).updateAfterRoll(Mockito.any());
+    Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyList());
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
   }
 
   @Test
@@ -812,7 +884,7 @@ public class TestStatsCollectorTask {
 
     StatsInfo stats = new StatsInfo(ImmutableList.of(new TestModelStatsExtension()));
     stats.setCurrentSystemInfo(buildInfo, runtimeInfo, task.getSysInfo());
-    stats.rollIfNeeded(buildInfo, runtimeInfo, task.getSysInfo(), 1, true);
+    stats.rollIfNeeded(buildInfo, runtimeInfo, task.getSysInfo(), 1, true, System.currentTimeMillis());
     // collected stats have extensions
     Assert.assertEquals(1, stats.getCollectedStats().size());
     Assert.assertEquals(1, stats.getCollectedStats().get(0).getExtensions().size());
