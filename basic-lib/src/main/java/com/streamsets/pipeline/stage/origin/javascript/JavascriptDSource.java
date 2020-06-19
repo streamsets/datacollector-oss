@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.origin.scripting.config.Groups;
     execution = {ExecutionMode.STANDALONE},
     icon = "javascript.png",
     producesEvents = true,
+    resetOffset = true,
     flags = StageBehaviorFlags.USER_CODE_INJECTION,
     onlineHelpRefUrl = "index.html?contextID=task_hnz_nnj_l3b"
 )

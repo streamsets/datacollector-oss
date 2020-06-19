@@ -33,6 +33,7 @@ import com.streamsets.pipeline.stage.origin.scripting.config.Groups;
     execution = {ExecutionMode.STANDALONE},
     icon = "groovy.png",
     producesEvents = true,
+    resetOffset = true,
     flags = StageBehaviorFlags.USER_CODE_INJECTION,
     onlineHelpRefUrl = "index.html?contextID=task_xxs_5kj_l3b"
 )
