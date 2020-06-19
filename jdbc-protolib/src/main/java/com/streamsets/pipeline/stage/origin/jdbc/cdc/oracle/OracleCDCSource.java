@@ -931,6 +931,15 @@ public class OracleCDCSource extends BaseSource {
     return useLocalBuffering ? startTime : startTime.minusSeconds(configBean.txnWindow);
   }
 
+  /**
+   * Parses a SQL statement and generates an SDC record.
+   *
+   * @param sql SQL statement to parse.
+   * @param attributes Header attributes to include in the generated SDC record.
+   * @param operationCode A valid {@code OracleCDCOperationCode} value.
+   * @return An SDC record or null if the SQL statement contains an unsupported database type and
+   *     {@code configBean.unsupportedFieldOp} is not {@code SEND_TO_PIPELINE}.
+   */
   private Record generateRecord(
       String sql,
       Map<String, String> attributes,
@@ -1209,20 +1218,20 @@ public class OracleCDCSource extends BaseSource {
         try {
           final RecordOffset recordOffset;
           Record record = recordFuture.future.get();
-          recordOffset = new RecordOffset(record,
-              new Offset(OFFSET_VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq, xid)
-          );
 
-          seq = recordOffset.offset.sequence;
+          if (record != null) {
+            recordOffset = new RecordOffset(
+                record, new Offset(OFFSET_VERSION_UNCOMMITTED, commitTimestamp, commitScn, recordFuture.seq, xid));
+            seq = recordOffset.offset.sequence;
 
-          while(!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
-            if (getContext().isStopped()) {
-              records.close();
-              return seq;
+            while (!recordQueue.offer(recordOffset, 1, TimeUnit.SECONDS)) {
+              if (getContext().isStopped()) {
+                records.close();
+                return seq;
+              }
             }
+            LOG.trace(GENERATED_RECORD, recordOffset.record, recordOffset.record.getHeader().getAttribute(XID));
           }
-
-          LOG.trace(GENERATED_RECORD, recordOffset.record, recordOffset.record.getHeader().getAttribute(XID));
         } catch (InterruptedException | ExecutionException ex) {
           try {
             errorRecordHandler.onError(JDBC_405, ex);
