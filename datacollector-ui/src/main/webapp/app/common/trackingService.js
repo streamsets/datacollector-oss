@@ -153,6 +153,31 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    /**
+     * Set up user identity in all tracking services
+     * @param {string} sdcId 
+     * @param {string} userName 
+     */
+    tracking.initializeUser = function(sdcId, userName) {
+      var USER_ID = sdcId + userName;
+      tracking.mixpanel.identify(USER_ID);
+      tracking.mixpanel.people.set({
+        userName: userName,
+        UserID: USER_ID,
+        sdcId: sdcId,
+        productName: 'Data Collector',
+      });
+      tracking.mixpanel.register({
+        userName: userName,
+        sdcId: sdcId,
+        productName: 'Data Collector',
+      });
+      tracking.FS.setUserVars({
+        userName: userName,
+        UserID: USER_ID,
+        sdcId: sdcId,
+      });
+    };
 
     return tracking;
 });
