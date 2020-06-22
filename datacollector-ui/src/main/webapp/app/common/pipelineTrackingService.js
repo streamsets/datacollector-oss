@@ -19,7 +19,9 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('pipelineTracking', function(tracking, pipelineConstant, api, $rootScope) {
+  .factory('pipelineTracking', function(
+    tracking, pipelineConstant, api, $rootScope, trackingEvent
+  ) {
     var pipelineTracking = {};
 
     /**
@@ -35,6 +37,9 @@ angular.module('dataCollectorApp.common')
       var processorStages = pipelineConfig.stages.filter(function(stage) {
         return stage.uiInfo.stageType === pipelineConstant.PROCESSOR_STAGE_TYPE;
       });
+      var executorStages = pipelineConfig.stages.filter(function(stage) {
+        return stage.uiInfo.stageType === pipelineConstant.EXECUTOR_STAGE_TYPE;
+      });
       var destinationStageIds = destinationStages.map(function(stage) {
         return stage.instanceName;
       });
@@ -42,6 +47,9 @@ angular.module('dataCollectorApp.common')
         return stage.stageName;
       });
       var processorStageNames = processorStages.map(function(stage) {
+        return stage.stageName;
+      });
+      var executorStageNames = executorStages.map(function(stage) {
         return stage.stageName;
       });
       var originStage = originStages[0] || {};
@@ -52,7 +60,8 @@ angular.module('dataCollectorApp.common')
         'Origin Type Name': originStage.stageName,
         'Destination Stage ID List': destinationStageIds,
         'Destination Type Name List': destinationStageNames,
-        'Processor Type Name List': processorStageNames
+        'Processor Type Name List': processorStageNames,
+        'Executor Type Name List': executorStageNames
       };
       return trackingData;
     };
@@ -75,7 +84,7 @@ angular.module('dataCollectorApp.common')
           activeConfigStatus.message];
         trackingData['Error Stage IDs'] = [];
       }
-      tracking.mixpanel.track('Pipeline Error', trackingData);
+      tracking.mixpanel.track(trackingEvent.PIPELINE_ERROR, trackingData);
     };
 
 
@@ -84,26 +93,21 @@ angular.module('dataCollectorApp.common')
      * with stage issues split to get only the code (e.g. JDBC_03)
      */
     pipelineTracking.getFlatIssueList = function(issues) {
-      var issueList = [];
-      var pipelineIssueMessages = [];
-      if (issues.pipelineIssues) {
-        pipelineIssueMessages = issues.pipelineIssues.map(function(issue) {
-          return issue.message;
+      var pipelineIssueMessages = (issues.pipelineIssues || []).map(function(issue) {
+        return issue.message;
+      });
+
+      var stageIssueMessages = Object.values(issues.stageIssues || {}).flatMap(function(stageIssues) {
+        return stageIssues.map(function(issue) {
+          if (issue.message) {
+            return issue.message.split(' ', 1)[0];
+          } else {
+            return JSON.stringify(issue);
+          }
         });
-      }
-      if (issues.stageIssues) {
-        for (var stage in issues.stageIssues) {
-          issueList = issueList.concat(issues.stageIssues[stage].map(function(issue) {
-            if (issue.message) {
-              return issue.message.split(' ', 1)[0];
-            } else {
-              return JSON.stringify(issue);
-            }
-          }));
-        }
-      }
-      issueList = issueList.concat(pipelineIssueMessages);
-      return issueList;
+      });
+
+      return pipelineIssueMessages.concat(stageIssueMessages);
     };
 
     /**
@@ -169,7 +173,7 @@ angular.module('dataCollectorApp.common')
           trackingData['Run Time'] = pipelineTracking.timeAgoInMinutes(runTime);
         }
       }).finally(function() {
-        tracking.mixpanel.track('Pipeline Stopped', trackingData);
+        tracking.mixpanel.track(trackingEvent.PIPELINE_STOPPED, trackingData);
       });
     };
 
@@ -194,7 +198,7 @@ angular.module('dataCollectorApp.common')
       if (previousPipelineTime) {
         trackingData['Run Time'] = pipelineTracking.timeAgoInMinutes(previousPipelineTime);
       }
-      tracking.mixpanel.track('Pipeline Stop Requested', trackingData);
+      tracking.mixpanel.track(trackingEvent.PIPELINE_STOP_REQUESTED, trackingData);
     };
 
     /**
@@ -208,20 +212,20 @@ angular.module('dataCollectorApp.common')
       Object.assign(trackingData, currentCounts);
       var previousBatchCount = $rootScope.common.previousBatchCount[pipelineConfig.pipelineId];
       if (previousBatchCount === 0 && currentBatchCount > 0) {
-        tracking.mixpanel.track('First Pipeline Microbatch', trackingData);
+        tracking.mixpanel.track(trackingEvent.FIRST_MICROBATCH, trackingData);
       }
       $rootScope.common.previousBatchCount[pipelineConfig.pipelineId] = currentBatchCount;
       var previousInputRecordCount = $rootScope.common.previousInputRecordCount[pipelineConfig.pipelineId];
       if (previousInputRecordCount === 0 && currentInputRecordCount > 0) {
-        tracking.mixpanel.track('Run Reported', trackingData);
+        tracking.mixpanel.track(trackingEvent.RUN_REPORTED, trackingData);
       }
       $rootScope.common.previousInputRecordCount[pipelineConfig.pipelineId] = currentInputRecordCount;
     };
 
     pipelineTracking.trackValidationSelected = function(pipelineConfig) {
       var trackingData = pipelineTracking.getTrackingInfo(pipelineConfig);
-      tracking.mixpanel.track('Validation Selected', trackingData);
-      tracking.FS.event('Validation Selected', trackingData);
+      tracking.mixpanel.track(trackingEvent.VALIDATION_SELECTED, trackingData);
+      tracking.FS.event(trackingEvent.VALIDATION_SELECTED, trackingData);
     };
 
     pipelineTracking.trackValidationComplete = function(pipelineConfig, success, previewData) {
@@ -231,19 +235,19 @@ angular.module('dataCollectorApp.common')
       if (previewData) {
         if (previewData.issues) {
           var issueList = pipelineTracking.getFlatIssueList(previewData.issues);
-          trackingData["Validation Error"] = issueList;
+          trackingData['Validation Error'] = issueList;
         } else if (previewData.message) {
-          trackingData["Validation Error"] = [JSON.stringify(previewData.message)];
+          trackingData['Validation Error'] = [JSON.stringify(previewData.message)];
         }
       }
-      tracking.mixpanel.track('Validation Complete', trackingData);
+      tracking.mixpanel.track(trackingEvent.VALIDATION_COMPLETE, trackingData);
     };
 
     pipelineTracking.trackRunSelected = function(pipelineConfig, withParameters) {
       var trackingData = pipelineTracking.getTrackingInfo(pipelineConfig);
       trackingData['With Parameters'] = withParameters;
-      tracking.mixpanel.track('Run Selected', trackingData);
-      tracking.FS.event('Run Selected', trackingData);
+      tracking.mixpanel.track(trackingEvent.RUN_SELECTED, trackingData);
+      tracking.FS.event(trackingEvent.RUN_SELECTED, trackingData);
     };
 
     pipelineTracking.trackStageAdded = function(stageInstance, pipelineId) {
@@ -253,40 +257,71 @@ angular.module('dataCollectorApp.common')
         'Stage Type Name': stageInstance.stageName,
         'Library Name': stageInstance.library
       };
-      if (stageInstance.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-        tracking.mixpanel.track('Origin Added', stageTrackingDetail);
-        tracking.mixpanel.people.set({
-          'Core Journey Stage - Origin Added': true
-        });
-      } else if (stageInstance.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-        tracking.mixpanel.track('Processor Added', stageTrackingDetail);
-        tracking.mixpanel.people.set({
-          'Core Journey Stage - Processor Added': true
-        });
-      } else if (stageInstance.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-        tracking.mixpanel.track('Destination Added', stageTrackingDetail);
-        tracking.mixpanel.people.set({
-          'Core Journey Stage - Destination Added': true
-        });
-      } else if (stageInstance.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-        tracking.mixpanel.track('Executor Added', stageTrackingDetail);
-        tracking.mixpanel.people.set({
-          'Core Journey Stage - Executor Added': true
-        });
-      } else {
-        tracking.mixpanel.track('Stage with unknown type added', stageTrackingDetail);
+      switch(stageInstance.uiInfo.stageType) {
+        case pipelineConstant.SOURCE_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.ORIGIN_ADDED, stageTrackingDetail);
+          tracking.mixpanel.people.set({
+            'Core Journey Stage - Origin Added': true
+          });
+          break;
+        case pipelineConstant.PROCESSOR_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.PROCESSOR_ADDED, stageTrackingDetail);
+          tracking.mixpanel.people.set({
+            'Core Journey Stage - Processor Added': true
+          });
+          break;
+        case pipelineConstant.TARGET_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.DESTINATION_ADDED, stageTrackingDetail);
+          tracking.mixpanel.people.set({
+            'Core Journey Stage - Destination Added': true
+          });
+          break;
+        case pipelineConstant.EXECUTOR_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.EXECUTOR_ADDED, stageTrackingDetail);
+          tracking.mixpanel.people.set({
+            'Core Journey Stage - Executor Added': true
+          });
+          break;
+        default:
+          tracking.mixpanel.track(trackingEvent.UNKNOWN_ADDED, stageTrackingDetail);
+          break;
+      }
+    };
+
+    pipelineTracking.trackStageRemoved = function(stageType, pipelineId, instanceName, stageName, library) {
+      var stageTrackingDetail = {
+        'Pipeline ID': pipelineId,
+        'Stage ID': instanceName,
+        'Stage Type Name': stageName,
+        'Library Name': library
+      };
+      switch(stageType) {
+        case pipelineConstant.SOURCE_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.ORIGIN_REMOVED, stageTrackingDetail);
+          break;
+        case pipelineConstant.PROCESSOR_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.PROCESSOR_REMOVED, stageTrackingDetail);
+          break;
+        case pipelineConstant.TARGET_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.DESTINATION_REMOVED, stageTrackingDetail);
+          break;
+        case pipelineConstant.EXECUTOR_STAGE_TYPE:
+          tracking.mixpanel.track(trackingEvent.EXECUTOR_REMOVED, stageTrackingDetail);
+          break;
+        default:
+          tracking.mixpanel.track(trackingEvent.UNKNOWN_REMOVED, stageTrackingDetail);
+          break;
       }
     };
 
     pipelineTracking.trackPreviewSelected = function(pipelineConfig) {
       var trackingData = pipelineTracking.getTrackingInfo(pipelineConfig);
-      tracking.mixpanel.track('Preview Selected', trackingData);
-      tracking.FS.event('Preview Selected', trackingData);
+      tracking.mixpanel.track(trackingEvent.PREVIEW_SELECTED, trackingData);
+      tracking.FS.event(trackingEvent.PREVIEW_SELECTED, trackingData);
     };
 
     pipelineTracking.trackPreviewClosed = function(pipelineConfig) {
-      tracking.mixpanel.track('Preview Closed', {'Pipeline ID': pipelineConfig ? pipelineConfig.pipelineId : 'N/A'});
-    };
+      tracking.mixpanel.track(trackingEvent.PREVIEW_CLOSED, {'Pipeline ID': pipelineConfig ? pipelineConfig.pipelineId : 'N/A'});    };
 
     pipelineTracking.trackPreviewConfigComplete = function(pipelineConfig, previewConfig) {
       var trackingData = pipelineTracking.getTrackingInfo(pipelineConfig);
@@ -299,7 +334,24 @@ angular.module('dataCollectorApp.common')
       trackingData['Has Show Field Type'] = previewConfig.showFieldType;
       trackingData['Has Remember The Configuration'] = previewConfig.rememberMe;
       tracking.mixpanel.people.set({'Core Journey Stage - Preview Run': true});
-      tracking.mixpanel.track('Preview Config Complete', trackingData);
+      tracking.mixpanel.track(trackingEvent.PREVIEW_CONFIG_COMPLETE, trackingData);
+    };
+
+    pipelineTracking.trackTabSelected = function(tabName, isPipelineRunning, selectedType, pipelineConfig) {
+      var trackingData = {
+        'Tab Viewed': tabName,
+        'Is Pipeline Running': isPipelineRunning,
+        'Selected Type': selectedType
+      };
+      if (pipelineConfig) {
+        trackingData['Pipeline ID'] = pipelineConfig.info.pipelineId;
+        if (tabName === 'history') {
+          tracking.mixpanel.track(trackingEvent.HISTORY_VIEWED, {
+            'Pipeline ID': pipelineConfig.info.pipelineId
+          });
+        }
+      }
+      tracking.mixpanel.track(trackingEvent.TAB_SELECTED, trackingData);
     };
 
     return pipelineTracking;

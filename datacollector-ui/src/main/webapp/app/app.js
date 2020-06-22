@@ -88,7 +88,8 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $modalStack,
-                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http, tracking) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http,
+                 tracking, trackingEvent) {
 
     var defaultTitle = 'Data Collector | StreamSets';
     var pipelineStatusTimer;
@@ -610,7 +611,7 @@ angular.module('dataCollectorApp')
             'sdcId': SDC_ID
           });
           setTimeout(function() {
-            tracking.mixpanel.track('Login Complete', {});
+            tracking.mixpanel.track(trackingEvent.LOGIN_COMPLETE, {});
           }, 500); // setTimeout to pick up extra super/register properties set later
         });
 
@@ -654,19 +655,19 @@ angular.module('dataCollectorApp')
                     $rootScope.common.infoList = [{
                       message: 'Activation key expired, you need to get a new one from StreamSets'
                     }];
-                    tracking.mixpanel.track('Activation key expired', {});
+                    tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRED, {});
                   }
                 }
               } else if (difDays < 30) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key expires in ' + difDays + '  days'
                 }];
-                tracking.mixpanel.track('Activation key expiring soon', {'Days': difDays});
+                tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRING_SOON, {'Days': difDays});
               } else if (!activationInfo.info.valid) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key is not valid'
                 }];
-                tracking.mixpanel.track('Activation key invalid', {});
+                tracking.mixpanel.track(trackingEvent.ACTIVATION_INVALID, {});
               }
             }
           }

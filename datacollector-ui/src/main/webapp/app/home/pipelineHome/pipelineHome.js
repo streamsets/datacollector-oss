@@ -825,10 +825,8 @@ angular
      * @param {string} status
      */
     function isErrorStatus(status) {
-      return _.contains(
-        ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'],
-        status
-        );
+      var ERROR_STATUSES = ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'];
+      return _.contains(ERROR_STATUSES, status);
     }
 
     /**

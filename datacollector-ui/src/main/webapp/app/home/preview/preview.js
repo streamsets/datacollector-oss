@@ -19,7 +19,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('PreviewController', function (
     $scope, $rootScope, $q, _, api, previewService, pipelineConstant,
-    $timeout, $modal, tracking, pipelineTracking
+    $timeout, $modal, tracking, pipelineTracking, trackingEvent
   ) {
     var previewDataBackup, previewStatusTimer, currentPreviewerId, currentStage;
 
@@ -487,7 +487,7 @@ angular
 
             trackingData['Preview Successful'] = true;
             trackingData['Preview Error'] = [];
-            tracking.mixpanel.track('Preview Complete', trackingData);
+            tracking.mixpanel.track(trackingEvent.PREVIEW_COMPLETE, trackingData);
           });
 
         }).catch(function(res) {
@@ -496,7 +496,7 @@ angular
           $scope.showLoading = false;
           trackingData['Preview Successful'] = false;
           trackingData['Preview Error'] = [JSON.stringify(res.data)];
-          tracking.mixpanel.track('Preview Complete', trackingData);
+          tracking.mixpanel.track(trackingEvent.PREVIEW_COMPLETE, trackingData);
         });
 
       }, function(data) {
@@ -505,7 +505,7 @@ angular
         $scope.showLoading = false;
         trackingData['Preview Successful'] = false;
         trackingData['Preview Error'] = [JSON.stringify(data)];
-        tracking.mixpanel.track('Preview Complete', trackingData);
+        tracking.mixpanel.track(trackingEvent.PREVIEW_COMPLETE, trackingData);
       });
 
 
@@ -628,7 +628,7 @@ angular
               trackingData['Preview Successful'] = false;
               var issueList = pipelineTracking.getFlatIssueList(previewData.issues);
               trackingData['Preview Error'] = issueList;
-              tracking.mixpanel.track('Preview Complete', trackingData);
+              tracking.mixpanel.track(trackingEvent.PREVIEW_COMPLETE, trackingData);
             } else if (previewData.message) {
               $rootScope.common.errors = [{
                 RemoteException: {
@@ -639,7 +639,7 @@ angular
               }];
               trackingData['Preview Successful'] = false;
               trackingData['Preview Error'] = [previewData.message];
-              tracking.mixpanel.track('Preview Complete', trackingData);
+              tracking.mixpanel.track(trackingEvent.PREVIEW_COMPLETE, trackingData);
             }
 
             $scope.closePreview();
