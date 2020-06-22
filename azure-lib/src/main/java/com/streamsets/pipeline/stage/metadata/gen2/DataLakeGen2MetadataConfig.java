@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.AzureUtils;
 import com.streamsets.pipeline.stage.conf.AuthMethodGen2;
 import com.streamsets.pipeline.stage.conf.AuthMethodGen2ChooserValues;
 import com.streamsets.pipeline.stage.conf.DataLakeConnectionProtocol;
@@ -194,28 +195,46 @@ public class DataLakeGen2MetadataConfig {
   }
 
   public String getAbfsUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {
-    String storageContainer = resolveCredentialValue(context, this.storageContainer, ADLS_CONFIG_STORAGE_CONTAINER, issues);
-    String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
-    return buildAbfsUri(storageContainer, accountFQDN);
+    String storageContainerString = resolveCredentialValue(context,
+        this.storageContainer,
+        ADLS_CONFIG_STORAGE_CONTAINER,
+        issues
+    );
+    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
+    return buildAbfsUri(storageContainerString, accountFQDNString);
   }
 
   public Map<String, String> getHdfsConfigBeans(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     Map<String, String> hdfsConfigs = new HashMap<>();
+    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
 
     switch (this.authMethod) {
       case OAUTH:
+        String clientKeyString = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_SECRET_KEY, issues);
         hdfsConfigs.put(ADLS_CONFIG_AUTH_TYPE_KEY, ADLS_CONFIG_AUTH_TYPE_DEFAULT_VALUE);
         hdfsConfigs.put(ADLS_CONFIG_OAUTH_PROVIDER_TYPE_KEY, ADLS_CONFIG_OAUTH_CLIENT_CREDS_TOKEN_PROVIDER_VALUE);
-        hdfsConfigs.put(ADLS_CONFIG_AUTH_ENDPOINT_KEY, resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_ENDPOINT_KEY, issues));
-        hdfsConfigs.put(ADLS_CONFIG_CLIENT_ID_KEY, resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues));
-        hdfsConfigs.put(ADLS_CONFIG_CLIENT_SECRET_KEY, resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_SECRET_KEY, issues));
+        hdfsConfigs.put(ADLS_CONFIG_AUTH_ENDPOINT_KEY,
+            resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_ENDPOINT_KEY, issues)
+        );
+        hdfsConfigs.put(ADLS_CONFIG_CLIENT_ID_KEY,
+            resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues)
+        );
+        hdfsConfigs.put(ADLS_CONFIG_CLIENT_SECRET_KEY, clientKeyString
+
+        );
+        AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
         break;
       case SHARED_KEY:
-        String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
-        String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDN;
-        hdfsConfigs.put(propertyName, resolveCredentialValue(context, this.accountKey,  ADLS_CONFIG_ACCOUNT_KEY, issues));
+        String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDNString;
+        hdfsConfigs.put(propertyName,
+            resolveCredentialValue(context, this.accountKey, ADLS_CONFIG_ACCOUNT_KEY, issues)
+        );
+        String accountKeyString = resolveCredentialValue(context, this.accountKey, "accountKey", issues);
+        AzureUtils.sendPartnerTaggingRequest(accountFQDNString, accountKeyString);
         break;
     }
+
+    hdfsConfigs.put(AzureUtils.ADLS_USER_AGENT_STRING_KEY, AzureUtils.buildUserAgentString(context));
 
     return hdfsConfigs;
   }

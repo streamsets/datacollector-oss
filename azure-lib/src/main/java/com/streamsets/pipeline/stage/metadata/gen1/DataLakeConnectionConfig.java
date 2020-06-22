@@ -85,8 +85,8 @@ public class DataLakeConnectionConfig extends HdfsConnectionConfig {
     initHiddenDefaults();
     this.hdfsUri = hdfsUri;
 
-    for (String hadoopConfig : hdfsConfigs.keySet()) {
-      conf.set(hadoopConfig, hdfsConfigs.get(hadoopConfig));
+    for (Map.Entry<String, String> hadoopConfig : hdfsConfigs.entrySet()) {
+      conf.set(hadoopConfig.getKey(), hadoopConfig.getValue());
     }
   }
 

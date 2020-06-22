@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.AzureUtils;
 import com.streamsets.pipeline.stage.conf.DataLakeConnectionProtocol;
 import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
@@ -110,16 +111,22 @@ public class DataLakeGen1MetadataConfig {
   public List<HadoopConfigBean> advancedConfiguration;
 
   public Map<String, String> getHdfsConfigBeans(final Stage.Context context, List<Stage.ConfigIssue> issues) {
-    Map hdfsConfigs = new HashMap<>();
+    Map<String, String> hdfsConfigs = new HashMap<>();
 
     String authEndPoint = resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_TOKEN_ENDPOINT, issues);
-    String clientId = resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues);
-    String clientKey = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_KEY, issues);
+    String clientIdString = resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues);
+    String clientKeyString = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_KEY, issues);
+    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
 
     hdfsConfigs.put(ADLS_GEN1_ACCESS_TOKEN_PROVIDER_KEY, ADLS_GEN1_ACCESS_TOKEN_PROVIDER_VALUE);
     hdfsConfigs.put(ADLS_GEN1_REFRESH_URL_KEY, authEndPoint);
-    hdfsConfigs.put(ADLS_GEN1_CLIENT_ID_KEY, clientId);
-    hdfsConfigs.put(ADLS_GEN1_CLIENT_SECRET_KEY, clientKey);
+    hdfsConfigs.put(ADLS_GEN1_CLIENT_ID_KEY, clientIdString);
+    hdfsConfigs.put(ADLS_GEN1_CLIENT_SECRET_KEY, clientKeyString);
+
+    hdfsConfigs.put(AzureUtils.ADLS_USER_AGENT_STRING_KEY, AzureUtils.buildUserAgentString(context));
+    AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
+
+    advancedConfiguration.forEach(hadoopConfig -> hdfsConfigs.put(hadoopConfig.key, hadoopConfig.value.get()));
 
     return hdfsConfigs;
   }
@@ -140,7 +147,7 @@ public class DataLakeGen1MetadataConfig {
   }
 
   public String getAdlUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {
-    String accountFQDN = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
-    return DataLakeConnectionProtocol.ADL_PROTOCOL_SECURE.getProtocol() + accountFQDN;
+    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
+    return DataLakeConnectionProtocol.ADL_PROTOCOL_SECURE.getProtocol() + accountFQDNString;
   }
 }

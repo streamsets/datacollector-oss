@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.datalake;
 
 import com.microsoft.azure.datalake.store.ADLException;
 import com.microsoft.azure.datalake.store.ADLStoreClient;
+import com.microsoft.azure.datalake.store.ADLStoreOptions;
 import com.microsoft.azure.datalake.store.oauth2.AzureADAuthenticator;
 import com.microsoft.azure.datalake.store.oauth2.AzureADToken;
 import com.streamsets.pipeline.api.Batch;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.lib.AzureUtils;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.FakeRecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
@@ -160,6 +162,11 @@ public class DataLakeTarget extends BaseTarget {
           clientKey,
           accountFQDN
         );
+
+        // Set client User Agent. There is no way to add a prefix, the only available option is adding a suffix
+        ADLStoreOptions adlStoreOptions = new ADLStoreOptions();
+        adlStoreOptions.setUserAgentSuffix(AzureUtils.buildUserAgentString(getContext()));
+        client.setOptions(adlStoreOptions);
 
         if (conf.checkPermission && !conf.dirPathTemplateInHeader) {
           validatePermission();
