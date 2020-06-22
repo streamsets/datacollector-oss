@@ -679,6 +679,7 @@ angular.module('dataCollectorApp')
                 Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
                 tracking.mixpanel.register({'sdcVersion': buildResult.data.version});
                 tracking.FS.setUserVars({'sdcVersion': buildResult.data.version});
+                tracking.mixpanel.people.set({'sdcVersion': buildResult.data.version});
               },
               1000
             );
@@ -692,11 +693,13 @@ angular.module('dataCollectorApp')
                     Analytics.set('dimension2', stats.activeStats.extraInfo.cloudProvider); // dimension2 is cloudProvider
                     tracking.mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
                     tracking.FS.setUserVars({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                    tracking.mixpanel.people.set({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
                   }
                   if (stats.activeStats.extraInfo.distributionChannel) {
                     Analytics.set('dimension3', stats.activeStats.extraInfo.distributionChannel); // dimension3 is distributionChannel
                     tracking.mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
                     tracking.FS.setUserVars({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                    tracking.mixpanel.people.set({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
                   }
                 }
               },
