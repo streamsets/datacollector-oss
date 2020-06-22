@@ -61,7 +61,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
-import net.sf.cglib.asm.$Attribute;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Assert;
@@ -270,6 +269,56 @@ public class TestClusterRunner {
   }
 
   @Test
+  public void testTransitionValidation() throws Exception {
+    ClusterRunner clusterRunner = createClusterRunner();
+    setState(PipelineStatus.FINISHED);
+    assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
+    // can't transition from inactive state
+    try {
+      clusterRunner.setStateTransition(
+              "admin", PipelineStatus.RUN_ERROR, "a", attributes);
+      fail("Expected exception due to invalid transition");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    }
+    assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
+
+    // verify all public methods that do transitions that should be validated, but allowed when made directly
+    testTransitionHelper(clusterRunner, PipelineStatus.STARTING,
+            () -> clusterRunner.prepareForStart(new StartPipelineContextBuilder("admin").build()));
+    testTransitionHelper(clusterRunner, PipelineStatus.RUNNING,
+            () -> clusterRunner.start(new StartPipelineContextBuilder("admin").build()));
+    testTransitionHelper(clusterRunner, PipelineStatus.STOPPING,
+            () -> clusterRunner.prepareForStop("admin"));
+    testTransitionHelper(clusterRunner, PipelineStatus.STOPPED,
+            () -> clusterRunner.stop("admin"));
+  }
+
+  private void testTransitionHelper(ClusterRunner clusterRunner,
+                                    PipelineStatus finalStatus,
+                                    TestRunnable callThatFails) throws Exception {
+    // can't transition from DISCONNECTED to anything but CONNECTING in public methods
+    setState(PipelineStatus.DISCONNECTED);
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
+    try {
+      callThatFails.run();
+      fail("Expected exception due to invalid transition");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    }
+    assertEquals(PipelineStatus.DISCONNECTED, clusterRunner.getState().getStatus());
+
+    // internal transitions should go through
+    clusterRunner.setStateTransition("admin", finalStatus, "directSet", attributes);
+    assertEquals(finalStatus, clusterRunner.getState().getStatus());
+  }
+
+  @FunctionalInterface
+  interface TestRunnable {
+    void run() throws Exception;
+  }
+
+  @Test
   public void testPipelineRetry() throws Exception {
     PipelineStateStore pipelineStateStore = new RetryPipelineStateStore(new CachePipelineStateStore(new
         FilePipelineStateStore(runtimeInfo,
@@ -280,19 +329,19 @@ public class TestClusterRunner {
     Assert.assertEquals(PipelineStatus.STARTING, clusterRunner.getState().getStatus());
     clusterRunner.start(new StartPipelineContextBuilder("admin").build());
     Assert.assertEquals(PipelineStatus.RUNNING, clusterRunner.getState().getStatus());
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).setStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     long saveStateTime = ((RetryPipelineStateStore)pipelineStateStore).retrySaveStateTime;
     long retryInvocationTime = ((RetryRunner)clusterRunner).retryInvocation;
     Assert.assertTrue("Retry should be schedule after state is saved", retryInvocationTime > saveStateTime);
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 1, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).setStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 2, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).setStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RETRY, clusterRunner.getState().getStatus());
     pipelineStateStore.saveState("admin", NAME, "0", PipelineStatus.RUNNING, null, attributes, ExecutionMode.CLUSTER_MESOS_STREAMING, null, 3, 0);
-    ((ClusterRunner)clusterRunner).validateAndSetStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
+    ((ClusterRunner)clusterRunner).setStateTransition("admin", PipelineStatus.RUN_ERROR, "a", attributes);
     assertEquals(PipelineStatus.RUN_ERROR, clusterRunner.getState().getStatus());
   }
 
@@ -523,14 +572,14 @@ public class TestClusterRunner {
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(1, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+    clusterRunner.setStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+    clusterRunner.setStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
 
     Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(1, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", new HashMap<String, Object>());
+    clusterRunner.setStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", new HashMap<String, Object>());
     //Check the handleErrorCallbackFromSlaves is called.
     Mockito.verify(clusterRunner, Mockito.times(1)).handleErrorCallbackFromSlaves(Matchers.anyMap());
 
@@ -559,9 +608,9 @@ public class TestClusterRunner {
     assertFalse(errorCallbacks.isEmpty());
     assertEquals(2, errorCallbacks.size());
 
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
+    clusterRunner.setStateTransition("user", PipelineStatus.STARTING, "Starting", Collections.<String, Object>emptyMap());
 
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
+    clusterRunner.setStateTransition("user", PipelineStatus.RUNNING, "Running", Collections.<String, Object>emptyMap());
 
     Mockito.verify(clusterRunner, Mockito.never()).handleErrorCallbackFromSlaves(Matchers.anyMap());
     assertFalse(errorCallbacks.isEmpty());
@@ -569,7 +618,7 @@ public class TestClusterRunner {
 
     final Map<String, Object> attributeMap = new HashMap<>();
 
-    clusterRunner.validateAndSetStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", attributeMap);
+    clusterRunner.setStateTransition("user", PipelineStatus.RUN_ERROR, "Run Error", attributeMap);
 
     assertFalse(attributeMap.isEmpty());
     assertTrue(attributeMap.containsKey(ClusterRunner.SLAVE_ERROR_ATTRIBUTE));
@@ -663,6 +712,45 @@ public class TestClusterRunner {
     PipelineState state = clusterRunner.getState();
     Assert.assertTrue(state.getStatus() == PipelineStatus.START_ERROR);
     Assert.assertTrue(state.getMessage().contains("CONTAINER_0158"));
+  }
+
+  @Test
+  public void testConnectTerminatesNormally() throws Exception {
+    // onDataCollectorStart is the easiest way to test connect
+    attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
+    ClusterRunner clusterRunner = createClusterRunner();
+    clusterRunner.prepareForStart(new StartPipelineContextBuilder("admin").build());
+    setState(PipelineStatus.RUNNING);
+
+    // pipeline should exit
+    clusterProvider.isSucceeded = true;
+    clusterRunner.connect("admin", APPLICATION_STATE, pipelineStoreTask.load(NAME, REV), null);
+    Assert.assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
+  }
+
+  @Test
+  public void testConnectTerminatesForced() throws Exception {
+    // onDataCollectorStart is the easiest way to test connect
+    attributes.put(ClusterRunner.APPLICATION_STATE, APPLICATION_STATE.getMap());
+    ClusterRunner clusterRunner = Mockito.spy(createClusterRunner());
+    clusterRunner.prepareForStart(new StartPipelineContextBuilder("admin").build());
+    setState(PipelineStatus.RETRY);
+
+    // make sure we are exercising an invalid transition
+    try {
+      clusterRunner.checkStatusTransition(PipelineStatus.FINISHED);
+      fail("expected exception");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    }
+
+    // pipeline should get marked as FINISHED since the job was successful.
+    clusterProvider.isSucceeded = true;
+    clusterRunner.connect("admin", APPLICATION_STATE, pipelineStoreTask.load(NAME, REV), null);
+    Assert.assertEquals(PipelineStatus.FINISHED, clusterRunner.getState().getStatus());
+    Mockito.verify(clusterRunner).setStateTransition(
+            Mockito.eq("admin"), Mockito.eq(PipelineStatus.FINISHED), Mockito.anyString(), Mockito.anyMap()
+    );
   }
 
   @Test
