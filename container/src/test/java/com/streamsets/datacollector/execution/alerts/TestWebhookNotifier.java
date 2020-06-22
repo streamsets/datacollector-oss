@@ -128,4 +128,38 @@ public class TestWebhookNotifier {
     Assert.assertTrue(requestPayload.contains("state changed to RUN_ERROR"));
   }
 
+  @Test
+  public void testWebhookNotifierEscapeJson() throws Exception {
+    PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
+    pipelineConfigBean.notifyOnStates = ImmutableList.of(com.streamsets.datacollector.config.PipelineState.RUN_ERROR);
+    PipelineWebhookConfig webhookConfig = new PipelineWebhookConfig();
+    webhookConfig.payload = "{\"text\" : " + "\"Pipeline '{{PIPELINE_TITLE}}', Change Message: {{PIPELINE_STATE_MESSAGE}}\"}";
+    webhookConfig.webhookUrl = server.getURI().toString();
+    pipelineConfigBean.webhookConfigs = ImmutableList.of(webhookConfig);
+
+    WebHookNotifier webHookNotifier = new WebHookNotifier(
+            "x",
+            "This pipeline title contains \"quoted\" text",
+            "0",
+            pipelineConfigBean,
+            runtimeInfo,
+            null
+    );
+
+    PipelineState runningState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUNNING, "Running",
+            System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+    PipelineState runErrorState = new PipelineStateImpl("x", "x", "0", PipelineStatus.RUN_ERROR,
+            "This error state message has \"quotes\" and line \n breaks that need to be escaped for JSON",
+            System.currentTimeMillis(), new HashMap<String, Object>(), ExecutionMode.STANDALONE, "", 0, 0);
+
+    webHookNotifier.onStateChange(runningState, runErrorState, "", null, null);
+
+    Assert.assertTrue(serverRequested);
+    Assert.assertNotNull(requestPayload);
+    Assert.assertEquals(
+            "{\"text\" : " + "\"Pipeline 'This pipeline title contains \\\"quoted\\\" text', " +
+                    "Change Message: This error state message has \\\"quotes\\\" and line \\n breaks that need to be escaped for JSON\"}",
+            requestPayload
+    );
+  }
 }
