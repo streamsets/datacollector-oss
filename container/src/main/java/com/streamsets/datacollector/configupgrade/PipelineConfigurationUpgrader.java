@@ -665,7 +665,7 @@ public class PipelineConfigurationUpgrader {
     ClassLoader cl = Thread.currentThread().getContextClassLoader();
     try {
       Thread.currentThread().setContextClassLoader(def.getStageClassLoader());
-      LOG.warn("Upgrading stage instance '{}' from version '{}' to version '{}'", conf.getInstanceName(), fromVersion, toVersion);
+      LOG.info("Upgrading stage '{}' instance '{}' from version '{}' to version '{}'", conf.getStageName(), conf.getInstanceName(), fromVersion, toVersion);
 
       UpgradeContext upgradeContext = new UpgradeContext(
           def.getLibrary(),
