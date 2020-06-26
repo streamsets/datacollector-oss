@@ -245,4 +245,13 @@ public class TestRuntimeEL {
     Assert.assertEquals("sdc.jarcec.net", RuntimeEL.hostname());
   }
 
+  @Test
+  public void testResourcesDirPath() throws IOException {
+    ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
+    og.get(Configuration.class);
+    RuntimeInfo info = og.get(RuntimeInfo.class);
+    RuntimeEL.loadRuntimeConfiguration(info);
+    Assert.assertEquals(resourcesDir.getPath(), RuntimeEL.resourcesDirPath());
+  }
+
 }
