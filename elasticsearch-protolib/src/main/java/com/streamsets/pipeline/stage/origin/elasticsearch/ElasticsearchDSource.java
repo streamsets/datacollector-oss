@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Elasticsearch",
     description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch_multithreaded.png",

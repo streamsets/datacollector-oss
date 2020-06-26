@@ -30,6 +30,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
 import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
 import com.streamsets.pipeline.stage.elasticsearch.common.ElasticsearchBaseIT;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -631,6 +632,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     // Invalid shield user
     conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
     conf.useSecurity = true;
+    conf.securityConfig.securityMode = SecurityMode.BASIC;
     conf.securityConfig.securityUser = () -> "INVALID_SHIELD_USER";
 
     target = new ElasticsearchTarget(conf);

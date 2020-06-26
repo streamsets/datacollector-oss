@@ -17,4 +17,16 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 11
+    actions:
+      - iterateListConfig:
+          actions:
+            - replaceConfig:
+                name: elasticSearchConfig.securityConfig.securityUser
+                ifOldValueMatches: ""
+                newValue: ""
+                elseNewValue: ${value("elasticSearchConfig.securityConfig.securityUser")}
+            - setConfig:
+                name: elasticSearchConfig.securityConfig.securityPassword
+                value: ""

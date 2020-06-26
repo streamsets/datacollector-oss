@@ -102,8 +102,8 @@ public class SecurityConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "username:password",
-      label = "Security Username/Password",
+      label = "User Name",
+      description = "Elasticsearch user name",
       dependencies = {
           @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
           @Dependency(configName = "securityMode", triggeredByValues = "BASIC")
@@ -115,13 +115,27 @@ public class SecurityConfig {
 
   @ConfigDef(
       required = false,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Password",
+      description = "Elasticsearch password",
+      dependencies = {
+          @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
+          @Dependency(configName = "securityMode", triggeredByValues = "BASIC")
+      },
+      displayPosition = 43,
+      group = "SECURITY"
+  )
+  public CredentialValue securityPassword = () -> "";
+
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "SSL TrustStore Path",
       description = "",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
-      displayPosition = 43,
+      displayPosition = 44,
       group = "SECURITY"
   )
   public String sslTrustStorePath;
@@ -132,7 +146,7 @@ public class SecurityConfig {
       label = "SSL TrustStore Password",
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
-      displayPosition = 44,
+      displayPosition = 45,
       group = "SECURITY"
   )
   public CredentialValue sslTrustStorePassword = () -> "";

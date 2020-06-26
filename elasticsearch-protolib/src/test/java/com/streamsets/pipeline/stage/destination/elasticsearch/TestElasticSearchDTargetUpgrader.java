@@ -19,8 +19,12 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +32,10 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 
 public class TestElasticSearchDTargetUpgrader {
+
+  private StageUpgrader elasticSearchTargetUpgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
 
   @Test
   @SuppressWarnings("unchecked")
@@ -61,6 +69,14 @@ public class TestElasticSearchDTargetUpgrader {
     return configs;
   }
 
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/ElasticSearchDTarget.yaml");
+    elasticSearchTargetUpgrader = new SelectorStageUpgrader("stage", new ElasticsearchDTargetUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
   @Test
   public void testV7ToV8() throws StageException {
     StageUpgrader upgrader = new ElasticsearchDTargetUpgrader();
@@ -91,5 +107,18 @@ public class TestElasticSearchDTargetUpgrader {
     UpgraderTestUtils.assertAllExist(newConfigs,
         "elasticSearchConfig.rawAdditionalProperties"
     );
+  }
+
+  @Test
+  public void testV10ToV11() throws StageException {
+    Mockito.doReturn(10).when(context).getFromVersion();
+    Mockito.doReturn(11).when(context).getToVersion();
+
+    String securityPrefix = "elasticSearchConfig.securityConfig";
+    configs.add(new Config(securityPrefix + ".securityUser", "username:password"));
+    configs = elasticSearchTargetUpgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, securityPrefix + ".securityUser", "username:password");
+    UpgraderTestUtils.assertExists(configs, securityPrefix + ".securityPassword", "");
   }
 }

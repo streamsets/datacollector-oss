@@ -40,7 +40,6 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_17("Could not index '{}' records: {}"),
   ELASTICSEARCH_18("Could not evaluate the time driver expression: {}"),
   ELASTICSEARCH_19("Document ID expression must be provided to use {} operation"),
-  ELASTICSEARCH_20("Invalid Security user, it must be <USERNAME>:<PASSWORD>"),
   // Origin
   ELASTICSEARCH_21("Could not find _scroll_id field in response to query."),
   ELASTICSEARCH_22("Failed to fetch batch: '{}'"),
@@ -59,6 +58,7 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_35("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   ELASTICSEARCH_36("Could not parse the additional properties expression: {}"),
   ELASTICSEARCH_37("Could not evaluate the additional properties expression: {}"),
+  ELASTICSEARCH_38("Can't resolve password: {}"),
 
   ;
   private final String msg;

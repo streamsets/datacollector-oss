@@ -17,4 +17,14 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - replaceConfig:
+          name: conf.securityConfig.securityUser
+          ifOldValueMatches: ""
+          newValue: ""
+          elseNewValue: ${value("conf.securityConfig.securityUser")}
+      - setConfig:
+          name: conf.securityConfig.securityPassword
+          value: ""
