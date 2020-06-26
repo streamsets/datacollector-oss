@@ -354,5 +354,22 @@ angular.module('dataCollectorApp.common')
       tracking.mixpanel.track(trackingEvent.TAB_SELECTED, trackingData);
     };
 
+    /**
+     * track import failure
+     * @param failureReason - one of trackingEvent.PIPELINE_IMPORT_FAILED
+     * @param error - Error that caused failure
+     */
+    pipelineTracking.trackImportFailure = function(failureReason, error) {
+      if (typeof(error) === 'string') {
+        tracking.mixpanel.track(failureReason, {'Failure Reason': error});
+      } else if (error instanceof Error) {
+        tracking.mixpanel.track(failureReason, {'Failure Reason': ('' + error)});
+      } else if ('data' in error) {
+        tracking.mixpanel.track(failureReason, {'Failure Reason': JSON.stringify(error.data)});
+      } else {
+        tracking.mixpanel.track(failureReason, {'Failure Reason': ('' + error)});
+      }
+    };
+
     return pipelineTracking;
 });

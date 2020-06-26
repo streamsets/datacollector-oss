@@ -20,7 +20,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ImportFromArchiveModalInstanceController', function (
-    $scope, $modalInstance, api, tracking, trackingEvent
+    $scope, $modalInstance, api, tracking, trackingEvent, pipelineTracking
   ) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
@@ -49,15 +49,21 @@ angular
             $scope.successEntities = res.successEntities;
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_COMPLETE_FROM_ARCHIVE, {});
-            tracking.FS.event(trackingEvent.PIPELINE_IMPORT_COMPLETE, {});
-            tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            angular.forEach(res.errorMessages, function(err) {
+              pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_ARCHIVE, err);
+            });
+            if (res.successEntities.length > 0) {
+              tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_COMPLETE_FROM_ARCHIVE, {});
+              tracking.FS.event(trackingEvent.PIPELINE_IMPORT_COMPLETE, {});
+              tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            }
           })
           .catch(function(res) {
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_ARCHIVE, {'Failure Reason': JSON.stringify(res.data)});          });
+            pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_ARCHIVE, res);
+          });
       },
 
       /**

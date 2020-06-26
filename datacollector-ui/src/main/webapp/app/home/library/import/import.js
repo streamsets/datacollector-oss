@@ -21,7 +21,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('ImportModalInstanceController', function (
     $scope, $modalInstance, api, pipelineInfo, $translate, tracking,
-    trackingEvent
+    trackingEvent, pipelineTracking
   ) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
@@ -106,7 +106,8 @@ angular
                   }
                 },function(res) {
                   $scope.common.errors = [res.data];
-                  tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED, {'Failure Reason': JSON.stringify(res.data)});                });
+                  pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED, res);
+                });
               } else { // If no pipeline exist or create pipeline option selected
                 var newPipelineObject,
                   label,
@@ -158,7 +159,8 @@ angular
                           $modalInstance.close(newPipelineObject);
                           tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_COMPLETE, {'Pipeline ID': newPipelineObject.pipelineId});
                           tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
-                          tracking.FS.event(trackingEvent.PIPELINE_IMPORT_COMPLETE, {'Pipeline ID': newPipelineObject.pipelineId});                        });
+                          tracking.FS.event(trackingEvent.PIPELINE_IMPORT_COMPLETE, {'Pipeline ID': newPipelineObject.pipelineId});
+                        });
 
                       });
 
@@ -170,7 +172,8 @@ angular
                     }
                   },function(res) {
                     $scope.common.errors = [res.data];
-                    tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED, {'Failure Reason': JSON.stringify(res.data)});                    //Failed to import pipeline. If new pipeline is created during import revert it back.
+                    pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED, res);
+                    //Failed to import pipeline. If new pipeline is created during import revert it back.
                     if (res.data && res.data.RemoteException &&
                       res.data.RemoteException.errorCode === 'CONTAINER_0201') {
                       // For CONTAINER_0201 - Pipeline 'Sample123' already exists - don't delete existing one
@@ -185,13 +188,13 @@ angular
               $scope.$apply(function() {
                 $scope.common.errors = [errorMsg];
               });
-              tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED, {'Failure Reason': 'Missing Pipeline uuid'});
+              pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED, 'Missing Pipeline uuid');
             }
           } catch(e) {
             $scope.$apply(function() {
               $scope.common.errors = [errorMsg];
             });
-            tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED, {'Failure Reason': e.toString()});
+            pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED, e);
           }
         };
         reader.readAsText($scope.uploadFile);

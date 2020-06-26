@@ -50,7 +50,7 @@ angular
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_URL, {'Failure Reason': JSON.stringify(res.data)});
+            pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_URL, res);
           });
       },
 
