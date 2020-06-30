@@ -30,6 +30,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.creation.PipelineStageBeans;
 import com.streamsets.datacollector.creation.ServiceBean;
 import com.streamsets.datacollector.creation.StageBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
@@ -50,7 +51,6 @@ import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Field;
-import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.ProtoSource;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -108,6 +108,8 @@ public class Pipeline {
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
   private boolean stopEventStageInitialized;
+  private String controlHubJobId = null;
+  private String controlHubJobName = null;
 
   private Pipeline(
       StageLibraryTask stageLib,
@@ -162,6 +164,12 @@ public class Pipeline {
     this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
+
+    Map<String, Object> parameters = pipelineBean.getConfig().constants;
+    if (parameters != null && parameters.get(JobEL.JOB_ID_VAR) != null) {
+      this.controlHubJobId = (String) parameters.get(JobEL.JOB_ID_VAR);
+      this.controlHubJobName = (String) parameters.get(JobEL.JOB_NAME_VAR);
+    }
   }
 
   public PipelineConfigBean getPipelineConfig() {
@@ -1209,6 +1217,10 @@ public class Pipeline {
     rootField.put("user", Field.create(Field.Type.STRING, userContext.getUser()));
     rootField.put("pipelineId", Field.create(Field.Type.STRING, name));
     rootField.put("pipelineTitle", Field.create(Field.Type.STRING, pipelineConf.getTitle()));
+    if (controlHubJobId != null) {
+      rootField.put("jobId", Field.create(controlHubJobId));
+      rootField.put("jobName", Field.create(controlHubJobName));
+    }
 
     // Pipeline parameters
     Map<String, Field> parameters = new LinkedHashMap<>();
@@ -1244,6 +1256,10 @@ public class Pipeline {
     rootField.put("reason", Field.create(Field.Type.STRING, stopReason.name()));
     rootField.put("pipelineId", Field.create(Field.Type.STRING, name));
     rootField.put("pipelineTitle", Field.create(Field.Type.STRING, pipelineConf.getTitle()));
+    if (controlHubJobId != null) {
+      rootField.put("jobId", Field.create(controlHubJobId));
+      rootField.put("jobName", Field.create(controlHubJobName));
+    }
 
     eventRecord.set(Field.create(rootField));
     return eventRecord;

@@ -24,9 +24,9 @@ import java.util.Map;
 public class JobEL {
 
   private static final String JOB_EL_PREFIX = "job";
-  private static final String DEFAULT_VALUE = "UNDEFINED";
-  static final String JOB_ID_VAR = "JOB_ID";
-  static final String JOB_NAME_VAR = "JOB_NAME";
+  public static final String DEFAULT_VALUE = "UNDEFINED";
+  public static final String JOB_ID_VAR = "JOB_ID";
+  public static final String JOB_NAME_VAR = "JOB_NAME";
   static final String JOB_USER_VAR = "JOB_USER";
   static final String JOB_START_TIME_VAR = "JOB_START_TIME";
   private static final ThreadLocal<Map<String, Object>> CONSTANTS_IN_SCOPE_TL = ThreadLocal.withInitial(HashMap::new);
