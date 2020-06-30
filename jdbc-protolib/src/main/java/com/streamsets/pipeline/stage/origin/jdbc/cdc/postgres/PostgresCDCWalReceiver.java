@@ -426,6 +426,9 @@ public class PostgresCDCWalReceiver {
         LOG.debug("Sending status updates");
         stream.forceUpdateStatus();
       } catch (SQLException e) {
+        // Heart beat sender thread is not currently propagating to main thread
+        // Even without that, if the main thread read will fail if there
+        // are connectivity issues.
         LOG.error("Error forcing update status: {}", e.getMessage());
         throw new StageException(JDBC_00, " forceUpdateStatus failed :" + e.getMessage(), e);
       }
@@ -479,7 +482,14 @@ public class PostgresCDCWalReceiver {
       }
 
     } catch (SQLException e) {
-      LOG.error("Error reading PostgreSQL replication stream: {}", e.getMessage(), e);
+      LOG.error(
+          Utils.format(
+              "Error reading PostgreSQL replication stream: {}",
+              e.getMessage()
+          ),
+          e
+      );
+      throw new StageException(JdbcErrors.JDBC_407, e);
     }
     return ret;
   }
