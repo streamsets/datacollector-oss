@@ -133,7 +133,7 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
 
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(getContext(), DataParserFormat.JSON);
-    builder.setMaxDataLen(50000).setMode(JsonMode.MULTIPLE_OBJECTS);
+    builder.setMaxDataLen(-1).setMode(JsonMode.MULTIPLE_OBJECTS);
     try {
       parserFactory = builder.build();
     } catch (Exception ex) {
