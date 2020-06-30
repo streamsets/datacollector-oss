@@ -40,7 +40,6 @@ import org.tensorflow.TensorFlowException;
 import java.io.File;
 import java.nio.Buffer;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -191,7 +190,7 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
   private void setInputConfigFields(Record record) {
     Set<String> fieldPaths = record.getEscapedFieldPaths();
     for (TensorInputConfig inputConfig : conf.inputConfigs) {
-      Set<String> inputConfigFields = new HashSet<>();
+      List<String> inputConfigFields = new ArrayList<>();
       for(String f: inputConfig.fields) {
         List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
             f,
@@ -202,7 +201,7 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
         );
         inputConfigFields.addAll(matchingFieldPaths);
       }
-      inputConfig.setResolvedFields(new ArrayList<>(inputConfigFields));
+      inputConfig.setResolvedFields(inputConfigFields);
     }
   }
 
