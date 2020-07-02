@@ -77,6 +77,12 @@
       <groupId>com.amazonaws</groupId>
       <artifactId>aws-encryption-sdk-java</artifactId>
       <version>${aws-encryption-sdk.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk15on</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -88,7 +94,7 @@
       <groupId>org.bouncycastle</groupId>
       <artifactId>bcprov-jdk15on</artifactId>
       <version>${bouncycastle.version}</version>
-      <scope>compile</scope>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>
