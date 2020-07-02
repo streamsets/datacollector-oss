@@ -344,12 +344,16 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
           }
           if (shouldReport(forceRollAndReport)) {
             LOG.debug("Reporting");
-            List<StatsBean> collectedStats = getStatsInfo().getCollectedStats();
-            if (reportStats(collectedStats)) {
+
+            //ignoring stats already reported (we keep them for longer per SDC-14937
+            List<StatsBean> statsToReport = getStatsInfo().getCollectedStats()
+                .stream()
+                .filter(s -> !s.isReported())
+                .collect(Collectors.toList());
+            if (reportStats(statsToReport)) {
               LOG.debug("Reported");
               reportStatsBackOffCount = 0;
               reportStatsBackOffUntil = 0;
-              getStatsInfo().getCollectedStats().clear();
             } else {
               reportStatsBackOffCount++;
               LOG.debug("Reporting has failed {} times in a row (with exponential back off).", reportStatsBackOffCount);
@@ -382,6 +386,10 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     if (getStatsInfo().getCollectedStats().isEmpty()) {
       return false;
     }
+    StatsBean firstNotReported = getStatsInfo().getCollectedStats().stream().filter(s -> ! s.isReported()).findFirst().orElse(null);
+    if (firstNotReported == null) { // nothing to report
+      return false;
+    }
     if (forceNextReport) {
       LOG.debug("shouldReport because next report is forced");
       return true;
@@ -397,7 +405,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
         return true;
       }
     }
-    long oldestStartTime = getStatsInfo().getCollectedStats().get(0).getStartTime();
+    // at this point we know there is non reported interval
+    long oldestStartTime = firstNotReported.getStartTime();
     long delta = now - oldestStartTime;
     boolean report = delta > (TimeUnit.SECONDS.toMillis(getReportPeriodSeconds()) * 0.99);
     LOG.debug("shouldReport returning {} with oldest start time {} delta {}", report, oldestStartTime, delta);
@@ -431,6 +440,11 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
           String uploadUrlString = responseData.get(TELEMETRY_URL_KEY);
           if (null != uploadUrlString) {
             reported = uploadToUrl(stats, uploadUrlString);
+
+            if (reported) {
+              // setting stats as reported
+              stats.forEach(s -> s.setReported());
+            }
           } else {
             LOG.warn("Unable to get telemetry URL from endpoint {}, url missing from responseData {}",
                 getTelemetryUrlEndpoint,

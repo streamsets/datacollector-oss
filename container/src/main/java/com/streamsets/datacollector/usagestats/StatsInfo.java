@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -50,8 +51,7 @@ public class StatsInfo {
   public static final String DPM_ENABLED = "dpmEnabled";
   public static final String EXTRA_INFO = "extraInfo";
 
-  // How many StatsBean intervals are kept, assuming 1hr intervals, 30 days worth of.
-  public static final int INTERVALS_TO_KEEP = 24 * 7 * 30;
+  public static final long PERIOD_OF_TIME_TO_KEEP_STATS_IN_MILLIS = TimeUnit.DAYS.toMillis(90);
   private final ReadWriteLock rwLock;
   private volatile ActiveStats activeStats;
   private List<StatsBean> collectedStats;
@@ -236,14 +236,21 @@ public class StatsInfo {
           setSystemInfo(currentSys, activeStats);
           setActiveStats(activeStats);
         } else {
+          // remove stats older than 90 days
+          List<StatsBean> kept = getCollectedStats().stream()
+              .filter(s -> currentTimeMillis - s.getEndTime() <= PERIOD_OF_TIME_TO_KEEP_STATS_IN_MILLIS)
+              .collect(Collectors.toCollection(ArrayList::new));
+
+          // roll and add active stats
           ActiveStats currentActiveStats = getActiveStats();
           setActiveStats(currentActiveStats.roll());
           // setting the end time of the stats we are storing for collection
           currentActiveStats.setEndTime(getActiveStats().getStartTime());
-          getCollectedStats().add(new StatsBean(runtimeInfo.getId(), currentActiveStats));
-          if (getCollectedStats().size() > INTERVALS_TO_KEEP) {
-            getCollectedStats().remove(0);
-          }
+
+          kept.add(new StatsBean(runtimeInfo.getId(), currentActiveStats));
+
+          setCollectedStats(kept);
+
           if (sysChange) {
             setSystemInfo(currentSys, getActiveStats());
           }

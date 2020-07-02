@@ -27,6 +27,17 @@ import org.junit.Test;
 public class TestStatsBean {
 
   @Test
+  public void testReported() {
+    StatsBean bean = new StatsBean();
+
+    // not reported on creation
+    Assert.assertFalse(bean.isReported());
+
+    bean.setReported();
+    Assert.assertTrue(bean.isReported());
+
+  }
+  @Test
   public void testCreationFromActiveStats() {
     TestModelStatsExtension ext = new TestModelStatsExtension();
     StatsInfo si = new StatsInfo(ImmutableList.of(ext));

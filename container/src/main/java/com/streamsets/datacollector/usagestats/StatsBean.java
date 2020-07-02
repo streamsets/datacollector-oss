@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 
 // stats bean that is send back to StreamSets.
 public class StatsBean {
+  private boolean reported;
   private String sdcId;
   private String productName;
   private String version;
@@ -102,6 +104,18 @@ public class StatsBean {
         .filter(e -> e.getValue().getFirstUseOn() > 0)
         .map(e -> e.getValue())
         .collect(Collectors.toList());
+  }
+
+  // it will only be serialized to JSON if TRUE, when we report it is still false, thus we don't introduce any
+  // change in the telemetry payload.
+  @JsonInclude(JsonInclude.Include.NON_DEFAULT)
+  public boolean isReported() {
+    return reported;
+  }
+
+  public StatsBean setReported() {
+    this.reported = true;
+    return this;
   }
 
   public String getSdcId() {

@@ -419,19 +419,22 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
-    ActiveStats as = si.getActiveStats();
     List<StatsBean> collected = new ArrayList<>();
-    for (int i = 0; i < StatsInfo.INTERVALS_TO_KEEP; i++) {
-      collected.add(new StatsBean());
+
+    long now = System.currentTimeMillis();
+    for (int i = 0; i < 10; i++) {
+      StatsBean bean = new StatsBean();
+      bean.setEndTime(now - StatsInfo.PERIOD_OF_TIME_TO_KEEP_STATS_IN_MILLIS + i - 5);
+      collected.add(bean);
     }
+
     si.setCollectedStats(collected);
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, now));
     Assert.assertEquals(1, ext.getRolls());
     List<StatsBean> got = si.getCollectedStats();
 
-    collected.remove(0);
-    got.remove(StatsInfo.INTERVALS_TO_KEEP - 1);
-    Assert.assertEquals(collected, got);
+    Assert.assertEquals(6, got.size());
+    got.forEach(s -> Assert.assertTrue(now - s.getEndTime() <= StatsInfo.PERIOD_OF_TIME_TO_KEEP_STATS_IN_MILLIS));
   }
 
   @Test

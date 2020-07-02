@@ -929,7 +929,8 @@ public class TestStatsCollectorTask {
 
     Assert.assertTrue(task.getStatsInfo().getActiveStats().getStartTime() > start);
 
-    Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
+    // we just reported the activation interval, but we keep it as reported (SDC-14937)
+    Assert.assertEquals(1, task.getStatsInfo().getCollectedStats().size());
 
     Assert.assertTrue(task.isActive());
 
@@ -962,7 +963,13 @@ public class TestStatsCollectorTask {
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
     stats.get(0).setActivePipelines(5);
 
+    // not reported yet
+    Assert.assertFalse(stats.get(0).isReported());
+
     Assert.assertTrue(task.reportStats(stats));
+
+    // reported
+    Assert.assertTrue(stats.get(0).isReported());
 
     Mockito.verify(task).postToGetTelemetryUrl(
         Mockito.any(),
