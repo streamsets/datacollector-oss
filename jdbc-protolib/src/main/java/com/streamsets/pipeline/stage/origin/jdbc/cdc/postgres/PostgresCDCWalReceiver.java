@@ -23,11 +23,15 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
+import static java.sql.DriverManager.getConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.PGProperty;
@@ -45,12 +49,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
+import java.util.Iterator;
 
 public class PostgresCDCWalReceiver {
 
@@ -73,14 +78,12 @@ public class PostgresCDCWalReceiver {
   private Connection connection = null;
   private PGReplicationStream stream;
   private List<SchemaAndTable> schemasAndTables;
-
-  private final  PostgresCDCConfigBean configBean;
-  private final  HikariPoolConfigBean hikariConfigBean;
+  PostgresCDCConfigBean configBean;
+  private HikariPoolConfigBean hikariConfigBean;
 
   private volatile LogSequenceNumber nextLSN;
   private final Object sendUpdatesMutex = new Object();
-  private final SafeScheduledExecutorService heartBeatSender =
-      new SafeScheduledExecutorService(1, "Postgres CDC Heart Beat Sender");
+  private SafeScheduledExecutorService heartBeatSender = new SafeScheduledExecutorService(1, "Postgres Heart Beat Sender");
 
   private final JdbcUtil jdbcUtil;
 
@@ -94,6 +97,16 @@ public class PostgresCDCWalReceiver {
     this.hikariConfigBean = hikariConfigBean;
     this.context = context;
 
+    /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
+     with postgres replication connection - keeping HikariConfigBean for now */
+    try {
+      this.connection = getConnection(
+          hikariConfigBean.getConnectionString(),
+          hikariConfigBean.getUsername().get(),
+          hikariConfigBean.getPassword().get());
+    } catch (SQLException e) {
+      throw new StageException(JDBC_00, e.getMessage(), e);
+    }
 
     this.slotName = configBean.slot;
     this.outputPlugin = configBean.decoderValue;
@@ -110,21 +123,13 @@ public class PostgresCDCWalReceiver {
     PGProperty.ASSUME_MIN_SERVER_VERSION.set(properties, configBean.minVersion.getLabel());
     PGProperty.REPLICATION.set(properties, configBean.replicationType);
     PGProperty.PREFER_QUERY_MODE.set(properties, "simple");
-
-    /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
-     with postgres replication connection - keeping HikariConfigBean for now */
-    try {
-      this.connection = DriverManager.getConnection(uri, properties);
-    } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_00, e.getMessage(), e);
-    }
   }
 
   public List<SchemaAndTable> getSchemasAndTables() {
     return schemasAndTables;
   }
 
-  public List<ConfigIssue> validateSchemaAndTables() {
+  public Optional<List<ConfigIssue>> validateSchemaAndTables() {
     List<ConfigIssue> issues = new ArrayList<>();
     schemasAndTables = new ArrayList<>();
     for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
@@ -132,28 +137,28 @@ public class PostgresCDCWalReceiver {
     }
     if (isThereAFilter() && schemasAndTables.isEmpty()) {
       issues.add(context.createConfigIssue(Groups.CDC.name(),
-          "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
+                  "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
     }
-    return issues;
+    return Optional.ofNullable(issues);
   }
 
   private boolean isThereAFilter() {
     //If there is any value configured for inclusion returns True else returns False
     boolean filterExist = false;
-    Iterator<SchemaTableConfigBean> it = configBean.baseConfigBean.schemaTableConfigs.iterator();
+    Iterator it = configBean.baseConfigBean.schemaTableConfigs.iterator();
     while (!filterExist && it.hasNext()) {
-      SchemaTableConfigBean tables = it.next();
+      SchemaTableConfigBean tables = (SchemaTableConfigBean)it.next();
       filterExist = !(tables.schema.isEmpty() && tables.table.isEmpty());
     }
     return filterExist;
   }
 
   private Optional<ConfigIssue> validateSchemaAndTable(SchemaTableConfigBean tables) {
+    ConfigIssue issue = null;
     // Empty keys match ALL :(
     if (tables.schema.isEmpty() && tables.table.isEmpty()) {
-      return Optional.empty();
+      return Optional.ofNullable(issue);
     }
-    ConfigIssue issue = null;
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
              jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
@@ -180,20 +185,19 @@ public class PostgresCDCWalReceiver {
       preparedStatement.setString(2, outputPlugin.getLabel());
       try (ResultSet rs = preparedStatement.executeQuery()) {
         while (rs.next()) {
-          if (!slotName.equals(rs.getString(1))) {
-            throw new StageException(JdbcErrors.JDBC_407);
+          if ( ! slotName.equals(rs.getString(1))) {
+            throw new StageException(JDBC_407);
           }
           LOG.debug("Slot Name: " +  rs.getString(1) + " " + rs.getString(2));
         }
       }
     } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_00, e.getMessage(), e);
+      throw new StageException(JDBC_00, e.getMessage(), e);
     }
   }
 
-  public LogSequenceNumber createReplicationStream(
-      String startOffset
-  ) throws StageException,  SQLException {
+  public LogSequenceNumber createReplicationStream(String startOffset)
+      throws StageException, InterruptedException, TimeoutException, SQLException {
 
     boolean newSlot = false;
     if (!doesReplicationSlotExists(slotName)) {
@@ -202,6 +206,7 @@ public class PostgresCDCWalReceiver {
     }
     obtainReplicationSlotInfo(slotName);
 
+    connection = getConnection(this.uri, this.properties);
     PGConnection pgConnection = connection.unwrap(PGConnection.class);
 
     ChainedLogicalStreamBuilder streamBuilder = pgConnection
@@ -253,7 +258,9 @@ public class PostgresCDCWalReceiver {
       }
     }
     streamBuilder.withStartPosition(streamLsn);
+
     stream = streamBuilder.start();
+
     LOG.debug("Starting the Stream with LSN : {}", streamLsn);
 
     heartBeatSender.scheduleAtFixedRate(this::sendUpdates, 1, 900, TimeUnit.MILLISECONDS);
@@ -297,9 +304,13 @@ public class PostgresCDCWalReceiver {
   public void dropReplicationSlot(String slotName)
       throws StageException
   {
-    try {
+    try (Connection localConnection = DriverManager.getConnection(
+        hikariConfigBean.getConnectionString(),
+        hikariConfigBean.getUsername().get(),
+        hikariConfigBean.getPassword().get()
+    )) {
       if (isReplicationSlotActive(slotName)) {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
+        try (PreparedStatement preparedStatement = localConnection.prepareStatement(
             "select pg_terminate_backend(active_pid) from pg_replication_slots "
                 + "where active = true and slot_name = ?")) {
           preparedStatement.setString(1, slotName);
@@ -308,50 +319,59 @@ public class PostgresCDCWalReceiver {
         waitStopReplicationSlot(slotName);
       }
 
-      try (PreparedStatement preparedStatement = connection
+      try (PreparedStatement preparedStatement = localConnection
           .prepareStatement("select pg_drop_replication_slot(slot_name) "
               + "from pg_replication_slots where slot_name = ?")) {
         preparedStatement.setString(1, slotName);
         preparedStatement.execute();
       }
     } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_407, slotName, e);
+      throw new StageException(JDBC_407, slotName, e);
     }
   }
 
   public void obtainReplicationSlotInfo(String slotName) throws StageException {
     try {
-      String flushedLabel = "confirmed_flush_lsn";
-      boolean hasFlushLsn = false;
-      try (PreparedStatement preparedStatement = connection.prepareStatement(SELECT_SLOT)) {
-        preparedStatement.setString(1, slotName);
-        try (ResultSet rs = preparedStatement.executeQuery()) {
+      try (Connection localConnection = DriverManager.getConnection(
+          hikariConfigBean.getConnectionString(),
+          hikariConfigBean.getUsername().get(),
+          hikariConfigBean.getPassword().get()
+      )) {
+        String sql = SELECT_SLOT;
+        String flushedLabel = "confirmed_flush_lsn";
+        boolean hasFlushLsn = false;
+        try (PreparedStatement preparedStatement = localConnection
+            .prepareStatement(sql)) {
+          preparedStatement.setString(1, slotName);
+          try (ResultSet rs = preparedStatement.executeQuery()) {
 
-          ResultSetMetaData rsmd = rs.getMetaData();
-          int columns = rsmd.getColumnCount();
-          for (int x = 1; x <= columns; x++) {
-            if (flushedLabel.equals(rsmd.getColumnName(x))) {
-              hasFlushLsn=true;
-              break;
+            ResultSetMetaData rsmd = rs.getMetaData();
+            int columns = rsmd.getColumnCount();
+            for (int x = 1; x <= columns; x++) {
+              if (flushedLabel.equals(rsmd.getColumnName(x))) {
+                hasFlushLsn=true;
+                break;
+              }
             }
-          }
-          if (!hasFlushLsn) {
-            LOG.debug("No column: confirmed_flush_lsn found. Using restart_lsn");
-            flushedLabel="restart_lsn";
-          }
+            if (!hasFlushLsn) {
+              LOG.debug("No column: confirmed_flush_lsn found. Using restart_lsn");
+              flushedLabel="restart_lsn";
+            }
 
-          while (rs.next()) {
-            this.configuredPlugin = rs.getString("plugin");
-            this.configuredSlotType = rs.getString("slot_type");
-            this.slotActive = rs.getBoolean("active");
-            this.restartLsn = rs.getString("restart_lsn");
-            this.confirmedFlushLSN = rs.getString(flushedLabel);
-            LOG.debug("Restart LSN - {}, Confirmed Flush LSN - {}", restartLsn, confirmedFlushLSN);
+            while (rs.next()) {
+              this.configuredPlugin = rs.getString("plugin");
+              this.configuredSlotType = rs.getString("slot_type");
+              this.slotActive = rs.getBoolean("active");
+              this.restartLsn = rs.getString("restart_lsn");
+              this.confirmedFlushLSN = rs.getString(flushedLabel);
+              LOG.debug("Restart LSN - {}, Confirmed Flush LSN - {}", restartLsn, confirmedFlushLSN);
+            }
           }
         }
       }
+
     } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_407, slotName, e);
+      throw new StageException(JDBC_407, slotName, e);
     }
   }
 
@@ -385,7 +405,7 @@ public class PostgresCDCWalReceiver {
     } while (stillActive && timeInWait <= 30000);
 
     if (stillActive) {
-      throw new StageException(JdbcErrors.JDBC_406, slotName);
+      throw new StageException(JDBC_406, slotName);
     }
   }
 
@@ -411,23 +431,13 @@ public class PostgresCDCWalReceiver {
         // Even without that, if the main thread read will fail if there
         // are connectivity issues.
         LOG.error("Error forcing update status: {}", e.getMessage());
-        throw new StageException(JdbcErrors.JDBC_00, " forceUpdateStatus failed :" + e.getMessage(), e);
+        throw new StageException(JDBC_00, " forceUpdateStatus failed :" + e.getMessage(), e);
       }
     }
   }
 
-  private void closeQuietly(AutoCloseable closeable) {
-    if (closeable != null) {
-      try {
-        closeable.close();
-      } catch (Exception e) {
-        LOG.trace("Exception closing resource : ", e);
-      }
-    }
-  }
-
-  public void close() {
-    this.heartBeatSender.shutdown();
+  public void closeConnection() throws SQLException {
+    heartBeatSender.shutdown();
     try {
       //Awaiting 10 seconds only as frequency is ~1 seconds
       heartBeatSender.awaitTermination(10, TimeUnit.SECONDS);
@@ -435,7 +445,9 @@ public class PostgresCDCWalReceiver {
       LOG.warn("Interrupted the await of heart beat sender shutdown");
       Thread.currentThread().interrupt();
     }
-    closeQuietly(this.connection);
+    if (connection != null) {
+      connection.close();
+    }
   }
 
   private ByteBuffer readNonBlocking() throws SQLException {
@@ -458,7 +470,7 @@ public class PostgresCDCWalReceiver {
     PostgresWalRecord ret = null;
     try {
       ByteBuffer buffer = readNonBlocking();
-      if (buffer != null) {
+      if(buffer != null) {
         ret = new PostgresWalRecord(
             buffer,
             getCurrentLSN(),
@@ -466,7 +478,10 @@ public class PostgresCDCWalReceiver {
         );
         //sets next LSN
         setNextLSN(LogSequenceNumber.valueOf(ret.getNextLSN()));
+      } else {
+        LOG.debug("Buffer null");
       }
+
     } catch (SQLException e) {
       LOG.error(
           Utils.format(
@@ -479,4 +494,5 @@ public class PostgresCDCWalReceiver {
     }
     return ret;
   }
+
 }

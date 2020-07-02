@@ -28,10 +28,8 @@ import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.postgresql.replication.LogSequenceNumber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,11 +37,18 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.postgresql.replication.LogSequenceNumber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PostgresCDCSource.class);
+  private static final Logger LOG = LoggerFactory.getLogger(
+      PostgresCDCSource.class);
   private static final String HIKARI_CONFIG_PREFIX = "hikariConf.";
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
@@ -135,13 +140,13 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
     // Validate the PostgresCDC ConfigBean and sets offset to what
     // it would be its value on the first run if the replication slot does not exists
-    issues.addAll(validatePostgresCDCConfigBean(configBean));
+    validatePostgresCDCConfigBean(configBean).ifPresent(issues::addAll);
 
     try {
       walReceiver = new PostgresCDCWalReceiver(configBean, hikariConfigBean, getContext());
       // Schemas and Tables
       if ( ! configBean.baseConfigBean.schemaTableConfigs.isEmpty()) {
-        issues.addAll(walReceiver.validateSchemaAndTables());
+        walReceiver.validateSchemaAndTables().ifPresent(issues::addAll);
       }
 
       // giving the WAL receiver the initial offset to set it postgres in case it is creating the replication slot,
@@ -151,15 +156,15 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
       LOG.debug("WAL Receiver will start reading from '{}'", lsn.asString());
 
-    } catch (StageException |  SQLException  e) {
+    } catch (StageException | InterruptedException | SQLException  | TimeoutException e) {
       LOG.error("Error while connecting to DB", e);
       issues.add(getContext()
-          .createConfigIssue(
-              Groups.JDBC.name(),
-              CONNECTION_STR,
-              JdbcErrors.JDBC_00,
-              e.toString()
-          )
+              .createConfigIssue(
+                  Groups.JDBC.name(),
+                  CONNECTION_STR,
+                  JdbcErrors.JDBC_00,
+                  e.toString()
+              )
       );
 
       return issues;
@@ -179,7 +184,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
     return issues;
   }
 
-  private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime) {
+  private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime, boolean isNewRecordNull) {
     return getContext().isStopped() ||
         currentBatchSize >= maxBatchSize || // batch is full
         System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime;
@@ -194,25 +199,35 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, final BatchMaker batchMaker) throws StageException {
     // the offset given by data collector is ignored as the external system (postgres) keeps track of it.
-    maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
 
+    PostgresWalRecord postgresWalRecord = null;
+    maxBatchSize = Math.min(configBean.baseConfigBean.maxBatchSize, maxBatchSize);
     int currentBatchSize = 0;
 
     long startTime = System.currentTimeMillis();
 
-    while (!isBatchDone(currentBatchSize, maxBatchSize, startTime)) {
-      PostgresWalRecord postgresWalRecord = getWalReceiver().read();
+    while (
+        !isBatchDone(
+            currentBatchSize,
+            maxBatchSize,
+            startTime,
+            postgresWalRecord == null
+        )
+    ) {
+
+      postgresWalRecord = getWalReceiver().read();
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
         ThreadUtil.sleep((long) configBean.pollInterval * 1000);
-      } else {
+      }
+      else {
         // filter out non data records or old data records
         PostgresWalRecord dataRecord = WalRecordFilteringUtils.filterRecord(postgresWalRecord, this);
         if (dataRecord == null) {
           LOG.debug("Received CDC with LSN {} from stream value filtered out", postgresWalRecord.getLsn().asString());
         } else {
-          String recordLsn = dataRecord.getLsn().asString();
+         String recordLsn = dataRecord.getLsn().asString();
           LOG.debug("Received CDC with LSN {} from stream value - {}", recordLsn, dataRecord.getChanges());
 
           if (LOG.isTraceEnabled()) {
@@ -232,7 +247,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         }
       }
     }
-    // we report a dummy offset as the external system (postgres) takes care of it
+    // we report the current position of the WAL reader.
     return "dummy-not-used";
   }
 
@@ -246,7 +261,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
   }
 
 
-  private List<ConfigIssue> validatePostgresCDCConfigBean(PostgresCDCConfigBean configBean) {
+  private Optional<List<ConfigIssue>> validatePostgresCDCConfigBean(PostgresCDCConfigBean configBean) {
     List<ConfigIssue> issues = new ArrayList<>();
 
     if (configBean.minVersion == null) {
@@ -325,7 +340,7 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         );
     }
 
-    return issues;
+    return Optional.ofNullable(issues);
   }
 
 
@@ -343,7 +358,11 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
           LOG.error(JdbcErrors.JDBC_406.getMessage(), configBean.slot);
         }
       }
-      getWalReceiver().close();
+      try {
+        getWalReceiver().closeConnection();
+      } catch (SQLException ex) {
+        LOG.error("Error while closing connection: {}", ex.toString(), ex);
+      }
     }
   }
 
