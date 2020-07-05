@@ -102,7 +102,7 @@ public class LogMinerSession {
   // Template to retrieve the list of redo log files given a SCN range (first, next) of interest.
   private static final String SELECT_REDO_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END "
+      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND "
       + "     ((FIRST_CHANGE# <= :first AND NEXT_CHANGE# > :first) OR "
@@ -110,7 +110,7 @@ public class LogMinerSession {
       + "      (FIRST_CHANGE# > :first AND NEXT_CHANGE# < :next)) "
       + " UNION "
       + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, ARCHIVED "
       + " FROM V$LOG, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
       + "      FROM V$LOGFILE) VLOGFILE "
@@ -124,13 +124,13 @@ public class LogMinerSession {
   // Templates to retrieve the redo logs containing the LogMiner dictionary valid for transactions with SCN >= :scn.
   private static final String SELECT_DICTIONARY_END_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END "
+      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                        DICTIONARY_END = 'YES' AND FIRST_CHANGE# <= :scn) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END "
+      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# >= (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                         DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND THREAD# = :thread) AND "
@@ -142,12 +142,12 @@ public class LogMinerSession {
   // Template to retrieve all the redo log files with data for a specific point in time.
   private static final String SELECT_LOGS_FROM_DATE_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "     DICTIONARY_END "
+      + "     DICTIONARY_END, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND FIRST_TIME <= :time AND NEXT_TIME > :time "
       + " UNION "
       + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END  "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, ARCHIVED  "
       + " FROM V$LOG, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
       + "      FROM V$LOGFILE) VLOGFILE "
@@ -807,7 +807,8 @@ public class LogMinerSession {
             rs.getBigDecimal(6),
             rs.getBigDecimal(7),
             rs.getBoolean(8),
-            rs.getBoolean(9)
+            rs.getBoolean(9),
+            rs.getBoolean(10)
         );
         result.add(log);
       }
@@ -853,19 +854,19 @@ public class LogMinerSession {
     newLogList.addAll(findLogs(start, end));
     newLogList.sort(Comparator.comparing(RedoLog::getFirstChange));
 
-    if (newLogList.size() == 0 || newLogList.get(0).getFirstChange().compareTo(start) > 1) {
+    if (newLogList.size() == 0 || newLogList.get(0).getFirstChange().compareTo(start) > 0) {
       throw new StageException(JdbcErrors.JDBC_600, start, end);
     }
 
     Set<String> current = currentLogList.stream().map(log -> log.getPath()).collect(Collectors.toSet());
     Set<String> next = newLogList.stream().map(log -> log.getPath()).collect(Collectors.toSet());
 
-    // Remove current active logs and logs no longer needed from the LogMiner internal list (V$LOGMNR_LOGS). We must do
-    // it before registering the new redo logs, because if a registered online log has been archived it will
-    // appear in the new list, and trying to add it to LogMiner would result in an ORA-01289 error
-    // ("duplicate redo logfile"). Current active logs are again registered after this.
+    // Remove online logs and logs no longer needed from the LogMiner internal list (V$LOGMNR_LOGS). We must do
+    // it before registering the new redo logs, because if a registered online log has been archived after the last
+    // update it will appear in the new list, and trying to add it to LogMiner would result in an ORA-01289 error
+    // ("duplicate redo logfile"). Current online, not archived logs are again registered after this.
     for (RedoLog log : currentLogList) {
-      if (!next.contains(log.getPath()) || log.isCurrentLog()) {
+      if (!next.contains(log.getPath()) || !log.isArchived()) {
         try (CallableStatement statement = connection.prepareCall(REMOVE_LOGFILE_CMD)) {
           LOG.debug("Remove redo log: {}", log);
           statement.setString(1, log.getPath());
@@ -879,7 +880,7 @@ public class LogMinerSession {
     currentLogList.clear();
 
     for (RedoLog log : newLogList) {
-      if (current.contains(log.getPath()) && !log.isCurrentLog()) {
+      if (current.contains(log.getPath()) && log.isArchived()) {
         currentLogList.add(log);
         LOG.debug("Keeping redo log: {}", log);
       } else {
@@ -920,7 +921,8 @@ public class LogMinerSession {
             rs.getBigDecimal(6),
             rs.getBigDecimal(7),
             rs.getBoolean(8),
-            rs.getBoolean(9)
+            rs.getBoolean(9),
+            rs.getBoolean(10)
         );
       } else {
         throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before SCN {}", start));
@@ -945,7 +947,8 @@ public class LogMinerSession {
             rs.getBigDecimal(6),
             rs.getBigDecimal(7),
             rs.getBoolean(8),
-            rs.getBoolean(9)
+            rs.getBoolean(9),
+            rs.getBoolean(10)
         );
         result.add(log);
       } else {
@@ -986,7 +989,8 @@ public class LogMinerSession {
             rs.getBigDecimal(6),
             rs.getBigDecimal(7),
             rs.getBoolean(8),
-            rs.getBoolean(9)
+            rs.getBoolean(9),
+            rs.getBoolean(10)
         );
         result.add(log);
       }
