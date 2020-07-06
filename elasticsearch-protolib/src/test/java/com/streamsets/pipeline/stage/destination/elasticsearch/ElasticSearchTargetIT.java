@@ -629,17 +629,6 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
 
-    // Invalid shield user
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
-    conf.useSecurity = true;
-    conf.securityConfig.securityMode = SecurityMode.BASIC;
-    conf.securityConfig.securityUser = () -> "INVALID_SHIELD_USER";
-
-    target = new ElasticsearchTarget(conf);
-    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
-    issues = runner.runValidateConfigs();
-    Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
   }
 
   @Test
