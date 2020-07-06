@@ -113,6 +113,36 @@ public class ElasticsearchStageDelegate {
       ));
     }
 
+    if (conf.useSecurity) {
+      if (securityUser == null || securityPassword == null) {
+        issues.add(
+            context.createConfigIssue(
+                Groups.SECURITY.name(),
+                SecurityConfig.CONF_PREFIX + "securityUser",
+                Errors.ELASTICSEARCH_40
+            )
+        );
+      } else {
+        if (securityUser.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.SECURITY.name(),
+                  SecurityConfig.CONF_PREFIX + "securityUser",
+                  Errors.ELASTICSEARCH_20
+              )
+          );
+        } else if (!securityUser.contains(":") && securityPassword.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.SECURITY.name(),
+                  SecurityConfig.CONF_PREFIX + "securityPassword",
+                  Errors.ELASTICSEARCH_39
+              )
+          );
+        }
+      }
+    }
+
     if (!issues.isEmpty()) {
       return issues;
     }
