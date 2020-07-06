@@ -50,6 +50,19 @@ public class LogMinerResultSetWrapper {
     resultSet = rs;
   }
 
+  /**
+   * Move the database cursor to the next position.
+   *
+   * This method can block and wait for future data. This happens when CONTINUOUS_MINE is enabled in
+   * {@link LogMinerSession} and the mining window specified in {@link LogMinerSession#start} spans across the future.
+   * In this case, when the database cursor reaches the current database time, calling this method will block for any
+   * future transaction written into the redo logs, or until the {@code end} time limit defined in
+   * {@link LogMinerSession#start} is reached. When the latter, this method will return False.
+   *
+   * When CONTINUOUS_MINE is not enabled, this method is non-blocking and always return False when the cursor
+   * traversed all the current transactions found for that mining windows in the redo logs, irrespective of the mining
+   * window span across the future.
+   */
   public boolean next() throws SQLException {
     return resultSet.next();
   }

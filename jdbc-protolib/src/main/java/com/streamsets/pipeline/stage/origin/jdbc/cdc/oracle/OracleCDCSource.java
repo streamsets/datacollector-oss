@@ -676,6 +676,21 @@ public class OracleCDCSource extends BaseSource {
             }
             startTime = adjustStartTime(endTime);
             endTime = getEndTimeForStartTime(startTime);
+
+            if (continuousMine) {
+              // When CONTINUOUS_MINE is enabled, explicitly close LogMiner session to ensure PGA resources are
+              // released. This is not needed when CONTINUOUS_MINE is disabled because LogMinerSession#start reuse
+              // the current session and redo logs are manually loaded/removed according to the specified time range.
+              try {
+                logMinerSession.close();
+                if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
+                  // The dictionary is deleted after closing the LogMiner session. We need to reload it again.
+                  logMinerSession.preloadDictionary(startTime);
+                }
+              } catch (SQLException ex) {
+                LOG.error("Error while attempting to close and prepare a new LogMinerSession", ex);
+              }
+            }
           }
           sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
           logMinerSession.start(startTime, endTime);
@@ -905,8 +920,22 @@ public class OracleCDCSource extends BaseSource {
     return accepted;
   }
 
+  /**
+   * Returns True if the mining window defined by {@code startTime} and {@code endTime} reaches the current database
+   * time.
+   *
+   * NOTE: see also {@link OracleCDCSource#getEndTimeForStartTime} and {@link LogMinerResultSetWrapper#next}.
+   */
   private boolean inSessionWindowCurrent(LocalDateTime startTime, LocalDateTime endTime) {
-    return Duration.between(startTime, endTime).toMillis() < configBean.logminerWindow * 1000;
+    boolean reached;
+    if (continuousMine) {
+      LocalDateTime currentTime = nowAtDBTz();
+      reached = (currentTime.isAfter(startTime) && currentTime.isBefore(endTime))
+          || currentTime.isEqual(startTime) || currentTime.isEqual(endTime);
+    } else {
+      reached = Duration.between(startTime, endTime).toMillis() < configBean.logminerWindow * 1000;
+    }
+    return reached;
   }
 
   private void resetConnectionsQuietly() {
@@ -1363,11 +1392,25 @@ public class OracleCDCSource extends BaseSource {
     }
   }
 
+  /**
+   * Compute the upper bound for the next mining window given its lower bound.
+   *
+   * When CONTINUOUS_MINE option is enabled, we allow the mining window to span across the future. When not enabled,
+   * we limit the upper bound to a value no further than the current database time. See
+   * {@link LogMinerResultSetWrapper#next()} for more details about this.
+   *
+   * @param startTime The lower bound for the next mining window.
+   * @return The mining window's upper bound.
+   */
   private LocalDateTime getEndTimeForStartTime(LocalDateTime startTime) {
-    // Ensure the LogMiner window does not span further than the current time in database.
-    LocalDateTime dbTime = nowAtDBTz();
     LocalDateTime endTime = startTime.plusSeconds(configBean.logminerWindow);
-    return endTime.isAfter(dbTime) ? dbTime : endTime;
+
+    if (!continuousMine) {
+      // Ensure the LogMiner window does not span further than the current time in database.
+      LocalDateTime dbTime = nowAtDBTz();
+      endTime = endTime.isAfter(dbTime) ? dbTime : endTime;
+    }
+    return endTime;
   }
 
   @Override
