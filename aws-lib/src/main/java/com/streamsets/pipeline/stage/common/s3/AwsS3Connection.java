@@ -53,7 +53,7 @@ import java.util.List;
 @ConfigGroups(AwsS3ConnectionGroups.class)
 public class AwsS3Connection {
 
-  public static final String TYPE = "AWS_S3";
+  public static final String TYPE = "STREAMSETS_AWS_S3";
 
   @ConfigDefBean()
   public AWSConfig awsConfig;
