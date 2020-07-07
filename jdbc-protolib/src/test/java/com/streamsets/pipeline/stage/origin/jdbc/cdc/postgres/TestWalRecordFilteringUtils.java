@@ -15,8 +15,12 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import org.junit.Assert;
@@ -26,6 +30,8 @@ import org.mockito.Mockito;
 import org.postgresql.replication.LogSequenceNumber;
 
 import java.nio.ByteBuffer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +39,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.mockito.Matchers.any;
 
 public class TestWalRecordFilteringUtils {
 
@@ -45,6 +54,7 @@ public class TestWalRecordFilteringUtils {
   private PostgresWalRecord walRecordMock;
   private List<SchemaAndTable> schemasAndTables;
   private Field baseRecordField;
+  private Stage.Context contextMock;
 
   private void createConfigBeans() {
     HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
@@ -90,6 +100,7 @@ public class TestWalRecordFilteringUtils {
     Mockito.when(pgSourceMock.getWalReceiver()).thenReturn(walReceiverMock);
     Mockito.when(walReceiverMock.getSchemasAndTables()).thenReturn(schemasAndTables);
 
+    contextMock = Mockito.mock(Stage.Context.class);
   }
 
   private void setupBeanTableFilter1() {
@@ -160,6 +171,53 @@ public class TestWalRecordFilteringUtils {
     Assert.assertEquals(walRecordMock.getChanges().size(), 3);
     Assert.assertEquals(filteredRecord.getChanges().size(), 2);
   }
+
+  @Test
+  public void testValidateSchemaAndTables() throws Exception {
+    /* Test that when a schema and table is configured
+       and no tables are retrieved from database
+       Init finds one issue
+     */
+
+    ResultSet resultSetMock = Mockito.mock(ResultSet.class);
+    Mockito.when(resultSetMock.next()).thenReturn(false);
+
+    JdbcUtil jdbcUtilMock = Mockito.mock(JdbcUtil.class);
+    Mockito.when(walReceiverMock.getJdbcUtil()).thenReturn(jdbcUtilMock);
+    Mockito.when(jdbcUtilMock.getTableAndViewMetadata(any(), any(), any())).thenReturn(resultSetMock);
+
+    //Setting startValue to latest means filter only checks tables, not dates
+    configBean.startValue = StartValues.LATEST;
+
+    SchemaTableConfigBean filterRule1 = new SchemaTableConfigBean();
+    filterRule1.schema = "public";
+    filterRule1.table = "table1";
+    filterRule1.excludePattern = null;
+    
+    Mockito.when(walReceiverMock.validateSchemaAndTables()).thenCallRealMethod();
+    Mockito.when(walReceiverMock.getSchemaAndTableConfig()).thenReturn(new ArrayList<SchemaTableConfigBean>() {{
+      add(filterRule1);
+    }});
+
+    Mockito.when(walReceiverMock.getContext()).thenReturn(contextMock);
+    Mockito.when(contextMock.createConfigIssue(Mockito.any(), Mockito.any(), Mockito.eq(JdbcErrors.JDBC_66)))
+              .thenReturn(new com.streamsets.pipeline.api.ConfigIssue() {
+                  @Override
+                  public String toString() {
+                      return JdbcErrors.JDBC_66.getCode();
+                  }
+              });
+
+    Optional<List<ConfigIssue>> issuesOptional = walReceiverMock.validateSchemaAndTables();
+
+    walReceiverMock.configBean = configBean;
+
+    Assert.assertTrue(issuesOptional.isPresent());
+    List<ConfigIssue> issues = issuesOptional.get();
+    Assert.assertEquals(issues.size(), 1);
+    Assert.assertEquals(issues.get(0).toString(),JdbcErrors.JDBC_66.getCode());
+  }
+
 
   @Test
   public void testPassesDateFilter() {

@@ -132,20 +132,24 @@ public class PostgresCDCWalReceiver {
   public Optional<List<ConfigIssue>> validateSchemaAndTables() {
     List<ConfigIssue> issues = new ArrayList<>();
     schemasAndTables = new ArrayList<>();
-    for (SchemaTableConfigBean tables : configBean.baseConfigBean.schemaTableConfigs) {
+    for (SchemaTableConfigBean tables : getSchemaAndTableConfig()) {
       validateSchemaAndTable(tables).ifPresent(issues::add);
     }
     if (isThereAFilter() && schemasAndTables.isEmpty()) {
-      issues.add(context.createConfigIssue(Groups.CDC.name(),
+      issues.add(getContext().createConfigIssue(Groups.CDC.name(),
                   "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
     }
     return Optional.ofNullable(issues);
   }
 
+  List<SchemaTableConfigBean> getSchemaAndTableConfig(){
+    return configBean.baseConfigBean.schemaTableConfigs;
+  }
+
   private boolean isThereAFilter() {
     //If there is any value configured for inclusion returns True else returns False
     boolean filterExist = false;
-    Iterator it = configBean.baseConfigBean.schemaTableConfigs.iterator();
+    Iterator it = getSchemaAndTableConfig().iterator();
     while (!filterExist && it.hasNext()) {
       SchemaTableConfigBean tables = (SchemaTableConfigBean)it.next();
       filterExist = !(tables.schema.isEmpty() && tables.table.isEmpty());
@@ -161,7 +165,7 @@ public class PostgresCDCWalReceiver {
     }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
-             jdbcUtil.getTableAndViewMetadata(connection, tables.schema, tables.table)) {
+             getJdbcUtil().getTableAndViewMetadata(connection, tables.schema, tables.table)) {
       while (rs.next()) {
         String schemaName = rs.getString(TABLE_METADATA_TABLE_SCHEMA_CONSTANT);
         String tableName = rs.getString(TABLE_METADATA_TABLE_NAME_CONSTANT);
@@ -173,7 +177,7 @@ public class PostgresCDCWalReceiver {
         }
       }
     } catch (SQLException e) {
-      issue = context.createConfigIssue(Groups.CDC.name(), tables.schema, JdbcErrors.JDBC_66);
+      issue = getContext().createConfigIssue(Groups.CDC.name(), tables.schema, JdbcErrors.JDBC_66);
     }
     return Optional.ofNullable(issue);
   }
@@ -495,4 +499,11 @@ public class PostgresCDCWalReceiver {
     return ret;
   }
 
+  public JdbcUtil getJdbcUtil() {
+    return jdbcUtil;
+  }
+
+    public Context getContext() {
+        return context;
+    }
 }
