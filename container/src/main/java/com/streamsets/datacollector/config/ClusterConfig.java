@@ -18,6 +18,7 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class ClusterConfig {
 
@@ -143,7 +144,7 @@ public class ClusterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "YARN Kerberos Keytab",
+      label = "YARN Kerberos Keytab Path",
       description = "Absolute path to the Kerberos keytab used to launch the Spark application for the pipeline",
       group = "CLUSTER",
       displayPosition = 1100,
@@ -151,6 +152,21 @@ public class ClusterConfig {
       triggeredByValue = "PIPELINE"
   )
   public String yarnKerberosKeytab;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      defaultValue = "",
+      label = "Keytab",
+      description = "Base64 encoded keytab to use for the pipeline. Paste the contents of the base64 encoded keytab," +
+          " or use a credential function to retrieve the base64 encoded keytab from a credential store.",
+      displayPosition = 1150,
+      dependsOn = "yarnKerberosKeytabSource",
+      triggeredByValue = "PIPELINE_CREDENTIAL_STORE",
+      group = "CLUSTER",
+      upload = ConfigDef.Upload.BASE64
+  )
+  public CredentialValue yarnKerberosKeytabBase64Bytes;
 
   @ConfigDef(
       required = true,
@@ -162,7 +178,7 @@ public class ClusterConfig {
       defaultValue = "name@DOMAIN",
       displayPosition = 1200,
       dependsOn = "yarnKerberosKeytabSource",
-      triggeredByValue = "PIPELINE"
+      triggeredByValue = {"PIPELINE", "PIPELINE_CREDENTIAL_STORE"}
   )
   public String yarnKerberosPrincipal = "name@DOMAIN";
 

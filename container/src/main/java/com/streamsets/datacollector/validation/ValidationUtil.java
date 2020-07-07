@@ -1114,6 +1114,7 @@ public class ValidationUtil {
       // only validate the keytab if not in embedded mode (since otherwise, we already validated in the launcher)
       String keytabPathStr = null;
       String errorMsgSuffix = null;
+      boolean checkKeytab = true;
       switch (config.clusterConfig.yarnKerberosKeytabSource) {
         case PIPELINE:
           keytabPathStr = config.clusterConfig.yarnKerberosKeytab;
@@ -1124,43 +1125,48 @@ public class ValidationUtil {
           keytabPathStr = securityConfig.getKerberosKeytab();
           errorMsgSuffix = " via the " + SecurityConfiguration.KERBEROS_KEYTAB_KEY + " configuration property";
           break;
+        case PIPELINE_CREDENTIAL_STORE:
+          keytabPathStr = "";
+          errorMsgSuffix = "";
+          checkKeytab = false;
       }
-      if (Strings.isNullOrEmpty(keytabPathStr)) {
-        errors.add(issueCreator.create(
-            PipelineGroups.CLUSTER.name(),
-            "clusterConfig.yarnKerberosKeytab",
-            ValidationError.VALIDATION_0307,
-            errorMsgSuffix
-        ));
-      } else {
-        final Path keytabPath = Paths.get(keytabPathStr);
-        if (!keytabPath.isAbsolute()) {
+      if (checkKeytab) {
+        if (Strings.isNullOrEmpty(keytabPathStr)) {
           errors.add(issueCreator.create(
               PipelineGroups.CLUSTER.name(),
               "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0302,
-              keytabPath.toString(),
+              ValidationError.VALIDATION_0307,
               errorMsgSuffix
           ));
-        } else if (!Files.exists(keytabPath)) {
-          errors.add(issueCreator.create(
-              PipelineGroups.CLUSTER.name(),
-              "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0303,
-              keytabPath.toString(),
-              errorMsgSuffix
-          ));
-        } else if (!Files.isRegularFile(keytabPath)) {
-          errors.add(issueCreator.create(
-              PipelineGroups.CLUSTER.name(),
-              "clusterConfig.yarnKerberosKeytab",
-              ValidationError.VALIDATION_0304,
-              keytabPath.toString(),
-              errorMsgSuffix
-          ));
+        } else {
+          final Path keytabPath = Paths.get(keytabPathStr);
+          if (!keytabPath.isAbsolute()) {
+            errors.add(issueCreator.create(
+                PipelineGroups.CLUSTER.name(),
+                "clusterConfig.yarnKerberosKeytab",
+                ValidationError.VALIDATION_0302,
+                keytabPath.toString(),
+                errorMsgSuffix
+            ));
+          } else if (!Files.exists(keytabPath)) {
+            errors.add(issueCreator.create(
+                PipelineGroups.CLUSTER.name(),
+                "clusterConfig.yarnKerberosKeytab",
+                ValidationError.VALIDATION_0303,
+                keytabPath.toString(),
+                errorMsgSuffix
+            ));
+          } else if (!Files.isRegularFile(keytabPath)) {
+            errors.add(issueCreator.create(
+                PipelineGroups.CLUSTER.name(),
+                "clusterConfig.yarnKerberosKeytab",
+                ValidationError.VALIDATION_0304,
+                keytabPath.toString(),
+                errorMsgSuffix
+            ));
+          }
         }
       }
-      // TODO: actually check that the keytab file is valid and contains the principal?
     }
 
     // Kerberos client is disabled via configuration
