@@ -13,38 +13,67 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.kafka;
+package com.streamsets.datacollector.security.kafka;
 
 import com.streamsets.datacollector.security.TempKeytabManager;
 import com.streamsets.pipeline.api.Configuration;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
+/**
+ * An implementation of {@link TempKeytabManager} that is geared towards managing temporary keytabs to be used by
+ * Kafka stages. Mostly a thin wrapper around its parent class, but also has a bit of logic to set some Kafka specific
+ * properties from the temp keytab files that are created.
+ */
 public class KafkaKerberosUtil extends TempKeytabManager {
 
-  private static final Logger LOG = LoggerFactory.getLogger(BaseKafkaValidationUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(KafkaKerberosUtil.class);
 
-  private static final String KAFKA_KEYTAB_LOCATION_KEY = "kafka.keytab.location";
-  private static final String KAFKA_DEFAULT_KEYTAB_LOCATION = "/tmp/sdc";
-  private static final String KAFKA_KEYTAB_SUBDIR = "kafka-keytabs";
+  public static final String KAFKA_KEYTAB_LOCATION_KEY = "kafka.keytab.location";
+  public static final String KAFKA_DEFAULT_KEYTAB_LOCATION = "/tmp/sdc";
+  public static final String KAFKA_KEYTAB_SUBDIR = "kafka-keytabs";
+
   private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
       "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
-  public KafkaKerberosUtil(Configuration configuration) throws IllegalStateException {
+  private KafkaKerberosUtil(Configuration configuration) throws IllegalStateException {
     super(configuration, KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION, KAFKA_KEYTAB_SUBDIR);
+  }
+
+  /**
+   * HACK ALERT: see SDC-15032
+   */
+  private static KafkaKerberosUtil INSTANCE = null;
+
+  public static KafkaKerberosUtil getInstance() {
+    if (INSTANCE == null) {
+      throw new IllegalStateException("INSTANCE has not been initialized yet");
+    }
+    return INSTANCE;
+  }
+
+  public static synchronized KafkaKerberosUtil initializeAndGet(Configuration configuration) {
+    if (INSTANCE != null) {
+      throw new IllegalStateException("INSTANCE is already initialized");
+    }
+    INSTANCE = new KafkaKerberosUtil(configuration);
+    return getInstance();
+  }
+
+  public static synchronized void destroyInstance() {
+    if (INSTANCE != null) {
+      try {
+        INSTANCE.cleanUpKeytabDirectory();
+      } catch (IOException e) {
+        LOG.error("IOException attempting to clean up temp keytab directory: {}", e.getMessage(), e);
+      }
+      INSTANCE = null;
+    }
   }
 
   public String saveUserKeytab(
@@ -64,9 +93,9 @@ public class KafkaKerberosUtil extends TempKeytabManager {
       return keytabFileName;
     } catch (IOException | IllegalStateException e) {
       issues.add(context.createConfigIssue(
-          KafkaDestinationGroups.KAFKA.name(),
+          "KAFKA",
           "userKeytab",
-          KafkaErrors.KAFKA_13,
+          KafkaKeytabErrors.KAFKA_KEYTAB_01,
           e.getMessage(),
           e
       ));
@@ -81,4 +110,5 @@ public class KafkaKerberosUtil extends TempKeytabManager {
       LOG.error("Failed to delete temp keytab file {}: {}", keytabFileName, e.getMessage(), e);
     }
   }
+
 }

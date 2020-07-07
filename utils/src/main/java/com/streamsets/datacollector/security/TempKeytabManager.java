@@ -15,7 +15,9 @@
  */
 package com.streamsets.datacollector.security;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.api.Configuration;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,7 +27,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Base64;
+import java.util.Comparator;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -37,7 +43,22 @@ import java.util.UUID;
 public class TempKeytabManager {
 
   private static final Logger LOG = LoggerFactory.getLogger(TempKeytabManager.class);
-  private final Path tempKeytabDir;
+  private Path tempKeytabDir;
+
+  private final Configuration configuration;
+  private final String baseDirKey;
+  private final String baseDirDefaultValue;
+  private final String subdirName;
+
+  @VisibleForTesting
+  public static final Set<PosixFilePermission> GLOBAL_ALL_PERM = PosixFilePermissions.fromString(
+      "rwxrwxrwx"
+  );
+
+  @VisibleForTesting
+  public static final Set<PosixFilePermission> USER_ONLY_PERM = PosixFilePermissions.fromString(
+      "rwx------"
+  );
 
   /**
    * Constructs a temporary keytab manager, using the given container {@link Configuration}, setting the temporary
@@ -58,18 +79,29 @@ public class TempKeytabManager {
       String subdirName
   ) throws IllegalStateException {
 
-    final String keytabDir = configuration.get(baseDirKey, baseDirDefaultValue);
-    // the temp keytab directory is the subdir, then a user-specific (user named) directory underneath that
-    tempKeytabDir = Paths.get(keytabDir).resolve(subdirName).resolve(System.getProperty("user.name"));
-    if (!Files.exists(tempKeytabDir) && !createAndRestrictKeytabSubdirIfNeeded(tempKeytabDir.toFile())) {
-      throw new IllegalStateException(String.format(
-          "Failed to create temporary keytab directory at: %s",
-          tempKeytabDir.toString()
-      ));
-    }
+    this.configuration = configuration;
+    this.baseDirKey = baseDirKey;
+    this.baseDirDefaultValue = baseDirDefaultValue;
+    this.subdirName = subdirName;
   }
 
-  private void ensureKeytabTempDir() {
+  public void ensureKeytabTempDir() {
+    final String keytabDir = configuration.get(baseDirKey, baseDirDefaultValue);
+    final Path keytabDirPath = keytabDirHelper(
+        Paths.get(keytabDir, subdirName),
+        GLOBAL_ALL_PERM,
+        "top level keytab directory",
+        true
+    );
+    final Path userSpecificDirPath = keytabDirHelper(
+        keytabDirPath.resolve(System.getProperty("user.name")),
+        USER_ONLY_PERM,
+        "user specific keytab directory",
+        true
+    );
+    // the temp keytab directory is the subdir, then a user-specific (user named) directory underneath that
+    tempKeytabDir = userSpecificDirPath;
+
     String errorMsg = null;
     if (tempKeytabDir == null) {
       errorMsg = "tempKeytabDir was null; initialization did not complete successfully";
@@ -95,8 +127,8 @@ public class TempKeytabManager {
    * @throws IOException if an error occurs when creating or writing the temp keytab file
    * @throws IllegalStateException if the keytab temp directory was not in the correct state (writeable directory)
    */
-  public String createTempKeytabFile(String keytabContentsBase64) throws IOException, IllegalStateException {
-    ensureKeytabTempDir();
+  public synchronized String createTempKeytabFile(String keytabContentsBase64) throws IOException, IllegalStateException {
+    Utils.checkNotNull(tempKeytabDir, "tempKeytabDir");
     final String keytabFileName = UUID.randomUUID().toString();
     final Path keytabPath = tempKeytabDir.resolve(keytabFileName);
     if (Files.exists(keytabPath)) {
@@ -126,18 +158,6 @@ public class TempKeytabManager {
     return tempKeytabDir.resolve(keytabFileName);
   }
 
-  private static synchronized boolean createAndRestrictKeytabSubdirIfNeeded(File keytabSubdir) {
-    boolean created = keytabSubdir.exists();
-    if (!created) {
-      created = keytabSubdir.mkdirs();
-      if (created) {
-        // make the temp keytab dir not readable except by owner, for security purposes
-        created = keytabSubdir.setReadable(false, false);
-      }
-    }
-    return created;
-  }
-
   /**
    * Deletes a temporary keytab file.
    *
@@ -159,4 +179,78 @@ public class TempKeytabManager {
     }
   }
 
+  private Path keytabDirHelper(Path path, Set<PosixFilePermission> permissions, String label, boolean create) {
+    final File dir = path.toFile();
+
+    final boolean exists = dir.exists();
+    if (!exists) {
+      if (create) {
+        LOG.debug("Attempting to create {} directory at: {}", label, path.toString());
+        try {
+          final Path directories = Files.createDirectories(path);
+          Files.setPosixFilePermissions(path, permissions);
+          return directories;
+        } catch (IOException e) {
+          throw new IllegalStateException(String.format(
+              "Failed to create %s directory at %s: %s",
+              label,
+              path.toString(),
+              e.getMessage()
+          ), e);
+        }
+      } else {
+        // doesn't exist, but shouldn't be created either; return the path as it was passed in
+        return path;
+      }
+    } else /* exists = true */ {
+      final boolean isDirectory = dir.isDirectory();
+      if (!isDirectory) {
+        throw new IllegalStateException(String.format(
+            "%s directory is not a directory, but a file: %s",
+            label,
+            dir.toString()
+        ));
+      } else /* isDirectory = true */ {
+        LOG.trace("{} directory already exists at: {}", label, path.toString());
+        try {
+          final Set<PosixFilePermission> existingPermissions = Files.getPosixFilePermissions(path);
+          if (!permissions.equals(existingPermissions)) {
+            if (LOG.isWarnEnabled()) {
+              LOG.warn(
+                  "Existing permissions for temp keytab dir at {} were {}; changing them to {}",
+                  path.toString(),
+                  PosixFilePermissions.toString(existingPermissions),
+                  PosixFilePermissions.toString(permissions)
+              );
+            }
+            Files.setPosixFilePermissions(path, permissions);
+          }
+        } catch (IOException e) {
+          throw new RuntimeException("Failed to get existing permissions for top level keytab dir", e);
+        }
+        return path;
+      }
+    }
+  }
+
+  /**
+   * Cleans up the temp keytab directory managed by this instance. All temp keytab files within it are removed.
+   */
+  public void cleanUpKeytabDirectory() throws IOException {
+    if (tempKeytabDir != null) {
+      if (Files.exists(tempKeytabDir) && Files.isDirectory(tempKeytabDir)) {
+        Files.walk(tempKeytabDir)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .forEach(File::delete);
+      } else {
+        LOG.warn(
+            "Directory {} did not exist, or was not a directory, when attempting to clean up temp keytab directory",
+            tempKeytabDir.toString()
+        );
+      }
+    } else {
+      LOG.warn("tempKeytabDir was null; may not have been initialized");
+    }
+  }
 }

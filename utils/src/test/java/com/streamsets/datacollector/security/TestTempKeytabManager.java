@@ -51,6 +51,7 @@ public class TestTempKeytabManager {
         tempDirDefaultValue,
         subdirName
     );
+    keytabManager.ensureKeytabTempDir();
 
     // not valid Kerberos keytab bytes, but for this test it doesn't matter
     final byte[] dummyKeytabBinaryData = new byte[] {1, 1, 2, 3, 5, 8, 13};

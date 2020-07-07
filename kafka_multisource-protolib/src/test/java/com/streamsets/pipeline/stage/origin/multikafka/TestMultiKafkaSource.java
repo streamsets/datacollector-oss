@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.stage.origin.multikafka;
 
 import com.google.common.base.Throwables;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
@@ -36,6 +38,7 @@ import org.apache.kafka.common.TopicPartition;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -56,6 +59,11 @@ public class TestMultiKafkaSource {
   public void setUp() throws IOException, InterruptedException {
     MockitoAnnotations.initMocks(this);
     KafkaConsumerLoader.isTest = true;
+  }
+
+  @BeforeClass
+  public static void initializeKafkaKerberosUtil() {
+    KafkaKerberosUtil.initializeAndGet(new Configuration());
   }
 
   @After

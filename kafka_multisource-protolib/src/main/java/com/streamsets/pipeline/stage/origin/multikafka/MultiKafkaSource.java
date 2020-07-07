@@ -36,7 +36,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -391,7 +391,8 @@ public class MultiKafkaSource extends BasePushSource {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
+    kafkaKerberosUtil = KafkaKerberosUtil.getInstance();
+    Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
 
     conf.init(getContext(), issues);
 

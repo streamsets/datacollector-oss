@@ -43,6 +43,8 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.security.TempKeytabManager;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -186,7 +188,7 @@ public class TestStandalonePipelineManager {
       Configuration configuration = new Configuration();
       configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INTERVAL, expiry);
       configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INITIAL_DELAY, initialExpiryDelay);
-      configuration.set(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_LOCATION_KEY, tempKafkaKeytabDir.toString());
+      configuration.set(KafkaKerberosUtil.KAFKA_KEYTAB_LOCATION_KEY, tempKafkaKeytabDir.toString());
       return configuration;
     }
 
@@ -347,9 +349,9 @@ public class TestStandalonePipelineManager {
       if (simulateExistingKafkaKeytabDir) {
         // prior to the changes in SDC-14847, the kafka-keytabs dir itself would be user readable
         // and writeable with no global permissions, so simulate that here
-        final Path kafkaKeytabsSubdir = tempKeytabDirPath.resolve(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_DIR);
+        final Path kafkaKeytabsSubdir = tempKeytabDirPath.resolve(KafkaKerberosUtil.KAFKA_KEYTAB_SUBDIR);
         Files.createDirectory(kafkaKeytabsSubdir);
-        Files.setPosixFilePermissions(kafkaKeytabsSubdir, StandaloneAndClusterPipelineManager.USER_ONLY_PERM);
+        Files.setPosixFilePermissions(kafkaKeytabsSubdir, TempKeytabManager.USER_ONLY_PERM);
       }
     } catch (IOException e) {
       throw new RuntimeException(e);
@@ -365,7 +367,7 @@ public class TestStandalonePipelineManager {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     final Configuration configuration = objectGraph.get(Configuration.class);
-    tempKeytabDir = configuration.get(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_LOCATION_KEY, INVALID_KEYTAB_DIR);
+    tempKeytabDir = configuration.get(KafkaKerberosUtil.KAFKA_KEYTAB_LOCATION_KEY, INVALID_KEYTAB_DIR);
     pipelineManager.init();
     pipelineManager.run();
   }
@@ -389,6 +391,7 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
   }
+
 
   @Test
   public void testPreviewer() throws PipelineException {
@@ -588,7 +591,7 @@ public class TestStandalonePipelineManager {
     assertTrue(Files.isDirectory(keytabDir));
 
     // kafka-keytabs dir should be globally writeable at this point
-    final Path kafkaKeytabsDir = keytabDir.resolve(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_DIR);
+    final Path kafkaKeytabsDir = keytabDir.resolve(KafkaKerberosUtil.KAFKA_KEYTAB_SUBDIR);
     assertTrue(Files.exists(kafkaKeytabsDir));
     assertTrue(Files.isDirectory(kafkaKeytabsDir));
     final Set<PosixFilePermission> topLevelPerms = Files.getPosixFilePermissions(kafkaKeytabsDir);
