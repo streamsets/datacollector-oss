@@ -28,7 +28,8 @@ public class StartPipelineConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Unique Task Name",
+      label = "Task Name",
+      description = "Task name to use in the generated record. Must be unique within the pipeline.",
       displayPosition = 5,
       group = "PIPELINE"
   )
@@ -39,7 +40,7 @@ public class StartPipelineConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "http://localhost:18630",
       label = "Execution Engine URL",
-      description = "URL of Data Collector, Data Collector Edge, or Transformer that runs the specified pipelines",
+      description = "URL of Data Collector, Edge, or Transformer to run the pipelines",
       displayPosition = 10,
       group = "PIPELINE"
   )
@@ -60,7 +61,7 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Reset Origin",
-      description = "Reset the origin before starting the pipeline",
+      description = "When possible, resets the origin before starting a pipeline",
       defaultValue = "false",
       displayPosition = 40,
       group = "PIPELINE"
@@ -71,7 +72,7 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Control Hub Enabled",
-      description = "Execution engine is registered with Control Hub",
+      description = "Indicates the execution engine is registered with Control Hub",
       defaultValue = "false",
       displayPosition = 50,
       group = "PIPELINE"
@@ -83,7 +84,7 @@ public class StartPipelineConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "https://cloud.streamsets.com",
       label = "Control Hub URL",
-      description = "Control Hub base URL",
+      description = "Control Hub URL",
       displayPosition = 60,
       group = "PIPELINE",
       dependsOn = "controlHubEnabled",
@@ -95,8 +96,8 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Run in Background",
-      description = "Run started pipelines in the background and pass the record to the next stage immediately after " +
-          "starting pipelines. If not selected, pass the record to the next stage after all started pipelines finish.",
+      description = "Run started pipelines in the background and pass the record to the next stage immediately. " +
+          "If not selected, the record passes downstream after all started pipelines finish.",
       defaultValue = "false",
       displayPosition = 70,
       group = "PIPELINE"
@@ -107,8 +108,8 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
-      label = "Delay Between State Checks",
-      description = "Milliseconds to wait before checking pipeline state",
+      label = "Status Check Interval",
+      description = "Milliseconds to wait between pipeline status checks",
       displayPosition = 80,
       group = "PIPELINE",
       min = 0,
@@ -122,8 +123,8 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "User Name",
-      description = "User that runs the pipeline. Enter a Data Collector, Data Collector Edge, or Transformer user, " +
-          "or enter a Control Hub user for execution engines registered with Control Hub.",
+      description = "User to run the pipeline. Enter a Data Collector, Edge, or Transformer user, " +
+          "or specify a Control Hub user for execution engines registered with Control Hub",
       defaultValue = "admin",
       displayPosition = 81,
       group = "CREDENTIALS"
@@ -134,7 +135,7 @@ public class StartPipelineConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
-      description = "Password for the user.",
+      description = "Password",
       defaultValue = "admin",
       displayPosition = 82,
       group = "CREDENTIALS"

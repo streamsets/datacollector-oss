@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.startPipeline.StartPipelineConfig;
 @StageDef(
     version = 3,
     label = "Start Pipeline",
-    description = "Starts a Data Collector, Transformer, or Edge pipeline",
+    description = "Starts pipelines on Data Collector, Edge, or Transformer",
     icon="pipeline.png",
     recordsByRef = true,
     execution = {

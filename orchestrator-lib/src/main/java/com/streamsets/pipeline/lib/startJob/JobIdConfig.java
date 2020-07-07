@@ -24,7 +24,7 @@ public class JobIdConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      label = "Job ID Type",
+      label = "Identifier Type",
       defaultValue = "ID",
       displayPosition = 15,
       group = "JOB"
@@ -35,8 +35,8 @@ public class JobIdConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Job ID",
-      description = "ID of the job to start. If Job ID Type is 'Job Name', then enter the name of the job to start.",
+      label = "Identifier",
+      description = "ID or name of the job to start",
       displayPosition = 20,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},

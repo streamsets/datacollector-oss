@@ -27,8 +27,8 @@ import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
     version = 2,
-    label = "Wait for Job Completion",
-    description = "Wait for Control Hub job completion",
+    label = "Wait for Jobs",
+    description = "Waits for Control Hub jobs to complete",
     icon="job.png",
     execution = {
         ExecutionMode.STANDALONE

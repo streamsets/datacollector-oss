@@ -26,7 +26,8 @@ public class WaitForJobCompletionConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       defaultValue = "https://cloud.streamsets.com",
-      label = "URL of Control Hub",
+      label = "Control Hub URL",
+      description = "URL for the Control Hub running the jobs",
       displayPosition = 10,
       group = "JOB"
   )
@@ -36,8 +37,8 @@ public class WaitForJobCompletionConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
-      label = "Delay Between State Checks",
-      description = "Milliseconds to wait before checking job state",
+      label = "Status Check Interval",
+      description = "Milliseconds to wait between job status checks",
       displayPosition = 60,
       group = "JOB",
       min = 0,
@@ -49,7 +50,7 @@ public class WaitForJobCompletionConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Control Hub User Name",
-      description = "Control Hub user that runs jobs",
+      description = "Control Hub user to perform status checks",
       displayPosition = 71,
       group = "CREDENTIALS"
   )
@@ -59,7 +60,7 @@ public class WaitForJobCompletionConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
-      description = "Password of the user",
+      description = "Password",
       displayPosition = 72,
       group = "CREDENTIALS"
   )

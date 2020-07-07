@@ -20,13 +20,13 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum StartJobErrors implements ErrorCode {
-  START_JOB_01("Control Hub Login failed, status code '{}': {}"),
-  START_JOB_02("Reset failed for Job ID: {}, status code '{}': {}"),
-  START_JOB_03("Failed to Start Job for Job ID: {}, status code '{}': {}"),
-  START_JOB_04("Failed to Start Job Template for Job ID: {}, status code '{}': {}"),
-  START_JOB_05("Failed to parse runtime parameters for Job ID: {}, error: {}"),
-  START_JOB_06("Configuration value is required for Job ID, at index: {}"),
-  START_JOB_07("Failed to fetch a unique job from the given job name: {}, fount {} entries"),
+  START_JOB_01("Control Hub login failed, status code '{}': {}"),
+  START_JOB_02("Reset failed for job ID: {}, status code '{}': {}"),
+  START_JOB_03("Failed to start job for job ID: {}, status code '{}': {}"),
+  START_JOB_04("Failed to start job template for job ID: {}, status code '{}': {}"),
+  START_JOB_05("Failed to parse runtime parameters for job ID: {}, error: {}"),
+  START_JOB_06("Configuration value is required for job ID, at index: {}"),
+  START_JOB_07("Failed to fetch a unique job from the given job name: {}, found {} entries"),
   START_JOB_08("Failed to start job: {}"),
   ;
 
