@@ -43,12 +43,18 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KB;
 
 public class FirehoseTarget extends BaseTarget {
   private static final Logger LOG = LoggerFactory.getLogger(FirehoseTarget.class);
   private static final int MAX_RECORDS_PER_REQUEST = 500;
+
+  private static final Pattern REGION_PATTERN = Pattern.compile(
+      "(?:https?://)?[\\w-]*\\.?firehose\\.([\\w-]+)(?:\\.vpce)?\\.amazonaws\\.com"
+  );
 
   private final FirehoseConfigBean conf;
 
@@ -82,7 +88,18 @@ public class FirehoseTarget extends BaseTarget {
         .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
 
       if (conf.region == AwsRegion.OTHER) {
-        builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+        Matcher matcher = REGION_PATTERN.matcher(conf.endpoint);
+        if (matcher.find()) {
+          builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(
+              conf.endpoint.substring(matcher.start(), matcher.end()), matcher.group(1)
+          ));
+        } else {
+          issues.add(getContext().createConfigIssue(
+              Groups.KINESIS.name(),
+              "kinesisConfig.endpoint",
+              Errors.KINESIS_19
+          ));
+        }
       } else {
         builder.withRegion(conf.region.getId());
       }

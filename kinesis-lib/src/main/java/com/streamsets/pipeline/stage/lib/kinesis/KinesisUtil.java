@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -52,6 +53,10 @@ public class KinesisUtil {
   public static final int ONE_MB = 1024 * KB; // MiB
   public static final String KINESIS_CONFIG_BEAN = "kinesisConfig";
   public static final String LEASE_TABLE_BEAN = "leaseTable";
+
+  public static final Pattern REGION_PATTERN = Pattern.compile(
+      "(?:https?://)?[\\w-]*\\.?kinesis\\.([\\w-]+)(?:\\.vpce)?\\.amazonaws\\.com"
+  );
 
   private KinesisUtil() {}
 
