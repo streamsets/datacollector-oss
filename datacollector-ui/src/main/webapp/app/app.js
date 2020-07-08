@@ -581,6 +581,10 @@ angular.module('dataCollectorApp')
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
         $rootScope.common.headerTitle = configuration.getUIHeaderTitle();
+        $rootScope.common.isChangePasswordEnabled =
+          configuration.getAuthenticationType() == 'form' &&
+          !configuration.isDPMEnabled() &&
+          !configuration.isManagedByClouderaManager();
         if(configuration.isAnalyticsEnabled()) {
           Analytics.createAnalyticsScriptTag();
           configuration.createFullStoryScriptTag();

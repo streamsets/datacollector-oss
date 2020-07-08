@@ -348,9 +348,9 @@
               </a>
             </li>
 
-            <li ng-if="common.authenticationType === 'form' && !common.isDPMEnabled" role="presentation" class="divider"></li>
+            <li ng-if="common.isChangePasswordEnabled" role="presentation" class="divider"></li>
 
-            <li ng-if="common.authenticationType === 'form' && !common.isDPMEnabled">
+            <li ng-if="common.isChangePasswordEnabled">
               <a href="javascript:;" ng-click="common.changePassword()">
                 <span class="glyphicon glyphicon-key"></span>
                 Change Password
