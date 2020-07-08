@@ -401,7 +401,7 @@ public class JdbcSource extends BaseSource {
         if (null == resultSet || resultSet.isClosed()) {
           // The result set got closed outside of us, so we also clean up the connection (if any)
           closeQuietly(connection);
-          connection = dataSource.getConnection();
+          connection = getProduceConnection();
 
           if (!txnColumnName.isEmpty()) {
             // CDC requires scrollable cursors.
@@ -551,6 +551,10 @@ public class JdbcSource extends BaseSource {
     return nextSourceOffset;
   }
 
+  protected Connection getProduceConnection() throws SQLException {
+    return dataSource.getConnection();
+  }
+
   private void generateNoMoreDataEvent() {
     NoMoreDataEvent.EVENT_CREATOR.create(getContext())
         .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
@@ -582,7 +586,7 @@ public class JdbcSource extends BaseSource {
     return query.replaceAll("\\$\\{(offset|OFFSET)}", offset);
   }
 
-  private Record processRow(ResultSet resultSet, long rowCount) throws SQLException {
+  protected Record processRow(ResultSet resultSet, long rowCount) throws SQLException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();

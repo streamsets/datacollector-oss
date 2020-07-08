@@ -89,6 +89,7 @@
     <rabbitmq-lib>rabbitmq-lib</rabbitmq-lib>
     <redis-lib>redis-lib</redis-lib>
     <salesforce-lib>salesforce-lib</salesforce-lib>
+    <sap_hana-lib>sap_hana-lib</sap_hana-lib>
     <sqlserver-lib>sqlserver-lib</sqlserver-lib>
     <stats-lib>stats-lib</stats-lib>
     <tensorflow-lib>tensorflow-lib</tensorflow-lib>
@@ -274,6 +275,7 @@
     <module>rabbitmq-lib</module>
     <module>redis-lib</module>
     <module>salesforce-lib</module>
+    <module>sap_hana-lib</module>
     <module>sqlserver-lib</module>
     <module>stats-lib</module>
     <module>tensorflow-lib</module>
