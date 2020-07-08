@@ -127,6 +127,5 @@ public class AwsS3Connection {
       builder.withRegion(region.getId());
     }
     s3Client = builder.build();
-
   }
 }

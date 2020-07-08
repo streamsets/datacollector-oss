@@ -45,10 +45,12 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.restapi.connection.ConnectionVerifierDynamicPreviewHelper;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -334,16 +336,24 @@ public class PreviewResource {
         dynamicPreviewWithOverridesRequest.getStageOutputsToOverrideJson()
     ));
 
-    final DynamicPreviewEventJson dynamicPreviewEvent = getDynamicPreviewEvent(
-        controlHubBaseUrl,
-        "/dynamic_preview/rest/v2/dynamic_preview/createDynamicPreviewEvent",
-        runtimeInfo.getAppAuthToken(),
-        runtimeInfo.getId(),
-        dynamicPreviewRequest
-    );
+    DynamicPreviewEventJson dynamicPreviewEvent;
+    if (DynamicPreviewType.CONNECTION_VERIFIER.equals(dynamicPreviewRequest.getType())) {
+      // build the dynamic preview pipeline and events
+      ConnectionVerifierDynamicPreviewHelper connectionVerifier = new ConnectionVerifierDynamicPreviewHelper();
+      PipelineEnvelopeJson verifierPipeline = connectionVerifier.getVerifierDynamicPreviewPipeline(dynamicPreviewRequest);
+      dynamicPreviewEvent = connectionVerifier.getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);
+    } else {
+      // for classification and protection policies get the preview event from SCH
+      dynamicPreviewEvent = getDynamicPreviewEvent(
+          controlHubBaseUrl,
+          "/dynamic_preview/rest/v2/dynamic_preview/createDynamicPreviewEvent",
+          runtimeInfo.getAppAuthToken(),
+          runtimeInfo.getId(),
+          dynamicPreviewRequest
+      );
+    }
 
-
-    String generatedPipelineId = null;
+    String generatedPipelineId;
     try {
       generatedPipelineId = handlePreviewEvents(
           "before",
@@ -385,8 +395,7 @@ public class PreviewResource {
         EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId())
     );
 
-    String previewerId = null;
-
+    String previewerId;
     if (previewEventResult.getImmediateResult() == null) {
       throw new StageException(PreviewError.PREVIEW_0102);
     } else {
@@ -396,6 +405,7 @@ public class PreviewResource {
     if (previewer == null) {
       throw new StageException(PreviewError.PREVIEW_0105);
     }
+
     final PreviewInfoJson previewInfoJson = new PreviewInfoJson(
         previewer.getId(),
         previewer.getStatus(),
@@ -417,6 +427,9 @@ public class PreviewResource {
         break;
       case PROTECTION_POLICY:
         // permissions on specific policies will be checked on DPM side
+        break;
+      case CONNECTION_VERIFIER:
+        // if the user could run the preview then it should have the appropriate roles
         break;
     }
   }
@@ -596,7 +609,7 @@ public class PreviewResource {
       }
     }
     Previewer previewer = manager.getPreviewer(previewerId);
-    if(previewer == null) {
+    if (previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
@@ -692,5 +705,4 @@ public class PreviewResource {
       }
     }
   }
-
 }

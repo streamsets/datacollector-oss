@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
-import com.streamsets.pipeline.stage.origin.s3.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +44,7 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String BUCKET_EXIST_PREFIX = "streamsets-s3-conn-veri-";
 
+  @ConfigDefBean
   public AwsS3Connection connection;
 
   @Override
@@ -52,7 +52,7 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     try {
       connection.initConnection(getContext(), "connection", issues, -1, false);
-      if (!issues.isEmpty()) {
+      if (issues.isEmpty()) {
         // We don't actually care if the bucket exists or not, we're only interested in if this will throw an Exception
         connection.getS3Client().doesBucketExistV2(BUCKET_EXIST_PREFIX + UUID.randomUUID().toString());
       }
