@@ -19,12 +19,13 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.ClassUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -79,17 +80,26 @@ public abstract class ConnectionDefinitionExtractor {
       String yamlUpgrader = conDef.upgraderDef();
       String verifier = conDef.verifier().getCanonicalName();
 
+      String verifierPrefix = "";
+      Class verifierClass = klass.getClassLoader().loadClass(verifier);
+      for (Field field : verifierClass.getDeclaredFields()) {
+        if (field.getAnnotation(ConfigDefBean.class) != null && klass.equals(field.getType())) {
+          verifierPrefix = field.getName();
+        }
+      }
+
       return new ConnectionDefinition(
-              conDef,
-              libraryDef,
-              version,
-              label,
-              description,
-              type,
-              configDefinitions,
-              configGroupDefinition,
-              yamlUpgrader,
-              verifier
+          conDef,
+          libraryDef,
+          version,
+          label,
+          description,
+          type,
+          configDefinitions,
+          configGroupDefinition,
+          yamlUpgrader,
+          verifier,
+          verifierPrefix
       );
     } catch (Exception e) {
       throw new IllegalStateException("Exception while extracting connection definition for " + conDef.label(), e);

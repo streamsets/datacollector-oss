@@ -60,6 +60,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
   private final String verifierClass;
+  private final String verifierPrefix;
 
   @SuppressWarnings("unchecked")
   public ConnectionDefinition(ConnectionDefinition def, ClassLoader classLoader) {
@@ -75,6 +76,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
     verifierClass = def.verifierClass;
+    verifierPrefix = def.verifierPrefix;
   }
 
   public ConnectionDefinition(
@@ -87,7 +89,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       List<ConfigDefinition> configDefinitions,
       ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
-      String verifierClass
+      String verifierClass,
+      String verifierPrefix
   ) {
     this.connectionDef = connectionDef;
     this.libraryDefinition = libraryDefinition;
@@ -113,6 +116,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     }
     this.yamlUpgrader = yamlUpgrader;
     this.verifierClass = verifierClass;
+    this.verifierPrefix = verifierPrefix;
   }
 
   @JsonIgnore
@@ -188,8 +192,14 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
 
   @Override
   public String toString() {
-    return Utils.format("ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' " +
-                    "verifier class='{}']", getLibrary(), getName(), getVersion(), getType(), verifierClass);
+    return Utils.format(
+        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier class='{}', verifier prefix='{}']",
+        getLibrary(), getName(), getVersion(), getType(), verifierClass, verifierPrefix
+    );
+  }
+
+  public String getVerifierPrefix() {
+    return verifierPrefix;
   }
 }
 

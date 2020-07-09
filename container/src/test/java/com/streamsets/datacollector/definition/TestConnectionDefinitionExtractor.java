@@ -88,10 +88,6 @@ public class TestConnectionDefinitionExtractor {
     Assert.assertEquals("Connects to Test Connection", def.getDescription());
     Assert.assertEquals("TEST_CON_TYPE", def.getType());
     Assert.assertEquals("upgrader/TestConnection.yaml", def.getUpgrader());
-    Assert.assertEquals(
-        "com.streamsets.datacollector.definition.connection.TestConnectionDef.TestConnectionVerifier",
-        def.getVerifierClass()
-    );
 
     // Assert connection configurations
     Assert.assertNotNull(def.getConfigDefinitions());
@@ -115,5 +111,9 @@ public class TestConnectionDefinitionExtractor {
     // Assert groups
     ConfigGroupDefinition groupsDef = def.getConfigGroupDefinition();
     validateGroups(groupsDef);
+
+    // Assert verifier and prefix
+    Assert.assertEquals("com.streamsets.datacollector.definition.connection.TestConnectionVerifier", def.getVerifierClass());
+    Assert.assertEquals("connection", def.getVerifierPrefix());
   }
 }

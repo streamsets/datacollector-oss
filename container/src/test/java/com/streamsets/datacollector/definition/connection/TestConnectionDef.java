@@ -17,20 +17,14 @@
 package com.streamsets.datacollector.definition.connection;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
-import com.streamsets.pipeline.api.ConnectionVerifier;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.common.InterfaceAudience;
 import com.streamsets.pipeline.common.InterfaceStability;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestConnectionDef {
 
@@ -72,32 +66,6 @@ public class TestConnectionDef {
       return msg;
     }
 
-  }
-
-  public class TestConnectionVerifier extends ConnectionVerifier {
-    private static final String BUCKET_EXIST_PREFIX = "streamsets-test-conn-veri-";
-
-    @ConfigDefBean(groups = "G1")
-    public TestConnection connection;
-
-    @Override
-    protected List<ConfigIssue> initConnection() {
-      List<Stage.ConfigIssue> issues = new ArrayList<>();
-      try {
-        connection.initConnection();
-      } catch (Exception e) {
-        issues.add(
-            getContext()
-                .createConfigIssue("G1", "connection", TestConnectionErrors.TEST_CONNECTION_ERROR, e.toString())
-        );
-      }
-      return issues;
-    }
-
-    @Override
-    protected void destroyConnection() {
-      connection.destroy();
-    }
   }
 
   @InterfaceAudience.LimitedPrivate
