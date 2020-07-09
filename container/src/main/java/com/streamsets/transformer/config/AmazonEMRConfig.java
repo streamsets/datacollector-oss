@@ -304,6 +304,20 @@ public class AmazonEMRConfig {
   public String slaveSecurityGroup;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Service Access Security Group",
+      description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
+      group = "EMR",
+      displayPosition = 315,
+      dependencies = {
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+      }
+  )
+  public String serviceAccessSecurityGroup;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "2",

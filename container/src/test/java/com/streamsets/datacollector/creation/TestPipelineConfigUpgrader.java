@@ -199,6 +199,17 @@ public class TestPipelineConfigUpgrader {
     doTestDataprocConfigs(17, 18);
   }
 
+  @Test
+  public void testPipelineConfigUpgradeV18ToV19() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 18, 19);
+
+    List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals("transformerEMRConfig.serviceAccessSecurityGroup", upgrade.get(0).getName());
+    Assert.assertNull(upgrade.get(0).getValue());
+  }
+
   private void doTestEMRConfigs(int from, int to) {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
@@ -252,7 +263,7 @@ public class TestPipelineConfigUpgrader {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
     List<Config> upgraded = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
-  
+
     String regex = "googleCloudConfig.";
     String regex2 = "googleCloudCredentialsConfig.";
     List<Config> gcloudConfigList = upgraded.stream()
@@ -275,7 +286,7 @@ public class TestPipelineConfigUpgrader {
     assertInIter(iter, "workerCount", 2);
     assertInIter(iter, "clusterName", null);
     assertInIter(iter, "terminate", false);
-  
+
     assertInIter(iter, "projectId", null);
     assertInIter(iter, "credentialsProvider", null);
     assertInIter(iter, "path", null);
