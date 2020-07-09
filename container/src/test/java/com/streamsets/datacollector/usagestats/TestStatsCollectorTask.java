@@ -692,7 +692,7 @@ public class TestStatsCollectorTask {
   private void verifyRollsReportsSaves(AbstractStatsCollectorTask task, int expectedRolls, int expectedReports, int expectedSaves) {
     Mockito.verify(task, Mockito.times(expectedRolls)).updateAfterRoll(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyList());
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
   }
 
   @Test
@@ -732,7 +732,7 @@ public class TestStatsCollectorTask {
 
     task.setActive(task.isActive());
 
-    Mockito.verify(task, Mockito.never()).saveStats();
+    Mockito.verify(task, Mockito.never()).saveStatsInternal();
 
     task.stop();
   }
@@ -784,7 +784,7 @@ public class TestStatsCollectorTask {
       Assert.assertNotNull(map.get(AbstractStatsCollectorTask.STATS_ACTIVE_KEY));
       Assert.assertFalse((Boolean) map.get(AbstractStatsCollectorTask.STATS_ACTIVE_KEY));
     }
-    Mockito.verify(task, Mockito.times(1)).saveStats();
+    Mockito.verify(task, Mockito.times(1)).saveStatsInternal();
 
     Assert.assertTrue(task.getStatsInfo().getCollectedStats().isEmpty());
     task.stop();
@@ -941,9 +941,50 @@ public class TestStatsCollectorTask {
       Assert.assertTrue((Boolean) map.get(AbstractStatsCollectorTask.STATS_ACTIVE_KEY));
     }
 
-    Mockito.verify(task, Mockito.times(1)).saveStats();
+    Mockito.verify(task, Mockito.times(1)).saveStatsInternal();
     task.stop();
   }
+
+  @Test
+  public void testSaveStats() throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", testDir);
+
+    Configuration config = new Configuration();
+
+    SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
+
+    AbstractStatsCollectorTask task = mockStatsCollectorTaskAndRunnable(buildInfo, runtimeInfo, config, scheduler);
+    final AtomicLong nonForceRuns = new AtomicLong(0);
+    final AtomicLong forceRuns = new AtomicLong(0);
+    Mockito.when(task.isActive()).thenReturn(true);
+    Mockito.when(task.isOpted()).thenReturn(true);
+
+    Mockito.when(task.getRunnable(Mockito.anyBoolean())).then((Answer<Runnable>) invocation -> {
+        final Runnable runnable = (Runnable) invocation.callRealMethod();
+        boolean isForce = (boolean)invocation.getArguments()[0];
+        return () -> {
+          long runs = (isForce)? forceRuns.incrementAndGet() : nonForceRuns.incrementAndGet();
+          runnable.run();
+        };
+    });
+
+    task.initTask();
+    Assert.assertEquals(0, nonForceRuns.get());
+    Assert.assertEquals(1, forceRuns.get());
+    Mockito.verify(task).saveStatsInternal();
+
+    task.saveStats();
+    Assert.assertEquals(1, nonForceRuns.get());
+    Assert.assertEquals(1, forceRuns.get());
+    Mockito.verify(task, Mockito.times(2)).saveStatsInternal();
+  }
+
 
   @Test
   public void testReportStats() throws Exception {
@@ -1024,7 +1065,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
 
     // run again, should just save now that we don't force
     Runnable runnable = task.getRunnable(false);
@@ -1032,7 +1073,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
 
     // run after roll period but before report period
     Mockito.when(task.getRollFrequencyMillis()).thenReturn(0L);
@@ -1041,7 +1082,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
 
     // run after report period
     Mockito.when(task.getReportPeriodSeconds()).thenReturn(0L);
@@ -1051,7 +1092,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
 
     // reset periods and make sure we only save
     Mockito.when(task.getRollFrequencyMillis()).thenReturn(
@@ -1062,7 +1103,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
 
     // stop task and make sure we do one full set of activity
     // we didn't properly start statsInfo, so fake the stop call else it will throw
@@ -1073,7 +1114,7 @@ public class TestStatsCollectorTask {
     expectedSaves++;
     Mockito.verify(statsInfo, Mockito.times(expectedRolls)).setActiveStats(Mockito.any());
     Mockito.verify(task, Mockito.times(expectedReports)).reportStats(Mockito.anyListOf(StatsBean.class));
-    Mockito.verify(task, Mockito.times(expectedSaves)).saveStats();
+    Mockito.verify(task, Mockito.times(expectedSaves)).saveStatsInternal();
     Mockito.verify(statsInfo).stopSystem();
   }
 

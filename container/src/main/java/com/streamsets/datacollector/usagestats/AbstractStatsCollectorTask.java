@@ -349,7 +349,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
 
   Runnable getRunnable(boolean forceRollAndReport) {
     return () -> {
-      synchronized (this) {
+      synchronized (AbstractStatsCollectorTask.this) {
         /*
         Roll every 1 hr, or on initial run
         Report every 24 hrs, on initial run
@@ -388,7 +388,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
               reportStatsBackOffUntil = getCurrentTimeMillis() + TimeUnit.MINUTES.toMillis(backOffMinutes);
             }
           }
-          saveStats();
+          saveStatsInternal();
         }
       }
     };
@@ -536,7 +536,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     return (HttpURLConnection) uploadUrl.openConnection();
   }
 
-  protected void saveStats() {
+  protected void saveStatsInternal() {
     DataStore ds = new DataStore(statsFile);
     try {
       try (OutputStream os = ds.getOutputStream()) {
@@ -595,9 +595,14 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
         // This internally save stats as well
         getRunnable(true).run();
       } else {
-        saveStats();
+        saveStatsInternal();
       }
     }
+  }
+
+  @Override
+  public void saveStats() {
+    getRunnable(false).run();
   }
 
   @Override

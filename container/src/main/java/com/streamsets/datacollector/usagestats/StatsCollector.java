@@ -111,4 +111,9 @@ public interface StatsCollector extends Task {
    * @return the StatsInfo of the data collector.
    */
   StatsInfo getStatsInfo();
+
+  /**
+   * Save Statistics to the local persistent store
+   */
+  void saveStats();
 }
