@@ -31,6 +31,7 @@ public class ProxyConfig {
       defaultValue = "10",
       description = "Set connection timeout (in seconds)",
       displayPosition = 4995,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer connectionTimeout = 10;
@@ -42,6 +43,7 @@ public class ProxyConfig {
       defaultValue = "50",
       description = "Set socket timeout (in seconds) for read and write operations. ",
       displayPosition = 4997,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer socketTimeout = 50;
@@ -54,6 +56,7 @@ public class ProxyConfig {
       description = "Sets the maximum number of retry attempts for failed " +
           "retry-able requests (ex: 5xx error).",
       displayPosition = 4999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer retryCount = 3;
@@ -66,6 +69,7 @@ public class ProxyConfig {
       description = "Whether or not to connect to AWS through a proxy",
       defaultValue = "false",
       displayPosition = 5000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean useProxy;
@@ -78,6 +82,7 @@ public class ProxyConfig {
       displayPosition = 5010,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public String proxyHost;
@@ -90,6 +95,7 @@ public class ProxyConfig {
       displayPosition = 5020,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int proxyPort;
@@ -102,6 +108,7 @@ public class ProxyConfig {
       displayPosition = 5030,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public CredentialValue proxyUser;
@@ -114,6 +121,7 @@ public class ProxyConfig {
       displayPosition = 5040,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public CredentialValue proxyPassword;
@@ -126,6 +134,7 @@ public class ProxyConfig {
       displayPosition = 5050,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public String proxyDomain;
@@ -138,6 +147,7 @@ public class ProxyConfig {
       displayPosition = 5060,
       dependsOn = "useProxy",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public String proxyWorkstation;

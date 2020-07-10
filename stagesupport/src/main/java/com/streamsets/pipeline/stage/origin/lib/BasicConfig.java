@@ -30,6 +30,7 @@ public class BasicConfig {
     description = "Max number of records per batch",
     displayPosition = 1000,
     group = "#0",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     min = 1,
     max = Integer.MAX_VALUE
   )
@@ -43,6 +44,7 @@ public class BasicConfig {
     description = "Max time to wait for data before sending a partial or empty batch",
     displayPosition = 1010,
     group = "#0",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
     min = 1,
     max = Integer.MAX_VALUE
   )

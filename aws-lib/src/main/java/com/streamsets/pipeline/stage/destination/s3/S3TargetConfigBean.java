@@ -69,6 +69,7 @@ public class S3TargetConfigBean {
       label = "Data Time Zone",
       description = "Time zone to use to resolve the date time of a time-based partition prefix",
       displayPosition = 190,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "S3"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -84,6 +85,7 @@ public class S3TargetConfigBean {
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "S3"
   )
   public String timeDriverTemplate;
@@ -95,6 +97,7 @@ public class S3TargetConfigBean {
     description = "Prefix for object names that will be uploaded on Amazon S3",
     label = "Object Name Prefix",
     displayPosition = 210,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "S3"
   )
   public String fileNamePrefix;
@@ -115,6 +118,7 @@ public class S3TargetConfigBean {
     defaultValue = "false",
     label = "Compress with gzip",
     displayPosition = 230,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "S3"
   )
   public boolean compress;

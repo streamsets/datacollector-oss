@@ -90,6 +90,7 @@ public abstract class S3ConnectionBaseConfig {
     description = "",
     defaultValue = "/",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "#0"
   )
   public String delimiter;
@@ -101,6 +102,7 @@ public abstract class S3ConnectionBaseConfig {
       defaultValue = "false",
       description = "If checked data is accessed using https://<s3_server>/<bucket>/<path>.  If unchecked, data is accessed using Virtual Model style of https://<bucket>.<s3_server>/<path>",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean usePathAddressModel = false;
