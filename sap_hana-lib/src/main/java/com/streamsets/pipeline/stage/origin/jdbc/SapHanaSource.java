@@ -21,9 +21,10 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Enumeration;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -96,5 +97,16 @@ public class SapHanaSource extends JdbcSource{
       }
     }
     return record;
+  }
+
+  @Override
+  protected Statement getStatement(Connection connection, int resultSetType, int resultSetConcurrency) throws SQLException {
+    return connection.prepareStatement(getPreparedQuery(), resultSetType, resultSetConcurrency);
+  }
+
+  @Override
+  protected ResultSet executeQuery(Statement statement, String preparedQuery) throws SQLException {
+    PreparedStatement preparedStatement = (PreparedStatement) statement;
+    return preparedStatement.executeQuery();
   }
 }
