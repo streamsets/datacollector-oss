@@ -458,13 +458,7 @@ public class HikariPoolConfigBean {
   }
 
   public DatabaseVendor getVendor() {
-    if (connectionString.startsWith("jdbc:oracle:")) {
-      return DatabaseVendor.ORACLE;
-    } else if (connectionString.startsWith("jdbc:sqlserver:")) {
-      return DatabaseVendor.SQL_SERVER;
-    }
-
-    return DatabaseVendor.UNKNOWN;
+    return DatabaseVendor.forUrl(connectionString);
   }
 
   public void addExtraDriverProperties(Map<String, String> keyValueProperties) {

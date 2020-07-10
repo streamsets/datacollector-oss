@@ -15,27 +15,75 @@
  */
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
+import com.google.common.collect.ImmutableList;
+
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Database vendor (Oracle, MySQL, ...)
  */
 public enum DatabaseVendor {
-  DB2("com.ibm.db2.jcc.DB2Driver"),
-  MYSQL("com.mysql.jdbc.Driver"),
-  HIVE("org.apache.hive.jdbc.HiveDriver", "com.cloudera.impala.jdbc41.Driver", "com.cloudera.impala.jdbc4.Driver"),
-  TERADATA("com.teradata.jdbc.TeraDriver"),
-  ORACLE("oracle.jdbc.driver.OracleDriver", "oracle.jdbc.OracleDriver"),
-  POSTGRESQL("org.postgresql.Driver"),
-  SQL_SERVER("com.microsoft.sqlserver.jdbc.SQLServerDriver"),
-  UNKNOWN(),
+  // https://www.ibm.com/support/knowledgecenter/en/SSEPGG_11.1.0/com.ibm.db2.luw.apdv.java.doc/src/tpc/imjcc_r0052342.html
+  DB2(
+    ImmutableList.of("jdbc:db2:", "jdbc:ibmdb:", "jdbc:ids:"),
+    ImmutableList.of("com.ibm.db2.jcc.DB2Driver")
+  ),
+  //
+  MYSQL(
+      ImmutableList.of("jdbc:mysql:"),
+      ImmutableList.of("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver")
+  ),
+  HIVE(
+      ImmutableList.of("jdbc:hive2:"),
+      ImmutableList.of("org.apache.hive.jdbc.HiveDriver", "com.cloudera.impala.jdbc41.Driver", "com.cloudera.impala.jdbc4.Driver")
+  ),
+  TERADATA(
+      ImmutableList.of("jdbc:teradata"),
+      ImmutableList.of("com.teradata.jdbc.TeraDriver")),
+  ORACLE(
+      ImmutableList.of("jdbc:oracle:"),
+      ImmutableList.of("oracle.jdbc.driver.OracleDriver", "oracle.jdbc.OracleDriver")
+  ),
+  POSTGRESQL(
+      ImmutableList.of("jdbc:postgresql:"),
+      ImmutableList.of("org.postgresql.Driver")
+  ),
+  SQL_SERVER(
+      ImmutableList.of("jdbc:sqlserver:"),
+      ImmutableList.of("com.microsoft.sqlserver.jdbc.SQLServerDriver")
+  ),
+  UNKNOWN(Collections.emptyList(), Collections.emptyList()),
   ;
 
-  private final String[] drivers;
+  private final List<String> jdbcPrefixes;
+  private final List<String> drivers;
 
-  DatabaseVendor(String ...drivers) {
+  DatabaseVendor(List<String> jdbcPrefixes, List<String> drivers) {
+    this.jdbcPrefixes = jdbcPrefixes;
     this.drivers = drivers;
   }
 
-  public String[] getDrivers() {
+  public List<String> getDrivers() {
     return drivers;
+  }
+
+  public List<String> getJdbcPrefixes() {
+    return jdbcPrefixes;
+  }
+
+  /**
+   * Return database vendor for given URL.
+   */
+  public static DatabaseVendor forUrl(String url) {
+    for(DatabaseVendor vendor : DatabaseVendor.values()) {
+      for(String prefix : vendor.jdbcPrefixes) {
+        if(url.startsWith(prefix)) {
+          return vendor;
+        }
+      }
+    }
+
+    return UNKNOWN;
   }
 }
