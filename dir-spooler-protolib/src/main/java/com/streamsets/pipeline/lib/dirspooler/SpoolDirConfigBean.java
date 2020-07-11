@@ -57,6 +57,7 @@ public class SpoolDirConfigBean {
       description = "Number of parallel threads that read data",
       displayPosition = 11,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1
   )
   public int numberOfThreads = 1;
@@ -90,6 +91,7 @@ public class SpoolDirConfigBean {
       label = "Read Order",
       description = "Read files based on the last-modified timestamp or lexicographically ascending file names. When timestamp ordering is used, files with the same timestamp are ordered based on file names.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES"
   )
   @ValueChooserModel(FileOrderingChooseValues.class)
@@ -117,6 +119,7 @@ public class SpoolDirConfigBean {
           " When enabled, the origin does not validate the configured path.",
       displayPosition = 50,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "false"
   )
   public boolean allowLateDirectory = false;
@@ -129,6 +132,7 @@ public class SpoolDirConfigBean {
       description = "Low level reader buffer limit to avoid out of Memory errors",
       displayPosition = 70,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -142,6 +146,7 @@ public class SpoolDirConfigBean {
       description = "Max number of records per batch",
       displayPosition = 43,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -155,6 +160,7 @@ public class SpoolDirConfigBean {
       description = "Max time to wait for new files before sending an empty batch",
       displayPosition = 48,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1
   )
   public long poolingTimeoutSecs;
@@ -168,6 +174,7 @@ public class SpoolDirConfigBean {
           "This is a soft limit and can be temporarily exceeded.",
       displayPosition = 60,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -181,6 +188,7 @@ public class SpoolDirConfigBean {
       description = "Max time period to spool the files",
       displayPosition = 61,
       group = "FILES",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -214,6 +222,7 @@ public class SpoolDirConfigBean {
       label = "File Post Processing",
       description = "Action to take after processing a file",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING"
   )
   @ValueChooserModel(PostProcessingOptionsChooserValues.class)
@@ -226,6 +235,7 @@ public class SpoolDirConfigBean {
       description = "Directory to archive files after they have been processed",
       displayPosition = 200,
       group = "POST_PROCESSING",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "postProcessing",
       triggeredByValue = "ARCHIVE"
   )
@@ -239,6 +249,7 @@ public class SpoolDirConfigBean {
       description = "How long archived files should be kept before deleting, a value of zero means forever",
       displayPosition = 210,
       group = "POST_PROCESSING",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "postProcessing",
       triggeredByValue = "ARCHIVE",
       min = 0

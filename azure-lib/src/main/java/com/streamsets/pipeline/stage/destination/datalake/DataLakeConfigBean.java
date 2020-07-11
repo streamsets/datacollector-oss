@@ -91,6 +91,7 @@ public class DataLakeConfigBean {
       defaultValue = "sdc-${sdc:id()}",
       label = "Files Prefix",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT"
   )
   public String uniquePrefix;
@@ -115,6 +116,7 @@ public class DataLakeConfigBean {
       label = "Directory in Header",
       description = "The directory is defined by the '" + DataLakeTarget.TARGET_DIRECTORY_HEADER + "' record header attribute instead of the Directory Template configuration property.",
       displayPosition = 102,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT"
   )
   public boolean dirPathTemplateInHeader;
@@ -140,6 +142,7 @@ public class DataLakeConfigBean {
       label = "Data Time Zone",
       description = "Time zone to use to resolve the date time of a time-based partition prefix",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -154,6 +157,7 @@ public class DataLakeConfigBean {
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<field path>\")}'.",
       displayPosition = 130,
       group = "OUTPUT",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -168,6 +172,7 @@ public class DataLakeConfigBean {
       displayPosition = 135,
       group = "OUTPUT",
       min = 0,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
@@ -182,6 +187,7 @@ public class DataLakeConfigBean {
       displayPosition = 136,
       group = "OUTPUT",
       min = 0,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
@@ -199,6 +205,7 @@ public class DataLakeConfigBean {
       displayPosition = 137,
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF"}
   )
@@ -211,6 +218,7 @@ public class DataLakeConfigBean {
       label = "Use Roll Attribute",
       description = "Closes the current file and creates a new file when processing a record with the specified roll attribute",
       displayPosition = 138,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT"
   )
   public boolean rollIfHeader;
@@ -223,6 +231,7 @@ public class DataLakeConfigBean {
       description = "Name of the roll attribute",
       displayPosition = 138,
       group = "OUTPUT",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "rollIfHeader",
       triggeredByValue = "true"
   )
@@ -236,6 +245,7 @@ public class DataLakeConfigBean {
       label = "Validate Directory Permissions",
       description = "When checked, ADLS destination will create test file in configured target directory to verify access privileges.",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT"
   )
   public boolean checkPermission;

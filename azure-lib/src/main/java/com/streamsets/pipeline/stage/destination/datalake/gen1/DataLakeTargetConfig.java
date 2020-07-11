@@ -101,6 +101,7 @@ public class DataLakeTargetConfig extends HdfsTargetConfigBean {
       label = "Advanced Configuration",
       description = "Additional HDFS properties to pass to the underlying file system. These properties take precedence over those defined in HDFS configuration files",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATALAKE"
   )
   @ListBeanModel
