@@ -541,6 +541,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- SAP HANA -->
+    <fileSet>
+      <directory>${basedir}/../sap_hana-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Databricks ML libs -->
     <fileSet>
       <directory>${basedir}/../${databricks-ml_2-lib}/target/streamsets-libs/</directory>
