@@ -34,6 +34,10 @@ public enum DatabaseVendor {
       ImmutableList.of("jdbc:mysql:"),
       ImmutableList.of("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver")
   ),
+  MARIADB(
+      ImmutableList.of("jdbc:mariadb:"),
+      ImmutableList.of("org.mariadb.jdbc.Driver")
+  ),
   HIVE(
       ImmutableList.of("jdbc:hive2:"),
       ImmutableList.of("org.apache.hive.jdbc.HiveDriver", "com.cloudera.impala.jdbc41.Driver", "com.cloudera.impala.jdbc4.Driver")
@@ -70,6 +74,20 @@ public enum DatabaseVendor {
 
   public List<String> getJdbcPrefixes() {
     return jdbcPrefixes;
+  }
+
+  public boolean isOneOf(DatabaseVendor... vendors) {
+    if(vendors == null) {
+      return false;
+    }
+
+    for(DatabaseVendor v : vendors) {
+      if(this == v) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   /**

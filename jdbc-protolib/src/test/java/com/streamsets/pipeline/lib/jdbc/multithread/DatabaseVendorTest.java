@@ -18,6 +18,8 @@ package com.streamsets.pipeline.lib.jdbc.multithread;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DatabaseVendorTest {
 
@@ -25,10 +27,17 @@ public class DatabaseVendorTest {
   public void testForUrl() {
     assertEquals(DatabaseVendor.DB2, DatabaseVendor.forUrl("jdbc:db2://"));
     assertEquals(DatabaseVendor.MYSQL, DatabaseVendor.forUrl("jdbc:mysql://"));
+    assertEquals(DatabaseVendor.MARIADB, DatabaseVendor.forUrl("jdbc:mariadb://"));
     assertEquals(DatabaseVendor.HIVE, DatabaseVendor.forUrl("jdbc:hive2://"));
     assertEquals(DatabaseVendor.TERADATA, DatabaseVendor.forUrl("jdbc:teradata://"));
     assertEquals(DatabaseVendor.ORACLE, DatabaseVendor.forUrl("jdbc:oracle://"));
     assertEquals(DatabaseVendor.POSTGRESQL, DatabaseVendor.forUrl("jdbc:postgresql://"));
     assertEquals(DatabaseVendor.SQL_SERVER, DatabaseVendor.forUrl("jdbc:sqlserver://"));
+  }
+
+  @Test
+  public void testIsOneOf() {
+    assertTrue(DatabaseVendor.MARIADB.isOneOf(DatabaseVendor.MARIADB, DatabaseVendor.MYSQL));
+    assertFalse(DatabaseVendor.TERADATA.isOneOf(DatabaseVendor.MARIADB, DatabaseVendor.MYSQL));
   }
 }
