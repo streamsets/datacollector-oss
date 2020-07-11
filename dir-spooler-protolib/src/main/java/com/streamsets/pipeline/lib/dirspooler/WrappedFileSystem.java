@@ -143,7 +143,7 @@ public interface WrappedFileSystem {
    * @param filePath {@link WrappedFile}
    * @return  {@code true} if, and only if, the file exists
    */
-  void mkdir(WrappedFile filePath);
+  void mkdirs(WrappedFile filePath) throws IOException;
 
   /**
    * Tells whether or not the file exists.

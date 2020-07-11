@@ -229,8 +229,8 @@ public class LocalFileSystem implements WrappedFileSystem {
     return filePath != null && filePath.startsWith(dirPath);
   }
 
-  public void mkdir(WrappedFile filePath) {
-    new File(filePath.getAbsolutePath()).mkdir();
+  public void mkdirs(WrappedFile filePath) throws IOException {
+    Files.createDirectories(Paths.get(filePath.getAbsolutePath()));
   }
 
   public boolean patternMatches(String fileName) {

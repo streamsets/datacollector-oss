@@ -225,7 +225,7 @@ public class HdfsFileSystem implements WrappedFileSystem {
     return filePath != null && filePath.startsWith(dirPath);
   }
 
-  public void mkdir(WrappedFile filePath) {
+  public void mkdirs(WrappedFile filePath) {
     try {
       boolean result = fs.mkdirs(new Path(filePath.getAbsolutePath()));
       if (!result) {
