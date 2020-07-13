@@ -18,6 +18,7 @@ package com.streamsets.datacollector.usagestats;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.hash.Hashing;
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -171,7 +172,8 @@ public class StatsInfo {
   }
 
   // if any of the system info changes, it triggers a stats roll.
-  Map<String, Object> getCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo) {
+  Map<String, Object> getCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo,
+                                           Activation activation) {
     return ImmutableMap.<String, Object>builder()
         .put(SDC_ID, runtimeInfo.getId())
         .put(PRODUCT_NAME, runtimeInfo.getProductName())
@@ -179,11 +181,12 @@ public class StatsInfo {
         .put(BUILD_REPO_SHA, buildInfo.getBuiltRepoSha())
         .put(DPM_ENABLED, runtimeInfo.isDPMEnabled())
         .put(EXTRA_INFO, getExtraInfo(sysInfo))
+        .put(ActivationInfo.class.getCanonicalName(), new ActivationInfo(activation))
         .build();
   }
 
-  void setCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo) {
-    Map<String, Object> currentSystemInfo = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
+  void setCurrentSystemInfo(BuildInfo buildInfo, RuntimeInfo runtimeInfo, SysInfo sysInfo, Activation activation) {
+    Map<String, Object> currentSystemInfo = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo, activation);
     setSystemInfo(currentSystemInfo, getActiveStats());
   }
 
@@ -194,6 +197,7 @@ public class StatsInfo {
     Optional.ofNullable(stats.getDataCollectorVersion()).ifPresent(s -> systemInfoBuilder.put(DATA_COLLECTOR_VERSION, s));
     Optional.ofNullable(stats.getBuildRepoSha()).ifPresent(s -> systemInfoBuilder.put(BUILD_REPO_SHA, s));
     Optional.ofNullable(stats.getExtraInfo()).ifPresent(s -> systemInfoBuilder.put(EXTRA_INFO, s));
+    systemInfoBuilder.put(ActivationInfo.class.getCanonicalName(), stats.getActivationInfo());
     systemInfoBuilder.put(DPM_ENABLED, stats.isDpmEnabled());
     return systemInfoBuilder.build();
   }
@@ -205,16 +209,18 @@ public class StatsInfo {
     stats.setBuildRepoSha((String) info.get(BUILD_REPO_SHA));
     stats.setDpmEnabled((Boolean) info.get(DPM_ENABLED));
     stats.setExtraInfo((Map<String, Object>) info.get(EXTRA_INFO));
+    stats.setActivationInfo((ActivationInfo) info.get(ActivationInfo.class.getCanonicalName()));
   }
 
   public boolean rollIfNeeded(
           BuildInfo buildInfo,
           RuntimeInfo runtimeInfo,
           SysInfo sysInfo,
+          Activation activation,
           long rollFrequencyMillis,
           boolean forceNextRoll,
           long currentTimeMillis) {
-    Map<String, Object> currentSys = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
+    Map<String, Object> currentSys = getCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo, activation);
 
     boolean existingStats = getActiveStats().getDataCollectorVersion() != null && !getActiveStats().getDataCollectorVersion().isEmpty();
     Map<String, Object> filteredNewSys = filterSystemInfoDynamicEntries(getSystemInfo(getActiveStats()));
@@ -268,7 +274,7 @@ public class StatsInfo {
    */
   private Map<String, Object> filterSystemInfoDynamicEntries(Map<String, Object> sysInfo) {
     return sysInfo.entrySet().stream()
-        .filter(x -> !x.getKey().equals(EXTRA_INFO))
+        .filter(x -> !x.getKey().equals(EXTRA_INFO) || x.getKey().equals(ActivationInfo.class.getCanonicalName()))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 

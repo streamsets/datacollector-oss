@@ -82,7 +82,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Module(injects = {TaskWrapper.class, Manager.class}, library = true, includes = ActivationModule.class, complete = false)
+@Module(injects = {TaskWrapper.class, Manager.class}, library = true, complete = false)
 public class WebServerModule {
 
   private final Manager mgr;

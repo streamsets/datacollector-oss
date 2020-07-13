@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -27,12 +28,13 @@ import java.util.List;
 public class DCStatsCollectorTask extends AbstractStatsCollectorTask {
 
   public DCStatsCollectorTask(
-      BuildInfo buildInfo,
-      RuntimeInfo runtimeInfo,
-      Configuration config,
-      SafeScheduledExecutorService executorService,
-      SysInfo sysInfo) {
-    super(buildInfo, runtimeInfo, config, executorService, sysInfo);
+          BuildInfo buildInfo,
+          RuntimeInfo runtimeInfo,
+          Configuration config,
+          SafeScheduledExecutorService executorService,
+          SysInfo sysInfo,
+          Activation activation) {
+    super(buildInfo, runtimeInfo, config, executorService, sysInfo, activation);
   }
 
   @Override

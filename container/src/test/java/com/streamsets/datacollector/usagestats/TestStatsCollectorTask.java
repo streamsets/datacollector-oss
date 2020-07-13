@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -96,7 +97,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     Assert.assertEquals(buildInfo, task.getBuildInfo());
 
@@ -121,7 +122,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     Mockito.when(runtimeInfo.isClusterSlave()).thenReturn(true);
 
@@ -415,7 +416,7 @@ public class TestStatsCollectorTask {
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
     // report fails so we can easily check collected stats
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, false);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -461,7 +462,7 @@ public class TestStatsCollectorTask {
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -508,7 +509,7 @@ public class TestStatsCollectorTask {
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
     // though we pass true here, we will temporarily cause failures in other layers first, before we let it get here
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -710,7 +711,7 @@ public class TestStatsCollectorTask {
 
     SupportBundleManager supportBundleManager = Mockito.mock(SupportBundleManager.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -750,7 +751,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -804,7 +805,7 @@ public class TestStatsCollectorTask {
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
     // report should fail so we can easily inspect collected stats
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, false);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       // This is copied from a real 3.13.0 install
@@ -879,12 +880,12 @@ public class TestStatsCollectorTask {
 
     Configuration config = new Configuration();
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, null, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, null, true);
     Mockito.when(task.provideStatsExtensions()).thenReturn(ImmutableList.of()); // no extensions
 
     StatsInfo stats = new StatsInfo(ImmutableList.of(new TestModelStatsExtension()));
-    stats.setCurrentSystemInfo(buildInfo, runtimeInfo, task.getSysInfo());
-    stats.rollIfNeeded(buildInfo, runtimeInfo, task.getSysInfo(), 1, true, System.currentTimeMillis());
+    stats.setCurrentSystemInfo(buildInfo, runtimeInfo, task.getSysInfo(), task.getActivation());
+    stats.rollIfNeeded(buildInfo, runtimeInfo, task.getSysInfo(), task.getActivation(),1, true, System.currentTimeMillis());
     // collected stats have extensions
     Assert.assertEquals(1, stats.getCollectedStats().size());
     Assert.assertEquals(1, stats.getCollectedStats().get(0).getExtensions().size());
@@ -912,7 +913,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(AbstractStatsCollectorTask.STATS_ACTIVE_KEY, false));
@@ -958,7 +959,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
     stats.get(0).setActivePipelines(5);
@@ -1002,13 +1003,13 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
     Mockito.when(task.isActive()).thenReturn(true);
     SysInfo sysInfo = task.getSysInfo();
 
     StatsInfo statsInfo = Mockito.spy(new StatsInfo(task.provideStatsExtensions()));
     Mockito.when(task.getStatsInfo()).thenReturn(statsInfo);
-    statsInfo.setCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo);
+    statsInfo.setCurrentSystemInfo(buildInfo, runtimeInfo, sysInfo, task.getActivation());
 
     long rollFrequencyMillis = task.getRollFrequencyMillis();
     Assert.assertEquals(TimeUnit.HOURS.toMillis(AbstractStatsCollectorTask.ROLL_PERIOD_CONFIG_MAX), rollFrequencyMillis);
@@ -1090,7 +1091,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
     stats.get(0).setActivePipelines(5);
@@ -1118,7 +1119,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
 
     List<StatsBean> stats = ImmutableList.of(new StatsBean());
 
@@ -1148,7 +1149,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
     task.initTask();
     Mockito.verify(scheduler).scheduleAtFixedRate(
         Matchers.any(Runnable.class),
@@ -1162,7 +1163,7 @@ public class TestStatsCollectorTask {
     //Set it to 48 hours - max at 24 hours
     config.set(AbstractStatsCollectorTask.TELEMETRY_REPORT_PERIOD_SECONDS, TimeUnit.DAYS.toSeconds(2));
 
-    task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
     task.initTask();
     Mockito.verify(scheduler).scheduleAtFixedRate(
         Matchers.any(Runnable.class),
@@ -1193,7 +1194,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
     task.initTask();
     Assert.assertEquals(TimeUnit.MINUTES.toMillis(20), task.getRollFrequencyMillis());
 
@@ -1201,7 +1202,7 @@ public class TestStatsCollectorTask {
     config.set(AbstractStatsCollectorTask.TEST_ROLL_PERIOD_CONFIG, 120);
     scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, true);
+    task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, true);
     task.initTask();
     Assert.assertEquals(TimeUnit.HOURS.toMillis(AbstractStatsCollectorTask.ROLL_PERIOD_CONFIG_MAX), task.getRollFrequencyMillis());
   }
@@ -1278,7 +1279,7 @@ public class TestStatsCollectorTask {
 
       Configuration config = new Configuration();
 
-      AbstractStatsCollectorTask collector = mockStatsCollectorTask(buildInfo, runtimeInfo, config, null, true);
+      AbstractStatsCollectorTask collector = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, null, true);
 
       List<StatsBean> list = Arrays.asList(new StatsBean());
 
@@ -1290,15 +1291,17 @@ public class TestStatsCollectorTask {
   }
 
   private AbstractStatsCollectorTask mockStatsCollectorTask(
-      BuildInfo buildInfo,
-      RuntimeInfo runtimeInfo,
-      Configuration config,
-      SafeScheduledExecutorService executorService,
-      boolean postTelemetrySuccess
+          BuildInfo buildInfo,
+          RuntimeInfo runtimeInfo,
+          Activation activation,
+          Configuration config,
+          SafeScheduledExecutorService executorService,
+          boolean postTelemetrySuccess
   ) {
     SysInfo sysInfo = Mockito.mock(SysInfo.class);
     Mockito.when(sysInfo.toMap()).thenReturn(DEFAULT_SYS_INFO_MAP);
-    AbstractStatsCollectorTask spy = Mockito.spy(new TestModelStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo));
+    AbstractStatsCollectorTask spy = Mockito.spy(new TestModelStatsCollectorTask(
+            buildInfo, runtimeInfo, config, executorService, sysInfo, activation));
 
     // to test real interactions, comment out starting from here, change StatsCollectorTask.TELEMETRY_USE_TEST_BUCKET_DEFAULT to true, and run testReportStats
     // This will put a real file into the S3 bucket customer-support-bundles-test that you can verify.
@@ -1343,7 +1346,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, false);
 
     try (OutputStream os = new FileOutputStream(task.getOptFile())) {
       ObjectMapperFactory.get().writeValue(os, ImmutableMap.of(task.STATS_ACTIVE_KEY, true));
@@ -1396,7 +1399,7 @@ public class TestStatsCollectorTask {
 
     SafeScheduledExecutorService scheduler = Mockito.mock(SafeScheduledExecutorService.class);
 
-    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, config, scheduler, false);
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, scheduler, false);
 
     Map<Boolean, AtomicLong> runnableForceParamToTimes =
         new HashMap<>(ImmutableMap.of(Boolean.TRUE, new AtomicLong(0), Boolean.FALSE, new AtomicLong(0)));
@@ -1453,7 +1456,7 @@ public class TestStatsCollectorTask {
       Configuration config,
       SafeScheduledExecutorService executorService) {
 
-    AbstractStatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, true);
+    AbstractStatsCollectorTask spy = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, executorService, true);
 
     runnable = Mockito.mock(Runnable.class);
     Mockito.doReturn(runnable).when(spy).getRunnable(Mockito.anyBoolean());
@@ -1467,8 +1470,9 @@ public class TestStatsCollectorTask {
         RuntimeInfo runtimeInfo,
         Configuration config,
         SafeScheduledExecutorService executorService,
-        SysInfo sysInfo) {
-      super(buildInfo, runtimeInfo, config, executorService, sysInfo);
+        SysInfo sysInfo,
+        Activation activation) {
+      super(buildInfo, runtimeInfo, config, executorService, sysInfo, activation);
     }
 
     @Override

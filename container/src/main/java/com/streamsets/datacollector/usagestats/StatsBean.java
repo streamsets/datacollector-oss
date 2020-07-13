@@ -46,6 +46,7 @@ public class StatsBean {
   private List<FirstPipelineUse> createToPreview;
   private List<FirstPipelineUse> createToRun;
   private List<StatsBeanExtension> extensions;
+  private ActivationInfo activationInfo;
 
   public StatsBean() {
     stageMilliseconds = new HashMap<>();
@@ -95,6 +96,8 @@ public class StatsBean {
     extensions = activeStats.getExtensions().stream()
         .map(AbstractStatsExtension::report)
         .collect(Collectors.toList());
+
+    activationInfo = activeStats.getActivationInfo();
   }
 
   @NotNull
@@ -268,6 +271,15 @@ public class StatsBean {
 
   public StatsBean setExtensions(List<StatsBeanExtension> extensions) {
     this.extensions = extensions;
+    return this;
+  }
+
+  public ActivationInfo getActivationInfo() {
+    return activationInfo;
+  }
+
+  public StatsBean setActivationInfo(ActivationInfo activationInfo) {
+    this.activationInfo = activationInfo;
     return this;
   }
 }

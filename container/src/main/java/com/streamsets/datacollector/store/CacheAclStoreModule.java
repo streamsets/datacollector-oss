@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.store;
 
+import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.store.impl.CacheAclStoreTask;
 import com.streamsets.datacollector.store.impl.FileAclStoreTask;
@@ -25,8 +26,10 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = AclStoreTask.class, library = true, includes = {CachePipelineStoreModule.class,
-    LockCacheModule.class})
+@Module(injects = AclStoreTask.class, library = true, includes = {
+        ActivationModule.class,
+        CachePipelineStoreModule.class,
+        LockCacheModule.class})
 public class CacheAclStoreModule {
 
   @Provides

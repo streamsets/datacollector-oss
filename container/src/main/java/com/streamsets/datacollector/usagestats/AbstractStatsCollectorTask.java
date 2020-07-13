@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -111,6 +112,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   private final File optFile;
   private final File statsFile;
   private final SysInfo sysInfo;
+  private final Activation activation;
   private boolean opted;
   private volatile boolean active;
   private long lastReport;
@@ -119,12 +121,27 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   private int reportStatsBackOffCount;
   private long reportStatsBackOffUntil;
 
+  /**
+   * @deprecated use constructor with activation instead
+   */
+  @Deprecated
+  public AbstractStatsCollectorTask(
+          BuildInfo buildInfo,
+          RuntimeInfo runtimeInfo,
+          Configuration config,
+          SafeScheduledExecutorService executorService,
+          SysInfo sysInfo
+  ) {
+    this(buildInfo, runtimeInfo, config, executorService, sysInfo, null);
+  }
+
   public AbstractStatsCollectorTask(
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration config,
       SafeScheduledExecutorService executorService,
-      SysInfo sysInfo
+      SysInfo sysInfo,
+      Activation activation
   ) {
     super("StatsCollector");
     this.buildInfo = buildInfo;
@@ -140,6 +157,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     reportStatsBackOffCount = 0;
     reportStatsBackOffUntil = 0;
     this.sysInfo = sysInfo;
+    this.activation = activation;
   }
 
   /**
@@ -178,6 +196,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
 
   protected SysInfo getSysInfo() { return sysInfo; }
 
+  protected Activation getActivation() { return activation; }
+
   @VisibleForTesting
   protected long getRollFrequencyMillis() {
     return rollFrequencyMillis;
@@ -193,7 +213,7 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     super.initTask();
 
     statsInfo =  new StatsInfo(provideStatsExtensions());
-    statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo(), getSysInfo());
+    statsInfo.setCurrentSystemInfo(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getActivation());
 
     if (runtimeInfo.isClusterSlave()) {
       opted = true;
@@ -337,7 +357,8 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
         On graceful shutdown, this is run one last time as well (mostly to guarantee save stats)
         */
         if (isActive()) {
-          if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(), getRollFrequencyMillis(),
+          if (getStatsInfo().rollIfNeeded(getBuildInfo(), getRuntimeInfo(), getSysInfo(),
+                  getActivation(), getRollFrequencyMillis(),
                   forceRollAndReport, getCurrentTimeMillis())) {
             updateAfterRoll(getStatsInfo());
             LOG.debug("Stats collection data rolled");

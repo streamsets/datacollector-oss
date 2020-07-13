@@ -18,6 +18,8 @@ package com.streamsets.datacollector.usagestats;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -29,16 +31,28 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.usagestats.TestStatsBean.TestModelStatsBeanExtension;
 import com.streamsets.datacollector.util.SysInfo;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TestStatsInfo {
 
-  SysInfo sysInfo = Mockito.mock(SysInfo.class);
+  SysInfo sysInfo;
+  Activation activation;
+
+  @Before
+  public void setup() {
+    sysInfo = Mockito.mock(SysInfo.class);
+    activation = Mockito.mock(Activation.class);
+    MockActivationInfo info = new MockActivationInfo();
+    info.additionalInfo = ImmutableMap.of("keyToKeep", "valToKeep", "user.doNotKeep", "shouldNotKeep");
+    Mockito.when(activation.getInfo()).thenReturn(info);
+  }
 
   @Test
   public void testGetters() {
@@ -152,7 +166,7 @@ public class TestStatsInfo {
     Assert.assertEquals(1, si.getActiveStats().getUpTime().getMultiplier());
     Assert.assertEquals(1, ext.getStartSystems());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo,1000, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 1000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -191,7 +205,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -218,8 +232,9 @@ public class TestStatsInfo {
     si.getActiveStats().setBuildRepoSha("sha1");
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -246,8 +261,9 @@ public class TestStatsInfo {
     si.getActiveStats().setBuildRepoSha("sha2");
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -274,8 +290,9 @@ public class TestStatsInfo {
     si.getActiveStats().setBuildRepoSha("sha1");
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(0, ext.getRolls());
 
@@ -303,8 +320,9 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -333,8 +351,9 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 1, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -362,8 +381,9 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, true, System.currentTimeMillis()));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 1, true, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(1, ext.getRolls());
 
@@ -391,9 +411,10 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis());
     si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
     ActiveStats as = si.getActiveStats();
 
-    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1000, false, System.currentTimeMillis()));
+    Assert.assertFalse(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 1000, false, System.currentTimeMillis()));
     Mockito.verify(si, Mockito.never()).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
     Assert.assertEquals(as, si.getActiveStats());
     Assert.assertEquals(0, ext.getRolls());
@@ -419,6 +440,7 @@ public class TestStatsInfo {
     si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
     si.getActiveStats().setStartTime(System.currentTimeMillis() - 2);
     si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
     List<StatsBean> collected = new ArrayList<>();
 
     long now = System.currentTimeMillis();
@@ -429,12 +451,58 @@ public class TestStatsInfo {
     }
 
     si.setCollectedStats(collected);
-    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 1, false, now));
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 1, false, now));
     Assert.assertEquals(1, ext.getRolls());
     List<StatsBean> got = si.getCollectedStats();
 
     Assert.assertEquals(6, got.size());
     got.forEach(s -> Assert.assertTrue(now - s.getEndTime() <= StatsInfo.PERIOD_OF_TIME_TO_KEEP_STATS_IN_MILLIS));
+  }
+
+  @Test
+  public void testRollIfNeededRollWhenActivationChanges() {
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+    Mockito.when(buildInfo.getBuiltRepoSha()).thenReturn("sha1");
+    RuntimeInfo runtimeInfo = mockRuntimeInfo("id", false);
+
+    StatsInfo si = createStatsInfo();
+    si = Mockito.spy(si);
+    Mockito.doReturn(ImmutableMap.of("a", "A")).when(si).getExtraInfo(sysInfo);
+
+    // make sure we are testing filtering
+    Assert.assertEquals(2, activation.getInfo().getAdditionalInfo().size());
+    Assert.assertTrue(activation.getInfo().getAdditionalInfo().containsKey("user.doNotKeep"));
+    ActivationInfo activationInfo = new ActivationInfo(activation);
+    Assert.assertEquals(ImmutableMap.of("keyToKeep", "valToKeep"), activationInfo.getAdditionalInfo());
+
+    TestModelStatsExtension ext = getTestExtension(si);
+
+    si.getActiveStats().setSdcId("id");
+    si.getActiveStats().setProductName(RuntimeInfo.SDC_PRODUCT);
+    si.getActiveStats().setDataCollectorVersion("v1");
+    si.getActiveStats().setBuildRepoSha("sha1");
+    si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
+    si.getActiveStats().setStartTime(System.currentTimeMillis());
+    si.getActiveStats().setDpmEnabled(false);
+    si.getActiveStats().setActivationInfo(activationInfo);
+
+    String initialType = si.getActiveStats().getActivationInfo().getActivationType();
+    String newType = "NEW_TYPE";
+    Assert.assertNotEquals(initialType, newType);
+
+    Activation newActivation = Mockito.mock(Activation.class);
+    MockActivationInfo newActivationInfo = new MockActivationInfo();
+    newActivationInfo.type = newType;
+    Mockito.when(newActivation.getInfo()).thenReturn(newActivationInfo);
+
+    Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, newActivation, 1000, false, System.currentTimeMillis()));
+    Assert.assertEquals(1, ext.getRolls());
+    Assert.assertEquals("NEW_TYPE", si.getActiveStats().getActivationInfo().getActivationType());
+    Assert.assertEquals(initialType, si.getCollectedStats().get(0).getActivationInfo().getActivationType());
+    Assert.assertEquals(
+            ImmutableSet.of("keyToKeep"),
+            si.getCollectedStats().get(0).getActivationInfo().getAdditionalInfo().keySet());
   }
 
   @Test
@@ -457,9 +525,10 @@ public class TestStatsInfo {
       si.getActiveStats().setBuildRepoSha("sha1");
       si.getActiveStats().setExtraInfo(ImmutableMap.of("a", "A"));
       si.getActiveStats().setStartTime(System.currentTimeMillis());
+      si.getActiveStats().setActivationInfo(new ActivationInfo(activation));
 
       Whitebox.setInternalState(si.getActiveStats(), fieldToNull, null);
-      Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, 10000, false, System.currentTimeMillis()));
+      Assert.assertTrue(si.rollIfNeeded(buildInfo, runtimeInfo, sysInfo, activation, 10000, false, System.currentTimeMillis()));
       Mockito.verify(si, Mockito.times(1)).doWithLock(Mockito.any(Runnable.class), Mockito.eq(true));
       Assert.assertEquals(1, ext.getRolls());
 
@@ -667,6 +736,58 @@ public class TestStatsInfo {
         throw new RuntimeException(e);
       }
       return snapshot;
+    }
+  }
+
+  private static class MockActivationInfo implements Activation.Info {
+
+    String type;
+    boolean valid;
+    long firstUse;
+    long expiration;
+    String sdcId;
+    String userInfo;
+    List<String> validSdcIds;
+    Map<String, Object> additionalInfo;
+
+    @Override
+    public String getType() {
+      return type;
+    }
+
+    @Override
+    public boolean isValid() {
+      return valid;
+    }
+
+    @Override
+    public long getFirstUse() {
+      return firstUse;
+    }
+
+    @Override
+    public long getExpiration() {
+      return expiration;
+    }
+
+    @Override
+    public String getSdcId() {
+      return sdcId;
+    }
+
+    @Override
+    public String getUserInfo() {
+      return userInfo;
+    }
+
+    @Override
+    public List<String> getValidSdcIds() {
+      return validSdcIds;
+    }
+
+    @Override
+    public Map<String, Object> getAdditionalInfo() {
+      return additionalInfo;
     }
   }
 }

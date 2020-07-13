@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.slave.dagger;
 
+import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.antennadoctor.AntennaDoctorModule;
 import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.credential.CredentialStoresModule;
@@ -37,6 +38,7 @@ import dagger.Module;
   library = true,
   injects = {SlavePipelineManager.class},
   includes = {
+    ActivationModule.class,
     SlavePipelineStateStoreModule.class,
     SlavePipelineStoreModule.class,
     SlaveAclStoreModule.class,

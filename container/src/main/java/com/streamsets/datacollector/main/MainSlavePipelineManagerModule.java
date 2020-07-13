@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.activation.ActivationOverrideModule;
 import com.streamsets.datacollector.event.handler.dagger.EventHandlerModule;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
@@ -39,7 +40,13 @@ public class MainSlavePipelineManagerModule { //Need better name
   public MainSlavePipelineManagerModule() {
     ObjectGraph objectGraph = ObjectGraph.create(SlavePipelineManagerModule.class);
     Manager m = new SlavePipelineManager(objectGraph);
-    this.objectGraph = objectGraph.plus(new WebServerModule(m), EventHandlerModule.class, SlavePipelineTaskModule.class);
+    // We add ActivationOverrideModule first to the list to ensure that we load the singleton Activation from the shared
+    // graph instead of creating a new copy. This technique is necessary for any shared dependencies.
+    this.objectGraph = objectGraph.plus(
+            new ActivationOverrideModule(objectGraph),
+            new WebServerModule(m),
+            EventHandlerModule.class,
+            SlavePipelineTaskModule.class);
   }
 
   @Provides @Singleton
