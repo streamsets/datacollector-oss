@@ -45,6 +45,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.el.ELEval;
@@ -311,7 +312,7 @@ public class ValidationUtil {
       }
 
       // Hidden stages can't appear on the main canvas
-      if(!notOnMainCanvas && !stageDef.getHideStage().isEmpty()) {
+      if (!notOnMainCanvas && !stageDef.getHideStage().isEmpty() && !isConnectionVerifierStage(stageDef)) {
         issues.add(issueCreator.create(stageConf.getInstanceName(), ValidationError.VALIDATION_0037));
         preview = false;
       }
@@ -1255,5 +1256,9 @@ public class ValidationUtil {
           ValidationError.VALIDATION_0306
       ));
     }
+  }
+
+  private static boolean isConnectionVerifierStage(StageDefinition stageDef) {
+    return stageDef.getHideStage().contains(HideStage.Type.CONNECTION_VERIFIER);
   }
 }
