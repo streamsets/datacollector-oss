@@ -1,0 +1,1123 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The Start Job origin starts one or more Control Hub jobs in parallel when the pipeline starts. The origin can also start job instances from a job template. The ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Start Job" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/Origins_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Origins/StartPipe.html#concept_h1l_xpr_2jb" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ufc_53w_wlb" /><title>Start Job</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ufc_53w_wlb-d46e97493" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_yjl_nc5_jq"><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_ufc_53w_wlb"><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_ufc_53w_wlb">Start Job</a></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b" title="SQL Server Change Tracking"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Origins/StartPipe.html#concept_h1l_xpr_2jb" title="Start Pipeline"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e803" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e13059" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e23081" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e30656" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e32497" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e35585" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37845" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e37867" class="topicref" data-id="concept_hpr_twm_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_overview.html#concept_hpr_twm_jq">Origins</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">An origin stage represents the source for the pipeline. You can use a single origin     stage in a pipeline.</p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_kvs_3hh_ht-d46e38331" class="topicref" data-id="concept_kvs_3hh_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonS3.html#concept_kvs_3hh_ht">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_xsh_knm_5bb-d46e39416" class="topicref" data-id="concept_xsh_knm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AmazonSQS.html#concept_xsh_knm_5bb">Amazon SQS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e39880" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G1.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen1</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_osx_qgz_xhb-d46e42662" class="topicref" data-id="concept_osx_qgz_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/ADLS-G2.html#concept_osx_qgz_xhb">Azure Data Lake Storage Gen2</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_c1z_15q_1bb-d46e45444" class="topicref" data-id="concept_c1z_15q_1bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/AzureEventHub.html#concept_c1z_15q_1bb">Azure IoT/Event Hub Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wfy_ghn_sz-d46e45726" class="topicref" data-id="concept_wfy_ghn_sz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CoAPServer.html#concept_wfy_ghn_sz">CoAP Server</a></span></span></li>
+         <li><span data-tocid="concept_nsz_mnr_2jb-d46e46017" class="topicref" data-id="concept_nsz_mnr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/CronScheduler.html#concept_nsz_mnr_2jb">Cron Scheduler</a></span></span></li>
+         <li><span data-tocid="concept_qcq_54n_jq-d46e46167" class="topicref" data-id="concept_qcq_54n_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Directory.html#concept_qcq_54n_jq">Directory</a></span></span></li>
+         <li><span data-tocid="concept_f1q_vpm_2z-d46e47555" class="topicref" data-id="concept_f1q_vpm_2z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Elasticsearch.html#concept_f1q_vpm_2z">Elasticsearch </a></span></span></li>
+         <li><span data-tocid="concept_n1y_qyp_5q-d46e48031" class="topicref" data-id="concept_n1y_qyp_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/FileTail.html#concept_n1y_qyp_5q">File Tail</a></span></span></li>
+         <li><span data-tocid="concept_cg3_y3v_q1b-d46e49277" class="topicref" data-id="concept_cg3_y3v_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/BigQuery.html#concept_cg3_y3v_q1b">Google BigQuery</a></span></span></li>
+         <li><span data-tocid="concept_iyd_wql_nbb-d46e49850" class="topicref" data-id="concept_iyd_wql_nbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GCS.html#concept_iyd_wql_nbb">Google Cloud Storage</a></span></span></li>
+         <li><span data-tocid="concept_pjw_qtl_r1b-d46e50411" class="topicref" data-id="concept_pjw_qtl_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PubSub.html#concept_pjw_qtl_r1b">Google Pub/Sub Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_chr_zjj_l3b-d46e50878" class="topicref" data-id="concept_chr_zjj_l3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/GroovyScripting.html#concept_chr_zjj_l3b">Groovy Scripting</a></span></span></li>
+         <li><span data-tocid="concept_yp1_4zs_yfb-d46e51678" class="topicref" data-id="concept_yp1_4zs_yfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC Client</a></span></span></li>
+         <li><span data-tocid="concept_lw2_tnm_vs-d46e51894" class="topicref" data-id="concept_lw2_tnm_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HadoopFS-origin.html#concept_lw2_tnm_vs">Hadoop FS </a></span></span></li>
+         <li><span data-tocid="concept_djz_pdm_hdb-d46e52470" class="topicref" data-id="concept_djz_pdm_hdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HDFSStandalone.html#concept_djz_pdm_hdb">Hadoop FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_wk4_bjz_5r-d46e56396" class="topicref" data-id="concept_wk4_bjz_5r" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_s2p_5hb_4y-d46e58784" class="topicref" data-id="concept_s2p_5hb_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_izh_mqd_dy-d46e59248" class="topicref" data-id="concept_izh_mqd_dy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/HTTPtoKafka.html#concept_izh_mqd_dy">HTTP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_kn5_bvt_m3b-d46e59531" class="topicref" data-id="concept_kn5_bvt_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JavaScriptScripting.html#concept_kn5_bvt_m3b">JavaScript Scripting</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e60212" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qhf_hjr_bs-d46e66294" class="topicref" data-id="concept_qhf_hjr_bs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JDBCConsumer.html#concept_qhf_hjr_bs">JDBC Query Consumer</a></span></span></li>
+         <li><span data-tocid="concept_rhh_4nj_dt-d46e69636" class="topicref" data-id="concept_rhh_4nj_dt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JMS.html#concept_rhh_4nj_dt">JMS Consumer</a></span></span></li>
+         <li><span data-tocid="concept_fxz_35t_m3b-d46e70004" class="topicref" data-id="concept_fxz_35t_m3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/JythonScripting.html#concept_fxz_35t_m3b">Jython Scripting</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_msz_wnr_5q-d46e70809" class="topicref" data-id="concept_msz_wnr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KConsumer.html#concept_msz_wnr_5q">Kafka Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ccs_fn4_x1b-d46e71184" class="topicref" data-id="concept_ccs_fn4_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KafkaMultiConsumer.html#concept_ccs_fn4_x1b">Kafka Multitopic Consumer</a></span></span></li>
+         <li><span data-tocid="concept_anh_4y3_yr-d46e71648" class="topicref" data-id="concept_anh_4y3_yr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/KinConsumer.html#concept_anh_4y3_yr">Kinesis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_qwj_5vm_pbb-d46e72118" class="topicref" data-id="concept_qwj_5vm_pbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRdbCDC.html#concept_qwj_5vm_pbb">MapR DB CDC</a></span></span></li>
+         <li><span data-tocid="concept_ywh_k15_3y-d46e72400" class="topicref" data-id="concept_ywh_k15_3y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRDBJSON.html#concept_ywh_k15_3y">MapR DB JSON</a></span></span></li>
+         <li><span data-tocid="concept_psz_db4_lx-d46e72499" class="topicref" data-id="concept_psz_db4_lx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFS.html#concept_psz_db4_lx">MapR FS</a></span></span></li>
+         <li><span data-tocid="concept_b43_3qc_mdb-d46e72883" class="topicref" data-id="concept_b43_3qc_mdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRFSStandalone.html#concept_b43_3qc_mdb">MapR FS Standalone</a></span></span></li>
+         <li><span data-tocid="concept_hvd_hww_lbb-d46e74492" class="topicref" data-id="concept_hvd_hww_lbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsMultiConsumer.html#concept_hvd_hww_lbb">MapR Multitopic Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_cvy_xsf_2v-d46e74953" class="topicref" data-id="concept_cvy_xsf_2v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MapRStreamsCons.html#concept_cvy_xsf_2v">MapR Streams Consumer</a></span></span></li>
+         <li><span data-tocid="concept_bk4_2rs_ns-d46e75241" class="topicref" data-id="concept_bk4_2rs_ns" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDB.html#concept_bk4_2rs_ns">MongoDB</a></span></span></li>
+         <li><span data-tocid="concept_mjn_yqw_4y-d46e75918" class="topicref" data-id="concept_mjn_yqw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MongoDBOplog.html#concept_mjn_yqw_4y">MongoDB Oplog</a></span></span></li>
+         <li><span data-tocid="concept_ukz_3vt_lz-d46e76376" class="topicref" data-id="concept_ukz_3vt_lz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT Subscriber</a></span></span></li>
+         <li><span data-tocid="concept_kqg_1yh_xx-d46e76661" class="topicref" data-id="concept_kqg_1yh_xx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/MySQLBinaryLog.html#concept_kqg_1yh_xx">MySQL Binary Log</a></span></span></li>
+         <li><span data-tocid="concept_ynn_vdb_p3b-d46e77231" class="topicref" data-id="concept_ynn_vdb_p3b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/NiFi.html#concept_ynn_vdb_p3b">NiFi HTTP Server</a></span></span></li>
+         <li><span data-tocid="concept_dsr_xmw_1s-d46e77287" class="topicref" data-id="concept_dsr_xmw_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Omniture.html#concept_dsr_xmw_1s">Omniture</a></span></span></li>
+         <li><span data-tocid="concept_nmf_1ly_f1b-d46e77341" class="topicref" data-id="concept_nmf_1ly_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OPCUAClient.html#concept_nmf_1ly_f1b">OPC UA Client </a></span></span></li>
+         <li><span data-tocid="concept_lnz_kzp_zgb-d46e77553" class="topicref" data-id="concept_lnz_kzp_zgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleBulk.html#concept_lnz_kzp_zgb">Oracle Bulkload</a></span></span></li>
+         <li><span data-tocid="concept_rs5_hjj_tw-d46e78964" class="topicref" data-id="concept_rs5_hjj_tw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_cfs_4m4_n2b-d46e83400" class="topicref" data-id="concept_cfs_4m4_n2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PostgreSQL.html#concept_cfs_4m4_n2b">PostgreSQL CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_o2b_1pc_r2b-d46e83863" class="topicref" data-id="concept_o2b_1pc_r2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/PulsarConsumer.html#concept_o2b_1pc_r2b">Pulsar Consumer</a></span></span></li>
+         <li><span data-tocid="concept_dyg_lq1_h5-d46e84337" class="topicref" data-id="concept_dyg_lq1_h5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RabbitMQ.html#concept_dyg_lq1_h5">RabbitMQ Consumer</a></span></span></li>
+         <li><span data-tocid="concept_plr_t3v_jw-d46e84550" class="topicref" data-id="concept_plr_t3v_jw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Redis.html#concept_plr_t3v_jw">Redis Consumer</a></span></span></li>
+         <li><span data-tocid="concept_hfg_2sn_p2b-d46e84701" class="topicref" data-id="concept_hfg_2sn_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/RESTService.html#concept_hfg_2sn_p2b">REST Service </a></span></span></li>
+         <li><span data-tocid="concept_odf_vr3_rx-d46e85381" class="topicref" data-id="concept_odf_vr3_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Salesforce.html#concept_odf_vr3_rx">Salesforce</a></span></span></li>
+         <li><span data-tocid="concept_agb_5c1_ct-d46e88459" class="topicref" data-id="concept_agb_5c1_ct" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDC_RPCorigin.html#concept_agb_5c1_ct">SDC RPC </a></span></span></li>
+         <li><span data-tocid="concept_tdk_slk_pw-d46e88513" class="topicref" data-id="concept_tdk_slk_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SDCRPCtoKafka.html#concept_tdk_slk_pw">SDC RPC to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ic5_bzd_5v-d46e88884" class="topicref" data-id="concept_ic5_bzd_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SFTP.html#concept_ic5_bzd_5v">SFTP/FTP/FTPS Client</a></span></span></li>
+         <li><span data-tocid="SQLServerBDCMultitable-d46e89688" class="topicref" data-id="SQLServerBDCMultitable" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerBDCMultitable.html#SQLServerBDCMultitable">SQL Server 2019 BDC Multitable Consumer</a></span></span></li>
+         <li><span data-tocid="concept_ut3_ywc_v1b-d46e94508" class="topicref" data-id="concept_ut3_ywc_v1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerCDC.html#concept_ut3_ywc_v1b">SQL Server CDC Client</a></span></span></li>
+         <li><span data-tocid="concept_ewq_b2s_r1b-d46e96261" class="topicref" data-id="concept_ewq_b2s_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SQLServerChange.html#concept_ewq_b2s_r1b">SQL Server Change Tracking</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ufc_53w_wlb-d46e97493" class="topicref" data-id="concept_ufc_53w_wlb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_ufc_53w_wlb">Start Job</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_dkk_mnm_ylb-d46e97565" class="topicref" data-id="concept_dkk_mnm_ylb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_dkk_mnm_ylb">Job Execution and Data Flow</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_evf_5p5_ylb-d46e97589" class="topicref" data-id="concept_evf_5p5_ylb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_evf_5p5_ylb">Generated Record</a></span></span></li>
+               <li><span data-tocid="concept_s1b_j3s_xlb-d46e97621" class="topicref" data-id="concept_s1b_j3s_xlb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_s1b_j3s_xlb">Runtime Parameters</a></span></span></li>
+               <li><span data-tocid="concept_wmc_h2c_4fb-d46e97663" class="topicref" data-id="concept_wmc_h2c_4fb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#concept_wmc_h2c_4fb">Suffix for Job Instance Names</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">For job instances created or started from a job template, <span class="ph">Control Hub</span> appends a         suffix to uniquely name each job instance.
+                              
+                           </p>
+                           </span></span></span></li>
+               <li><span data-tocid="task_mmx_1n3_plb-d46e97721" class="topicref" data-id="task_mmx_1n3_plb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartJob.html#task_mmx_1n3_plb">Configuring a Start Job Origin</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_h1l_xpr_2jb-d46e97786" class="topicref" data-id="concept_h1l_xpr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/StartPipe.html#concept_h1l_xpr_2jb">Start Pipeline</a></span></span></li>
+         <li><span data-tocid="concept_gzy_gmv_32b-d46e97940" class="topicref" data-id="concept_gzy_gmv_32b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/SystemMetrics.html#concept_gzy_gmv_32b">System Metrics</a></span></span></li>
+         <li><span data-tocid="concept_ppm_xb1_4z-d46e98094" class="topicref" data-id="concept_ppm_xb1_4z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/TCPServer.html#concept_ppm_xb1_4z">TCP Server</a></span></span></li>
+         <li><span data-tocid="concept_zp3_wnw_4y-d46e98552" class="topicref" data-id="concept_zp3_wnw_4y" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Teradata.html#concept_zp3_wnw_4y">Teradata Consumer</a></span></span></li>
+         <li><span data-tocid="concept_wng_g5f_5bb-d46e103370" class="topicref" data-id="concept_wng_g5f_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPMulti.html#concept_wng_g5f_5bb">UDP Multithreaded Source</a></span></span></li>
+         <li><span data-tocid="concept_rst_2y5_1s-d46e103735" class="topicref" data-id="concept_rst_2y5_1s" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDP.html#concept_rst_2y5_1s">UDP Source</a></span></span></li>
+         <li><span data-tocid="concept_jzq_jcz_pw-d46e103883" class="topicref" data-id="concept_jzq_jcz_pw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/UDPtoKafka.html#concept_jzq_jcz_pw">UDP to Kafka (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_unk_nzk_fbb-d46e104096" class="topicref" data-id="concept_unk_nzk_fbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket Client</a></span></span></li>
+         <li><span data-tocid="concept_u2r_gpc_3z-d46e104331" class="topicref" data-id="concept_u2r_gpc_3z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WebSocketServer.html#concept_u2r_gpc_3z">WebSocket Server</a></span></span></li>
+         <li><span data-tocid="concept_agf_5jv_sbb-d46e104820" class="topicref" data-id="concept_agf_5jv_sbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event Log</a></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e104917" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e123509" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e151229" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e160887" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e163490" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e167027" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e169218" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e173555" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e174137" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e174509" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e174801" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e175283" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e176428" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e177384" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e180012" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e181269" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e182922" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e187420" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e188625" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e194068" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e194123" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e194345" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e198016" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e198239" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ufc_53w_wlb">
+    <h1 class="title topictitle1" id="ariaid-title1">Start Job</h1>
+
+    <div class="body conbody">
+        <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_ufc_53w_wlb__simpletable_gxj_hjb_sgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_ufc_53w_wlb__d17e112">
+                        <li class="li">
+                            <p class="p"><img class="image" id="concept_ufc_53w_wlb__d17e117" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+
+                        </li>
+
+                    </ul>
+</td>
+
+            </tr>
+</tbody></table>
+</div>The Start Job origin starts one or more <span class="ph">Control Hub</span>
+            jobs in parallel when the pipeline starts. The origin can also start job instances from
+            a job template.</div>
+
+        <p class="p">The Start Job origin <span class="ph">is an orchestration stage
+                        that you use in <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#OrchestrationPipeline_Overview">orchestration pipelines</a>.</span>
+            <span class="ph">Orchestration stages perform tasks, such as schedule and
+                        start pipelines and <span class="ph">Control Hub</span> jobs, that
+                        you can use to create an orchestrated workflow across the <span class="ph">StreamSets</span>
+                        platform.</span></p>
+
+        <p class="p">The Start Job origin can start jobs that run on any <span class="ph">StreamSets</span>
+            execution engine, including <span class="ph">Data Collector</span>,
+                <span class="ph">Data Collector Edge</span>, and Transformer. The origin generates an <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#concept_x43_wlc_zlb">orchestration record</a> that contains the list of started jobs and additional
+            details about those jobs. <span class="ph">You can pass the record to an
+                        orchestration stage to trigger another task. Or, you can pass it to a
+                        non-orchestration stage to perform other processing. </span>
+            <span class="ph">For example, you might use a scripting
+                        processor to add information to the orchestration record.</span></p>
+
+        <p class="p">When you configure the Start Job origin, <span class="ph">you specify the <span class="ph">Control Hub</span> URL, and the
+                        names or IDs of the jobs or job template to start. You can also specify
+                        runtime parameters for each job or job instance.</span></p>
+
+        <p class="p">You can configure the origin <span class="ph">to reset the origins in the jobs when
+                        possible, and to run the jobs in the background. When running jobs in the
+                        background,</span> the origin immediately passes its generated record downstream instead of
+            waiting for the jobs to finish. </p>
+
+        <p class="p">You also configure the user name and password to run
+                  the job and can optionally configure SSL/TLS properties.</p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_dkk_mnm_ylb">
+    <h2 class="title topictitle2" id="ariaid-title2">Job Execution and Data Flow</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p">The Start Job origin starts the specified jobs when the
+            pipeline starts. The origin creates a record with task details and passes it downstream
+            based on how the jobs run:<dl class="dl">
+                
+                    <dt class="dt dlterm">Run jobs in the foreground</dt>
+
+                    <dd class="dd">By default, the origin starts jobs that run in the foreground. When the jobs
+                        run in the foreground, the origin passes the orchestration record downstream
+                        after all the started jobs complete. </dd>
+
+                    <dd class="dd ddexpand">Run jobs in the foreground to ensure that the task defined in the subsequent
+                        stage is not performed until all of the jobs complete.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Run jobs in the background</dt>
+
+                    <dd class="dd">You can configure the origin to start jobs that run in the background. When
+                        jobs run in the background, the origin passes the orchestration record
+                        downstream immediately after starting the jobs.</dd>
+
+                    <dd class="dd ddexpand">The origin does not track or provide information about whether the jobs
+                        finish successfully. </dd>
+
+                    <dd class="dd ddexpand">Run jobs in the background to enable the task defined in the subsequent
+                        orchestration stage to occur in parallel with the jobs started by the
+                        origin.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_evf_5p5_ylb">
+    <h2 class="title topictitle2" id="ariaid-title3">Generated Record</h2>
+
+    <div class="body conbody">
+        <p class="p">The Start
+            Job origin creates an <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#concept_x43_wlc_zlb">orchestration record</a> that includes information about the jobs that it
+            starts. </p>
+
+        <div class="p">The record includes the following fields: 
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_evf_5p5_ylb__table_vyl_xq5_ylb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.27272727272727%" /><col style="width:72.72727272727273%" /></colgroup><thead class="thead" style="text-align:left;">
+            <tr>
+              <th class="entry cellrowborder" style="text-align:left;" id="d508777e297">Field Name</th>
+
+              <th class="entry cellrowborder" style="text-align:left;" id="d508777e300">Description</th>
+
+            </tr>
+
+          </thead>
+<tbody class="tbody">
+            <tr id="concept_evf_5p5_ylb__d29e7852">
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e297 ">orchestratorTasks</td>
+
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e300 ">List Map field that contains task details for the orchestration pipeline.
+                  <p class="p">Most orchestration stages add details about their completed tasks within this
+                  field.</p>
+</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e297 ">&lt;Unique task name&gt;</td>
+
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e300 ">List Map field within the <code class="ph codeph">orchestratorTasks</code> field that
+                contains the following fields:<ul class="ul" id="concept_evf_5p5_ylb__d29e7873">
+                  <li class="li">jobIds - IDs of the jobs that the stage is configured to start.</li>
+
+                  <li class="li">jobResults - List Map of job information for each job. </li>
+
+                  <li class="li">success - <span class="ph" id="concept_evf_5p5_ylb__d29e7883">Boolean field that indicates whether all jobs
+                      completed successfully.</span><p class="p">Included only when the jobs run in the
+                      foreground.</p>
+</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+            <tr id="concept_evf_5p5_ylb__d29e7890">
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e297 ">&lt;Job ID&gt;</td>
+
+              <td class="entry cellrowborder" style="text-align:left;" headers="d508777e300 ">List Map field within the <code class="ph codeph">jobResults</code> field that provides
+                details about each job. Contains the following fields:<ul class="ul" id="concept_evf_5p5_ylb__d29e7900">
+                  <li class="li">jobId - ID of the job.</li>
+
+                  <li class="li">startedSuccessfully - Boolean field that indicates whether a job was started
+                    successfully. </li>
+
+                  <li class="li">jobStatus - <span class="ph" id="concept_evf_5p5_ylb__d29e7910">Status of the job. For more information see
+                        <span class="ph">the <a class="xref" href="https://streamsets.com//documentation/controlhub/latest/help/controlhub/UserGuide/Jobs/Jobs-Monitoring.html#concept_qll_fbn_gy" target="_blank"><span class="ph">Control Hub</span> documentation</a></span></span>.</li>
+
+                  <li class="li">jobStatusColor - <span class="ph" id="concept_evf_5p5_ylb__d29e7921">Status color of the job. For more
+                      information see <span class="ph">the <a class="xref" href="https://streamsets.com//documentation/controlhub/latest/help/controlhub/UserGuide/Jobs/Jobs-Monitoring.html#concept_qll_fbn_gy" target="_blank"><span class="ph">Control Hub</span> documentation</a></span>.</span></li>
+
+                  <li class="li">errorMessage - <span class="ph" id="concept_evf_5p5_ylb__d29e7932">Error message associated with the
+                      job.</span></li>
+
+                  <li class="li">finishedSuccessfully - <span class="ph" id="concept_evf_5p5_ylb__d29e7938">Boolean field that
+                      indicates whether a job completed successfully. Contains the following
+                      field:</span><ul class="ul" id="concept_evf_5p5_ylb__d29e7940">
+                      <li class="li">jobMetrics - Map field that contains job metrics for the pipeline and
+                        individual pipeline stages.</li>
+
+                    </ul>
+<p class="p">Included only when the job runs in the foreground.</p>
+</li>
+
+                </ul>
+</td>
+
+            </tr>
+
+          </tbody>
+</table>
+</div>
+</div>
+
+        <p class="p">For example, the following preview shows information provided by a Start Job origin with
+            the <code class="ph codeph">Load_Data</code> task name. The origin runs two jobs in the background: </p>
+
+        <p class="p"><img class="image" id="concept_evf_5p5_ylb__image_olv_nhd_zlb" src="../Graphics/StartJob-O-Record.png" height="412" width="516" /></p>
+
+        <p class="p">Note that the job status and colors indicate that the jobs are running at the time that
+            the origin creates the record. There is no <code class="ph codeph">success</code> field because the
+            jobs have not yet completed.</p>
+
+        <p class="p">For an example of a full orchestration record, see <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#concept_x43_wlc_zlb__section_qtk_mlq_zlb">Example</a>.</p>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title4" id="concept_s1b_j3s_xlb">
+    <h2 class="title topictitle2" id="ariaid-title4">Runtime Parameters</h2>
+
+    <div class="body conbody">
+        
+        <p class="p">When you configure the Start Job origin to start
+            job instances from templates, you must specify the <span class="ph"><a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/index.html?contextID=concept_dwq_33w_vz" target="_blank">runtime
+                    parameters</a></span><span class="ph"></span> for each job instance that you want
+            the origin to start. You can also specify runtime parameters when you configure the
+            origin to start jobs.</p>
+
+        <p class="p">You can use <span class="ph"><a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/index.html?contextID=concept_flz_h4p_w2b" target="_blank">functions</a></span> from the StreamSets expression language to define
+            parameter values. </p>
+
+        <p class="p">When you configure runtime parameters in the Start Job origin, you must enter the runtime
+            parameters as a JSON object, specifying the parameter names and values as key-value
+            pairs. The parameter names must match runtime parameters defined for the pipeline that
+            the job runs. </p>
+
+        <p class="p">The format that you use differs depending on whether you are specifying parameters for a
+            job or job instance:</p>
+
+        <div class="p">
+            <dl class="dl">
+                
+                    <dt class="dt dlterm">Format for jobs</dt>
+
+                    <dd class="dd">When configuring runtime parameters for a job, you specify one JSON object
+                        with all of the parameters that you want to define.</dd>
+
+                    <dd class="dd ddexpand">Use the following format to specify runtime parameters for
+                        jobs:<pre class="pre codeblock"><code>{
+      "&lt;parameter name&gt;": &lt;numeric value&gt;,
+      "&lt;parameter name&gt;": "&lt;string value&gt;"
+}</code></pre></dd>
+
+                
+                
+                    <dt class="dt dlterm">Format for job instances</dt>
+
+                    <dd class="dd">When configuring runtime parameters for a job template, you specify one JSON
+                        object for each job instance that you want the origin to run.</dd>
+
+                    <dd class="dd ddexpand">Use the following format to specify runtime parameters for job
+                        instances:<pre class="pre codeblock"><code>[
+   {
+      "&lt;param1&gt;": &lt;param numeric value&gt;,
+      "&lt;param2&gt;": "&lt;param string value&gt;"
+   }
+   {
+      "&lt;param1&gt;": &lt;param numeric value&gt;,
+      "&lt;param2&gt;": "&lt;param string value&gt;"
+   }
+]</code></pre></dd>
+
+                
+            </dl>
+
+        </div>
+
+        <div class="p">For example, you might enter the following to configure the origin to start two job
+            instances with different values for directory
+            parameters:<pre class="pre codeblock"><code>[
+   {
+      "FileDir": "/server1/logs",
+      "ErrorDir": "/server1/errors"
+   }
+   {
+      "FileDir": "/server2/logs",
+      "ErrorDir": "/server2/errors"
+   }
+]</code></pre></div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title5" id="concept_wmc_h2c_4fb">
+    <h2 class="title topictitle2" id="ariaid-title5">Suffix for Job Instance Names</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc">For job instances created or started from a job template, <span class="ph">Control Hub</span> appends a
+        suffix to uniquely name each job instance.</p>
+
+        <p class="p">The suffix is added to the job template name after a hyphen, as follows:</p>
+
+        <pre class="pre codeblock"><code>&lt;job template name&gt; - &lt;suffix&gt;</code></pre>
+        <div class="p">Select one of the following methods to generate the suffix:<dl class="dl">
+                
+                    <dt class="dt dlterm">Counter</dt>
+
+                    <dd class="dd"><span class="ph">Control Hub</span> appends a number to the job template name. For example, job instances
+                        created from the Web Log Collection Job are named as follows: <ul class="ul" id="concept_wmc_h2c_4fb__ul_ugb_sxc_4fb">
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - 1</code></li>
+
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - 2</code></li>
+
+                        </ul>
+</dd>
+
+                
+                
+                    <dt class="dt dlterm">Timestamp</dt>
+
+                    <dd class="dd"><span class="ph">Control Hub</span> appends a timestamp indicating when the job instance is started to the
+                        job template name. For example, job instances created from the Web Log
+                        Collection Job are named as follows: <ul class="ul" id="concept_wmc_h2c_4fb__ul_ak4_txc_4fb">
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - 2018-10-22</code></li>
+
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - 2018-10-23</code></li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Use a timestamp for the suffix when you plan to create and start job
+                        instances from the template at different times. For example, if you plan to
+                        start a single job instance every 24 hours. If you start multiple job
+                        instances from the template at the same time, each job instance name is
+                        appended with the same timestamp.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Parameter Value</dt>
+
+                    <dd class="dd"><span class="ph">Control Hub</span> appends the value of the specified parameter. For example, job instances
+                        created from the Web Log Collection Job are named as follows: <ul class="ul">
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - /server1/logs</code></li>
+
+                            <li class="li"><code class="ph codeph">Web Log Collection Job - /server2/logs</code></li>
+
+                        </ul>
+</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic task nested1" aria-labelledby="ariaid-title6" id="task_mmx_1n3_plb">
+    <h2 class="title topictitle2" id="ariaid-title6">Configuring a Start Job Origin</h2>
+
+    
+    <div class="body taskbody"><p class="shortdesc"></p>
+
+        <section class="section context" id="task_mmx_1n3_plb__context_vvy_z4r_2jb">
+            <p class="p">Configure a
+                Start Job origin to start <span class="ph">Control Hub</span>
+                jobs when the pipeline starts. The Start Job origin <span class="ph">is an orchestration stage
+                        that you use in <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#OrchestrationPipeline_Overview">orchestration pipelines</a>.</span></p>
+
+        </section>
+
+        <ol class="ol steps" id="task_mmx_1n3_plb__steps_obd_zlk_qkb"><li class="li step stepexpand">
+                <span class="ph cmd">In the Properties panel, on the <span class="keyword wintitle">General</span> tab, configure the
+                    following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mmx_1n3_plb__d21e6644" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d508777e674">General Property</th>
+
+                                    <th class="entry cellrowborder" id="d508777e677">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr id="task_mmx_1n3_plb__d21e6666">
+                                    <td class="entry cellrowborder" headers="d508777e674 ">Name</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e677 ">Stage name.</td>
+
+                                </tr>
+
+                                <tr id="task_mmx_1n3_plb__d21e6675">
+                                    <td class="entry cellrowborder" headers="d508777e674 ">Description</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e677 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_mmx_1n3_plb__d21e6684">
+                                    <td class="entry cellrowborder" headers="d508777e674 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e677 ">Fields that must include data for the record to be passed
+                                        into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
+                                            include fields that the stage uses.</div>
+<p class="p">Records
+                                            that do not include all required fields are processed
+                                            based on the error handling configured for the
+                                            pipeline.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_mmx_1n3_plb__d21e6698">
+                                    <td class="entry cellrowborder" headers="d508777e674 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e677 ">Conditions that must evaluate to TRUE to allow a record
+                                        to enter the stage for processing. Click
+                                            <span class="ph uicontrol">Add</span> to create additional
+                                        preconditions. <p class="p">Records that do not meet all preconditions
+                                            are processed based on the error handling configured for
+                                            the stage.</p>
+</td>
+
+                                </tr>
+
+                                <tr id="task_mmx_1n3_plb__d21e6713">
+                                    <td class="entry cellrowborder" headers="d508777e674 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e677 ">Error record handling for the stage: <ul class="ul" id="task_mmx_1n3_plb__d21e6721">
+                                            <li class="li">Discard - Discards the record.</li>
+
+                                            <li class="li">Send to Error - Sends the record to the pipeline for
+                                                error handling.</li>
+
+                                            <li class="li">Stop Pipeline - Stops the pipeline. Not valid for
+                                                cluster pipelines.</li>
+
+                                        </ul>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Jobs</span> tab, configure the following properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mmx_1n3_plb__table_wjf_kmk_qkb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d508777e782">Jobs Property</th>
+
+                                    <th class="entry cellrowborder" id="d508777e785">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Unique Task Name</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Name for the task to perform. The name must be unique
+                                        within the pipeline. <div class="p">The task name is used to group the
+                                            data that the stage adds to the generated record.<div class="note tip"><span class="tiptitle">Tip:</span> Avoid using spaces in the task name if
+                                                you want to access information added to the record,
+                                                such as a job status, from within the
+                                                pipeline.</div>
+</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Control Hub URL</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">URL of <span class="ph">Control Hub</span> that runs the jobs: <ul class="ul" id="task_mmx_1n3_plb__ul_kdf_lms_xlb">
+                                    <li class="li">For <span class="ph">Control Hub</span> cloud, enter
+                                            <kbd class="ph userinput">https://cloud.streamsets.com</kbd>.</li>
+
+                                    <li class="li">For <span class="ph">Control Hub</span> on-premises, enter the URL provided by your system
+                                        administrator. For example,
+                                            <kbd class="ph userinput">https://&lt;hostname&gt;:18631</kbd>.</li>
+
+                                </ul>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Job Template</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Starts one or more job instances from a defined job
+                                        template.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Job Template ID</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">ID of the job template to start. Available when starting
+                                        jobs from a job template.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 "><a class="xref" href="StartJob.html#concept_wmc_h2c_4fb" title="For job instances created or started from a job template, Control Hub appends a suffix to uniquely name each job instance.">Instance Name Suffix</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Method for generating a suffix
+                                        to uniquely name each job instance:<ul class="ul" id="task_mmx_1n3_plb__d21e11845">
+                                            <li class="li">Counter</li>
+
+                                            <li class="li">Timestamp</li>
+
+                                            <li class="li">Parameter Value</li>
+
+                                        </ul>
+<p class="p"><span class="ph">Available when starting jobs from a job
+                                                template.</span></p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 "><a class="xref" href="StartJob.html#concept_s1b_j3s_xlb">Runtime Parameters for Each Instance</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 "><span class="ph"><a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/index.html?contextID=concept_dwq_33w_vz" target="_blank">Runtime
+                                                parameters and values</a></span><span class="ph"></span>, specified as a JSON object for each
+                                        job instance. The stage starts a job instance in parallel
+                                        for each defined JSON object. <div class="p">Use the following
+                                            format:<pre class="pre codeblock" id="task_mmx_1n3_plb__d21e11879"><code>[
+   {
+      "&lt;param1&gt;": &lt;param numeric value&gt;,
+      "&lt;param2&gt;": "&lt;param string value&gt;"
+   }
+   {
+      "&lt;param1&gt;": &lt;param numeric value&gt;,
+      "&lt;param2&gt;": "&lt;param string value&gt;"
+   }
+]</code></pre></div>
+<p class="p">Available
+                                            when starting jobs from a job template.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Jobs</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">List of jobs to start in parallel. Available when not
+                                        starting a job instance from a template. <div class="p">For each job,
+                                            configure the following properties:<ul class="ul" id="task_mmx_1n3_plb__d21e11894">
+                                                <li class="li">Identifier Type - Information used to identify
+                                                  the job. Select Job ID or Job Name.</li>
+
+                                                <li class="li">Identifier - ID or name of the job.<p class="p">To find
+                                                  the job ID in <span class="ph">Control Hub</span>, in the Jobs view, expand the job and click
+                                                  <span class="ph uicontrol">Show Additional
+                                                  Info</span>.</p>
+</li>
+
+                                                <li class="li">Runtime Parameters - <span class="ph"><a class="xref" href="https://streamsets.com/documentation/controlhub/latest/help/index.html?contextID=concept_dwq_33w_vz" target="_blank">Runtime parameters</a></span><span class="ph"></span> for
+                                                  the job to use.<div class="p">Use the following format:
+                                                  <pre class="pre codeblock" id="task_mmx_1n3_plb__d21e11918"><code>{
+      "&lt;parameter name&gt;": &lt;numeric value&gt;,
+      "&lt;parameter name&gt;": "&lt;string value&gt;"
+}</code></pre></div>
+</li>
+
+                                            </ul>
+</div>
+<p class="p">To include another job, click the
+                                                <span class="ph uicontrol">Add</span> icon. </p>
+<p class="p">You can use
+                                                <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a> to specify jobs.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Reset Origin</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Resets the origin before starting a job, if the origin
+                                        can be reset. <p class="p">For a list of origins that can be reset,
+                                            see <span class="ph"><a class="xref" href="../Pipeline_Maintenance/PipelineMaintenance_title.html#task_hdg_j1s_5q" title="You can reset the origin when you want the Data Collector to process all available data instead of processing data from the last-saved offset. Reset the origin when the pipeline is not running.">Resetting the Origin</a></span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 "><a class="xref" href="StartJob.html#concept_dkk_mnm_ylb">Run in Background</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Runs the started jobs in the
+                                        background. <p class="p">When running jobs in the background, the
+                                            stage passes the <a class="xref" href="../Orchestration_Pipelines/OrchestrationPipelines_Title.html#concept_x43_wlc_zlb">orchestration record</a> downstream immediately
+                                            after starting the jobs.</p>
+<p class="p">By default, the stage
+                                            runs jobs in the foreground, passing the record
+                                            downstream only after all started jobs
+                                        complete.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e782 ">Delay Between State Checks</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e785 ">Milliseconds to wait between checks for the completion
+                                        status of the started jobs. Available when running jobs in
+                                        the foreground.</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">On the <span class="keyword wintitle">Credentials</span> tab, configure the following
+                    properties:</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mmx_1n3_plb__d21e11986" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d508777e1037">Credentials Property</th>
+
+                                    <th class="entry cellrowborder" id="d508777e1040">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1037 ">Control Hub User Name</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1040 ">User that starts the jobs. Enter a <span class="ph">Control Hub</span> user name in the following format: <div class="p">
+                  <pre class="pre codeblock"><code>&lt;ID&gt;@&lt;organization ID&gt;</code></pre>
+            </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1037 ">Password</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1040 ">Password for the user. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mmx_1n3_plb__d15e6253">To
+                        secure sensitive information such as user names and passwords, you can use
+                              <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+<li class="li step stepexpand">
+                <span class="ph cmd">To use SSL/TLS, click the <span class="keyword wintitle">TLS</span> tab and
+                    configure the following properties.</span>
+                <div class="itemgroup info">
+                    
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mmx_1n3_plb__table_isk_mgv_zz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr>
+                                    <th class="entry cellrowborder" id="d508777e1117">TLS Property</th>
+
+                                    <th class="entry cellrowborder" id="d508777e1120">Description</th>
+
+                                </tr>
+
+                            </thead>
+<tbody class="tbody">
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Use TLS</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Enables the use of TLS. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Keystore File</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Path to the keystore file. Enter an absolute path to the
+                                        file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no keystore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Keystore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Type of keystore to use. Use one of the following
+                                            types:<ul class="ul" id="task_mmx_1n3_plb__d21e4811">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS #12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Keystore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Password to the keystore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Keystore Key Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Algorithm to manage the keystore. <p class="p">Default is
+                                                <span class="ph">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Path to the truststore file. Enter an absolute path to
+                                        the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
+                                                <p class="p"><span class="ph">For more information about environment variables, see
+                              <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
+<p class="p">By default, no truststore is used. </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Truststore Type</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                            <li class="li">Java Keystore File (JKS)</li>
+
+                                            <li class="li">PKCS #12 (p12 file)</li>
+
+                                        </ul>
+<p class="p">Default is Java Keystore File (JKS). </p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Truststore Password</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Password to the truststore file. A password is optional,
+                                        but recommended.<div class="p">
+                                            <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                  passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
+
+                                        </div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Truststore Trust Algorithm</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_mmx_1n3_plb__d21e4933">SunX509</span>.</p>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Use Default Protocols</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
+                                        different protocol, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">TLS protocols to use. To use a protocol other than the
+                                        default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
+                                        protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
+                                            protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
+</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Uses a default cipher suite for the SSL/TLS handshake. To
+                                        use a different cipher suite, clear this option.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d508777e1117 ">Cipher Suites</td>
+
+                                    <td class="entry cellrowborder" headers="d508777e1120 ">Cipher suites to use. To use a cipher suite that is not a
+                                        part of the default set, click the
+                                            <span class="ph uicontrol">Add</span> icon and enter the name of
+                                        the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
+                                            suites.<p class="p">Enter the Java Secure Socket Extension (JSSE)
+                                            name for the additional cipher suites that you want to
+                                            use. </p>
+</td>
+
+                                </tr>
+
+                            </tbody>
+</table>
+</div>
+
+                </div>
+            </li>
+</ol>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

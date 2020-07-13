@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Spark executor starts a Spark application each time it receives an event. You can use the Spark executor with Spark on YARN. The executor is not compatible with Spark on Mesos at this time. Use ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Spark" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_cvy_vxb_1z" /><title>Spark</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_cvy_vxb_1z-d46e156524" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The Spark executor starts a Spark application each time it receives an event. You can use the Spark executor with Spark on YARN. The executor is not compatible with Spark on Mesos at this time. Use ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Spark" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_cvy_vxb_1z" /><title>Spark</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_cvy_vxb_1z-d46e160089" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -104,101 +104,101 @@
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
    <li><span data-tocid="concept_l4q_flb_kr-d46e10450" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e12848" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e22567" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e29826" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e31667" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e34758" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e13059" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e23081" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e30656" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e32497" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e35585" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e37018" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e102509" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e119944" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e147664" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_stt_2lk_fx-d46e147686" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e37845" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e104917" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e123509" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e151229" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e151251" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zhp_ldk_xhb-d46e147710" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_i22_k2k_xhb-d46e148796" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zhp_ldk_xhb-d46e151275" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_i22_k2k_xhb-d46e152361" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_mvh_bnm_f1b-d46e149882" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
-         <li><span data-tocid="concept_fdc_qrx_jz-d46e150355" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
-         <li><span data-tocid="concept_bzl_3fq_zjb-d46e150645" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
-         <li><span data-tocid="concept_sjs_sfp_qz-d46e151740" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
-         <li><span data-tocid="concept_wgj_slk_fx-d46e151950" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_kjw_llk_fx-d46e153176" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
-         <li><span data-tocid="concept_j3r_gcv_sx-d46e153634" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
-         <li><span data-tocid="concept_ohx_r5h_z1b-d46e154011" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_bj2_zlk_fx-d46e155237" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
-         <li><span data-tocid="concept_qzm_l4r_kz-d46e155914" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
-         <li><span data-tocid="concept_kcf_sn2_jlb-d46e156196" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e153447" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_fdc_qrx_jz-d46e153920" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
+         <li><span data-tocid="concept_bzl_3fq_zjb-d46e154210" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e155305" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
+         <li><span data-tocid="concept_wgj_slk_fx-d46e155515" class="topicref" data-id="concept_wgj_slk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_kjw_llk_fx-d46e156741" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e157199" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e157576" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e158802" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e159479" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
+         <li><span data-tocid="concept_kcf_sn2_jlb-d46e159761" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_jsr_zpw_tz-d46e156294" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
-         <li class="active"><span data-tocid="concept_cvy_vxb_1z-d46e156524" class="topicref" data-id="concept_cvy_vxb_1z" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_vbm_ywb_c1b-d46e156647" class="topicref" data-id="concept_vbm_ywb_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_vbm_ywb_c1b">Spark Versions and Stage Libraries</a></span></span></li>
-               <li><span data-tocid="concept_pyb_gsg_gz-d46e156669" class="topicref" data-id="concept_pyb_gsg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_pyb_gsg_gz">Prerequisite</a></span></span></li>
-               <li><span data-tocid="concept_aht_p4h_c1b-d46e156701" class="topicref" data-id="concept_aht_p4h_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_aht_p4h_c1b">Spark Home Requirement</a></span></span></li>
-               <li><span data-tocid="concept_lkk_rwx_jz-d46e156743" class="topicref" data-id="concept_lkk_rwx_jz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_lkk_rwx_jz">Application Properties</a></span></span></li>
-               <li><span data-tocid="concept_twh_wsg_gz-d46e156795" class="topicref" data-id="concept_twh_wsg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_twh_wsg_gz">Using a Proxy Hadoop User</a></span></span></li>
-               <li><span data-tocid="concept_bhk_fhg_gz-d46e156857" class="topicref" data-id="concept_bhk_fhg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_bhk_fhg_gz">Kerberos Authentication</a></span></span></li>
-               <li><span data-tocid="concept_xmx_1wg_gz-d46e156929" class="topicref" data-id="concept_xmx_1wg_gz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_xmx_1wg_gz">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_ibt_1tx_jz-d46e157105" class="topicref" data-id="concept_ibt_1tx_jz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_ibt_1tx_jz">Monitoring</a></span></span></li>
-               <li><span data-tocid="task_cdw_wxb_1z-d46e157208" class="topicref" data-id="task_cdw_wxb_1z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#task_cdw_wxb_1z">Configuring a Spark Executor</a></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e159859" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
+         <li class="active"><span data-tocid="concept_cvy_vxb_1z-d46e160089" class="topicref" data-id="concept_cvy_vxb_1z" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_vbm_ywb_c1b-d46e160212" class="topicref" data-id="concept_vbm_ywb_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_vbm_ywb_c1b">Spark Versions and Stage Libraries</a></span></span></li>
+               <li><span data-tocid="concept_pyb_gsg_gz-d46e160234" class="topicref" data-id="concept_pyb_gsg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_pyb_gsg_gz">Prerequisite</a></span></span></li>
+               <li><span data-tocid="concept_aht_p4h_c1b-d46e160266" class="topicref" data-id="concept_aht_p4h_c1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_aht_p4h_c1b">Spark Home Requirement</a></span></span></li>
+               <li><span data-tocid="concept_lkk_rwx_jz-d46e160308" class="topicref" data-id="concept_lkk_rwx_jz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_lkk_rwx_jz">Application Properties</a></span></span></li>
+               <li><span data-tocid="concept_twh_wsg_gz-d46e160360" class="topicref" data-id="concept_twh_wsg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_twh_wsg_gz">Using a Proxy Hadoop User</a></span></span></li>
+               <li><span data-tocid="concept_bhk_fhg_gz-d46e160422" class="topicref" data-id="concept_bhk_fhg_gz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_bhk_fhg_gz">Kerberos Authentication</a></span></span></li>
+               <li><span data-tocid="concept_xmx_1wg_gz-d46e160494" class="topicref" data-id="concept_xmx_1wg_gz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_xmx_1wg_gz">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_ibt_1tx_jz-d46e160670" class="topicref" data-id="concept_ibt_1tx_jz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_ibt_1tx_jz">Monitoring</a></span></span></li>
+               <li><span data-tocid="task_cdw_wxb_1z-d46e160773" class="topicref" data-id="task_cdw_wxb_1z" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#task_cdw_wxb_1z">Configuring a Spark Executor</a></span></span></li>
             </ul>
          </li>
       </ul>
    </li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e157322" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e159925" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e163462" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e160887" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e163490" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e167027" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e165653" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e169990" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e169218" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e173555" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e170572" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e170944" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e171099" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e171581" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e172726" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e173682" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e174137" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e174509" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e174801" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e175283" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e176428" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e177384" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e176310" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e180012" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e177567" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e179220" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e181269" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e182922" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e183718" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e184923" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_nls_w1r_ks-d46e187420" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e188625" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e190366" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e190421" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e194068" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e194123" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e190643" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e194314" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e194345" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e198016" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e194537" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e198239" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -300,7 +300,7 @@
                               <dt class="dt dlterm">Configure the YARN Minimum User ID property, min.user.id</dt>
 
                               <dd class="dd">The min.user.id property is set to 1000 by default. To allow job
-                                          submission:<ol class="ol" id="concept_pyb_gsg_gz__d26e6590">
+                                          submission:<ol class="ol" id="concept_pyb_gsg_gz__d33e6610">
                                           <li class="li">Verify the user ID being used by the <span class="ph">Data Collector</span> user, typically named "sdc".</li>
 
                                           <li class="li">In Hadoop, configure the YARN min.user.id property.
@@ -317,7 +317,7 @@
                                     allowed.system.users</dt>
 
                               <dd class="dd">The allowed.system.users property lists allowed user names. To
-                                    allow job submission: <ol class="ol" id="concept_pyb_gsg_gz__d26e6613">
+                                    allow job submission: <ol class="ol" id="concept_pyb_gsg_gz__d33e6633">
                                           <li class="li"> In Hadoop, configure the YARN allowed.system.users
                                                 property. <p class="p">Add the <span class="ph">Data Collector</span> user name, typically "sdc", to the list of
                                                   allowed users.</p>
@@ -501,18 +501,18 @@
             header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qk2_3wg_gz__table_smk_gp5_sx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d258662e659">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d259524e659">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d258662e662">Description</th>
+                            <th class="entry cellrowborder" id="d259524e662">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d258662e659 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d259524e659 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d258662e662 ">Event type. Uses the following type:<ul class="ul" id="concept_qk2_3wg_gz__ul_tmk_gp5_sx">
+                            <td class="entry cellrowborder" headers="d259524e662 ">Event type. Uses the following type:<ul class="ul" id="concept_qk2_3wg_gz__ul_tmk_gp5_sx">
                                     <li class="li">AppSubmittedEvent - Generated when the executor starts a
                                         Spark application.</li>
 
@@ -522,16 +522,16 @@
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d258662e659 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d259524e659 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d258662e662 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d259524e662 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d258662e659 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d259524e659 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_qk2_3wg_gz__d170e2542" headers="d258662e662 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_qk2_3wg_gz__d176e2542" headers="d259524e662 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -544,18 +544,18 @@
         <div class="p">Event records generated by the Spark executor have the following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_qk2_3wg_gz__table_umk_gp5_sx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d258662e718">Event Field Name</th>
+                            <th class="entry cellrowborder" id="d259524e718">Event Field Name</th>
 
-                            <th class="entry cellrowborder" id="d258662e721">Description</th>
+                            <th class="entry cellrowborder" id="d259524e721">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d258662e718 ">app_id</td>
+                            <td class="entry cellrowborder" headers="d259524e718 ">app_id</td>
 
-                            <td class="entry cellrowborder" headers="d258662e721 ">YARN application ID for the Spark application.</td>
+                            <td class="entry cellrowborder" headers="d259524e721 ">YARN application ID for the Spark application.</td>
 
                         </tr>
 
@@ -605,48 +605,48 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d258662e819">General Property</th>
+                                    <th class="entry cellrowborder" id="d259524e819">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d258662e822">Description</th>
+                                    <th class="entry cellrowborder" id="d259524e822">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d258662e819 ">Name</td>
+              <td class="entry cellrowborder" headers="d259524e819 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d258662e822 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d258662e819 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d258662e822 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d259524e822 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d258662e819 ">Stage Library</td>
+              <td class="entry cellrowborder" headers="d259524e819 ">Description</td>
 
-              <td class="entry cellrowborder" headers="d258662e822 ">Library version that you want to use. </td>
+              <td class="entry cellrowborder" headers="d259524e822 ">Optional description.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e819 ">Produce Events <a class="xref" href="Spark.html#concept_xmx_1wg_gz">
+              <td class="entry cellrowborder" headers="d259524e819 ">Stage Library</td>
+
+              <td class="entry cellrowborder" headers="d259524e822 ">Library version that you want to use. </td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d259524e819 ">Produce Events <a class="xref" href="Spark.html#concept_xmx_1wg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_qqz_cxs_5x" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d258662e822 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d259524e822 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d258662e819 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+              <td class="entry cellrowborder" headers="d259524e819 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-              <td class="entry cellrowborder" headers="d258662e822 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+              <td class="entry cellrowborder" headers="d259524e822 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
                   uses.</div>
 <p class="p">Records that do not include all required fields are processed based
                   on the error handling configured for the pipeline.</p>
@@ -655,9 +655,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d258662e819 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+              <td class="entry cellrowborder" headers="d259524e819 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-              <td class="entry cellrowborder" headers="d258662e822 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+              <td class="entry cellrowborder" headers="d259524e822 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
                 processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
                   <p class="p">Records that do not meet all preconditions are processed based on the error
                   handling configured for the stage.</p>
@@ -678,18 +678,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_f4s_j5l_gz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d258662e932">Spark Property</th>
+                                    <th class="entry cellrowborder" id="d259524e932">Spark Property</th>
 
-                                    <th class="entry cellrowborder" id="d258662e935">Description</th>
+                                    <th class="entry cellrowborder" id="d259524e935">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Deploy Mode</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Deploy Mode</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Deploy mode for the application:<ul class="ul" id="task_cdw_wxb_1z__ul_swj_n5l_gz">
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Deploy mode for the application:<ul class="ul" id="task_cdw_wxb_1z__ul_swj_n5l_gz">
                                             <li class="li">Client - Runs the application in Spark client mode.
                                                 Use only when resources are not a concern.</li>
 
@@ -703,9 +703,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Driver Memory</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Driver Memory</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Maximum amount of memory the driver can use for the
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Maximum amount of memory the driver can use for the
                                             application.<p class="p">Enter the number and a standard Java unit
                                             of measure without additional spaces. For example, 10m.
                                             </p>
@@ -716,9 +716,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Executor Memory</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Executor Memory</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Maximum amount of memory the executor can use. <p class="p">Enter
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Maximum amount of memory the executor can use. <p class="p">Enter
                                             the number and a standard Java unit of measure without
                                             additional spaces. For example, 100k. </p>
 <p class="p">You can use
@@ -728,42 +728,42 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Dynamic Allocation</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Dynamic Allocation</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Enables the dynamic allocation of executors to start an
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Enables the dynamic allocation of executors to start an
                                         applications.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Number of Worker Nodes</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Number of Worker Nodes</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">The exact number of worker nodes for Spark to use.
+                                    <td class="entry cellrowborder" headers="d259524e935 ">The exact number of worker nodes for Spark to use.
                                         Configure when not using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Minimum Number of Worker Nodes</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Minimum Number of Worker Nodes</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">The minimum number of worker nodes for Spark to use.
+                                    <td class="entry cellrowborder" headers="d259524e935 ">The minimum number of worker nodes for Spark to use.
                                         Configure when using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Maximum Number of Worker Nodes</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Maximum Number of Worker Nodes</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">The maximum number of worker nodes for Spark to use.
+                                    <td class="entry cellrowborder" headers="d259524e935 ">The maximum number of worker nodes for Spark to use.
                                         Configure when using dynamic allocation.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Proxy User <a class="xref" href="Spark.html#concept_twh_wsg_gz">
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Proxy User <a class="xref" href="Spark.html#concept_twh_wsg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_xqm_fjm_zx" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Hadoop user to connect to the external system and run the
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Hadoop user to connect to the external system and run the
                                         application. When using this property, make sure the
                                         external system is configured appropriately. <p class="p">By default,
                                             the pipeline uses the Data Collector user. </p>
@@ -772,10 +772,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Custom Spark Home <a class="xref" href="Spark.html#concept_aht_p4h_c1b">
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Custom Spark Home <a class="xref" href="Spark.html#concept_aht_p4h_c1b">
                                             <img class="image" id="task_cdw_wxb_1z__image_crp_srh_c1b" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Use to enter a custom Spark home directory. By default,
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Use to enter a custom Spark home directory. By default,
                                         the origin uses the directory specified in the SPARK_HOME
                                         environment variable on the <span class="ph">Data Collector</span> machine. <p class="p">This property overrides the SPARK_HOME
                                             environment variable.</p>
@@ -791,9 +791,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Custom Java Home</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Custom Java Home</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Use to enter a custom Java home directory. By default,
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Use to enter a custom Java home directory. By default,
                                         the origin uses the directory specified in the JAVA_HOME
                                         environment variable on the <span class="ph">Data Collector</span> machine. <p class="p">This property overrides the <span class="ph">Data Collector</span> environment variable.</p>
 <p class="p">Required if the
@@ -803,9 +803,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Additional Spark Arguments</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Additional Spark Arguments</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Additional arguments to pass to Spark. Overrides any
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Additional arguments to pass to Spark. Overrides any
                                         previous configuration for the specified arguments. For a
                                         list of available arguments, see the Spark documentation.
                                     </td>
@@ -813,9 +813,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Additional Spark Arguments and Values</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Additional Spark Arguments and Values</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Additional arguments with values to pass to Spark.
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Additional arguments with values to pass to Spark.
                                         Overrides any previous configuration for the specified
                                         arguments. For a list of available arguments, see the Spark
                                         documentation.</td>
@@ -823,9 +823,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e932 ">Environment Variables</td>
+                                    <td class="entry cellrowborder" headers="d259524e932 ">Environment Variables</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e935 ">Additional environment variables to use. Overrides any
+                                    <td class="entry cellrowborder" headers="d259524e935 ">Additional environment variables to use. Overrides any
                                         previous configuration for the specified arguments. For a
                                         list of valid environment variables, see the Spark
                                         documentation.</td>
@@ -846,21 +846,21 @@
                         properties:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_udj_yyx_jz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d258662e1144">Java/Scala Application Properties</th>
+                                    <th class="entry cellrowborder" id="d259524e1144">Java/Scala Application Properties</th>
 
-                                    <th class="entry cellrowborder" id="d258662e1147">Description</th>
+                                    <th class="entry cellrowborder" id="d259524e1147">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Application Name</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Application Name</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">Name to display in YARN resource manager and logs. Also
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">Name to display in YARN resource manager and logs. Also
                                         displays in Spark server history pages.<div class="p">
                   <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
-                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d26e6658">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d33e6678">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
 
             </div>
 </td>
@@ -868,25 +868,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Application Resource</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Application Resource</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">The full path to the JAR that contains the main
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">The full path to the JAR that contains the main
                                         class.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Main Class</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Main Class</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">The full path to the main class for the Spark
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">The full path to the main class for the Spark
                                         application. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Application Arguments</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Application Arguments</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">You can add additional arguments to pass to the
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">You can add additional arguments to pass to the
                                         application. <p class="p">Enter the arguments exactly as expected, and
                                             in the expected order. The executor does not validate
                                             the arguments.</p>
@@ -895,17 +895,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Additional JARs</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Additional JARs</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">You can specify additional JARs to use. Enter the full
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">You can specify additional JARs to use. Enter the full
                                         path to the JAR.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Additional Files</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Additional Files</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">Additional files to pass to the application using the
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">Additional files to pass to the application using the
                                             <code class="ph codeph">--files</code> protocol. Enter the full path
                                         to the files. <p class="p">For information about the protocol, see the
                                             Spark documentation.</p>
@@ -914,9 +914,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1144 ">Enable Verbose Logging</td>
+                                    <td class="entry cellrowborder" headers="d259524e1144 ">Enable Verbose Logging</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1147 ">Enables logging additional information to the <span class="ph">Data Collector</span> log. <p class="p">To avoid filling the log with unnecessary
+                                    <td class="entry cellrowborder" headers="d259524e1147 ">Enables logging additional information to the <span class="ph">Data Collector</span> log. <p class="p">To avoid filling the log with unnecessary
                                             information, enable this property only when testing the
                                             pipeline. </p>
 </td>
@@ -931,21 +931,21 @@
                         properties:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_uzz_qr2_kz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d258662e1257">Python Application Properties </th>
+                                    <th class="entry cellrowborder" id="d259524e1257">Python Application Properties </th>
 
-                                    <th class="entry cellrowborder" id="d258662e1260">Description</th>
+                                    <th class="entry cellrowborder" id="d259524e1260">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Application Name</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Application Name</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">Name to display in YARN resource manager and logs. Also
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">Name to display in YARN resource manager and logs. Also
                                         displays in Spark server history pages.<div class="p">
                   <div class="note tip"><span class="tiptitle">Tip:</span> Use a name that distinguishes the application from those started
-                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d26e6658">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
+                        by other processes and other pipelines, such as <span class="ph" id="task_cdw_wxb_1z__d33e6678">SDC_&lt;pipeline name&gt;_&lt;app_type&gt;</span>.</div>
 
             </div>
 </td>
@@ -953,16 +953,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Application Resource</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Application Resource</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">The full path to the Python file to run. </td>
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">The full path to the Python file to run. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Application Arguments</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Application Arguments</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">You can add additional arguments to pass to the
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">You can add additional arguments to pass to the
                                         application. <p class="p">Enter the arguments exactly as expected, and
                                             in the expected order. The executor does not validate
                                             the arguments.</p>
@@ -971,17 +971,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Dependencies</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Dependencies</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">Full path to any files the Python application resource
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">Full path to any files the Python application resource
                                         requires. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Additional Files</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Additional Files</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">Additional files to pass to the application using the
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">Additional files to pass to the application using the
                                             <code class="ph codeph">--files</code> protocol. Enter the full path
                                         to the files. <p class="p">For information about the protocol, see the
                                             Spark documentation.</p>
@@ -990,9 +990,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1257 ">Enable Verbose Logging</td>
+                                    <td class="entry cellrowborder" headers="d259524e1257 ">Enable Verbose Logging</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1260 ">Enables logging additional information to the <span class="ph">Data Collector</span> log. <p class="p">To avoid filling the log with unnecessary
+                                    <td class="entry cellrowborder" headers="d259524e1260 ">Enables logging additional information to the <span class="ph">Data Collector</span> log. <p class="p">To avoid filling the log with unnecessary
                                             information, enable this property only when testing the
                                             pipeline. </p>
 </td>
@@ -1011,27 +1011,27 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_cdw_wxb_1z__table_hxn_syj_kz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d258662e1368">Credentials Properties <a class="xref" href="Spark.html#concept_bhk_fhg_gz">
+                                    <th class="entry cellrowborder" id="d259524e1368">Credentials Properties <a class="xref" href="Spark.html#concept_bhk_fhg_gz">
                                             <img class="image" id="task_cdw_wxb_1z__image_hlh_jzj_kz" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></th>
 
-                                    <th class="entry cellrowborder" id="d258662e1375">Description</th>
+                                    <th class="entry cellrowborder" id="d259524e1375">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1368 ">Kerberos Principal</td>
+                                    <td class="entry cellrowborder" headers="d259524e1368 ">Kerberos Principal</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1375 ">Kerberos principal for the YARN cluster where the
+                                    <td class="entry cellrowborder" headers="d259524e1375 ">Kerberos principal for the YARN cluster where the
                                         application runs. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d258662e1368 ">Kerberos Keytab</td>
+                                    <td class="entry cellrowborder" headers="d259524e1368 ">Kerberos Keytab</td>
 
-                                    <td class="entry cellrowborder" headers="d258662e1375 ">Kerberos keytab for the YARN cluster where the
+                                    <td class="entry cellrowborder" headers="d259524e1375 ">Kerberos keytab for the YARN cluster where the
                                         application runs. </td>
 
                                 </tr>
