@@ -54,11 +54,7 @@ public class AzureUtils {
   }
 
   public static String buildUserAgentString(Stage.Context context) {
-    return String.format("APN/1.0 streamsets/1.0 datacollector/%s %s/%s",
-        context.getEnvironmentVersion(),
-        context.getStageInfo().getName(),
-        context.getStageInfo().getVersion()
-    );
+    return String.format("APN/1.0 streamsets/1.0 datacollector/%s", context.getEnvironmentVersion());
   }
 
 
