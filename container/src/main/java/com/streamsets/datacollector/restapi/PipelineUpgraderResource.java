@@ -37,6 +37,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.security.Principal;
+import java.util.HashMap;
 
 @Path("/v1")
 @Api(value = "upgrader")
@@ -74,7 +75,8 @@ public class PipelineUpgraderResource {
         buildInfo,
         name,
         pipelineConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();

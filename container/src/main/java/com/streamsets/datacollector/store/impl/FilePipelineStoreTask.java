@@ -439,7 +439,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         dataStoreInfo.commit(infoFile);
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
-          PipelineBeanCreator.get().create(pipeline, errors, null, user);
+          PipelineBeanCreator.get().create(pipeline, errors, null, user, new HashMap<>());
           pipelineStateStore.edited(user,
               name,
               tag,

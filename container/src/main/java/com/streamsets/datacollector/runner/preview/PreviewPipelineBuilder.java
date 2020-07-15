@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
@@ -38,6 +39,7 @@ import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -168,12 +170,14 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
+    HashMap<String, ConnectionConfiguration> connections = new HashMap<>();
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLib,
         buildInfo,
         name,
         pipelineConf,
-        userContext.getUser()
+        userContext.getUser(),
+        connections
     );
     pipelineConf = validator.validate();
     if (!validator.getIssues().hasIssues() || validator.canPreview()) {
@@ -198,7 +202,8 @@ public class PreviewPipelineBuilder {
        blobStoreTask,
        lineagePublisherTask,
        statsCollector,
-       interceptorConfs
+       interceptorConfs,
+       connections
      );
      Pipeline pipeline = builder.build(runner);
      if (pipeline != null) {

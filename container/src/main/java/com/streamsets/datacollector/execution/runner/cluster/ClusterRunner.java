@@ -385,7 +385,8 @@ public class ClusterRunner extends AbstractRunner {
           getPipelineConfiguration(user),
           new ArrayList<>(),
           getStartPipelineContext().getRuntimeParameters(),
-          user
+          user,
+          getConnections()
         );
         stop(user, appState, pipelineConf, pipelineConfigBean);
       }
@@ -418,7 +419,8 @@ public class ClusterRunner extends AbstractRunner {
           pipelineConf,
           new ArrayList<>(),
           getStartPipelineContext().getRuntimeParameters(),
-          context.getUser()
+          context.getUser(),
+          getConnections()
       );
       connect(context.getUser(), appState, pipelineConf, pipelineConfigBean);
       if (getState().getStatus().isActive()) {
@@ -509,7 +511,8 @@ public class ClusterRunner extends AbstractRunner {
           pipelineConf,
           new ArrayList<>(),
           getStartPipelineContext().getRuntimeParameters(),
-          runningUser.getUser()
+          runningUser.getUser(),
+          getConnections()
       );
       if (pipelineConfigBean != null) {
         JobEL.setConstantsInContext(pipelineConfigBean.constants);
@@ -843,8 +846,13 @@ public class ClusterRunner extends AbstractRunner {
         getConfiguration().get(
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
-        )
-    ), pipelineConfiguration, getState().getTimeStamp(), context.getInterceptorConfigurations(), null);
+        )),
+        pipelineConfiguration,
+        getState().getTimeStamp(),
+        context.getInterceptorConfigurations(),
+        null,
+        getConnections()
+    );
   }
 
   static class ManagerRunnable implements Runnable {
@@ -996,7 +1004,8 @@ public class ClusterRunner extends AbstractRunner {
           pipelineConf,
           errors,
           runtimeParameters,
-          user
+          user,
+          getConnections()
       );
       if (pipelineConfigBean == null) {
         throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);

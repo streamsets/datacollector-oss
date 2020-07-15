@@ -38,13 +38,14 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -128,19 +129,12 @@ public class ConfigInjector {
     Map<String, Object> getPipelineConstants();
 
     /**
-     * Retrieve automated connection for this stage, associated with provided type.
-     * @return connectionId if automated connection exists for this stage and type.
-     *         null         if automated connection does not exist for this stage and type.
+     * Connections used by this pipeline.
      */
-    String getConnection(String type);
+    Map<String, ConnectionConfiguration> getConnections();
 
     /**
-     * Register automated connection from stage config.
-     */
-    void putConnection(String type, String connectionId);
-
-    /**
-     * The user who is running this stage
+     * The user who is running this pipeline.
      */
     String getUser();
   }
@@ -196,13 +190,8 @@ public class ConfigInjector {
     }
 
     @Override
-    public String getConnection(String type) {
-      return parent.getConnection(type);
-    }
-
-    @Override
-    public void putConnection(String type, String connectionId) {
-      parent.putConnection(type, connectionId);
+    public Map<String, ConnectionConfiguration> getConnections() {
+      return parent.getConnections();
     }
 
     @Override
@@ -220,23 +209,38 @@ public class ConfigInjector {
     private final StageConfiguration configuration;
     private final IssueCreator issueCreator;
     private final Map<String, Object> pipelineConstants;
-    private final List<Issue> issues;
-    private Map<String, String> connections;
     private final String user;
+    private final Map<String, ConnectionConfiguration> connections;
+    private final List<Issue> issues;
 
     public StageInjectorContext(
         StageDefinition definition,
         StageConfiguration configuration,
         Map<String, Object> pipelineConstants,
         String user,
+        Map<String, ConnectionConfiguration> connections,
         List<Issue> issues
     ) {
       this.definition = definition;
       this.configuration = configuration;
       this.issueCreator = IssueCreator.getStage(configuration.getInstanceName());
       this.pipelineConstants = pipelineConstants;
-      this.issues = issues;
       this.user = user;
+      this.connections = connections;
+      this.issues = issues;
+    }
+
+    public StageInjectorContext(
+        StageInjectorContext old,
+        Map<String, Object> pipelineConstantsOverride
+    ) {
+      this.definition = old.definition;
+      this.configuration = old.configuration;
+      this.issueCreator = old.issueCreator;
+      this.pipelineConstants = pipelineConstantsOverride;
+      this.user = old.user;
+      this.connections = old.connections;
+      this.issues = old.issues;
     }
 
     @Override
@@ -280,23 +284,9 @@ public class ConfigInjector {
       return pipelineConstants;
     }
 
-
     @Override
-    public String getConnection(String type) {
-      if (connections == null) {
-        return null;
-      }
-
-      return connections.get(type);
-    }
-
-    @Override
-    public void putConnection(String type, String connectionId) {
-      // lazy load connections map to save memory
-      if (connections == null) {
-        connections = new HashMap<>();
-      }
-      connections.put(type, connectionId);
+    public Map<String, ConnectionConfiguration> getConnections() {
+      return connections;
     }
 
     @Override
@@ -358,13 +348,8 @@ public class ConfigInjector {
     }
 
     @Override
-    public String getConnection(String type) {
-      return parentContext.getConnection(type);
-    }
-
-    @Override
-    public void putConnection(String type, String connectionId) {
-      parentContext.putConnection(type, connectionId);
+    public Map<String, ConnectionConfiguration> getConnections() {
+      return parentContext.getConnections();
     }
 
     @Override
@@ -379,6 +364,8 @@ public class ConfigInjector {
     private final ServiceDefinition definition;
     private final ServiceConfiguration configuration;
     private final Map<String, Object> pipelineConstants;
+    private final String user;
+    private final Map<String, ConnectionConfiguration> connections;
     private final IssueCreator issueCreator;
     private final List<Issue> issues;
 
@@ -387,12 +374,16 @@ public class ConfigInjector {
         ServiceDefinition definition,
         ServiceConfiguration configuration,
         Map<String, Object> pipelineConstants,
+        String user,
+        Map<String, ConnectionConfiguration> connections,
         List<Issue> issues
     ) {
       this.stageName = stageName;
       this.definition = definition;
       this.configuration = configuration;
       this.pipelineConstants = pipelineConstants;
+      this.user = user;
+      this.connections = connections;
       this.issueCreator = IssueCreator.getService(stageName, definition.getKlass().getName());
       this.issues = issues;
     }
@@ -439,16 +430,13 @@ public class ConfigInjector {
     }
 
     @Override
-    public String getConnection(String type) {
-      return null;
+    public Map<String, ConnectionConfiguration> getConnections() {
+      return connections;
     }
 
     @Override
-    public void putConnection(String type, String connectionId) {}
-
-    @Override
     public String getUser() {
-      return null;
+      return user;
     }
   }
 
@@ -468,16 +456,26 @@ public class ConfigInjector {
       StageConfiguration stageConf,
       Map<String, Object> constants,
       String user,
+      Map<String, ConnectionConfiguration> connections,
       List<Issue> issues
   ) {
-    injectConfigsToObject(stage, new StageInjectorContext(stageDef, stageConf, constants, user, issues));
+    injectConfigsToObject(stage, new StageInjectorContext(stageDef, stageConf, constants, user, connections, issues));
   }
 
-  public void injectService(Object service, String stageName, ServiceDefinition def, ServiceConfiguration conf, Map<String, Object> constants, List<Issue> issues) {
-    injectConfigsToObject(service, new ServiceInjectorContext(stageName, def, conf, constants, issues));
+  public void injectService(
+      Object service,
+      String stageName,
+      ServiceDefinition def,
+      ServiceConfiguration conf,
+      Map<String, Object> constants,
+      String user,
+      Map<String, ConnectionConfiguration> connections,
+      List<Issue> issues
+  ) {
+    injectConfigsToObject(service, new ServiceInjectorContext(stageName, def, conf, constants, user, connections, issues));
   }
 
-  public void injectConfigsToObject(Object object, Context context) {
+  void injectConfigsToObject(Object object, Context context) {
     if (createConfigBeans(object, "", context)) {
       injectConfigs(object, "", context);
     }
@@ -499,12 +497,22 @@ public class ConfigInjector {
           context.createIssue(CreationError.CREATION_001, field.getType().getSimpleName(), ex.toString());
         }
       // if field is ConfigDef with CONNECTION type, we need to do extra processing
-      } else if (field.getAnnotation(ConfigDef.class) != null && field.getAnnotation(ConfigDef.class).type() == ConfigDef.Type.CONNECTION) {
+      } else if (field.getAnnotation(ConfigDef.class) != null
+              && field.getAnnotation(ConfigDef.class).type() == ConfigDef.Type.CONNECTION) {
         // if the value of this CONNECTION config is anything other than 'MANUAL' we assume it's a connection ID
-        if (!((String) context.getConfigValue(configPrefix + field.getName())).equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {
-          // add connection ID to stage injector context to be used later
-          String configValue = (String) context.getConfigValue(configPrefix + field.getName());
-          context.putConnection(field.getAnnotation(ConfigDef.class).connectionType(), configValue);
+        Object configValue = context.getConfigValue(configName);
+        if (context.getUser() != null && context.getConnections() != null && configValue != null
+            && !((String) configValue).equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {
+          // add connection to stage injector context to be used later
+          String connectionId = (String) configValue;
+          ConnectionConfiguration cc = context.getConnections().computeIfAbsent(
+              connectionId,
+              cid -> connectionRetriever.get(cid, context)
+          );
+          if (cc == null) {
+            ok = false;
+            // connectionRetriever created the issue
+          }
         }
       }
     }
@@ -528,16 +536,17 @@ public class ConfigInjector {
         }
       } else if (field.getAnnotation(ConfigDefBean.class) != null) {
         boolean injected = false;
-        // if ConfigDefBean is also a ConnectionDef, check if we need to get it
+        // if ConfigDefBean is also a ConnectionDef, check if we need to handle it
         ConnectionDef connectionDef = field.getType().getAnnotation(ConnectionDef.class);
         if (connectionDef != null) {
-          // if the connection ID was populated in the context earlier, we need to get the connection
-          String connectionId = context.getConnection(connectionDef.type());
-          if (connectionId != null && context.getUser() != null) {  // Don't even bother without a user
-            ConnectionConfiguration cc = connectionRetriever.get(connectionId, context);
+          // Figure out the ConnectionId that this ConnectionDef is associated with
+          String connectionId = getConnectionId(obj, field, context);
+          if (connectionId != null && !connectionId.equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {
+            // We should have populated this earlier
+            ConnectionConfiguration cc = context.getConnections().get(connectionId);
             if (cc != null) {
               if (!cc.getType().equals(connectionDef.type())) {
-                // Somehow connection type mismatch
+                // Connection type mismatch
                 context.createIssue(CreationError.CREATION_1102, cc.getType(), connectionDef.type());
               } else {
                 // Do an upgrade if necessary
@@ -881,4 +890,20 @@ public class ConfigInjector {
     }
   }
 
+  String getConnectionId(Object obj, Field connectionField, Context context) {
+    String connectionId = null;
+    Dependency[] dependencies = connectionField.getAnnotation(ConfigDefBean.class).dependencies();
+    if (dependencies.length == 0) {
+      context.createIssue(CreationError.CREATION_1106, "Connection does not have a dependent selection field");
+    } else {
+      String connectionSelectionFieldName = dependencies[0].configName();
+      try {
+        Field connectionSelectionField = obj.getClass().getField(connectionSelectionFieldName);
+        connectionId = (String) connectionSelectionField.get(obj);
+      } catch (Exception ex) {
+        context.createIssue(CreationError.CREATION_1106, "Encountered error when trying to extract ID: " + ex.toString());
+      }
+    }
+    return connectionId;
+  }
 }

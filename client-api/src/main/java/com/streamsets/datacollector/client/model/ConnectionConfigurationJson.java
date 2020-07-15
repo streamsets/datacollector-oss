@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.client.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.client.StringUtil;
 import io.swagger.annotations.ApiModel;
@@ -25,6 +26,7 @@ import java.util.List;
 
 
 @ApiModel(description = "")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionConfigurationJson {
 
   private String library = null;

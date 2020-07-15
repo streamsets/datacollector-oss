@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.util.PipelineException;
@@ -41,6 +42,8 @@ public interface Previewer {
   String getName();
 
   String getRev();
+
+  public Map<String, ConnectionConfiguration> getConnections();
 
   List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs();
 

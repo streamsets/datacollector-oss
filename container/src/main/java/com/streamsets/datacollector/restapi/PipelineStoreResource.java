@@ -698,7 +698,8 @@ public class PipelineStoreResource {
             buildInfo,
             name,
             pipeline,
-            user
+            user,
+            new HashMap<>()
         );
         pipeline = validator.validate();
         data = BeanHelper.wrapPipelineConfiguration(pipeline);
@@ -864,7 +865,8 @@ public class PipelineStoreResource {
         buildInfo,
         pipelineId,
         pipelineConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
 
@@ -956,7 +958,8 @@ public class PipelineStoreResource {
         buildInfo,
         pipelineId,
         pipelineFragmentConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineFragmentConfig = validator.validateFragment();
 
@@ -1024,7 +1027,8 @@ public class PipelineStoreResource {
         buildInfo,
         name,
         pipelineConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
     pipelineConfig = store.save(user, name, rev, description, pipelineConfig, encryptCredentials);
@@ -1087,7 +1091,7 @@ public class PipelineStoreResource {
     if(ruleDefinitions != null) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
       PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, new ArrayList<>(), null, null);
+          .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
           pipelineId,
           ruleDefinitions,
@@ -1125,7 +1129,7 @@ public class PipelineStoreResource {
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null, null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         pipelineId,
         ruleDefs,
@@ -1159,7 +1163,8 @@ public class PipelineStoreResource {
         buildInfo,
         name,
         pipelineConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
@@ -1314,7 +1319,8 @@ public class PipelineStoreResource {
         buildInfo,
         name,
         pipelineConfig,
-        user
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
 
@@ -1359,7 +1365,7 @@ public class PipelineStoreResource {
     }
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfig, new ArrayList<>(), null, null);
+        .create(pipelineConfig, new ArrayList<>(), null, null, null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         name,
         ruleDefinitions,
@@ -1417,7 +1423,8 @@ public class PipelineStoreResource {
         buildInfo,
         fragmentId,
         fragmentConfig,
-        user
+        user,
+        new HashMap<>()
     );
     fragmentConfig = validator.validateFragment();
 
@@ -1477,7 +1484,8 @@ public class PipelineStoreResource {
             buildInfo,
             pipelineId,
             pipelineConfig,
-            user
+            user,
+            new HashMap<>()
         );
         pipelineConfig = validator.validate();
         store.save(user, pipelineId, "0", pipelineConfig.getDescription(), pipelineConfig, false);
@@ -1520,7 +1528,7 @@ public class PipelineStoreResource {
     for (String pipelineId: pipelineIdArr) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
       PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, new ArrayList<>(), null, null);
+          .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
       if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
         throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
       }
@@ -1587,7 +1595,8 @@ public class PipelineStoreResource {
               buildInfo,
               pipelineConfig.getPipelineId(),
               pipelineConfig,
-              user
+              user,
+              new HashMap<>()
           );
           pipelineConfig = validator.validate();
 

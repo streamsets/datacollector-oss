@@ -16,6 +16,7 @@
 
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -27,7 +28,9 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 
 import javax.ws.rs.core.MultivaluedMap;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class MockPreviewer implements Previewer {
@@ -41,6 +44,7 @@ public class MockPreviewer implements Previewer {
   public boolean previewStarted;
   public boolean previewStopped;
   private final Function afterActionsFunction;
+  private final Map<String, ConnectionConfiguration> connections;
 
   public MockPreviewer(
       String user,
@@ -54,6 +58,7 @@ public class MockPreviewer implements Previewer {
     this.rev = rev;
     this.interceptorConfs = interceptorConfs;
     this.afterActionsFunction = afterActionsFunction;
+    this.connections = new HashMap<>();
   }
 
   @Override
@@ -70,6 +75,11 @@ public class MockPreviewer implements Previewer {
   public String getRev() {
     // TODO Auto-generated method stub
     return rev;
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return connections;
   }
 
   @Override

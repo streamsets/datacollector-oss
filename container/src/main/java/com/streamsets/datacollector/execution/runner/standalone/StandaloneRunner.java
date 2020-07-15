@@ -763,7 +763,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
             pipelineConfiguration,
             errors,
             getStartPipelineContext().getRuntimeParameters(),
-            context.getUser()
+            context.getUser(),
+            getConnections()
         );
         if (pipelineConfigBean == null) {
           throw new PipelineRuntimeException(ContainerError.CONTAINER_0116, errors);
@@ -849,7 +850,8 @@ public class StandaloneRunner extends AbstractRunner implements StateListener {
           pipelineConfiguration,
           getState().getTimeStamp(),
           context.getInterceptorConfigurations(),
-          context.getRuntimeParameters()
+          context.getRuntimeParameters(),
+          getConnections()
         );
         prodPipeline.registerStatusListener(this);
 

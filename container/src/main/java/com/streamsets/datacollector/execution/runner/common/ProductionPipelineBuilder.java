@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
@@ -41,6 +42,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +95,7 @@ public class ProductionPipelineBuilder {
       PipelineConfiguration pipelineConf,
       long startTime
   ) throws PipelineRuntimeException, StageException {
-    return build(userContext, pipelineConf, startTime, Collections.emptyList(), null);
+    return build(userContext, pipelineConf, startTime, Collections.emptyList(), null, new HashMap<>());
   }
 
   public ProductionPipeline build(
@@ -101,14 +103,16 @@ public class ProductionPipelineBuilder {
       PipelineConfiguration pipelineConf,
       long startTime,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineRuntimeException, StageException {
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLib,
         buildInfo,
         name,
         pipelineConf,
-        userContext.getUser()
+        userContext.getUser(),
+        connections
     );
     pipelineConf = validator.validate();
     if (validator.getIssues().hasIssues()) {
@@ -127,7 +131,8 @@ public class ProductionPipelineBuilder {
         blobStoreTask,
         lineagePublisherTask,
         statsCollector,
-        interceptorConfs
+        interceptorConfs,
+        connections
     ).setObserver(observer).build(runner, runtimeParameters);
 
     SourceOffsetTracker sourceOffsetTracker;

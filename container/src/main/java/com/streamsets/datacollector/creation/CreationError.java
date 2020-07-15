@@ -85,6 +85,7 @@ public enum CreationError implements ErrorCode {
   CREATION_1103("Connection definition requires at least version '{}' which is higher than the available library supports ('{}')"),
   CREATION_1104("There was a problem retrieving the connection: {}"),
   CREATION_1105("Using connections requires that Control Hub is enabled"),
+  CREATION_1106("Could not determine Connection ID: {}"),
   ;
 
   private final String msg;

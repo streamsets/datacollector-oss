@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
@@ -81,6 +82,9 @@ public interface Runner {
 
   // pipeline revision
   public String getRev();
+
+  // pipeline connections
+  public Map<String, ConnectionConfiguration> getConnections();
 
   // pipeline title
   public String getPipelineTitle() throws PipelineException;

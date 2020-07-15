@@ -18,6 +18,7 @@ package com.streamsets.datacollector.event.handler.remote;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -301,6 +302,11 @@ public class TestRemoteDataCollector {
     @Override
     public String getRev() {
       // TODO Auto-generated method stub
+      return null;
+    }
+
+    @Override
+    public Map<String, ConnectionConfiguration> getConnections() {
       return null;
     }
 

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -69,6 +70,7 @@ public abstract  class AbstractRunner implements Runner {
 
   private final String name;
   private final String rev;
+  private final HashMap<String, ConnectionConfiguration> connections;
 
   @Inject AclStoreTask aclStoreTask;
   @Inject EventListenerManager eventListenerManager;
@@ -86,6 +88,7 @@ public abstract  class AbstractRunner implements Runner {
   public AbstractRunner(String name, String rev) {
     this.name = name;
     this.rev = rev;
+    this.connections = new HashMap<>();
   }
 
   protected AbstractRunner(
@@ -119,6 +122,11 @@ public abstract  class AbstractRunner implements Runner {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return connections;
   }
 
   protected AclStoreTask getAclStore() {
@@ -260,7 +268,8 @@ public abstract  class AbstractRunner implements Runner {
         buildInfo,
         name,
         load,
-        user
+        user,
+        connections
     );
     PipelineConfiguration validate = validator.validate();
     if(validator.getIssues().hasIssues()) {

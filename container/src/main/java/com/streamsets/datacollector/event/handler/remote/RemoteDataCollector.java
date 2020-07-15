@@ -263,7 +263,8 @@ public class RemoteDataCollector implements DataCollector {
             buildInfo,
             name,
             pipelineConfiguration,
-            user
+            user,
+            new HashMap<>()
         );
         PipelineConfiguration validatedPipelineConfig = validator.validate();
         //By default encrypt credentials from Remote data collector

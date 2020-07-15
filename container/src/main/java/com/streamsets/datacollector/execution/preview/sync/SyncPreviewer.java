@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.preview.sync;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RawSourceDefinition;
 import com.streamsets.datacollector.config.StageConfiguration;
@@ -72,7 +73,9 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class SyncPreviewer implements Previewer {
@@ -89,6 +92,7 @@ public class SyncPreviewer implements Previewer {
   private final UserContext userContext;
   private final String name;
   private final String rev;
+  private final HashMap<String, ConnectionConfiguration> connections;
   private final PreviewerListener previewerListener;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
   private final Function afterActionsFunction;
@@ -131,6 +135,7 @@ public class SyncPreviewer implements Previewer {
     this.previewStatus = PreviewStatus.CREATED;
     this.interceptorConfs = interceptorConfs;
     this.afterActionsFunction = afterActionsFunction;
+    this.connections = new HashMap<>();
   }
 
   @Override
@@ -146,6 +151,11 @@ public class SyncPreviewer implements Previewer {
   @Override
   public String getRev() {
     return rev;
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return connections;
   }
 
   @Override

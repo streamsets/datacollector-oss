@@ -326,7 +326,7 @@ public class MetricsEventRunnable implements Runnable {
       isDPMPipeline = isRemotePipeline(state);
       if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(pipelineConfiguration, new ArrayList<>(), null, null);
+            .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
         for (String key : pipelineConfigBean.constants.keySet()) {
           switch (key) {
             case PIPELINE_COMMIT_ID:

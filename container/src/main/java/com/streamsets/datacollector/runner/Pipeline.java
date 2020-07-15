@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
 import com.streamsets.datacollector.antennadoctor.engine.context.AntennaDoctorStageContext;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.InterceptorBean;
 import com.streamsets.datacollector.creation.PipelineBean;
@@ -107,6 +108,7 @@ public class Pipeline {
   private final InterceptorCreatorContextBuilder interceptorContextBuilder;
   private final StageRuntime startEventStage;
   private final StageRuntime stopEventStage;
+  private final Map<String, ConnectionConfiguration> connections;
   private boolean stopEventStageInitialized;
 
   private Pipeline(
@@ -134,7 +136,8 @@ public class Pipeline {
       StatsCollector statsCollector,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
       StageRuntime startEventStage,
-      StageRuntime stopEventStage
+      StageRuntime stopEventStage,
+      Map<String, ConnectionConfiguration> connections
   ) {
     this.stageLib = stageLib;
     this.pipelineBean = pipelineBean;
@@ -162,6 +165,7 @@ public class Pipeline {
     this.interceptorContextBuilder = interceptorCreatorContextBuilder;
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
+    this.connections = connections;
     PipelineBeanCreator.prepareForConnections(configuration, runner.getRuntimeInfo(), blobStore);
   }
 
@@ -334,6 +338,7 @@ public class Pipeline {
               interceptorContextBuilder,
               originPipe.getStage().getConstants(),
               userContext.getUser(),
+              connections,
               localIssues
             );
 
@@ -563,6 +568,7 @@ public class Pipeline {
     private Observer observer;
     private final ResourceControlledScheduledExecutor scheduledExecutor =
         new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
+    private final Map<String, ConnectionConfiguration> connections;
     private List<Issue> errors;
 
     public Builder(
@@ -578,7 +584,8 @@ public class Pipeline {
         BlobStoreTask blobStore,
         LineagePublisherTask lineagePublisherTask,
         StatsCollector statsCollector,
-        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+        Map<String, ConnectionConfiguration> connections
     ) {
       this.stageLib = stageLib;
       this.name = name;
@@ -598,6 +605,7 @@ public class Pipeline {
         interceptorConfs
       );
       PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStore);
+      this.connections = connections;
     }
 
     public Builder setObserver(Observer observer) {
@@ -620,7 +628,8 @@ public class Pipeline {
           interceptorCreatorContextBuilder,
           errors,
           runtimeParameters,
-          userContext.getUser()
+          userContext.getUser(),
+          connections
       );
       StageRuntime errorStage;
       StageRuntime statsAggregator;
@@ -819,7 +828,8 @@ public class Pipeline {
             statsCollector,
             interceptorCreatorContextBuilder,
             startEventStageRuntime,
-            stopEventStageRuntime
+            stopEventStageRuntime,
+            connections
           );
         } catch (Exception e) {
           String msg = "Can't instantiate pipeline: " + e;

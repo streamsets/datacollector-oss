@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -181,6 +182,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false,
         stageLibraryTask,
         pipelineConfiguration,
+        null,
         null,
         null,
         new ArrayList<>()
@@ -535,12 +537,14 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     String clusterToken = UUID.randomUUID().toString();
     Set<String> jarsToShip = new LinkedHashSet<>();
     List<Issue> errors = new ArrayList<>();
+    HashMap<String, ConnectionConfiguration> connections = new HashMap<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(
         false,
         stageLibrary,
         pipelineConfiguration,
         interceptorCreatorContextBuilder,
         user,
+        connections,
         errors
     );
     if (!errors.isEmpty()) {

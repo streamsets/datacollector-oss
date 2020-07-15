@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.preview.async;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.PreviewOutput;
 import com.streamsets.datacollector.execution.PreviewStatus;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import javax.inject.Inject;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -61,6 +63,11 @@ public class AsyncPreviewer implements Previewer {
   @Override
   public String getRev() {
     return syncPreviewer.getRev();
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return syncPreviewer.getConnections();
   }
 
   @Override

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.runner;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
@@ -26,7 +27,9 @@ import com.streamsets.datacollector.util.Configuration;
 import org.mockito.Mockito;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Pipeline.Builder test specific builder (yes builder of a builder) that will provide mock defaults and allow user to
@@ -47,6 +50,7 @@ public class MockPipelineBuilder {
   private List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
   private StatsCollector statsCollector;
   private Observer observer;
+  private Map<String, ConnectionConfiguration> connections;
 
   public MockPipelineBuilder() {
     this.stageLib = MockStages.createStageLibrary();
@@ -63,6 +67,7 @@ public class MockPipelineBuilder {
     this.interceptorConfs = Collections.emptyList();
     this.statsCollector = Mockito.mock(StatsCollector.class);
     this.observer = null;
+    this.connections = new HashMap<>();
   }
 
   public MockPipelineBuilder withStageLib(StageLibraryTask stageLib) {
@@ -125,6 +130,11 @@ public class MockPipelineBuilder {
     return this;
   }
 
+  public MockPipelineBuilder withConnections(Map<String, ConnectionConfiguration> connections) {
+    this.connections = connections;
+    return this;
+  }
+
   public Pipeline.Builder build() {
     return new Pipeline.Builder(
       stageLib,
@@ -139,7 +149,8 @@ public class MockPipelineBuilder {
       blobStoreTask,
       lineagePublisherTask,
       statsCollector,
-      interceptorConfs
+      interceptorConfs,
+      connections
     ).setObserver(observer);
   }
 

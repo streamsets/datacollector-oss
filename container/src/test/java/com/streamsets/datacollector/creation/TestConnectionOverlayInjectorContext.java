@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ErrorCode;
 import org.junit.Assert;
@@ -92,16 +93,9 @@ public class TestConnectionOverlayInjectorContext {
   }
 
   @Test
-  public void testGetConnection() {
-    context.getConnection("type");
-    Mockito.verify(parentContext).getConnection("type");
-    Mockito.verifyNoMoreInteractions(parentContext);
-  }
-
-  @Test
-  public void testPutConnection() {
-    context.putConnection("type", "connId");
-    Mockito.verify(parentContext).putConnection("type", "connId");
+  public void testGetConnections() {
+    context.getConnections();
+    Mockito.verify(parentContext).getConnections();
     Mockito.verifyNoMoreInteractions(parentContext);
   }
 

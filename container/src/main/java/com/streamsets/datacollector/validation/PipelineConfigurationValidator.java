@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
@@ -48,6 +49,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,9 +69,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       BuildInfo buildInfo,
       String name,
       PipelineConfiguration pipelineConfiguration,
-      String user
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
-    this(stageLibrary, buildInfo, name, pipelineConfiguration, null, null, user);
+    this(stageLibrary, buildInfo, name, pipelineConfiguration, null, null, user, connections);
   }
 
   public PipelineConfigurationValidator(
@@ -79,9 +82,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       PipelineConfiguration pipelineConfiguration,
       Configuration dataCollectorConfiguration,
       RuntimeInfo runtimeInfo,
-      String user
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
-    super(stageLibrary, buildInfo, name, pipelineConfiguration, user);
+    super(stageLibrary, buildInfo, name, pipelineConfiguration, user, connections);
     this.pipelineConfiguration = pipelineConfiguration;
     this.dataCollectorConfiguration = dataCollectorConfiguration;
     this.runtimeInfo = runtimeInfo;
@@ -351,6 +355,7 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       pipelineConfiguration,
       null,
       user,
+      connections,
       errors
     );
     StageConfiguration pipelineConfs = PipelineBeanCreator.getPipelineConfAsStageConf(pipelineConfiguration);

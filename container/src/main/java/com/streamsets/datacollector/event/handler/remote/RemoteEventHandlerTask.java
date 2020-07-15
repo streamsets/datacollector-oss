@@ -1228,7 +1228,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Runner runner = remoteDataCollector.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
       if (runner != null) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(runner.getPipelineConfiguration(pipelineState.getUser()), new ArrayList<>(), null, null);
+            .create(runner.getPipelineConfiguration(pipelineState.getUser()), new ArrayList<>(), null, null, null);
         SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
 
         Object metrics = runner.getMetrics();

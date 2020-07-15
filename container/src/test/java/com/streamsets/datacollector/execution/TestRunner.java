@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.alerts.AlertInfo;
 import com.streamsets.datacollector.execution.runner.common.PipelineRunnerException;
@@ -45,6 +46,11 @@ public class TestRunner {
 
     @Override
     public String getRev() {
+      return null;
+    }
+
+    @Override
+    public Map<String, ConnectionConfiguration> getConnections() {
       return null;
     }
 
@@ -236,6 +242,11 @@ public class TestRunner {
 
     @Override
     public String getRev() {
+      return null;
+    }
+
+    @Override
+    public Map<String, ConnectionConfiguration> getConnections() {
       return null;
     }
 
