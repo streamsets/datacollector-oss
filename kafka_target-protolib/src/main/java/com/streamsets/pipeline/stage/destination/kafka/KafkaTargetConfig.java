@@ -347,7 +347,7 @@ public class KafkaTargetConfig {
   }
 
   public void init(Stage.Context context, DataFormat dataFormat, boolean sendResponse, List<Stage.ConfigIssue> issues) {
-    kafkaKerberosUtil = KafkaKerberosUtil.getInstance();
+    kafkaKerberosUtil = new KafkaKerberosUtil(context.getConfiguration());
     Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
     dataGeneratorFormatConfig.init(
         context,

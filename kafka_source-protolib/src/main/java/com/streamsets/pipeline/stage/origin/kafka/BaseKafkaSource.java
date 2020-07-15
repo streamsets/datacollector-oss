@@ -81,7 +81,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
-    kafkaKerberosUtil = KafkaKerberosUtil.getInstance();
+    kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
     Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 

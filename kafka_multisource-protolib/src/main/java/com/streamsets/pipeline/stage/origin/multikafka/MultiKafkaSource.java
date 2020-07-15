@@ -391,7 +391,7 @@ public class MultiKafkaSource extends BasePushSource {
   @Override
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
-    kafkaKerberosUtil = KafkaKerberosUtil.getInstance();
+    kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
     Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
 
     conf.init(getContext(), issues);

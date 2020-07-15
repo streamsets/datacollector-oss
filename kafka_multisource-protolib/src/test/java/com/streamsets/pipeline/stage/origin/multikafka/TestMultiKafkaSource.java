@@ -61,11 +61,6 @@ public class TestMultiKafkaSource {
     KafkaConsumerLoader.isTest = true;
   }
 
-  @BeforeClass
-  public static void initializeKafkaKerberosUtil() {
-    KafkaKerberosUtil.initializeAndGet(new Configuration());
-  }
-
   @After
   public void tearDown() {
     KafkaConsumerLoader.isTest = false;

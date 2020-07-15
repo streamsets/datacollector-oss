@@ -64,12 +64,20 @@ public class TempKeytabManager {
    * Constructs a temporary keytab manager, using the given container {@link Configuration}, setting the temporary
    * keytab location from the given property (with given default value), and with the given subdirectory name.
    *
-   * The constructor attempts to create this temp directory, and throws an {@link IllegalStateException} if that fails
+   * The overall directory where the temp keytabs will be stored is:
    *
-   * @param configuration
-   * @param baseDirKey
-   * @param baseDirDefaultValue
-   * @param subdirName
+   * <pre>/<baseDir>/<subdirName>/<userName></pre>
+   *
+   * Where baseDir is resolved as per the given configuration properties (and params; see below), and subdirName
+   * is taken from the parameter, and userName is taken from the current user running the process. The last portion is
+   * to ensure that if different uids run this code in different contexts (ex: container versus cluster mode), then
+   * they don't interfere with each others' temp keytab stores.
+   *
+   * @param configuration the product {@link Configuration}
+   * @param baseDirKey the key in the properties file pointing to the top level temp keytab dir
+   * @param baseDirDefaultValue the default value for the aforementioned property
+   * @param subdirName the subdirectory name within the top level directory for the implementation-specific
+   *                   temporary keytab store
    * @throws IllegalStateException
    */
   public TempKeytabManager(
@@ -85,7 +93,15 @@ public class TempKeytabManager {
     this.subdirName = subdirName;
   }
 
-  public void ensureKeytabTempDir() {
+  /**
+   * Ensures that the temp keytab directory (including top level and user-specific subdir) exists and has the
+   * proper permissions.
+   *
+   * Synchronized to ensure that if multiple threads both attempt to store a temp keytab at the same time,
+   * only one will attempt create a missing directory.
+   */
+  @VisibleForTesting
+  synchronized void ensureKeytabTempDir() {
     final String keytabDir = configuration.get(baseDirKey, baseDirDefaultValue);
     final Path keytabDirPath = keytabDirHelper(
         Paths.get(keytabDir, subdirName),
@@ -121,13 +137,18 @@ public class TempKeytabManager {
    * temporary keytab file on disk will be deleted either when {@link #deleteTempKeytabFileIfExists(String)} is called,
    * or the JVM exits (whichever happens first).
    *
+   * This method is overall thread-safe. If multiple threads attempt to create a temp keytab file at the same time,
+   * they should generate distinct UUIDs so there should not be a clash. If the overall temp keytab directory does not
+   * yet exist (see constructor Javadoc for details), then it will be created in a synchronized block.
+   *
    * @param keytabContentsBase64 the contents of the keytab (binary data encoded to a Base64 String), to be written to
    *                             the temporary keytab file
    * @return the generated keytab name
    * @throws IOException if an error occurs when creating or writing the temp keytab file
    * @throws IllegalStateException if the keytab temp directory was not in the correct state (writeable directory)
    */
-  public synchronized String createTempKeytabFile(String keytabContentsBase64) throws IOException, IllegalStateException {
+  public String createTempKeytabFile(String keytabContentsBase64) throws IOException, IllegalStateException {
+    ensureKeytabTempDir();
     Utils.checkNotNull(tempKeytabDir, "tempKeytabDir");
     final String keytabFileName = UUID.randomUUID().toString();
     final Path keytabPath = tempKeytabDir.resolve(keytabFileName);
@@ -170,7 +191,6 @@ public class TempKeytabManager {
       LOG.debug("deleteTempKeytabFileIfExists was called with a null keytabFileName");
       return;
     }
-    ensureKeytabTempDir();
     final Path keytabPath = tempKeytabDir.resolve(keytabFileName);
     if (!Files.exists(keytabPath)) {
       LOG.warn("Could not delete keytab at {}; file did not exist", keytabPath.toString());

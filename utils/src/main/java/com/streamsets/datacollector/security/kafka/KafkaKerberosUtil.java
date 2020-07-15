@@ -41,39 +41,8 @@ public class KafkaKerberosUtil extends TempKeytabManager {
   private static final String KAFKA_JAAS_CONFIG = "com.sun.security.auth.module.Krb5LoginModule required " +
       "useKeyTab=true keyTab=\"%s\" principal=\"%s\";";
 
-  private KafkaKerberosUtil(Configuration configuration) throws IllegalStateException {
+  public KafkaKerberosUtil(Configuration configuration) throws IllegalStateException {
     super(configuration, KAFKA_KEYTAB_LOCATION_KEY, KAFKA_DEFAULT_KEYTAB_LOCATION, KAFKA_KEYTAB_SUBDIR);
-  }
-
-  /**
-   * HACK ALERT: see SDC-15032
-   */
-  private static KafkaKerberosUtil INSTANCE = null;
-
-  public static KafkaKerberosUtil getInstance() {
-    if (INSTANCE == null) {
-      throw new IllegalStateException("INSTANCE has not been initialized yet");
-    }
-    return INSTANCE;
-  }
-
-  public static synchronized KafkaKerberosUtil initializeAndGet(Configuration configuration) {
-    if (INSTANCE != null) {
-      throw new IllegalStateException("INSTANCE is already initialized");
-    }
-    INSTANCE = new KafkaKerberosUtil(configuration);
-    return getInstance();
-  }
-
-  public static synchronized void destroyInstance() {
-    if (INSTANCE != null) {
-      try {
-        INSTANCE.cleanUpKeytabDirectory();
-      } catch (IOException e) {
-        LOG.error("IOException attempting to clean up temp keytab directory: {}", e.getMessage(), e);
-      }
-      INSTANCE = null;
-    }
   }
 
   public String saveUserKeytab(

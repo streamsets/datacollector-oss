@@ -62,6 +62,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
-  private KafkaKerberosUtil kafkaKerberosUtil;
+  private final KafkaKerberosUtil kafkaKerberosUtil;
 
   public StandaloneAndClusterPipelineManager(ObjectGraph objectGraph) {
     super(PIPELINE_MANAGER);
@@ -127,7 +128,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     runnerExpiryInitialDelay = configuration.get(RUNNER_EXPIRY_INITIAL_DELAY, DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY);
     eventListenerManager.addStateEventListener(resourceManager);
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
-
+    kafkaKerberosUtil = new KafkaKerberosUtil(configuration);
   }
 
   @Override
@@ -385,20 +386,17 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Override
   protected void initTask() {
     if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
-      LOG.debug("Initializing task for Data Collector; attempting to clean existing Kafka temp keytab directory");
+      LOG.debug("Initializing task for Data Collector; attempting to clean any existing Kafka temp keytab directory");
       cleanUpKafkaKeytabDir();
-      createAndRestrictKafkaKeytabDir();
     }
   }
 
-  private void createAndRestrictKafkaKeytabDir() {
-    LOG.debug("Attempting to initialize Kafka temp keytab manager and create directory");
-    kafkaKerberosUtil = KafkaKerberosUtil.initializeAndGet(configuration);
-    kafkaKerberosUtil.ensureKeytabTempDir();
-  }
-
   private void cleanUpKafkaKeytabDir() {
-    KafkaKerberosUtil.destroyInstance();
+    try {
+      kafkaKerberosUtil.cleanUpKeytabDirectory();
+    } catch (IOException e) {
+      LOG.error("IOException attempting to clean up temp keytab directory", e);
+    }
   }
 
   @Override
@@ -431,7 +429,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     if(runnerExpiryFuture != null) {
       runnerExpiryFuture.cancel(true);
     }
-    cleanUpKafkaKeytabDir();
+    if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
+      /**
+       * HACK ALERT: see SDC-15032
+       */
+      cleanUpKafkaKeytabDir();
+    }
     LOG.info("Stopped Production Pipeline Manager");
   }
 
