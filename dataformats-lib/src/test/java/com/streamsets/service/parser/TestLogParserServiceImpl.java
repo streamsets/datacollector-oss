@@ -15,13 +15,16 @@
  */
 package com.streamsets.service.parser;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.record.RecordImpl;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.service.Service;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
+import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.parser.log.Constants;
 import com.streamsets.pipeline.lib.parser.log.RegExConfig;
@@ -200,6 +203,12 @@ public class TestLogParserServiceImpl {
         return stringToReturn.toString();
       }
     });
+    Configuration mockConfig = new Configuration();
+    mockConfig.set(
+        DataFormatConstants.MAX_RUNNERS_CONFIG_KEY,
+        DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE
+    );
+    Mockito.when(context.getConfiguration()).thenReturn(mockConfig);
   }
 
   private LogParserServiceImpl getDataParserService() {

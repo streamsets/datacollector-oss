@@ -18,6 +18,8 @@ package com.streamsets.pipeline.lib.parser.text;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.common.DataFormatConstants;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -167,43 +169,13 @@ public class TestTextDataParserFactory {
     TextDataParserFactory textDataParserFactory = (TextDataParserFactory) factory.getFactory();
     GenericObjectPool<StringBuilder> stringBuilderPool = textDataParserFactory.getStringBuilderPool();
     Assert.assertNotNull(stringBuilderPool);
-    Assert.assertEquals(1, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxIdle());
     Assert.assertEquals(1, stringBuilderPool.getMinIdle());
-    Assert.assertEquals(1, stringBuilderPool.getMaxTotal());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxTotal());
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
     Assert.assertEquals(0, stringBuilderPool.getNumActive());
 
     DataParser parser = factory.getParser("id", "Hello\\r\\nBye");
-
-    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(1, stringBuilderPool.getNumActive());
-
-    parser.close();
-
-    Assert.assertEquals(1, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(0, stringBuilderPool.getNumActive());
-
-    // Parser with non default string builder pool config
-
-    dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
-    factory = (WrapperDataParserFactory) dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setStringBuilderPoolSize(5)
-      .setConfig(TextDataParserFactory.USE_CUSTOM_DELIMITER_KEY, true)
-      .setConfig(TextDataParserFactory.CUSTOM_DELIMITER_KEY, "\\\\r\\\\n")
-      .build();
-
-    textDataParserFactory = (TextDataParserFactory) factory.getFactory();
-    stringBuilderPool = textDataParserFactory.getStringBuilderPool();
-    Assert.assertNotNull(stringBuilderPool);
-    Assert.assertEquals(5, stringBuilderPool.getMaxIdle());
-    Assert.assertEquals(5, stringBuilderPool.getMinIdle());
-    Assert.assertEquals(5, stringBuilderPool.getMaxTotal());
-
-    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(0, stringBuilderPool.getNumActive());
-
-    parser = factory.getParser("id", "Hello\\r\\nBye");
     DataParser parser2 = factory.getParser("id", "Hello\\r\\nBye");
     DataParser parser3 = factory.getParser("id", "Hello\\r\\nBye");
 
@@ -221,7 +193,6 @@ public class TestTextDataParserFactory {
   @Test
   public void testStringBuilderPoolException() throws Exception {
 
-    // Parser with default string builder pool config
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.TEXT);
     WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
       .setMaxDataLen(1000)
@@ -232,19 +203,21 @@ public class TestTextDataParserFactory {
     TextDataParserFactory textDataParserFactory = (TextDataParserFactory) factory.getFactory();
     GenericObjectPool<StringBuilder> stringBuilderPool = textDataParserFactory.getStringBuilderPool();
     Assert.assertNotNull(stringBuilderPool);
-    Assert.assertEquals(1, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxIdle());
     Assert.assertEquals(1, stringBuilderPool.getMinIdle());
-    Assert.assertEquals(1, stringBuilderPool.getMaxTotal());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxTotal());
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
     Assert.assertEquals(0, stringBuilderPool.getNumActive());
 
-    factory.getParser("id", "Hello\\r\\nBye");
+    for (int i = 0; i < DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE; ++i) {
+      factory.getParser("id" + i, "Hello\\r\\nBye");
+    }
 
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(1, stringBuilderPool.getNumActive());
+    Assert.assertEquals(50, stringBuilderPool.getNumActive());
 
     try {
-      factory.getParser("id", "Hello\\r\\nBye");
+      factory.getParser("id" + (DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE + 1), "Hello\\r\\nBye");
       Assert.fail("Expected IOException which wraps NoSuchElementException since pool is empty");
     } catch (DataParserException e) {
       Assert.assertTrue(e.getCause() instanceof IOException);

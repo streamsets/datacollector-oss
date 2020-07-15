@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.parser.log;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.common.DataFormatConstants;
 import com.streamsets.pipeline.config.LogMode;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -563,7 +564,6 @@ public class TestLogDataParserFactory {
   @Test
   public void testParserFactoryCurrentLineStringBuilderPool() throws Exception {
 
-    // Parser with default string builder pool config
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
       .setMaxDataLen(1000)
@@ -574,27 +574,16 @@ public class TestLogDataParserFactory {
     LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
     GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getCurrentLineBuilderPool();
 
-    testDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 1);
-
-    // Parser with non default string builder pool config
-
-    dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
-    factory = (WrapperDataParserFactory) dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setStringBuilderPoolSize(5)
-      .setMaxDataLen(100)
-      .setMode(LogMode.COMMON_LOG_FORMAT)
-      .build();
-
-    logDataParserFactory = (LogDataParserFactory) factory.getFactory();
-    stringBuilderPool = logDataParserFactory.getCurrentLineBuilderPool();
-    testNonDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 5);
+    testStringBuilderPool(
+        stringBuilderPool,
+        logDataParserFactory,
+        DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE
+    );
   }
 
   @Test
   public void testParserFactoryPreviousLineStringBuilderPool() throws Exception {
 
-    // Parser with default string builder pool config
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
       .setMaxDataLen(1000)
@@ -604,27 +593,16 @@ public class TestLogDataParserFactory {
 
     LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
     GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
-    testDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 1);
-
-    // Parser with non default string builder pool config
-
-    dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
-    factory = (WrapperDataParserFactory) dataParserFactoryBuilder
-      .setMaxDataLen(1000)
-      .setStringBuilderPoolSize(5)
-      .setMaxDataLen(100)
-      .setMode(LogMode.COMMON_LOG_FORMAT)
-      .build();
-
-    logDataParserFactory = (LogDataParserFactory) factory.getFactory();
-    stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
-    testNonDefaultStringBuilderPool(stringBuilderPool, logDataParserFactory, 5);
+    testStringBuilderPool(
+        stringBuilderPool,
+        logDataParserFactory,
+        DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE
+    );
   }
 
   @Test
   public void testStringBuilderPoolException() throws Exception {
 
-    // Parser with default string builder pool config
     DataParserFactoryBuilder dataParserFactoryBuilder = new DataParserFactoryBuilder(getContext(), DataParserFormat.LOG);
     WrapperDataParserFactory factory = (WrapperDataParserFactory) dataParserFactoryBuilder
       .setMaxDataLen(1000)
@@ -635,16 +613,18 @@ public class TestLogDataParserFactory {
     LogDataParserFactory logDataParserFactory = (LogDataParserFactory) factory.getFactory();
     GenericObjectPool<StringBuilder> stringBuilderPool = logDataParserFactory.getPreviousLineBuilderPool();
     Assert.assertNotNull(stringBuilderPool);
-    Assert.assertEquals(1, stringBuilderPool.getMaxIdle());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxIdle());
     Assert.assertEquals(1, stringBuilderPool.getMinIdle());
-    Assert.assertEquals(1, stringBuilderPool.getMaxTotal());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getMaxTotal());
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
     Assert.assertEquals(0, stringBuilderPool.getNumActive());
 
-    factory.getParser("id", "Hello\\r\\nBye");
+    for (int i = 0; i < DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE; ++i) {
+      factory.getParser("id", "Hello\\r\\nBye");
+    }
 
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(1, stringBuilderPool.getNumActive());
+    Assert.assertEquals(DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE, stringBuilderPool.getNumActive());
 
     try {
       factory.getParser("id", "Hello\\r\\nBye");
@@ -656,14 +636,14 @@ public class TestLogDataParserFactory {
 
   }
 
-  private void testDefaultStringBuilderPool(
+  private void testStringBuilderPool(
       GenericObjectPool<StringBuilder> stringBuilderPool,
       LogDataParserFactory factory,
       int poolSize
   ) throws Exception {
     Assert.assertNotNull(stringBuilderPool);
     Assert.assertEquals(poolSize, stringBuilderPool.getMaxIdle());
-    Assert.assertEquals(poolSize, stringBuilderPool.getMinIdle());
+    Assert.assertEquals(1, stringBuilderPool.getMinIdle());
     Assert.assertEquals(poolSize, stringBuilderPool.getMaxTotal());
     Assert.assertEquals(0, stringBuilderPool.getNumIdle());
     Assert.assertEquals(0, stringBuilderPool.getNumActive());
@@ -676,34 +656,6 @@ public class TestLogDataParserFactory {
     parser.close();
 
     Assert.assertEquals(1, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(0, stringBuilderPool.getNumActive());
-  }
-
-  private void testNonDefaultStringBuilderPool(
-    GenericObjectPool<StringBuilder> stringBuilderPool,
-    LogDataParserFactory factory,
-    int poolSize
-  ) throws Exception {
-    Assert.assertNotNull(stringBuilderPool);
-    Assert.assertEquals(poolSize, stringBuilderPool.getMaxIdle());
-    Assert.assertEquals(poolSize, stringBuilderPool.getMinIdle());
-    Assert.assertEquals(poolSize, stringBuilderPool.getMaxTotal());
-
-    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(0, stringBuilderPool.getNumActive());
-
-    DataParser parser1 = factory.getParser("id", "Hello\\r\\nBye");
-    DataParser parser2 = factory.getParser("id", "Hello\\r\\nBye");
-    DataParser parser3 = factory.getParser("id", "Hello\\r\\nBye");
-
-    Assert.assertEquals(0, stringBuilderPool.getNumIdle());
-    Assert.assertEquals(3, stringBuilderPool.getNumActive());
-
-    parser1.close();
-    parser2.close();
-    parser3.close();
-
-    Assert.assertEquals(3, stringBuilderPool.getNumIdle());
     Assert.assertEquals(0, stringBuilderPool.getNumActive());
   }
 

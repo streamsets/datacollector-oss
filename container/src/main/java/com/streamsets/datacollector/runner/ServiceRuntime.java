@@ -150,6 +150,7 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   }
 
   @Override // From DataFormatParserService
+  @Deprecated
   public void setStringBuilderPoolSize(int poolSize) {
     LambdaUtil.privilegedWithClassLoader(
       serviceBean.getDefinition().getStageClassLoader(),
@@ -158,6 +159,7 @@ public class ServiceRuntime implements DataFormatGeneratorService, DataFormatPar
   }
 
   @Override // From DataFormatParserService
+  @Deprecated
   public int getStringBuilderPoolSize() {
     return LambdaUtil.privilegedWithClassLoader(
         serviceBean.getDefinition().getStageClassLoader(),

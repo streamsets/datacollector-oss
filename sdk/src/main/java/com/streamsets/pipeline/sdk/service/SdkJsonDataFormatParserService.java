@@ -79,11 +79,13 @@ public class SdkJsonDataFormatParserService extends BaseService implements DataF
   }
 
   @Override
+  @Deprecated
   public void setStringBuilderPoolSize(int poolSize) {
     // Throw away in this test case.
   }
 
   @Override
+  @Deprecated
   public int getStringBuilderPoolSize() {
     return 1;
   }

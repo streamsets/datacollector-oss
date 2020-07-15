@@ -1162,8 +1162,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
   public List<String> excelSheetNames = Collections.emptyList();
 
   // Size of StringBuilder pool maintained by Text and Log Data Parser Factories.
-  // The default value is 1 for regular origins. Multithreaded origins should override this value as required.
-  public int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
+  // It is equal to the max number of runners in multi-threaded pipelines configured in sdc.properties,
+  // with a default value of 50.
+  public int stringBuilderPoolSize;
 
   @Override
   public boolean init(
@@ -1241,6 +1242,10 @@ public class DataParserFormatConfig implements DataFormatConfig {
       ));
       return false;
     }
+    stringBuilderPoolSize = context.getConfiguration().get(
+        DataFormatConstants.MAX_RUNNERS_CONFIG_KEY,
+        DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE
+    );
     switch (dataFormat) {
       case JSON:
         valid = validateJson(context, configPrefix, issues);

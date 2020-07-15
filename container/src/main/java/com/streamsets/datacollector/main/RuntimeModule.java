@@ -59,6 +59,10 @@ public class RuntimeModule {
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
+  private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
+  private static final String STAGE_CONFIG_PREFIX = "stage.conf_";
+  private static final int DEFAULT_MAX_RUNNERS = 50;
+
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
     stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);
   }
@@ -100,6 +104,11 @@ public class RuntimeModule {
     Configuration.setFileRefsBaseDir(new File(runtimeInfo.getConfigDir()));
     Configuration conf = new Configuration();
     RuntimeInfo.loadOrReloadConfigs(runtimeInfo, conf);
+
+    // remapping max runner config so it is available to stages
+    int maxRunners = conf.get(MAX_RUNNERS_CONFIG_KEY, DEFAULT_MAX_RUNNERS);
+    conf.set(STAGE_CONFIG_PREFIX + MAX_RUNNERS_CONFIG_KEY, maxRunners);
+
     return conf;
   }
 
