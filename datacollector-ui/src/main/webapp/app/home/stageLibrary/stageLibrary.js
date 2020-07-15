@@ -114,7 +114,7 @@ angular
 
       var libraryList = _.chain($scope.stageLibraries)
         .filter(function (stageLibrary) {
-          return stageLibrary.library !== 'streamsets-datacollector-stats-lib';
+          return stageLibrary.library && stageLibrary.library !== 'streamsets-datacollector-stats-lib';
         })
         .sortBy('libraryLabel')
         .pluck("library")
