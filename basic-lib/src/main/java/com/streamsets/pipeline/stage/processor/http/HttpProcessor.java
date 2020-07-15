@@ -15,7 +15,11 @@
  */
 package com.streamsets.pipeline.stage.processor.http;
 
+import com.amazonaws.util.IOUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
 import com.google.common.util.concurrent.RateLimiter;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
@@ -24,9 +28,12 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.HttpClientCommon;
@@ -34,10 +41,13 @@ import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.origin.http.PaginationMode;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,21 +55,29 @@ import org.slf4j.LoggerFactory;
 import javax.ws.rs.client.AsyncInvoker;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import static com.streamsets.pipeline.lib.http.Errors.HTTP_66;
 
 /**
  * Processor that makes HTTP requests and stores the parsed or unparsed result in a field on a per record basis.
@@ -69,17 +87,34 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpProcessor.class);
   private static final String REQUEST_BODY_CONFIG_NAME = "requestBody";
+  private static final String RESOURCE_CONFIG_NAME = "resourceUrl";
   private static final String REQUEST_STATUS_CONFIG_NAME = "HTTP-Status";
+  private static final String STOP_CONFIG_NAME = "stopCondition";
+  private static final String START_AT = "startAt";
+  private static final HashFunction HF = Hashing.sha256();
 
+  private static final Set<PaginationMode> LINK_PAGINATION = ImmutableSet.of(
+      PaginationMode.LINK_HEADER,
+      PaginationMode.LINK_FIELD
+  );
+
+  private Link next;
+  private String resolvedUrl;
   private HttpProcessorConfig conf;
   private final HttpClientCommon httpClientCommon;
   private DataParserFactory parserFactory;
   private ErrorRecordHandler errorRecordHandler;
   private RateLimiter rateLimiter;
   private Response response;
+  private boolean lastRequestTimedOut = false;
+  private boolean haveMorePages;
 
+  private ELVars resourceVars;
   private ELVars bodyVars;
   private ELEval bodyEval;
+  private ELEval resourceEval;
+  private ELEval stopEval;
+  private ELVars stopVars;
 
   private class HeadersAndBody {
     final MultivaluedMap<String, Object> resolvedHeaders;
@@ -137,6 +172,15 @@ public class HttpProcessor extends SingleLaneProcessor {
     bodyVars = getContext().createELVars();
     bodyEval = getContext().createELEval(REQUEST_BODY_CONFIG_NAME);
 
+    resourceVars = getContext().createELVars();
+    resourceEval = getContext().createELEval(RESOURCE_CONFIG_NAME);
+
+    stopVars = getContext().createELVars();
+    stopEval = getContext().createELEval(STOP_CONFIG_NAME);
+
+    next = null;
+    haveMorePages = false;
+
     if (issues.isEmpty()) {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
@@ -154,17 +198,147 @@ public class HttpProcessor extends SingleLaneProcessor {
     super.destroy();
   }
 
+  /**
+   * Returns true if the batchWaitTime has expired and we should return from produce
+   *
+   * @param start the time in milliseconds at which this produce call began
+   * @return whether or not to return the batch as-is
+   */
+  private boolean waitTimeExpired(long start) {
+    return (System.currentTimeMillis() - start) > conf.basic.maxWaitTime;
+  }
+
+
+
+
+  /**
+   * Sets the startAt EL variable in scope for the resource and request body.
+   * If the source offset is null (origin was reset) then the initial value
+   * from the user provided configuration is used.
+   */
+  private void initPageOffset() {
+    switch (conf.pagination.mode){
+      case LINK_HEADER:
+      case LINK_FIELD:
+      case BY_OFFSET:
+      case BY_PAGE:
+        int startAt = conf.pagination.startAt;
+        resourceVars.addVariable(START_AT, startAt);
+        bodyVars.addVariable(START_AT, startAt);
+        break;
+      default:
+    }
+  }
+
+  @VisibleForTesting
+  String resolveInitialUrl(Record record) throws ELEvalException {
+    RecordEL.setRecordInContext(resourceVars, record);
+    TimeEL.setCalendarInContext(resourceVars, Calendar.getInstance());
+    TimeNowEL.setTimeNowInContext(resourceVars, new Date());
+    return resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
+  }
+
+  /**
+   * Helper method to construct an HTTP request and fetch a response.
+   *
+   * @param target the target url to fetch.
+   * @throws StageException if an unhandled error is encountered
+   */
+  private Future<Response> makeRequest(WebTarget target, Record record) throws StageException {
+    MultivaluedMap<String, Object> resolvedHeaders = httpClientCommon.resolveHeaders(conf.headers, record);
+    String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, conf.defaultRequestContentType);
+    final AsyncInvoker asyncInvoker = target.request()
+        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
+        .headers(resolvedHeaders)
+        .async();
+
+    HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
+    Future<Response> futureResp = null;
+
+    long startTime = System.currentTimeMillis();
+
+
+      try {
+        rateLimiter.acquire();
+        if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
+          RecordEL.setRecordInContext(bodyVars, record);
+          final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+          resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, requestBody, contentType, method, target));
+          futureResp = asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType));
+
+        } else {
+          resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, null, null, method, target));
+          futureResp = asyncInvoker.method(method.getLabel());
+        }
+        LOG.debug("Retrieved response in {} ms", System.currentTimeMillis() - startTime);
+        lastRequestTimedOut = false;
+      } catch (Exception e) {
+        LOG.debug("Request failed after {} ms", System.currentTimeMillis() - startTime);
+        final Throwable cause = e.getCause();
+        if (cause != null && (cause instanceof TimeoutException || cause instanceof SocketTimeoutException)) {
+          LOG.warn(
+              "{} attempting to read response in HttpClientSource: {}",
+              cause.getClass().getSimpleName(),
+              e.getMessage(),
+              e
+          );
+
+          lastRequestTimedOut = true;
+
+        } else if (cause != null && cause instanceof InterruptedException) {
+          LOG.error(
+              String.format(
+                  "InterruptedException attempting to make request in HttpClientSource; stopping: %s",
+                  e.getMessage()
+              ),
+              e);
+
+        } else {
+          LOG.error(
+              String.format(
+                  "ProcessingException attempting to make request in HttpClientSource: %s",
+                  e.getMessage()
+              ),
+              e);
+          Throwable reportEx = cause != null ? cause : e;
+          final StageException stageException = new StageException(Errors.HTTP_32, getResponseStatus(), reportEx.toString(), reportEx);
+          LOG.error(stageException.getMessage());
+          throw stageException;
+        }
+
+
+    }
+
+    return futureResp;
+  }
+
+
+  @VisibleForTesting
+  int getCurrentPage() {
+    // Body params take precedence, but usually only one or the other should be used.
+    if (bodyVars.hasVariable(START_AT)) {
+      return (int) bodyVars.getVariable(START_AT);
+    } else if (resourceVars.hasVariable(START_AT)) {
+      return (int) resourceVars.getVariable(START_AT);
+    }
+    return 0;
+  }
+
+
   /** {@inheritDoc} */
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
-    List<Future<Response>> responses = new ArrayList<>();
     resolvedRecords.clear();
-
+    long start = System.currentTimeMillis();
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
 
+      boolean uninterrupted = true;
       Record record = records.next();
-      String resolvedUrl = httpClientCommon.getResolvedUrl(conf.resourceUrl, record);
+      int countPages = conf.pagination.startAt;
+      initPageOffset();
+
+      String resolvedUrl = resolveInitialUrl(record);
       WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
 
       LOG.debug("Resolved HTTP Client URL: '{}'",resolvedUrl);
@@ -175,68 +349,165 @@ public class HttpProcessor extends SingleLaneProcessor {
         throw new StageException(Errors.HTTP_07);
       }
 
-      // from HttpStreamConsumer
-      final MultivaluedMap<String, Object> resolvedHeaders = httpClientCommon.resolveHeaders(conf.headers, record);
+      List<Record> addToBatchRecords = new ArrayList<>();
+      boolean close;
+      List<Record> recordsResponse;
 
-      String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, conf.defaultRequestContentType);
+      Record currentRecord = null;
 
-      final AsyncInvoker asyncInvoker = target.request()
-          .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
-          .headers(resolvedHeaders)
-          .async();
+      do{
 
-      HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
+        recordsResponse=new ArrayList<>();
 
-      rateLimiter.acquire();
-      if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
-        RecordEL.setRecordInContext(bodyVars, record);
-        final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
-        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, requestBody, contentType, method, target));
-        responses.add(asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType)));
-      } else {
-        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, null, null, method, target));
-        responses.add(asyncInvoker.method(method.getLabel()));
-      }
-    }
+        Future<Response> future = makeRequest(target, record);
 
-    records = batch.getRecords();
-    int recordNum = 0;
-    while (records.hasNext()) {
-      try {
-        Record inRec = records.next();
-        List<Record> recordsResponse = processResponse(inRec, responses.get(recordNum), conf.maxRequestCompletionSecs, false);
-        Response response = null;
+        int numRecordsLastRequest = 0;
+
         try {
-          response = responses.get(recordNum).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
-        } catch (InterruptedException | ExecutionException e) {
-          LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(response), e.toString(), e);
-          throw new OnRecordErrorException(inRec, Errors.HTTP_03, getResponseStatus(response), e.toString());
-        } catch (TimeoutException e) {
-          LOG.error("HTTP request future timed out", e.toString(), e);
-          throw new OnRecordErrorException(inRec , Errors.HTTP_03, getResponseStatus(response), e.toString());
+          close = processResponse(record, future, conf.maxRequestCompletionSecs, false, recordsResponse);
+
+          Response response = null;
+          try {
+            response = future.get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
+          } catch (InterruptedException | ExecutionException e) {
+            LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(response), e.toString(), e);
+            throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(response), e.toString());
+          } catch (TimeoutException e) {
+            LOG.error("HTTP request future timed out", e.toString(), e);
+            throw new OnRecordErrorException(record , Errors.HTTP_03, getResponseStatus(response), e.toString());
+          }
+
+          if (conf.pagination.mode != PaginationMode.NONE) {
+            Record recordResp = recordsResponse.get(0);
+            String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
+            List listResponse = (List) recordResp.get(resultFieldPath).getValue();
+            numRecordsLastRequest = listResponse.size();
+            if(currentRecord == null) {
+              currentRecord = recordResp;
+            } else {
+              ((List) currentRecord.get(resultFieldPath).getValue()).addAll(
+                  listResponse
+              );
+            }
+            if(conf.pagination.mode == PaginationMode.BY_PAGE){
+              countPages++;
+            }else{
+              countPages = countPages + numRecordsLastRequest;
+            }
+            String s = resolveNextPageUrl(countPages+"");
+            if(s==null){
+              close = true;
+            }else {
+              target = httpClientCommon.getClient().target(s);
+            }
+            // Pause between paging requests so we don't get rate limited.
+            uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
+          }else{
+            if(recordsResponse.size()>0)currentRecord = recordsResponse.get(0);
+          }
+        } catch (OnRecordErrorException e) {
+          close = true;
+          errorRecordHandler.onError(e);
         }
-        if (recordsResponse != null && response != null) {
-          processRecord(batchMaker, recordsResponse, inRec, response);
+      }while (shouldMakeAnotherRequest(start, uninterrupted, close));
+
+      if (recordsResponse != null && response != null) {
+        addToBatchRecords = processRecord(currentRecord, record, response);
+        for (Record recToAdd : addToBatchRecords) {
+          batchMaker.addRecord(recToAdd);
         }
-      } catch (OnRecordErrorException e) {
-        errorRecordHandler.onError(e);
-      } finally {
-        ++recordNum;
       }
     }
+
     if (!resolvedRecords.isEmpty()) {
       reprocessIfRequired(batchMaker);
     }
+
+  }
+
+  private boolean shouldMakeAnotherRequest(long start, boolean uninterrupted, boolean close) {
+    boolean waitTimeNotExp = !waitTimeExpired(start);
+    boolean thereIsNextLink =
+        (((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER))
+            && haveMorePages)
+            || (conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET);
+    return waitTimeNotExp &&
+        uninterrupted &&
+        !lastRequestTimedOut &&
+        !close &&
+        conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
+        thereIsNextLink;
   }
 
 
-  private void processRecord(SingleLaneBatchMaker batchMaker, List<Record> parsedRecords, Record inRec, Response response) throws OnRecordErrorException {
-    Record firstRecord = null;
-    Field field = null;
-    if(parsedRecords.size()>0) {
-      firstRecord = parsedRecords.get(0);
-      field = inRec.get();
+  /**
+   * Sets the startAt EL variable in scope for the resource and request body.
+   * If the source offset is null (origin was reset) then the initial value
+   * from the user provided configuration is used.
+   *
+   * @param sourceOffset source offset to parse for startAt variable.
+   */
+  private void setPageOffset(String sourceOffset) {
+    if (conf.pagination.mode == PaginationMode.NONE) {
+      return;
     }
+
+    int startAt = conf.pagination.startAt;
+    if (StringUtils.isNotEmpty(sourceOffset) && StringUtils.isNumeric(sourceOffset)) {
+      startAt = Integer.parseInt(sourceOffset);
+    }
+
+    resourceVars.addVariable(START_AT, startAt);
+    bodyVars.addVariable(START_AT, startAt);
+  }
+
+  @VisibleForTesting
+  String getResolvedUrl() {
+    return resolvedUrl;
+  }
+
+  @VisibleForTesting
+  void setResolvedUrl(String resolvedUrl) {
+    this.resolvedUrl = resolvedUrl;
+  }
+
+
+  /**
+   * Returns the URL of the next page to fetch when paging is enabled. Otherwise
+   * returns the previously configured URL.
+   *
+   * @param sourceOffset current source offset
+   * @return next URL to fetch
+   * @throws ELEvalException if the resource expression cannot be evaluated
+   */
+  @VisibleForTesting
+  String resolveNextPageUrl(String sourceOffset) throws ELEvalException {
+    String url;
+    if (LINK_PAGINATION.contains(conf.pagination.mode) && next != null) {
+      url = next.getUri().toString();
+      setResolvedUrl(url);
+    } else if (conf.pagination.mode == PaginationMode.BY_OFFSET || conf.pagination.mode == PaginationMode.BY_PAGE) {
+      if (sourceOffset != null) {
+        setPageOffset(sourceOffset);
+      }
+      url = resourceEval.eval(resourceVars, conf.resourceUrl, String.class);
+    } else {
+      url = getResolvedUrl();
+    }
+    return url;
+  }
+
+
+  private List<Record> processRecord(Record currentRecord, Record inRec, Response response) throws OnRecordErrorException {
+    List<Record> recordsProcessed = new ArrayList<>();
+
+    if(currentRecord==null){
+      return recordsProcessed;
+    }
+
+    Record firstRecord = currentRecord;
+    Field field = inRec.get();
+
     if (field != null) {
       try {
         final String parserId = String.format("%s_%s_%s",
@@ -256,14 +527,13 @@ public class HttpProcessor extends SingleLaneProcessor {
             break;
           case FILE_REF:
             try {
-              parsedRecords.clear();
               final InputStream inputStream = field.getValueAsFileRef().createInputStream(getContext(),
                   InputStream.class
               );
               byte[] fieldData = IOUtils.toByteArray(inputStream);
 
               try (DataParser parser = parserFactory.getParser(parserId, fieldData)) {
-                parsedRecords.add(parser.parse());
+                currentRecord = parser.parse();
               }
 
             } catch (IOException e) {
@@ -278,58 +548,64 @@ public class HttpProcessor extends SingleLaneProcessor {
             }
             break;
           default:
-            throw new OnRecordErrorException(inRec, Errors.HTTP_61, getResponseStatus(response) , conf.outputField, field.getType().name());
+            throw new OnRecordErrorException(
+                inRec,
+                Errors.HTTP_61,
+                getResponseStatus(response),
+                conf.outputField,
+                field.getType().name()
+            );
         }
 
-        if (parsedRecords.isEmpty()) {
-          LOG.warn("No records were parsed from field {} of record {}",
-              conf.outputField,
-              inRec.getHeader().getSourceId()
-          );
-          batchMaker.addRecord(inRec);
-          return;
+        Object currentRecordValue = currentRecord.get().getValue();
+        List<Field> currentRecordList;
+        if (currentRecordValue instanceof List) {
+          currentRecordList = (List<Field>) currentRecordValue;
+        }else{
+          currentRecordList = Arrays.asList(currentRecord.get());
         }
+
         switch (conf.multipleValuesBehavior) {
           case FIRST_ONLY:
-            Map<String, Field> fieldsMap = new HashMap<>((Map<String,Field>)inRec.get().getValue());
-            Field resFieldHeaders = createResponseHeaders(inRec,response);
-            if(resFieldHeaders != null){
-              fieldsMap.put(conf.headerOutputField.replace("/",""),resFieldHeaders);
+            Map<String, Field> fieldsMap = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+            Field resFieldHeaders = createResponseHeaders(inRec, response);
+            if (resFieldHeaders != null) {
+              fieldsMap.put(conf.headerOutputField.replace("/", ""), resFieldHeaders);
             }
-            fieldsMap.put(conf.outputField.replace("/",""),firstRecord.get());
-            Record rec = getContext().cloneRecord(inRec);
-            rec.set(Field.create(fieldsMap));
-            batchMaker.addRecord(rec);
+            fieldsMap.put(conf.outputField.replace("/", ""), currentRecordList.get(0));
+            Record recToAddToBatch = getContext().cloneRecord(inRec);
+            recToAddToBatch.set(Field.create(fieldsMap));
+            recordsProcessed.add(recToAddToBatch);
             break;
           case ALL_AS_LIST:
-            List<Field> multipleFieldValues = new LinkedList<>();
-            parsedRecords.forEach(parsedRecord -> multipleFieldValues.add(parsedRecord.get()));
-            Map<String, Field> fs = new HashMap<>((Map<String,Field>)inRec.get().getValue());
-            Field resField = createResponseHeaders(inRec,response);
-            if(resField != null){
-              fs.put(conf.headerOutputField.replace("/",""),resField);
+            Map<String, Field> fs = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+            Field resField = createResponseHeaders(inRec, response);
+            if (resField != null) {
+              fs.put(conf.headerOutputField.replace("/", ""), resField);
             }
-            fs.put(conf.outputField.replace("/",""),Field.create(multipleFieldValues));
-            Record newRec = getContext().cloneRecord(inRec);
-            newRec.set(Field.create(fs));
-            batchMaker.addRecord(newRec);
+            fs.put(conf.outputField.replace("/", ""), Field.create(currentRecordList));
+            Record recToAddToBatchList = getContext().cloneRecord(inRec);
+            recToAddToBatchList.set(Field.create(fs));
+            recordsProcessed.add(recToAddToBatchList);
             break;
           case SPLIT_INTO_MULTIPLE_RECORDS:
-            int size = parsedRecords.size();
-            for (int i=0; i<size; i++) {
-              Record parsedRecord = parsedRecords.get(i);
-              Map<String, Field> fields = new HashMap<>((Map<String,Field>)inRec.get().getValue());
-              Field responseField = createResponseHeaders(inRec,response);
-              if(responseField != null){
-                fields.put(conf.headerOutputField.replace("/",""),responseField);
+            int size = currentRecordList.size();
+            for (int i = 0; i < size; i++) {
+              Record parsedRecord = getContext().createRecord("");
+              parsedRecord.set(currentRecordList.get(i));
+              Map<String, Field> fields = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+              Field responseField = createResponseHeaders(inRec, response);
+              if (responseField != null) {
+                fields.put(conf.headerOutputField.replace("/", ""), responseField);
               }
-              fields.put(conf.outputField.replace("/",""),parsedRecord.get());
-              Record splitRecord = getContext().cloneRecord(inRec);
-              splitRecord.set(Field.create(fields));
-              batchMaker.addRecord(splitRecord);
+              fields.put(conf.outputField.replace("/", ""), parsedRecord.get());
+              Record recToAddToBatchSplit = getContext().cloneRecord(inRec);
+              recToAddToBatchSplit.set(Field.create(fields));
+              recordsProcessed.add(recToAddToBatchSplit);
             }
             break;
         }
+
       } catch (DataParserException ex) {
         throw new OnRecordErrorException(inRec,
             Errors.HTTP_61,
@@ -343,6 +619,8 @@ public class HttpProcessor extends SingleLaneProcessor {
     } else {
       throw new OnRecordErrorException(inRec, Errors.HTTP_65, getResponseStatus(response), conf.outputField, inRec.getHeader().getSourceId());
     }
+
+    return recordsProcessed;
   }
 
 
@@ -363,7 +641,9 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     for (Map.Entry<Record, Future<Response>> entry : responses.entrySet()) {
       try {
-        List<Record> output = processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true);
+        List<Record> recordsToAddBatch = new ArrayList<>();
+        List<Record> output = new ArrayList<>();
+        processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output);
         Response response = null;
         try {
           response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
@@ -375,7 +655,10 @@ public class HttpProcessor extends SingleLaneProcessor {
           throw new OnRecordErrorException(entry.getKey() , Errors.HTTP_03, getResponseStatus(), e.toString());
         }
         if (output != null && response != null) {
-          processRecord(batchMaker, output, entry.getKey(), response);
+          recordsToAddBatch = processRecord(output.get(0), entry.getKey(), response);
+          for (Record record: recordsToAddBatch) {
+            batchMaker.addRecord(record);
+          }
         }
       } catch (OnRecordErrorException e) {
         errorRecordHandler.onError(e);
@@ -394,11 +677,12 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return parsed record from the request
    * @throws StageException if the request fails, times out, or cannot be parsed
    */
-  private List<Record> processResponse(
+  private boolean processResponse(
       Record record,
       Future<Response> responseFuture,
       long maxRequestCompletionSecs,
-      boolean failOn403
+      boolean failOn403,
+      List<Record> records
   ) throws StageException {
 
     Response response = null;
@@ -413,7 +697,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       int responseStatus = response.getStatus();
       if (conf.client.useOAuth2 && (response.getStatus() == 403 || response.getStatus() == 401) && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
-        return null;
+        return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
         throw new OnRecordErrorException(
@@ -424,11 +708,11 @@ public class HttpProcessor extends SingleLaneProcessor {
         );
       }
       resolvedRecords.remove(record);
-      List<Record> parsedResponse = parseResponse(record, responseBody);
+      boolean close = parseResponse(record, responseBody, records);
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       }
-      return parsedResponse;
+      return close;
     } catch (InterruptedException | ExecutionException e) {
       LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(), e.toString(), e);
       throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(), e.toString());
@@ -450,39 +734,74 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @return an SDC record resulting from the response text
    * @throws StageException if the response could not be parsed
    */
-  private List<Record> parseResponse(Record inRecord, InputStream response) throws StageException {
-    List<Record> records = new ArrayList<Record>();
+  private boolean parseResponse(Record inRecord, InputStream response, List<Record> parsedRecords) throws StageException {
+    boolean close = false;
     if (conf.httpMethod == HttpMethod.HEAD) {
       // Head will have no body so can't be parsed.   Return an empty record.
       Record record = getContext().createRecord("");
       record.set(Field.create(new HashMap()));
-      records.add(record);
+      parsedRecords.add(record);
     } else if (response != null) {
       try (DataParser parser = parserFactory.getParser("", response, "0")) {
         // A response may only contain a single record, so we only parse it once.
         Record record = parser.parse();
+
+        // LINK_FIELD pagination
+        if (conf.pagination.mode == PaginationMode.LINK_FIELD) {
+          // evaluate stopping condition
+          RecordEL.setRecordInContext(stopVars, record);
+          haveMorePages = !stopEval.eval(stopVars, conf.pagination.stopCondition, Boolean.class);
+          if (haveMorePages) {
+            final String nextPageURLPrefix =
+                StringUtils.isNotBlank(conf.pagination.nextPageURLPrefix) ? conf.pagination.nextPageURLPrefix : "";
+            if(!record.has(conf.pagination.nextPageFieldPath)){
+              throw new StageException(HTTP_66, getResponseStatus(), conf.pagination.nextPageFieldPath);
+            }
+            final String nextPageFieldValue = record.get(conf.pagination.nextPageFieldPath).getValueAsString();
+            final String nextPageURL =
+                nextPageFieldValue.startsWith(nextPageURLPrefix) ?
+                    nextPageFieldValue : nextPageURLPrefix.concat(nextPageFieldValue);
+            next = Link.fromUri(nextPageURL).build();
+          } else {
+            next = null;
+          }
+        }
+
+        if (conf.pagination.mode == PaginationMode.LINK_HEADER) {
+          next = getResponse().getLink("next");
+          haveMorePages = true;
+          if (next == null) {
+            haveMorePages = false;
+          }
+        }
+
         while(record!=null){
           if(conf.dataFormat == DataFormat.TEXT) {
             // Output is placed in a field "/text" so we remove it here.
             Record rec = getContext().cloneRecord(inRecord);
             rec.set(record.get("/text"));
-            records.add(rec);
+            parsedRecords.add(rec);
           }else if(conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML){
             if(record.get().getValue() instanceof List) {
-              // JSON Array. It returns all data in a list already. So we split each element of
+              /** // JSON Array. It returns all data in a list already. So we split each element of
               // the list in a separate record.
               ArrayList<Field> list = (ArrayList<Field>) record.get().getValue();
+              close = true;
               for (Field f : list) {
                 Record rec = getContext().cloneRecord(inRecord);
                 rec.set(f);
-                records.add(rec);
-              }
+                parsedRecords.add(rec);
+                close = false;
+              }*/
+              if(parsePaginatedRecord(parsedRecords, record))
+                close = true;
             }else{
               //JSON Object
-              records.add(record);
+              if(parsePaginatedRecord(parsedRecords, record))
+                close = true;
             }
           }else{
-            records.add(record);
+            parsedRecords.add(record);
           }
           record = parser.parse();
         }
@@ -491,11 +810,24 @@ public class HttpProcessor extends SingleLaneProcessor {
         errorRecordHandler.onError(Errors.HTTP_00, getResponseStatus(), e.toString(), e);
       }
     }
-    // Ensure there is always at least one record.
-    if(records.size()==0){
-      records.add(getContext().cloneRecord(inRecord));
+
+    return close;
+  }
+
+  private boolean parsePaginatedRecord(List<Record> records, Record record) {
+    boolean close = false;
+    if(conf.pagination.mode != PaginationMode.NONE){
+      List<Field> value = (List<Field>) record.get(conf.pagination.resultFieldPath).getValue();
+      close = value.isEmpty();
     }
-    return records;
+    if (conf.pagination.mode != PaginationMode.NONE && !conf.pagination.keepAllFields){
+      Record recordPag = getContext().createRecord("");
+      recordPag.set(record.get(conf.pagination.resultFieldPath));
+      records.add(recordPag);
+    }else {
+      records.add(record);
+    }
+    return close;
   }
 
   /**

@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
-import com.streamsets.pipeline.lib.http.Groups;
 
 @StageDef(version = 15,
     label = "HTTP Client",
@@ -43,7 +42,8 @@ import com.streamsets.pipeline.lib.http.Groups;
     onlineHelpRefUrl ="index.html?contextID=task_z54_1qr_fw"
 )
 @HideConfigs(value = {
-    "conf.dataFormatConfig.jsonContent"
+    "conf.dataFormatConfig.jsonContent",
+    "conf.basic.maxBatchSize"
 })
 @ConfigGroups(Groups.class)
 @GenerateResourceBundle
