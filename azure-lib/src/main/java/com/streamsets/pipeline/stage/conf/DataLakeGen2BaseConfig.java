@@ -197,7 +197,7 @@ public class DataLakeGen2BaseConfig {
         );
         break;
       case SHARED_KEY:
-        String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDN;
+        String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDNString;
         String accountKeyString = resolveCredentialValue(context, this.accountKey, "accountKey", issues);
         hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(propertyName, this.accountKey));
         AzureUtils.sendPartnerTaggingRequest(accountFQDNString, accountKeyString);
