@@ -101,7 +101,7 @@ public class TempKeytabManager {
    * only one will attempt create a missing directory.
    */
   @VisibleForTesting
-  synchronized void ensureKeytabTempDir() {
+  public synchronized void ensureKeytabTempDir() {
     final String keytabDir = configuration.get(baseDirKey, baseDirDefaultValue);
     final Path keytabDirPath = keytabDirHelper(
         Paths.get(keytabDir, subdirName),
