@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.startJob;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.startJob.StartJobErrors;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,8 @@ public class TestStartJobSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("Configuration value is required for Job ID"));
+    // Configuration value is required for job ID
+    Assert.assertTrue(issues.get(0).toString().contains(StartJobErrors.START_JOB_06.name()));
   }
 
 }
