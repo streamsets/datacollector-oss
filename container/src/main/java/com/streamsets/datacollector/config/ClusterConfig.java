@@ -157,9 +157,8 @@ public class ClusterConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       defaultValue = "",
-      label = "Keytab",
-      description = "Base64 encoded keytab to use for the pipeline. Paste the contents of the base64 encoded keytab," +
-          " or use a credential function to retrieve the base64 encoded keytab from a credential store.",
+      label = "Keytab Credential Function",
+      description = "Credential function to retrieve the base64 encoded keytab from a credential store.",
       displayPosition = 1150,
       dependsOn = "yarnKerberosKeytabSource",
       triggeredByValue = "PIPELINE_CREDENTIAL_STORE",
