@@ -31,18 +31,12 @@
   <name>StreamSets Data Collector JDBC SAP Hana Lib</name>
 
   <properties>
-    <saphana.version>2.4.76</saphana.version>
     <guava.version>18.0</guava.version>
     <joda.version>2.8</joda.version>
   </properties>
 
 
   <dependencies>
-    <dependency>
-      <groupId>com.sap.cloud.db.jdbc</groupId>
-      <artifactId>ngdbc</artifactId>
-      <version>${saphana.version}</version>
-    </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
