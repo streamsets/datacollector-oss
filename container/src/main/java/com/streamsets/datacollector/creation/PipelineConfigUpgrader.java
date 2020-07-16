@@ -310,11 +310,11 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV17ToV18(List<Config> configs) {
-    addDataprocConfigs(configs);
+    configs.add(new Config("transformerEMRConfig.serviceAccessSecurityGroup", null));
   }
 
   private void upgradeV18ToV19(List<Config> configs) {
-    configs.add(new Config("transformerEMRConfig.serviceAccessSecurityGroup", null));
+    addDataprocConfigs(configs);
   }
 
   private void addEmrConfigs(List<Config> configs, String amazonEmrConfigPrefix) {
