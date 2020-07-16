@@ -78,11 +78,6 @@ public class MockPreviewer implements Previewer {
   }
 
   @Override
-  public Map<String, ConnectionConfiguration> getConnections() {
-    return connections;
-  }
-
-  @Override
   public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
     return interceptorConfs;
   }
@@ -152,5 +147,10 @@ public class MockPreviewer implements Previewer {
       Issues issues = new Issues();
       return new PreviewOutputImpl(PreviewStatus.INVALID, issues, (List)null);
     }
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return null;
   }
 }

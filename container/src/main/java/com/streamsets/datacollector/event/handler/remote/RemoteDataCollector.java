@@ -20,6 +20,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
@@ -246,7 +247,8 @@ public class RemoteDataCollector implements DataCollector {
       final PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl,
-      Map<String, Object> metadata
+      Map<String, Object> metadata,
+      Map<String, ConnectionConfiguration> connections
   ) {
     UUID uuid = null;
     try {
@@ -264,7 +266,7 @@ public class RemoteDataCollector implements DataCollector {
             name,
             pipelineConfiguration,
             user,
-            new HashMap<>()
+            connections
         );
         PipelineConfiguration validatedPipelineConfig = validator.validate();
         //By default encrypt credentials from Remote data collector
@@ -313,7 +315,7 @@ public class RemoteDataCollector implements DataCollector {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null, false);
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null, false, new HashMap<>());
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -332,9 +334,10 @@ public class RemoteDataCollector implements DataCollector {
       long timeoutMillis,
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
-    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false);
+    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
     previewer.validateConfigs(10000l);
 
     if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {

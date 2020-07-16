@@ -43,6 +43,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -79,6 +80,7 @@ public class PreviewPipelineBuilder {
   private final StatsCollector statsCollector;
   private final boolean testOrigin;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
+  private Map<String, ConnectionConfiguration> connections;
 
   /**
    * Constructor
@@ -102,7 +104,8 @@ public class PreviewPipelineBuilder {
     LineagePublisherTask lineagePublisherTask,
     StatsCollector statsCollector,
     boolean testOrigin,
-    List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
+    List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
+    Map<String, ConnectionConfiguration> connections
   ) {
     this.stageLib = new PreviewStageLibraryTask(stageLib);
     this.buildInfo = buildInfo;
@@ -117,6 +120,7 @@ public class PreviewPipelineBuilder {
     this.statsCollector = statsCollector;
     this.testOrigin = testOrigin;
     this.interceptorConfs = interceptorConfs;
+    this.connections = connections;
     PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
   }
 
@@ -170,7 +174,6 @@ public class PreviewPipelineBuilder {
       pipelineConf.setStages(stages);
     }
 
-    HashMap<String, ConnectionConfiguration> connections = new HashMap<>();
     PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
         stageLib,
         buildInfo,
@@ -214,4 +217,11 @@ public class PreviewPipelineBuilder {
     }
   }
 
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return connections;
+  }
+
+  public void setConnections(HashMap<String, ConnectionConfiguration> connections) {
+    this.connections = connections;
+  }
 }

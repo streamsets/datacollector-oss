@@ -43,7 +43,7 @@ public interface Previewer {
 
   String getRev();
 
-  public Map<String, ConnectionConfiguration> getConnections();
+  Map<String, ConnectionConfiguration> getConnections();
 
   List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs();
 

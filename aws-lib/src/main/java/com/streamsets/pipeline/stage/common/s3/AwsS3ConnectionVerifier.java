@@ -15,9 +15,12 @@
  */
 package com.streamsets.pipeline.stage.common.s3;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
@@ -44,7 +47,23 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String BUCKET_EXIST_PREFIX = "streamsets-s3-conn-veri-";
 
-  @ConfigDefBean
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = AwsS3Connection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection"
+  )
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
   public AwsS3Connection connection;
 
   @Override

@@ -19,6 +19,7 @@ import com.codahale.metrics.MetricRegistry;
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricsRuleDefinition;
@@ -858,7 +859,8 @@ public class TestUtil {
             ObjectGraph objectGraph,
             List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
             Function<Object, Void> afterActionsFunction,
-            boolean remote
+            boolean remote,
+            Map<String, ConnectionConfiguration> connections
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());

@@ -17,6 +17,7 @@
 package com.streamsets.datacollector.restapi.connection;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
 import com.streamsets.datacollector.event.dto.EventType;
@@ -24,6 +25,7 @@ import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionPreviewJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
@@ -37,11 +39,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestConnectionVerifierDynamicPreviewHelper {
 
   private ConnectionVerifierDynamicPreviewHelper verifierPreviewHelper;
   private DynamicPreviewRequestJson dynamicPreviewRequest;
+  private ConnectionDefinitionPreviewJson connection;
   private UserJson currentUser;
 
   @Before
@@ -64,14 +68,16 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     config.add(new ConfigConfigurationJson("awsConfig.credentialMode", "WITH_CREDENTIALS"));
     config.add(new ConfigConfigurationJson("awsConfig.awsAccessKeyId", "test-key"));
     config.add(new ConfigConfigurationJson("awsConfig.awsSecretAccessKey", "test-secret"));
-    ConnectionDefinitionPreviewJson connection = new ConnectionDefinitionPreviewJson(
+    connection = new ConnectionDefinitionPreviewJson(
         "1",
-        "AWS_S3",
+        "STREAMSETS_AWS_S3",
         config,
         "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
         "connection",
+        "connectionSelection",
         "streamsets-datacollector-aws-lib"
     );
+    connection.setConnectionId(UUID.randomUUID().toString());
 
     Map<String, Object> params = new HashMap<>();
     params.put("connection", connection);
@@ -88,7 +94,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
 
   @Test
   public void testGetVerifierDynamicPreviewPipeline() throws IOException {
-    PipelineEnvelopeJson verifierPipeline = verifierPreviewHelper.getVerifierDynamicPreviewPipeline(dynamicPreviewRequest);
+    PipelineEnvelopeJson verifierPipeline = verifierPreviewHelper.getVerifierDynamicPreviewPipeline(connection);
 
     // assert pipeline configuration
     Assert.assertTrue(verifierPipeline.getPipelineConfig().getPipelineId().contains("-Dynamic-Preview"));
@@ -104,12 +110,11 @@ public class TestConnectionVerifierDynamicPreviewHelper {
 
     // assert verifier stage configuration
     StageConfigurationJson verifierStage = verifierPipeline.getPipelineConfig().getStages().get(0);
-    Assert.assertEquals("AmazonS3ConnectionVerifier_01", verifierStage.getInstanceName());
-    Assert.assertEquals("streamsets-datacollector-aws-lib", verifierStage.getLibrary());
-    Assert.assertEquals("com_streamsets_pipeline_stage_common_s3_AwsS3ConnectionVerifier", verifierStage.getStageName());
-    Assert.assertEquals("WITH_CREDENTIALS", verifierStage.getConfig("connection.awsConfig.credentialMode").getValue());
-    Assert.assertEquals("test-key", verifierStage.getConfig("connection.awsConfig.awsAccessKeyId").getValue());
-    Assert.assertEquals("test-secret", verifierStage.getConfig("connection.awsConfig.awsSecretAccessKey").getValue());
+    Assert.assertEquals(connection.getVerifierStageName().concat("_01"), verifierStage.getInstanceName());
+    Assert.assertEquals(connection.getLibrary(), verifierStage.getLibrary());
+    Assert.assertEquals(connection.getVerifierStageName(), verifierStage.getStageName());
+    Assert.assertEquals(connection.connectionId, verifierStage.getConfig(connection.getVerifierConnectionSelectionFieldName()).getValue());
+
     Assert.assertEquals(ImmutableList.of(), verifierStage.getInputLanes());
     Assert.assertEquals(ImmutableList.of("DevRawDataSource_01OutputLane15397448822820"), verifierStage.getOutputLanes());
     Assert.assertEquals(ImmutableList.of(), verifierStage.getEventLanes());
@@ -118,7 +123,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
 
   @Test
   public void testGetVerifierDynamicPreviewEvent() throws IOException {
-    PipelineEnvelopeJson verifierPipeline = verifierPreviewHelper.getVerifierDynamicPreviewPipeline(dynamicPreviewRequest);
+    PipelineEnvelopeJson verifierPipeline = verifierPreviewHelper.getVerifierDynamicPreviewPipeline(connection);
     String pipelineId = verifierPipeline.getPipelineConfig().getPipelineId();
     DynamicPreviewEventJson dynamicPreviewEvent = verifierPreviewHelper
         .getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);
@@ -169,5 +174,31 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     Assert.assertEquals(pipelineId, deleteEvent.getName());
     Assert.assertEquals("admin", deleteEvent.getUser());
     Assert.assertEquals("0", deleteEvent.getRev());
+  }
+
+  @Test
+  public void testGetVerifierConfiguration() {
+    Map<String, ConnectionConfiguration> connections = verifierPreviewHelper.getVerifierConfigurationJson(connection);
+    Assert.assertNotNull(connections.get(connection.getConnectionId()));
+    ConnectionConfiguration connectionConfiguration = connections.get(connection.getConnectionId());
+    Assert.assertEquals(BeanHelper.unwrapConfigConfiguration(connection.getConfiguration()), connectionConfiguration.getConfiguration());
+    Assert.assertEquals(connection.getType(), connectionConfiguration.getType());
+    Assert.assertEquals(connection.getVersion(), String.valueOf(connectionConfiguration.getVersion()));
+    Assert.assertEquals(connection.getLibrary(), connectionConfiguration.getLibrary());
+  }
+
+  @Test
+  public void testGetConnectionPreview() {
+    ConnectionDefinitionPreviewJson parsedConnection = verifierPreviewHelper.getConnectionPreviewJson(dynamicPreviewRequest);
+    Assert.assertEquals(parsedConnection.getVerifierStageName(), connection.getVerifierStageName());
+    Assert.assertEquals(parsedConnection.getVerifierConnectionFieldName(), connection.getVerifierConnectionFieldName());
+    Assert.assertEquals(parsedConnection.getVerifierConnectionSelectionFieldName(), connection.getVerifierConnectionSelectionFieldName());
+    Assert.assertEquals(parsedConnection.getType(), connection.getType());
+    Assert.assertEquals(parsedConnection.getLibrary(), connection.getLibrary());
+    Assert.assertEquals(parsedConnection.getVersion(), connection.getVersion());
+    Assert.assertEquals(parsedConnection.getConfiguration().size(), connection.getConfiguration().size());
+    for (ConfigConfigurationJson config : connection.getConfiguration()) {
+      Assert.assertNotNull(parsedConnection.getConfiguration().contains(config));
+    }
   }
 }

@@ -164,7 +164,8 @@ public class TestRemoteDataCollector {
         String rev,
         List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
         Function<Object, Void> afterActionsFunction,
-        boolean remote
+        boolean remote,
+        Map<String, ConnectionConfiguration> connections
     ) throws PipelineStoreException {
       final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
       Previewer previewer = mockPreviewer;
@@ -995,7 +996,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         acl,
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        new HashMap<>()
     );
     Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq("foo"), Mockito.eq(acl));
   }
@@ -1063,7 +1065,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         new Acl(),
-        Collections.emptyMap()
+        Collections.emptyMap(),
+        new HashMap<>()
     );
     Mockito.verify(pipelineStoreTask).save(
         Mockito.eq("user"),
@@ -1108,7 +1111,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         new Acl(),
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        new HashMap<>()
     );
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
     assertEquals(
@@ -1296,7 +1300,8 @@ public class TestRemoteDataCollector {
         p -> {
           this.afterActionsFunctionParam = p;
           return null;
-        }
+        },
+        new HashMap<>()
     );
     final MockPreviewer lastPreviewer = manager.getLastPreviewer();
 

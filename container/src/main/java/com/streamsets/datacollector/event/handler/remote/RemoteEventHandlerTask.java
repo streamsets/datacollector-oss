@@ -25,6 +25,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -406,7 +407,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   }
 
   @Override
-  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleLocalEvent(
+      Event event,
+      EventType eventType,
+      Map<String, ConnectionConfiguration> connections
+  ) {
     RemoteDataCollectorResult result;
     try {
       switch (eventType) {
@@ -441,11 +446,12 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelinePreviewEvent.getTimeoutMillis(),
               pipelinePreviewEvent.isTestOrigin(),
               pipelinePreviewEvent.getInterceptorConfiguration(),
-              pipelinePreviewEvent.getAfterActionsFunction()
+              pipelinePreviewEvent.getAfterActionsFunction(),
+              connections
           ));
           break;
         default:
-          result = handleEventHelper(event, eventType);
+          result = handleEventHelper(event, eventType, connections);
           break;
       }
     } catch (Exception e) {
@@ -460,10 +466,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   }
 
   @Override
-  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType, Map<String, ConnectionConfiguration> connections) {
     RemoteDataCollectorResult result;
     try {
-      result = handleEventHelper(event, eventType);
+      result = handleEventHelper(event, eventType, connections);
     } catch (Exception ex) {
       LOG.error("Encountered exception handling remote event type: '{}': {}", eventType, ex.getMessage(), ex);
       result = RemoteDataCollectorResult.error(Utils.format(
@@ -475,7 +481,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     return result;
   }
 
-  private RemoteDataCollectorResult handleEventHelper(Event event, EventType eventType) throws Exception {
+  private RemoteDataCollectorResult handleEventHelper(
+      Event event,
+      EventType eventType,
+      Map<String, ConnectionConfiguration> connections
+  ) throws Exception {
     RemoteDataCollectorResult result = RemoteDataCollectorResult.empty();
     switch (eventType) {
       case PING_FREQUENCY_ADJUSTMENT:
@@ -505,7 +515,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
             BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
             pipelineSaveEvent.getAcl(),
-            new HashMap<>()
+            new HashMap<>(),
+            connections
         );
         result = RemoteDataCollectorResult.immediate(pipelineId);
         break;
@@ -1094,7 +1105,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Event event = serverEvent.getEvent();
       EventType eventType = serverEvent.getEventType();
       LOG.info("Handling {} event: '{}' ", eventType, serverEvent);
-      RemoteDataCollectorResult result = handleRemoteEvent(event, eventType);
+      RemoteDataCollectorResult result = handleRemoteEvent(event, eventType, new HashMap<>());
       if (result.isError()) {
         LOG.error(result.getErrorMessage());
         ackEventMessage = result.getErrorMessage();

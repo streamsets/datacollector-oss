@@ -57,7 +57,6 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.pipeline.api.AntennaDoctorMessage;
 import com.streamsets.pipeline.api.RawSourcePreviewer;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageType;
@@ -73,7 +72,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -92,7 +90,7 @@ public class SyncPreviewer implements Previewer {
   private final UserContext userContext;
   private final String name;
   private final String rev;
-  private final HashMap<String, ConnectionConfiguration> connections;
+  private final Map<String, ConnectionConfiguration> connections;
   private final PreviewerListener previewerListener;
   private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
   private final Function afterActionsFunction;
@@ -118,7 +116,8 @@ public class SyncPreviewer implements Previewer {
       PreviewerListener previewerListener,
       ObjectGraph objectGraph,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
   ) {
     objectGraph.inject(this);
     this.id = id;
@@ -135,7 +134,7 @@ public class SyncPreviewer implements Previewer {
     this.previewStatus = PreviewStatus.CREATED;
     this.interceptorConfs = interceptorConfs;
     this.afterActionsFunction = afterActionsFunction;
-    this.connections = new HashMap<>();
+    this.connections = connections;
   }
 
   @Override
@@ -154,13 +153,13 @@ public class SyncPreviewer implements Previewer {
   }
 
   @Override
-  public Map<String, ConnectionConfiguration> getConnections() {
-    return connections;
+  public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
+    return interceptorConfs;
   }
 
   @Override
-  public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
-    return interceptorConfs;
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return connections;
   }
 
   @Override
@@ -405,7 +404,8 @@ public class SyncPreviewer implements Previewer {
         lineagePublisherTask,
         statsCollector,
         testOrigin,
-        interceptorConfs
+        interceptorConfs,
+        connections
     ).build(userContext, runner);
   }
 

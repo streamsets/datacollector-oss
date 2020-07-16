@@ -37,6 +37,7 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPreviewStatus;
@@ -53,7 +54,8 @@ public class TestAsyncPreviewer extends TestPreviewer {
         previewerListener,
         objectGraph,
         Collections.emptyList(),
-        p -> null
+        p -> null,
+        new HashMap<>()
     ),
       new SafeScheduledExecutorService(5, "preview"));
   }

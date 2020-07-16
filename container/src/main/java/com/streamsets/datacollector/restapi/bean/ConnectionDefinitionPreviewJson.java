@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.restapi.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.List;
 
 /**
@@ -27,8 +29,12 @@ public class ConnectionDefinitionPreviewJson {
   private String type;
   private List<ConfigConfigurationJson> configuration;
   private String verifierClass;
-  private String verifierPrefix;
+  private String verifierConnectionFieldName;
+  private String verifierConnectionSelectionFieldName;
   private String library;
+
+  @JsonIgnore
+  public String connectionId;
 
   public ConnectionDefinitionPreviewJson() { }
 
@@ -37,14 +43,16 @@ public class ConnectionDefinitionPreviewJson {
       String type,
       List<ConfigConfigurationJson> configuration,
       String verifierClass,
-      String verifierPrefix,
+      String verifierConnectionFieldName,
+      String verifierConnectionSelectionFieldName,
       String library
   ) {
     this.version = version;
     this.type = type;
     this.configuration = configuration;
     this.verifierClass = verifierClass;
-    this.verifierPrefix = verifierPrefix;
+    this.verifierConnectionFieldName = verifierConnectionFieldName;
+    this.verifierConnectionSelectionFieldName = verifierConnectionSelectionFieldName;
     this.library = library;
   }
 
@@ -92,11 +100,27 @@ public class ConnectionDefinitionPreviewJson {
     return verifierClass.replace(".", "_");
   }
 
-  public String getVerifierPrefix() {
-    return verifierPrefix;
+  public String getVerifierConnectionFieldName() {
+    return verifierConnectionFieldName;
   }
 
-  public void setVerifierPrefix(String verifierPrefix) {
-    this.verifierPrefix = verifierPrefix;
+  public void setVerifierConnectionFieldName(String verifierConnectionFieldName) {
+    this.verifierConnectionFieldName = verifierConnectionFieldName;
+  }
+
+  public String getConnectionId() {
+    return connectionId;
+  }
+
+  public void setConnectionId(String connectionId) {
+    this.connectionId = connectionId;
+  }
+
+  public String getVerifierConnectionSelectionFieldName() {
+    return verifierConnectionSelectionFieldName;
+  }
+
+  public void setVerifierConnectionSelectionFieldName(String verifierConnectionSelectionFieldName) {
+    this.verifierConnectionSelectionFieldName = verifierConnectionSelectionFieldName;
   }
 }

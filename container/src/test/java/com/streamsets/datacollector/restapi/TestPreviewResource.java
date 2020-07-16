@@ -256,7 +256,7 @@ public class TestPreviewResource extends JerseyTest {
   public void testDynamicPreviewConnectionVerifier() throws IOException {
     RemoteDataCollectorResult okResult = RemoteDataCollectorResult.immediate("pipeline-id");
     PowerMockito
-        .when(eventHandlerTask.handleLocalEvent(Mockito.any(Event.class), Mockito.any(EventType.class)))
+        .when(eventHandlerTask.handleLocalEvent(Mockito.any(Event.class), Mockito.any(EventType.class), Mockito.anyMap()))
         .thenReturn(okResult);
     PowerMockito
         .when(manager.getPreviewer(Mockito.anyString()))

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewConstants;
@@ -44,6 +45,7 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionPreviewJson;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
@@ -259,7 +261,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote, new HashMap<>());
     try {
       previewer.start(
           batches,
@@ -337,11 +339,14 @@ public class PreviewResource {
     ));
 
     DynamicPreviewEventJson dynamicPreviewEvent;
+    Map<String, ConnectionConfiguration> connections = new HashMap<>();
     if (DynamicPreviewType.CONNECTION_VERIFIER.equals(dynamicPreviewRequest.getType())) {
       // build the dynamic preview pipeline and events
-      ConnectionVerifierDynamicPreviewHelper connectionVerifier = new ConnectionVerifierDynamicPreviewHelper();
-      PipelineEnvelopeJson verifierPipeline = connectionVerifier.getVerifierDynamicPreviewPipeline(dynamicPreviewRequest);
-      dynamicPreviewEvent = connectionVerifier.getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);
+      ConnectionVerifierDynamicPreviewHelper verifierHelper = new ConnectionVerifierDynamicPreviewHelper();
+      ConnectionDefinitionPreviewJson connection = verifierHelper.getConnectionPreviewJson(dynamicPreviewRequest);
+      PipelineEnvelopeJson verifierPipeline = verifierHelper.getVerifierDynamicPreviewPipeline(connection);
+      dynamicPreviewEvent = verifierHelper.getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);
+      connections = verifierHelper.getVerifierConfigurationJson(connection);
     } else {
       // for classification and protection policies get the preview event from SCH
       dynamicPreviewEvent = getDynamicPreviewEvent(
@@ -358,7 +363,8 @@ public class PreviewResource {
       generatedPipelineId = handlePreviewEvents(
           "before",
           dynamicPreviewEvent.getBeforeActionsEventTypeIds(),
-          dynamicPreviewEvent.getBeforeActions()
+          dynamicPreviewEvent.getBeforeActions(),
+          connections
       );
     } catch (IOException e) {
       throw new StageException(PreviewError.PREVIEW_0101, "before", e.getMessage(), e);
@@ -378,7 +384,8 @@ public class PreviewResource {
         handlePreviewEvents(
             "after",
             dynamicPreviewEvent.getAfterActionsEventTypeIds(),
-            dynamicPreviewEvent.getAfterActions()
+            dynamicPreviewEvent.getAfterActions(),
+            new HashMap<>()
         );
       } catch (IOException e) {
         LOG.error(
@@ -390,9 +397,11 @@ public class PreviewResource {
       return null;
     });
 
+
     final RemoteDataCollectorResult previewEventResult = eventHandlerTask.handleLocalEvent(
         previewEvent,
-        EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId())
+        EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId()),
+        connections
     );
 
     String previewerId;
@@ -468,7 +477,12 @@ public class PreviewResource {
     }
   }
 
-  private String handlePreviewEvents(String kind, List<Integer> eventTypeIds, List<EventJson> events) throws IOException {
+  private String handlePreviewEvents(
+      String kind,
+      List<Integer> eventTypeIds,
+      List<EventJson> events,
+      Map<String, ConnectionConfiguration> connections
+  ) throws IOException {
     String generatedPipelineId = null;
     if (eventTypeIds == null && events == null) {
       LOG.debug("Null {} events; nothing to do", kind);
@@ -487,7 +501,8 @@ public class PreviewResource {
       final EventType eventType = EventType.fromValue(eventTypeId);
       final RemoteDataCollectorResult result = eventHandlerTask.handleLocalEvent(
           MessagingJsonToFromDto.INSTANCE.asDto(events.get(i), eventTypeId),
-          eventType
+          eventType,
+          connections
       );
       if (eventType == EventType.SAVE_PIPELINE && result.getImmediateResult() != null) {
         generatedPipelineId = (String) result.getImmediateResult();
@@ -643,7 +658,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, false);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, false, new HashMap<>());
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
@@ -683,7 +698,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote, new HashMap<>());
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {
