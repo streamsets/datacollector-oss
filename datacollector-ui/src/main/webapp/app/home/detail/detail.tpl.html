@@ -36,7 +36,7 @@
         </li>
       </ul>
       <div class="checkbox advanced-options-select"
-        ng-if="selectedType == pipelineConstant.STAGE_INSTANCE
+        ng-if="(selectedType == pipelineConstant.STAGE_INSTANCE || selectedType == pipelineConstant.PIPELINE)
         && detailPaneConfigDefn
         && hasAdvancedConfig(detailPaneConfigDefn.configDefinitions)">
         <label
