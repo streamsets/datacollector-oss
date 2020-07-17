@@ -15,11 +15,9 @@
  */
 package com.streamsets.pipeline.lib.remote;
 
-import com.sun.org.apache.bcel.internal.generic.RETURN;
 import net.schmizz.sshj.sftp.RemoteFile;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;

@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.lib.remote;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -52,4 +54,23 @@ public abstract class RemoteFile {
   public abstract void commitOutputStream() throws IOException;
 
   public abstract boolean isReadable() throws IOException;
+
+  @NotNull
+  public static String getAbsolutePathFileName(String remoteAddress, String fileName) {
+    //remove any query parameter
+    String address = remoteAddress.split("\\?")[0];
+
+    //remove protocol
+    address = address.replace(address.split("://")[0], "").replace("://", "");
+
+    //remove host and port
+    address = address.replace(address.split("/")[0], "");
+
+    if (!address.isEmpty() && address.endsWith("/")) {
+      //Remove last character if it is a /
+      address = address.substring(0, address.length() - 1);
+    }
+
+    return address.concat(fileName);
+  }
 }
