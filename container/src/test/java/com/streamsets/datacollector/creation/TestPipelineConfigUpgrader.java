@@ -205,11 +205,6 @@ public class TestPipelineConfigUpgrader {
     Assert.assertNull(upgrade.get(0).getValue());
   }
 
-  @Test
-  public void testPipelineConfigUpgradeV18ToV19() throws StageException {
-    doTestDataprocConfigs(18, 19);
-  }
-
   private void doTestEMRConfigs(int from, int to) {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
@@ -257,46 +252,5 @@ public class TestPipelineConfigUpgrader {
       Assert.assertTrue(emrConfigList.contains("useIAMRoles"));
       Assert.assertTrue(emrConfigList.contains("clusterConfig.callbackUrl"));
     }
-  }
-
-  private void doTestDataprocConfigs(int from, int to) {
-    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
-    List<Config> upgraded = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
-
-    String regex = "googleCloudConfig.";
-    String regex2 = "googleCloudCredentialsConfig.";
-    List<Config> gcloudConfigList = upgraded.stream()
-                                      .map(conf -> new Config(conf.getName().replaceAll(regex, ""), conf.getValue()))
-                                      .map(conf -> new Config(conf.getName().replaceAll(regex2, ""), conf.getValue()))
-                                      .collect(Collectors.toList());
-    Iterator<Config> iter = gcloudConfigList.iterator();
-    assertInIter(iter, "region", null);
-    assertInIter(iter, "customRegion", null);
-    assertInIter(iter, "gcsStagingUri", null);
-    assertInIter(iter, "create", false);
-    assertInIter(iter, "clusterPrefix", null);
-    assertInIter(iter, "version", GoogleCloudConfig.DATAPROC_IMAGE_VERSION_DEFAULT);
-    assertInIter(iter, "masterType", null);
-    assertInIter(iter, "workerType", null);
-    assertInIter(iter, "networkType", null);
-    assertInIter(iter, "network", null);
-    assertInIter(iter, "subnet", null);
-    assertInIter(iter, "tags", new ArrayList<String>());
-    assertInIter(iter, "workerCount", 2);
-    assertInIter(iter, "clusterName", null);
-    assertInIter(iter, "terminate", false);
-
-    assertInIter(iter, "projectId", null);
-    assertInIter(iter, "credentialsProvider", null);
-    assertInIter(iter, "path", null);
-    assertInIter(iter, "credentialsFileContent", null);
-  }
-
-  private void assertInIter(Iterator<Config> conf, String key, Object value) {
-    Assert.assertTrue(conf.hasNext());
-    Config next = conf.next();
-    Assert.assertEquals(next.getName(), key);
-    Assert.assertEquals(next.getValue(), value);
   }
 }
