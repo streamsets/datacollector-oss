@@ -497,12 +497,15 @@ angular
     );
 
     $scope.$watch('selectedObject', function() {
-      if (configuration.defaultShowAdvancedConfigs() &&
-          $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
+      if (($scope.selectedType === pipelineConstant.STAGE_INSTANCE || $scope.selectedType == pipelineConstant.PIPELINE) &&
           $scope.detailPaneConfigDefn &&
           $scope.hasAdvancedConfig($scope.detailPaneConfigDefn.configDefinitions) &&
           !$scope.detailPaneConfig.uiInfo.displayMode) {
-        $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+        if(configuration.defaultShowAdvancedConfigs()) {
+          $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+        } else {
+          $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_BASIC;
+        }
       }
     });
 

@@ -557,6 +557,7 @@ angular
        * @returns {Boolean}
        */
       isShownByConfigDisplayMode: function(configurationItemDisplayMode, stageDisplayMode) {
+        stageDisplayMode = stageDisplayMode || $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
         return configurationItemDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_BASIC ||
           stageDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
       },
