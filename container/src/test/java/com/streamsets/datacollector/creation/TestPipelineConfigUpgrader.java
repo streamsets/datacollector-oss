@@ -196,18 +196,18 @@ public class TestPipelineConfigUpgrader {
 
   @Test
   public void testPipelineConfigUpgradeV17ToV18() throws StageException {
-    doTestDataprocConfigs(17, 18);
-  }
-
-  @Test
-  public void testPipelineConfigUpgradeV18ToV19() throws StageException {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 18, 19);
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 17, 18);
 
     List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
 
     Assert.assertEquals("transformerEMRConfig.serviceAccessSecurityGroup", upgrade.get(0).getName());
     Assert.assertNull(upgrade.get(0).getValue());
+  }
+
+  @Test
+  public void testPipelineConfigUpgradeV18ToV19() throws StageException {
+    doTestDataprocConfigs(18, 19);
   }
 
   private void doTestEMRConfigs(int from, int to) {
