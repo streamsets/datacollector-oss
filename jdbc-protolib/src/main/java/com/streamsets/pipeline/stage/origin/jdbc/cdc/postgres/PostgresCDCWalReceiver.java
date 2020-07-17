@@ -85,6 +85,7 @@ public class PostgresCDCWalReceiver {
   private SafeScheduledExecutorService heartBeatSender = new SafeScheduledExecutorService(1, "Postgres Heart Beat Sender");
 
   private final JdbcUtil jdbcUtil;
+  private final long statusInterval;
 
   public PostgresCDCWalReceiver(
       PostgresCDCConfigBean configBean,
@@ -95,6 +96,7 @@ public class PostgresCDCWalReceiver {
     this.configBean = configBean;
     this.hikariConfigBean = hikariConfigBean;
     this.context = context;
+    this.statusInterval = TimeUnit.SECONDS.toMillis(configBean.statusInterval);
 
     /* TODO resolve issue with using internal Jdbc Read only connection - didn't work
      with postgres replication connection - keeping HikariConfigBean for now */
@@ -216,6 +218,7 @@ public class PostgresCDCWalReceiver {
         .getReplicationAPI()
         .replicationStream()
         .logical()
+        .withStatusInterval((int) statusInterval, TimeUnit.MILLISECONDS)
         .withSlotName(slotName)
         .withSlotOption("include-xids", true)
         .withSlotOption("include-timestamp", true)
@@ -276,7 +279,7 @@ public class PostgresCDCWalReceiver {
 
     LOG.debug("Starting the Stream with LSN : {}", streamLsn);
 
-    heartBeatSender.scheduleAtFixedRate(this::sendUpdates, 1, 900, TimeUnit.MILLISECONDS);
+    heartBeatSender.scheduleWithFixedDelay(() -> sendUpdates(true), statusInterval, statusInterval, TimeUnit.MILLISECONDS);
     return streamLsn;
   }
 
@@ -429,15 +432,15 @@ public class PostgresCDCWalReceiver {
         LOG.debug("Flushing LSN END: {}", lsn.asString());
         stream.setAppliedLSN(lsn);
         stream.setFlushedLSN(lsn);
-        sendUpdates();
+        sendUpdates(false);
       }
     }
   }
 
-  private void sendUpdates() {
+  private void sendUpdates(boolean isHeartBeat) {
     synchronized (sendUpdatesMutex) {
       try {
-        LOG.debug("Sending status updates");
+        LOG.debug("Sending status updates. Is Heart Beat: {}", isHeartBeat);
         stream.forceUpdateStatus();
       } catch (SQLException e) {
         // Heart beat sender thread is not currently propagating to main thread

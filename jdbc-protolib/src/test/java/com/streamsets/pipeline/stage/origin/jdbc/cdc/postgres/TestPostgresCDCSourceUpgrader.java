@@ -19,7 +19,6 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -65,15 +64,22 @@ public class TestPostgresCDCSourceUpgrader {
 
     configs = postgresCDCSourceUpgrader.upgrade(configs, context);
 
-    Assert.assertEquals(2, configs.size());
+    Assert.assertEquals(3, configs.size());
 
     for (Config config : configs) {
-      if (config.getName().equals("postgresCDCConfigBean.baseConfigBean.maxBatchSize")) {
-        Assert.assertEquals(500, config.getValue());
-      } else if (config.getName().equals("postgresCDCConfigBean.generatorQueueMaxSize")) {
-        Assert.assertEquals("2500", config.getValue());
-      } else {
-        Assert.fail("Unexpected config :" + config.getName());
+      switch (config.getName()) {
+        case "postgresCDCConfigBean.baseConfigBean.maxBatchSize":
+          Assert.assertEquals(500, config.getValue());
+          break;
+        case "postgresCDCConfigBean.generatorQueueMaxSize":
+          Assert.assertEquals("2500", config.getValue());
+          break;
+        case "postgresCDCConfigBean.statusInterval":
+          Assert.assertEquals(30, config.getValue());
+          break;
+        default:
+          Assert.fail("Unexpected config :" + config.getName());
+          break;
       }
     }
   }

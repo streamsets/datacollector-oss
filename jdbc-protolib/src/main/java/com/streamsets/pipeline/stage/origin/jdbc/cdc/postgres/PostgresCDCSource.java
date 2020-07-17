@@ -287,7 +287,6 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         if (dataRecord == null) {
           LOG.debug("Received CDC with LSN {} from stream value filtered out", postgresWalRecord.getLsn().asString());
         } else {
-
           String recordLsn = dataRecord.getLsn().asString();
           LOG.debug("Received CDC with LSN {} from stream value", recordLsn);
 

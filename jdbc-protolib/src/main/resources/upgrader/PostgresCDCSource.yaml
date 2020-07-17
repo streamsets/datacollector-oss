@@ -29,4 +29,7 @@ upgrades:
       - setConfig:
           name: postgresCDCConfigBean.generatorQueueMaxSize
           value: ${value("postgresCDCConfigBean.baseConfigBean.maxBatchSize") * 5}
+      - setConfig:
+          name: postgresCDCConfigBean.statusInterval
+          value: 30
 

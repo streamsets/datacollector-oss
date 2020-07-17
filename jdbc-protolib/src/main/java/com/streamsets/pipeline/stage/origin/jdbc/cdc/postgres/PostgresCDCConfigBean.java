@@ -226,6 +226,19 @@ public class PostgresCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
+      label = "Status Interval",
+      description = "Interval between sending heart beats to Postgres. Should be less than wal_sender_timeout",
+      displayPosition = 145,
+      group = "CDC",
+      elDefs = TimeEL.class,
+      // Default wal_sender_timeout is 60 seconds
+      defaultValue = "${30 * SECONDS}"
+  )
+  public int statusInterval;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
       label = "CDC Generator Queue Size",
       description = "CDC Generator Queue Size.",
       displayPosition = 150,
