@@ -62,7 +62,6 @@ public class ClusterConfig {
       defaultValue = "CLIENT",
       displayPosition = 103,
       dependsOn = "clusterType",
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"YARN", "STANDALONE_SPARK_CLUSTER", "KUBERNETES"}
   )
   @ValueChooserModel(SparkDeployModeChooserValues.class)
@@ -77,7 +76,6 @@ public class ClusterConfig {
       defaultValue = "",
       displayPosition = 104,
       dependsOn = "clusterType",
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = "YARN"
   )
   public String hadoopUserName;
@@ -90,7 +88,6 @@ public class ClusterConfig {
       group = "CLUSTER",
       defaultValue = "${pipeline:title()}",
       displayPosition = 105,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^executionMode",
@@ -109,7 +106,6 @@ public class ClusterConfig {
       defaultValue = "/streamsets",
       displayPosition = 106,
       dependsOn = "clusterType",
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"DATABRICKS", "SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT", "EMR"}
   )
   public String stagingDir = "/streamsets";
@@ -189,7 +185,6 @@ public class ClusterConfig {
           "Use this format: http://<hostname>:<port>",
       displayPosition = 5,
       group = "ADVANCED",
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^executionMode",

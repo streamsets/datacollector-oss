@@ -90,7 +90,6 @@ public class GoogleCloudConfig {
     defaultValue = DATAPROC_IMAGE_VERSION_DEFAULT,
     displayPosition = 85,
     dependsOn = "create",
-    displayMode = ConfigDef.DisplayMode.ADVANCED,
     triggeredByValue = "true"
   )
   public String version;
@@ -195,7 +194,6 @@ public class GoogleCloudConfig {
     group = "DATAPROC",
     description = "Terminates the cluster when the pipeline stops",
     displayPosition = 170,
-    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "create",
     triggeredByValue = "true"
   )

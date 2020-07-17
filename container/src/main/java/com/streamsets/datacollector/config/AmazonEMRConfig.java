@@ -144,7 +144,6 @@ public class AmazonEMRConfig {
       description = "Terminates the cluster when the pipeline stops",
       group = "EMR",
       displayPosition = 210,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -160,7 +159,6 @@ public class AmazonEMRConfig {
       group = "EMR",
       description = "Copy cluster log files to S3",
       displayPosition = 220,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -190,7 +188,6 @@ public class AmazonEMRConfig {
       description = "Enable console debugging in EMR",
       group = "EMR",
       displayPosition = 240,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
@@ -209,7 +206,6 @@ public class AmazonEMRConfig {
           "tasks",
       group = "EMR",
       displayPosition = 260,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -225,7 +221,6 @@ public class AmazonEMRConfig {
       description = "EMR role for EC2 used by EC2 instances within the cluster",
       group = "EMR",
       displayPosition = 270,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -240,7 +235,6 @@ public class AmazonEMRConfig {
       label = "Visible to All Users",
       group = "EMR",
       displayPosition = 280,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -298,7 +292,6 @@ public class AmazonEMRConfig {
       label = "Instance Count",
       group = "EMR",
       displayPosition = 320,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")

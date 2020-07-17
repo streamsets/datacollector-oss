@@ -152,7 +152,6 @@ public class DatabricksConfig {
       defaultValue = DEFAULT_CLUSTER_CONFIG,
       group = "CLUSTER",
       displayPosition = 112,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^clusterConfig.clusterType",
@@ -171,7 +170,6 @@ public class DatabricksConfig {
       description = "Terminates the cluster when the pipeline stops",
       group = "CLUSTER",
       displayPosition = 113,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^clusterConfig.clusterType",
