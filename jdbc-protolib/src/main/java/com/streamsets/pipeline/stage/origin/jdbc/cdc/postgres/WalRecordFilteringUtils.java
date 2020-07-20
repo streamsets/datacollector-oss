@@ -16,9 +16,8 @@
 
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
-import com.streamsets.pipeline.api.Field;
-
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 
 import java.time.LocalDateTime;
@@ -32,11 +31,6 @@ import java.util.List;
 public class WalRecordFilteringUtils {
 
   public static PostgresWalRecord filterRecord(PostgresWalRecord postgresWalRecord, PostgresCDCSource postgresCDCSource) {
- // Pushed to wal2json
-//    if (postgresWalRecord != null) {
-//      postgresWalRecord = passesTableFilter(postgresWalRecord, postgresCDCSource);
-//    }
-
     if (postgresWalRecord != null) {
       postgresWalRecord = passesStartValueFilter(postgresWalRecord, postgresCDCSource);
     }

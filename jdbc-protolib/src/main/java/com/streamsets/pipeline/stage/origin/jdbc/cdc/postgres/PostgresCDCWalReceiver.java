@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.Stage.Context;
@@ -23,15 +25,11 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
-import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
-import static java.sql.DriverManager.getConnection;
 import org.apache.commons.lang3.StringUtils;
 import org.postgresql.PGConnection;
 import org.postgresql.PGProperty;
@@ -49,13 +47,24 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
-import java.util.Iterator;
+import java.util.stream.Collectors;
+
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_00;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_406;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_407;
+import static java.sql.DriverManager.getConnection;
 
 public class PostgresCDCWalReceiver {
 
@@ -63,6 +72,8 @@ public class PostgresCDCWalReceiver {
   private static final String TABLE_METADATA_TABLE_SCHEMA_CONSTANT = "table_schem";
   private static final String TABLE_METADATA_TABLE_NAME_CONSTANT = "table_name";
   public static final String SELECT_SLOT = "select * from pg_replication_slots where slot_name = ?";
+
+  private static final Set<String> WAL_SENDER_STATUS_FIELDS_TO_IGNORE= ImmutableSet.of("usename", "client_addr", "client_hostname");
 
   private final Properties properties;
   private final String uri;
@@ -72,20 +83,29 @@ public class PostgresCDCWalReceiver {
 
   private String configuredPlugin;
   private String configuredSlotType;
+
   private Boolean slotActive;
   private String restartLsn;
   private String confirmedFlushLSN;
   private Connection connection = null;
   private PGReplicationStream stream;
   private List<SchemaAndTable> schemasAndTables;
+
+  @VisibleForTesting
   PostgresCDCConfigBean configBean;
-  private HikariPoolConfigBean hikariConfigBean;
+  private final HikariPoolConfigBean hikariConfigBean;
+  private final String applicationName;
+  private final AtomicBoolean isWalSenderActive = new AtomicBoolean(true);
+
   private volatile LogSequenceNumber nextLSN;
   private final Object sendUpdatesMutex = new Object();
-  private SafeScheduledExecutorService heartBeatSender = new SafeScheduledExecutorService(1, "Postgres Heart Beat Sender");
+
+  private final SafeScheduledExecutorService pgWalStatusMgrExecutor =
+      new SafeScheduledExecutorService(2, "Postgres Wal Status Manager");
 
   private final JdbcUtil jdbcUtil;
   private final long statusInterval;
+  private final Map<String, Object> walSenderStatusGauge;
 
   public PostgresCDCWalReceiver(
       PostgresCDCConfigBean configBean,
@@ -117,6 +137,10 @@ public class PostgresCDCWalReceiver {
     this.slotActive = false;
     this.restartLsn = null;
     this.confirmedFlushLSN = null;
+    // Not Using pipelineId for application name as pipelineId has some title appended
+    // which has problems with  postgres (<=9.5)
+    this.applicationName = UUID.randomUUID().toString();
+    this.walSenderStatusGauge = context.createGauge("Wal Sender Status").getValue();
 
     this.properties = new Properties();
     PGProperty.USER.set(properties, hikariConfigBean.getUsername().get());
@@ -124,6 +148,7 @@ public class PostgresCDCWalReceiver {
     PGProperty.ASSUME_MIN_SERVER_VERSION.set(properties, configBean.minVersion.getLabel());
     PGProperty.REPLICATION.set(properties, configBean.replicationType);
     PGProperty.PREFER_QUERY_MODE.set(properties, "simple");
+    PGProperty.APPLICATION_NAME.set(properties, this.applicationName);
   }
 
   public List<SchemaAndTable> getSchemasAndTables() {
@@ -140,7 +165,7 @@ public class PostgresCDCWalReceiver {
       issues.add(getContext().createConfigIssue(Groups.CDC.name(),
           "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
     }
-    return Optional.ofNullable(issues);
+    return Optional.of(issues);
   }
 
   List<SchemaTableConfigBean> getSchemaAndTableConfig(){
@@ -150,9 +175,9 @@ public class PostgresCDCWalReceiver {
   private boolean isThereAFilter() {
     //If there is any value configured for inclusion returns True else returns False
     boolean filterExist = false;
-    Iterator it = getSchemaAndTableConfig().iterator();
+    Iterator<SchemaTableConfigBean> it = getSchemaAndTableConfig().iterator();
     while (!filterExist && it.hasNext()) {
-      SchemaTableConfigBean tables = (SchemaTableConfigBean)it.next();
+      SchemaTableConfigBean tables = it.next();
       filterExist = !(tables.schema.isEmpty() && tables.table.isEmpty());
     }
     return filterExist;
@@ -162,7 +187,7 @@ public class PostgresCDCWalReceiver {
     ConfigIssue issue = null;
     // Empty keys match ALL :(
     if (tables.schema.isEmpty() && tables.table.isEmpty()) {
-      return Optional.ofNullable(issue);
+      return Optional.empty();
     }
     Pattern p = StringUtils.isEmpty(tables.excludePattern) ? null : Pattern.compile(tables.excludePattern);
     try (ResultSet rs =
@@ -224,6 +249,7 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true);
 
+    // Push filtering of schema/tables to wal2json if non sql pattern
     if (schemasAndTables != null && !schemasAndTables.isEmpty()) {
       List<String> qualifiedNames = new ArrayList<>();
       for (SchemaAndTable schemaAndTable : schemasAndTables) {
@@ -279,7 +305,9 @@ public class PostgresCDCWalReceiver {
 
     LOG.debug("Starting the Stream with LSN : {}", streamLsn);
 
-    heartBeatSender.scheduleWithFixedDelay(() -> sendUpdates(true), statusInterval, statusInterval, TimeUnit.MILLISECONDS);
+    pgWalStatusMgrExecutor.scheduleWithFixedDelay(() -> sendUpdates(true), statusInterval, statusInterval, TimeUnit.MILLISECONDS);
+    pgWalStatusMgrExecutor.scheduleWithFixedDelay(this::checkWalSenderActive, 0, statusInterval, TimeUnit.MILLISECONDS);
+
     return streamLsn;
   }
 
@@ -353,11 +381,10 @@ public class PostgresCDCWalReceiver {
           hikariConfigBean.getUsername().get(),
           hikariConfigBean.getPassword().get()
       )) {
-        String sql = SELECT_SLOT;
         String flushedLabel = "confirmed_flush_lsn";
         boolean hasFlushLsn = false;
         try (PreparedStatement preparedStatement = localConnection
-            .prepareStatement(sql)) {
+            .prepareStatement(SELECT_SLOT)) {
           preparedStatement.setString(1, slotName);
           try (ResultSet rs = preparedStatement.executeQuery()) {
 
@@ -440,7 +467,7 @@ public class PostgresCDCWalReceiver {
   private void sendUpdates(boolean isHeartBeat) {
     synchronized (sendUpdatesMutex) {
       try {
-        LOG.debug("Sending status updates. Is Heart Beat: {}", isHeartBeat);
+        LOG.trace("Sending status updates. Is Heart Beat: {}", isHeartBeat);
         stream.forceUpdateStatus();
       } catch (SQLException e) {
         // Heart beat sender thread is not currently propagating to main thread
@@ -452,11 +479,50 @@ public class PostgresCDCWalReceiver {
     }
   }
 
-  public void closeConnection() throws SQLException {
-    heartBeatSender.shutdown();
+
+  public void checkWalSenderActive() throws StageException {
+    try (
+        Connection localConnection = DriverManager.getConnection(
+            hikariConfigBean.getConnectionString(),
+            hikariConfigBean.getUsername().get(),
+            hikariConfigBean.getPassword().get()
+        );
+        PreparedStatement preparedStatement =
+            localConnection.prepareStatement("select * from pg_stat_replication where application_name = ?")
+    ) {
+
+      //https://www.enterprisedb.com/blog/monitoring-approach-streaming-replication-hot-standby-postgresql-93
+      preparedStatement.setString(1, applicationName);
+      try (ResultSet rs = preparedStatement.executeQuery()){
+        if (rs.next()) {
+          isWalSenderActive.set(true);
+          ResultSetMetaData rsmd = rs.getMetaData();
+          Map<String, String> columnNameToValue = new LinkedHashMap<>();
+          for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+            columnNameToValue.put(rsmd.getColumnName(i), Optional.ofNullable(rs.getObject(i)).map(Object::toString).orElse(""));
+          }
+          LOG.trace("Wal Sender is queryable. Result Info : {}",
+              columnNameToValue.entrySet().stream().map(e -> e.getKey() + " = " + e.getValue())
+                  .collect(Collectors.joining(",  "))
+          );
+          WAL_SENDER_STATUS_FIELDS_TO_IGNORE.forEach(columnNameToValue::remove);
+          walSenderStatusGauge.putAll(columnNameToValue);
+        } else {
+          LOG.warn("Wal sender Process is not active for application {}", applicationName);
+          isWalSenderActive.set(false);
+        }
+      }
+    } catch (SQLException e) {
+      isWalSenderActive.set(false);
+      LOG.error("Wal Sender presence cannot be queried", e);
+    }
+  }
+
+  public void close() throws SQLException {
+    pgWalStatusMgrExecutor.shutdown();
     try {
-      //Awaiting 10 seconds only as frequency is ~1 seconds
-      heartBeatSender.awaitTermination(10, TimeUnit.SECONDS);
+      //Awaiting 10 seconds only
+      pgWalStatusMgrExecutor.awaitTermination(10, TimeUnit.SECONDS);
     } catch (InterruptedException e) {
       LOG.warn("Interrupted the await of heart beat sender shutdown");
       Thread.currentThread().interrupt();
@@ -482,9 +548,16 @@ public class PostgresCDCWalReceiver {
     this.nextLSN = nextLSN;
   }
 
+  public boolean isWalSenderActive() {
+    return isWalSenderActive.get();
+  }
+
   public PostgresWalRecord read() {
     PostgresWalRecord ret = null;
     ByteBuffer buffer;
+    if (!isWalSenderActive.get()) {
+      throw new StageException(JdbcErrors.JDBC_606);
+    }
     try {
       buffer = readNonBlocking();
       if(buffer != null) {
@@ -493,10 +566,7 @@ public class PostgresCDCWalReceiver {
             getCurrentLSN(),
             configBean.decoderValue
         );
-      } else {
-        LOG.debug("Buffer null");
       }
-
     } catch (SQLException e) {
       LOG.error(
           Utils.format(
