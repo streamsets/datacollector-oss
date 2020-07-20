@@ -436,7 +436,7 @@ public class HttpProcessor extends SingleLaneProcessor {
           close = true;
           errorRecordHandler.onError(e);
         }
-      }while (shouldMakeAnotherRequest(start, uninterrupted, close));
+      }while (shouldMakeAnotherRequest(start, uninterrupted, close, recordsToResponseState.get(record)));
 
       if (recordsResponse != null && response != null) {
         addToBatchRecords = processRecord(currentRecord, record, response);
@@ -452,18 +452,26 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   }
 
-  private boolean shouldMakeAnotherRequest(long start, boolean uninterrupted, boolean close) {
+  private boolean shouldMakeAnotherRequest(
+      long start,
+      boolean uninterrupted,
+      boolean close,
+      ResponseState responseState) {
     boolean waitTimeNotExp = !waitTimeExpired(start);
     boolean thereIsNextLink =
         (((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER))
             && haveMorePages)
-            || (conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET);
+            || (conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
+            conf.pagination.mode == PaginationMode.NONE);
+    HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
+    boolean numRetriesExceed = action != null && (responseState.retryCount>action.getMaxNumRetries());
     return waitTimeNotExp &&
         uninterrupted &&
         !lastRequestTimedOut &&
         !close &&
         conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
-        thereIsNextLink;
+        thereIsNextLink &&
+        !numRetriesExceed;
   }
 
 
@@ -713,10 +721,12 @@ public class HttpProcessor extends SingleLaneProcessor {
   ) throws StageException {
 
     ResponseState responseState;
+
     if (recordsToResponseState.containsKey(record)) {
       responseState = recordsToResponseState.get(record);
     } else {
       responseState = new ResponseState();
+      recordsToResponseState.put(record,responseState);
     }
 
     Response response = null;
@@ -735,19 +745,19 @@ public class HttpProcessor extends SingleLaneProcessor {
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
         final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
-        if(action==null){
+        if (action==null) {
 
-          if(conf.propagateAllHttpResponses){
-            String respString = extractResponseBodyStr(response);
+          if (conf.propagateAllHttpResponses) {
             Map<String,Field> mapFields = new HashMap<>();
-            mapFields.put(conf.errorResponseField,Field.create(respString));
+            String responseBodyString = extractResponseBodyStr(response);
+            mapFields.put(conf.errorResponseField,Field.create(responseBodyString));
             Record r = getContext().createRecord("");
             r.set(Field.create(mapFields));
             createResponseHeaders(r,response);
             r.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d",getResponse().getStatus()));
             records.add(r);
             return false;
-          }else{
+          } else {
             throw new OnRecordErrorException(
                 record,
                 Errors.HTTP_01,
@@ -756,22 +766,22 @@ public class HttpProcessor extends SingleLaneProcessor {
             );
           }
 
-        }else{
+        } else {
           final boolean statusChanged = responseState.lastStatus != responseStatus || responseState.lastRequestTimedOut;
 
           final AtomicInteger retryCountObj = new AtomicInteger(responseState.retryCount);
           final AtomicLong backoffExp = new AtomicLong(responseState.backoffIntervalExponential);
           final AtomicLong backoffLin = new AtomicLong(responseState.backoffIntervalLinear);
-          final String responseStr = extractResponseBodyStr(response);
+          String responseBodyString = extractResponseBodyStr(response);
           HttpStageUtil.applyResponseAction(
               action,
               statusChanged,
-              input -> new StageException(Errors.HTTP_14, responseStatus, responseStr),
+              input -> new StageException(Errors.HTTP_14, responseStatus, responseBodyString),
               retryCountObj,
               backoffLin,
               backoffExp,
               record,
-              String.format("action defined for status %d (response: %s)", responseStatus, responseStr)
+              String.format("action defined for status %d (response: %s)", responseStatus, responseBodyString)
           );
           responseState.retryCount = retryCountObj.get();
           responseState.backoffIntervalExponential = backoffExp.get();
@@ -783,8 +793,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       boolean close = parseResponse(record, responseBody, records);
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
+      } else if (responseStatus==204 && records.size()==0) {
+        Record recordEmpty = getContext().cloneRecord(record);
+        records.add(recordEmpty);
       }
+
       responseState.lastRequestTimedOut = false;
+      responseState.lastStatus = responseStatus;
       return close;
     } catch (InterruptedException | ExecutionException e) {
       LOG.error(Errors.HTTP_03.getMessage(), getResponseStatus(), e.toString(), e);
@@ -821,6 +836,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
+  
   private String extractResponseBodyStr(Response response) {
     String bodyStr = "";
     if (response != null) {
@@ -891,16 +907,6 @@ public class HttpProcessor extends SingleLaneProcessor {
             parsedRecords.add(rec);
           }else if(conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML){
             if(record.get().getValue() instanceof List) {
-              /** // JSON Array. It returns all data in a list already. So we split each element of
-              // the list in a separate record.
-              ArrayList<Field> list = (ArrayList<Field>) record.get().getValue();
-              close = true;
-              for (Field f : list) {
-                Record rec = getContext().cloneRecord(inRecord);
-                rec.set(f);
-                parsedRecords.add(rec);
-                close = false;
-              }*/
               if(parsePaginatedRecord(parsedRecords, record))
                 close = true;
             }else{
