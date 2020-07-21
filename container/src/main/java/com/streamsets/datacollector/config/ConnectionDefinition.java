@@ -16,31 +16,13 @@
 package com.streamsets.datacollector.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.creation.StageConfigBean;
-import com.streamsets.pipeline.SDCClassLoader;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.pipeline.api.ConnectionDef;
-import com.streamsets.pipeline.api.ConnectionVerifier;
-import com.streamsets.pipeline.api.ExecutionMode;
-import com.streamsets.pipeline.api.HideConfigs;
-import com.streamsets.pipeline.api.HideStage;
-import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.StageType;
-import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.api.impl.LocalizableMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Captures the configuration options for a {@link ConnectionDef}.
@@ -59,8 +41,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final Map<String, ConfigDefinition> configDefinitionsMap;
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
-  private final String verifierClass;
-  private final String verifierPrefix;
+  private final ConnectionVerifierDefinition verifierDefinition;
 
   @SuppressWarnings("unchecked")
   public ConnectionDefinition(ConnectionDefinition def, ClassLoader classLoader) {
@@ -75,8 +56,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     configDefinitionsMap = def.configDefinitionsMap;
     configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
-    verifierClass = def.verifierClass;
-    verifierPrefix = def.verifierPrefix;
+    verifierDefinition = def.verifierDefinition;
   }
 
   public ConnectionDefinition(
@@ -89,8 +69,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       List<ConfigDefinition> configDefinitions,
       ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
-      String verifierClass,
-      String verifierPrefix
+      ConnectionVerifierDefinition verifierDefinition
   ) {
     this.connectionDef = connectionDef;
     this.libraryDefinition = libraryDefinition;
@@ -115,8 +94,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       }
     }
     this.yamlUpgrader = yamlUpgrader;
-    this.verifierClass = verifierClass;
-    this.verifierPrefix = verifierPrefix;
+    this.verifierDefinition = verifierDefinition;
   }
 
   @JsonIgnore
@@ -159,10 +137,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     return yamlUpgrader;
   }
 
-  public String getVerifierClass() {
-    return verifierClass;
-  }
-
   public void addConfiguration(ConfigDefinition confDef) {
     if (configDefinitionsMap.containsKey(confDef.getName())) {
       throw new IllegalArgumentException(Utils.format("Connection '{}:{}:{}', configuration definition '{}' already exists",
@@ -193,13 +167,13 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier class='{}', verifier prefix='{}']",
-        getLibrary(), getName(), getVersion(), getType(), verifierClass, verifierPrefix
+        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier='{}']",
+        getLibrary(), getName(), getVersion(), getType(), verifierDefinition
     );
   }
 
-  public String getVerifierPrefix() {
-    return verifierPrefix;
+  public ConnectionVerifierDefinition getVerifierDefinition() {
+    return verifierDefinition;
   }
 }
 

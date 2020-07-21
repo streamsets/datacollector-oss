@@ -10,9 +10,11 @@
         "version" : "1",
         "type" : "STREAMSETS_AWS_S3",
         "library": "streamsets-datacollector-aws-lib",
-        "verifierClass" : "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
-        "verifierPrefix": "connection",
-        "connectionSelection": "connectionSelection",
+        "verifierDefinition": {
+          "verifierClass": "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
+          "verifierConnectionFieldName": "connection",
+          "verifierConnectionSelectionFieldName": "connectionSelection"
+        },
         "configuration" : [
           {
             "name" : "awsConfig.credentialMode",

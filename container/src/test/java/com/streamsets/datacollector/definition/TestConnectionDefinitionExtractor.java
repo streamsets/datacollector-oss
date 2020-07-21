@@ -113,7 +113,8 @@ public class TestConnectionDefinitionExtractor {
     validateGroups(groupsDef);
 
     // Assert verifier and prefix
-    Assert.assertEquals("com.streamsets.datacollector.definition.connection.TestConnectionVerifier", def.getVerifierClass());
-    Assert.assertEquals("connection", def.getVerifierPrefix());
+    Assert.assertEquals("com.streamsets.datacollector.definition.connection.TestConnectionVerifier", def.getVerifierDefinition().getVerifierClass());
+    Assert.assertEquals("connection", def.getVerifierDefinition().getVerifierConnectionFieldName());
+    Assert.assertEquals("connectionSelection", def.getVerifierDefinition().getVerifierConnectionSelectionFieldName());
   }
 }

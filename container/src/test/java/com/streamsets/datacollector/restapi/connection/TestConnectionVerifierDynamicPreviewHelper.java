@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi.connection;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
 import com.streamsets.datacollector.event.dto.EventType;
@@ -72,9 +73,11 @@ public class TestConnectionVerifierDynamicPreviewHelper {
         "1",
         "STREAMSETS_AWS_S3",
         config,
-        "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
-        "connection",
-        "connectionSelection",
+        new ConnectionVerifierDefinition(
+            "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
+            "connection",
+            "connectionSelection"
+        ),
         "streamsets-datacollector-aws-lib"
     );
     connection.setConnectionId(UUID.randomUUID().toString());
@@ -113,7 +116,10 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     Assert.assertEquals(connection.getVerifierStageName().concat("_01"), verifierStage.getInstanceName());
     Assert.assertEquals(connection.getLibrary(), verifierStage.getLibrary());
     Assert.assertEquals(connection.getVerifierStageName(), verifierStage.getStageName());
-    Assert.assertEquals(connection.connectionId, verifierStage.getConfig(connection.getVerifierConnectionSelectionFieldName()).getValue());
+    Assert.assertEquals(
+        connection.connectionId,
+        verifierStage.getConfig(connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName()).getValue()
+    );
 
     Assert.assertEquals(ImmutableList.of(), verifierStage.getInputLanes());
     Assert.assertEquals(ImmutableList.of("DevRawDataSource_01OutputLane15397448822820"), verifierStage.getOutputLanes());
@@ -191,8 +197,14 @@ public class TestConnectionVerifierDynamicPreviewHelper {
   public void testGetConnectionPreview() {
     ConnectionDefinitionPreviewJson parsedConnection = verifierPreviewHelper.getConnectionPreviewJson(dynamicPreviewRequest);
     Assert.assertEquals(parsedConnection.getVerifierStageName(), connection.getVerifierStageName());
-    Assert.assertEquals(parsedConnection.getVerifierConnectionFieldName(), connection.getVerifierConnectionFieldName());
-    Assert.assertEquals(parsedConnection.getVerifierConnectionSelectionFieldName(), connection.getVerifierConnectionSelectionFieldName());
+    Assert.assertEquals(
+        parsedConnection.getVerifierDefinition().getVerifierConnectionFieldName(),
+        connection.getVerifierDefinition().getVerifierConnectionFieldName()
+    );
+    Assert.assertEquals(
+        parsedConnection.getVerifierDefinition().getVerifierConnectionSelectionFieldName(),
+        connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName()
+    );
     Assert.assertEquals(parsedConnection.getType(), connection.getType());
     Assert.assertEquals(parsedConnection.getLibrary(), connection.getLibrary());
     Assert.assertEquals(parsedConnection.getVersion(), connection.getVersion());

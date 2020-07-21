@@ -16,8 +16,11 @@
 
 package com.streamsets.datacollector.definition.connection;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
 
 import java.util.ArrayList;
@@ -25,7 +28,24 @@ import java.util.List;
 
 public class TestConnectionVerifier extends ConnectionVerifier {
 
-  @ConfigDefBean(groups = "G1")
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = TestConnectionDef.TestConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection"
+  )
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      groups = "G1",
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
   public TestConnectionDef.TestConnection connection;
 
   @Override

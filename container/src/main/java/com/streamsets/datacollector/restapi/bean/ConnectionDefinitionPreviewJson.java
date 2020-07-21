@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 
 import java.util.List;
 
@@ -28,9 +29,7 @@ public class ConnectionDefinitionPreviewJson {
   private String version;
   private String type;
   private List<ConfigConfigurationJson> configuration;
-  private String verifierClass;
-  private String verifierConnectionFieldName;
-  private String verifierConnectionSelectionFieldName;
+  private ConnectionVerifierDefinition verifierDefinition;
   private String library;
 
   @JsonIgnore
@@ -42,17 +41,13 @@ public class ConnectionDefinitionPreviewJson {
       String version,
       String type,
       List<ConfigConfigurationJson> configuration,
-      String verifierClass,
-      String verifierConnectionFieldName,
-      String verifierConnectionSelectionFieldName,
+      ConnectionVerifierDefinition verifierDefinition,
       String library
   ) {
     this.version = version;
     this.type = type;
     this.configuration = configuration;
-    this.verifierClass = verifierClass;
-    this.verifierConnectionFieldName = verifierConnectionFieldName;
-    this.verifierConnectionSelectionFieldName = verifierConnectionSelectionFieldName;
+    this.verifierDefinition = verifierDefinition;
     this.library = library;
   }
 
@@ -72,14 +67,6 @@ public class ConnectionDefinitionPreviewJson {
     this.type = type;
   }
 
-  public String getVerifierClass() {
-    return verifierClass;
-  }
-
-  public void setVerifierClass(String verifierClass) {
-    this.verifierClass = verifierClass;
-  }
-
   public List<ConfigConfigurationJson> getConfiguration() {
     return configuration;
   }
@@ -96,18 +83,6 @@ public class ConnectionDefinitionPreviewJson {
     this.library = library;
   }
 
-  public String getVerifierStageName() {
-    return verifierClass.replace(".", "_");
-  }
-
-  public String getVerifierConnectionFieldName() {
-    return verifierConnectionFieldName;
-  }
-
-  public void setVerifierConnectionFieldName(String verifierConnectionFieldName) {
-    this.verifierConnectionFieldName = verifierConnectionFieldName;
-  }
-
   public String getConnectionId() {
     return connectionId;
   }
@@ -116,11 +91,15 @@ public class ConnectionDefinitionPreviewJson {
     this.connectionId = connectionId;
   }
 
-  public String getVerifierConnectionSelectionFieldName() {
-    return verifierConnectionSelectionFieldName;
+  public ConnectionVerifierDefinition getVerifierDefinition() {
+    return verifierDefinition;
   }
 
-  public void setVerifierConnectionSelectionFieldName(String verifierConnectionSelectionFieldName) {
-    this.verifierConnectionSelectionFieldName = verifierConnectionSelectionFieldName;
+  public void setVerifierDefinition(ConnectionVerifierDefinition verifierDefinition) {
+    this.verifierDefinition = verifierDefinition;
+  }
+
+  public String getVerifierStageName() {
+    return verifierDefinition.getVerifierClass().replace(".", "_");
   }
 }

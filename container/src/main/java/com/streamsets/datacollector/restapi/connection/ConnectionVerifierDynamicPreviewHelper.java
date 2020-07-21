@@ -72,7 +72,10 @@ public class ConnectionVerifierDynamicPreviewHelper {
 
     // build verifier stage and replace the raw data origin with it
     List<ConfigConfigurationJson> verifierConfig = new ArrayList<>();
-    verifierConfig.add(new ConfigConfigurationJson(connection.getVerifierConnectionSelectionFieldName(), connection.getConnectionId()));
+    verifierConfig.add(new ConfigConfigurationJson(
+        connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName(),
+        connection.getConnectionId())
+    );
     StageConfigurationJson rawDataStage = pipelineTemplateConfig.getStages().get(0);
     rawDataStage.getUiInfo().put("label", "Connection Verifier");
     StageConfigurationJson verifierStage = new StageConfigurationJson(
