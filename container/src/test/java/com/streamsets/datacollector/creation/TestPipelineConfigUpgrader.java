@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.aws.SseOption;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
 import com.streamsets.pipeline.stage.common.CredentialsProviderType;
@@ -276,6 +277,19 @@ public class TestPipelineConfigUpgrader {
       Assert.assertTrue(emrConfigList.contains("useIAMRoles"));
       Assert.assertTrue(emrConfigList.contains("clusterConfig.callbackUrl"));
     }
+  }
+
+  @Test
+  public void testPipelineConfigUpgradeV19ToV20() {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 19, 20);
+    List<Config> upgraded = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals(2, upgraded.size());
+    Assert.assertEquals("transformerEMRConfig.encryption", upgraded.get(0).getName());
+    Assert.assertEquals(SseOption.NONE, upgraded.get(0).getValue());
+    Assert.assertEquals("transformerEMRConfig.kmsKeyId", upgraded.get(1).getName());
+    Assert.assertNull(upgraded.get(1).getValue());
   }
 
   private void doTestDataprocConfigs(int from, int to) {

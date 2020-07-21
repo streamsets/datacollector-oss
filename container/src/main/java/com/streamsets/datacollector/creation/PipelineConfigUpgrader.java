@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.aws.SseOption;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -99,6 +100,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 18:
         upgradeV18ToV19(configs);
+        // fall through
+      case 19:
+        upgradeV19ToV20(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -375,6 +379,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
 
   private static void addGCloudCredentialConfig(List<Config> configs, String key) {
     configs.add(new Config(GOOGLE_CLOUD_CREDENTIALS_CONFIG_PREFIX + key, null));
+  }
+
+  private static void upgradeV19ToV20(List<Config> configs) {
+    String prefix = "transformerEMRConfig.";
+    configs.add(new Config(prefix + "encryption", SseOption.NONE));
+    configs.add(new Config(prefix + "kmsKeyId", null));
   }
 
 }

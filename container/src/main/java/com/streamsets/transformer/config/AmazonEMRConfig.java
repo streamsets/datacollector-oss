@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
+import com.streamsets.pipeline.lib.aws.SseOption;
 
 import static com.streamsets.datacollector.config.AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT;
 import static com.streamsets.datacollector.config.AmazonEMRConfig.SERVICE_ROLE_DEFAULT;
@@ -391,6 +392,33 @@ public class AmazonEMRConfig {
       }
   )
   public String slaveInstanceTypeCustom;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Enable Server-Side Encryption",
+    description = "Server-Side Encryption",
+    defaultValue = "NONE",
+    displayPosition = 370,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
+    group = "EMR"
+  )
+  @ValueChooserModel(SseOptionChooserValues.class)
+  public SseOption encryption;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.CREDENTIAL,
+    label = "AWS KMS Key ARN",
+    description = "AWS KMS master encryption key that was used for the object. " +
+                    "The KMS key you specify in the policy must use the \"arn:aws:kms:region:acct-id:key/key-id\" format.",
+    displayPosition = 380,
+    dependsOn = "encryption",
+    triggeredByValue = "KMS",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
+    group = "EMR"
+  )
+  public CredentialValue kmsKeyId;
 
   public String getUserRegion() {
     if (userRegion != AwsRegion.OTHER) {
