@@ -213,7 +213,7 @@ public class ClusterRunner extends AbstractRunner {
       eventListenerManager,
       aclStoreTask
     );
-    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo(), blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo());
     this.runnerExecutor = executorService;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
@@ -232,7 +232,7 @@ public class ClusterRunner extends AbstractRunner {
     super(name, rev);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo(), blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo());
     this.tempDir = new File(Files.createTempDir(), PipelineUtils.
       escapedPipelineName(Utils.format("cluster-pipeline-{}-{}", name, rev)));
     FileUtils.deleteQuietly(tempDir);

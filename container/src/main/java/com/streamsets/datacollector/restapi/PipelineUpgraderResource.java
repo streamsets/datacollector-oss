@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.restapi;
 
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -53,13 +52,12 @@ public class PipelineUpgraderResource {
       BuildInfo buildInfo,
       Configuration configuration,
       RuntimeInfo runtimeInfo,
-      BlobStoreTask blobStoreTask,
       Principal principal
   ) {
     this.stageLibrary = stageLibrary;
     this.buildInfo = buildInfo;
     this.user = principal.getName();
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   @Path("/pipeline-upgrader")

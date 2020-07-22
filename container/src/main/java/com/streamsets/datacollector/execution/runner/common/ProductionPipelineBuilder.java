@@ -87,7 +87,7 @@ public class ProductionPipelineBuilder {
     this.blobStoreTask = blobStoreTask;
     this.lineagePublisherTask = lineagePublisherTask;
     this.statsCollector = statsCollector;
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   public ProductionPipeline build(

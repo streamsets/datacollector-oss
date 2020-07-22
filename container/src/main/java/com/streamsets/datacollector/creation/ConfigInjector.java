@@ -33,7 +33,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
-import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -42,7 +41,6 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +62,6 @@ public class ConfigInjector {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
   private static final ObjectMapper mapper = new ObjectMapper();
 
-  private static BlobStore blobStore;
   private static ConnectionRetriever connectionRetriever;
 
   private static final ConfigInjector INJECTOR = new ConfigInjector() {
@@ -76,13 +73,12 @@ public class ConfigInjector {
     return INJECTOR;
   }
 
-  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo, BlobStore blobStore) {
-    prepareForConnections(new ConnectionRetriever(configuration, runtimeInfo), blobStore);
+  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo) {
+    prepareForConnections(new ConnectionRetriever(configuration, runtimeInfo));
   }
 
   @VisibleForTesting
-  static void prepareForConnections(ConnectionRetriever connectionRetriever, BlobStore blobStore) {
-    ConfigInjector.blobStore = blobStore;
+  static void prepareForConnections(ConnectionRetriever connectionRetriever) {
     ConfigInjector.connectionRetriever = connectionRetriever;
   }
 

@@ -24,7 +24,6 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
@@ -71,7 +70,6 @@ import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -197,8 +195,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       StageLibraryTask stageLibrary,
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
-      Configuration conf,
-      BlobStoreTask blobStoreTask
+      Configuration conf
   ) {
     this(
         remoteDataCollector,
@@ -208,8 +205,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         buildInfo,
         runtimeInfo,
         conf,
-        null,
-        blobStoreTask
+        null
     );
   }
 
@@ -221,8 +217,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       Configuration conf,
-      DataStore disconnectedSsoCredentialsDataStore,
-      BlobStoreTask blobStoreTask
+      DataStore disconnectedSsoCredentialsDataStore
   ) {
     super("REMOTE_EVENT_HANDLER");
 
@@ -267,7 +262,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
     requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
-    PipelineBeanCreator.prepareForConnections(conf, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(conf, runtimeInfo);
     stopWatch = Stopwatch.createUnstarted();
     stopWatchForSyncEvents = Stopwatch.createUnstarted();
 

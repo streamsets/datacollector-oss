@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.store.impl;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.store.SlavePipelineStateStore;
 import com.streamsets.datacollector.execution.store.TestPipelineStateStore;
@@ -74,8 +73,7 @@ public class TestSlavePipelineStoreExecutionModes {
         new EventListenerManager(),
         new LockCache<>(),
         Mockito.mock(PipelineCredentialHandler.class),
-        new Configuration(),
-        Mockito.mock(BlobStoreTask.class)
+        new Configuration()
     );
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
@@ -98,8 +96,7 @@ public class TestSlavePipelineStoreExecutionModes {
         new EventListenerManager(),
         new LockCache<>(),
         Mockito.mock(PipelineCredentialHandler.class),
-        new Configuration(),
-        Mockito.mock(BlobStoreTask.class)
+        new Configuration()
     );
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();

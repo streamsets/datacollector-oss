@@ -148,7 +148,7 @@ public class RemoteDataCollector implements DataCollector {
     this.stageLibrary = stageLibrary;
     this.blobStoreTask = blobStoreTask;
     this.eventHandlerExecutor = eventHandlerExecutor;
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
     String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
     ));

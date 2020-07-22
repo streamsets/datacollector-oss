@@ -169,8 +169,7 @@ public class Pipeline {
     this.startEventStage = startEventStage;
     this.stopEventStage = stopEventStage;
     this.connections = connections;
-    PipelineBeanCreator.prepareForConnections(configuration, runner.getRuntimeInfo(), blobStore);
-
+    PipelineBeanCreator.prepareForConnections(configuration, runner.getRuntimeInfo());
     Map<String, Object> parameters = pipelineBean.getConfig().constants;
     if (parameters != null && parameters.get(JobEL.JOB_ID_VAR) != null) {
       this.controlHubJobId = (String) parameters.get(JobEL.JOB_ID_VAR);
@@ -613,7 +612,7 @@ public class Pipeline {
         configuration,
         interceptorConfs
       );
-      PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStore);
+      PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
       this.connections = connections;
     }
 

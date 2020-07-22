@@ -119,8 +119,7 @@ public class TestStandalonePipelineManager {
       LockCache.class,
       BuildInfo.class,
       RuntimeInfo.class,
-      Configuration.class,
-      BlobStoreTask.class
+      Configuration.class
     },
     includes = LockCacheModule.class,
     library = true
@@ -188,8 +187,7 @@ public class TestStandalonePipelineManager {
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
         LockCache<String> lockCache,
-        PipelineCredentialHandler pipelineCredentialsHandler,
-        BlobStoreTask blobStoreTask
+        PipelineCredentialHandler pipelineCredentialsHandler
     ) {
       FilePipelineStoreTask filePipelineStoreTask = new FilePipelineStoreTask(
           buildInfo,
@@ -199,8 +197,7 @@ public class TestStandalonePipelineManager {
           new EventListenerManager(),
           lockCache,
           pipelineCredentialsHandler,
-          configuration,
-          blobStoreTask
+          configuration
       );
       filePipelineStoreTask.init();
       return filePipelineStoreTask;

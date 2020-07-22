@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.execution.manager;
 
 import com.codahale.metrics.MetricRegistry;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.Manager;
@@ -78,8 +77,7 @@ public class TestSlaveManager {
         PipelineStoreTask.class,
         PipelineStateStore.class,
         EventListenerManager.class,
-        AclStoreTask.class,
-        BlobStoreTask.class
+        AclStoreTask.class
     },
     library = true)
   public static class TestSlaveManagerModule {
@@ -119,20 +117,13 @@ public class TestSlaveManager {
 
     @Provides
     @Singleton
-    public BlobStoreTask provideBlobStoreTask() {
-      return Mockito.mock(BlobStoreTask.class);
-    }
-
-    @Provides
-    @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
         Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
-        PipelineStateStore pipelineStateStore,
-        BlobStoreTask blobStoreTask
+        PipelineStateStore pipelineStateStore
     ) {
       return new SlavePipelineStoreTask(
             new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
@@ -141,8 +132,7 @@ public class TestSlaveManager {
                 runtimeInfo,
                 stageLibraryTask,
                 eventListenerManager,
-                new FilePipelineStateStore(runtimeInfo, provideConfiguration()),
-                blobStoreTask)
+                new FilePipelineStateStore(runtimeInfo, provideConfiguration()))
         );
     }
 

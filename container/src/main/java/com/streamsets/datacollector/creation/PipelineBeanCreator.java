@@ -38,7 +38,6 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
-import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Stage;
@@ -74,8 +73,8 @@ public abstract class PipelineBeanCreator {
     return CREATOR;
   }
 
-  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo, BlobStore blobStore) {
-    ConfigInjector.prepareForConnections(configuration, runtimeInfo, blobStore);
+  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo) {
+    ConfigInjector.prepareForConnections(configuration, runtimeInfo);
   }
 
   public static final StageDefinition PIPELINE_DEFINITION = getPipelineDefinition();

@@ -20,7 +20,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.Timer;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.alerts.AlertsUtil;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -42,7 +41,6 @@ import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,8 +78,7 @@ TestMetricObserverRunner {
         new AlertManager(PIPELINE_NAME, PIPELINE_TITLE, REVISION, null, metrics, runtimeInfo, new EventListenerManager()),
         null,
         new Configuration(),
-        runtimeInfo,
-        Mockito.mock(BlobStoreTask.class)
+        runtimeInfo
     );
   }
 

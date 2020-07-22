@@ -356,8 +356,7 @@ public class TestUtil {
           TestRuntimeModule.class,
           TestStageLibraryModule.class,
           TestCredentialStoreModule.class,
-          TestPipelineStateStoreModule.class,
-          TestBlobStoreModule.class
+          TestPipelineStateStoreModule.class
       }
   )
   public static class TestPipelineStoreModuleNew {
@@ -373,8 +372,7 @@ public class TestUtil {
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
-        PipelineStateStore pipelineStateStore,
-        BlobStoreTask blobStoreTask
+        PipelineStateStore pipelineStateStore
     ) {
       FilePipelineStoreTask pipelineStoreTask = new FilePipelineStoreTask(
           buidInfo,
@@ -384,8 +382,7 @@ public class TestUtil {
           eventListenerManager,
           new LockCache<>(),
           Mockito.mock(PipelineCredentialHandler.class),
-          configuration,
-          blobStoreTask
+          configuration
       );
       pipelineStoreTask.init();
       try {

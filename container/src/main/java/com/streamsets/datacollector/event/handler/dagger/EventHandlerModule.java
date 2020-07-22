@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.event.handler.dagger;
 
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.NoOpEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.ColonCompatibleRemoteDataCollector;
@@ -52,8 +51,7 @@ public class EventHandlerModule {
       RemoteDataCollector remoteDataCollector,
       BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
-      StageLibraryTask stageLibraryTask,
-      BlobStoreTask blobStoreTask
+      StageLibraryTask stageLibraryTask
   ) {
     EventHandlerTask eventHandlerTask;
     boolean isDPMEnabled = runtimeInfo.isDPMEnabled();
@@ -71,8 +69,7 @@ public class EventHandlerModule {
           stageLibraryTask,
           buildInfo,
           runtimeInfo,
-          conf,
-          blobStoreTask
+          conf
       );
     } else {
       eventHandlerTask = new NoOpEventHandlerTask();

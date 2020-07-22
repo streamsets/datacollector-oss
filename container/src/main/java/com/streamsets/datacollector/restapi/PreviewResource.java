@@ -156,7 +156,7 @@ public class PreviewResource {
     this.eventHandlerTask = eventHandlerTask;
     this.pipelineStoreTask = pipelineStoreTask;
     this.blobStoreTask = blobStoreTask;
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
 
     if (runtimeInfo.isDPMEnabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);

@@ -113,8 +113,7 @@ public class PipelineProviderModule {
       MetricRegistry metricRegistry,
       AlertManager alertManager,
       Configuration configuration,
-      RuntimeInfo runtimeInfo,
-      BlobStoreTask blobStoreTask
+      RuntimeInfo runtimeInfo
   ) {
     return new MetricsObserverRunner(
         pipelineId,
@@ -124,8 +123,7 @@ public class PipelineProviderModule {
         alertManager,
         resolvedParameters,
         configuration,
-        runtimeInfo,
-        blobStoreTask
+        runtimeInfo
     );
   }
 
@@ -185,8 +183,7 @@ public class PipelineProviderModule {
       MetricRegistry metricRegistry,
       AlertManager alertManager,
       Configuration configuration,
-      RuntimeInfo runtimeInfo,
-      BlobStoreTask blobStoreTask
+      RuntimeInfo runtimeInfo
   ) {
     return new DataObserverRunnable(
         pipelineId,
@@ -196,8 +193,7 @@ public class PipelineProviderModule {
         alertManager,
         configuration,
         runtimeInfo,
-        resolvedParameters,
-        blobStoreTask
+        resolvedParameters
     );
   }
 
@@ -250,8 +246,7 @@ public class PipelineProviderModule {
       MetricRegistry metricRegistry,
       ThreadHealthReporter threadHealthReporter,
       EventListenerManager eventListenerManager,
-      RuntimeInfo runtimeInfo,
-      BlobStoreTask blobStoreTask
+      RuntimeInfo runtimeInfo
   ) {
     return new MetricsEventRunnable(
         name,
@@ -262,8 +257,7 @@ public class PipelineProviderModule {
         eventListenerManager,
         metricRegistry,
         null,
-        runtimeInfo,
-        blobStoreTask
+        runtimeInfo
     );
   }
 

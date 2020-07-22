@@ -17,7 +17,6 @@ package com.streamsets.datacollector.execution.store;
 
 import com.codahale.metrics.MetricRegistry;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -159,8 +158,7 @@ public class TestPipelineStateStore {
           eventListenerManager,
           lockCache,
           Mockito.mock(PipelineCredentialHandler.class),
-          configuration,
-          Mockito.mock(BlobStoreTask.class)
+          configuration
       );
     }
   }

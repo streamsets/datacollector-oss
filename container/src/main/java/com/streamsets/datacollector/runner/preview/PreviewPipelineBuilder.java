@@ -121,7 +121,7 @@ public class PreviewPipelineBuilder {
     this.testOrigin = testOrigin;
     this.interceptorConfs = interceptorConfs;
     this.connections = connections;
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   public PreviewPipeline build(UserContext userContext, PipelineRunner runner) throws PipelineRuntimeException {

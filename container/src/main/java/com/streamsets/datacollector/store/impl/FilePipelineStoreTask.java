@@ -18,7 +18,6 @@ package com.streamsets.datacollector.store.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -37,7 +36,6 @@ import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -114,8 +112,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       EventListenerManager eventListenerManager,
       LockCache<String> lockCache,
       PipelineCredentialHandler encryptingCredentialHandler,
-      Configuration configuration,
-      BlobStoreTask blobStoreTask
+      Configuration configuration
   ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
@@ -135,7 +132,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     );
     this.eventListenerManager = eventListenerManager;
     this.encryptingCredentialHandler = encryptingCredentialHandler;
-    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo, blobStoreTask);
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   @VisibleForTesting

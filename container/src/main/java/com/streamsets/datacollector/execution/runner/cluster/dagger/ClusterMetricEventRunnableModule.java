@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.execution.runner.cluster.dagger;
 
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.metrics.MetricsEventRunnable;
@@ -44,8 +43,7 @@ public class ClusterMetricEventRunnableModule {
       PipelineStateStore pipelineStateStore,
       EventListenerManager eventListenerManager,
       SlaveCallbackManager slaveCallbackManager,
-      RuntimeInfo runtimeInfo,
-      BlobStoreTask blobStoreTask
+      RuntimeInfo runtimeInfo
   ) {
     return new MetricsEventRunnable(
         name,
@@ -56,8 +54,7 @@ public class ClusterMetricEventRunnableModule {
         eventListenerManager,
         null,
         slaveCallbackManager,
-        runtimeInfo,
-        blobStoreTask
+        runtimeInfo
     );
   }
 

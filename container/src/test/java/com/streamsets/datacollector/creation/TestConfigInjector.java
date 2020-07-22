@@ -28,7 +28,6 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.BlobStore;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -362,10 +361,9 @@ public class TestConfigInjector {
       )))
       .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     Configuration configuration = new Configuration();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    ConfigInjector.prepareForConnections(configuration, runtimeInfo, mockBlobStore);
+    ConfigInjector.prepareForConnections(configuration, runtimeInfo);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -411,9 +409,6 @@ public class TestConfigInjector {
     Assert.assertEquals(E.A, stage.enumSNoDefaultAlAll);
     Assert.assertEquals(1, stage.enumMJavaDefault.size());
     Assert.assertEquals(E.A, stage.enumMJavaDefault.get(0));
-
-    Mockito.verify(mockBlobStore, Mockito.never())
-        .retrieve(Mockito.anyString(), Mockito.anyString(), Mockito.anyLong());
   }
 
   @Test
@@ -423,7 +418,6 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("URL", "http://new.place"));
@@ -431,7 +425,7 @@ public class TestConfigInjector {
     configs.add(new Config("beanSubBean.subBeanString", "StreamSets"));
     ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 2, configs);
     connections.put(connectionId, cc);
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -473,7 +467,6 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("URL", "http://new.place"));
@@ -481,7 +474,7 @@ public class TestConfigInjector {
     configs.add(new Config("beanSubBean.subBeanString", "StreamSets"));
     ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 2, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -523,14 +516,13 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("URL", "http://new.place"));
     // connection configuration is older version
     ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 1, configs);
     connections.put(connectionId, cc);
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -573,12 +565,11 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     ConnectionConfiguration cc = new ConnectionConfiguration("lib", "WRONG_TYPE", 1, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -609,13 +600,12 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     // connection configuration is newer version
     ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 3, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {
@@ -646,7 +636,6 @@ public class TestConfigInjector {
         .put("connectionSelection", connectionId)
         .build();
 
-    BlobStore mockBlobStore = Mockito.mock(BlobStore.class);
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any()))
         .thenAnswer((Answer<ConnectionConfiguration>) invocation -> {
@@ -654,7 +643,7 @@ public class TestConfigInjector {
           context.createIssue(CreationError.CREATION_1104, "some problem");
           return null;
         });
-    ConfigInjector.prepareForConnections(connectionRetriever, mockBlobStore);
+    ConfigInjector.prepareForConnections(connectionRetriever);
 
     StageConfiguration stageConfig = Mockito.mock(StageConfiguration.class);
     Mockito.when(stageConfig.getConfig(Mockito.anyString())).then(invocation -> {

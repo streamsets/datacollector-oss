@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.store.impl;
 
-import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineStateStore;
@@ -120,13 +119,6 @@ public class TestFileAclStoreTask {
 
     @Provides
     @Singleton
-    @Nullable
-    public BlobStoreTask provideBlobStoreTask() {
-      return Mockito.mock(BlobStoreTask.class);
-    }
-
-    @Provides
-    @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
         Configuration configuration,
@@ -134,8 +126,7 @@ public class TestFileAclStoreTask {
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
         EventListenerManager eventListenerManager,
-        LockCache<String> lockCache,
-        BlobStoreTask blobStoreTask
+        LockCache<String> lockCache
     ) {
       return new FilePipelineStoreTask(
           buildInfo,
@@ -145,8 +136,7 @@ public class TestFileAclStoreTask {
           eventListenerManager,
           lockCache,
           Mockito.mock(PipelineCredentialHandler.class),
-          configuration,
-          blobStoreTask
+          configuration
       );
     }
 
