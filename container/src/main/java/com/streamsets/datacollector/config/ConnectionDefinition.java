@@ -18,6 +18,7 @@ package com.streamsets.datacollector.config;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.HashMap;
@@ -42,6 +43,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
   private final ConnectionVerifierDefinition verifierDefinition;
+  private final ConnectionEngine[] supportedEngines;
 
   @SuppressWarnings("unchecked")
   public ConnectionDefinition(ConnectionDefinition def, ClassLoader classLoader) {
@@ -57,6 +59,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
     verifierDefinition = def.verifierDefinition;
+    supportedEngines = def.supportedEngines;
   }
 
   public ConnectionDefinition(
@@ -69,7 +72,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       List<ConfigDefinition> configDefinitions,
       ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
-      ConnectionVerifierDefinition verifierDefinition
+      ConnectionVerifierDefinition verifierDefinition,
+      ConnectionEngine[] supportedEngines
   ) {
     this.connectionDef = connectionDef;
     this.libraryDefinition = libraryDefinition;
@@ -95,6 +99,7 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     }
     this.yamlUpgrader = yamlUpgrader;
     this.verifierDefinition = verifierDefinition;
+    this.supportedEngines = supportedEngines;
   }
 
   @JsonIgnore
@@ -167,13 +172,17 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier='{}']",
-        getLibrary(), getName(), getVersion(), getType(), verifierDefinition
+        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier='{}' supported engines='{}']",
+        getLibrary(), getName(), getVersion(), getType(), verifierDefinition, supportedEngines
     );
   }
 
   public ConnectionVerifierDefinition getVerifierDefinition() {
     return verifierDefinition;
+  }
+
+  public ConnectionEngine[] getSupportedEngines() {
+    return supportedEngines;
   }
 }
 

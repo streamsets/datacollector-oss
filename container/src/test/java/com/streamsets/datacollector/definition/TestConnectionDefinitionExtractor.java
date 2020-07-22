@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.connection.TestConnectionDef;
+import com.streamsets.pipeline.api.ConnectionEngine;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -107,6 +108,8 @@ public class TestConnectionDefinitionExtractor {
     Assert.assertEquals(2, def.getConfigDefinitionsMap().size());
     Assert.assertEquals(def.getConfigDefinitions().get(0), def.getConfigDefinitionsMap().get("host"));
     Assert.assertEquals(def.getConfigDefinitions().get(1), def.getConfigDefinitionsMap().get("port"));
+    Assert.assertArrayEquals(new ConnectionEngine[]{ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER},
+        def.getSupportedEngines());
 
     // Assert groups
     ConfigGroupDefinition groupsDef = def.getConfigGroupDefinition();

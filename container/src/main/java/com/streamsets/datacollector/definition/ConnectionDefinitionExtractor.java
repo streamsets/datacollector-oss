@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
@@ -96,6 +97,16 @@ public abstract class ConnectionDefinitionExtractor {
       ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
       String yamlUpgrader = conDef.upgraderDef();
       ConnectionVerifierDefinition verifierDefinition = getVerifierDefinition(conDef, klass);
+      String verifier = conDef.verifier().getCanonicalName();
+      ConnectionEngine[] supportedEngines = conDef.supportedEngines();
+
+      String verifierPrefix = "";
+      Class verifierClass = klass.getClassLoader().loadClass(verifier);
+      for (Field field : verifierClass.getDeclaredFields()) {
+        if (field.getAnnotation(ConfigDefBean.class) != null && klass.equals(field.getType())) {
+          verifierPrefix = field.getName();
+        }
+      }
 
       return new ConnectionDefinition(
           conDef,
@@ -107,7 +118,8 @@ public abstract class ConnectionDefinitionExtractor {
           configDefinitions,
           configGroupDefinition,
           yamlUpgrader,
-          verifierDefinition
+          verifierDefinition,
+          supportedEngines
       );
     } catch (Exception e) {
       throw new IllegalStateException("Exception while extracting connection definition for " + conDef.label(), e);
