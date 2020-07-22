@@ -58,11 +58,13 @@ public class SdkWholeFileDataFormatParserService extends BaseService implements 
   }
 
   @Override
+  @Deprecated
   public void setStringBuilderPoolSize(int poolSize) {
     // N0-op
   }
 
   @Override
+  @Deprecated
   public int getStringBuilderPoolSize() {
     return 0;
   }

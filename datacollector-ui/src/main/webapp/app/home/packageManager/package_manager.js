@@ -584,7 +584,6 @@ angular
       });
       modalInstance.result.then(function(repoUrl) {
         $scope.header.customRepoUrl = $rootScope.$storage.customPackageManagerRepoUrl = repoUrl;
-        console.log(repoUrl);
         getLibraries($scope.header.customRepoUrl, false);
       }, function () {
       });

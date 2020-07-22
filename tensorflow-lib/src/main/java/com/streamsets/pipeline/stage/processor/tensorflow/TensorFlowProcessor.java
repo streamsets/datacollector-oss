@@ -24,6 +24,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneProcessor;
+import com.streamsets.pipeline.api.el.ELEval;
+import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.tensorflow.typesupport.TensorDataTypeSupport;
@@ -36,10 +39,12 @@ import org.tensorflow.TensorFlowException;
 
 import java.io.File;
 import java.nio.Buffer;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class TensorFlowProcessor extends SingleLaneProcessor {
@@ -49,6 +54,8 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
   private Session session;
   private Map<Pair<String, Integer>, TensorInputConfig> inputConfigMap = new LinkedHashMap<>();
   private ErrorRecordHandler errorRecordHandler;
+  private ELEval fieldPathEval;
+  private ELVars fieldPathVars;
 
   TensorFlowProcessor(TensorFlowConfigBean conf) {
     this.conf = conf;
@@ -91,6 +98,9 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
           inputConfigMap.put(key, inputConfig);
         }
     );
+
+    fieldPathEval = getContext().createELEval("conf.inputConfigs");
+    fieldPathVars = getContext().createELVars();
 
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
@@ -143,6 +153,7 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
     Iterator<Record> it = batch.getRecords();
     while (it.hasNext()) {
       Record record = it.next();
+      setInputConfigFields(record);
       Session.Runner runner = this.session.runner();
 
       Map<Pair<String, Integer>, Tensor> inputs = null;
@@ -176,6 +187,24 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
     }
   }
 
+  private void setInputConfigFields(Record record) {
+    Set<String> fieldPaths = record.getEscapedFieldPaths();
+    for (TensorInputConfig inputConfig : conf.inputConfigs) {
+      List<String> inputConfigFields = new ArrayList<>();
+      for(String f: inputConfig.fields) {
+        List<String> matchingFieldPaths = FieldPathExpressionUtil.evaluateMatchingFieldPaths(
+            f,
+            fieldPathEval,
+            fieldPathVars,
+            record,
+            fieldPaths
+        );
+        inputConfigFields.addAll(matchingFieldPaths);
+      }
+      inputConfig.setResolvedFields(inputConfigFields);
+    }
+  }
+
   private <T extends TensorDataTypeSupport> void writeRecord(
       Record r,
       List<String> fields,
@@ -206,11 +235,12 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
 
     while (batchIterator.hasNext()) {
       Record r = batchIterator.next();
+      setInputConfigFields(r);
       for (TensorInputConfig inputConfig : inputConfigs) {
         Pair<String, Integer> key = Pair.of(inputConfig.operation, inputConfig.index);
         long[] inputSize = (conf.useEntireBatch)?
-            new long[]{1, numberOfRecords, inputConfig.fields.size()}
-            : new long[]{numberOfRecords, inputConfig.fields.size()};
+            new long[]{1, numberOfRecords, inputConfig.getFields().size()}
+            : new long[]{numberOfRecords, inputConfig.getFields().size()};
 
         TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.
             getTensorDataTypeSupport(inputConfig.tensorDataType);
@@ -219,7 +249,7 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
             k -> dtSupport.allocateBuffer(inputSize)
         );
         try {
-          writeRecord(r, inputConfig.fields, b, dtSupport);
+          writeRecord(r, inputConfig.getFields(), b, dtSupport);
         } catch (OnRecordErrorException e) {
           errorRecordHandler.onError(e);
         }
@@ -240,8 +270,8 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
           TensorDataTypeSupport dtSupport =
               TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(inputConfig.tensorDataType);
           long[] inputSize = (conf.useEntireBatch)?
-              new long[]{1, numberOfRecords, inputConfig.fields.size()}
-              : new long[]{numberOfRecords, inputConfig.fields.size()};
+              new long[]{1, numberOfRecords, inputConfig.getFields().size()}
+              : new long[]{numberOfRecords, inputConfig.getFields().size()};
           //for read
           v.flip();
           inputs.put(k, dtSupport.createTensor(inputSize, v));
@@ -259,8 +289,8 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
     for (TensorInputConfig inputConfig : inputConfigs) {
       Pair<String, Integer> key = Pair.of(inputConfig.operation, inputConfig.index);
       long[] inputSize = (conf.useEntireBatch)?
-          new long[]{1, numberOfRecords, inputConfig.fields.size()}
-          : new long[]{numberOfRecords, inputConfig.fields.size()};
+          new long[]{1, numberOfRecords, inputConfig.getFields().size()}
+          : new long[]{numberOfRecords, inputConfig.getFields().size()};
 
       TensorDataTypeSupport dtSupport = TensorTypeSupporter.INSTANCE.getTensorDataTypeSupport(inputConfig.tensorDataType);
       Buffer b = inputBuffer.computeIfAbsent(
@@ -268,7 +298,7 @@ public final class TensorFlowProcessor extends SingleLaneProcessor {
           k -> dtSupport.allocateBuffer(inputSize)
       );
 
-      writeRecord(r, inputConfig.fields, b, dtSupport);
+      writeRecord(r, inputConfig.getFields(), b, dtSupport);
     }
     return createInputTensor(inputBuffer, numberOfRecords);
   }

@@ -64,6 +64,7 @@ public class S3ConfigBean {
       defaultValue = "false",
       description = "Select to include object metadata in record header attributes",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "S3"
   )
   public boolean enableMetaData = false;
@@ -76,6 +77,7 @@ public class S3ConfigBean {
       description = "Number of parallel threads to read data",
       displayPosition = 60,
       group = "ADVANCED",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1
   )
   public int numberOfThreads = 1;

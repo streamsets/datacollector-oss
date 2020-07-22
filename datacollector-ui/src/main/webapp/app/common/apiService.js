@@ -18,7 +18,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('api', function($rootScope, $http, $q, tracking) {
+  .factory('api', function($rootScope, $http, $q, tracking, trackingEvent) {
     var apiVersion = 'v1';
     var apiBase = 'rest/' + apiVersion;
     var api = {
@@ -195,7 +195,7 @@ angular.module('dataCollectorApp.common')
        * logout
        */
       logout: function(authenticationType, isDPMEnabled) {
-        tracking.mixpanel.track('Logout', {
+        tracking.mixpanel.track(trackingEvent.LOGOUT, {
           //'Time to First Pipeline': '',
           'Logout Type': 'User Logout',
         });
@@ -625,7 +625,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
-        tracking.mixpanel.track('Pipeline Exported', {'Pipeline ID': name});
+        tracking.mixpanel.track(trackingEvent.PIPELINE_EXPORT, {'Pipeline ID': name});
       },
 
       /**
@@ -691,7 +691,7 @@ angular.module('dataCollectorApp.common')
               'To include credentials in the export, use Export with Plain Text Credentials.'
           }];
         }
-        tracking.mixpanel.track('Pipelines Bulk Exported', {'Pipeline IDs': pipelineIds});
+        tracking.mixpanel.track(trackingEvent.PIPELINE_EXPORT_BULK, {'Pipeline IDs': pipelineIds});
       },
 
       /**
@@ -880,7 +880,7 @@ angular.module('dataCollectorApp.common')
        * @param edgeHttpUrl
        */
       cancelPreview: function(pipelineId, previewerId, edgeHttpUrl) {
-        tracking.mixpanel.track('Preview Cancelled', {
+        tracking.mixpanel.track(trackingEvent.PREVIEW_CANCELLED, {
           'Pipeline ID': pipelineId,
           'Stop Type': 'User',
         });

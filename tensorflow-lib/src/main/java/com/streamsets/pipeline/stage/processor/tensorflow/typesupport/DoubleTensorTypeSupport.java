@@ -38,7 +38,10 @@ final class DoubleTensorTypeSupport extends AbstractTensorDataTypeSupport<Double
 
   @Override
   public void writeField(DoubleBuffer buffer, Field field) {
-    Utils.checkState(field.getType() == Field.Type.DOUBLE, "Not a double scalar");
+    Utils.checkState(
+        field.getType() == Field.Type.DOUBLE,
+        Utils.format("Not a Double scalar, it is {}", field.getType())
+    );
     buffer.put(field.getValueAsDouble());
   }
 

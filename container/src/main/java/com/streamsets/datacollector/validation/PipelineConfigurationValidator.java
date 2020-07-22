@@ -269,6 +269,10 @@ public class PipelineConfigurationValidator extends PipelineFragmentConfiguratio
       ValidationUtil.addMissingConfigsToStage(stageLibrary, stageConfiguration);
     }
 
+    if(pipelineConfiguration.getTestOriginStage() != null) {
+      ValidationUtil.addMissingConfigsToStage(stageLibrary, pipelineConfiguration.getTestOriginStage());
+    }
+
     return true;
   }
 

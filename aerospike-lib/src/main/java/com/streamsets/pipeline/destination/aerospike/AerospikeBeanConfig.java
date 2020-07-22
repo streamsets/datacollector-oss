@@ -48,6 +48,7 @@ public class AerospikeBeanConfig {
       required = true,
       min = 0,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "AEROSPIKE"
   )
   public int maxRetries = 0;

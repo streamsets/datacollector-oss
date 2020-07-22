@@ -16,9 +16,11 @@
 package com.streamsets.pipeline.lib.startJob;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.CommonUtil;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -31,6 +33,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -135,6 +138,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
 
   private void generateField(List<Map<String, Object>> jobStatusList) {
     LinkedHashMap<String, Field> jobTemplateOutput = new LinkedHashMap<>();
+    List<Field> templateJobInstances = new ArrayList<>();
     boolean jobTemplateSuccess = true;
     for (Map<String, Object> jobStatus : jobStatusList) {
       String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
@@ -147,14 +151,22 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
       startOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
       if (!conf.runInBackground) {
         startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
+        MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
+            clientBuilder,
+            conf.baseUrl,
+            jobId,
+            userAuthToken
+        );
+        startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
       }
       startOutput.put(Constants.JOB_STATUS_FIELD, Field.create(status));
       startOutput.put(Constants.JOB_STATUS_COLOR_FIELD, Field.create(statusColor));
       startOutput.put(Constants.ERROR_MESSAGE_FIELD, Field.create(errorMessage));
-      jobTemplateOutput.put(jobId, Field.createListMap(startOutput));
+      templateJobInstances.add(Field.createListMap(startOutput));
       jobTemplateSuccess &= success;
     }
     jobTemplateOutput.put(Constants.TEMPLATE_JOB_ID_FIELD, Field.create(templateJobId));
+    jobTemplateOutput.put(Constants.TEMPLATE_JOB_INSTANCES_FIELD, Field.create(templateJobInstances));
     jobTemplateOutput.put(Constants.STARTED_SUCCESSFULLY_FIELD, Field.create(true));
     if (!conf.runInBackground) {
       jobTemplateOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(jobTemplateSuccess));

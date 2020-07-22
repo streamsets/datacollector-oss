@@ -166,11 +166,11 @@ angular
       }
     });
 
-    if(!$rootScope.$storage.summaryPanelList_v1) {
+    if (!$rootScope.$storage.summaryPanelList_v1) {
       $rootScope.$storage.summaryPanelList_v1 = chartList;
     }
 
-    if(!$rootScope.$storage.counters) {
+    if (!$rootScope.$storage.counters) {
       $rootScope.$storage.counters = {};
     }
 
@@ -179,32 +179,45 @@ angular
      * Update Summary Tab Data
      */
     var updateSummaryData = function() {
-      var timerProperty,
-        pipelineConfig = $scope.pipelineConfig,
-        pipelineMetrics = $rootScope.common.pipelineMetrics,
-        currentSelection = $scope.detailPaneConfig,
-        isStageSelected = $scope.stageSelected;
+      var timerProperty;
+      var pipelineConfig = $scope.pipelineConfig;
+      var pipelineMetrics = $scope.detailPaneMetrics;
+      var currentSelection = $scope.detailPaneConfig;
+      var isStageSelected = $scope.stageSelected;
 
-      //Workaround for refreshing the graph after data is loaded
+      // reset all chart values
+      $scope.summaryHistograms = undefined;
+      $scope.runnerGauges = undefined;
+      $scope.summaryMeters = undefined;
+      $scope.customStageMeters = undefined;
+      $scope.customStageTimers = undefined;
+      $scope.customStageHistograms = undefined;
+      $scope.customStageGauges = undefined;
+      $scope.summaryTimer = undefined;
+
+      if (!pipelineMetrics) {
+        return;
+      }
+
+      // Workaround for refreshing the graph after data is loaded
       $timeout(function() {
         $scope.summaryDataLoaded = true;
       });
 
-
-      if(angular.equals({},pipelineMetrics)) {
+      if (angular.equals({},pipelineMetrics)) {
         return;
       }
 
       //histogram
-      if(isStageSelected && pipelineMetrics.histograms) {
+      if (isStageSelected && pipelineMetrics.histograms) {
         var inputRecordsHistogram =
-            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.inputRecords.histogramM5'],
-          outputRecordsHistogram=
-            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.outputRecords.histogramM5'],
-          errorRecordsHistogram=
-            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'],
-          errorsHistogram =
-            pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
+          pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.inputRecords.histogramM5'];
+        var outputRecordsHistogram =
+          pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.outputRecords.histogramM5'];
+        var errorRecordsHistogram =
+          pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.errorRecords.histogramM5'];
+        var errorsHistogram =
+          pipelineMetrics.histograms['stage.' + currentSelection.instanceName + '.stageErrors.histogramM5'];
 
         switch(currentSelection.uiInfo.stageType) {
           case pipelineConstant.SOURCE_STAGE_TYPE:
@@ -242,7 +255,7 @@ angular
             };
             break;
         }
-      } else if(pipelineMetrics && pipelineMetrics.histograms){
+      } else if (pipelineMetrics && pipelineMetrics.histograms){
         $scope.histogramList = ['inputRecords', 'outputRecords', 'errorRecords', 'errors'];
         $scope.summaryHistograms = {
           inputRecords:
@@ -261,24 +274,24 @@ angular
       }
 
 
-      //Counters
-      if(pipelineMetrics.counters) {
-        var persistedCounters = ['memoryConsumed'],
-          pipelineCounterKey = 'pipeline.' + pipelineConfig.info.pipelineId,
-          currentTime = new Date().getTime(),
-          counterValue;
+      // Counters
+      if (pipelineMetrics && pipelineMetrics.counters) {
+        var persistedCounters = ['memoryConsumed'];
+        var pipelineCounterKey = 'pipeline.' + pipelineConfig.info.pipelineId;
+        var currentTime = new Date().getTime();
+        var counterValue;
 
         angular.forEach(persistedCounters, function(persistedCounter) {
           var counters = $rootScope.common.counters[persistedCounter];
 
-          if(!counters) {
+          if (!counters) {
             counters = $rootScope.common.counters[persistedCounter] = {};
           }
 
           //Pipeline
           counterValue = pipelineMetrics.counters['pipeline.memoryConsumed.counter'] ?
             pipelineMetrics.counters['pipeline.memoryConsumed.counter'].count : 0;
-          if(!counters[pipelineCounterKey]) {
+          if (!counters[pipelineCounterKey]) {
             counters[pipelineCounterKey] =  [[currentTime, counterValue]];
           } else {
             counters[pipelineCounterKey].push([currentTime, counterValue]);
@@ -289,10 +302,10 @@ angular
           }
 
           angular.forEach(pipelineConfig.stages, function(stageInst) {
-            if(pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter']) {
+            if (pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter']) {
               counterValue = pipelineMetrics.counters['stage.' + stageInst.instanceName + '.memoryConsumed.counter'].count;
 
-              if(!counters[ stageInst.instanceName ]) {
+              if (!counters[ stageInst.instanceName ]) {
                 counters[ stageInst.instanceName ]=  [[currentTime, counterValue]];
               } else {
                 counters[ stageInst.instanceName ].push([currentTime, counterValue]);
@@ -309,9 +322,9 @@ angular
         pipelineTracking.trackRunReported(pipelineMetrics, pipelineConfig);
       }
 
-      //Gauges
-      if(pipelineMetrics.gauges) {
-        if(!isStageSelected) {
+      // Gauges
+      if (pipelineMetrics.gauges) {
+        if (!isStageSelected) {
           $scope.runnerGauges = [];
           angular.forEach(pipelineMetrics.gauges, function(gaugeObj, gaugeKey) {
             if (gaugeKey.indexOf('runner.') !== -1) {
@@ -332,9 +345,9 @@ angular
         }
       }
 
-      //meters
-      if(pipelineMetrics.meters) {
-        if(isStageSelected) {
+      // meters
+      if (pipelineMetrics.meters) {
+        if (isStageSelected) {
           $scope.summaryMeters = {
             batchCount:
               pipelineMetrics.meters['pipeline.batchCount.meter'],
@@ -435,23 +448,21 @@ angular
         }
       }
 
-      //timers
-      if(pipelineMetrics.timers) {
+      // timers
+      if (pipelineMetrics.timers) {
         timerProperty = 'pipeline.batchProcessing.timer';
-        if(isStageSelected) {
+        if (isStageSelected) {
           timerProperty = 'stage.' + currentSelection.instanceName + '.batchProcessing.timer';
         }
 
         $scope.summaryTimer = pipelineMetrics.timers[timerProperty];
       }
 
-
       $scope.$broadcast('summaryDataUpdated');
     };
 
     $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+      if ($scope.detailPaneMetrics &&
         options.type !== pipelineConstant.LINK) {
         $scope.customStageMeters = undefined;
         $scope.customStageTimers = undefined;
@@ -463,9 +474,8 @@ angular
       }
     });
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if ($scope.detailPaneMetrics &&
         $scope.selectedType !== pipelineConstant.LINK && !$scope.monitoringPaused) {
         updateSummaryData();
       }
@@ -498,10 +508,7 @@ angular
       });
     });
 
-    if($scope.isPipelineRunning &&
-      $rootScope.common.pipelineMetrics) {
-      updateSummaryData();
-    }
+    updateSummaryData();
 
   })
 

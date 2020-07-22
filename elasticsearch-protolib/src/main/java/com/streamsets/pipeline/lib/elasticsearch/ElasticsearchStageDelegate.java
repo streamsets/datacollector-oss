@@ -62,7 +62,6 @@ import java.util.regex.Pattern;
 public class ElasticsearchStageDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchStageDelegate.class);
   private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
-  private static final Pattern SECURITY_USER_PATTERN = Pattern.compile("\\S+:\\S+");
   private static final String AWS_SERVICE_NAME = "es";
 
   private final Stage.Context context;
@@ -102,12 +101,46 @@ public class ElasticsearchStageDelegate {
       ));
     }
 
-    if (conf.useSecurity && !SECURITY_USER_PATTERN.matcher(securityUser).matches()) {
+    String securityPassword = null;
+    try {
+      securityPassword = conf.securityConfig.securityPassword.get();
+    } catch (StageException e) {
       issues.add(context.createConfigIssue(
           Groups.SECURITY.name(),
-          SecurityConfig.CONF_PREFIX + "securityUser",
-          Errors.ELASTICSEARCH_20
+          SecurityConfig.CONF_PREFIX + "securityPassword",
+          Errors.ELASTICSEARCH_38,
+          e.toString()
       ));
+    }
+
+    if (conf.useSecurity) {
+      if (securityUser == null || securityPassword == null) {
+        issues.add(
+            context.createConfigIssue(
+                Groups.SECURITY.name(),
+                SecurityConfig.CONF_PREFIX + "securityUser",
+                Errors.ELASTICSEARCH_40
+            )
+        );
+      } else {
+        if (securityUser.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.SECURITY.name(),
+                  SecurityConfig.CONF_PREFIX + "securityUser",
+                  Errors.ELASTICSEARCH_20
+              )
+          );
+        } else if (!securityUser.contains(":") && securityPassword.isEmpty()) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.SECURITY.name(),
+                  SecurityConfig.CONF_PREFIX + "securityPassword",
+                  Errors.ELASTICSEARCH_39
+              )
+          );
+        }
+      }
     }
 
     if (!issues.isEmpty()) {
@@ -148,7 +181,7 @@ public class ElasticsearchStageDelegate {
             break;
         }
 
-        restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser));
+        restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser, securityPassword));
       } else {
         restClient = restClientBuilder.build();
         restClient.performRequest("GET", "/");
@@ -311,13 +344,15 @@ public class ElasticsearchStageDelegate {
     }
   }
 
-  public Header[] getAuthenticationHeader(String securityUser) {
+  public Header[] getAuthenticationHeader(String securityUser, String securityPassword) {
     if (!conf.useSecurity || conf.securityConfig.securityMode.equals(SecurityMode.AWSSIGV4)) {
       return new Header[0];
     }
 
     // Credentials are in form of "username:password".
-    byte[] credentials = securityUser.getBytes();
+    String securityData = (securityUser.contains(":")) ? securityUser:
+                          securityUser.concat(":").concat(securityPassword);
+    byte[] credentials = securityData.getBytes();
     return Collections.singletonList(new BasicHeader(
         "Authorization",
         "Basic " + Base64.encodeBase64String(credentials)

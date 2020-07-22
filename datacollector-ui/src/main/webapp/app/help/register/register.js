@@ -21,7 +21,8 @@ angular
   .module('dataCollectorApp')
   .controller('RegisterModalInstanceController', function (
       $scope, $rootScope, $modalInstance, $location, $interval, $q,
-      api, activationInfo, configuration, authService, activationTracking
+      api, activationInfo, configuration, authService, activationTracking,
+      $httpParamSerializer
     ) {
 
     var activationUpdateInterval;
@@ -121,6 +122,7 @@ angular
         agreedToTerms: false,
         agreedToPrivacyPolicy: false
       },
+      registerWithAccountUrl: configuration.getAccountRegistrationURL(),
 
       uploadActivationText: function() {
         uploadActivation($scope.activationData.activationText).then(function(res) {
@@ -203,9 +205,23 @@ angular
     }
 
     $q.all([api.admin.getSdcId(), api.admin.getBuildInfo()]).then( function(results) {
-      $scope.activationData.sdcId = results[0].data.id;
+      var sdcId = results[0].data.id;
+      $scope.activationData.sdcId = sdcId;
       if (results[1] && results[1].data) {
-        $scope.activationData.sdcVersion = results[1].data.version;
+        var productVersion = results[1].data.version;
+        $scope.activationData.sdcVersion = productVersion;
+        var accountUrl = configuration.getAccountRegistrationURL();
+        if (accountUrl) {
+          $scope.registerWithAccountUrl =
+          accountUrl +
+          '?' +
+          $httpParamSerializer({
+            productType: 'DATA_COLLECTOR',
+            productVersion: productVersion,
+            productId: sdcId,
+            productUrl: window.location.href
+          });
+        }
       }
       if (getActivationKeyFromURL()) {
         $scope.uploadActivationText();

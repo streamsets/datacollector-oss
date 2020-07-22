@@ -148,7 +148,7 @@ angular
     });
 
     $scope.$on('summaryDataUpdated', function() {
-      var pipelineMetrics = $rootScope.common.pipelineMetrics,
+      var pipelineMetrics = $scope.detailPaneMetrics,
         values = [],
         total = 0;
 
@@ -174,60 +174,4 @@ angular
       $scope.chartData = values;
       $scope.totalValue = (total).toFixed(2);
     });
-
-
-    var refreshTimeSeriesData = function() {
-      var query = baseQuery + '(',
-        timeRangeCondition = $scope.getTimeRangeWhereCondition(),
-        labelMap = {};
-
-      angular.forEach(stages, function(stage, index) {
-        var stageMemoryCounter = 'stage.' + stage.instanceName + '.memoryConsumed.counter';
-
-        if(index !== 0) {
-          query += ' or ';
-        }
-
-        query += "metric = '" + stageMemoryCounter + "'";
-        labelMap[stageMemoryCounter] = stage.uiInfo.label;
-      });
-
-      query += ") and " + timeRangeCondition;
-
-      api.timeSeries.getTimeSeriesData(query).then(
-        function(res) {
-          if(res && res.data) {
-            var chartData = $scope.timeSeriesChartData;
-            chartData.splice(0, chartData.length);
-            angular.forEach(res.data.results[0].series, function(d, index) {
-              chartData.push({
-                key: labelMap[d.tags.metric],
-                columns: d.columns,
-                values: d.values
-              });
-            });
-          }
-        },
-        function(res) {
-          $rootScope.common.errors = [res.data];
-        }
-      );
-    };
-
-    $scope.$watch('timeRange', function() {
-      if($scope.timeRange !== 'latest') {
-        refreshTimeSeriesData();
-      }
-    });
-
-    $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning && $scope.timeRange !== 'latest' &&
-        options.type !== pipelineConstant.LINK) {
-        refreshTimeSeriesData();
-      }
-    });
-
-    if($scope.timeRange !== 'latest') {
-      refreshTimeSeriesData();
-    }
   });

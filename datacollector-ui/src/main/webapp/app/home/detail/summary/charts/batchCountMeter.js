@@ -136,7 +136,7 @@ angular
     });
 
     var refreshChartData = function() {
-      if($scope.summaryMeters && $scope.summaryMeters.batchCount) {
+      if ($scope.summaryMeters && $scope.summaryMeters.batchCount) {
         $scope.chartData[0].values = [
           ["1m" , $scope.summaryMeters.batchCount.m1_rate ],
           ["5m" , $scope.summaryMeters.batchCount.m5_rate ],
@@ -151,61 +151,13 @@ angular
       }
     };
 
-
-    var refreshTimeSeriesData = function() {
-      var query = baseQuery,
-        timeRangeCondition = $scope.getTimeRangeWhereCondition(),
-        labelMap = {
-          'pipeline.batchCount.meter': 'Batch Throughput'
-        };
-
-      query += "(metric = 'pipeline.batchCount.meter') and " + timeRangeCondition;
-
-      api.timeSeries.getTimeSeriesData(query).then(
-        function(res) {
-          if(res && res.data) {
-            var chartData = $scope.timeSeriesChartData;
-            chartData.splice(0, chartData.length);
-            angular.forEach(res.data.results[0].series, function(d, index) {
-              chartData.push({
-                key: labelMap[d.tags.metric],
-                columns: d.columns,
-                values: d.values,
-                area: true
-              });
-            });
-          }
-        },
-        function(res) {
-          $rootScope.common.errors = [res.data];
-        }
-      );
-    };
+    $scope.$on('onSelectionChange', function(event, options) {
+      refreshChartData();
+    });
 
     $scope.$on('summaryDataUpdated', function() {
       refreshChartData();
     });
 
-    $scope.$watch('timeRange', function() {
-      if($scope.timeRange !== 'latest') {
-        refreshTimeSeriesData();
-      }
-    });
-
-    $scope.$on('onSelectionChange', function(event, options) {
-      if($scope.isPipelineRunning && options.type !== pipelineConstant.LINK) {
-        if($scope.timeRange !== 'latest') {
-          refreshTimeSeriesData();
-        } else {
-          refreshChartData();
-        }
-      }
-    });
-
-    if($scope.timeRange !== 'latest') {
-      refreshTimeSeriesData();
-    } else {
-      refreshChartData();
-    }
-
+    refreshChartData();
   });

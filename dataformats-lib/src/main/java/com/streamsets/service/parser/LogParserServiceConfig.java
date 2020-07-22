@@ -64,8 +64,9 @@ public class LogParserServiceConfig {
   private LogDataFormatValidator logDataFormatValidator;
   private DataParserFactory parserFactory;
   // Size of StringBuilder pool maintained by Text and Log Data Parser Factories.
-  // The default value is 1 for regular origins. Multithreaded origins should override this value as required.
-  public int stringBuilderPoolSize = DataFormatConstants.STRING_BUILDER_POOL_SIZE;
+  // It is equal to the max number of runners in multi-threaded pipelines configured in sdc.properties,
+  // with a default value of 50.
+  public int stringBuilderPoolSize;
 
   @ConfigDef(
       required = true,
@@ -351,6 +352,11 @@ public class LogParserServiceConfig {
       List<Stage.ConfigIssue> issues
   ) {
     Preconditions.checkState(dataFormat != null, "dataFormat cannot be NULL");
+
+    stringBuilderPoolSize = context.getConfiguration().get(
+        DataFormatConstants.MAX_RUNNERS_CONFIG_KEY,
+        DataFormatConstants.DEFAULT_STRING_BUILDER_POOL_SIZE
+    );
 
     validateLogFormat(context, issues);
 

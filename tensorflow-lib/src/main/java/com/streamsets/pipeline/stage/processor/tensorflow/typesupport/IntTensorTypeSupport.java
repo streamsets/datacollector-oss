@@ -37,7 +37,10 @@ class IntTensorTypeSupport extends AbstractTensorDataTypeSupport<IntBuffer, Inte
 
   @Override
   public void writeField(IntBuffer buffer, Field field) {
-    Utils.checkState(field.getType() == Field.Type.INTEGER, "Not a Float scalar");
+    Utils.checkState(
+        field.getType() == Field.Type.INTEGER,
+        Utils.format("Not a Integer scalar, it is {}", field.getType())
+    );
     buffer.put(field.getValueAsInteger());
   }
 

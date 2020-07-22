@@ -27,6 +27,7 @@ public class S3SSEConfigBean {
       description = "Whether or not server-side encryption is enabled with customer-provided keys",
       defaultValue = "false",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean useCustomerSSEKey;
@@ -40,6 +41,7 @@ public class S3SSEConfigBean {
       displayPosition = 20,
       dependsOn = "useCustomerSSEKey",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue customerKey;
@@ -53,6 +55,7 @@ public class S3SSEConfigBean {
       displayPosition = 30,
       dependsOn = "useCustomerSSEKey",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue customerKeyMd5;

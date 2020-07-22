@@ -37,7 +37,10 @@ final class FloatTensorTypeSupport extends AbstractTensorDataTypeSupport<FloatBu
 
   @Override
   public void writeField(FloatBuffer buffer, Field field) {
-    Utils.checkState(field.getType() == Field.Type.FLOAT, "Not a Float scalar");
+    Utils.checkState(
+        field.getType() == Field.Type.FLOAT,
+        Utils.format("Not a Float scalar, it is {}", field.getType())
+    );
     buffer.put(field.getValueAsFloat());
   }
 

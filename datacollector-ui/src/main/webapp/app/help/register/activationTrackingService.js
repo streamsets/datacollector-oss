@@ -19,7 +19,7 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('activationTracking', function(tracking, api, configuration) {
+  .factory('activationTracking', function(tracking, api, configuration, trackingEvent) {
     var activationTracking = {};
 
     activationTracking.trackActivationEvent = function(activationInfo, previousActivationInfo) {
@@ -39,7 +39,7 @@ angular.module('dataCollectorApp.common')
           // If permission error happens, we can assume 0
           trackingData['Pipeline Count'] = 0;
         }).finally(function() {
-          tracking.mixpanel.track('Product Activated', trackingData);
+          tracking.mixpanel.track(trackingEvent.ACTIVATION, trackingData);
           tracking.mixpanel.people.set({'$email': activationInfo.info.userInfo});
           var additionalInfo = activationInfo.info.additionalInfo;
           var firstName = additionalInfo['user.firstName'];

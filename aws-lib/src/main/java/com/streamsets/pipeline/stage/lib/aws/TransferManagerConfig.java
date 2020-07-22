@@ -30,6 +30,7 @@ public class TransferManagerConfig {
       label = "Thread Pool Size For Parallel Uploads",
       description = "Size of thread pool to use when making requests to Amazon S3",
       displayPosition = 8010,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int threadPoolSize = 10;
@@ -41,6 +42,7 @@ public class TransferManagerConfig {
       label = "Multipart Upload Threshold",
       description = "Size threshold in bytes for when to use multipart uploads",
       displayPosition = 8020,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public long multipartUploadThreshold = 16 * 1024 * 1024;
@@ -52,6 +54,7 @@ public class TransferManagerConfig {
       label = "Minimum Upload Part Size",
       description = "Minimum part size in bytes for upload parts",
       displayPosition = 8030,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public long minimumUploadPartSize = 5 * 1024 * 1024;

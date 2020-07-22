@@ -41,6 +41,7 @@ public class S3TargetSSEConfigBean {
       description = "Whether or not to enable server-side encryption",
       defaultValue = "false",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean useSSE;
@@ -54,6 +55,7 @@ public class S3TargetSSEConfigBean {
       displayPosition = 20,
       dependsOn = "useSSE",
       triggeredByValue = "true",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(SseOptionChooserValues.class)
@@ -68,6 +70,7 @@ public class S3TargetSSEConfigBean {
       displayPosition = 30,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue kmsKeyId;
@@ -80,6 +83,7 @@ public class S3TargetSSEConfigBean {
       displayPosition = 40,
       dependsOn = "encryption",
       triggeredByValue = "KMS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ListBeanModel
@@ -93,6 +97,7 @@ public class S3TargetSSEConfigBean {
       displayPosition = 50,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue customerKey;
@@ -105,6 +110,7 @@ public class S3TargetSSEConfigBean {
       displayPosition = 60,
       dependsOn = "encryption",
       triggeredByValue = "CUSTOMER",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue customerKeyMd5;

@@ -64,7 +64,7 @@ angular
 
     function updateChartData() {
       var customStageHistogram = $scope.customStageHistogram,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $scope.detailPaneMetrics;
 
       if(pipelineMetrics && pipelineMetrics.histograms) {
         var histogramData = pipelineMetrics.histograms[customStageHistogram.histogramKey];
@@ -88,9 +88,8 @@ angular
       }
     }
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if($scope.detailPaneMetrics &&
         $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
         !$scope.monitoringPaused) {
         updateChartData();

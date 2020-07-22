@@ -96,6 +96,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 17:
         upgradeV17ToV18(configs);
+        // fall through
+      case 18:
+        upgradeV18ToV19(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -307,6 +310,10 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV17ToV18(List<Config> configs) {
+    configs.add(new Config("transformerEMRConfig.serviceAccessSecurityGroup", null));
+  }
+
+  private void upgradeV18ToV19(List<Config> configs) {
     addDataprocConfigs(configs);
   }
 

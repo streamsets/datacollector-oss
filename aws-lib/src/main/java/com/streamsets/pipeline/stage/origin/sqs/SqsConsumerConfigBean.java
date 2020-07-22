@@ -73,6 +73,7 @@ public class SqsConsumerConfigBean {
       description = "The max number of messages that should be retrieved per request.",
       displayPosition = 120,
       group = "SQS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1
   )
   public int numberOfMessagesPerRequest;
@@ -88,6 +89,7 @@ public class SqsConsumerConfigBean {
       description = "Max number of records per batch.",
       displayPosition = 160,
       group = "SQS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -101,6 +103,7 @@ public class SqsConsumerConfigBean {
       description = "The maximum time a partial batch will remain open before being flushed (milliseconds).",
       displayPosition = 170,
       group = "SQS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -114,6 +117,7 @@ public class SqsConsumerConfigBean {
       description = "Maximum number of record processing threads to spawn.",
       displayPosition = 190,
       group = "SQS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -129,6 +133,7 @@ public class SqsConsumerConfigBean {
           " thus not use long polling).",
       displayPosition = 190,
       group = "SQS",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = -1,
       max = 20
   )
@@ -141,6 +146,7 @@ public class SqsConsumerConfigBean {
       label = "SQS Message Attribute Level",
       description = "Level of SQS message metadata and attributes to include as SDC record attributes.",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SQS"
   )
   @ValueChooserModel(SqsAttributesOptionChooserValues.class)
@@ -154,6 +160,7 @@ public class SqsConsumerConfigBean {
       displayPosition = 210,
       dependsOn = "sqsAttributesOption",
       triggeredByValue = "ALL",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SQS"
   )
   public List<String> sqsMessageAttributeNames;

@@ -42,6 +42,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
@@ -59,6 +60,7 @@ import dagger.ObjectGraph;
 import dagger.Provides;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Duration;
+import org.awaitility.core.ConditionTimeoutException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -77,6 +79,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ScheduledFuture;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.desiredPipelineState;
 import static org.awaitility.Awaitility.await;
@@ -85,6 +88,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 public class TestStandaloneRunner {
 
@@ -123,12 +127,15 @@ public class TestStandaloneRunner {
   @After
   public void tearDown() throws Exception {
     TestUtil.EMPTY_OFFSET = false;
-    if (pipelineManager != null) {
-      pipelineManager.stop();
+    try {
+      if (pipelineManager != null) {
+        pipelineManager.stop();
+      }
+    } finally {
+      TestUtil.EMPTY_OFFSET = false;
+      System.getProperties().remove(DATA_DIR_KEY);
+      await().atMost(Duration.ONE_MINUTE).until(() -> FileUtils.deleteQuietly(dataDir));
     }
-    TestUtil.EMPTY_OFFSET = false;
-    System.getProperties().remove(DATA_DIR_KEY);
-    await().atMost(Duration.ONE_MINUTE).until(() -> FileUtils.deleteQuietly(dataDir));
   }
 
   @Test(timeout = 20000)
@@ -237,17 +244,37 @@ public class TestStandaloneRunner {
       ExecutionMode.STANDALONE, null, 0, 0);
     runner.prepareForDataCollectorStart("admin");
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
-    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, "test save STOPPED", null,
       ExecutionMode.STANDALONE, null, 0, 0);
     runner.start(new StartPipelineContextBuilder("admin").build());
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
+    /* TODO wait for RUNNING below should not be necessary. Without it, however, the following events occur:
+     * Start thread                                     Stop thread (via async runner)
+     * 1. ProductionPipeline transitions to STARTING
+     *                                                  2. In main thread, transitions state to STOPPING.
+     *
+     * 3. PP tries to transition to RUNNING, fails
+     * 4. PP checks PipelineRunner.stop, gets false.
+     *    Has no handle to the current status (ie
+     *    cannot observe that #2 occurred)
+     * 5. PP transitions to RUN_ERROR (forced) when
+     *    it is supposed to transition to STOPPED
+     *                                                  6. Asynchronously, sets PipelineRunner.stop (too late!)
+     *
+     * We have a race condition between start and stop and no locking to protect it. Though PipelineRunner.stop is
+     * volatile, it is set after the transition to STOPPING so it doesn't help in this race. If the stop thread
+     * completes both steps atomically then there is never a problem, but these are two separate interface methods.
+     */
+    waitForState(runner, PipelineStatus.RUNNING);
+    runner.stop("admin");
+    waitForState(runner, PipelineStatus.STOPPED);
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
     assertNull(runner.getState().getMetrics());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, null, null,
       ExecutionMode.STANDALONE, null, 0, 0);
     runner.start(new StartPipelineContextBuilder("admin").build());
-    assertTrue("Unexpectd state: " + runner.getState().getStatus(), runner.getState().getStatus().isOneOf(PipelineStatus.STARTING, PipelineStatus.RUNNING));
+    assertTrue("Unexpected state: " + runner.getState().getStatus(), runner.getState().getStatus().isOneOf(PipelineStatus.STARTING, PipelineStatus.RUNNING));
   }
 
   @Test
@@ -374,6 +401,34 @@ public class TestStandaloneRunner {
   }
 
   @Test(timeout = 20000)
+  public void testStopDcWhenPipelineInRetry() throws Exception {
+    Runner runner = Mockito.spy(pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0"));
+    ScheduledFuture<Void> retryFutureMock = Mockito.mock(ScheduledFuture.class);
+    Whitebox.setInternalState(runner.getRunner(AsyncRunner.class).getDelegatingRunner(), "retryFuture", retryFutureMock);
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, "test set RETRY", null,
+            ExecutionMode.STANDALONE, null, 0, 0);
+    runner.onDataCollectorStop("admin");
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
+
+    // test forced transition
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RETRY, "test set RETRY", null,
+            ExecutionMode.STANDALONE, null, 0, 0);
+    // make it so when cancel is called, it simulates a concurrent thread transitioning to RUNNING_ERROR, which would
+    // cause failures if not for forcing the transition
+    Mockito.when(retryFutureMock.cancel(Mockito.anyBoolean())).thenAnswer(i -> {
+      try {
+        pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.RUNNING_ERROR,
+                "test concurrent STARTING", null, ExecutionMode.STANDALONE, null, 0, 0);
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+      return true;
+    });
+    runner.onDataCollectorStop("admin");
+    assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
+  }
+
+  @Test(timeout = 20000)
   public void testMultiplePipelineStartStop() throws Exception {
     Runner runner1 = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     Runner runner2 = pipelineManager.getRunner( TestUtil.MY_SECOND_PIPELINE, "0");
@@ -447,8 +502,13 @@ public class TestStandaloneRunner {
     assertNotNull(runner2.getState().getMetrics());
   }
 
-  private void waitForState(Runner runner, PipelineStatus pipelineStatus) {
-    await().until(desiredPipelineState(runner, pipelineStatus));
+  private void waitForState(Runner runner, PipelineStatus pipelineStatus) throws Exception {
+    try {
+      await().until(desiredPipelineState(runner, pipelineStatus));
+    } catch (ConditionTimeoutException e) {
+      fail(String.format("Failed to transition to status %s, current status is %s",
+              pipelineStatus, runner.getState().getStatus()));
+    }
   }
 
   @Test(timeout = 20000)
@@ -727,6 +787,61 @@ public class TestStandaloneRunner {
 
     pipelineManager.statusChange(previewer.getId(), PreviewStatus.VALIDATING);
     Mockito.verify(statsCollector).previewStatusChanged(PreviewStatus.VALIDATING, previewer);
+  }
+
+  @Test
+  public void testTransitionValidation() throws Exception {
+    Runner runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.FINISHED, null, null,
+            ExecutionMode.STANDALONE, null, 0, 0);
+    StandaloneRunner standaloneRunner = runner.getRunner(StandaloneRunner.class);
+    assertEquals(PipelineStatus.FINISHED, runner.getState().getStatus());
+    // can't transition from inactive state
+    try {
+      standaloneRunner.stateChanged(PipelineStatus.RUN_ERROR, "failed direct transition test", null);
+      fail("Expected exception due to invalid transition");
+    } catch (PipelineRuntimeException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    }
+    assertEquals(PipelineStatus.FINISHED, standaloneRunner.getState().getStatus());
+
+    // verify all public methods that do transitions that should be validated, but allowed when made directly
+    testTransitionHelper(standaloneRunner, PipelineStatus.STARTING,
+            () -> standaloneRunner.prepareForStart(new StartPipelineContextBuilder("admin").build()));
+    testTransitionHelper(standaloneRunner, PipelineStatus.RUNNING,
+            () -> standaloneRunner.start(new StartPipelineContextBuilder("admin").build()));
+    testTransitionHelper(standaloneRunner, PipelineStatus.RUNNING,
+            () -> standaloneRunner.startAndCaptureSnapshot(new StartPipelineContextBuilder("admin").build(),
+                    null, null, 1, 1));
+    testTransitionHelper(standaloneRunner, PipelineStatus.STOPPING,
+            () -> standaloneRunner.prepareForStop("admin"));
+    testTransitionHelper(standaloneRunner, PipelineStatus.STOPPED,
+            () -> standaloneRunner.stop("admin"));
+  }
+
+  private void testTransitionHelper(StandaloneRunner standaloneRunner,
+                                    PipelineStatus finalStatus,
+                                    TestRunnable callThatFails) throws Exception {
+    // can't transition from DISCONNECTING to anything but DISCONNECTED in public methods
+    pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.DISCONNECTING, null, null,
+            ExecutionMode.STANDALONE, null, 0, 0);
+    assertEquals(PipelineStatus.DISCONNECTING, standaloneRunner.getState().getStatus());
+    try {
+      callThatFails.run();
+      fail("Expected exception due to invalid transition");
+    } catch (PipelineRunnerException e) {
+      Assert.assertEquals(ContainerError.CONTAINER_0102, e.getErrorCode());
+    }
+    assertEquals(PipelineStatus.DISCONNECTING, standaloneRunner.getState().getStatus());
+
+    // internal transitions should go through
+    standaloneRunner.stateChanged(finalStatus, "successful direct transition", null);
+    assertEquals(finalStatus, standaloneRunner.getState().getStatus());
+  }
+
+  @FunctionalInterface
+  interface TestRunnable {
+    void run() throws Exception;
   }
 
   @Module(overrides = true, library = true)

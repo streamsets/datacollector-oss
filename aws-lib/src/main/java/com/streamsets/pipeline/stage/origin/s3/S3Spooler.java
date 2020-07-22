@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -90,10 +92,16 @@ public class S3Spooler {
       s3offset = amazonS3Source.getLatestOffset();
     }
 
-    List<S3ObjectSummary> s3ObjectSummaries;
+    List<S3ObjectSummary> s3ObjectSummaries = Collections.emptyList();
     if (!AWSUtil.containsWildcard(s3ConfigBean.s3FileConfig.prefixPattern)) {
       // No wildcard in the prefixPattern - don't need to scan the bucket
-      s3ObjectSummaries = AmazonS3Util.getObjectNoWildcard(s3Client, s3ConfigBean, s3offset, s3ConfigBean.s3FileConfig.prefixPattern);
+      try {
+        s3ObjectSummaries = AmazonS3Util.getObjectNoWildcard(s3Client, s3ConfigBean, s3offset,
+                s3ConfigBean.s3Config.commonPrefix + s3ConfigBean.s3FileConfig.prefixPattern);
+      } catch (AmazonS3Exception e) {
+        LOG.warn("Object '{}' not found", s3ConfigBean.s3Config.commonPrefix + s3ConfigBean.s3FileConfig.prefixPattern);
+      }
+
     } else {
       ObjectOrdering objectOrdering = s3ConfigBean.s3FileConfig.objectOrdering;
       switch (objectOrdering) {

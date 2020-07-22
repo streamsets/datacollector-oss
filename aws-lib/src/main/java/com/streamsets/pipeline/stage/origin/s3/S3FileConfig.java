@@ -48,6 +48,7 @@ public class S3FileConfig {
       description = "Read objects based on the last-modified timestamp or lexicographically ascending key names. " +
           "When timestamp ordering is used, objects with the same timestamp are ordered based on key names.",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(ObjectOrderingChooseValues.class)
@@ -62,6 +63,7 @@ public class S3FileConfig {
       " SDC will perform new file listing only after all the files in the pool have been transferred.",
     displayPosition = 115,
     group = "#0",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     min = 1,
     max = Integer.MAX_VALUE
   )
@@ -75,6 +77,7 @@ public class S3FileConfig {
     description = "Low level reader buffer limit to avoid out of Memory errors",
     displayPosition = 120,
     group = "#0",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     min = 1,
     max = Integer.MAX_VALUE
   )

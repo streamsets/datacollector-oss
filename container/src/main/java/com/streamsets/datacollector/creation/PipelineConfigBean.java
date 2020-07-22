@@ -66,7 +66,7 @@ import java.util.Map;
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 18;
+  public static final int VERSION = 19;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -120,6 +120,7 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       label = "Execution Mode",
       defaultValue= "STANDALONE",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 10
   )
   @ValueChooserModel(ExecutionModeChooserValues.class)
@@ -132,6 +133,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = EDGE_HTTP_URL_DEFAULT,
       displayPosition = 15,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"EDGE"}
   )
   public String edgeHttpUrl = EDGE_HTTP_URL_DEFAULT;
@@ -143,6 +145,7 @@ public class PipelineConfigBean implements Stage {
       label = "Delivery Guarantee",
       displayPosition = 20,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH"}
   )
   @ValueChooserModel(DeliveryGuaranteeChooserValues.class)
@@ -156,6 +159,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = RAW_DATA_ORIGIN,
       displayPosition = 21,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH"}
   )
   @ValueChooserModel(PipelineTestStageChooserValues.class)
@@ -169,6 +173,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = TRASH_TARGET,
       displayPosition = 23,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE"}
   )
   @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
@@ -182,6 +187,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = TRASH_TARGET,
       displayPosition = 26,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE"}
   )
   @ValueChooserModel(PipelineLifecycleStageChooserValues.class)
@@ -194,6 +200,7 @@ public class PipelineConfigBean implements Stage {
       label = "Retry Pipeline on Error",
       displayPosition = 30,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
   )
   public boolean shouldRetry;
@@ -208,6 +215,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = {
           @Dependency(configName = "executionMode", triggeredByValues = {"STREAMING"})
       },
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 35
   )
   public long triggerInterval = 1; // default so tests don't wait forever
@@ -221,6 +229,7 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue = "true",
       description = "Max no of retries. To retry indefinitely, use -1. The wait time between retries starts at 15 seconds"
           + " and doubles until reaching 5 minutes.",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 30
   )
   public int retryAttempts;
@@ -234,6 +243,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = {
           @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
       },
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 40
   )
   public boolean ludicrousMode;
@@ -247,6 +257,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = {
           @Dependency(configName = "ludicrousMode", triggeredByValues = "true")
       },
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 50
   )
   public boolean ludicrousModeInputCount;
@@ -260,6 +271,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = {
           @Dependency(configName = "executionMode", triggeredByValues = {"BATCH", "STREAMING"})
       },
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 60
   )
   public boolean advancedErrorHandling;
@@ -273,6 +285,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 75,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   @MultiValueChooserModel(PipelineStateChooserValues.class)
@@ -287,6 +300,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 76,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   public List<String> emailIDs;
@@ -297,6 +311,7 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MAP,
       label = "Parameters",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "PARAMETERS"
   )
   public Map<String, Object> constants;
@@ -323,6 +338,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 93,
       group = "BAD_RECORDS",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH"}
   )
   @ValueChooserModel(ErrorRecordPolicyChooserValues.class)
@@ -351,6 +367,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 100,
       group = "CLUSTER",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_YARN_STREAMING"}
   )
   public long workerCount;
@@ -363,6 +380,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 150,
       group = "CLUSTER",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
   )
   public long clusterSlaveMemory;
@@ -377,6 +395,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 110,
       group = "CLUSTER",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
   )
   public String clusterSlaveJavaOpts;
@@ -390,6 +409,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 120,
       group = "CLUSTER",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
   )
   public Map<String, String> clusterLauncherEnv;
@@ -415,6 +435,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 140,
       group = "CLUSTER",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"EMR_BATCH", "BATCH", "STREAMING"}
   )
   @ValueChooserModel(LogLevelChooserValues.class)
@@ -441,6 +462,7 @@ public class PipelineConfigBean implements Stage {
           "Rate is not limited if this is not set, or is set to 0",
       displayPosition = 180,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
   )
   public long rateLimit;
@@ -454,6 +476,7 @@ public class PipelineConfigBean implements Stage {
       min = 0,
       displayPosition = 190,
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
   )
   public int maxRunners = 0;
@@ -468,6 +491,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = @Dependency(
           configName = "executionMode", triggeredByValues = "STANDALONE"
       ),
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 200
   )
   public boolean shouldCreateFailureSnapshot;
@@ -482,6 +506,7 @@ public class PipelineConfigBean implements Stage {
       dependencies = @Dependency(
           configName = "executionMode", triggeredByValues = "STANDALONE"
       ),
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 210
   )
   public long runnerIdleTIme = 60;
@@ -494,6 +519,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 210,
       group = "NOTIFICATIONS",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "BATCH", "STREAMING"}
   )
   @ListBeanModel
@@ -524,6 +550,7 @@ public class PipelineConfigBean implements Stage {
       displayPosition = 10,
       group = "ADVANCED",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"BATCH", "STREAMING"}
   )
   public String preprocessScript;

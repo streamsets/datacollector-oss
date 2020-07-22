@@ -33,7 +33,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <awssdk.version>1.11.385</awssdk.version>
+    <awssdk.version>1.11.813</awssdk.version>
     <apache-http.version>4.5.5</apache-http.version>
   </properties>
   <dependencyManagement>

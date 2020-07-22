@@ -351,7 +351,8 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
         Record record = parser.parse();
         if (record != null) {
           record.getHeader().setAttribute(REMOTE_URI, remoteURI.toString());
-          record.getHeader().setAttribute(HeaderAttributeConstants.FILE, next.getFilePath());
+          record.getHeader().setAttribute(HeaderAttributeConstants.FILE,
+              RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath()));
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME,
               FilenameUtils.getName(next.getFilePath())
           );

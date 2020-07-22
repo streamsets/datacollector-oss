@@ -1,5 +1,36 @@
 <div class="container-fluid summary-tab" ng-controller="SummaryController">
 
+  <div class="row" ng-if="runHistory.length > 0 && (!isPipelineRunning || selectedRunHistory !== runHistory[0]) && selectedRunHistory">
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th translate="global.form.runCount">Run Count</th>
+        <th translate="global.form.started">Started</th>
+        <th translate="global.form.completed">Completed</th>
+        <th translate="global.form.duration">Duration</th>
+        <th translate="global.form.user">User</th>
+        <th translate="global.form.status">Status</th>
+      </tr>
+      </thead>
+      <tbody ng-hide="showLoading">
+      <tr>
+        <td>{{selectedRunHistory.appName}}</td>
+        <td>{{selectedRunHistory.started | date:'medium'}}</td>
+        <td>{{selectedRunHistory.completed | date:'medium'}}</td>
+        <td>{{selectedRunHistory.completed | amDifference : selectedRunHistory.started | amDurationFormat }} </td>
+        <td>{{selectedRunHistory.user}}</td>
+        <td>{{selectedRunHistory.status}}</td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div class="alert alert-danger" role="alert" ng-if="selectedRunHistory.status !== 'STOPPED' && selectedRunHistory.message">
+      <i class="fa fa-exclamation-triangle"></i>
+      <span>Pipeline Status: {{selectedRunHistory.status}}: {{selectedRunHistory.message}}</span>
+    </div>
+
+  </div>
+
   <div class="row" ng-if="selectedType === pipelineConstant.PIPELINE && triggeredAlerts.length">
     <div class="col-sm-12 col-md-12 col-lg-12 triggered-alerts"
          ng-repeat="triggeredAlert in triggeredAlerts | filter: {type: 'METRIC_ALERT'}">
@@ -98,7 +129,7 @@
         </div>
         <div class="panel-body">
           <ul class="table-properties">
-            <li ng-repeat= "(propertyKey, propertyValue) in common.pipelineMetrics.gauges[customStageGauge.gaugeKey].value">
+            <li ng-repeat= "(propertyKey, propertyValue) in detailPaneMetrics.gauges[customStageGauge.gaugeKey].value">
               <span class="properties-label">{{propertyKey}}: </span>
               <span class="properties-value">{{propertyValue}}</span>
             </li>
@@ -135,7 +166,7 @@
           <span> Runner {{runnerGauge.runnerId}}</span>
         </div>
         <div class="panel-body">
-          <ul class="table-properties" ng-init="gaugeData = common.pipelineMetrics.gauges[runnerGauge.gaugeKey].value">
+          <ul class="table-properties" ng-init="gaugeData = detailPaneMetrics.gauges[runnerGauge.gaugeKey].value">
             <li>
               <span class="properties-label">Current Stage:</span>
               <span class="properties-value">{{stageNameToLabelMap[gaugeData.currentStage]}}</span>
@@ -170,6 +201,10 @@
     </div>
   </div>
 
+</div>
+
+<div class="alert alert-info" role="alert" ng-if="pipelineStateHistory.length > 0 && runHistory.length === 0">
+  <span>No Run History found</span>
 </div>
 
 <script type="text/ng-template" id="summaryRecordPercentagePieChartTemplate">
@@ -322,7 +357,7 @@
           <ul class="properties">
             <li>
               <span class="properties-label">Current runners:</span>
-              <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.availableRunners}}/{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.totalRunners}}</span>
+              <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.availableRunners}}/{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.totalRunners}}</span>
             </li>
           </ul>
         <nvd3 options="chartOptions" data="timerData" config="{ refreshDataOnly: true }"></nvd3>
@@ -408,46 +443,46 @@
           <li>
             <span class="properties-label">Current Stages:</span>
             <span class="properties-value"
-                  ng-repeat="currentStage in common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages">{{stageNameToLabelMap[currentStage] + (!$last ? ', ' : '')}}</span>
+                  ng-repeat="currentStage in detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages">{{stageNameToLabelMap[currentStage] + (!$last ? ', ' : '')}}</span>
             <span class="properties-value"
-                  ng-if="!common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages || common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages.length === 0">--</span>
+                  ng-if="!detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages || detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.currentStages.length === 0">--</span>
           </li>
 
           <li>
             <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchInputRecordsCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchInputRecordsCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchInputRecordsCount}}</span>
           </li>
 
           <li>
             <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchOutputRecordsCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchOutputRecordsCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchOutputRecordsCount}}</span>
           </li>
 
           <li>
             <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchErrorRecordsCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorRecordsCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorRecordsCount}}</span>
           </li>
 
           <li>
             <span class="properties-label last-batch">{{'home.detailPane.summaryTab.lastBatchErrorMessagesCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorMessagesCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.lastBatchErrorMessagesCount}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.timeOfLastReceivedRecord' | translate}}:</span>
             <span class="properties-value"
-                  ng-if="common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord"
-              >{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
+                  ng-if="detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord"
+              >{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.timeOfLastReceivedRecord  | date:'medium'}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.batchCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.batchCount}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.idleBatchCount' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['RuntimeStatsGauge.gauge'].value.idleBatchCount}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['RuntimeStatsGauge.gauge'].value.idleBatchCount}}</span>
           </li>
 
           <li>
@@ -456,27 +491,27 @@
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.productionPipelineRunnable' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['health.ProductionPipelineRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['health.ProductionPipelineRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.rulesConfigLoaderRunnable' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['health.RulesConfigLoaderRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['health.RulesConfigLoaderRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.dataObserverRunnable' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['health.DataObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['health.DataObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.metricObserverRunnable' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['health.MetricObserverRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
           <li>
             <span class="properties-label">{{'home.detailPane.summaryTab.metricsEventRunnable' | translate}}:</span>
-            <span class="properties-value">{{common.pipelineMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
+            <span class="properties-value">{{detailPaneMetrics.gauges['health.MetricsEventRunnable.gauge'].value.timestamp  | date:'medium'}}</span>
           </li>
 
         </ul>
@@ -505,14 +540,14 @@
       </div>
       <div class="panel-body">
         <ul class="table-properties">
-          <li ng-repeat="sdcURL in common.pipelineMetrics.slaves">
+          <li ng-repeat="sdcURL in detailPaneMetrics.slaves">
             <a href="/rest/v1/cluster/redirectToSlave?name={{pipelineConfig.info.pipelineId}}&sdcURL={{sdcURL}}"
                target="_blank">{{sdcURL}}</a>
           </li>
         </ul>
 
         <span class="no-data-available"
-              ng-if="!common.pipelineMetrics || !common.pipelineMetrics.slaves || common.pipelineMetrics.slaves.length === 0"
+              ng-if="!detailPaneMetrics || !detailPaneMetrics.slaves || detailPaneMetrics.slaves.length === 0"
               translate="global.messages.info.noDataAvailable">No Data Available.</span>
 
       </div>

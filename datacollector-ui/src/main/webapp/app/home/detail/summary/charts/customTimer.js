@@ -64,7 +64,7 @@ angular
 
     function updateChartData() {
       var customStageTimer = $scope.customStageTimer,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $scope.detailPaneMetrics;
 
       if(pipelineMetrics && pipelineMetrics.timers) {
         var timerData = pipelineMetrics.timers[customStageTimer.timerKey];
@@ -88,9 +88,8 @@ angular
       }
     }
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if($scope.detailPaneMetrics &&
         $scope.selectedType === pipelineConstant.STAGE_INSTANCE &&
         !$scope.monitoringPaused) {
         updateChartData();

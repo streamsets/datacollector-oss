@@ -1,12 +1,17 @@
 <div class="history-tab" ng-controller="HistoryController">
 
+  <div class="btn-group toggle-toolbar input-matching">
+    <label class="btn btn-default btn-sm" ng-model="showRunHistory" btn-radio="true">Run History</label>
+    <label class="btn btn-default btn-sm" ng-model="showRunHistory" btn-radio="false">State History</label>
+  </div>
+
   <button type="button" class="btn btn-primary btn-sm add-button pull-right"
-          ng-show="isAuthorized([userRoles.admin, userRoles.creator]) && !isPipelineRunning && runHistory.length"
+          ng-show="isAuthorized([userRoles.admin, userRoles.creator]) && !isPipelineRunning && pipelineStateHistory.length"
           ng-click="clearHistory()">
     <i class="fa fa-trash-o"></i> {{'home.detailPane.historyTab.clearHistory' | translate}}
   </button>
 
-  <table class="table">
+  <table class="table" ng-if="!showRunHistory">
     <thead>
     <tr>
       <th class="col-md-2" translate="global.form.lastStatusChange">Last Status Change</th>
@@ -18,25 +23,12 @@
     </tr>
     </thead>
     <tbody ng-hide="showLoading">
-    <tr ng-repeat="history in runHistory track by $index">
+    <tr ng-repeat="history in pipelineStateHistory track by $index">
       <td>{{history.timeStamp | date:'medium'}}</td>
       <td>{{history.user}}</td>
       <td ng-bind="history.status"></td>
       <td>
-        <i class="fa fa-info-circle help-icon"
-                     ng-class="fa-info-circle"
-                     ng-if="history.attributes['ANTENNA_DOCTOR_MESSAGES'] && history.attributes['ANTENNA_DOCTOR_MESSAGES'].length > 0"
-                     tooltip-placement="right"
-                     tooltip-append-to-body="false"
-                     tooltip="{{history.attributes['ANTENNA_DOCTOR_MESSAGES'][0].summary}}"
-                     tooltip-trigger="mouseenter">
-         </i>
-        {{history.message}}
-        <a class="view-stack-trace"
-            ng-if="history.attributes['ERROR_STACKTRACE']"
-            ng-click="showStackTrace(history)">
-            ( <span translate="home.graphPane.viewStackTrace">View Details</span>... )
-        </a>
+        <span>{{history.message}}</span>
       </td>
       <td>
         <span ng-if="history.attributes && history.attributes['RUNTIME_PARAMETERS']">{{history.attributes['RUNTIME_PARAMETERS'] | json}}</span>
@@ -49,8 +41,67 @@
       </td>
     </tr>
 
-    <tr ng-if="runHistory.length === 0">
+    <tr ng-if="pipelineStateHistory.length === 0">
       <td colspan="3" class="no-status text-center" translate="home.detailPane.historyTab.noStatus">No Status.</td>
+    </tr>
+
+    </tbody>
+  </table>
+
+  <table class="table" ng-if="showRunHistory">
+    <thead>
+    <tr>
+      <th translate="global.form.runCount">Run Count</th>
+      <th translate="global.form.started">Started</th>
+      <th translate="global.form.completed">Completed</th>
+      <th translate="global.form.duration">Duration</th>
+      <th translate="global.form.user">User</th>
+      <th translate="global.form.status">Status</th>
+      <th translate="global.form.input">Input</th>
+      <th translate="global.form.output">Output</th>
+      <th translate="global.form.error">Error</th>
+      <th translate="home.detailPane.summary">Summary</th>
+    </tr>
+    </thead>
+    <tbody ng-hide="showLoading">
+    <tr ng-repeat="history in runHistory track by $index">
+      <td>{{history.appName}}</td>
+      <td>{{history.started | date:'medium'}}</td>
+      <td>
+        <span ng-if="!history.active">{{history.completed | date:'medium'}}</span>
+        <span ng-if="history.active">--</span>
+      </td>
+      <td>
+        <span ng-if="!history.active">{{history.completed | amDifference : history.started | amDurationFormat }}</span>
+        <span ng-if="history.active">{{history.completed | amDifference | amDurationFormat }}</span>
+      </td>
+      <td>{{history.user}}</td>
+      <td>
+        {{history.status}}
+        <span class="invalid-status"
+              ng-if="history.message && history.isErrorState"
+              tooltip-placement="bottom"
+              tooltip="{{history.message}}">
+          <i class="fa fa-exclamation-triangle fa-12x"></i>
+          <a href="#"
+             ng-if="history.errorStackTrace"
+             ng-click="showStackTraceFromParams(history.message, history.errorStackTrace)">
+           ( <span translate="home.graphPane.viewStackTrace">View Stack Trace</span>... )
+        </a>
+        </span>
+      </td>
+      <td class="input-records">{{history.metrics ? (history.inputRecords | number) : '--'}}</td>
+      <td class="output-records">{{history.metrics ? (history.outputRecords | number) : '--'}}</td>
+      <td class="error-records">{{history.metrics ? (history.errorRecordsAndMessages | number) : '--'}}</td>
+      <td>
+        <a href="javascript:"
+           ng-if="history.metrics"
+           ng-click="viewSummary(history.pipelineState, history.stateIndex)">View Summary ...</a>
+      </td>
+    </tr>
+
+    <tr ng-if="runHistory.length === 0">
+      <td colspan="6" class="no-status text-center" translate="home.detailPane.historyTab.noStatus">No Status.</td>
     </tr>
 
     </tbody>

@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 public class ActiveStats {
   private final Logger LOG = LoggerFactory.getLogger(ActiveStats.class);
 
-  public static final String VERSION = "1.2";
+  public static final String VERSION = "1.3";
 
   /** In upgrade scenarios, this can differ from {@link #VERSION} until the first roll. */
   private String version;
@@ -68,6 +68,7 @@ public class ActiveStats {
   private ConcurrentHashMap<String, FirstPipelineUse> createToPreview;
   private ConcurrentHashMap<String, FirstPipelineUse> createToRun;
   private List<AbstractStatsExtension> extensions;
+  private ActivationInfo activationInfo;
 
   /**
    * @param extensions immutable list of callbacks for extensions to customize behavior
@@ -87,6 +88,7 @@ public class ActiveStats {
     createToPreview = new ConcurrentHashMap<>();
     createToRun = new ConcurrentHashMap<>();
     this.extensions = null == extensions ? Collections.emptyList() : extensions;
+    activationInfo = new ActivationInfo(null);
   }
 
   @JsonIgnore
@@ -290,6 +292,15 @@ public class ActiveStats {
     return this;
   }
 
+  public ActivationInfo getActivationInfo() {
+    return activationInfo;
+  }
+
+  public ActiveStats setActivationInfo(ActivationInfo activationInfo) {
+    this.activationInfo = activationInfo;
+    return this;
+  }
+
   public String hashPipelineId(String id) {
     return statsInfo.hashPipelineId(id);
   }
@@ -445,7 +456,8 @@ public class ActiveStats {
         .setBuildRepoSha(getBuildRepoSha())
         .setExtraInfo(getExtraInfo())
         .setDpmEnabled(isDpmEnabled())
-        .setUpTime(getUpTime().roll());
+        .setUpTime(getUpTime().roll())
+        .setActivationInfo(getActivationInfo());
     statsBean.setDeprecatedPipelines(
         getDeprecatedPipelines().stream()
             // If multiplier is 0, its not running/used anymore
@@ -487,7 +499,8 @@ public class ActiveStats {
         .setDpmEnabled(isDpmEnabled())
         .setErrorCodes(errorCodes)
         .setUpTime(getUpTime().snapshot())
-        .setRecordCount(getRecordCount());
+        .setRecordCount(getRecordCount())
+        .setActivationInfo(getActivationInfo());
     snapshot.setDeprecatedPipelines(getDeprecatedPipelines().stream().map(UsageTimer::snapshot).collect(Collectors.toList()));
     snapshot.setPipelineStats(getPipelineStats().entrySet().stream().collect(Collectors.toConcurrentMap(
         e -> e.getKey(),

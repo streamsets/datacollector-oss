@@ -376,6 +376,10 @@ public class JdbcSource extends BaseSource {
     super.destroy();
   }
 
+  protected String getPreparedQuery() {
+    return preparedQuery;
+  }
+
   @Override
   public String produce(String lastSourceOffset, int maxBatchSize, BatchMaker batchMaker) {
     int batchSize = Math.min(this.commonSourceConfigBean.maxBatchSize, maxBatchSize);
@@ -401,13 +405,14 @@ public class JdbcSource extends BaseSource {
         if (null == resultSet || resultSet.isClosed()) {
           // The result set got closed outside of us, so we also clean up the connection (if any)
           closeQuietly(connection);
-          connection = dataSource.getConnection();
+          connection = getProduceConnection();
 
+          preparedQuery = prepareQuery(query, lastSourceOffset);
           if (!txnColumnName.isEmpty()) {
             // CDC requires scrollable cursors.
-            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            statement = getStatement(connection, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
           } else {
-            statement = connection.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            statement = getStatement(connection, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
           }
 
           int fetchSize = batchSize;
@@ -422,11 +427,11 @@ public class JdbcSource extends BaseSource {
           if (getContext().isPreview()) {
             statement.setMaxRows(batchSize);
           }
-          preparedQuery = prepareQuery(query, lastSourceOffset);
+
           LOG.trace("Executing query: {}", preparedQuery);
           String hashedQuery = hasher.putString(preparedQuery, Charsets.UTF_8).hash().toString();
           LOG.debug("Executing query: {}", hashedQuery);
-          resultSet = statement.executeQuery(preparedQuery);
+          resultSet = executeQuery(statement, preparedQuery);
           queryRowCount = 0;
           numQueryErrors = 0;
           firstQueryException = null;
@@ -551,6 +556,18 @@ public class JdbcSource extends BaseSource {
     return nextSourceOffset;
   }
 
+  protected ResultSet executeQuery(Statement statement, String preparedQuery) throws SQLException {
+    return statement.executeQuery(preparedQuery);
+  }
+
+  protected Statement getStatement(Connection connection, int resultSetType, int resultSetConcurrency) throws SQLException {
+    return connection.createStatement(resultSetType, resultSetConcurrency);
+  }
+
+  protected Connection getProduceConnection() throws SQLException {
+    return dataSource.getConnection();
+  }
+
   private void generateNoMoreDataEvent() {
     NoMoreDataEvent.EVENT_CREATOR.create(getContext())
         .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
@@ -582,7 +599,7 @@ public class JdbcSource extends BaseSource {
     return query.replaceAll("\\$\\{(offset|OFFSET)}", offset);
   }
 
-  private Record processRow(ResultSet resultSet, long rowCount) throws SQLException {
+  protected Record processRow(ResultSet resultSet, long rowCount) throws SQLException {
     Source.Context context = getContext();
     ResultSetMetaData md = resultSet.getMetaData();
     int numColumns = md.getColumnCount();

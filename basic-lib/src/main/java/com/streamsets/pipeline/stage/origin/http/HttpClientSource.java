@@ -75,6 +75,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -191,46 +193,27 @@ public class HttpClientSource extends BaseSource {
 
     if (conf.responseStatusActionConfigs != null) {
       final String cfgName = "conf.responseStatusActionConfigs";
-      final EnumSet<ResponseAction> backoffRetries = EnumSet.of(
-          ResponseAction.RETRY_EXPONENTIAL_BACKOFF,
-          ResponseAction.RETRY_LINEAR_BACKOFF
-      );
 
       for (HttpResponseActionConfigBean actionConfig : conf.responseStatusActionConfigs) {
-        final HttpResponseActionConfigBean prevAction = statusToActionConfigs.put(
-            actionConfig.getStatusCode(),
-            actionConfig
-        );
-
-        if (prevAction != null) {
+        if (actionConfig.getAction() == ResponseAction.ERROR_RECORD) {
           issues.add(
-            getContext().createConfigIssue(
-                Groups.HTTP.name(),
-                cfgName,
-                Errors.HTTP_17,
-                actionConfig.getStatusCode()
-            )
-          );
-        }
-        if (backoffRetries.contains(actionConfig.getAction()) && actionConfig.getBackoffInterval() <= 0) {
-          issues.add(
-            getContext().createConfigIssue(
-                Groups.HTTP.name(),
-                cfgName,
-                Errors.HTTP_15
-            )
-          );
-        }
-        if (actionConfig.getStatusCode() >= 200 && actionConfig.getStatusCode() < 300) {
-          issues.add(
-            getContext().createConfigIssue(
-                Groups.HTTP.name(),
-                cfgName,
-                Errors.HTTP_16
-            )
+              getContext().createConfigIssue(
+                  Groups.HTTP.name(),
+                  cfgName,
+                  Errors.HTTP_37,
+                  actionConfig.getAction().getLabel(),
+                  actionConfig.getStatusCode()
+              )
           );
         }
       }
+      HttpStageUtil.validateStatusActionConfigs(
+          issues,
+          getContext(),
+          conf.responseStatusActionConfigs,
+          statusToActionConfigs,
+          cfgName
+      );
     }
     this.timeoutActionConfig = conf.responseTimeoutActionConfig;
 
@@ -457,19 +440,20 @@ public class HttpClientSource extends BaseSource {
           final HttpResponseActionConfigBean actionConf = this.statusToActionConfigs.get(status);
           final boolean statusChanged = lastStatus != status || lastRequestTimedOut;
 
-          keepRequesting = applyResponseAction(
+          final AtomicInteger retryCountObj = new AtomicInteger(retryCount);
+          final AtomicLong backoffExp = new AtomicLong(backoffIntervalExponential);
+          final AtomicLong backoffLin = new AtomicLong(backoffIntervalLinear);
+          HttpStageUtil.applyResponseAction(
               actionConf,
               statusChanged,
-              input -> {
-                final StageException stageException = new StageException(
-                    Errors.HTTP_14,
-                    status,
-                    response.readEntity(String.class)
-                );
-                LOG.error(stageException.getMessage());
-                return stageException;
-              }
+              input -> new StageException(Errors.HTTP_14, status, response.readEntity(String.class)),
+              retryCountObj,
+              backoffLin,
+              backoffExp
           );
+          this.retryCount = retryCountObj.get();
+          this.backoffIntervalExponential = backoffExp.get();
+          this.backoffIntervalLinear = backoffLin.get();
 
         } else {
           keepRequesting = false;
@@ -492,11 +476,20 @@ public class HttpClientSource extends BaseSource {
 
             final boolean firstTimeout = !lastRequestTimedOut;
 
-            applyResponseAction(actionConf, firstTimeout, input -> {
-                  LOG.error(Errors.HTTP_18.getMessage());
-                  return new StageException(Errors.HTTP_18);
-                }
+            final AtomicInteger retryCountObj = new AtomicInteger(retryCount);
+            final AtomicLong backoffExp = new AtomicLong(backoffIntervalExponential);
+            final AtomicLong backoffLin = new AtomicLong(backoffIntervalLinear);
+            HttpStageUtil.applyResponseAction(
+                actionConf,
+                firstTimeout,
+                input -> new StageException(Errors.HTTP_18),
+                retryCountObj,
+                backoffLin,
+                backoffExp
             );
+            this.retryCount = retryCountObj.get();
+            this.backoffIntervalExponential = backoffExp.get();
+            this.backoffIntervalLinear = backoffLin.get();
 
           }
 
@@ -528,43 +521,6 @@ public class HttpClientSource extends BaseSource {
 
     // Calculate request parameter hash
     currentParameterHash = hasher.hash().toString();
-  }
-
-  private boolean applyResponseAction(
-      HttpResponseActionConfigBean actionConf,
-      boolean firstOccurence,
-      Function<Void, StageException> createConfiguredErrorFunction
-  ) throws StageException {
-    if (firstOccurence) {
-      retryCount = 0;
-    } else {
-      retryCount++;
-    }
-    if (actionConf.getMaxNumRetries() > 0 && retryCount > actionConf.getMaxNumRetries()) {
-      final StageException stageException = new StageException(Errors.HTTP_19, actionConf.getMaxNumRetries());
-      LOG.error(stageException.getMessage());
-      throw stageException;
-    }
-
-    boolean uninterrupted = true;
-    final long backoff = actionConf.getBackoffInterval();
-    switch (actionConf.getAction()) {
-      case STAGE_ERROR:
-        throw createConfiguredErrorFunction.apply(null);
-      case RETRY_IMMEDIATELY:
-        break;
-      case RETRY_EXPONENTIAL_BACKOFF:
-        backoffIntervalExponential = firstOccurence ? backoff : backoffIntervalExponential * 2;
-        LOG.debug("Applying back off for {} ms", backoffIntervalExponential);
-        uninterrupted = ThreadUtil.sleep(backoffIntervalExponential);
-        break;
-      case RETRY_LINEAR_BACKOFF:
-        backoffIntervalLinear = firstOccurence ? backoff : backoffIntervalLinear + backoff;
-        LOG.debug("Applying back off for {} ms", backoffIntervalLinear);
-        uninterrupted = ThreadUtil.sleep(backoffIntervalLinear);
-        break;
-    }
-    return uninterrupted;
   }
 
   /**

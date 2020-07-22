@@ -73,7 +73,7 @@ public class StartJobCommon {
       );
     }
 
-    if (CollectionUtils.isNotEmpty(conf.jobIdConfigList)) {
+    if (!conf.jobTemplate && CollectionUtils.isNotEmpty(conf.jobIdConfigList)) {
       int index = 1;
       for (JobIdConfig jobIdConfig: conf.jobIdConfigList) {
         if (StringUtils.isEmpty(jobIdConfig.jobId)) {
@@ -163,15 +163,37 @@ public class StartJobCommon {
           Field startJobOutputField = future.get();
           if (startJobOutputField != null) {
             LinkedHashMap<String, Field> fields = startJobOutputField.getValueAsListMap();
-            Field jobIdField = fields.get(Constants.JOB_ID_FIELD);
-            if (jobIdField != null) {
-              jobIds.add(Field.create(jobIdField.getValueAsString()));
-              jobResults.put(jobIdField.getValueAsString(), startJobOutputField);
-            }
-            if (!conf.runInBackground) {
-              Field finishedSuccessfully = fields.get(Constants.FINISHED_SUCCESSFULLY_FIELD);
-              if (finishedSuccessfully != null) {
-                success &= finishedSuccessfully.getValueAsBoolean();
+            Field templateJobInstances = fields.get(Constants.TEMPLATE_JOB_INSTANCES_FIELD);
+            if (templateJobInstances != null) {
+              // Job Template
+              List<Field> templateJobInstanceIdsList = templateJobInstances.getValueAsList();
+              for (Field templateJobInstanceField : templateJobInstanceIdsList) {
+                LinkedHashMap<String, Field> templateJobInstanceFieldValue =
+                    templateJobInstanceField.getValueAsListMap();
+                Field jobIdField = templateJobInstanceFieldValue.get(Constants.JOB_ID_FIELD);
+                if (jobIdField != null) {
+                  jobIds.add(Field.create(jobIdField.getValueAsString()));
+                  jobResults.put(jobIdField.getValueAsString(), templateJobInstanceField);
+                }
+                if (!conf.runInBackground) {
+                  Field finishedSuccessfully = templateJobInstanceFieldValue.get(Constants.FINISHED_SUCCESSFULLY_FIELD);
+                  if (finishedSuccessfully != null) {
+                    success &= finishedSuccessfully.getValueAsBoolean();
+                  }
+                }
+              }
+            } else {
+              // Regular Job
+              Field jobIdField = fields.get(Constants.JOB_ID_FIELD);
+              if (jobIdField != null) {
+                jobIds.add(Field.create(jobIdField.getValueAsString()));
+                jobResults.put(jobIdField.getValueAsString(), startJobOutputField);
+              }
+              if (!conf.runInBackground) {
+                Field finishedSuccessfully = fields.get(Constants.FINISHED_SUCCESSFULLY_FIELD);
+                if (finishedSuccessfully != null) {
+                  success &= finishedSuccessfully.getValueAsBoolean();
+                }
               }
             }
           } else {

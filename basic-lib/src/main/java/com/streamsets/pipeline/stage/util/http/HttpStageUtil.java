@@ -19,14 +19,22 @@ import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
+import com.streamsets.pipeline.lib.http.Errors;
+import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
 import org.apache.commons.lang.StringUtils;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
+import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
+import com.streamsets.pipeline.stage.origin.http.HttpStatusResponseActionConfigBean;
+import com.streamsets.pipeline.stage.origin.http.ResponseAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +44,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_21;
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_22;
@@ -149,4 +161,149 @@ public abstract class HttpStageUtil {
     return fieldList;
   }
 
+  /**
+   * @param issues existing list of config issues to add validation errors to
+   * @param context the stage context
+   * @param responseStatusActionConfigs the list of status->action configs (from stage config)
+   * @param statusToActionConfigs a map of status->action configs, keyed by status code (will be updated
+   *   by this method)
+   * @param configName the name of the responseStatusActionConfigs config field within the stage
+   * @return a list of config issues (unmodified from issues param if no errors)
+   */
+  public static List<Stage.ConfigIssue> validateStatusActionConfigs(
+      List<Stage.ConfigIssue> issues,
+      Stage.Context context,
+      List<HttpStatusResponseActionConfigBean> responseStatusActionConfigs,
+      Map<Integer, HttpResponseActionConfigBean> statusToActionConfigs,
+      String configName
+    ) {
+
+    if (responseStatusActionConfigs != null) {
+      final String cfgName = configName;
+      final EnumSet<ResponseAction> backoffRetries = EnumSet.of(
+          ResponseAction.RETRY_EXPONENTIAL_BACKOFF,
+          ResponseAction.RETRY_LINEAR_BACKOFF
+      );
+
+      for (HttpResponseActionConfigBean actionConfig : responseStatusActionConfigs) {
+        final HttpResponseActionConfigBean prevAction = statusToActionConfigs.put(
+            actionConfig.getStatusCode(),
+            actionConfig
+        );
+
+        if (prevAction != null) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HTTP.name(),
+                  cfgName,
+                  Errors.HTTP_17,
+                  actionConfig.getStatusCode()
+              )
+          );
+        }
+        if (backoffRetries.contains(actionConfig.getAction()) && actionConfig.getBackoffInterval() <= 0) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HTTP.name(),
+                  cfgName,
+                  Errors.HTTP_15
+              )
+          );
+        }
+        if (actionConfig.getStatusCode() >= 200 && actionConfig.getStatusCode() < 300) {
+          issues.add(
+              context.createConfigIssue(
+                  Groups.HTTP.name(),
+                  cfgName,
+                  Errors.HTTP_16
+              )
+          );
+        }
+      }
+    }
+
+    return issues;
+  }
+
+  public static boolean applyResponseAction(
+      HttpResponseActionConfigBean actionConf,
+      boolean firstOccurence,
+      Function<Void, StageException> createConfiguredErrorFunction,
+      AtomicInteger retryCount,
+      AtomicLong backoffIntervalLinear,
+      AtomicLong backoffIntervalExponential
+  ) throws StageException {
+    return applyResponseAction(
+        actionConf,
+        firstOccurence,
+        createConfiguredErrorFunction,
+        retryCount,
+        backoffIntervalLinear,
+        backoffIntervalExponential,
+        null,
+        null
+    );
+  }
+
+  /**
+   * Apply an HTTP status response action, based on configuration.  Updates stateful variables by
+   * using the atomic constructs.
+   *
+   * @param actionConf the configuration for the action to be performed
+   * @param firstOccurence whether this is the first occurence of this status
+   * @param createConfiguredErrorFunction a function that produces an exception as per configuration
+   * @param retryCount the number of times the request has been retried (will be updated)
+   * @param backoffIntervalLinear the linear backoff interval (will be updated)
+   * @param backoffIntervalExponential the expxonential backoff interval (will be updated)
+   * @param inputRecord the input record which led to this action (to be used when generating error records)
+   * @param errorRecordMessage a message to be included in the error record, if generated
+   * @return true if any sleep (for backoffs) was uninterrupted, false if it was not
+   * @throws StageException if the configured action was to throw a {@link StageException}
+   */
+  public static boolean applyResponseAction(
+      HttpResponseActionConfigBean actionConf,
+      boolean firstOccurence,
+      Function<Void, StageException> createConfiguredErrorFunction,
+      AtomicInteger retryCount,
+      AtomicLong backoffIntervalLinear,
+      AtomicLong backoffIntervalExponential,
+      Record inputRecord,
+      String errorRecordMessage
+  ) throws StageException {
+    if (firstOccurence) {
+      retryCount.set(0);
+    } else {
+      retryCount.incrementAndGet();
+    }
+    if (actionConf.getMaxNumRetries() > 0 && retryCount.get() > actionConf.getMaxNumRetries()) {
+      throw new StageException(Errors.HTTP_19, actionConf.getMaxNumRetries());
+    }
+
+    boolean uninterrupted = true;
+    final long backoff = actionConf.getBackoffInterval();
+    switch (actionConf.getAction()) {
+      case STAGE_ERROR:
+        throw createConfiguredErrorFunction.apply(null);
+      case RETRY_IMMEDIATELY:
+        break;
+      case ERROR_RECORD:
+        throw new OnRecordErrorException(inputRecord, Errors.HTTP_100, errorRecordMessage);
+      case RETRY_EXPONENTIAL_BACKOFF:
+      case RETRY_LINEAR_BACKOFF:
+        long updatedBackoff;
+        if (actionConf.getAction() == ResponseAction.RETRY_EXPONENTIAL_BACKOFF) {
+          updatedBackoff = firstOccurence ? backoff : backoffIntervalExponential.get() * 2;
+          backoffIntervalExponential.set(updatedBackoff);
+        } else {
+          updatedBackoff = firstOccurence ? backoff : backoffIntervalLinear.get() + backoff;
+          backoffIntervalLinear.set(updatedBackoff);
+        }
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Applying backoff for {} ms", updatedBackoff);
+        }
+        uninterrupted = ThreadUtil.sleep(updatedBackoff);
+        break;
+    }
+    return uninterrupted;
+  }
 }

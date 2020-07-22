@@ -18,8 +18,9 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService, tracking) {
-
+  .service('contextHelpService', function($rootScope, $q, configuration, api, pipelineConstant, pipelineService,
+    tracking, trackingEvent
+  ) {
     // pre-populate with some static configurations
     var helpIds = {
         "pipeline-configuration": "index.html#datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html#task_xlv_jdw_kq",
@@ -53,7 +54,7 @@ angular.module('dataCollectorApp.common')
 
         uiHelpBaseURL = getHelpBaseUrl();
         helpURL = uiHelpBaseURL + '/' + (relativeURL || 'index.html');
-        tracking.mixpanel.track('Help Documentation Clicked', {
+        tracking.mixpanel.track(trackingEvent.HELP_CLICKED, {
           'Current Page': window.location.pathname,
           'Help Topic': relativeURL || 'index.html'
         });
@@ -73,7 +74,7 @@ angular.module('dataCollectorApp.common')
         uiHelpBaseURL = getHelpBaseUrl();
         helpURL = uiHelpBaseURL + '/index.html';
 
-        tracking.mixpanel.track('Help Documentation Clicked', {
+        tracking.mixpanel.track(trackingEvent.HELP_CLICKED, {
           'Current Page': window.location.pathname,
           'Help Topic': 'index.html'
         });

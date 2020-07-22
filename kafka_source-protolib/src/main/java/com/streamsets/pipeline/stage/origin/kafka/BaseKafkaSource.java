@@ -34,7 +34,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -82,6 +82,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = new ArrayList<>();
     kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
+    Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     if (conf.topic == null || conf.topic.isEmpty()) {

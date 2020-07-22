@@ -72,7 +72,7 @@ angular
         var selectedType = $scope.selectedType,
           selectedObject = $scope.selectedObject;
 
-        if(selectedObject) {
+        if (selectedObject) {
           switch(selectedType) {
             case pipelineConstant.PIPELINE:
               return selectedObject.info.title;
@@ -123,7 +123,7 @@ angular
       var currentSelection = $scope.selectedObject,
         isStageSelected = ($scope.selectedType === pipelineConstant.STAGE_INSTANCE);
 
-      if(isStageSelected) {
+      if (isStageSelected) {
         $scope.summaryMeters = {
           batchCount:
             pipelineMetrics.meters['pipeline.batchCount.meter'],
@@ -156,7 +156,7 @@ angular
     };
 
 
-    if(pipelineMetrics && pipelineMetrics.meters) {
+    if (pipelineMetrics && pipelineMetrics.meters) {
       updateSummary();
     }
   });

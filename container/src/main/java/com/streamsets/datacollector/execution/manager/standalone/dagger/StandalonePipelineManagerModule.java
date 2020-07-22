@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.manager.standalone.dagger;
 
+import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.antennadoctor.AntennaDoctorModule;
 import com.streamsets.datacollector.blobstore.BlobStoreModule;
 import com.streamsets.datacollector.bundles.SupportBundleModule;
@@ -38,6 +39,7 @@ import dagger.Module;
   library = true,
   injects = {StandaloneAndClusterPipelineManager.class},
   includes = {
+    ActivationModule.class,
     CachePipelineStateStoreModule.class,
     CachePipelineStoreModule.class,
     CacheAclStoreModule.class,

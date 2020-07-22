@@ -147,7 +147,7 @@ public class MongoDBTarget extends BaseTarget {
             recordList.add(record);
             Document replaceKey = new Document();
             mongoTargetConfigBean.uniqueKeyField.forEach( key ->
-                replaceKey.put(removeLeadingSlash(key), record.get(key).getValueAsString())
+                replaceKey.put(removeAndReplaceSlashes(key), record.get(key).getValue())
             );
             documentList.add(
                 new ReplaceOneModel<>(
@@ -162,7 +162,7 @@ public class MongoDBTarget extends BaseTarget {
             recordList.add(record);
             Document updateKey = new Document();
             mongoTargetConfigBean.uniqueKeyField.forEach( key ->
-                updateKey.put(removeLeadingSlash(key), record.get(key).getValueAsString())
+                updateKey.put(removeAndReplaceSlashes(key), record.get(key).getValue())
             );
             documentList.add(
                 new UpdateOneModel<>(
@@ -245,10 +245,11 @@ public class MongoDBTarget extends BaseTarget {
     }
   }
 
-  private String removeLeadingSlash(String uniqueKeyField) {
+  private String removeAndReplaceSlashes(String uniqueKeyField) {
+    String uniqueKey = uniqueKeyField;
     if(uniqueKeyField.startsWith("/")) {
-      return uniqueKeyField.substring(1);
+      uniqueKey = uniqueKeyField.substring(1);
     }
-    return uniqueKeyField;
+    return uniqueKey.replaceAll("/", ".");
   }
 }

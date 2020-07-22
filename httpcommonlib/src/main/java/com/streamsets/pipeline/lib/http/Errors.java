@@ -57,10 +57,12 @@ public enum Errors implements ErrorCode {
   HTTP_34("HTTP-Status: {}. Received no entity in the HTTP message body."),
   HTTP_35("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   HTTP_36("SPNEGO config file could not be created."),
+  HTTP_37("\"{}\" action (for status {}) cannot be used in the HTTP Client Source"),
 
   // HTTP Target
   HTTP_40("Error sending resource. HTTP-Status: {} Reason: {}"),
   HTTP_41("Error sending resource. Reason: {}"),
+
 
   // WebSocket Target
   HTTP_50("Error sending resource. Reason: {}"),
@@ -75,6 +77,10 @@ public enum Errors implements ErrorCode {
   HTTP_64("HTTP-Status: {}. IOException attempting to parse whole file field '{}' for record '{}': {}"),
   HTTP_65("HTTP-Status: {}. Input field '{}' does not exist in record '{}'"),
   HTTP_66("HTTP-Status: {}. Link field '{}' does not exist in record"),
+  // HTTP Processor
+
+  HTTP_100("Generating error record as per stage configuration: {}"),
+
   ;
 
   private final String msg;

@@ -90,6 +90,11 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
       // fall through
       case 9:
         upgradeV9toV10(configs);
+        if (toVersion == 10) {
+          break;
+        }
+      case 10:
+        // handled by YAML upgrader
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));

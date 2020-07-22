@@ -41,6 +41,7 @@ angular.module('dataCollectorApp.common')
     var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
     var UI_DEFAULT_CONFIGURATION_VIEW = 'ui.default.configuration.view';
     var UI_REGISTRATION_URL = 'ui.registration.url';
+    var UI_ACCOUNT_REGISTRATION_URL = 'ui.account.registration.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
@@ -366,5 +367,15 @@ angular.module('dataCollectorApp.common')
         return self.config[UI_REGISTRATION_URL];
       }
       return 'https://registration.streamsets.com/register';
+    };
+
+    /**
+     * Gets the URL for product registration with an account, ui.account.regisration.url
+     */
+    this.getAccountRegistrationURL = function() {
+      if (self.config && self.config[UI_ACCOUNT_REGISTRATION_URL] !== undefined) {
+        return self.config[UI_ACCOUNT_REGISTRATION_URL];
+      }
+      return '';
     };
   });

@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.usagestats;
 
+import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -42,9 +43,10 @@ public class StatsCollectorModule {
       RuntimeInfo runtimeInfo,
       Configuration config,
       @Named("runnerExecutor") SafeScheduledExecutorService executorService,
-      SysInfo sysInfo
+      SysInfo sysInfo,
+      Activation activation
   ) {
-    return new DCStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo);
+    return new DCStatsCollectorTask(buildInfo, runtimeInfo, config, executorService, sysInfo, activation);
   }
 
 }

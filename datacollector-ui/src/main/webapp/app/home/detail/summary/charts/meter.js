@@ -147,13 +147,13 @@ angular
     });
 
     var updatedLatestData = function() {
-      if (!$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
+      if (!$scope.summaryMeters || !$scope.summaryMeters.inputRecords || !$scope.summaryMeters.outputRecords ||
         !$scope.summaryMeters.errorRecords) {
         return;
       }
 
       var stageInstance = $scope.detailPaneConfig;
-      var pipelineMetrics = $rootScope.common.pipelineMetrics;
+      var pipelineMetrics = $scope.detailPaneMetrics;
       var meterChartData = {};
 
       meterChartData['Input'] = [
@@ -320,7 +320,7 @@ angular
     });
 
     $scope.$on('onSelectionChange', function(event, options) {
-      if ($scope.isPipelineRunning && options.type !== pipelineConstant.LINK) {
+      if (options.type !== pipelineConstant.LINK) {
         refreshChartDataOnSelectionChange();
       }
     });

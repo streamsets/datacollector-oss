@@ -20,8 +20,9 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum KeytabSource implements Label {
-  PROPERTIES_FILE("Properties file"),
-  PIPELINE("Pipeline configuration"),
+  PROPERTIES_FILE("Transformer Configuration File"),
+  PIPELINE("Pipeline Configuration - File"),
+  PIPELINE_CREDENTIAL_STORE("Pipeline Configuration - Credential Store"),
   ;
 
   private final String label;

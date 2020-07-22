@@ -173,6 +173,7 @@ public class AmazonEMRConfig {
       description = "Terminates the cluster when the pipeline stops",
       group = "EMR",
       displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -188,6 +189,7 @@ public class AmazonEMRConfig {
       group = "EMR",
       description = "Copies cluster log files to the specified S3 location. Use to enable continued access to log files.",
       displayPosition = 220,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -219,6 +221,7 @@ public class AmazonEMRConfig {
           "tasks",
       group = "EMR",
       displayPosition = 260,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -234,6 +237,7 @@ public class AmazonEMRConfig {
       description = "EMR role for EC2. Used by EC2 instances within the cluster.",
       group = "EMR",
       displayPosition = 270,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -248,6 +252,7 @@ public class AmazonEMRConfig {
       label = "Visible to All Users",
       group = "EMR",
       displayPosition = 280,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
@@ -299,6 +304,20 @@ public class AmazonEMRConfig {
   public String slaveSecurityGroup;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Service Access Security Group",
+      description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
+      group = "EMR",
+      displayPosition = 315,
+      dependencies = {
+          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")
+      }
+  )
+  public String serviceAccessSecurityGroup;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "2",
@@ -308,6 +327,7 @@ public class AmazonEMRConfig {
       group = "EMR",
       min = 2,
       displayPosition = 320,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "provisionNewCluster", triggeredByValues = "true")

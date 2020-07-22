@@ -40,6 +40,7 @@ public class Constants {
   public static final String PIPELINE_METRICS_FIELD = "pipelineMetrics";
   public static final String COMMITTED_OFFSET_STR = "committedOffsetsStr";
 
+  public static final String TEMPLATE_JOB_INSTANCES_FIELD = "templateJobInstances";
   public static final String TEMPLATE_JOB_ID_FIELD = "templateJobId";
   public static final String STARTED_SUCCESSFULLY_FIELD = "startedSuccessfully";
   public static final String FINISHED_SUCCESSFULLY_FIELD = "finishedSuccessfully";

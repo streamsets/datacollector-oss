@@ -19,8 +19,10 @@ import org.glassfish.hk2.api.Factory;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 public class URIInjector implements Factory<URI> {
   private URI uri;
@@ -28,8 +30,8 @@ public class URIInjector implements Factory<URI> {
   @Inject
   public URIInjector(HttpServletRequest request) {
     try {
-      uri = new URI(request.getRequestURI());
-    } catch (URISyntaxException ex) {
+      uri = new URI(URLEncoder.encode(request.getRequestURI(),"UTF-8"));
+    } catch (URISyntaxException | UnsupportedEncodingException ex) {
       throw new RuntimeException(ex);
     }
   }

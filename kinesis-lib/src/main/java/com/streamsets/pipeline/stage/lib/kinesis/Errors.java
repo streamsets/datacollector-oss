@@ -40,6 +40,7 @@ public enum Errors implements ErrorCode {
   KINESIS_16("Throttle limit exceeded, ThrottleException caught while checkpointing offset"),
   KINESIS_17("Unknown error occurred while processing records, some data might not have been read: {}"),
   KINESIS_18("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  KINESIS_19("Endpoint is invalid or doesn't include region"),
   ;
   private final String msg;
 

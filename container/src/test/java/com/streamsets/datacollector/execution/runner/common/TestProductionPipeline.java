@@ -16,6 +16,8 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -69,6 +71,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -918,4 +921,58 @@ public class TestProductionPipeline {
     future.get();
   }
 
+  @Test
+  public void testShutdownTransitions() throws Exception {
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
+    List<PipelineStatus> transitionHistory = Lists.newArrayList();
+    StateListener stateListener = new StateListener() {
+      @Override
+      public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
+              throws PipelineRuntimeException {
+        transitionHistory.add(pipelineStatus);
+      }
+    };
+    pipeline.registerStatusListener(stateListener);
+    pipeline.run();
+
+    Assert.assertEquals(ImmutableList.of(
+            PipelineStatus.RUNNING,
+            PipelineStatus.FINISHING,
+            PipelineStatus.FINISHED
+    ), transitionHistory);
+  }
+
+  @Test
+  public void testShutdownTransitionsErrorOnDestroy() throws Exception {
+    ProductionPipeline pipeline = createProductionPipeline(DeliveryGuarantee.AT_LEAST_ONCE, false, PipelineType.DEFAULT);
+    List<PipelineStatus> transitionHistory = Lists.newArrayList();
+    StateListener stateListener = new StateListener() {
+      @Override
+      public void stateChanged(PipelineStatus pipelineStatus, String message, Map<String, Object> attributes)
+              throws PipelineRuntimeException {
+        transitionHistory.add(pipelineStatus);
+      }
+    };
+    pipeline.registerStatusListener(stateListener);
+    Pipeline origInnerPipeline = Whitebox.getInternalState(pipeline, "pipeline");
+    Pipeline spyInnerPipeline = Mockito.spy(origInnerPipeline);
+    RuntimeException testException = new RuntimeException("test exception");
+    try {
+      Whitebox.setInternalState(pipeline, "pipeline", spyInnerPipeline);
+      Mockito.doThrow(testException).when(spyInnerPipeline)
+              .destroy(Mockito.anyBoolean(), Mockito.any());
+      pipeline.run();
+      Assert.fail("expected exception");
+    } catch (RuntimeException e) {
+      Assert.assertSame(testException, e);
+    } finally {
+      Whitebox.setInternalState(pipeline, origInnerPipeline);
+    }
+    Assert.assertEquals(ImmutableList.of(
+            PipelineStatus.RUNNING,
+            PipelineStatus.FINISHING,
+            PipelineStatus.STOPPING_ERROR,
+            PipelineStatus.RETRY
+    ), transitionHistory);
+  }
 }

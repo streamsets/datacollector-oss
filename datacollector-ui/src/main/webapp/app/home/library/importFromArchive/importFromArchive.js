@@ -19,7 +19,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('ImportFromArchiveModalInstanceController', function ($scope, $modalInstance, api, $translate, tracking) {
+  .controller('ImportFromArchiveModalInstanceController', function (
+    $scope, $modalInstance, api, tracking, trackingEvent, pipelineTracking
+  ) {
     var errorMsg = 'Not a valid Pipeline Configuration file.';
 
     angular.extend($scope, {
@@ -39,7 +41,7 @@ angular
         $scope.operationInProgress = true;
         var formData = new FormData();
         formData.append('file', $scope.uploadFile);
-        tracking.mixpanel.track('Import Pipelines From Archive Started', {});
+        tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_START_FROM_ARCHIVE, {});
         api.pipelineAgent.importPipelines(formData)
           .then(function(response) {
             var res = response.data;
@@ -47,15 +49,20 @@ angular
             $scope.successEntities = res.successEntities;
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            tracking.mixpanel.track('Import Pipeline From Archive Completed', {});
-            tracking.FS.event('Import Pipeline Completed', {});
-            tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            angular.forEach(res.errorMessages, function(err) {
+              pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_ARCHIVE, err);
+            });
+            if (res.successEntities.length > 0) {
+              tracking.mixpanel.track(trackingEvent.PIPELINE_IMPORT_COMPLETE_FROM_ARCHIVE, {});
+              tracking.FS.event(trackingEvent.PIPELINE_IMPORT_COMPLETE, {});
+              tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Imported': true});
+            }
           })
           .catch(function(res) {
             $scope.common.errors = [res.data];
             $scope.operationDone = true;
             $scope.operationInProgress = false;
-            tracking.mixpanel.track('Import Pipeline From Archive Failed', {'Failure Reason': JSON.stringify(res.data)});
+            pipelineTracking.trackImportFailure(trackingEvent.PIPELINE_IMPORT_FAILED_FROM_ARCHIVE, res);
           });
       },
 

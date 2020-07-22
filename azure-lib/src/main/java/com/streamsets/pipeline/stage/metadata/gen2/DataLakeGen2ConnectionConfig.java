@@ -52,8 +52,8 @@ public class DataLakeGen2ConnectionConfig extends HdfsConnectionConfig {
 
     hdfsUri = dataLakeConfig.getAbfsUri(context, issues);
     Map<String, String> hadoopConfigs = dataLakeConfig.getHdfsConfigBeans(context, issues);
-    for (String hadoopConfig : hadoopConfigs.keySet()) {
-      conf.set(hadoopConfig, hadoopConfigs.get(hadoopConfig));
+    for (Map.Entry<String, String> hadoopConfig : hadoopConfigs.entrySet()) {
+      conf.set(hadoopConfig.getKey(), hadoopConfig.getValue());
     }
 
     try {

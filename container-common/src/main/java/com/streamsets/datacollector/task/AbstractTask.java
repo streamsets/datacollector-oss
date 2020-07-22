@@ -19,6 +19,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,10 +58,11 @@ public abstract class AbstractTask implements Task {
     Preconditions.checkState(VALID_TRANSITIONS.get(getStatus()).contains(Status.INITIALIZED),
                              Utils.formatL(STATE_ERROR_MSG, getStatus()));
     try {
+      long start = System.currentTimeMillis();
       LOG.debug("Task '{}' initializing", getName());
       setStatus(Status.INITIALIZED);
       initTask();
-      LOG.debug("Task '{}' initialized", getName());
+      LOG.debug("Task '{}' initialized in {}", getName(), DurationFormatUtils.formatDuration(System.currentTimeMillis() - start, "H:m:s.S", true));
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to initialize, {}, calling stopTask() and going into ERROR", getName(),
                ex.toString(), ex);
@@ -75,9 +77,10 @@ public abstract class AbstractTask implements Task {
                              Utils.formatL(STATE_ERROR_MSG, getStatus()));
     setStatus(Status.RUNNING);
     try {
+      long start = System.currentTimeMillis();
       LOG.debug("Task '{}' starting", getName());
       runTask();
-      LOG.debug("Task '{}' running", getName());
+      LOG.debug("Task '{}' started running in {}", getName(), DurationFormatUtils.formatDuration(System.currentTimeMillis() - start, "H:m:s.S", true));
     } catch (RuntimeException ex) {
       LOG.warn("Task '{}' failed to start, {}, calling stopTask() and going into ERROR", getName(), ex.toString(),
                ex);

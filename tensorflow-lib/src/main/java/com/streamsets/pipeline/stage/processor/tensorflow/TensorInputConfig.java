@@ -41,4 +41,17 @@ public class TensorInputConfig extends TensorConfig {
       displayPosition = 20
   )
   public List<Integer> shape;
+
+  private List<String> resolvedFields;
+
+  public void setResolvedFields(List<String> resolvedFields) {
+    this.resolvedFields = resolvedFields;
+  }
+
+  public List<String> getFields() {
+    if (resolvedFields != null) {
+      return resolvedFields;
+    }
+    return fields;
+  }
 }

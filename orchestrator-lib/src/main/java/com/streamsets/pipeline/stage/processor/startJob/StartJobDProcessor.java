@@ -28,8 +28,8 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
 @StageDef(
     version = 3,
-    label = "Start Job",
-    description = "Starts a Control Hub job",
+    label = "Start Jobs",
+    description = "Starts Control Hub jobs",
     icon="job.png",
     recordsByRef = true,
     execution = {

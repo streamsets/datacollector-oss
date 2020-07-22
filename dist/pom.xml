@@ -40,7 +40,7 @@
     <edge.dist-dir>${basedir}/dist/target/edge-binaries</edge.dist-dir>
     <sdc.log4j.level>DEBUG</sdc.log4j.level>
     <snappy.version>1.0.5</snappy.version>
-    <datacollector-edge.version>3.17.0-SNAPSHOT</datacollector-edge.version>
+    <datacollector-edge.version>3.18.0-SNAPSHOT</datacollector-edge.version>
   </properties>
 
   <dependencies>
@@ -126,6 +126,24 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-metadata-generator</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpkix-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcpg-jdk15on</artifactId>
+      <version>${bouncycastle.version}</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

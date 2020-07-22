@@ -21,7 +21,8 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('MetricAlertRulesController', function (
-      $scope, pipelineConstant, pipelineService, $modal, tracking
+      $scope, pipelineConstant, pipelineService, $modal, tracking,
+      trackingEvent
     ) {
     angular.extend($scope, {
       showLoading: false,
@@ -64,7 +65,7 @@ angular
           modalInstance.result.then(function (metricAlertRuleDefn) {
             $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Save Metric Alert Rule', 1);
             $scope.pipelineRules.metricsRuleDefinitions.push(metricAlertRuleDefn);
-            tracking.mixpanel.track('Metric Rule Created', {'Pipeline ID': $scope.pipelineConfig.pipelineId});
+            tracking.mixpanel.track(trackingEvent.METRIC_RULE_CREATED, {'Pipeline ID': $scope.pipelineConfig.pipelineId});
           }, function () {
 
           });

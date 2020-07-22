@@ -67,11 +67,11 @@ From within the Data Collector directory, execute:
 
 To start the Data Collector, execute:
 
-`dist/target/streamsets-datacollector-3.17.0-CATALOG/streamsets-datacollector-3.17.0-CATALOG/bin/streamsets dc`
+`dist/target/streamsets-datacollector-3.17.0-CATALOG/streamsets-datacollector-3.18.0-CATALOG/bin/streamsets dc`
 
 For Data Collector CLI, execute:
 
-`dist/target/streamsets-datacollector-3.17.0-CATALOG/streamsets-datacollector-3.17.0-CATALOG/bin/streamsets cli`
+`dist/target/streamsets-datacollector-3.17.0-CATALOG/streamsets-datacollector-3.18.0-CATALOG/bin/streamsets cli`
 
 To skip the RAT report during the build use the `-DskipRat` option.
 
@@ -97,6 +97,7 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
+<<<<<<< HEAD
 `release/target/streamsets-datacollector-all-3.17.0-CATALOG.tgz`
 
 Extract the tarball to your preferred location :
@@ -106,6 +107,17 @@ Extract the tarball to your preferred location :
 To start the DataCollector, execute:
 
 `streamsets-datacollector-all-3.17.0-CATALOG/bin/streamsets dc`
+=======
+`release/target/streamsets-datacollector-all-3.18.0-SNAPSHOT.tgz`
+
+Extract the tarball to your preferred location :
+
+`tar xf streamsets-datacollector-all-3.18.0-SNAPSHOT.tgz`
+
+To start the DataCollector, execute:
+
+`streamsets-datacollector-all-3.18.0-SNAPSHOT/bin/streamsets dc`
+>>>>>>> master
 
 ## Troubleshooting
 

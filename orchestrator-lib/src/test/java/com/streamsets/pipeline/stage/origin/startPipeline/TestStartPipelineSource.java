@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.startPipeline;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.startPipeline.StartPipelineErrors;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,7 +41,8 @@ public class TestStartPipelineSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("Configuration value is required for Pipeline ID"));
+    // Configuration value is required for pipeline ID
+    Assert.assertTrue(issues.get(0).toString().contains(StartPipelineErrors.START_PIPELINE_03.name()));
   }
 
   @Test
@@ -57,7 +59,8 @@ public class TestStartPipelineSource {
 
     List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains("Failed to connect to Execution Engine"));
+    // Failed to connect to execution engine
+    Assert.assertTrue(issues.get(0).toString().contains(StartPipelineErrors.START_PIPELINE_01.name()));
   }
 
 

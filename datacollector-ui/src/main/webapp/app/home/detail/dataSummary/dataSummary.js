@@ -76,7 +76,7 @@ angular
 
     function updateChartData() {
       var dataRuleDefn = $scope.dataRuleDefn,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $scope.detailPaneMetrics;
 
       if(pipelineMetrics && pipelineMetrics.meters) {
         var meterData = pipelineMetrics.meters['user.' + dataRuleDefn.id + '.meter'];
@@ -101,9 +101,8 @@ angular
       }
     }
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if($scope.detailPaneMetrics &&
         $scope.selectedType === pipelineConstant.LINK && !$scope.monitoringPaused) {
         updateChartData();
       }
@@ -122,7 +121,7 @@ angular
 
     function updateChartData() {
       var dataRuleDefn = $scope.dataRuleDefn,
-        pipelineMetrics = $rootScope.common.pipelineMetrics;
+        pipelineMetrics = $scope.detailPaneMetrics;
 
       if(pipelineMetrics && pipelineMetrics.histograms) {
         var histogramData = pipelineMetrics.histograms['user.' + dataRuleDefn.id + '.histogramM5'];
@@ -147,9 +146,8 @@ angular
       }
     }
 
-    $rootScope.$watch('common.pipelineMetrics', function() {
-      if($scope.isPipelineRunning &&
-        $rootScope.common.pipelineMetrics &&
+    $scope.$watch('detailPaneMetrics', function() {
+      if($scope.detailPaneMetrics &&
         $scope.selectedType === pipelineConstant.LINK && !$scope.monitoringPaused) {
         updateChartData();
       }

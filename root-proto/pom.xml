@@ -50,8 +50,8 @@
     -->
     <awaitility.version>2.0.0</awaitility.version>
     <aws-encryption-sdk.version>1.3.5</aws-encryption-sdk.version>
-    <aws.sdk.version>1.11.385</aws.sdk.version>
-    <bouncycastle.version>1.60</bouncycastle.version>
+    <aws.sdk.version>1.11.813</aws.sdk.version>
+    <bouncycastle.version>1.64</bouncycastle.version>
     <conscrypt.version>1.2.0</conscrypt.version>
     <metrics.version>4.0.3</metrics.version>
     <log4j.version>1.2.17</log4j.version>
@@ -81,7 +81,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
     <hive-storage-api.version>2.2.1</hive-storage-api.version>
-    <streamsets-datacollector-rbgen-maven-plugin.version>3.17.0-CATALOG</streamsets-datacollector-rbgen-maven-plugin.version>
+    <streamsets-datacollector-rbgen-maven-plugin.version>3.18.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
     <gcp-beta.version>0.25.0-beta</gcp-beta.version>
     <gcp-gcs.version>1.93.0</gcp-gcs.version>
     <gcp-ps.version>1.93.0</gcp-ps.version>

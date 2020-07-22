@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.store;
 
 import com.streamsets.datacollector.blobstore.BlobStoreModule;
+import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.credential.CredentialStoresModule;
 import com.streamsets.datacollector.execution.executor.ExecutorModule;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -41,6 +42,7 @@ import javax.inject.Singleton;
     injects = PipelineStoreTask.class,
     library = true,
     includes = {
+        ActivationModule.class,
         RuntimeModule.class,
         ExecutorModule.class,
         StageLibraryModule.class,

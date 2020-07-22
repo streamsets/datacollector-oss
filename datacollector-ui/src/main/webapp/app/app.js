@@ -88,7 +88,8 @@ angular.module('dataCollectorApp')
 
   })
   .run(function ($location, $rootScope, $modal, api, pipelineConstant, $localStorage, contextHelpService, $modalStack,
-                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http, tracking) {
+                 $timeout, $translate, authService, userRoles, configuration, Analytics, $q, editableOptions, $http,
+                 tracking, trackingEvent) {
 
     var defaultTitle = 'Data Collector | StreamSets';
     var pipelineStatusTimer;
@@ -580,6 +581,10 @@ angular.module('dataCollectorApp')
         $rootScope.common.sdcClusterManagerURL = configuration.getSDCClusterManagerURL();
         $rootScope.common.isMetricsTimeSeriesEnabled = configuration.isMetricsTimeSeriesEnabled();
         $rootScope.common.headerTitle = configuration.getUIHeaderTitle();
+        $rootScope.common.isChangePasswordEnabled =
+          configuration.getAuthenticationType() == 'form' &&
+          !configuration.isDPMEnabled() &&
+          !configuration.isManagedByClouderaManager();
         if(configuration.isAnalyticsEnabled()) {
           Analytics.createAnalyticsScriptTag();
           configuration.createFullStoryScriptTag();
@@ -589,28 +594,6 @@ angular.module('dataCollectorApp')
           tracking.mixpanel.opt_out_tracking();
           tracking.FS.shutdown();
         }
-        api.admin.getSdcId().then(function(res) {
-          var SDC_ID = res.data.id;
-          var USER_ID = SDC_ID + $rootScope.common.userName;
-          tracking.mixpanel.identify(USER_ID);
-          tracking.mixpanel.people.set({
-            'userName': $rootScope.common.userName,
-            'UserID': USER_ID,
-            'sdcId': SDC_ID
-          });
-          tracking.mixpanel.register({
-            'userName': $rootScope.common.userName,
-            'sdcId': SDC_ID
-          });
-          tracking.FS.setUserVars({
-            'userName': $rootScope.common.userName,
-            'UserID': USER_ID,
-            'sdcId': SDC_ID
-          });
-          setTimeout(function() {
-            tracking.mixpanel.track('Login Complete', {});
-          }, 500); // setTimeout to pick up extra super/register properties set later
-        });
 
         if ($rootScope.common.isDPMEnabled && $rootScope.common.userRoles.indexOf('disconnected-sso') !== -1) {
           $rootScope.common.disconnectedMode = true;
@@ -629,16 +612,27 @@ angular.module('dataCollectorApp')
           window.$rootScope = $rootScope;
         }
 
-        $q.all([api.system.getStats(), api.admin.getBuildInfo(), api.activation.getActivation()]).then(function(sbaResults) {
+        $q.all([
+          api.system.getStats(),
+          api.admin.getBuildInfo(),
+          api.activation.getActivation(),
+          api.admin.getSdcId(),
+        ]).then(function (sbaResults) {
           var statsResult = sbaResults[0];
           var buildResult = sbaResults[1];
           var activationResult = sbaResults[2];
+          var sdcIdResult = sbaResults[3];
+
+          // Tracking initialization
+          tracking.initializeUser(sdcIdResult.data.id, $rootScope.common.userName);
 
           // Modal (or notification) for activation
           if (activationResult && activationResult.data) {
             var activationInfo = $rootScope.common.activationInfo = activationResult.data;
             if (activationInfo.enabled) {
-              var difDays = authService.daysUntilProductExpiration(activationInfo.info.expiration);
+              var difDays = authService.daysUntilProductExpiration(
+                activationInfo.info.expiration
+              );
               if (difDays < 0) {
                 // if it is still valid, it is because only core stages are in use
                 if (!activationInfo.info.valid || $location.search().activationKey) {
@@ -652,54 +646,65 @@ angular.module('dataCollectorApp')
                     $rootScope.common.infoList = [{
                       message: 'Activation key expired, you need to get a new one from StreamSets'
                     }];
-                    tracking.mixpanel.track('Activation key expired', {});
+                    tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRED, {});
                   }
                 }
               } else if (difDays < 30) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key expires in ' + difDays + '  days'
                 }];
-                tracking.mixpanel.track('Activation key expiring soon', {'Days': difDays});
+                tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRING_SOON, {'Days': difDays});
               } else if (!activationInfo.info.valid) {
                 $rootScope.common.infoList = [{
                   message: 'Activation key is not valid'
                 }];
-                tracking.mixpanel.track('Activation key invalid', {});
+                tracking.mixpanel.track(trackingEvent.ACTIVATION_INVALID, {});
               }
             }
           }
 
           // Analytics tracking
           if (buildResult && buildResult.data) {
-            $timeout(
-              function() {
-                Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
-                tracking.mixpanel.register({'sdcVersion': buildResult.data.version});
-                tracking.FS.setUserVars({'sdcVersion': buildResult.data.version});
-              },
-              1000
-            );
+            tracking.mixpanel.register({'sdcVersion': buildResult.data.version});
+            tracking.FS.setUserVars({'sdcVersion': buildResult.data.version});
+            tracking.mixpanel.people.set({'sdcVersion': buildResult.data.version});
+            $timeout(function () {
+              Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
+            }, 1000);
           }
-          if (statsResult.data.active && statsResult.data.stats && statsResult.data.stats.activeStats && statsResult.data.stats.activeStats.extraInfo) {
-            $timeout(
-              function() {
-                var stats = statsResult.data.stats;
-                if (stats.activeStats.extraInfo) {
-                  if (stats.activeStats.extraInfo.cloudProvider) {
-                    Analytics.set('dimension2', stats.activeStats.extraInfo.cloudProvider); // dimension2 is cloudProvider
-                    tracking.mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
-                    tracking.FS.setUserVars({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
-                  }
-                  if (stats.activeStats.extraInfo.distributionChannel) {
-                    Analytics.set('dimension3', stats.activeStats.extraInfo.distributionChannel); // dimension3 is distributionChannel
-                    tracking.mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
-                    tracking.FS.setUserVars({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
-                  }
-                }
-              },
-              1000
-            );
+          if (
+            statsResult.data.active &&
+            statsResult.data.stats &&
+            statsResult.data.stats.activeStats &&
+            statsResult.data.stats.activeStats.extraInfo
+          ) {
+            var stats = statsResult.data.stats;
+            if (stats.activeStats.extraInfo) {
+              if (stats.activeStats.extraInfo.cloudProvider) {
+                tracking.mixpanel.register({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                tracking.FS.setUserVars({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                tracking.mixpanel.people.set({'cloudProvider': stats.activeStats.extraInfo.cloudProvider});
+                $timeout(function () {
+                  Analytics.set(
+                    'dimension2',
+                    stats.activeStats.extraInfo.cloudProvider
+                  ); // dimension2 is cloudProvider
+                }, 1000);
+              }
+              if (stats.activeStats.extraInfo.distributionChannel) {
+                tracking.mixpanel.register({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                tracking.FS.setUserVars({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                tracking.mixpanel.people.set({'distributionChannel': stats.activeStats.extraInfo.distributionChannel});
+                $timeout(function () {
+                  Analytics.set(
+                    "dimension3",
+                    stats.activeStats.extraInfo.distributionChannel
+                  ); // dimension3 is distributionChannel
+                }, 1000);
+              }
+            }
           }
+          tracking.mixpanel.track(trackingEvent.LOGIN_COMPLETE, {});
         });
       });
 

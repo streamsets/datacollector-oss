@@ -33,6 +33,7 @@ public class RedoLog {
   private final BigDecimal nextChange;
   private final boolean dictionaryBegin;
   private final boolean dictionaryEnd;
+  private final boolean archived;
 
   public RedoLog(
       String path,
@@ -43,7 +44,8 @@ public class RedoLog {
       BigDecimal firstChange,
       BigDecimal nextChange,
       boolean dictionaryBegin,
-      boolean dictionaryEnd
+      boolean dictionaryEnd,
+      boolean archived
   ) {
     this.path = Preconditions.checkNotNull(path);
     this.thread = Preconditions.checkNotNull(thread);
@@ -54,6 +56,7 @@ public class RedoLog {
     this.nextChange = Preconditions.checkNotNull(nextChange);
     this.dictionaryBegin = dictionaryBegin;
     this.dictionaryEnd = dictionaryEnd;
+    this.archived = archived;
   }
 
   public RedoLog(
@@ -65,7 +68,8 @@ public class RedoLog {
       BigDecimal firstChange,
       BigDecimal nextChange,
       boolean dictionaryBegin,
-      boolean dictionaryEnd
+      boolean dictionaryEnd,
+      boolean archived
   ) {
     this(path,
         thread,
@@ -73,7 +77,8 @@ public class RedoLog {
         firstTime.toLocalDateTime(),
         nextTime == null ? null : nextTime.toLocalDateTime(), firstChange, nextChange,
         dictionaryBegin,
-        dictionaryEnd);
+        dictionaryEnd,
+        archived);
   }
 
   @Override
@@ -105,6 +110,7 @@ public class RedoLog {
     RedoLog log = (RedoLog) o;
     return dictionaryBegin == log.dictionaryBegin &&
         dictionaryEnd == log.dictionaryEnd &&
+        archived == log.archived &&
         path.equals(log.path) &&
         thread.equals(log.thread) &&
         sequence.equals(log.sequence) &&
@@ -157,11 +163,12 @@ public class RedoLog {
   }
 
   /**
-   * Returns true if this RedoLog is being used by LogWriter to register new transactions.
-   * For current redo logs NEXT_TIME is set to NULL and NEXT_CHANGE# is set to the highest possible SCN.
+   * For redo logs in V$ARCHIVED_LOG this is always True. For redo logs in V$LOG (i.e. the online redo logs), this can
+   * be either True or False: it is always False for the current redo log (i.e. the one that the database is
+   * currently writing), and is False for any other online redo log still pending to archive.
    */
-  public boolean isCurrentLog() {
-    return nextTime == null;
+  public boolean isArchived() {
+    return archived;
   }
 
 }

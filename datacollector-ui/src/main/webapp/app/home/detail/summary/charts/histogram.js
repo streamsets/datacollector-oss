@@ -91,10 +91,9 @@ angular
       }
     });
 
-
-    $scope.$on('summaryDataUpdated', function() {
-      var list = $scope.timerData,
-        listBackup = angular.copy($scope.timerData);
+    var refreshData = function() {
+      var list = $scope.timerData;
+      var listBackup = angular.copy($scope.timerData);
       list.splice(0, list.length);
       angular.forEach($scope.histogramList, function(recordType, index) {
         var data = $scope.summaryHistograms[recordType];
@@ -116,6 +115,12 @@ angular
           });
         }
       });
+    };
+
+    $scope.$on('summaryDataUpdated', function() {
+      refreshData();
     });
+
+    refreshData();
 
   });

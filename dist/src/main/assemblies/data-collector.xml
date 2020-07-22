@@ -189,12 +189,6 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- SSH Tunnel lib -->
-    <fileSet>
-      <directory>${basedir}/../sshtunnel-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
     <!-- crypto-lib -->
     <fileSet>
       <directory>${basedir}/../crypto-lib/target/streamsets-libs/</directory>
@@ -222,22 +216,6 @@
     <!-- jdbc-lib -->
     <fileSet>
       <directory>${basedir}/../jdbc-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../mysql-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../sqlserver-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../postgresql-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../oracle-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
@@ -541,6 +519,12 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
+    <!-- SAP HANA -->
+    <fileSet>
+      <directory>${basedir}/../sap_hana-lib/target/streamsets-libs/</directory>
+      <outputDirectory>/streamsets-libs/</outputDirectory>
+    </fileSet>
+
     <!-- Databricks ML libs -->
     <fileSet>
       <directory>${basedir}/../${databricks-ml_2-lib}/target/streamsets-libs/</directory>
@@ -629,6 +613,9 @@
         <include>org.slf4j:slf4j-log4j12</include>
         <include>log4j:log4j</include>
         <include>org.slf4j:jul-to-slf4j</include>
+        <include>org.bouncycastle:bcprov-jdk15on</include>
+        <include>org.bouncycastle:bcpg-jdk15on</include>
+        <include>org.bouncycastle:bcpkix-jdk15on</include>
       </includes>
     </dependencySet>
 

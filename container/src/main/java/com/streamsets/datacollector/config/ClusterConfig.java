@@ -18,6 +18,7 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.api.credential.CredentialValue;
 
 public class ClusterConfig {
 
@@ -61,6 +62,7 @@ public class ClusterConfig {
       defaultValue = "CLIENT",
       displayPosition = 103,
       dependsOn = "clusterType",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"YARN", "STANDALONE_SPARK_CLUSTER", "KUBERNETES"}
   )
   @ValueChooserModel(SparkDeployModeChooserValues.class)
@@ -75,6 +77,7 @@ public class ClusterConfig {
       defaultValue = "",
       displayPosition = 104,
       dependsOn = "clusterType",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = "YARN"
   )
   public String hadoopUserName;
@@ -87,6 +90,7 @@ public class ClusterConfig {
       group = "CLUSTER",
       defaultValue = "${pipeline:title()}",
       displayPosition = 105,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^executionMode",
@@ -105,6 +109,7 @@ public class ClusterConfig {
       defaultValue = "/streamsets",
       displayPosition = 106,
       dependsOn = "clusterType",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"DATABRICKS", "SQL_SERVER_BIG_DATA_CLUSTER", "AZURE_HD_INSIGHT", "EMR"}
   )
   public String stagingDir = "/streamsets";
@@ -139,7 +144,7 @@ public class ClusterConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "YARN Kerberos Keytab",
+      label = "YARN Kerberos Keytab Path",
       description = "Absolute path to the Kerberos keytab used to launch the Spark application for the pipeline",
       group = "CLUSTER",
       displayPosition = 1100,
@@ -147,6 +152,20 @@ public class ClusterConfig {
       triggeredByValue = "PIPELINE"
   )
   public String yarnKerberosKeytab;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      defaultValue = "",
+      label = "Keytab Credential Function",
+      description = "Credential function to retrieve the base64 encoded keytab from a credential store.",
+      displayPosition = 1150,
+      dependsOn = "yarnKerberosKeytabSource",
+      triggeredByValue = "PIPELINE_CREDENTIAL_STORE",
+      group = "CLUSTER",
+      upload = ConfigDef.Upload.BASE64
+  )
+  public CredentialValue yarnKerberosKeytabBase64Bytes;
 
   @ConfigDef(
       required = true,
@@ -158,7 +177,7 @@ public class ClusterConfig {
       defaultValue = "name@DOMAIN",
       displayPosition = 1200,
       dependsOn = "yarnKerberosKeytabSource",
-      triggeredByValue = "PIPELINE"
+      triggeredByValue = {"PIPELINE", "PIPELINE_CREDENTIAL_STORE"}
   )
   public String yarnKerberosPrincipal = "name@DOMAIN";
 
@@ -170,6 +189,7 @@ public class ClusterConfig {
           "Use this format: http://<hostname>:<port>",
       displayPosition = 5,
       group = "ADVANCED",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(
               configName = "^executionMode",

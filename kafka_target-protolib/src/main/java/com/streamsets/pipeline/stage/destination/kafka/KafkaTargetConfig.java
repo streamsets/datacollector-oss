@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
@@ -43,7 +44,7 @@ import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
@@ -347,6 +348,7 @@ public class KafkaTargetConfig {
 
   public void init(Stage.Context context, DataFormat dataFormat, boolean sendResponse, List<Stage.ConfigIssue> issues) {
     kafkaKerberosUtil = new KafkaKerberosUtil(context.getConfiguration());
+    Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
     dataGeneratorFormatConfig.init(
         context,
         dataFormat,

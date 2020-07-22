@@ -24,7 +24,8 @@ public class DataFormatConstants {
   public static final int MAX_OVERRUN_LIMIT = Integer.parseInt(
     System.getProperty("DataFactoryBuilder.OverRunLimit", "1048576"));
   public static final String FILE_PATTERN_IN_ARCHIVE = "*";
-  public static final int STRING_BUILDER_POOL_SIZE = 1;
+  public static final int DEFAULT_STRING_BUILDER_POOL_SIZE = 50;
+  public static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
 
   private DataFormatConstants() {}
 }

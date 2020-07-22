@@ -27,7 +27,7 @@ public class WaitForPipelineCompletionConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "http://localhost:18630",
       label = "Execution Engine URL",
-      description = "URL of Data Collector, Data Collector Edge, or Transformer that runs the specified pipelines",
+      description = "URL of Data Collector, Edge, or Transformer running the pipelines",
       displayPosition = 10,
       group = "PIPELINE"
   )
@@ -37,7 +37,7 @@ public class WaitForPipelineCompletionConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Control Hub Enabled",
-      description = "Execution engine is registered with Control Hub",
+      description = "Indicates if the execution engine is registered with Control Hub",
       defaultValue = "false",
       displayPosition = 50,
       group = "PIPELINE"
@@ -49,7 +49,7 @@ public class WaitForPipelineCompletionConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = "https://cloud.streamsets.com",
       label = "Control Hub URL",
-      description = "Control Hub base URL",
+      description = "Control Hub URL where the execution engine is registered",
       displayPosition = 60,
       group = "PIPELINE",
       dependsOn = "controlHubEnabled",
@@ -61,8 +61,8 @@ public class WaitForPipelineCompletionConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "5000",
-      label = "Delay Between State Checks",
-      description = "Milliseconds to wait before checking pipeline state",
+      label = "Status Check Interval",
+      description = "Milliseconds to wait between pipeline status checks",
       displayPosition = 80,
       group = "PIPELINE",
       min = 0,
@@ -74,8 +74,8 @@ public class WaitForPipelineCompletionConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "User Name",
-      description = "User that runs the pipeline. Enter a Data Collector, Data Collector Edge, or Transformer user, " +
-          "or enter a Control Hub user for execution engines registered with Control Hub.",
+      description = "User to perform status checks. Enter an execution engine user " +
+          "or a Control Hub user if the engine is registered with Control Hub.",
       defaultValue = "admin",
       displayPosition = 81,
       group = "CREDENTIALS"
@@ -86,7 +86,7 @@ public class WaitForPipelineCompletionConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
-      description = "Password for the user",
+      description = "Password",
       defaultValue = "admin",
       displayPosition = 82,
       group = "CREDENTIALS"

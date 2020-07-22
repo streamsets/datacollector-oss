@@ -40,6 +40,11 @@ import java.util.Map;
 //  CLUSTER: cluster streaming
 //  SLAVE: cluster streaming
 //  BATCH  : cluster batch
+
+/**
+ * Runner implementations must robustly notify StatsCollector on pipeline state changes, and must take great care to not
+ * fail to transition to a non-active PipelineStatus if the underlying resources have actually halted.
+ */
 public interface Runner {
 
   //Runners are lightweight control classes, they are created on every Manager.getRunner() call

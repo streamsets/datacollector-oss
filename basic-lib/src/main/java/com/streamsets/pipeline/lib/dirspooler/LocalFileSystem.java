@@ -67,6 +67,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     }
   }
 
+  @Override
   public boolean exists(WrappedFile filePath) {
     if (filePath == null) {
       return false;
@@ -74,6 +75,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     return Files.exists(Paths.get(filePath.getAbsolutePath()));
   }
 
+  @Override
   public void delete(WrappedFile filePath) throws IOException {
     if (filePath == null) {
       return;
@@ -81,6 +83,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     Files.delete(Paths.get(filePath.getAbsolutePath()));
   }
 
+  @Override
   public void move(WrappedFile filePath, WrappedFile destFilePath) throws IOException {
     Files.move(Paths.get(filePath.getAbsolutePath()), Paths.get(destFilePath.getAbsolutePath()));
   }
@@ -108,10 +111,12 @@ public class LocalFileSystem implements WrappedFileSystem {
     return result;
   }
 
+  @Override
   public long getLastModifiedTime(WrappedFile filePath) throws IOException {
     return getFileTimeProperty(filePath, LocalFile.LAST_MODIFIED_TIMESTAMP_KEY);
   }
 
+  @Override
   public long getChangedTime(WrappedFile filePath) throws IOException {
     return getFileTimeProperty(filePath, HeaderAttributeConstants.LAST_CHANGE_TIME);
   }
@@ -124,6 +129,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     return ((FileTime) Files.getAttribute(filePath, "unix:ctime")).toMillis();
   }
 
+  @Override
   public boolean isDirectory(WrappedFile filePath) {
     if (filePath == null) {
       return false;
@@ -131,6 +137,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     return Files.isDirectory(Paths.get(filePath.getAbsolutePath()));
   }
 
+  @Override
   public void addFiles(WrappedFile dirFile, WrappedFile startingFile, List<WrappedFile> toProcess, boolean includeStartingFile, boolean useLastModified) throws IOException {
     final long scanTime = System.currentTimeMillis();
 
@@ -177,6 +184,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     }
   }
 
+  @Override
   public void archiveFiles(WrappedFile archiveDirPath, List<WrappedFile> toProcess, long timeThreshold) throws IOException {
   EnumSet<FileVisitOption> opts = EnumSet.noneOf(FileVisitOption.class);
     Files.walkFileTree(Paths.get(archiveDirPath.getAbsolutePath()), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
@@ -194,6 +202,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     });
   }
 
+  @Override
   public void addDirectory(WrappedFile dirPath, List<WrappedFile> directories) throws Exception {
     EnumSet<FileVisitOption> opts = EnumSet.noneOf(FileVisitOption.class);
       Files.walkFileTree(Paths.get(dirPath.getAbsolutePath()), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
@@ -207,11 +216,13 @@ public class LocalFileSystem implements WrappedFileSystem {
       });
   }
 
+  @Override
   public WrappedFile getFile(String filePath) throws IOException {
     Path path = Paths.get(filePath);
     return new LocalFile(path);
   }
 
+  @Override
   public WrappedFile getFile(String dirPath, String filePath) throws IOException {
     if (isAbsolutePath(dirPath, filePath)) {
       return getFile(filePath);
@@ -229,14 +240,17 @@ public class LocalFileSystem implements WrappedFileSystem {
     return filePath != null && filePath.startsWith(dirPath);
   }
 
-  public void mkdir(WrappedFile filePath) {
-    new File(filePath.getAbsolutePath()).mkdir();
+  @Override
+  public void mkdirs(WrappedFile filePath) throws IOException {
+    Files.createDirectories(Paths.get(filePath.getAbsolutePath()));
   }
 
+  @Override
   public boolean patternMatches(String fileName) {
     return matcher.matches(Paths.get(fileName));
   }
 
+  @Override
   public void handleOldFiles(WrappedFile dirpath, WrappedFile startingFile, boolean useLastModified, List<WrappedFile> toProcess) throws IOException {
     EnumSet<FileVisitOption> opts = EnumSet.noneOf(FileVisitOption.class);
     Files.walkFileTree(Paths.get(dirpath.getAbsolutePath()), opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
@@ -255,6 +269,7 @@ public class LocalFileSystem implements WrappedFileSystem {
   }
 
   // This method is a simple wrapper that lets us find the NoSuchFileException if that was the cause.
+  @Override
   public int compare(WrappedFile path1, WrappedFile path2, boolean useLastModified) {
     // why not just check if the file exists? Well, there is a possibility file gets moved/archived/deleted right after
     // that check. In that case we will still fail. So fail, and recover.
@@ -276,6 +291,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     }
   }
 
+  @Override
   public Comparator<WrappedFile> getComparator(boolean useLastModified) {
     return new Comparator<WrappedFile>() {
       @Override
@@ -328,6 +344,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     };
   }
 
+  @Override
   public boolean findDirectoryPathCreationWatcher(List<WrappedFile> spoolDirPath) {
     List<Path> files = new ArrayList<>();
     for (WrappedFile wrappedFile : spoolDirPath) {
@@ -337,6 +354,7 @@ public class LocalFileSystem implements WrappedFileSystem {
     return !watcher.find().isEmpty();
   }
 
+  @Override
   public AbstractSpoolerFileRef.Builder getFileRefBuilder() {
     return new LocalFileRef.Builder();
   }

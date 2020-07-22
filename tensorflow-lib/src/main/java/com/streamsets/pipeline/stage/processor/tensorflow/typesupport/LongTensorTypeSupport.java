@@ -37,7 +37,10 @@ final class LongTensorTypeSupport extends AbstractTensorDataTypeSupport<LongBuff
 
   @Override
   public void writeField(LongBuffer buffer, Field field) {
-    Utils.checkState(field.getType() == Field.Type.LONG, "Not a Float scalar");
+    Utils.checkState(
+        field.getType() == Field.Type.LONG,
+        Utils.format("Not a Long scalar, it is {}", field.getType())
+    );
     buffer.put(field.getValueAsLong());
   }
 

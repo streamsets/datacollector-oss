@@ -825,10 +825,8 @@ angular
      * @param {string} status
      */
     function isErrorStatus(status) {
-      return _.contains(
-        ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'],
-        status
-        );
+      var ERROR_STATUSES = ['START_ERROR', 'STARTING_ERROR','RUNNING_ERROR', 'RUN_ERROR', 'CONNECT_ERROR', 'STOP_ERROR', 'STOPPING_ERROR'];
+      return _.contains(ERROR_STATUSES, status);
     }
 
     /**
@@ -1409,7 +1407,7 @@ angular
       $scope.firstOpenLane = $rootScope.$storage.dontShowHelpAlert ? {} : getFirstOpenLane();
 
       if (pipelineStatus && pipelineStatus.pipelineId === pipelineConfig.info.pipelineId &&
-        pipelineStatus.status === 'RUNNING' && pipelineMetrics && pipelineMetrics.meters) {
+        pipelineMetrics && pipelineMetrics.meters) {
         stageErrorCounts = getStageErrorCounts();
       }
 
@@ -1645,12 +1643,6 @@ angular
         if (!options.detailTabName) {
           if ($scope.selectedDetailPaneTabCache[selectedObject.instanceName]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[selectedObject.instanceName];
-          } else {
-            if ($scope.isPipelineRunning) {
-              options.detailTabName = 'summary';
-            } else {
-              options.detailTabName = 'configuration';
-            }
           }
 
           if ($scope.selectedConfigGroupCache[selectedObject.instanceName]) {
@@ -1714,12 +1706,6 @@ angular
         if (!options.detailTabName) {
           if ($scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.pipelineId]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.pipelineConfig.info.pipelineId];
-          } else {
-            if ($scope.isPipelineRunning) {
-              options.detailTabName = 'summary';
-            } else {
-              options.detailTabName = 'configuration';
-            }
           }
 
           if ($scope.selectedConfigGroupCache[$scope.pipelineConfig.info.pipelineId]) {
@@ -1733,12 +1719,6 @@ angular
         if (!options.detailTabName) {
           if ($scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane]) {
             options.detailTabName = $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane];
-          } else {
-            if ($scope.isPipelineRunning) {
-              options.detailTabName = 'summary';
-            } else {
-              options.detailTabName = 'dataRules';
-            }
           }
         }
       }
@@ -2300,6 +2280,9 @@ angular
 
         $scope.isPipelineRunning = derivePipelineRunning();
         $scope.activeConfigStatus = $rootScope.common.pipelineStatusMap[routeParamPipelineName] || {};
+
+        // clear current running stage
+        $scope.$broadcast('updateRunningStage', null);
 
         if (oldActiveConfigStatus.timeStamp && oldActiveConfigStatus.timeStamp !== $scope.activeConfigStatus.timeStamp &&
           isErrorStatus($scope.activeConfigStatus.status)

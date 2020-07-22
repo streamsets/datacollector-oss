@@ -76,43 +76,33 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.attribute.PosixFilePermission;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
 
 import static com.streamsets.datacollector.util.AwaitConditionUtil.numPipelinesEqualTo;
 import static org.awaitility.Awaitility.await;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class TestStandalonePipelineManager {
 
   private static Logger LOG = LoggerFactory.getLogger(TestStandalonePipelineManager.class);
-  public static final String INVALID_KEYTAB_DIR = "invalid";
 
   private PipelineStoreTask pipelineStoreTask;
   private Manager pipelineManager;
   private PipelineStateStore pipelineStateStore;
   private Object afterActionsFunctionCallParam;
-  private String tempKeytabDir;
 
   @Before
   public void resetState() {
@@ -139,12 +129,10 @@ public class TestStandalonePipelineManager {
     private static Logger LOG = LoggerFactory.getLogger(TestPipelineManagerModule.class);
     private final long expiry;
     private final long initialExpiryDelay;
-    private final Path tempKafkaKeytabDir;
 
-    public TestPipelineManagerModule(long expiry, long initialExpiryDelay, Path tempKafkaKeytabDir) {
+    public TestPipelineManagerModule(long expiry, long initialExpiryDelay) {
       this.initialExpiryDelay = initialExpiryDelay;
       this.expiry = expiry;
-      this.tempKafkaKeytabDir = tempKafkaKeytabDir;
     }
 
     @Provides @Singleton
@@ -189,7 +177,6 @@ public class TestStandalonePipelineManager {
       Configuration configuration = new Configuration();
       configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INTERVAL, expiry);
       configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INITIAL_DELAY, initialExpiryDelay);
-      configuration.set(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_LOCATION_KEY, tempKafkaKeytabDir.toString());
       return configuration;
     }
 
@@ -344,29 +331,11 @@ public class TestStandalonePipelineManager {
   private void setUpManager(
       long expiry,
       long initialThreadExpiryDelay,
-      boolean isDPMEnabled,
-      boolean simulateExistingKafkaKeytabDir
+      boolean isDPMEnabled
   ) {
-    Path tempKeytabDirPath;
-    try {
-      tempKeytabDirPath = Files.createTempDirectory(
-          this.getClass().getSimpleName() + "_tempKeytabDirectory_"
-      );
-      tempKeytabDirPath.toFile().deleteOnExit();
-      if (simulateExistingKafkaKeytabDir) {
-        // prior to the changes in SDC-14847, the kafka-keytabs dir itself would be user readable
-        // and writeable with no global permissions, so simulate that here
-        final Path kafkaKeytabsSubdir = tempKeytabDirPath.resolve(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_DIR);
-        Files.createDirectory(kafkaKeytabsSubdir);
-        Files.setPosixFilePermissions(kafkaKeytabsSubdir, StandaloneAndClusterPipelineManager.USER_ONLY_PERM);
-      }
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
     final ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineManagerModule(
         expiry,
-        initialThreadExpiryDelay,
-        tempKeytabDirPath
+        initialThreadExpiryDelay
     ));
     RuntimeInfo info = objectGraph.get(RuntimeInfo.class);
     info.setDPMEnabled(isDPMEnabled);
@@ -374,7 +343,6 @@ public class TestStandalonePipelineManager {
     pipelineStateStore = objectGraph.get(PipelineStateStore.class);
     pipelineManager = new StandaloneAndClusterPipelineManager(objectGraph);
     final Configuration configuration = objectGraph.get(Configuration.class);
-    tempKeytabDir = configuration.get(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_LOCATION_KEY, INVALID_KEYTAB_DIR);
     pipelineManager.init();
     pipelineManager.run();
   }
@@ -387,7 +355,6 @@ public class TestStandalonePipelineManager {
     setUpManager(
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
         false
     );
   }
@@ -398,6 +365,7 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
   }
+
 
   @Test
   public void testPreviewer() throws PipelineException {
@@ -491,8 +459,7 @@ public class TestStandalonePipelineManager {
     setUpManager(
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        true,
-        false
+        true
     );
 
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
@@ -511,7 +478,6 @@ public class TestStandalonePipelineManager {
     setUpManager(
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
         false
     );
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
@@ -533,7 +499,6 @@ public class TestStandalonePipelineManager {
     setUpManager(
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
         false
     );
 
@@ -550,7 +515,6 @@ public class TestStandalonePipelineManager {
     setUpManager(
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
         StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
         false
     );
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
@@ -559,61 +523,6 @@ public class TestStandalonePipelineManager {
     assertEquals(1, pipelineStates.size());
     // no runner is created
     assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
-  }
-
-  @Test
-  public void testKafkaTempKeytabDir() throws Exception {
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
-        false
-    );
-
-    // in this case, there is no existing Kafka keytab dir, so the top level dir should have global perms
-    testKafkaKeytabHelper(tempKeytabDir);
-  }
-
-  /**
-   * This test confirms that an existing kafka-keytabs dir (which, prior to SDC 3.17, was
-   * restricted to only user permissions), still continues to work after the user-level
-   * subdirectory concept is introduced under SDC-14847.  Note the code deliberately does
-   * NOT "upgrade" the permissions by changing them; it simply ensures that the new user
-   * subdirectory works as expected.
-   *
-   */
-  @Test
-  public void testKafkaTempKeytabExistingDir() throws Exception {
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false,
-        true
-    );
-    // run the rest of the assertions as normal; the top level dir permissions should have changed to global write
-    testKafkaKeytabHelper(tempKeytabDir);
-  }
-
-  private static void testKafkaKeytabHelper(String keytabDirStr) throws Exception {
-    assertThat(keytabDirStr, not(equalTo(INVALID_KEYTAB_DIR)));
-    final Path keytabDir = Paths.get(keytabDirStr);
-    assertTrue(Files.exists(keytabDir));
-    assertTrue(Files.isDirectory(keytabDir));
-
-    // kafka-keytabs dir should be globally writeable at this point
-    final Path kafkaKeytabsDir = keytabDir.resolve(StandaloneAndClusterPipelineManager.KAFKA_KEYTAB_DIR);
-    assertTrue(Files.exists(kafkaKeytabsDir));
-    assertTrue(Files.isDirectory(kafkaKeytabsDir));
-    final Set<PosixFilePermission> topLevelPerms = Files.getPosixFilePermissions(kafkaKeytabsDir);
-    assertThat(topLevelPerms, equalTo(StandaloneAndClusterPipelineManager.GLOBAL_ALL_PERM));
-
-    // current user level subdirectory should be restricted to user only
-    final Path userLevelDir = kafkaKeytabsDir.resolve(System.getProperty("user.name"));
-    assertTrue(Files.exists(userLevelDir));
-    assertTrue(Files.isDirectory(userLevelDir));
-    final Set<PosixFilePermission> userLevelPerms = Files.getPosixFilePermissions(userLevelDir);
-    assertThat(userLevelPerms, equalTo(StandaloneAndClusterPipelineManager.USER_ONLY_PERM));
-
   }
 
   @Test
@@ -630,7 +539,7 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode
         .STANDALONE, null, 0, 0);
     pipelineManager = null;
-    setUpManager(100, 0, false, false);
+    setUpManager(100, 0, false);
     await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
@@ -644,7 +553,7 @@ public class TestStandalonePipelineManager {
   public void testPipelineRunnersAtDifferentTimesExpiry() throws Exception {
     pipelineStoreTask.create("user", "aaaa", "label","blah", false, false, new HashMap<String, Object>());
     pipelineStoreTask.create("user", "bbbb", "label","blah", false, false, new HashMap<String, Object>());
-    setUpManager(100, 0, false, false);
+    setUpManager(100, 0, false);
 
     pipelineManager.getRunner("aaaa", "0");
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);

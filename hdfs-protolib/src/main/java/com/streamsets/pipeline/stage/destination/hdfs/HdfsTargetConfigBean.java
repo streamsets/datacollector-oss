@@ -77,6 +77,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     description = "File name prefix",
     displayPosition = 105,
     group = "OUTPUT_FILES",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     elDefs = SdcEL.class
   )
   public String uniquePrefix;
@@ -100,6 +101,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Directory in Header",
     description = "The directory is defined by the '" + HdfsTarget.TARGET_DIRECTORY_HEADER + "' record header attribute instead of the Directory Template configuration property.",
     displayPosition = 107,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   public boolean dirPathTemplateInHeader;
@@ -128,6 +130,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Data Time Zone",
     description = "Time zone to use to resolve directory paths",
     displayPosition = 120,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -142,6 +145,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
       "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
     displayPosition = 130,
     group = "OUTPUT_FILES",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -156,6 +160,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     displayPosition = 140,
     group = "OUTPUT_FILES",
     min = 0,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "fileType",
     triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
@@ -170,6 +175,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     displayPosition = 150,
     group = "OUTPUT_FILES",
     min = 0,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "fileType",
     triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
@@ -187,6 +193,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     displayPosition = 155,
     elDefs = {TimeEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "fileType",
     triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
@@ -200,6 +207,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     description = "",
     displayPosition = 160,
     group = "OUTPUT_FILES",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "fileType",
     triggeredByValue = {"TEXT", "SEQUENCE_FILE"}
   )
@@ -214,6 +222,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     description = "Use the full class name",
     displayPosition = 170,
     group = "OUTPUT_FILES",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "compression",
     triggeredByValue = "OTHER"
   )
@@ -227,6 +236,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "File Type",
     description = "",
     displayPosition = 100,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   @ValueChooserModel(FileTypeChooserValues.class)
@@ -243,6 +253,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     group = "OUTPUT_FILES",
     dependsOn = "fileType",
     triggeredByValue = "SEQUENCE_FILE",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class, DataUtilEL.class}
   )
@@ -255,6 +266,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Compression Type",
     description = "Compression type if using a CompressionCodec",
     displayPosition = 190,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES",
     dependsOn = "fileType",
     triggeredByValue = "SEQUENCE_FILE"
@@ -273,6 +285,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
       "'${30 * MINUTES}'",
     displayPosition = 200,
     group = "LATE_RECORDS",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     elDefs = {TimeEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -285,6 +298,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Use Roll Attribute",
     description = "Closes the current file and creates a new file when processing a record with the specified roll attribute",
     displayPosition = 204,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   public boolean rollIfHeader;
@@ -297,6 +311,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     description = "Name of the roll attribute",
     displayPosition = 205,
     group = "OUTPUT_FILES",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     dependsOn = "rollIfHeader",
     triggeredByValue = "true"
   )
@@ -309,6 +324,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Late Record Handling",
     description = "Action for records considered late.",
     displayPosition = 210,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "LATE_RECORDS"
   )
   @ValueChooserModel(LateRecordsActionChooserValues.class)
@@ -325,6 +341,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     group = "LATE_RECORDS",
     dependsOn = "lateRecordsAction",
     triggeredByValue = "SEND_TO_LATE_RECORDS_FILE",
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     elDefs = {RecordEL.class, TimeEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -348,6 +365,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     label = "Validate Permissions",
     description = "When checked, the destination creates a test file in configured target directory to verify access privileges.",
     displayPosition = 230,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   public boolean hdfsPermissionCheck;
@@ -363,6 +381,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
           "Should be a octal/symbolic representation of the permissions.",
       displayPosition = 460,
       group = "DATA_FORMAT",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "dataFormat",
       triggeredByValue = "WHOLE_FILE"
   )
@@ -375,6 +394,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
     defaultValue = "false",
     description = "Set to true to skip finding old temporary files that were written to and automatically recover them.",
     displayPosition = 1000,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "OUTPUT_FILES"
   )
   public boolean skipOldTempFileRecovery = false;

@@ -128,11 +128,13 @@ public class DataParserServiceImpl extends BaseService implements DataFormatPars
   }
 
   @Override
+  @Deprecated
   public void setStringBuilderPoolSize(int poolSize) {
     this.dataFormatConfig.stringBuilderPoolSize = poolSize;
   }
 
   @Override
+  @Deprecated
   public int getStringBuilderPoolSize() {
     return this.dataFormatConfig.stringBuilderPoolSize;
   }

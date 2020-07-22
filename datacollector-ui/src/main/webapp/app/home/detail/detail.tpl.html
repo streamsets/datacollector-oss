@@ -36,7 +36,7 @@
         </li>
       </ul>
       <div class="checkbox advanced-options-select"
-        ng-if="selectedType == pipelineConstant.STAGE_INSTANCE
+        ng-if="(selectedType == pipelineConstant.STAGE_INSTANCE || selectedType == pipelineConstant.PIPELINE)
         && detailPaneConfigDefn
         && hasAdvancedConfig(detailPaneConfigDefn.configDefinitions)">
         <label
@@ -138,19 +138,19 @@
     </div>
 
     <div class="btn-group pull-right detail-time-range-dropdown"
-         ng-if="common.isMetricsTimeSeriesEnabled && isPipelineRunning && activeDetailTab.name == 'summary'">
+         ng-if="activeDetailTab.name == 'summary' && runHistory.length > 0">
 
       <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown">
-        <i class="fa fa-clock-o"></i>
-        <span>{{getTimeRangeLabel()}}</span>
+        <i class="fa fa-bar-chart"></i>
+        <span>{{selectedRunHistory.appName}}: {{selectedRunHistory.status}}</span>
         <span class="caret"></span>
       </button>
 
       <ul class="dropdown-menu pull-left" role="menu" aria-labelledby="dropdownMenu1">
 
-        <li role="presentation" ng-repeat="timeOption in timeOptions">
+        <li role="presentation" ng-repeat="history in runHistory track by $index">
           <a role="menuitem" tabindex="-1" href="#"
-             ng-click="changeTimeRange(timeOption)">{{'home.detailPane.' + timeOption | translate}}</a>
+             ng-click="monitorRun(history)">{{history.appName + ": " + history.status}}</a>
         </li>
 
       </ul>

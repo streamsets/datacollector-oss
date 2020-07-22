@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.multikafka;
 
 import com.google.common.base.Throwables;
-import com.google.protobuf.MapEntry;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
@@ -37,7 +36,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
-import com.streamsets.pipeline.lib.kafka.KafkaKerberosUtil;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -70,13 +69,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 public class MultiKafkaSource extends BasePushSource {
 
   private static final Logger LOG = LoggerFactory.getLogger(MultiKafkaSource.class);
 
   private static final String MULTI_KAFKA_DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
+  private static final String TOPIC_PARTITION_SEPARATOR = "#";
 
   private final MultiKafkaBeanConfig conf;
   private AtomicBoolean shutdownCalled = new AtomicBoolean(false);
@@ -185,7 +184,7 @@ public class MultiKafkaSource extends BasePushSource {
           ConsumerRecords<String, byte[]> messages = consumer.poll(pollInterval);
 
           for (ConsumerRecord<String, byte[]> item : messages) {
-            String topicPartitionName = item.topic() + "-" + item.partition();
+            String topicPartitionName = item.topic() + TOPIC_PARTITION_SEPARATOR + item.partition();
             recordsSinceLastCommit.putIfAbsent(topicPartitionName, 0L);
             recordsSinceLastCommit.put(topicPartitionName, recordsSinceLastCommit.get(topicPartitionName) + 1);
           }
@@ -222,7 +221,7 @@ public class MultiKafkaSource extends BasePushSource {
                 timestampType
             ));
 
-            String topicPartitionName = item.topic() + "-" + item.partition();
+            String topicPartitionName = item.topic() + TOPIC_PARTITION_SEPARATOR + item.partition();
             offsetIncrements.putIfAbsent(topicPartitionName, 0L);
             offsetIncrements.put(topicPartitionName, offsetIncrements.get(topicPartitionName) + 1);
 
@@ -283,7 +282,7 @@ public class MultiKafkaSource extends BasePushSource {
     ) {
       Map<TopicPartition, OffsetAndMetadata> offsets = new HashMap<>();
       for (Map.Entry<String, Long> offsetIncrement : offsetIncrements.entrySet()) {
-        String[] topicAndPartition = offsetIncrement.getKey().split("-");
+        String[] topicAndPartition = offsetIncrement.getKey().split(TOPIC_PARTITION_SEPARATOR);
         TopicPartition topicPartition = new TopicPartition(
             topicAndPartition[0],
             Integer.parseInt(topicAndPartition[1])
@@ -393,6 +392,7 @@ public class MultiKafkaSource extends BasePushSource {
   public List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     kafkaKerberosUtil = new KafkaKerberosUtil(getContext().getConfiguration());
+    Utils.checkNotNull(kafkaKerberosUtil, "kafkaKerberosUtil");
 
     conf.init(getContext(), issues);
 

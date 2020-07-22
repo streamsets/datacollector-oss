@@ -41,6 +41,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsCache;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.security.GroupsInScope;
+import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -62,11 +63,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
@@ -123,14 +120,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private ScheduledFuture<?> runnerExpiryFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
-  /**
-   * These properties need to be kept in sync with KafkaKerberosUtil
-   */
-  @VisibleForTesting
-  static final String KAFKA_KEYTAB_LOCATION_KEY = "stage.conf_kafka.keytab.location";
-  private static final String KAFKA_KEYTAB_LOCATION_DEFAULT = "/tmp/sdc";
-  @VisibleForTesting
-  static final String KAFKA_KEYTAB_DIR = "kafka-keytabs";
+  private final KafkaKerberosUtil kafkaKerberosUtil;
 
   public StandaloneAndClusterPipelineManager(ObjectGraph objectGraph) {
     super(PIPELINE_MANAGER);
@@ -140,6 +130,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     runnerExpiryInitialDelay = configuration.get(RUNNER_EXPIRY_INITIAL_DELAY, DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY);
     eventListenerManager.addStateEventListener(resourceManager);
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
+    kafkaKerberosUtil = new KafkaKerberosUtil(configuration);
   }
 
   @Override
@@ -398,129 +389,18 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   @Override
   protected void initTask() {
-    cleanUpKafkaKeytabDir();
-    createAndRestrictKafkaKeytabDir();
-  }
-
-  private Path keytabDirHelper(Path path, Set<PosixFilePermission> permissions, String label, boolean create) {
-    final File dir = path.toFile();
-
-    final boolean exists = dir.exists();
-    if (!exists) {
-      if (create) {
-        LOG.debug("Attempting to create {} directory at: {}", label, path.toString());
-        try {
-          final Path directories = Files.createDirectories(path);
-          Files.setPosixFilePermissions(path, permissions);
-          return directories;
-        } catch (IOException e) {
-          throw new IllegalStateException(String.format(
-              "Failed to create %s directory at %s: %s",
-              label,
-              path.toString(),
-              e.getMessage()
-          ), e);
-        }
-      } else {
-        // doesn't exist, but shouldn't be created either; return the path as it was passed in
-        return path;
-      }
-    } else /* exists = true */ {
-      final boolean isDirectory = dir.isDirectory();
-      if (!isDirectory) {
-        throw new IllegalStateException(String.format(
-            "%s directory is not a directory, but a file: %s",
-            label,
-            dir.toString()
-        ));
-      } else /* isDirectory = true */ {
-        LOG.trace("{} directory already exists at: {}", label, path.toString());
-        try {
-          final Set<PosixFilePermission> existingPermissions = Files.getPosixFilePermissions(path);
-          if (!GLOBAL_ALL_PERM.equals(existingPermissions)) {
-            if (LOG.isWarnEnabled()) {
-              LOG.warn(
-                  "Existing permissions for top-level Kafka keytab dir at {} were {}; changing them to {}",
-                  path.toString(),
-                  PosixFilePermissions.toString(existingPermissions),
-                  PosixFilePermissions.toString(GLOBAL_ALL_PERM)
-              );
-            }
-            Files.setPosixFilePermissions(path, GLOBAL_ALL_PERM);
-          }
-        } catch (IOException e) {
-          throw new RuntimeException("Failed to get existing permissions for top level keytab dir", e);
-        }
-        return path;
-      }
+    if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
+      LOG.debug("Initializing task for Data Collector; attempting to clean any existing Kafka temp keytab directory");
+      cleanUpKafkaKeytabDir();
     }
-  }
-
-  /**
-   * Creates the global top-level dir for all Kafka keytabs. The path is based on the configuration properties, and
-   * the permission will be globally readable/writeable. Individual subdirectories will be restricted to only
-   * the user who is running the container.
-   *
-   * @param create whether the directory should be created, if it doesn't exist
-   * @return the {@link Path} to the top level Kafka keytab dir
-   */
-  private Path getOrCreateTopKeytabDir(boolean create) {
-    String kafkaKeytabDirPath = configuration.get(KAFKA_KEYTAB_LOCATION_KEY, KAFKA_KEYTAB_LOCATION_DEFAULT);
-    final Path path = Paths.get(kafkaKeytabDirPath).resolve(KAFKA_KEYTAB_DIR);
-    return keytabDirHelper(path, GLOBAL_ALL_PERM, "top level Kafka keytab", create);
-  }
-
-  /**
-   * Creates the user-specific Kafka keytab dir, directly underneath the top level directory. It will
-   * only be readable and writeable by the user running the container.
-   *
-   * @param create whether the directory should be created, if it doesn't exist
-   * @return the {@link Path} to the user-specific Kafka keytab dir
-   */
-  private File getOrCreateKafkaKeytabDir(boolean create) {
-    final Path topLevelDir = getOrCreateTopKeytabDir(create);
-    final Path userLevelDir = topLevelDir.resolve(System.getProperty("user.name"));
-
-    return keytabDirHelper(userLevelDir, USER_ONLY_PERM, "user level Kafka keytab", create).toFile();
   }
 
   private void cleanUpKafkaKeytabDir() {
-    File kafkaKeytabDir = getOrCreateKafkaKeytabDir(false);
-    if (kafkaKeytabDir.exists()) {
-      if (kafkaKeytabDir.isDirectory()) {
-        boolean canRead = kafkaKeytabDir.canRead();
-        if (!canRead) {
-          canRead = kafkaKeytabDir.setReadable(true, false);
-        }
-        if (canRead) {
-          deleteFileOrDirectory(kafkaKeytabDir);
-        } else {
-          LOG.warn("Insufficient permissions on {} to delete its contents", kafkaKeytabDir.getName());
-        }
-      } else {
-        if (!kafkaKeytabDir.delete()) {
-          LOG.warn("Failed to delete file {}, it should be a directory for Kafka Keytabs", kafkaKeytabDir.getName());
-        }
-      }
+    try {
+      kafkaKerberosUtil.cleanUpKeytabDirectory();
+    } catch (IOException e) {
+      LOG.error("IOException attempting to clean up temp keytab directory", e);
     }
-  }
-
-  private void deleteFileOrDirectory(File fileOrDirectory) {
-    if (fileOrDirectory.isDirectory()) {
-      File[] fileList = fileOrDirectory.listFiles();
-      if (fileList != null) {
-        for (File file : fileList) {
-          deleteFileOrDirectory(file);
-        }
-      }
-    }
-    if (!fileOrDirectory.delete()) {
-      LOG.warn("Failed to delete file or directory {}", fileOrDirectory.getName());
-    }
-  }
-
-  private void createAndRestrictKafkaKeytabDir() {
-    getOrCreateKafkaKeytabDir(true);
   }
 
   @Override
@@ -553,7 +433,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     if(runnerExpiryFuture != null) {
       runnerExpiryFuture.cancel(true);
     }
-    cleanUpKafkaKeytabDir();
+    if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
+      /**
+       * HACK ALERT: see SDC-15032
+       */
+      cleanUpKafkaKeytabDir();
+    }
     LOG.info("Stopped Production Pipeline Manager");
   }
 

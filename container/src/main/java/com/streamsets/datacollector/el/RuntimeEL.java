@@ -209,4 +209,13 @@ public class RuntimeEL {
   public static int availableProcessors() {
     return Runtime.getRuntime().availableProcessors();
   }
+
+  @ElFunction(
+      prefix = "runtime",
+      name = "resourcesDirPath",
+      description = "Returns the full path to the directory for runtime resource files"
+  )
+  public static String resourcesDirPath() {
+    return runtimeInfo.getResourcesDir();
+  }
 }

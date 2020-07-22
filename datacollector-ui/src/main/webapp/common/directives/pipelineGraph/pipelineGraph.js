@@ -25,8 +25,8 @@ angular.module('pipelineGraphDirectives', [])
     };
   })
   .controller('PipelineGraphController', function(
-    $scope, $rootScope, $element, _, $filter, $location, $modal, 
-    pipelineConstant, $translate, pipelineService, tracking
+    $scope, $rootScope, $element, _, $filter, $location, $modal,
+    pipelineConstant, $translate, pipelineService, pipelineTracking
   ) {
 
     var showTransition = false;
@@ -1532,6 +1532,7 @@ angular.module('pipelineGraphDirectives', [])
             state.selectedEdge = null;
             $scope.$emit('onRemoveNodeSelection', {
               selectedObject: undefined,
+              detailTabName: undefined,
               type: pipelineConstant.PIPELINE
             });
             graph.updateGraph();
@@ -1751,27 +1752,18 @@ angular.module('pipelineGraphDirectives', [])
         state.selectedNode = null;
         $scope.$emit('onRemoveNodeSelection', {
           selectedObject: undefined,
+          detailTabName: undefined,
           type: pipelineConstant.PIPELINE
         });
         graph.updateGraph();
 
-        var stageTrackingDetail = {
-          'Pipeline ID': $scope.pipelineConfig.pipelineId,
-          'Stage ID': selectedNode.instanceName,
-          'Stage Type Name': selectedNode.stageName,
-          'Library Name': selectedNode.library
-        };
-        if (selectedNode.uiInfo.stageType === pipelineConstant.SOURCE_STAGE_TYPE) {
-          tracking.mixpanel.track('Origin Removed', stageTrackingDetail);
-        } else if (selectedNode.uiInfo.stageType == pipelineConstant.PROCESSOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Processor Removed', stageTrackingDetail);
-        } else if (selectedNode.uiInfo.stageType == pipelineConstant.TARGET_STAGE_TYPE) {
-          tracking.mixpanel.track('Destination Removed', stageTrackingDetail);
-        } else if (selectedNode.uiInfo.stageType == pipelineConstant.EXECUTOR_STAGE_TYPE) {
-          tracking.mixpanel.track('Executor Removed', stageTrackingDetail);
-        } else {
-          tracking.mixpanel.track('Stage with unknown type removed', stageTrackingDetail);
-        }
+        pipelineTracking.trackStageRemoved(
+          selectedNode.uiInfo.stageType,
+          $scope.pipelineConfig.pipelineId,
+          selectedNode.instanceName,
+          selectedNode.stageName,
+          selectedNode.library
+        );
       }
     };
 

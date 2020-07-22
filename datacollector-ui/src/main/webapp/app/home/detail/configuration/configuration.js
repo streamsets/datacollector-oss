@@ -117,7 +117,6 @@ angular
                 cm.setOption('fullScreen', !cm.getOption('fullScreen'));
               },
               'Esc': function(cm) {
-                console.log('fsfsdfsdf');
                 cm.setOption('fullScreen', !cm.getOption('fullScreen'));
               }
             }
@@ -558,6 +557,7 @@ angular
        * @returns {Boolean}
        */
       isShownByConfigDisplayMode: function(configurationItemDisplayMode, stageDisplayMode) {
+        stageDisplayMode = stageDisplayMode || $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
         return configurationItemDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_BASIC ||
           stageDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
       },
@@ -661,12 +661,13 @@ angular
        * @param displayMode Current display mode of stage
        * @returns {*}
        */
-      isGroupEnabled: function(stageInstance, configDefinitions, groupName) {
+      isGroupEnabled: function(stageInstance, configDefinitions, groupName, displayMode) {
         var enabled = false;
 
         angular.forEach(configDefinitions, function(configDefinition) {
           if (configDefinition.group === groupName &&
-              $scope.verifyDependsOnMap(stageInstance, configDefinition)) {
+              $scope.verifyDependsOnMap(stageInstance, configDefinition) &&
+              $scope.isShownByConfigDisplayMode(configDefinition.displayMode, displayMode)) {
             enabled = true;
           }
         });
@@ -708,13 +709,13 @@ angular
        */
       isStageGroupEnabled: function(stageInstance, stageDefinition, services, groupName) {
         // First see if this tab is enabled in normal stage configurations
-        if(this.isGroupEnabled(stageInstance, stageDefinition.configDefinitions, groupName)) {
+        if(this.isGroupEnabled(stageInstance, stageDefinition.configDefinitions, groupName, stageInstance.uiInfo.displayMode)) {
           return true;
         }
 
         var enabled = false;
         angular.forEach(services, function(service) {
-          if($scope.isGroupEnabled(service.config, service.definition.configDefinitions, groupName)) {
+          if($scope.isGroupEnabled(service.config, service.definition.configDefinitions, groupName, stageInstance.uiInfo.displayMode)) {
             enabled = true;
           }
         });

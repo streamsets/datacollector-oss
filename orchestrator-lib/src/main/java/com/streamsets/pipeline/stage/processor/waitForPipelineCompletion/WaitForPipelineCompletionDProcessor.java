@@ -27,8 +27,8 @@ import com.streamsets.pipeline.lib.startPipeline.Groups;
 
 @StageDef(
     version = 2,
-    label = "Wait for Pipeline Completion",
-    description = "Wait for a Data Collector, Transformer, or Edge pipeline to complete",
+    label = "Wait for Pipelines",
+    description = "Waits for pipelines to complete on Data Collector, Edge, or Transformer",
     icon="pipeline.png",
     execution = {
         ExecutionMode.STANDALONE

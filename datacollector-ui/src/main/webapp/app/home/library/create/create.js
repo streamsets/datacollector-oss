@@ -19,7 +19,9 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('CreateModalInstanceController', function ($scope, $modalInstance, $translate, api, pipelineType, tracking) {
+  .controller('CreateModalInstanceController', function (
+    $scope, $modalInstance, $translate, api, pipelineType, tracking, trackingEvent
+  ) {
     api.pipelineAgent.getPipelineLabels().then(function(res) {$scope.pipelineLabels = res.data;});
     angular.extend($scope, {
       common: {
@@ -47,8 +49,8 @@ angular
             function(res) {
               $modalInstance.close(res.data);
               tracking.mixpanel.people.set({'Core Journey Stage - Pipeline Created': true});
-              tracking.mixpanel.track('New Pipeline Created', {'Pipeline ID': res.data.pipelineId});
-              tracking.FS.event('New Pipeline Created', {'Pipeline ID': res.data.pipelineId});
+              tracking.mixpanel.track(trackingEvent.PIPELINE_CREATED, {'Pipeline ID': res.data.pipelineId});
+              tracking.FS.event(trackingEvent.PIPELINE_CREATED, {'Pipeline ID': res.data.pipelineId});
             },
             function(res) {
               $scope.common.errors = [res.data];

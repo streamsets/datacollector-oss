@@ -20,14 +20,16 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.el.JobEL;
 import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.BadRecordsHandler;
 import com.streamsets.datacollector.runner.production.StatsAggregationHandler;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
-import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
+import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Executor;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.PushSource;
@@ -35,16 +37,18 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
-import com.streamsets.pipeline.api.Config;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestPipeline {
@@ -309,36 +313,60 @@ public class TestPipeline {
 
   @Test
   public void testLifecycleDelegation() throws Exception {
+    testLifecycleDelegation(false);
+  }
+
+  @Test
+  public void testLifecycleDelegationForControlHubPipeline() throws Exception {
+    testLifecycleDelegation(true);
+  }
+
+  private void testLifecycleDelegation(boolean controlHubControlledPipeline) throws Exception {
     StageLibraryTask lib = MockStages.createStageLibrary();
     List<StageConfiguration> stageDefs = ImmutableList.of(
         MockStages.createSource("s", ImmutableList.of("s")),
         MockStages.createProcessor("p", ImmutableList.of("s"), ImmutableList.of("p")),
         MockStages.createTarget("t", ImmutableList.of("p"))
     );
-    List<Config> pipelineConfigs = new ArrayList<>(2);
+    List<Config> pipelineConfigs = new ArrayList<>();
     pipelineConfigs.add(new Config("deliveryGuarantee", DeliveryGuarantee.AT_LEAST_ONCE));
     pipelineConfigs.add(new Config("stopPipelineOnError", false));
     pipelineConfigs.add(new Config("executionMode", ExecutionMode.STANDALONE));
+    if (controlHubControlledPipeline) {
+      List<Map<String, Object>> constants = new ArrayList<>();
+
+      Map<String, Object> jobIdConstantValue = new LinkedHashMap<>();
+      jobIdConstantValue.put("key", JobEL.JOB_ID_VAR);
+      jobIdConstantValue.put("value", "jId");
+      constants.add(jobIdConstantValue);
+
+      Map<String, Object> jobNameConstantValue = new LinkedHashMap<>();
+      jobNameConstantValue.put("key", JobEL.JOB_NAME_VAR);
+      jobNameConstantValue.put("value", "jName");
+      constants.add(jobNameConstantValue);
+
+      pipelineConfigs.add(new Config("constants", constants));
+    }
 
     PipelineConfiguration pipelineConf = new PipelineConfiguration(
-      PipelineStoreTask.SCHEMA_VERSION,
-      PipelineConfigBean.VERSION,
-      "pipelineId",
-      UUID.randomUUID(),
-      "label",
-      null,
-      pipelineConfigs,
-      null,
-      stageDefs,
-      MockStages.getErrorStageConfig(),
-      MockStages.getStatsAggregatorStageConfig(),
-      ImmutableList.of(MockStages.getLifecycleExecutorConfig()),
-      ImmutableList.of(MockStages.getLifecycleExecutorConfig())
+        PipelineStoreTask.SCHEMA_VERSION,
+        PipelineConfigBean.VERSION,
+        "pipelineId",
+        UUID.randomUUID(),
+        "label",
+        null,
+        pipelineConfigs,
+        null,
+        stageDefs,
+        MockStages.getErrorStageConfig(),
+        MockStages.getStatsAggregatorStageConfig(),
+        ImmutableList.of(MockStages.getLifecycleExecutorConfig()),
+        ImmutableList.of(MockStages.getLifecycleExecutorConfig())
     );
     Pipeline.Builder builder = new MockPipelineBuilder()
-      .withStageLib(lib)
-      .withPipelineConf(pipelineConf)
-      .build();
+        .withStageLib(lib)
+        .withPipelineConf(pipelineConf)
+        .build();
 
     PipelineRunner runner = Mockito.mock(PipelineRunner.class);
     Mockito.when(runner.getMetrics()).thenReturn(new MetricRegistry());
@@ -356,7 +384,10 @@ public class TestPipeline {
     Observer observer = Mockito.mock(Observer.class);
     builder.setObserver(observer);
 
-    Pipeline pipeline = builder.build(runner);
+    Pipeline pipeline = builder.build(runner, new HashMap<>());
+
+    ArgumentCaptor<Record> startEventRecordCaptor = ArgumentCaptor.forClass(Record.class);
+    ArgumentCaptor<Record> stopEventRecordCaptor = ArgumentCaptor.forClass(Record.class);
 
     Mockito.verifyZeroInteractions(source);
     Mockito.verifyZeroInteractions(processor);
@@ -364,16 +395,16 @@ public class TestPipeline {
     Mockito.verifyZeroInteractions(executor);
     pipeline.init(true);
     Mockito.verify(source, Mockito.times(1))
-      .init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
+        .init(Mockito.any(Stage.Info.class), Mockito.any(Source.Context.class));
     Mockito.verify(processor, Mockito.times(1))
-      .init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
+        .init(Mockito.any(Stage.Info.class), Mockito.any(Processor.Context.class));
     Mockito.verify(target, Mockito.times(1))
-      .init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
+        .init(Mockito.any(Stage.Info.class), Mockito.any(Target.Context.class));
     // We're using the same handler for both start/stop events, hence the init should have been called twice
     Mockito.verify(executor, Mockito.times(2))
-      .init(Mockito.any(Stage.Info.class), Mockito.any(Executor.Context.class));
+        .init(Mockito.any(Stage.Info.class), Mockito.any(Executor.Context.class));
     Mockito.verify(runner, Mockito.times(1))
-      .runLifecycleEvent(Mockito.any(Record.class), Mockito.any(StageRuntime.class));
+        .runLifecycleEvent(startEventRecordCaptor.capture(), Mockito.any(StageRuntime.class));
 
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
@@ -388,13 +419,36 @@ public class TestPipeline {
     Mockito.verify(runner, Mockito.times(1)).destroy(Mockito.any(SourcePipe.class), Mockito.any(List.class), Mockito.any(BadRecordsHandler.class), Mockito.any(StatsAggregationHandler.class));
     // We're using the same handler for both start/stop events, hence the destroy should have been called twice
     Mockito.verify(executor, Mockito.times(2)).destroy();
+
     Mockito.verify(runner, Mockito.times(1))
-      .runLifecycleEvent(Mockito.any(Record.class), Mockito.any(StageRuntime.class));
+        .runLifecycleEvent(stopEventRecordCaptor.capture(), Mockito.any(StageRuntime.class));
 
     Mockito.verifyNoMoreInteractions(source);
     Mockito.verifyNoMoreInteractions(processor);
     Mockito.verifyNoMoreInteractions(target);
     Mockito.verifyNoMoreInteractions(executor);
+
+    Record startEventRecord = startEventRecordCaptor.getValue();
+    assertLifeCycleEventRecord(startEventRecord, controlHubControlledPipeline);
+
+    Record stopEventRecord = stopEventRecordCaptor.getValue();
+    assertLifeCycleEventRecord(stopEventRecord, controlHubControlledPipeline);
+  }
+
+  private void assertLifeCycleEventRecord(Record eventRecord, boolean controlHubControlledPipeline) {
+    Assert.assertNotNull(eventRecord);
+    Assert.assertNotNull(eventRecord.get("/pipelineId"));
+    Assert.assertEquals("name", eventRecord.get("/pipelineId").getValueAsString());
+
+    if (controlHubControlledPipeline) {
+      Assert.assertNotNull(eventRecord.get("/jobId"));
+      Assert.assertEquals("jId", eventRecord.get("/jobId").getValueAsString());
+      Assert.assertNotNull(eventRecord.get("/jobName"));
+      Assert.assertEquals("jName", eventRecord.get("/jobName").getValueAsString());
+    } else {
+      Assert.assertNull(eventRecord.get("/jobId"));
+      Assert.assertNull(eventRecord.get("/jobName"));
+    }
   }
 
   @Test

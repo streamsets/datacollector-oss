@@ -19,7 +19,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('DetailController', function (
     $scope, $rootScope, _, pipelineConstant, api, contextHelpService, $modal,
-    authService, userRoles, configuration, tracking
+    authService, userRoles, configuration, pipelineTracking
   ) {
     var infoTab = {
       name: 'info',
@@ -39,13 +39,13 @@ angular
     var configurationTab = {
       name: 'configuration',
       template: 'app/home/detail/configuration/configuration.tpl.html',
-      iconClass: 'fa fa-gear'
+      iconClass: 'fa fa-gear',
+      active: true
     };
     var summaryTab = {
       name: 'summary',
       template: 'app/home/detail/summary/summary.tpl.html',
       iconClass: 'fa fa-bar-chart',
-      active: true,
       helpId: 'pipeline-monitoring'
     };
     var errorTab = {
@@ -86,6 +86,12 @@ angular
       helpId: 'metric-rules-tab'
     };
 
+    var defaultTabName = {
+      PIPELINE: 'configuration',
+      STAGE_INSTANCE: 'configuration',
+      LINK: 'dataRules'
+    };
+
     /**
      * Returns list tabs based on type.
      *
@@ -107,7 +113,7 @@ angular
                 [summaryTab, errorTab, infoTab, configurationTab, rulesTab, historyTab];
             }
           } else {
-            tabsList = [infoTab, configurationTab, rulesTab, historyTab];
+            tabsList = [summaryTab, infoTab, configurationTab, rulesTab, historyTab];
           }
 
           return tabsList;
@@ -119,7 +125,7 @@ angular
               tabsList = [summaryTab, errorTab, infoTab, configurationTab];
             }
           } else {
-            tabsList = [infoTab, configurationTab];
+            tabsList = [summaryTab, errorTab, infoTab, configurationTab];
           }
 
           if (authService.isAuthorized([userRoles.admin])) {
@@ -161,85 +167,12 @@ angular
 
     angular.extend($scope, {
       detailPaneTabs: getDetailTabsList(pipelineConstant.PIPELINE, false),
-      timeOptions: [
-        'latest',
-        'last5m',
-        'last15m',
-        'last1h',
-        'last6h',
-        'last12h',
-        'last24h',
-        'last2d',
-        'last7d',
-        'last30d',
-        'custom'
-      ],
       timeRange: 'latest',
-      customFromTime: null,
-      customToTime: null,
-
-
-      /**
-       * Returns label for Time Range
-       */
-      getTimeRangeLabel: function() {
-        var timeRange = $scope.timeRange;
-        switch(timeRange) {
-          case 'latest':
-            return 'Latest';
-          case 'last5m':
-            return '5 minutes ago to a few seconds ago';
-          case 'last15m':
-            return '15 minutes ago to a few seconds ago';
-          case 'last1h':
-            return 'an hour ago to a few seconds ago';
-          case 'last6h':
-            return '6 hours ago to a few seconds ago';
-          case 'last12h':
-            return '12 hours ago to a few seconds ago';
-          case 'last24h':
-            return 'a day ago to a few seconds ago';
-          case 'last2d':
-            return '2 days ago to a few seconds ago';
-          case 'last7d':
-            return '7 days ago to a few seconds ago';
-          case 'last30d':
-            return 'a month ago to a few seconds ago';
-          case 'custom':
-            return '2 days ago to a few seconds ago';
-        }
-      },
-
-      /**
-       * Returns label for Time Range
-       */
-      getTimeRangeWhereCondition: function() {
-        var timeRange = $scope.timeRange;
-        switch(timeRange) {
-          case 'last5m':
-            return '(time > now() - 5m)';
-          case 'last15m':
-            return '(time > now() - 15m)';
-          case 'last1h':
-            return '(time > now() - 1h)';
-          case 'last6h':
-            return '(time > now() - 6h)';
-          case 'last12h':
-            return '(time > now() - 12h)';
-          case 'last24h':
-            return '(time > now() - 24h)';
-          case 'last2d':
-            return '(time > now() - 1d)';
-          case 'last7d':
-            return '(time > now() - 7d)';
-          case 'last30d':
-            return '(time > now() - 30d)';
-        }
-      },
-
-      changeTimeRange: function(timeRange) {
-        $scope.timeRange = timeRange;
-      },
+      pipelineStateHistory: [],
+      runHistory: [],
+      showRunHistory: false,
+      selectedRunHistory: null,
+      detailPaneMetrics: null,
 
       /**
        * Returns label for Detail Pane
@@ -266,6 +199,22 @@ angular
         });
 
         return nameLabelMap.libraryLabel;
+      },
+
+      getSelectedRunLabel: function() {
+        if ($scope.selectedRunHistory) {
+          return $scope.selectedRunHistory.appName;
+        }
+        return 'Latest';
+      },
+
+      monitorRun: function(history) {
+        $scope.selectedRunHistory = history;
+        if (history.metrics) {
+          $scope.detailPaneMetrics = history.metrics;
+        } else if ($scope.selectedRunHistory === $scope.runHistory[0]) {
+          $scope.detailPaneMetrics = $rootScope.common.pipelineMetrics;
+        }
       },
 
       /**
@@ -394,7 +343,7 @@ angular
         $scope.$broadcast('launchSummarySettings');
       },
 
-      /**
+    /*
        * On Tab Select
        * @param tab
        */
@@ -411,20 +360,12 @@ angular
           case pipelineConstant.LINK:
             $scope.selectedDetailPaneTabCache[$scope.selectedObject.outputLane] = tab.name;
         }
-        var trackingData = {
-          'Tab Viewed': tab.name,
-          'Is Pipeline Running': $scope.isPipelineRunning,
-          'Selected Type': $scope.selectedType
-        };
-        if ($scope.pipelineConfig) {
-          trackingData['Pipeline ID'] = $scope.pipelineConfig.info.pipelineId;
-        }
-        tracking.mixpanel.track('Tab Selected', trackingData);
-        if (tab.name === 'history') {
-          tracking.mixpanel.track('Pipeline History Viewed', {
-            'Pipeline ID': $scope.pipelineConfig.info.pipelineId
-          });
-        }
+        pipelineTracking.trackTabSelected(
+          tab.name,
+          $scope.isPipelineRunning,
+          $scope.selectedType,
+          $scope.pipelineConfig
+        );
       },
 
       /**
@@ -459,36 +400,43 @@ angular
           });
         }, function () {
         });
+      },
+
+      updateHistory: function (pipelineId) {
+        updateHistory(pipelineId);
       }
+
     });
 
     $scope.$on('onSelectionChange', function(event, options) {
       $scope.detailPaneTabs = getDetailTabsList(options.type, $scope.isPipelineRunning, options.selectedObject);
-
       if (options.detailTabName) {
         angular.forEach($scope.detailPaneTabs, function(tab) {
           if (tab.name === options.detailTabName) {
             tab.active = true;
           }
         });
-      }
-
-      if (!options.detailTabName && options.type === pipelineConstant.LINK && !$scope.isPipelineRunning &&
-        $scope.detailPaneTabs.length > 1) {
-        $scope.detailPaneTabs[1].active = true;
+      } else {
+        // Make sure at least one of the tab is active.
+        var activeTab = _.find($scope.detailPaneTabs, function (tab) {
+          return tab.active;
+        });
+        if (!activeTab) {
+          var defaultTab = defaultTabName[$scope.selectedType];
+          angular.forEach($scope.detailPaneTabs, function(tab) {
+            tab.active = (tab.name === defaultTab);
+          });
+        }
       }
     });
 
-    $scope.$watch('isPipelineRunning', function(newValue) {
+    $scope.$watch('isPipelineRunning', function(newValue, oldValue) {
       var tabs = $scope.detailPaneTabs = getDetailTabsList($scope.selectedType, newValue);
 
-      if (newValue || $scope.detailPaneTabs.length < 2 ) {
+      if (newValue || oldValue || $scope.detailPaneTabs.length < 2 ) {
+        $scope.detailPaneMetrics = $rootScope.common.pipelineMetrics;
         angular.forEach(tabs, function(tab) {
           tab.active = (tab.name === 'summary');
-        });
-      } else if ($scope.detailPaneTabs.length > 1) {
-        angular.forEach(tabs, function(tab) {
-          tab.active = (tab.name === 'configuration' || tab.name === 'dataRules');
         });
       }
     });
@@ -549,12 +497,120 @@ angular
     );
 
     $scope.$watch('selectedObject', function() {
-      if (configuration.defaultShowAdvancedConfigs() &&
-          $scope.selectedType == pipelineConstant.STAGE_INSTANCE &&
+      if (($scope.selectedType === pipelineConstant.STAGE_INSTANCE || $scope.selectedType == pipelineConstant.PIPELINE) &&
           $scope.detailPaneConfigDefn &&
           $scope.hasAdvancedConfig($scope.detailPaneConfigDefn.configDefinitions) &&
           !$scope.detailPaneConfig.uiInfo.displayMode) {
-        $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+        if(configuration.defaultShowAdvancedConfigs()) {
+          $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
+        } else {
+          $scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_BASIC;
+        }
+      }
+    });
+
+    $scope.$watch('activeConfigStatus.status', function () {
+      updateHistory($scope.pipelineConfig.info.pipelineId);
+    });
+
+    var updateHistory = function(pipelineId) {
+      $scope.showLoading = true;
+      api.pipelineAgent.getHistory(pipelineId)
+        .then(function(res) {
+          if(res.data && res.data.length) {
+            $scope.pipelineStateHistory = res.data;
+          } else {
+            $scope.pipelineStateHistory = [];
+          }
+          generateRunHistory($scope.pipelineStateHistory);
+          $scope.showLoading = false;
+        })
+        .catch(function(res) {
+          $scope.showLoading = false;
+          $rootScope.common.errors = [res.data];
+        });
+    };
+
+    var generateRunHistory = function(pipelineStateHistory) {
+      $scope.runHistory = [];
+      angular.forEach(pipelineStateHistory, function (pipelineState, index) {
+        if (pipelineState.metrics != null || _.contains(pipelineConstant.END_STATES, pipelineState.status) ||
+          (index === 0 && _.contains(pipelineConstant.ACTIVE_STATES, pipelineState.status))) {
+
+          var  startTimeStamp = getStartTimestamp(pipelineStateHistory, index);
+
+          var metrics = JSON.parse(pipelineState.metrics);
+          var inputRecords = 0;
+          var outputRecords = 0;
+          var errorRecordsAndMessages = 0;
+
+          if (metrics && metrics.counters) {
+            if (metrics.counters['pipeline.batchInputRecords.counter']) {
+              inputRecords = metrics.counters['pipeline.batchInputRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchOutputRecords.counter']) {
+              outputRecords = metrics.counters['pipeline.batchOutputRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchErrorRecords.counter']) {
+              errorRecordsAndMessages += metrics.counters['pipeline.batchErrorRecords.counter'].count;
+            }
+            if (metrics.counters['pipeline.batchErrorMessages.counter']) {
+              errorRecordsAndMessages += metrics.counters['pipeline.batchErrorMessages.counter'].count;
+            }
+          }
+
+          var run = {
+            started: startTimeStamp,
+            completed: pipelineState.timeStamp,
+            message: pipelineState.message,
+            errorStackTrace: pipelineState.attributes['errorStackTrace'],
+            metrics: metrics,
+            status: pipelineState.status,
+            user: pipelineState.user,
+            pipelineState: pipelineState,
+            stateIndex: index,
+            isErrorState: pipelineConstant.ERROR_STATES.indexOf(pipelineState.status) !== -1,
+            inputRecords: inputRecords,
+            outputRecords: outputRecords,
+            errorRecordsAndMessages: errorRecordsAndMessages
+          };
+
+          if (index === 0 && _.contains(pipelineConstant.ACTIVE_STATES, pipelineState.status)) {
+            run.active = true;
+          }
+
+          $scope.runHistory.push(run);
+        }
+      });
+      if ($scope.runHistory.length > 0) {
+
+        for (var i = $scope.runHistory.length - 1, j = 1; i >=0 ; i--, j++) {
+          $scope.runHistory[i].appName = 'run' + j;
+        }
+
+        $scope.showRunHistory = true;
+        $scope.monitorRun($scope.runHistory[0]);
+      }
+    };
+
+    var getStartTimestamp = function(pipelineStateHistory, startIndex) {
+      for (var i = startIndex; i < pipelineStateHistory.length; i++) {
+        if (pipelineStateHistory[i].status === 'STARTING') {
+          return pipelineStateHistory[i].timeStamp;
+        }
+      }
+      return pipelineStateHistory[startIndex].timeStamp;
+    };
+
+    $scope.$on('onPipelineConfigSelect', function(event, configInfo) {
+      if (configInfo) {
+        updateHistory(configInfo.pipelineId);
+      }
+    });
+
+    $rootScope.$watch('common.pipelineMetrics', function() {
+      if ($scope.selectedRunHistory === $scope.runHistory[0] && $rootScope.common.pipelineMetrics) {
+        $scope.detailPaneMetrics = $rootScope.common.pipelineMetrics;
       }
     });
   });

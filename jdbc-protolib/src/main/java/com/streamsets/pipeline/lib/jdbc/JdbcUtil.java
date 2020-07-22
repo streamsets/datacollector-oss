@@ -56,6 +56,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -683,6 +684,24 @@ public class JdbcUtil {
               }
               return Field.create(Field.Type.ZONED_DATETIME, dateTimeOffset.getOffsetDateTime().toZonedDateTime());
           }
+        } else if (vendor.isOneOf(DatabaseVendor.MYSQL, DatabaseVendor.MARIADB)) {
+          // For MySQL we have to deal with unsigned types since the JDBC driver won't transfer them properly for us
+          // Tinyint and mediumint (unsigned) are alright since MySQL will auto expand them for purpose of JDBC.
+          int columnType = md.getColumnType(columnIndex);
+          String columnTypeName = md.getColumnTypeName(columnIndex);
+          if(columnType == Types.SMALLINT && columnTypeName.endsWith("UNSIGNED")) {
+            int value = rs.getInt(columnIndex);
+            return Field.create(Field.Type.INTEGER, rs.wasNull() ? null : value);
+          }
+          if(columnType == Types.INTEGER && columnTypeName.endsWith("UNSIGNED")) {
+            long value = rs.getLong(columnIndex);
+            return Field.create(Field.Type.LONG, rs.wasNull() ? null : value);
+          }
+          if(columnType == Types.BIGINT && columnTypeName.endsWith("UNSIGNED")) {
+            BigDecimal value = rs.getBigDecimal(columnIndex);
+            return Field.create(Field.Type.DECIMAL, rs.wasNull() ? null : value);
+          }
+          LOG.error("Got type {}, columnTypeName={}, catalogName={}", md.getColumnType(columnIndex), md.getColumnTypeName(columnIndex), md.getCatalogName(columnIndex));
         }
 
         // All types as of JDBC 2.0 are here:
@@ -901,6 +920,7 @@ public class JdbcUtil {
           fields.put(md.getColumnLabel(i), field);
         }
       } catch (IOException|SQLException e) {
+        LOG.debug("Can't read from JDBC: {}", e.getMessage(), e);
         errorRecordHandler.onError(JdbcErrors.JDBC_03, md.getColumnName(i), md.getColumnType(i), rs.getObject(i), e);
       }
     }

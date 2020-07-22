@@ -36,6 +36,7 @@ import java.util.Map;
 public abstract class DataParserFactory extends DataFactory {
 
   private static final int DEFAULT_MAX_RECORD_LENGTH = 1024;
+  private static final int STRING_BUILDER_POOL_MIN_SIZE = 1;
 
   protected DataParserFactory(Settings settings) {
     super(settings);
@@ -108,8 +109,14 @@ public abstract class DataParserFactory extends DataFactory {
     int maxRecordLen = getSettings().getMaxRecordLen();
     int poolSize = getSettings().getStringBuilderPoolSize();
     GenericObjectPoolConfig stringBuilderPoolConfig = new GenericObjectPoolConfig();
+    // By using this configuration, the pool will have a minimum (starting) size of 1 and will grow up
+    // to the max size (max number of runners in sdc.properties) on demand. Also, it will not shrink
+    // when load is reduced, keeping the idle objects for future spikes.
+    // Having the total limit set to the max number of runners ensures that the pool won't grow
+    // out of control, and also having the max idle limit would remove the excess objects created
+    // once they are not used.
     stringBuilderPoolConfig.setMaxTotal(poolSize);
-    stringBuilderPoolConfig.setMinIdle(poolSize);
+    stringBuilderPoolConfig.setMinIdle(STRING_BUILDER_POOL_MIN_SIZE);
     stringBuilderPoolConfig.setMaxIdle(poolSize);
     stringBuilderPoolConfig.setBlockWhenExhausted(false);
     return new GenericObjectPool<>(

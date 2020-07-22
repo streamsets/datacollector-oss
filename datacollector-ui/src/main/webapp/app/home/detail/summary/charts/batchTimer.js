@@ -75,7 +75,8 @@ angular
     });
 
     var refreshChartData = function() {
-      if(!$scope.summaryTimer) {
+      if (!$scope.summaryTimer) {
+        $scope.timerData[0].values = [];
         return;
       }
 

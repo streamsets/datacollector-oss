@@ -47,7 +47,8 @@ public class SDCClassLoader extends BlackListURLClassLoader {
       "com.streamsets.pipeline.api.",
       "com.streamsets.pipeline.container.",
       "org.slf4j.",
-      "org.apache.log4j."
+      "org.apache.log4j.",
+      "org.bouncycastle."
   };
 
   /**

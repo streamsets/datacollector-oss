@@ -30,6 +30,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
 import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
+import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
 import com.streamsets.pipeline.stage.elasticsearch.common.ElasticsearchBaseIT;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -177,6 +178,155 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+
+    conf.rawAdditionalProperties =  "{${record:value('/text')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+  }
+
+  @Test
+  public void testAdditionalPropertiesValidationWithRecordLabel() throws Exception {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "docId";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.UPDATE;
+    conf.useSecurity = false;
+    conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{}";
+
+    Target target = new ElasticsearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":${record:value(\'/text\')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":record:value(\'/text\'),\"_retry_on_conflict\":3}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+
+    conf.rawAdditionalProperties =  "{${record:value(\'/text\')}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+  }
+
+  @Test
+  public void testAdditionalPropertiesValidationWithoutRecordLabel() throws Exception {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${record:value('/index')}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "docId";
+    conf.parentIdTemplate = "";
+    conf.routingTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.UPDATE;
+    conf.useSecurity = false;
+    conf.securityConfig = new SecurityConfig();
+    conf.rawAdditionalProperties =  "{}";
+
+    Target target = new ElasticsearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_retry_on_conflict\":3}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(0, issues.size());
+
+    conf.rawAdditionalProperties =  "{\"_index\":record:value(\'/text\'),\"_retry_on_conflict\":3}}";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_34.name()));
+  }
+
+  @Test
+  public void testCredentialValue() {
+    ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.timeDriver = "${time:now()}";
+    conf.timeZoneID = "UTC";
+    conf.indexTemplate = "${YYYY()}";
+    conf.typeTemplate = "${record:value('/type')}";
+    conf.docIdTemplate = "";
+    conf.charset = "UTF-8";
+    conf.defaultOperation = ElasticsearchOperationType.INDEX;
+    conf.rawAdditionalProperties =  "{\n}";
+    conf.useSecurity = true;
+    conf.securityConfig.securityMode = SecurityMode.BASIC;
+    // Test for blank credentials using security
+    conf.securityConfig.securityUser = () -> "";
+    conf.securityConfig.securityPassword = () -> "";
+
+    Target target = new ElasticsearchTarget(conf);
+    TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
+
+    // Test for null user name using security
+    conf.securityConfig.securityUser = () -> null;
+    conf.securityConfig.securityPassword = () -> "";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_40.name()));
+
+    // Test for null password and invalid user name using security
+    conf.securityConfig.securityUser = () -> "";
+    conf.securityConfig.securityPassword = () -> null;
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_40.name()));
+
+    // Test for user name without password format and blank password field
+    conf.securityConfig.securityUser = () -> "elastic";
+    conf.securityConfig.securityPassword = () -> "";
+
+    target = new ElasticsearchTarget(conf);
+    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
+    issues = runner.runValidateConfigs();
+    Assert.assertEquals(1, issues.size());
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_39.name()));
   }
 
   private Target createTarget() {
@@ -534,16 +684,6 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_08.name()));
 
-    // Invalid shield user
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
-    conf.useSecurity = true;
-    conf.securityConfig.securityUser = () -> "INVALID_SHIELD_USER";
-
-    target = new ElasticsearchTarget(conf);
-    runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
-    issues = runner.runValidateConfigs();
-    Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
   }
 
   @Test

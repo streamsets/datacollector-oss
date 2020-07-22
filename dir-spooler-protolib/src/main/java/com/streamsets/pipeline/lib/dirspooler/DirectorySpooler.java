@@ -631,7 +631,7 @@ public class DirectorySpooler {
     String f = file.toString().replaceFirst(spoolDirPath.toString(), "");
     WrappedFile dest = fs.getFile(destinationRoot.toString(), f);
     if(!file.equals(dest)) {
-      fs.mkdir(fs.getFile(dest.getParent()));
+      fs.mkdirs(fs.getFile(dest.getParent()));
 
       try {
         if (fs.exists(dest)) {
@@ -639,8 +639,7 @@ public class DirectorySpooler {
         }
         fs.move(file, dest);
       } catch (Exception ex) {
-        throw new IOException("moveIt: Files.delete or Files.move failed.  " + file + " " + dest + " " + ex.getMessage() + " destRoot " + destinationRoot);
-
+        throw new IOException(Utils.format("Can't move {} to {}", file, dest), ex);
       }
     }
   }

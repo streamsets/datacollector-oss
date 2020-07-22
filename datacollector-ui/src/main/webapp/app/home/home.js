@@ -34,7 +34,7 @@ angular
   }])
   .controller('HomeController', function (
     $scope, $rootScope, $routeParams, $q, $modal, $location, pipelineService, api, configuration, pipelineConstant,
-    Analytics, $route, $translate, tracking
+    Analytics, $route, $translate, tracking, trackingEvent
   ) {
 
     // Handle importing pipeline from github URL
@@ -466,7 +466,7 @@ angular
        */
       openPipeline: function(pipeline) {
         $location.path('/collector/pipeline/' + pipeline.pipelineId);
-        tracking.mixpanel.track('Pipeline Setup View', {
+        tracking.mixpanel.track(trackingEvent.PIPELINE_SETUP_VIEW, {
           'Pipeline ID': pipeline.pipelineId,
           'Pipeline Status': $rootScope.common.pipelineStatusMap[pipeline.pipelineId].status
         });

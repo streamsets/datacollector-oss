@@ -143,6 +143,7 @@ public class TestAWSSecretsManagerCredentialStore {
 
     SecretCache secretCache = Mockito.mock(SecretCache.class);
     AWSSecretsManagerException exception = new AWSSecretsManagerException("message");
+    exception.setErrorCode("IncompleteSignature");
     AWSSecretsManagerCredentialStore secretManager = createAWSSecretsManagerCredentialStore(secretCache, exception);
     List<CredentialStore.ConfigIssue> issues = secretManager.init(context);
     Assert.assertEquals(1, issues.size());
@@ -151,6 +152,44 @@ public class TestAWSSecretsManagerCredentialStore {
         exception.getMessage(),
         exception
     );
+  }
+
+  @Test
+  public void testInitAccessDeniedException() throws Exception {
+    String region = "us-west-2";
+    String awsAccessKey = "access-key";
+    String awsSecretKey = "secret-key";
+
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_REGION_PROP)).thenReturn(region);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_ACCESS_KEY_PROP)).thenReturn(awsAccessKey);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_SECRET_KEY_PROP)).thenReturn(awsSecretKey);
+
+    SecretCache secretCache = Mockito.mock(SecretCache.class);
+    AWSSecretsManagerException exception = new AWSSecretsManagerException("message");
+    exception.setErrorCode("AccessDeniedException");
+    AWSSecretsManagerCredentialStore secretManager = createAWSSecretsManagerCredentialStore(secretCache, exception);
+    List<CredentialStore.ConfigIssue> issues = secretManager.init(context);
+    Assert.assertEquals(0, issues.size());  // AccessDeniedException should be ignored at initialization.
+  }
+
+  @Test
+  public void testInitResourceNotFoundException() throws Exception {
+    String region = "us-west-2";
+    String awsAccessKey = "access-key";
+    String awsSecretKey = "secret-key";
+
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_REGION_PROP)).thenReturn(region);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_ACCESS_KEY_PROP)).thenReturn(awsAccessKey);
+    Mockito.when(context.getConfig(AWSSecretsManagerCredentialStore.AWS_SECRET_KEY_PROP)).thenReturn(awsSecretKey);
+
+    SecretCache secretCache = Mockito.mock(SecretCache.class);
+    AWSSecretsManagerException exception = new ResourceNotFoundException("message");
+    exception.setErrorCode("ResourceNotFoundException");
+    AWSSecretsManagerCredentialStore secretManager = createAWSSecretsManagerCredentialStore(secretCache, exception);
+    List<CredentialStore.ConfigIssue> issues = secretManager.init(context);
+    Assert.assertEquals(0, issues.size());  // ResourceNotFoundException should be ignored at initialization.
   }
 
   @Test
