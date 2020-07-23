@@ -46,6 +46,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.PaginationMode;
+import com.streamsets.pipeline.stage.origin.http.ResponseAction;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
@@ -112,6 +113,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private Response response;
   private boolean lastRequestTimedOut = false;
   private boolean haveMorePages;
+  private boolean appliedRetryAction;
 
   private ELVars resourceVars;
   private ELVars bodyVars;
@@ -404,7 +406,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             throw new OnRecordErrorException(record , Errors.HTTP_03, getResponseStatus(response), e.toString());
           }
 
-          if (conf.pagination.mode != PaginationMode.NONE) {
+          if (conf.pagination.mode != PaginationMode.NONE  && !appliedRetryAction) {
             Record recordResp = recordsResponse.get(0);
             String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
             List listResponse = (List) recordResp.get(resultFieldPath).getValue();
@@ -460,9 +462,10 @@ public class HttpProcessor extends SingleLaneProcessor {
     boolean waitTimeNotExp = !waitTimeExpired(start);
     boolean thereIsNextLink =
         (((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER))
-            && haveMorePages)
-            || (conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
-            conf.pagination.mode == PaginationMode.NONE);
+            && haveMorePages);
+    boolean isLink = !(conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
+        conf.pagination.mode == PaginationMode.NONE);
+
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
     boolean numRetriesExceed = action != null && (responseState.retryCount>action.getMaxNumRetries());
     return waitTimeNotExp &&
@@ -470,7 +473,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         !lastRequestTimedOut &&
         !close &&
         conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
-        thereIsNextLink &&
+        (thereIsNextLink || !isLink || appliedRetryAction) &&
         !numRetriesExceed;
   }
 
@@ -721,14 +724,13 @@ public class HttpProcessor extends SingleLaneProcessor {
       List<Record> records,
       long start
   ) throws StageException {
-
+    appliedRetryAction = false;
     ResponseState responseState;
 
     if (recordsToResponseState.containsKey(record)) {
       responseState = recordsToResponseState.get(record);
     } else {
       responseState = new ResponseState();
-      recordsToResponseState.put(record,responseState);
     }
 
     Response response = null;
@@ -788,18 +790,24 @@ public class HttpProcessor extends SingleLaneProcessor {
           responseState.backoffIntervalExponential = backoffExp.get();
           responseState.backoffIntervalLinear = backoffLin.get();
           responseState.lastRequestTimedOut = true;
+          appliedRetryAction =
+              action.getAction() == ResponseAction.RETRY_EXPONENTIAL_BACKOFF
+                  || action.getAction() == ResponseAction.RETRY_LINEAR_BACKOFF
+                  || action.getAction() == ResponseAction.RETRY_IMMEDIATELY;
         }
       }
       resolvedRecords.remove(record);
-      boolean close;
-      if(waitTimeExpired(start)) {
-        close = true;
-        if(action != null) {
+      boolean close = false;
+
+      if (action!=null) {
+        if(waitTimeExpired(start)) {
+          close = true;
           errorRecordHandler.onError(Errors.HTTP_67, getResponseStatus());
         }
       } else {
         close = parseResponse(record, responseBody, records);
       }
+
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       } else if (responseStatus==204 && records.size()==0) {
