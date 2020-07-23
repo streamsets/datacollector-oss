@@ -391,7 +391,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         int numRecordsLastRequest = 0;
 
         try {
-          close = processResponse(record, future, conf.maxRequestCompletionSecs, false, recordsResponse);
+          close = processResponse(record, future, conf.maxRequestCompletionSecs, false, recordsResponse, start);
 
           Response response = null;
           try {
@@ -678,7 +678,8 @@ public class HttpProcessor extends SingleLaneProcessor {
       try {
         List<Record> recordsToAddBatch = new ArrayList<>();
         List<Record> output = new ArrayList<>();
-        processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output);
+        processResponse(
+            entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output, System.currentTimeMillis());
         Response response = null;
         try {
           response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
@@ -717,7 +718,8 @@ public class HttpProcessor extends SingleLaneProcessor {
       Future<Response> responseFuture,
       long maxRequestCompletionSecs,
       boolean failOn403,
-      List<Record> records
+      List<Record> records,
+      long start
   ) throws StageException {
 
     ResponseState responseState;
@@ -738,15 +740,14 @@ public class HttpProcessor extends SingleLaneProcessor {
       if (response.hasEntity()) {
         responseBody = response.readEntity(InputStream.class);
       }
+      final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
       int responseStatus = response.getStatus();
       if (conf.client.useOAuth2 && (response.getStatus() == 403 || response.getStatus() == 401) && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
-        final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
         if (action==null) {
-
           if (conf.propagateAllHttpResponses) {
             Map<String,Field> mapFields = new HashMap<>();
             String responseBodyString = extractResponseBodyStr(response);
@@ -790,7 +791,15 @@ public class HttpProcessor extends SingleLaneProcessor {
         }
       }
       resolvedRecords.remove(record);
-      boolean close = parseResponse(record, responseBody, records);
+      boolean close;
+      if(waitTimeExpired(start)) {
+        close = true;
+        if(action != null) {
+          errorRecordHandler.onError(Errors.HTTP_67, getResponseStatus());
+        }
+      } else {
+        close = parseResponse(record, responseBody, records);
+      }
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       } else if (responseStatus==204 && records.size()==0) {
