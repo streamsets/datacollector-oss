@@ -265,14 +265,17 @@ public class S3Spooler {
     if(!Strings.isNullOrEmpty(s3Offset.getKey()) && S3Constants.MINUS_ONE.equals(s3Offset.getOffset())) {
       LOG.info("Post processing check for {}", s3Offset.getKey());
       //conditions 1, 2 are met. Check for 3 and 4.
-      ObjectMetadata metadata = s3Client.getObjectMetadata(s3ConfigBean.s3Config.bucket, s3Offset.getKey());
-      if(metadata != null &&
-          metadata.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) {
-        postProcessOrErrorHandle(s3Offset.getKey(), s3ConfigBean.postProcessingConfig.postProcessing,
-          s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessPrefix,
-          s3ConfigBean.postProcessingConfig.archivingOption);
+
+      if (s3Client.doesObjectExist(s3ConfigBean.s3Config.bucket, s3Offset.getKey())) {
+        ObjectMetadata metadata = s3Client.getObjectMetadata(s3ConfigBean.s3Config.bucket, s3Offset.getKey());
+        if (metadata != null &&
+                metadata.getLastModified().compareTo(new Date(Long.parseLong(s3Offset.getTimestamp()))) == 0) {
+          postProcessOrErrorHandle(s3Offset.getKey(), s3ConfigBean.postProcessingConfig.postProcessing,
+                  s3ConfigBean.postProcessingConfig.postProcessBucket, s3ConfigBean.postProcessingConfig.postProcessPrefix,
+                  s3ConfigBean.postProcessingConfig.archivingOption);
+        }
+        currentObject = null;
       }
-      currentObject = null;
     }
   }
 }
