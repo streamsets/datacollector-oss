@@ -27,3 +27,17 @@ upgrades:
       - configStringListAdd:
           name: config.queries
           value: ${value("config.query")}
+  - toVersion: 5
+    actions:
+      - renameConfig:
+          oldNamePattern: config.hikariConfigBean.connectionString
+          newNamePattern: config.hikariConfigBean.connection.connectionString
+      - renameConfig:
+          oldNamePattern: config.hikariConfigBean.useCredentials
+          newNamePattern: config.hikariConfigBean.connection.useCredentials
+      - renameConfig:
+          oldNamePattern: config.hikariConfigBean.username
+          newNamePattern: config.hikariConfigBean.connection.username
+      - renameConfig:
+          oldNamePattern: config.hikariConfigBean.password
+          newNamePattern: config.hikariConfigBean.connection.password

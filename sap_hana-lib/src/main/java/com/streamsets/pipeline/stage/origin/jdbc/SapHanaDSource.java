@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.config.SapHanaGroups;
 import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
 
 
-@StageDef(version = 1,
+@StageDef(version = 2,
     label = "SAP HANA Query Consumer",
     description = "Reads data from SAP HANA using a query",
     icon = "sapHanaIcon.png",
@@ -46,7 +46,7 @@ import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
     "commonSourceConfigBean.txnWindow",
-    "hikariConfigBean.connectionString",
+    "hikariConfigBean.connection.connectionString",
     "hikariConfigBean.driverClassName",
     "hikariConfigBean.connectionTestQuery",
     "txnIdColumnName",

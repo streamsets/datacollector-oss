@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.*;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -116,10 +117,11 @@ public class TestJdbcTee {
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connectionString = connectionString;
-    bean.useCredentials = true;
-    bean.username = () -> username;
-    bean.password = () -> password;
+    bean.connection = new JdbcConnection();
+    bean.connection.connectionString = connectionString;
+    bean.connection.useCredentials = true;
+    bean.connection.username = () -> username;
+    bean.connection.password = () -> password;
 
     return bean;
   }

@@ -43,7 +43,7 @@ import java.util.List;
 @GenerateResourceBundle
 @StageDef(
     //We bumped to 10, so we keep this in sync with other repos -> mysql, postgres, sqlserver
-    version = 10,
+    version = 11,
     label = "JDBC Producer",
     description = "Insert, update, and delete data to a JDBC destination.",
     upgrader = JdbcTargetUpgrader.class,

@@ -97,16 +97,7 @@ public abstract class ConnectionDefinitionExtractor {
       ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
       String yamlUpgrader = conDef.upgraderDef();
       ConnectionVerifierDefinition verifierDefinition = getVerifierDefinition(conDef, klass);
-      String verifier = conDef.verifier().getCanonicalName();
       ConnectionEngine[] supportedEngines = conDef.supportedEngines();
-
-      String verifierPrefix = "";
-      Class verifierClass = klass.getClassLoader().loadClass(verifier);
-      for (Field field : verifierClass.getDeclaredFields()) {
-        if (field.getAnnotation(ConfigDefBean.class) != null && klass.equals(field.getType())) {
-          verifierPrefix = field.getName();
-        }
-      }
 
       return new ConnectionDefinition(
           conDef,

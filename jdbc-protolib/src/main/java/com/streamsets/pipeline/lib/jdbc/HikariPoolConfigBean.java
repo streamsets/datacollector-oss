@@ -17,6 +17,9 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
@@ -24,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import org.slf4j.Logger;
@@ -81,49 +85,25 @@ public class HikariPoolConfigBean {
   private Properties additionalProperties = new Properties();
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JDBC Connection String",
-      displayPosition = 10,
-      group = "JDBC"
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = JdbcConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  public String connectionString = "";
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Use Credentials",
-      displayPosition = 15,
-      group = "JDBC"
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
   )
-  public boolean useCredentials = true;
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      dependsOn = "useCredentials",
-      triggeredByValue = "true",
-      label = "Username",
-      displayPosition = 110,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      dependsOn = "useCredentials",
-      triggeredByValue = "true",
-      label = "Password",
-      displayPosition = 120,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue password;
+  public JdbcConnection connection;
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -454,11 +434,11 @@ public class HikariPoolConfigBean {
   }
 
   public String getConnectionString() {
-    return connectionString;
+    return connection.connectionString;
   }
 
   public DatabaseVendor getVendor() {
-    return DatabaseVendor.forUrl(connectionString);
+    return DatabaseVendor.forUrl(connection.connectionString);
   }
 
   public void addExtraDriverProperties(Map<String, String> keyValueProperties) {
@@ -494,11 +474,15 @@ public class HikariPoolConfigBean {
   }
 
   public CredentialValue getUsername() {
-    return username;
+    return connection.username;
   }
 
   public CredentialValue getPassword() {
-    return password;
+    return connection.password;
+  }
+
+  public boolean useCredentials() {
+    return connection.useCredentials;
   }
 
   public void setConnectionString(String connectionString) {

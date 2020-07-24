@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcSchemaReader;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -106,10 +107,11 @@ public class TestJdbcMetadata {
 
   private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connectionString = connectionString;
-    bean.useCredentials = true;
-    bean.username = () -> username;
-    bean.password = () -> password;
+    bean.connection = new JdbcConnection();
+    bean.connection.connectionString = connectionString;
+    bean.connection.useCredentials = true;
+    bean.connection.username = () -> username;
+    bean.connection.password = () -> password;
 
     return bean;
   }

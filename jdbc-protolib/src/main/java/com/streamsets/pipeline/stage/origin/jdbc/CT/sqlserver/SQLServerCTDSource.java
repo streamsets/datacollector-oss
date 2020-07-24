@@ -28,7 +28,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "SQL Server Change Tracking Client",
     description = "Origin that an read change events from an SQL Server Database",
     icon = "sql-server-multithreaded.png",

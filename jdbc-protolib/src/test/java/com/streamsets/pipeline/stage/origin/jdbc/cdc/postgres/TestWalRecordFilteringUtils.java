@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import org.junit.Assert;
@@ -58,10 +59,11 @@ public class TestWalRecordFilteringUtils {
 
   private void createConfigBeans() {
     HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
-    hikariConfigBean.useCredentials = true;
-    hikariConfigBean.username = () -> username;
-    hikariConfigBean.password = () -> password;
+    hikariConfigBean.connection = new JdbcConnection();
+    hikariConfigBean.connection.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
+    hikariConfigBean.connection.useCredentials = true;
+    hikariConfigBean.connection.username = () -> username;
+    hikariConfigBean.connection.password = () -> password;
 
     configBean = new PostgresCDCConfigBean();
     configBean.slot = "slot";

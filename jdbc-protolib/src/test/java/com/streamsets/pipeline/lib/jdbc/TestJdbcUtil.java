@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.zaxxer.hikari.HikariConfig;
@@ -63,10 +64,11 @@ public class TestJdbcUtil {
 
   private HikariPoolConfigBean createConfigBean() {
     HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connectionString = h2ConnectionString;
-    bean.useCredentials = true;
-    bean.username = () -> username;
-    bean.password = () -> password;
+    bean.connection = new JdbcConnection();
+    bean.connection.connectionString = h2ConnectionString;
+    bean.connection.useCredentials = true;
+    bean.connection.username = () -> username;
+    bean.connection.password = () -> password;
 
     return bean;
   }

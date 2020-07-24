@@ -18,20 +18,38 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.processor.jdbclookup.JdbcLookupProcessorUpgrader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestJdbcLookupUpgrader {
 
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/JdbcLookupDProcessor.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
+  }
+
   @Test
   public void testUpgradeV1toV2() throws StageException {
-    List<Config> configs = new ArrayList<>();
-
     JdbcLookupProcessorUpgrader upgrader = new JdbcLookupProcessorUpgrader();
     List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 1, 2, configs);
 
@@ -46,7 +64,6 @@ public class TestJdbcLookupUpgrader {
 
   @Test
   public void testUpgradeV2toV3() throws StageException {
-    List<Config> configs = new ArrayList<>();
     final String queryIntervalField = "commonSourceConfigBean.queryInterval";
     final String queryInterval = "5";
     configs.add(new Config(queryIntervalField, queryInterval));
@@ -55,5 +72,19 @@ public class TestJdbcLookupUpgrader {
     List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 2, 3, configs);
 
     UpgraderTestUtils.assertExists(upgradedConfigs, "missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR);
+  }
+
+  @Test
+  public void testUpgradeV3toV4() throws StageException {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        upgrader,
+        context,
+        "hikariConfigBean.",
+        "connection."
+    );
   }
 }

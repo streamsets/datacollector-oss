@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.origin.jdbc;
+package com.streamsets.pipeline.stage.processor.jdbctee;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
@@ -30,7 +30,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestJdbcSourceUpgrader {
+public class TestJdbcTeeUpgrader {
 
   private StageUpgrader upgrader;
   private List<Config> configs;
@@ -39,7 +39,7 @@ public class TestJdbcSourceUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/JdbcDSource.yaml");
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/JdbcTeeDProcessor.yaml");
     upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
@@ -47,27 +47,9 @@ public class TestJdbcSourceUpgrader {
   }
 
   @Test
-  public void testUpgradeV9toV10() throws StageException {
-    List<Config> configs = new ArrayList<>();
-    final String queryIntervalField = "commonSourceConfigBean.queryInterval";
-    final String queryInterval = "5";
-    configs.add(new Config(queryIntervalField, queryInterval));
-
-    JdbcSourceUpgrader upgrader = new JdbcSourceUpgrader();
-    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 9, 10, configs);
-
-    UpgraderTestUtils.assertNoneExist(
-        upgradedConfigs,
-        "commonSourceConfigBean.queriesPerSecond",
-        "commonSourceConfigBean.queryInterval"
-    );
-    UpgraderTestUtils.assertExists(configs, "queryInterval", queryInterval);
-  }
-
-  @Test
-  public void testUpgradeV12toV13() throws StageException {
-    Mockito.doReturn(12).when(context).getFromVersion();
-    Mockito.doReturn(13).when(context).getToVersion();
+  public void testUpgradeV3toV4() throws StageException {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
 
     connectionUpgradeTester.testJdbcConnectionIntroduction(
         configs,

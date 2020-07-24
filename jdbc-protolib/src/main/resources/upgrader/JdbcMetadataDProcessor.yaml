@@ -16,5 +16,18 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - renameConfig:
+          oldNamePattern: conf.hikariConfigBean.connectionString
+          newNamePattern: conf.hikariConfigBean.connection.connectionString
+      - renameConfig:
+          oldNamePattern: conf.hikariConfigBean.useCredentials
+          newNamePattern: conf.hikariConfigBean.connection.useCredentials
+      - renameConfig:
+          oldNamePattern: conf.hikariConfigBean.username
+          newNamePattern: conf.hikariConfigBean.connection.username
+      - renameConfig:
+          oldNamePattern: conf.hikariConfigBean.password
+          newNamePattern: conf.hikariConfigBean.connection.password

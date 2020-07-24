@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "PostgreSQL CDC Client",
     description = "Origin that reads change events from a PostgreSQL database",
     icon = "rdbms.png",

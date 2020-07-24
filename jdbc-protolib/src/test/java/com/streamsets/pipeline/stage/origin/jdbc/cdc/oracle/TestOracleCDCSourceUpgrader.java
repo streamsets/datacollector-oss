@@ -16,10 +16,14 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -29,6 +33,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestOracleCDCSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/OracleCDCDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
+  }
+
   @Test
   public void upgradeV1ToV2() throws Exception {
     List<Config> configs = new ArrayList<>(1);
@@ -163,5 +182,19 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(1, configs.size());
     Assert.assertEquals("oracleCDCConfigBean.logminerWindow", configs.get(0).getName());
     Assert.assertEquals("${2 * HOURS}", configs.get(0).getValue());
+  }
+
+  @Test
+  public void testUpgradeV12toV13() throws StageException {
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        upgrader,
+        context,
+        "hikariConf.",
+        "connection."
+    );
   }
 }

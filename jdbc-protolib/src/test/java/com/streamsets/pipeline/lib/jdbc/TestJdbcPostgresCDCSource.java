@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PgVersionValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCConfigBean;
 import org.junit.Assert;
@@ -32,10 +33,11 @@ public class TestJdbcPostgresCDCSource {
 
   private void createConfigBeans() {
     HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
-    hikariConfigBean.useCredentials = true;
-    hikariConfigBean.username = () -> username;
-    hikariConfigBean.password = () -> password;
+    hikariConfigBean.connection = new JdbcConnection();
+    hikariConfigBean.connection.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
+    hikariConfigBean.connection.useCredentials = true;
+    hikariConfigBean.connection.username = () -> username;
+    hikariConfigBean.connection.password = () -> password;
 
     PostgresCDCConfigBean configBean = new PostgresCDCConfigBean();
     configBean.slot = "slot";

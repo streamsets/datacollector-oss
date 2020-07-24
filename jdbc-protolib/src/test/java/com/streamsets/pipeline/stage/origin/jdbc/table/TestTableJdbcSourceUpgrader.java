@@ -16,9 +16,11 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
@@ -48,6 +50,7 @@ public class TestTableJdbcSourceUpgrader {
   private StageUpgrader upgrader;
   private List<Config> configs;
   private StageUpgrader.Context context;
+  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
 
   @Before
   public void setUp() {
@@ -55,6 +58,7 @@ public class TestTableJdbcSourceUpgrader {
     upgrader = new SelectorStageUpgrader("stage", new TableJdbcSourceUpgrader(), yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
   }
 
   @Test
@@ -257,6 +261,20 @@ public class TestTableJdbcSourceUpgrader {
     Map<String, Object> tableConfig = ((List<Map<String, Object>>) tablesConfig.getValue()).get(0);
     Assert.assertTrue(tableConfig.containsKey("isTablePatternListProvided"));
     Assert.assertTrue(tableConfig.containsKey("tablePatternList"));
+  }
+
+  @Test
+  public void testUpgradeV9toV10() throws StageException {
+    Mockito.doReturn(9).when(context).getFromVersion();
+    Mockito.doReturn(10).when(context).getToVersion();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        upgrader,
+        context,
+        "hikariConfigBean.",
+        "connection."
+    );
   }
 
   private static void assertAllContain(String configKey, Object configValue, LinkedHashMap... tableConfigMaps) {
