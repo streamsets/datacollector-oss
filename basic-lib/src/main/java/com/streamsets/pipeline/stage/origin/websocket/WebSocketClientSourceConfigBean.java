@@ -40,6 +40,7 @@ public class WebSocketClientSourceConfigBean {
       description = "The WebSocket resource URL",
       elDefs = RecordEL.class,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public String resourceUrl = "";
@@ -51,6 +52,7 @@ public class WebSocketClientSourceConfigBean {
       description = "Headers to include in the request",
       displayPosition = 20,
       elDefs = {RecordEL.class},
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public Map<String, String> headers = new HashMap<>();
@@ -62,6 +64,7 @@ public class WebSocketClientSourceConfigBean {
       description = "Data that should be sent as initial message after connecting to the WebSocket Server",
       displayPosition = 25,
       lines = 2,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public String requestBody = "";
@@ -72,6 +75,7 @@ public class WebSocketClientSourceConfigBean {
       label = "Authentication Type",
       defaultValue = "NONE",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
@@ -89,6 +93,7 @@ public class WebSocketClientSourceConfigBean {
       label = "Data Format",
       description = "WebSocket payload data format",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)

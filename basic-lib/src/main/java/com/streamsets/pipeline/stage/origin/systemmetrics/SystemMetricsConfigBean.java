@@ -29,6 +29,7 @@ public class SystemMetricsConfigBean {
       min = 0,
       max = Integer.MAX_VALUE,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS"
   )
   public long delay;
@@ -39,6 +40,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch Host Information",
       description = "",
       displayPosition = 11,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "true"
   )
@@ -50,6 +52,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch CPU Stats",
       description = "",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "true"
   )
@@ -61,6 +64,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch Memory Stats",
       description = "",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "true"
   )
@@ -73,6 +77,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch Disk Stats",
       description = "",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "true"
   )
@@ -85,6 +90,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch Network Stats",
       description = "",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "true"
   )
@@ -96,6 +102,7 @@ public class SystemMetricsConfigBean {
       label = "Fetch Process Stats",
       description = "",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSTEM_METRICS",
       defaultValue = "false"
   )

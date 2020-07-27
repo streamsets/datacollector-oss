@@ -43,6 +43,7 @@ public class Configs extends HttpConfigs {
       label = "SDC RPC Listening Port",
       description = "Port number to listen for data. Must match one of the port numbers used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RPC",
       min = 1,
       max = 65535
@@ -55,6 +56,7 @@ public class Configs extends HttpConfigs {
       label = "SDC RPC ID",
       description = "User-defined ID. Must match the SDC RPC ID used by the SDC RPC destination of the origin pipeline.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RPC"
   )
   public CredentialValue appId = () -> "";
@@ -66,6 +68,7 @@ public class Configs extends HttpConfigs {
       label = "Batch Wait Time (secs)",
       description = "Maximum amount of time to wait for a batch before sending an empty one",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "RPC",
       min = 1,
       max = Integer.MAX_VALUE
@@ -79,6 +82,7 @@ public class Configs extends HttpConfigs {
       label = "Max Record Size (MB)",
       description = "",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       min = 1,
       max = 100

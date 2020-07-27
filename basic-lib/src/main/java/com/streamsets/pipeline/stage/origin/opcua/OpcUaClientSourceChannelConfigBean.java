@@ -26,6 +26,7 @@ public class OpcUaClientSourceChannelConfigBean {
       description = "The maximum size of a single chunk. Must be greater than or equal to 8192",
       defaultValue = "65536",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 8192,
       group = "CHANNEL_CONFIG"
   )
@@ -38,6 +39,7 @@ public class OpcUaClientSourceChannelConfigBean {
       description = "The maximum number of chunks that a message can break down into.",
       defaultValue = "32",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "CHANNEL_CONFIG"
   )
@@ -51,6 +53,7 @@ public class OpcUaClientSourceChannelConfigBean {
           "Default value Max Chunk Size *  Max Chunk Count = (2mb)",
       defaultValue = "2097152",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 8192,
       group = "CHANNEL_CONFIG"
   )
@@ -62,6 +65,7 @@ public class OpcUaClientSourceChannelConfigBean {
       label = "Max Array Length",
       defaultValue = "65536",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "CHANNEL_CONFIG"
   )
@@ -73,6 +77,7 @@ public class OpcUaClientSourceChannelConfigBean {
       label = "Max String Length",
       defaultValue = "65536",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "CHANNEL_CONFIG"
   )

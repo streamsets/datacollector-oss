@@ -30,6 +30,7 @@ public class CoapServerConfigs {
       label = "CoAP Listening Port",
       description = "CoAP endpoint to listen for data.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COAP",
       min = 1,
       max = 65535
@@ -44,6 +45,7 @@ public class CoapServerConfigs {
       label = "Max Concurrent Requests",
       description = "Maximum number of concurrent requests allowed by the origin.",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COAP",
       min = 1,
       max = 200
@@ -57,6 +59,7 @@ public class CoapServerConfigs {
       label = "Resource Name",
       description = "CoAP Resource Name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COAP"
   )
   public CredentialValue resourceName;
@@ -67,6 +70,7 @@ public class CoapServerConfigs {
       label = "Network Configuration",
       description = "Additional network configuration properties. Values here override default values.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COAP"
   )
   public Map<String, Object> networkConfigs = Collections.emptyMap();

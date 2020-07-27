@@ -51,6 +51,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       description = "Enable to use Data Collector instance as API gateway",
       defaultValue = "false",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   public boolean useApiGateway = false;
@@ -62,6 +63,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       description = "Name of the Gateway Service used in the REST Service URL - " +
           "<Data Collector Instance URL>/rest/v1/gateway/<service name>",
       displayPosition = 7,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP",
       dependsOn = "useApiGateway",
       triggeredByValue = "true"
@@ -78,6 +80,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
           "<Data Collector Instance URL>/public-rest/v1/gateway/<service name>",
       defaultValue = "false",
       displayPosition = 8,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP",
       dependsOn = "useApiGateway",
       triggeredByValue = "true"
@@ -91,6 +94,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       label = "HTTP Listening Port",
       description = "HTTP endpoint to listen for data",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP",
       min = 1,
       max = 65535/**,
@@ -106,6 +110,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       label = "Max Concurrent Requests",
       description = "Maximum number of concurrent requests allowed by the origin",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       min = 1,
       max = 200
@@ -120,6 +125,7 @@ public abstract class CommonHttpConfigs extends HttpConfigs {
       description = "Select if the application ID is in a URL query parameter rather than in the request header " +
           "- http://localhost:8000?sdcApplicationId=<Application ID>",
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public boolean appIdViaQueryParamAllowed;

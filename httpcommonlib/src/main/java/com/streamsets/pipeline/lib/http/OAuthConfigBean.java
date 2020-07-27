@@ -29,6 +29,7 @@ public class OAuthConfigBean {
       label = "Consumer Key",
       description = "OAuth Consumer Key",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -41,6 +42,7 @@ public class OAuthConfigBean {
       label = "Consumer Secret",
       description = "OAuth Consumer Secret",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -53,6 +55,7 @@ public class OAuthConfigBean {
       label = "Token",
       description = "OAuth Consumer Token",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"
@@ -65,6 +68,7 @@ public class OAuthConfigBean {
       label = "Token Secret",
       description = "OAuth Token Secret",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "authType^",
       triggeredByValue = "OAUTH"

@@ -52,7 +52,8 @@ public class MultithreadedUDPDSource extends DPushSource {
       group = "UDP",
       min = 1,
       max = Integer.MAX_VALUE,
-      displayPosition = 200
+      displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int packetQueueSize;
 
@@ -64,7 +65,8 @@ public class MultithreadedUDPDSource extends DPushSource {
       defaultValue = "1",
       group = "UDP",
       min = 1,
-      displayPosition = 210
+      displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int numWorkerThreads;
 

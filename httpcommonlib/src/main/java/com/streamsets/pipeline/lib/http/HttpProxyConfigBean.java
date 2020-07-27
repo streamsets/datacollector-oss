@@ -30,6 +30,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public String uri = "";
@@ -41,6 +42,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue username = () -> "";
@@ -52,6 +54,7 @@ public class HttpProxyConfigBean {
       dependsOn = "useProxy^",
       triggeredByValue = "true",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public CredentialValue password = () -> "";

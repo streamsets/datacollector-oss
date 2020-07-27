@@ -31,6 +31,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "opc.tcp://localhost:12686/example",
       description = "Specify the OPC UA resource URL",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "OPC_UA"
   )
   public String resourceUrl = "";
@@ -42,6 +43,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "SDC OPC UA Client",
       description = "Specify the OPC UA client application name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "OPC_UA"
   )
   public String applicationName = "SDC OPC UA Client";
@@ -54,6 +56,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "urn:sdc:pipeline:${pipeline:id()}",
       description = "Specify the OPC UA resource URL",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "OPC_UA"
   )
   public String applicationUri = "urn:sdc:pipeline:${pipeline:id()}";
@@ -65,6 +68,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "5000",
       description = "OPC UA request timeout in milliseconds.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OPC_UA"
   )
   public int requestTimeoutMillis = 5000;
@@ -76,6 +80,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "120000",
       description = "OPC UA session timeout in milliseconds.",
       displayPosition = 45,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OPC_UA"
   )
   public int sessionTimeoutMillis = 120000;
@@ -86,6 +91,7 @@ public class OpcUaClientSourceConfigBean {
       label = "Processing Mode",
       defaultValue = "POLLING",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OPC_UA"
   )
   @ValueChooserModel(OpcUaReadModeChooserValues.class)
@@ -97,6 +103,7 @@ public class OpcUaClientSourceConfigBean {
       label = "Polling Interval (ms)",
       defaultValue = "5000",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OPC_UA",
       dependsOn = "readMode",
       triggeredByValue = "POLLING"
@@ -110,6 +117,7 @@ public class OpcUaClientSourceConfigBean {
       label = "Security Policy",
       defaultValue = "NONE",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   @ValueChooserModel(SecurityPolicyChooserValues.class)
@@ -123,6 +131,7 @@ public class OpcUaClientSourceConfigBean {
       description = "An alias is specified when you add an entity to the keystore using the -genseckey command to " +
           "generate a secret key, -genkeypair command to generate a key pair (public and private key).",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public String clientKeyAlias = "client-ai";
@@ -136,6 +145,7 @@ public class OpcUaClientSourceConfigBean {
       label = "NodeId Fetch Mode",
       defaultValue = "MANUAL",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS"
   )
   @ValueChooserModel(NodeIdFetchModeChooserValues.class)
@@ -148,6 +158,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue="",
       description="Fields to generate of the indicated Node Id",
       displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "MANUAL"
@@ -163,6 +174,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "${runtime:loadResource('nodeIdConfigs.json', false)}",
       description = "File path to the NodeId file. Or an expression that points to the correct runtime resource file.",
       displayPosition = 220,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "FILE"
@@ -176,6 +188,7 @@ public class OpcUaClientSourceConfigBean {
       defaultValue = "",
       description = "The identifier for a root node in the address space of an OPC UA server",
       displayPosition = 220,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "BROWSE"
@@ -189,6 +202,7 @@ public class OpcUaClientSourceConfigBean {
       description = "The format and data type of the identifier",
       defaultValue = "NUMERIC",
       displayPosition = 230,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "BROWSE"
@@ -204,6 +218,7 @@ public class OpcUaClientSourceConfigBean {
       description = "The index an OPC UA server uses for a namespace URI",
       min = 0,
       displayPosition = 240,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "BROWSE"
@@ -217,6 +232,7 @@ public class OpcUaClientSourceConfigBean {
       description = "Refresh interval for updating Node IDs by browsing root Node ID.",
       defaultValue = "3600",
       displayPosition = 240,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "NODE_IDS",
       dependsOn = "nodeIdFetchMode",
       triggeredByValue = "BROWSE"

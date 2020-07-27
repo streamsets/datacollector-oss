@@ -34,6 +34,7 @@ public class SpoolDirConfigBean {
       label = "Data Format",
       description = "Format of data in the files",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -45,6 +46,7 @@ public class SpoolDirConfigBean {
       label = "Files Directory",
       description = "Use a local directory",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FILES"
   )
   public String spoolDir;
@@ -69,6 +71,7 @@ public class SpoolDirConfigBean {
       description = "Select whether the File Name Pattern specified uses glob pattern syntax or regex syntax.",
       defaultValue = "GLOB",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES"
   )
   @ValueChooserModel(PathMatcherModeChooserValues.class)
@@ -80,6 +83,7 @@ public class SpoolDirConfigBean {
       label = "File Name Pattern",
       description = "A glob or regular expression that defines the pattern of the file names in the directory.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FILES"
   )
   public String filePattern;
@@ -105,6 +109,7 @@ public class SpoolDirConfigBean {
       description = "Process files in subdirectories of Files Directory.  " +
           "Only file names matching File Name Pattern will be processed.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useLastModified",
       triggeredByValue = "TIMESTAMP",
       group = "FILES"
@@ -201,6 +206,7 @@ public class SpoolDirConfigBean {
       label = "First File to Process",
       description = "When configured, the Data Collector does not process earlier (naturally ascending order) file names",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FILES"
   )
   public String initialFileToProcess;
@@ -211,6 +217,7 @@ public class SpoolDirConfigBean {
       label = "Error Directory",
       description = "Directory for files that could not be fully processed",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING"
   )
   public String errorArchiveDir;
