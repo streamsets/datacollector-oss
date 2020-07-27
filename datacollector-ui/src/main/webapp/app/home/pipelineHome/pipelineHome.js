@@ -989,7 +989,7 @@ angular
        */
       var configsWithConnections = stageLibraries
         .flatMap(function (stage) {
-          return stage.configDefinitions
+          return (stage.configDefinitions || [])
             .filter(function (config) { return config.type === 'CONNECTION'; })
             .map(function (config) { return {name: config.name, stageName: stage.name }; });
         })
