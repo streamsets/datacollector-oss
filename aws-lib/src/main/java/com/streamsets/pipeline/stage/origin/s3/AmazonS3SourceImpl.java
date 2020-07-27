@@ -124,7 +124,7 @@ public class AmazonS3SourceImpl extends AbstractAmazonS3Source implements Amazon
 
   @Override
   public void updateOffset(Integer runnerId, S3Offset s3Offset) {
-    if (s3Offset.getKey() != null) {
+    if (s3Offset != null && s3Offset.getKey() != null) {
 
       if (!isKeyAlreadyInMap(s3Offset.getKey())) {
         offsetsMap.put(runnerId, new S3Offset(s3Offset));
