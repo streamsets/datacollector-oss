@@ -34,7 +34,8 @@ public class ShellConfig {
     group = "ENVIRONMENT",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class},
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public Map<String, String> environmentVariables = Collections.emptyMap();
 
@@ -45,6 +46,7 @@ public class ShellConfig {
     defaultValue = "1000",
     description = "How long will the script be allowed to run. The time is in milliseconds.",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {TimeEL.class},
     group = "ENVIRONMENT"
@@ -60,7 +62,8 @@ public class ShellConfig {
     group = "SCRIPT",
     mode = ConfigDef.Mode.SHELL,
     evaluation = ConfigDef.Evaluation.EXPLICIT,
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String script;
 }

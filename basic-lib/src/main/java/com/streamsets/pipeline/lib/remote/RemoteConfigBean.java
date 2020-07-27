@@ -194,7 +194,7 @@ public class RemoteConfigBean {
       label = "Strict Host Checking",
       description = "If enabled, will only connect to the host if the host is in the known hosts file.",
       displayPosition = 50,
-      displayMode = ConfigDef.DisplayMode.BASIC,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#1"
   )
   public boolean strictHostChecking;

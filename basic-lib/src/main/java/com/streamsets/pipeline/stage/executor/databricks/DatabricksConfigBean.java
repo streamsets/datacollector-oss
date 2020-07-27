@@ -49,7 +49,8 @@ public class DatabricksConfigBean {
       required = true,
       label = "Cluster Base URL",
       group = "APPLICATION",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String baseUrl = "";
 
@@ -59,7 +60,8 @@ public class DatabricksConfigBean {
       label = "Use Proxy",
       defaultValue = "false",
       group = "APPLICATION",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean useProxy = false;
   /*
@@ -71,7 +73,8 @@ public class DatabricksConfigBean {
       required = true,
       label = "Job Type",
       group = "APPLICATION",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(JobTypeChooserValues.class)
   public JobType jobType;
@@ -81,7 +84,8 @@ public class DatabricksConfigBean {
       required = true,
       label = "Job ID",
       group = "APPLICATION",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int jobId;
 
@@ -93,6 +97,7 @@ public class DatabricksConfigBean {
       dependsOn = "jobType",
       triggeredByValue = "JAR",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
@@ -106,6 +111,7 @@ public class DatabricksConfigBean {
       dependsOn = "jobType",
       triggeredByValue = "NOTEBOOK",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )

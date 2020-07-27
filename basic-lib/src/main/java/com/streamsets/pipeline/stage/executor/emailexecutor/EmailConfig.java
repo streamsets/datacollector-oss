@@ -33,7 +33,8 @@ public class EmailConfig {
       description = "Boolean expression.  Triggers sending an email when true. ",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 100
+      displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String condition;
   ELEval conditionELEval;
@@ -45,7 +46,8 @@ public class EmailConfig {
       label = "Email IDs",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 200
+      displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> email;
   Map<String, ELEval> emailELEval;
@@ -58,7 +60,8 @@ public class EmailConfig {
       lines = 1,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 300
+      displayPosition = 300,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String subject;
   ELEval subjectELEval;
@@ -71,7 +74,8 @@ public class EmailConfig {
       label = "Email Body",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
-      displayPosition = 400
+      displayPosition = 400,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String body;
   ELEval bodyELEval;

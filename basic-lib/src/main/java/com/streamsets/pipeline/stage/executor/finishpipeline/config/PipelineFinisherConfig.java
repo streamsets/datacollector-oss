@@ -26,6 +26,7 @@ public class PipelineFinisherConfig {
     defaultValue = "false",
     description = "Resets the origin after the executor stops the pipeline. When enabled, the origin processes all available data each time the pipeline runs.",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FINISHER"
   )
   public boolean resetOffset = false;

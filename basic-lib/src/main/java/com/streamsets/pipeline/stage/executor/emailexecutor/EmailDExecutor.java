@@ -45,6 +45,7 @@ public class EmailDExecutor extends DExecutor {
       label = "Email Configuration",
       description = "Configure Email Messages",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "EMAILS"
   )
   @ListBeanModel

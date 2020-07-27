@@ -34,6 +34,7 @@ public class PostProcessingFileActionsConfig {
       defaultValue = "${record:value('/filepath')}",
       group = "ACTION",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
   )
@@ -46,7 +47,8 @@ public class PostProcessingFileActionsConfig {
     description = "Task to be performed",
     defaultValue = "DELETE_FILE",
     group = "ACTION",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(PostProcessingFileActionChooserValues.class)
   public PostProcessingFileAction actionType = PostProcessingFileAction.DELETE_FILE;
@@ -59,7 +61,8 @@ public class PostProcessingFileActionsConfig {
       group = "ACTION",
       dependsOn = "actionType",
       triggeredByValue = {"MOVE_FILE"},
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String targetDir;
 
@@ -72,7 +75,8 @@ public class PostProcessingFileActionsConfig {
       group = "ACTION",
       dependsOn = "actionType",
       triggeredByValue = {"MOVE_FILE"},
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(WholeFileExistsActionChooserValues.class)
   public WholeFileExistsAction fileExistsAction = WholeFileExistsAction.OVERWRITE;
