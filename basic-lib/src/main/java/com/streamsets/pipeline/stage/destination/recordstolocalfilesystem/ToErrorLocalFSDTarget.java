@@ -61,6 +61,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
       label = "Files Prefix",
       description = "File name prefix",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FILES",
       elDefs = SdcEL.class
   )
@@ -75,6 +76,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
                     "Enter the time in seconds or use the default expression to enter the time limit in minutes. " +
                     "You can also use HOURS in the expression to enter the limit in hours.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES",
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -88,6 +90,7 @@ public class ToErrorLocalFSDTarget extends DTarget {
       label = "Max File Size (MB)",
       description = "Max file size to trigger the creation of a new file. Use 0 to opt out.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES",
       min = 0,
       max = Integer.MAX_VALUE

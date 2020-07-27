@@ -30,6 +30,7 @@ public class SyslogTargetConfig {
       defaultValue = "UDP",
       description = "Syslog protocol",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSLOG"
   )
   @ValueChooserModel(ProtocolChooserValues.class)
@@ -42,6 +43,7 @@ public class SyslogTargetConfig {
       defaultValue = "localhost",
       description = "Syslog server hostname",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSLOG"
   )
   public String serverName;
@@ -53,6 +55,7 @@ public class SyslogTargetConfig {
       defaultValue = "514",
       description = "Syslog port",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSLOG"
   )
   public int serverPort;
@@ -65,6 +68,7 @@ public class SyslogTargetConfig {
       description = "Message format to use for messages sent over UDP. TCP messages will use RFC 6587 regardless of " +
           "this setting.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSLOG",
       dependsOn = "protocol",
       triggeredByValue = "UDP"
@@ -79,6 +83,7 @@ public class SyslogTargetConfig {
       defaultValue = "500",
       description = "TCP socket connection timeout in milliseconds",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SYSLOG",
       dependsOn = "protocol",
       triggeredByValue = "TCP"
@@ -92,6 +97,7 @@ public class SyslogTargetConfig {
       defaultValue = "2",
       description = "Number of times to retry a TCP connection",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SYSLOG",
       dependsOn = "protocol",
       triggeredByValue = "TCP"
@@ -105,6 +111,7 @@ public class SyslogTargetConfig {
       defaultValue = "false",
       description = "Enable SSL for TCP connections",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SYSLOG",
       dependsOn = "protocol",
       triggeredByValue = "TCP"
@@ -118,6 +125,7 @@ public class SyslogTargetConfig {
       defaultValue = "${time:now()}",
       description = "Expression to get the message timestamp. Default is the current system time.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -131,6 +139,7 @@ public class SyslogTargetConfig {
       defaultValue = "localhost",
       description = "Expression to get the messsage hostname",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -144,6 +153,7 @@ public class SyslogTargetConfig {
       defaultValue = "6",
       description = "Expression to get the severity level integer. Default is 6 (Informational).",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -157,6 +167,7 @@ public class SyslogTargetConfig {
       defaultValue = "1",
       description = "Expression to get the syslog facility integer. Default is 1 (User).",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -169,6 +180,7 @@ public class SyslogTargetConfig {
       type = ConfigDef.Type.STRING,
       description = "Expression to get the application name",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -181,6 +193,7 @@ public class SyslogTargetConfig {
       type = ConfigDef.Type.STRING,
       description = "Expression to get the message ID",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -193,6 +206,7 @@ public class SyslogTargetConfig {
       type = ConfigDef.Type.STRING,
       description = "Expression to get the process ID",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MESSAGE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT

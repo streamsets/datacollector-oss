@@ -32,6 +32,7 @@ public class SplunkTargetConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SPLUNK"
   )
   public String splunkEndpoint = "";
@@ -42,6 +43,7 @@ public class SplunkTargetConfig {
       label = "Splunk Token",
       description = "Splunk HTTP Event Collector token",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SPLUNK"
   )
   public CredentialValue splunkToken = () -> "";

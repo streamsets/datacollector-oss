@@ -26,6 +26,7 @@ public class ToOriginResponseConfig {
       defaultValue = "false",
       label = "Send Response to Origin",
       displayPosition = 400,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean sendResponseToOrigin = false;
@@ -36,6 +37,7 @@ public class ToOriginResponseConfig {
       defaultValue = "SUCCESS_RECORDS",
       label = "Response Type",
       displayPosition = 410,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "sendResponseToOrigin",
       triggeredByValue = "true"

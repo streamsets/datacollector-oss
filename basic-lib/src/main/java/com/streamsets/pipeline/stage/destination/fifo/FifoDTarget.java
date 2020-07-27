@@ -45,6 +45,7 @@ public class FifoDTarget extends DTarget {
       label = "Named Pipe",
       description = "Full path of the Named Pipe",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NAMED_PIPE"
   )
   public String namedPipe;

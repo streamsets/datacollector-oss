@@ -42,6 +42,7 @@ public class SplunkJerseyClientConfigBean {
       label = "Request Transfer Encoding",
       defaultValue = "BUFFERED",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   @ValueChooserModel(RequestEntityProcessingChooserValues.class)
@@ -54,6 +55,7 @@ public class SplunkJerseyClientConfigBean {
       label = "HTTP Compression",
       defaultValue = "NONE",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   @ValueChooserModel(HttpCompressionChooserValues.class)
@@ -66,6 +68,7 @@ public class SplunkJerseyClientConfigBean {
       defaultValue = "0",
       description = "HTTP connection timeout in milliseconds. 0 means no timeout.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int connectTimeoutMillis = 0;
@@ -77,6 +80,7 @@ public class SplunkJerseyClientConfigBean {
       defaultValue = "0",
       description = "HTTP read timeout in milliseconds. 0 means no timeout.",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int readTimeoutMillis = 0;
@@ -87,6 +91,7 @@ public class SplunkJerseyClientConfigBean {
       label = "Authentication Type",
       defaultValue = "NONE",
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
@@ -98,6 +103,7 @@ public class SplunkJerseyClientConfigBean {
       label = "Use Proxy",
       defaultValue = "false",
       displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public boolean useProxy = false;

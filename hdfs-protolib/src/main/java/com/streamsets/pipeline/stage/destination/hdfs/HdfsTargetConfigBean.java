@@ -115,6 +115,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
       "${hh()}, ${mm()}, ${ss()} and {record:value(“/field”)} for values in a field. Directories are " +
       "created based on the smallest time unit variable used.",
     displayPosition = 110,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "OUTPUT_FILES",
     elDefs = {RecordEL.class, TimeEL.class, ExtraTimeEL.class},
     evaluation = ConfigDef.Evaluation.EXPLICIT,

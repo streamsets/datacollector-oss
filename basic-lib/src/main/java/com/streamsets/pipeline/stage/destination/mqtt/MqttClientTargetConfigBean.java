@@ -31,6 +31,7 @@ public class MqttClientTargetConfigBean {
       label = "Runtime Topic Resolution",
       description = "Select topic at runtime based on the field values in the record",
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean runtimeTopicResolution;
@@ -42,6 +43,7 @@ public class MqttClientTargetConfigBean {
       label = "Topic Expression",
       description = "An expression that resolves to the name of the topic to use",
       displayPosition = 22,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class},
       group = "MQTT",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -60,6 +62,7 @@ public class MqttClientTargetConfigBean {
           "Records with invalid topic names are treated as error records. " +
           "'*' indicates that all topic names are allowed.",
       displayPosition = 23,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MQTT",
       dependsOn = "runtimeTopicResolution",
       triggeredByValue = "true"
@@ -73,6 +76,7 @@ public class MqttClientTargetConfigBean {
       defaultValue = "",
       description = "Specify the topic to deliver the message to, for example \"finance/stock/cmp\"",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MQTT",
       dependsOn = "runtimeTopicResolution",
       triggeredByValue = "false"
@@ -86,6 +90,7 @@ public class MqttClientTargetConfigBean {
       label = "Retain the Message",
       description = "Whether or not the publish message should be retained by the messaging engine",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT"
   )
   public boolean retained = false;

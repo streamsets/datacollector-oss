@@ -55,6 +55,7 @@ public class WebSocketTargetConfig {
       description = "The WebSocket resource URL",
       elDefs = RecordEL.class,
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public String resourceUrl = "";
@@ -65,6 +66,7 @@ public class WebSocketTargetConfig {
       label = "Headers",
       description = "Headers to include in the request",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   @ListBeanModel
@@ -77,6 +79,7 @@ public class WebSocketTargetConfig {
       defaultValue = "60",
       description = "Maximum time to wait for each request completion.",
       displayPosition = 999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "WEB_SOCKET"
   )
   public long maxRequestCompletionSecs = 60L;

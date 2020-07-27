@@ -52,6 +52,7 @@ public class CoapClientTargetConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COAP"
   )
   public String resourceUrl = "";
@@ -65,6 +66,7 @@ public class CoapClientTargetConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COAP"
   )
   @ValueChooserModel(CoapMethodChooserValues.class)
@@ -77,6 +79,7 @@ public class CoapClientTargetConfig {
       defaultValue = "NONCONFIRMABLE",
       description = "Specify the type of requests.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COAP"
   )
   @ValueChooserModel(RequestTypeChooserValues.class)
@@ -89,6 +92,7 @@ public class CoapClientTargetConfig {
       defaultValue = "2000",
       description = "CoAP connection timeout in milliseconds. 0 means no timeout.",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COAP"
   )
   public int connectTimeoutMillis = 2000;
