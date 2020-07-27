@@ -34,6 +34,7 @@ public class HasherConfig {
       label = "Use Field Separator",
       description = "Separator character to insert between fields before hashing",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_HASHING"
   )
   public boolean useSeparator;
@@ -47,6 +48,7 @@ public class HasherConfig {
           label = "Field Separator",
           description = "Character to separate fields",
           displayPosition = 8,
+          displayMode = ConfigDef.DisplayMode.BASIC,
           group = "FIELD_HASHING"
   )
   public Character separatorCharacter = '\u0000';
@@ -57,6 +59,7 @@ public class HasherConfig {
       label = "Hash in Place",
       description="Replaces data in the specified fields with the hashed values",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_HASHING"
   )
   @ListBeanModel
@@ -69,6 +72,7 @@ public class HasherConfig {
       description="Hashes the specified fields and writes to a target field or header attribute." +
           " Multiple fields are hashed together.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_HASHING"
   )
   @ListBeanModel

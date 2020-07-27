@@ -32,6 +32,7 @@ public class ReplacerConfigBean {
     label = "Field Does Not Exist",
     description="Action for data that does not contain the specified fields",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "ADVANCED"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -42,6 +43,7 @@ public class ReplacerConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Replacement rules",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REPLACE"
   )
   @ListBeanModel

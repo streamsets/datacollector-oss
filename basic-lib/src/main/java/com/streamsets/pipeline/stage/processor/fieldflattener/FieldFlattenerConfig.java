@@ -31,6 +31,7 @@ public class FieldFlattenerConfig {
     label = "Flatten",
     description = "Select what should be flattened in the record",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN"
   )
   @ValueChooserModel(FlattenTypeChooserValues.class)
@@ -43,6 +44,7 @@ public class FieldFlattenerConfig {
     dependsOn = "flattenType",
     description = "List of fields to be flattened",
     displayPosition = 15,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN",
     triggeredByValue = { "SPECIFIC_FIELDS" }
   )
@@ -56,6 +58,7 @@ public class FieldFlattenerConfig {
     defaultValue = "true",
     description = "When set, each field will be flattened in place.",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN",
     dependsOn = "flattenType",
     triggeredByValue = { "SPECIFIC_FIELDS" }
@@ -68,6 +71,7 @@ public class FieldFlattenerConfig {
     label = "Target Field",
     description = "Field (must be MAP or MAP_LIST) into which the fields should be flattened.",
     displayPosition = 25,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN",
     dependsOn = "flattenInPlace",
     triggeredByValue = { "false" }
@@ -82,6 +86,7 @@ public class FieldFlattenerConfig {
     label = "Collision Field Action",
     description = "Action that should be performed when he target field already have field with given name.",
     displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN",
     dependsOn = "flattenInPlace",
     triggeredByValue = { "false" }
@@ -96,6 +101,7 @@ public class FieldFlattenerConfig {
     defaultValue = "true",
     description = "When set, flattened field will be removed after successful flattening.",
     displayPosition = 35,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN",
     dependsOn = "flattenInPlace",
     triggeredByValue = { "false" }
@@ -109,6 +115,7 @@ public class FieldFlattenerConfig {
     defaultValue = ".",
     description = "Separator that is used when created merged field name from nested structures.",
     displayPosition = 35,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLATTEN"
   )
   public String nameSeparator;

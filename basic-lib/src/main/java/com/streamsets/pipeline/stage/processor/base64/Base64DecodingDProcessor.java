@@ -44,6 +44,7 @@ public class Base64DecodingDProcessor extends DProcessor {
       label = "Field to Decode",
       description = "Base64 encoded Byte Array field that is to be decoded",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BASE64"
   )
   @FieldSelectorModel(singleValued = true)
@@ -55,6 +56,7 @@ public class Base64DecodingDProcessor extends DProcessor {
       label = "Target Field",
       description = "Target field to which decoded Byte Array is to be written to",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BASE64"
   )
   public String resultFieldPath;

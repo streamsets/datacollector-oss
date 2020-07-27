@@ -62,6 +62,7 @@ public class JavaScriptDProcessor extends DProcessor {
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Batch by Batch' " +
           "the JavaScript must take care of record error handling",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JAVASCRIPT"
   )
   @ValueChooserModel(ProcessingModeChooserValues.class)
@@ -74,6 +75,7 @@ public class JavaScriptDProcessor extends DProcessor {
       label = "Init Script",
       description = "Place initialization code here. Called on pipeline validate/start.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JAVASCRIPT",
       mode = ConfigDef.Mode.JAVASCRIPT
   )
@@ -85,6 +87,7 @@ public class JavaScriptDProcessor extends DProcessor {
       defaultValueFromResource = "default_script.js",
       label = "Script",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JAVASCRIPT",
       mode = ConfigDef.Mode.JAVASCRIPT
   )
@@ -97,6 +100,7 @@ public class JavaScriptDProcessor extends DProcessor {
       label = "Destroy Script",
       description = "Place cleanup code here. Called on pipeline stop.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JAVASCRIPT",
       mode = ConfigDef.Mode.JAVASCRIPT
   )
@@ -107,6 +111,7 @@ public class JavaScriptDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       defaultValue = "NATIVE_OBJECTS",
       label = "Record Type",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "Record type to use during script execution",
       displayPosition = 10,
       group = "ADVANCED"
@@ -115,14 +120,15 @@ public class JavaScriptDProcessor extends DProcessor {
   public ScriptRecordType scriptRecordType = ScriptRecordType.NATIVE_OBJECTS;
 
   @ConfigDef(
-    required = false,
-    defaultValue = "{}",
-    type = ConfigDef.Type.MAP,
-    label = "Parameters in Script",
-    description = "Parameters and values for use in script.\n" +
-        "Access in user script as sdc.userParams.",
-    displayPosition = 80,
-    group = "ADVANCED"
+      required = false,
+      defaultValue = "{}",
+      type = ConfigDef.Type.MAP,
+      label = "Parameters in Script",
+      description = "Parameters and values for use in script.\n" +
+          "Access in user script as sdc.userParams.",
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "ADVANCED"
   )
   public Map<String, String> userParams;
 

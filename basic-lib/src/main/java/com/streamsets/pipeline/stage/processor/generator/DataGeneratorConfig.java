@@ -28,6 +28,7 @@ public class DataGeneratorConfig {
     label = "Target field",
     description = "Name of the output field for serialized record.",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "GENERATOR"
   )
   @FieldSelectorModel(singleValued = true)
@@ -40,6 +41,7 @@ public class DataGeneratorConfig {
     label = "Output Type",
     description = "Output data type",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "GENERATOR"
   )
   @ValueChooserModel(OutputTypeChooserType.class)

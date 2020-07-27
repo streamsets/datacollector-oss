@@ -47,6 +47,7 @@ public class XmlParserConfig {
       label = "Field to Parse",
       description = "String field that contains a XML document",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "XML"
   )
   @FieldSelectorModel(singleValued = true)
@@ -58,6 +59,7 @@ public class XmlParserConfig {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "XML"
   )
   @ValueChooserModel(CharsetChooserValues.class)
@@ -70,6 +72,7 @@ public class XmlParserConfig {
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "XML"
   )
   public boolean removeCtrlChars = false;
@@ -81,6 +84,7 @@ public class XmlParserConfig {
       defaultValue = "",
       description = Constants.XML_RECORD_ELEMENT_DESCRIPTION,
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "XML"
   )
   public String xmlRecordElement = "";
@@ -92,6 +96,7 @@ public class XmlParserConfig {
       defaultValue = ""+XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT,
       description = Constants.INCLUDE_FIELD_XPATH_ATTRIBUTES_DESCRIPTION,
       displayPosition = 43,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "XML"
   )
   public boolean includeFieldXpathAttributes = XmlDataParserFactory.INCLUDE_FIELD_XPATH_ATTRIBUTES_DEFAULT;
@@ -103,6 +108,7 @@ public class XmlParserConfig {
       description = Constants.XPATH_NAMESPACE_CONTEXT_DESCRIPTION,
       defaultValue = "{}",
       displayPosition = 45,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "XML"
   )
   public Map<String, String> xPathNamespaceContext = new HashMap<>();
@@ -114,6 +120,7 @@ public class XmlParserConfig {
       description = Constants.OUTPUT_FIELD_ATTRIBUTES_DESCRIPTION,
       defaultValue = ""+XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT,
       displayPosition = 48,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "XML"
   )
   public boolean outputFieldAttributes = XmlDataParserFactory.USE_FIELD_ATTRIBUTES_DEFAULT;
@@ -125,6 +132,7 @@ public class XmlParserConfig {
       label = "Target Field",
       description = "Name of the field to set the parsed XML data to",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "XML"
   )
   @FieldSelectorModel(singleValued = true)
@@ -137,6 +145,7 @@ public class XmlParserConfig {
       description = "How to handle multiple values produced by the parser",
       defaultValue = "FIRST_ONLY",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "XML"
   )
   @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)

@@ -38,6 +38,7 @@ public class AggregationConfigBean {
       description = "",
       group = "AGGREGATIONS",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {TimeConstantsEL.class}
   )
   @ValueChooserModel(WindowTypeChooserValues.class)
@@ -51,6 +52,7 @@ public class AggregationConfigBean {
       description = "",
       group = "AGGREGATIONS",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {TimeConstantsEL.class},
       dependsOn = "windowType",
       triggeredByValue = "ROLLING"
@@ -66,6 +68,7 @@ public class AggregationConfigBean {
       description = "",
       group = "AGGREGATIONS",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {TimeConstantsEL.class},
       dependsOn = "windowType",
       triggeredByValue = "SLIDING"
@@ -80,6 +83,7 @@ public class AggregationConfigBean {
       label = "Time Zone",
       description = "Time zone to use for time windows",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "AGGREGATIONS"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -93,6 +97,7 @@ public class AggregationConfigBean {
       description = "",
       group = "AGGREGATIONS",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       max = 10,
       dependsOn = "windowType",
@@ -107,6 +112,7 @@ public class AggregationConfigBean {
       defaultValue = "",
       description = "",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "AGGREGATIONS"
   )
   @ListBeanModel
@@ -119,7 +125,8 @@ public class AggregationConfigBean {
       label = "All Aggregators Event",
       description = "Produce one event record for all aggregations computed by this processor",
       group = "EVENTS",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean allAggregatorsEvent;
 
@@ -130,7 +137,8 @@ public class AggregationConfigBean {
       label = "Per Aggregator Events",
       description = "Produce one record for each aggregation computed by this processor",
       group = "EVENTS",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean perAggregatorEvents;
 
@@ -141,7 +149,8 @@ public class AggregationConfigBean {
       label = "Produce Event Record with Text Field",
       description = "When this option is chosen the aggregation data is written in a String field as a JSON string in the event record",
       group = "EVENTS",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean eventRecordWithTextField;
 

@@ -51,6 +51,7 @@ public class DeDupDProcessor extends DProcessor {
       defaultValue = "1000000",
       label = "Max Records to Compare",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DE_DUP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -64,6 +65,7 @@ public class DeDupDProcessor extends DProcessor {
       label = "Time to Compare (secs)",
       description = "Creates a window of time for comparison. Takes precedence over Max Records. Use 0 for no time window.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DE_DUP",
       min = 0,
       max = Integer.MAX_VALUE
@@ -76,6 +78,7 @@ public class DeDupDProcessor extends DProcessor {
       defaultValue = "ALL_FIELDS",
       label = "Compare",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DE_DUP"
   )
   @ValueChooserModel(SelectFieldsChooserValues.class)
@@ -86,6 +89,7 @@ public class DeDupDProcessor extends DProcessor {
       type = ConfigDef.Type.MODEL,
       label = "Fields to Compare",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DE_DUP",
       dependsOn = "compareFields",
       triggeredByValue = "SPECIFIED_FIELDS"

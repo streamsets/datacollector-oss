@@ -26,7 +26,8 @@ public class FieldZipConfig {
       defaultValue="",
       label = "First Field",
       description="First field to zip.",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String firstField;
@@ -37,7 +38,8 @@ public class FieldZipConfig {
       defaultValue="",
       label = "Second Field",
       description="Second field to zip.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String secondField;
@@ -48,7 +50,8 @@ public class FieldZipConfig {
       defaultValue="/zipped",
       label = "Path for Zipped Field",
       description="Field path for the new zipped field. This field will be created by the processor.",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String zippedFieldPath;
 }

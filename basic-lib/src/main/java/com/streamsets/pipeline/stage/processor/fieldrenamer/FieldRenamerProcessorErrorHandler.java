@@ -28,6 +28,7 @@ public class FieldRenamerProcessorErrorHandler {
       label = "Source Field Does Not Exist",
       description="Response when records do not include the specified source fields.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RENAME"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -40,6 +41,7 @@ public class FieldRenamerProcessorErrorHandler {
       label = "Target Field Already Exists",
       description="Response when records include field names that match the specified target fields.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RENAME"
   )
   @ValueChooserModel(ExistingFieldHandlingChooserValues.class)
@@ -52,6 +54,7 @@ public class FieldRenamerProcessorErrorHandler {
       label = "Multiple Source Field Matches",
       description="Response when source fields match multiple source field regular expressions.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RENAME"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)

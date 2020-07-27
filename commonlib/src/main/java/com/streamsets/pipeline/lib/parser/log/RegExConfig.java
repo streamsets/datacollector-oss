@@ -25,7 +25,8 @@ public class RegExConfig {
     defaultValue="/",
     label = "Field Path",
     description = "",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String fieldPath;
 
@@ -35,7 +36,8 @@ public class RegExConfig {
     defaultValue="1",
     label = "Regular Expression Group",
     description="",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int group;
 

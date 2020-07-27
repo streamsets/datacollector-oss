@@ -32,6 +32,7 @@ public class FieldMaskConfig {
       label = "Fields to Mask",
       description="Mask string fields. You can enter multiple fields for the same mask type.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, FieldEL.class},
       group = "MASKING"
@@ -46,6 +47,7 @@ public class FieldMaskConfig {
       label = "Mask Type",
       description="",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MASKING"
   )
   @ValueChooserModel(MaskTypeChooseValues.class)
@@ -57,6 +59,7 @@ public class FieldMaskConfig {
       label = "Custom Mask",
       description = "Use # to reveal field values. Other characters replace field values.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "maskType",
       triggeredByValue = "CUSTOM",
       group = "MASKING"
@@ -69,6 +72,7 @@ public class FieldMaskConfig {
     label = "Regular Expression",
     description = "Regular expression that matches the data and groups them.",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     dependsOn = "maskType",
     triggeredByValue = "REGEX",
     defaultValue = "(.*)",
@@ -82,6 +86,7 @@ public class FieldMaskConfig {
     label = "Groups To Show",
     description = "Comma separated list of group numbers that must be revealed in the data.",
     displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     dependsOn = "maskType",
     triggeredByValue = "REGEX",
     defaultValue = "1",

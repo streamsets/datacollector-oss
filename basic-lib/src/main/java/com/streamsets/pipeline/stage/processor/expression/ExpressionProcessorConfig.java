@@ -30,6 +30,7 @@ public class ExpressionProcessorConfig {
       description = "Use an existing field or enter a new field. Using an existing field overwrites the " +
                     "original value.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "EXPRESSIONS"
 
   )
@@ -43,6 +44,7 @@ public class ExpressionProcessorConfig {
       label = "Field Expression",
       description = "Use the expression language to modify values in a field.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, ELSupport.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "EXPRESSIONS"

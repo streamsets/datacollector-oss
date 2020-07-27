@@ -29,6 +29,7 @@ public class HttpRouterLaneConfig {
       label = "Stream",
       description = "Records that match the specified method and path pass to the stream",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ROUTER"
   )
   public String outputLane;
@@ -42,6 +43,7 @@ public class HttpRouterLaneConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ROUTER"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -54,6 +56,7 @@ public class HttpRouterLaneConfig {
       label = "Path Parameter",
       description = "URL path in record header attribute",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ROUTER"
   )
   public String pathParam = "/";

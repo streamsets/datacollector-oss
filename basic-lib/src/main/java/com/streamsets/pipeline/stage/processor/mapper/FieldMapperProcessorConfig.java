@@ -34,6 +34,7 @@ public class FieldMapperProcessorConfig {
       description = "Controls whether this mapper will operate on field paths, names, or values.",
       defaultValue = "FIELD_VALUES",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MAPPER"
   )
   @ValueChooserModel(OperateOnChooserValues.class)
@@ -47,6 +48,7 @@ public class FieldMapperProcessorConfig {
       description = "An expression that controls whether the mapper should apply to any particular field in the input" +
           "record. Leave this blank to apply the mapping to all fields in the record (unconditionally).",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, FieldEL.class, ELSupport.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "MAPPER"
@@ -60,6 +62,7 @@ public class FieldMapperProcessorConfig {
       label = "Mapping Expression",
       description = "The expression that transforms the field path, name, or value.",
       displayPosition = 300,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, FieldEL.class, ELSupport.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "MAPPER"
@@ -74,6 +77,7 @@ public class FieldMapperProcessorConfig {
       description = "An expression that controls how to aggregate the results, if multiple fields map to the same " +
           "path.  The results will be available in a variable called \"fields\".",
       displayPosition = 300,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, FieldEL.class, ELSupport.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "MAPPER",
@@ -90,6 +94,7 @@ public class FieldMapperProcessorConfig {
       description = "Controls whether the mapping is allowed to change the structure of the record by adding new " +
           "fields, changing types, etc.",
       displayPosition = 400,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MAPPER",
       dependsOn = "operateOn",
       triggeredByValue = {"FIELD_PATHS", "FIELD_NAMES"}
@@ -104,6 +109,7 @@ public class FieldMapperProcessorConfig {
       description = "Controls what happens if multiple fields map to an existing list field. If true, mapped fields " +
           "will be appended to this list. If false, the mapped fields will replace all existing values in the list.",
       displayPosition = 500,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MAPPER",
       dependsOn = "operateOn",
       triggeredByValue = {"FIELD_PATHS", "FIELD_NAMES"}
@@ -118,6 +124,7 @@ public class FieldMapperProcessorConfig {
       description = "When a field is mapped to a new location (either name or path), it is removed unless this " +
           "property is set.",
       displayPosition = 600,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MAPPER",
       dependsOn = "operateOn",
       triggeredByValue = {"FIELD_PATHS", "FIELD_NAMES"}

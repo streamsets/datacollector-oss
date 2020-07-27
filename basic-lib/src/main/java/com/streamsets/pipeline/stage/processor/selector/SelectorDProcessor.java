@@ -61,6 +61,7 @@ public class SelectorDProcessor extends DProcessor {
       label = "Condition",
       description = "Records that match the condition pass to the stream",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CONDITIONS",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, TimeNowEL.class}

@@ -32,7 +32,8 @@ public class OrderConfigBean {
     label = "Fields to Order",
     description = "List of fields in the desired order",
     group = "ORDER",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel
   public List<String> fields;
@@ -44,7 +45,8 @@ public class OrderConfigBean {
     label = "Output Type",
     description = "Type of the output parent field",
     group = "ORDER",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(OutputTypeChooserValues.class)
   public OutputType outputType = OutputType.LIST_MAP;
@@ -56,7 +58,8 @@ public class OrderConfigBean {
     label = "Missing Fields",
     description = "Action to perform if the record doesn't have all the fields specified in the order list",
     group = "ORDER",
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(MissingFieldActionChooserValues.class)
   public MissingFieldAction missingFieldAction = MissingFieldAction.TO_ERROR;
@@ -71,7 +74,8 @@ public class OrderConfigBean {
       @Dependency(configName = "missingFieldAction", triggeredByValues = "USE_DEFAULT")
     },
     group = "ORDER",
-    displayPosition = 40
+    displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String defaultValue;
 
@@ -84,7 +88,8 @@ public class OrderConfigBean {
       @Dependency(configName = "missingFieldAction", triggeredByValues = "USE_DEFAULT")
     },
     group = "ORDER",
-    displayPosition = 50
+    displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(DataTypeChooserValues.class)
   public DataType dataType;
@@ -96,7 +101,8 @@ public class OrderConfigBean {
     label = "Extra Fields",
     description = "Action to perform if the record has additional fields that weren't specified in the order list",
     group = "ORDER",
-    displayPosition = 60
+    displayPosition = 60,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(ExtraFieldActionValueChooser.class)
   public ExtraFieldAction extraFieldAction = ExtraFieldAction.TO_ERROR;
@@ -111,7 +117,8 @@ public class OrderConfigBean {
       @Dependency(configName = "extraFieldAction", triggeredByValues = "TO_ERROR")
     },
     group = "ORDER",
-    displayPosition = 70
+    displayPosition = 70,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel
   public List<String> discardFields = Collections.emptyList();

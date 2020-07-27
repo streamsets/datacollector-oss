@@ -33,6 +33,7 @@ public class LocalLookupConfig {
       type = ConfigDef.Type.MAP,
       label = "Values",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOCAL"
   )
   public Map<String, String> values = new HashMap<>();
@@ -44,6 +45,7 @@ public class LocalLookupConfig {
       description = "Whether to perform a bulk lookup of all keys in the batch, or perform individual lookups per key.",
       defaultValue = "BATCH",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(LookupModeChooserValues.class)
@@ -54,6 +56,7 @@ public class LocalLookupConfig {
       type = ConfigDef.Type.MODEL,
       label = "Lookup Parameters",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP"
   )
   @ListBeanModel

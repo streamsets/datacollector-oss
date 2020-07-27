@@ -33,6 +33,7 @@ public class DataParserConfig {
       label = "Field to Parse",
       description = "String field that contains the data to parse",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PARSER"
   )
   @FieldSelectorModel(singleValued = true)
@@ -45,6 +46,7 @@ public class DataParserConfig {
       label = "Target Field",
       description = "Name of the field to set the parsed data to",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PARSER"
   )
   @FieldSelectorModel(singleValued = true)
@@ -57,6 +59,7 @@ public class DataParserConfig {
       description = "How to handle multiple values produced by the parser",
       defaultValue = "FIRST_ONLY",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PARSER"
   )
   @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)

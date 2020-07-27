@@ -43,6 +43,7 @@ public class JsonParserDProcessor extends DProcessor {
       label = "Field to Parse",
       description = "String field that contains a JSON object",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JSON"
   )
   @FieldSelectorModel(singleValued = true)
@@ -55,6 +56,7 @@ public class JsonParserDProcessor extends DProcessor {
       label = "Ignore Control Characters",
       description = "Use only if required as it impacts reading performance",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JSON"
   )
   public boolean removeCtrlChars;
@@ -66,6 +68,7 @@ public class JsonParserDProcessor extends DProcessor {
       label = "Target Field",
       description="Name of the field to set the parsed JSON data to",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JSON"
   )
   public String parsedFieldPath;

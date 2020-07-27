@@ -49,6 +49,7 @@ public class LogParserDProcessor extends DProcessor {
       label = "Field to Parse",
       description = "String field that contains a LOG line",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOG"
   )
   @FieldSelectorModel(singleValued = true)
@@ -61,6 +62,7 @@ public class LogParserDProcessor extends DProcessor {
     label = "New Parsed Field",
     description="Name of the new field to set the parsed JSON data",
     displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
     group = "LOG"
   )
   public String parsedFieldPath;

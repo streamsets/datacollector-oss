@@ -27,6 +27,7 @@ public class GeolocationDatabaseConfig {
       label = "GeoIP2 Database File",
       description = "An absolute path or a file under SDC resources directory in GeoIP2 format",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GEOLOCATION"
   )
   public String geoIP2DBFile;
@@ -38,6 +39,7 @@ public class GeolocationDatabaseConfig {
       label = "GeoIP2 Database Type",
       description = "The type of GeoIP2 database being used",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GEOLOCATION"
   )
   @ValueChooserModel(GeolocationDBTypeEnumChooserValues.class)

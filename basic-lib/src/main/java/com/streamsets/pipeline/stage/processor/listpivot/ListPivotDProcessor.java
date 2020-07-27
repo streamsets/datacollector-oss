@@ -47,7 +47,8 @@ public class ListPivotDProcessor extends DProcessor {
       defaultValue = "",
       label = "Field To Pivot",
       description = "Path to the field that will be exploded into multiple records (supported types are LIST and LIST_MAP).",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String listPath;
@@ -60,7 +61,8 @@ public class ListPivotDProcessor extends DProcessor {
       label = "Copy All Fields",
       description = "Copy all non-pivot fields to each resulting record. " +
           "If this is not set, then the pivoted value is set as the root field of the record.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean copyFields;
 
@@ -75,7 +77,8 @@ public class ListPivotDProcessor extends DProcessor {
       description = "Path in the new record where the pivoted list items are written to. Each record will contain one" +
           "item from the original list at this path. If this is not specified, the path of the original list is used. " +
           "If there is data at this field path, it will be overwritten.",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String newPath;
 
@@ -88,7 +91,8 @@ public class ListPivotDProcessor extends DProcessor {
       defaultValue = "true",
       label = "Remove Pivot Field",
       description = "If this is set, old pivot field values will not be copied to new record.",
-      displayPosition = 31
+      displayPosition = 31,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean replaceListField;
 
@@ -99,7 +103,8 @@ public class ListPivotDProcessor extends DProcessor {
       defaultValue = "false",
       label = "Save Original Field Name",
       description = "Specifies whether or not to save the original field name of the pivoted field.",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean saveOriginalFieldName;
 
@@ -112,7 +117,8 @@ public class ListPivotDProcessor extends DProcessor {
       triggeredByValue = "true",
       label = "Original Field Name Path",
       description = "Path in the new record to store the name of the field that was pivoted.",
-      displayPosition = 41
+      displayPosition = 41,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String originalFieldNamePath;
 
@@ -123,6 +129,7 @@ public class ListPivotDProcessor extends DProcessor {
       label = "Field Does Not Exist",
       description="Action for data that does not contain the specified fields",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIVOT"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)

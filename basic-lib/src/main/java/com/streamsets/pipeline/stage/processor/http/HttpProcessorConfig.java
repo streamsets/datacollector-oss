@@ -59,6 +59,7 @@ public class HttpProcessorConfig {
       label = "Output Field",
       description = "Field in which to place the result of the HTTP request",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @FieldSelectorModel(singleValued = true)
@@ -71,6 +72,7 @@ public class HttpProcessorConfig {
       description = "Field in which to place the result of the HTTP request",
       defaultValue = "HEADER",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   @ValueChooserModel(HeaderOutputLocationChooserValues.class)
@@ -82,6 +84,7 @@ public class HttpProcessorConfig {
       label = "Header Attribute Prefix",
       description = "A prefix to add to record header attributes in the response",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "headerOutputLocation",
       triggeredByValue = "HEADER"
@@ -94,6 +97,7 @@ public class HttpProcessorConfig {
       label = "Header Output Field",
       description = "Field in which to place the HTTP response headers.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "headerOutputLocation",
       triggeredByValue = "FIELD"
@@ -120,6 +124,7 @@ public class HttpProcessorConfig {
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   public String resourceUrl = "";
@@ -131,6 +136,7 @@ public class HttpProcessorConfig {
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, VaultEL.class},
       group = "HTTP"
   )
@@ -145,6 +151,7 @@ public class HttpProcessorConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -156,6 +163,7 @@ public class HttpProcessorConfig {
       label = "HTTP Method Expression",
       description = "Expression used to determine the HTTP method to use",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "httpMethod",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -170,6 +178,7 @@ public class HttpProcessorConfig {
       label = "Request Data",
       description = "Data that should be included as a part of the request",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       lines = 2,
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},
@@ -186,6 +195,7 @@ public class HttpProcessorConfig {
       defaultValue = HttpStageUtil.DEFAULT_CONTENT_TYPE,
       description = "Content-Type header to be sent with the request; used if that header is not already present",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -204,6 +214,7 @@ public class HttpProcessorConfig {
       defaultValue = "0",
       description = "Time between requests (in ms, 0 for unlimited). Useful for rate-limited APIs.",
       displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int rateLimit;
@@ -215,6 +226,7 @@ public class HttpProcessorConfig {
       defaultValue = "60",
       description = "Maximum time to wait for each request completion.",
       displayPosition = 999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;
@@ -226,6 +238,7 @@ public class HttpProcessorConfig {
       description = "How to handle multiple values produced by the parser",
       defaultValue = "FIRST_ONLY",
       displayPosition = 12,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)

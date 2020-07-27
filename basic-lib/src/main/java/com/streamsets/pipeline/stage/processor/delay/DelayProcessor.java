@@ -56,6 +56,7 @@ public class DelayProcessor extends SingleLaneRecordProcessor {
       defaultValue = "1000",
       label = "Delay Between Batches",
       description = "Milliseconds to wait before sending records to next stage",
+      displayMode = ConfigDef.DisplayMode.BASIC,
       min = 0,
       max = Integer.MAX_VALUE
   )

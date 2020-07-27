@@ -45,6 +45,7 @@ public class JsonGeneratorDProcessor extends DProcessor {
       label = "Field to Serialize",
       description = "Map or List field to serialize to JSON",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JSON"
   )
   @FieldSelectorModel(singleValued = true)
@@ -56,6 +57,7 @@ public class JsonGeneratorDProcessor extends DProcessor {
       label = "Target Field",
       description="Name of the field in which to place the serialized JSON string",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JSON"
   )
   public String outputFieldPath;

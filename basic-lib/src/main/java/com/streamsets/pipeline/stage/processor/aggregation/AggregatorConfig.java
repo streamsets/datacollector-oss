@@ -51,6 +51,7 @@ public class AggregatorConfig {
       label = "Aggregation Title",
       description = "Enter the title you want to see in the metrics view for this aggregation",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "AGGREGATIONS"
   )
   public String aggregationTitle;
@@ -62,6 +63,7 @@ public class AggregatorConfig {
       label = "Filter",
       description = "Select to enable filtering records for aggregation",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "AGGREGATIONS"
   )
   public boolean filter;
@@ -73,6 +75,7 @@ public class AggregatorConfig {
       label = "Filter Predicate",
       description = "An expression to filter records for aggregation",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "filter",
@@ -88,6 +91,7 @@ public class AggregatorConfig {
       description = " ",
       defaultValue = "COUNT",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "AGGREGATIONS"
   )
   @ValueChooserModel(AggregationFunctionsChooserValues.class)
@@ -100,6 +104,7 @@ public class AggregatorConfig {
       label = "Aggregation Expression",
       description = "The resulting value of this expression will be aggregated",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "AGGREGATIONS",
@@ -115,6 +120,7 @@ public class AggregatorConfig {
       label = "Group By",
       description = "",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "AGGREGATIONS"
   )
   public boolean groupBy;
@@ -126,6 +132,7 @@ public class AggregatorConfig {
       label = "Group By Expression",
       description = "Aggregations will be grouped by the resulting values of this expression",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       dependsOn = "groupBy",

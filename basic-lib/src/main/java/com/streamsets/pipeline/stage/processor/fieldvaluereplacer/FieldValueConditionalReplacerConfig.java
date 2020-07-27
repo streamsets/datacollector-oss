@@ -29,7 +29,9 @@ public class FieldValueConditionalReplacerConfig {
       defaultValue = "",
       label = "Fields to Replace",
       description = "Specify names of fields ",
-      displayPosition = 10)
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   @FieldSelectorModel
   public List<String> fieldNames;
 
@@ -39,7 +41,9 @@ public class FieldValueConditionalReplacerConfig {
       defaultValue = "LESS_THAN",
       label = "Operator",
       description = "Select comparison operator < = > ",
-      displayPosition = 20)
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   @ValueChooserModel(OperatorChooser.class)
   public String operator;
 
@@ -49,7 +53,9 @@ public class FieldValueConditionalReplacerConfig {
       defaultValue = "",
       label = "Comparison Value",
       description = "Literal value to compare against",
-      displayPosition = 30)
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   public String comparisonValue;
 
   @ConfigDef(
@@ -58,7 +64,9 @@ public class FieldValueConditionalReplacerConfig {
       defaultValue = "",
       label = "Replacement Value",
       description = "Replacement Value",
-      displayPosition = 40)
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   public String replacementValue;
 
 }

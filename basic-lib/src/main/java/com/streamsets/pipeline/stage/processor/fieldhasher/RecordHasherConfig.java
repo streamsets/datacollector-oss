@@ -28,6 +28,7 @@ public class RecordHasherConfig {
       label = "Hash Entire Record",
       description = "",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RECORD_HASHING"
   )
   public boolean hashEntireRecord;
@@ -39,6 +40,7 @@ public class RecordHasherConfig {
       label = "Include Record Header",
       description = "Include the record header for hashing",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
       group = "RECORD_HASHING"
@@ -52,6 +54,7 @@ public class RecordHasherConfig {
       label = "Use Field Separator",
       description = "Separator character to insert between fields before hashing",
       displayPosition = 25,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
       group = "RECORD_HASHING"
@@ -67,6 +70,7 @@ public class RecordHasherConfig {
       label = "Field Separator",
       description = "Character to separate fields",
       displayPosition = 28,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RECORD_HASHING"
   )
   public Character separatorCharacter = '\u0000';
@@ -78,6 +82,7 @@ public class RecordHasherConfig {
       label = "Hash Type",
       description = "",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
       group = "RECORD_HASHING"
@@ -94,7 +99,8 @@ public class RecordHasherConfig {
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String targetField;
@@ -108,7 +114,8 @@ public class RecordHasherConfig {
       group = "RECORD_HASHING",
       dependsOn = "hashEntireRecord",
       triggeredByValue = "true",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String headerAttribute;
 

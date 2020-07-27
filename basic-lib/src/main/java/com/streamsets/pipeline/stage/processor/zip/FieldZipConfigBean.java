@@ -31,6 +31,7 @@ public class FieldZipConfigBean {
       label = "Fields to Zip",
       description="Zips the specified fields into a single list.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ZIP"
   )
   @ListBeanModel
@@ -45,7 +46,8 @@ public class FieldZipConfigBean {
       label = "Zip Values Only",
       description = "If checked, the output will be a list of two-element lists. If unchecked, the output " +
           "will be a list of maps with each field value identified by the originating field name.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean valuesOnly;
 
@@ -56,6 +58,7 @@ public class FieldZipConfigBean {
       label = "Field Does Not Exist",
       description="Action for data that does not contain the specified fields",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ZIP"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)

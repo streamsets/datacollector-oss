@@ -34,7 +34,8 @@ public class SchemaGeneratorConfig {
     label = "Schema Type",
     description = "Type of schema that should be generated.",
     group = "SCHEMA",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(SchemaTypeValueChooser.class)
   public SchemaType schemaType = SchemaType.AVRO;
@@ -46,7 +47,8 @@ public class SchemaGeneratorConfig {
     label = "Schema name",
     description = "Name of the schema that will be generated.",
     group = "SCHEMA",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String schemaName;
 
@@ -57,7 +59,8 @@ public class SchemaGeneratorConfig {
     label = "Header Attribute",
     description = "Name of the header attribute where the generated schema will be stored.",
     group = "SCHEMA",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String attributeName = "avroSchema";
 
@@ -72,7 +75,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
     },
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String avroNamespace;
 
@@ -85,7 +89,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
     },
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String avroDoc;
 
@@ -99,7 +104,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
     },
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean avroNullableFields = false;
 
@@ -113,7 +119,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "avroNullableFields", triggeredByValues = "true")
     },
-    displayPosition = 31
+    displayPosition = 31,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean avroDefaultNullable;
 
@@ -128,7 +135,8 @@ public class SchemaGeneratorConfig {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO"),
       @Dependency(configName = "avroNullableFields", triggeredByValues = "false")
     },
-    displayPosition = 40
+    displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   @ListBeanModel
   public List<AvroDefaultConfig> avroDefaultTypes = new ArrayList<>();
@@ -143,7 +151,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "schemaType", triggeredByValues = "AVRO")
     },
-    displayPosition = 50
+    displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean avroExpandTypes;
 
@@ -156,7 +165,8 @@ public class SchemaGeneratorConfig {
     label = "Precision Field Attribute",
     description = "Name of the field attribute that stores precision for decimal fields.",
     group = "TYPES",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String precisionAttribute = HeaderAttributeConstants.ATTR_PRECISION;
 
@@ -167,7 +177,8 @@ public class SchemaGeneratorConfig {
     label = "Scale Field Attribute",
     description = "Name of the field attribute that stores scale for decimal fields.",
     group = "TYPES",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String scaleAttribute = HeaderAttributeConstants.ATTR_SCALE;
 
@@ -178,7 +189,8 @@ public class SchemaGeneratorConfig {
     label = "Default Precision",
     description = "Default precision when given field attribute does not exists or is invalid. Use -1 to disable default value.",
     group = "TYPES",
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int defaultPrecision;
 
@@ -189,7 +201,8 @@ public class SchemaGeneratorConfig {
     defaultValue = "-1",
     description = "Default scale when given field attribute does not exists or is invalid. Use -1 to disable default value.",
     group = "TYPES",
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int defaultScale;
 
@@ -203,7 +216,8 @@ public class SchemaGeneratorConfig {
     description = "Rather then calculating schema for each individual record, cache schema and re-use it for the logically" +
       "same records.",
     group = "ADVANCED",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean enableCache;
 
@@ -217,7 +231,8 @@ public class SchemaGeneratorConfig {
     dependencies = {
       @Dependency(configName = "enableCache", triggeredByValues = "true")
     },
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int cacheSize = 50;
 
@@ -232,7 +247,8 @@ public class SchemaGeneratorConfig {
     },
     elDefs = RecordEL.class,
     evaluation = ConfigDef.Evaluation.EXPLICIT,
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String cacheKeyExpression;
 }

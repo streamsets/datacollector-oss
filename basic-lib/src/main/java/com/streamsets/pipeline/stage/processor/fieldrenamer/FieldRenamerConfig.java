@@ -32,6 +32,7 @@ public class FieldRenamerConfig {
       label = "Source Field Expression",
       description = "Existing fields to rename. You can use regular expressions to rename a set of fields.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RENAME"
   )
   public String fromFieldExpression;
@@ -43,6 +44,7 @@ public class FieldRenamerConfig {
       label = "Target Field Expression",
       description = "New name for the field. You can use regular expressions to rename a set of fields.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "RENAME"
   )

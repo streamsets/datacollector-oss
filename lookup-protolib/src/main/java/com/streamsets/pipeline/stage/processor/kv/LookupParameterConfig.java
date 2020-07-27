@@ -28,6 +28,7 @@ public class LookupParameterConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String keyExpr;
@@ -37,6 +38,7 @@ public class LookupParameterConfig {
       type = ConfigDef.Type.MODEL,
       label = "Output Field",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @FieldSelectorModel(singleValued = true)

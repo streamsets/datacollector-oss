@@ -36,14 +36,15 @@ public class ReplaceRule {
   @FieldSelectorModel(singleValued = true)
   public String fields;
 
-   @ConfigDef(
+  @ConfigDef(
     required = true,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Set to Null",
     description = "Whether the field should be set to NULL or not.",
     group = "REPLACE",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean setToNull;
 
@@ -58,7 +59,8 @@ public class ReplaceRule {
     dependencies = {
       @Dependency(configName = "setToNull", triggeredByValues = "false")
     },
-    displayPosition = 30
+    displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String replacement;
 }

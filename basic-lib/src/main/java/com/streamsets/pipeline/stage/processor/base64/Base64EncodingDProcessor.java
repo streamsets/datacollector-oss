@@ -44,6 +44,7 @@ public class Base64EncodingDProcessor extends DProcessor {
       label = "Field to Encode",
       description = "Byte Array field that is to be encoded",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BASE64"
   )
   @FieldSelectorModel(singleValued = true)
@@ -55,6 +56,7 @@ public class Base64EncodingDProcessor extends DProcessor {
       label = "Target Field",
       description = "Target field to which encoded Byte Array is to be written to",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BASE64"
   )
   public String resultFieldPath;
@@ -66,6 +68,7 @@ public class Base64EncodingDProcessor extends DProcessor {
       label = "URL Safe",
       description = "Encode the field so that it can be safely sent in a URL",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BASE64"
   )
   public boolean urlSafe;

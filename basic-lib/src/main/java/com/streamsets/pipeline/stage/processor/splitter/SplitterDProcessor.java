@@ -51,6 +51,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "Field to Split",
       description = "",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   @FieldSelectorModel(singleValued = true)
@@ -64,6 +65,7 @@ public class SplitterDProcessor extends DProcessor {
       description = "Regular expression to use for splitting the field. If trying to split on a RegEx meta" +
           " character \".$|()[{^?*+\\\", the character must be escaped with \\",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   public String separator;
@@ -75,6 +77,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "New Split Fields",
       description="New fields to pass split data. The last field includes any remaining unsplit data.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   @FieldSelectorModel(singleValued = false)
@@ -87,6 +90,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "Not Enough Splits",
       description="Action for data that has fewer splits than configured field paths",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   @ValueChooserModel(OnStagePreConditionFailureChooserValues.class)
@@ -100,6 +104,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "Too Many Splits",
       description="Action for data that more splits than configured field paths",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   @ValueChooserModel(TooManySplitsActionChooserValues.class)
@@ -112,6 +117,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "Field for Remaining Splits",
       description = "List field used to store any remaining splits",
       displayPosition = 55,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "tooManySplitsAction",
       triggeredByValue = "TO_LIST",
       group = "FIELD_SPLITTER"
@@ -126,6 +132,7 @@ public class SplitterDProcessor extends DProcessor {
       label = "Original Field",
       description="Action for the original field being split",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FIELD_SPLITTER"
   )
   @ValueChooserModel(OriginalFieldActionChooserValues.class)

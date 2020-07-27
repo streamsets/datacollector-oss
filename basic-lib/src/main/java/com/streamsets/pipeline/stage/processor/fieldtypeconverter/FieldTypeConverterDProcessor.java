@@ -51,6 +51,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       label = "Conversion Method",
       description = "Select type of conversion that will be performed.",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TYPE_CONVERSION"
   )
   @ValueChooserModel(ConvertByChooserValues.class)
@@ -63,6 +64,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       label = "",
       description = "Configures field by names that should be converted",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TYPE_CONVERSION",
       dependsOn = "convertBy",
       triggeredByValue = "BY_FIELD"
@@ -77,6 +79,7 @@ public class FieldTypeConverterDProcessor extends DProcessor {
       label = "",
       description = "Configure types that should be converted. All fields of given type in a record will be converted.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TYPE_CONVERSION",
       dependsOn = "convertBy",
       triggeredByValue = "BY_TYPE"

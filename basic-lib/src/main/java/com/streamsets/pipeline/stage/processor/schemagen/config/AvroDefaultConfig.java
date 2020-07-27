@@ -25,7 +25,8 @@ public class AvroDefaultConfig {
     type = ConfigDef.Type.MODEL,
     defaultValue = "",
     label = "Avro Type",
-    displayPosition = 10
+    displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(AvroTypeValueChooser.class)
   public AvroType avroType;
@@ -35,7 +36,8 @@ public class AvroDefaultConfig {
     type = ConfigDef.Type.STRING,
     defaultValue = "",
     label = "Default Value",
-    displayPosition = 20
+    displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String defaultValue;
 

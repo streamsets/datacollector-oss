@@ -31,6 +31,7 @@ public class FieldValueReplacerConfig {
       label = "Fields to Replace",
       description = "You can enter multiple fields to replace with the same value",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, FieldEL.class},
       group = "REPLACE"
@@ -45,6 +46,7 @@ public class FieldValueReplacerConfig {
       label = "Replacement Value",
       description="Value to replace nulls",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REPLACE"
   )
   public String newValue;
