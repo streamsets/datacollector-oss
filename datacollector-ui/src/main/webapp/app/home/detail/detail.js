@@ -272,6 +272,10 @@ angular
       hasAdvancedConfig: function(configDefinitions) {
         return configDefinitions.some(function (x) {
           return x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
+        }) || configDefinitions.some(function(configDef) {
+          return configDef && configDef.model && configDef.model.configDefinitions && configDef.model.configDefinitions.some(function(x) {
+            return x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
+          });
         });
       },
 

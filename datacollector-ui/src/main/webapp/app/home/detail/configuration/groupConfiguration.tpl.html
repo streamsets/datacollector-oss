@@ -148,7 +148,7 @@
                 <label class="output-lane-value">{{configIndex + 1}}</label>
               </div>
 
-              <div ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition)) && !($index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig)">
+              <div ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition)) && !($index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig) && isShownByConfigDisplayMode(customFieldConfigDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)">
                 <ng-include src="'app/home/detail/configuration/listBeanConfiguration.tpl.html'"></ng-include>
               </div>
             </td>
@@ -181,7 +181,7 @@
               <div class="form-group "
                    ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
                    ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, customFieldConfigDefinition).length > 0}"
-                   ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition))">
+                   ng-if="(verifyCustomFieldDependsOn(detailPaneConfig, customFieldValue, customFieldConfigDefinition)) && isShownByConfigDisplayMode(customFieldConfigDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)">
 
                 <label class="col-lg-3 control-label">{{customFieldConfigDefinition.label}}
                   <i class="fa fa-info-circle help-icon"
