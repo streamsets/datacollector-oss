@@ -36,6 +36,7 @@ public class CassandraTargetConfig {
       label = "Cassandra Contact Points",
       description = "Hostnames of Cassandra nodes to use as contact points. To ensure a connection, enter several.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   public List<String> contactPoints = new ArrayList<>();
@@ -47,6 +48,7 @@ public class CassandraTargetConfig {
       label = "Cassandra Port",
       description = "Port number to use when connecting to Cassandra nodes",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   public int port = 9042;
@@ -57,6 +59,7 @@ public class CassandraTargetConfig {
       label = "Authentication Provider",
       defaultValue = "NONE",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   @ValueChooserModel(AuthenticatorClassChooserValues.class)
@@ -69,6 +72,7 @@ public class CassandraTargetConfig {
       description = "If unsure which setting to use, refer to: https://datastax.github" +
           ".io/java-driver/manual/native_protocol",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   @ValueChooserModel(ProtocolVersionChooserValues.class)
@@ -81,6 +85,7 @@ public class CassandraTargetConfig {
       label = "Compression",
       description = "Optional compression for transport-level requests and responses.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   @ValueChooserModel(CompressionChooserValues.class)
@@ -93,6 +98,7 @@ public class CassandraTargetConfig {
       label = "Enable Batches",
       description = "Enables the use of Cassandra batches",
       displayPosition = 51,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   public boolean enableBatches = true;
@@ -106,6 +112,7 @@ public class CassandraTargetConfig {
       label = "Write Timeout",
       description = "The timeout for each write request (in milliseconds)",
       displayPosition = 52,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA",
       dependsOn = "enableBatches",
       triggeredByValue = "false"
@@ -119,6 +126,7 @@ public class CassandraTargetConfig {
       label = "Batch Type",
       description = "Un-logged batches do not use the Cassandra distributed batch log and as such as nonatomic.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA",
       dependsOn = "enableBatches",
       triggeredByValue = "true"
@@ -135,6 +143,7 @@ public class CassandraTargetConfig {
       label = "Max Batch Size",
       description = "Maximum statements to batch prior to submission.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   public int maxBatchSize = 65535;
@@ -145,6 +154,7 @@ public class CassandraTargetConfig {
       label = "Fully Qualified Table Name",
       description = "Table write to, e.g. <keyspace>.<table_name>",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   public String qualifiedTableName;
@@ -155,6 +165,7 @@ public class CassandraTargetConfig {
       label = "Field to Column Mapping",
       description = "Fields to map to Cassandra columns. To avoid errors, field data types must match.",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CASSANDRA"
   )
   @ListBeanModel
@@ -169,6 +180,7 @@ public class CassandraTargetConfig {
       label = "Connection Timeout",
       description = "The connection timeout (in milliseconds)",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   public int connectionTimeout = 5000;
@@ -182,6 +194,7 @@ public class CassandraTargetConfig {
       label = "Read Timeout",
       description = "The per-host read timeout (in milliseconds)",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   public int readTimeout = 5000;
@@ -193,6 +206,7 @@ public class CassandraTargetConfig {
       label = "Consistency Level",
       description = "The consistency level to use for queries",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   @ValueChooserModel(ConsistencyLevelChooserValues.class)
@@ -206,6 +220,7 @@ public class CassandraTargetConfig {
       description = "Enables the logging of slow queries. " +
           "Note that the logger for com.datastax.driver.core.QueryLogger.SLOW must be set to either DEBUG or TRACE.",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
   )
   public boolean logSlowQueries = false;
@@ -218,6 +233,7 @@ public class CassandraTargetConfig {
       label = "Slow Query Logging Threshold",
       description = "The threshold (in milliseconds) to consider a query slow",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA",
       dependsOn = "logSlowQueries",
       triggeredByValue = "true"
@@ -230,6 +246,7 @@ public class CassandraTargetConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS",
       dependsOn = "authProviderOption",
       triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
@@ -242,6 +259,7 @@ public class CassandraTargetConfig {
       label = "Password",
       defaultValue = "",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS",
       dependsOn = "authProviderOption",
       triggeredByValue = {"PLAINTEXT", "DSE_PLAINTEXT"}
