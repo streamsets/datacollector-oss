@@ -18,6 +18,10 @@
 angular
   .module('dataCollectorApp.home')
   .controller('ErrorConfigurationController', function ($scope, pipelineService) {
+    angular.extend($scope, {
+      pipelinePaneConfig: $scope.detailPaneConfig
+    });
+
     var initialize = function() {
       $scope.detailPaneConfig = $scope.errorStageConfig;
       $scope.detailPaneServices = [];
@@ -31,6 +35,10 @@ angular
 
     $scope.$watch('errorStageConfig', function() {
       initialize();
+    });
+
+    $scope.$watch('$parent.detailPaneConfig', function() {
+      $scope.pipelinePaneConfig = $scope.$parent.detailPaneConfig;
     });
 
     initialize();

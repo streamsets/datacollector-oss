@@ -67,7 +67,7 @@
           <div class="form-group"
                ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in testOriginStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(verifyDependsOnMap(testOriginStageConfig, configDefinition))"
+               ng-if="(verifyDependsOnMap(testOriginStageConfig, configDefinition)) && isShownByConfigDisplayMode(configDefinition.displayMode, pipelinePaneConfig.uiInfo.displayMode)"
                ng-init="configIndex = getConfigIndex(testOriginStageConfig, configDefinition);">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
@@ -78,7 +78,7 @@
             <div class="form-group "
                  ng-class="{'has-error': getConfigurationIssues(service.config, configDefinition).length > 0}"
                  ng-repeat="configDefinition in service.definition.configDefinitions | orderBy: 'displayPosition'"
-                 ng-if="(verifyDependsOnMap(service.config, configDefinition))"
+                 ng-if="(verifyDependsOnMap(service.config, configDefinition)) && isShownByConfigDisplayMode(configDefinition.displayMode, pipelinePaneConfig.uiInfo.displayMode)"
                  ng-init="configIndex = getConfigIndex(service.config, configDefinition); detailPaneConfig = service.config">
               <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                           src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
@@ -119,7 +119,7 @@
           <div class="form-group"
                ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
                ng-repeat="configDefinition in errorStageConfigDefn.configDefinitions | orderBy: 'displayPosition'"
-               ng-if="(verifyDependsOnMap(errorStageConfig, configDefinition))"
+               ng-if="(verifyDependsOnMap(errorStageConfig, configDefinition)) && isShownByConfigDisplayMode(configDefinition.displayMode, pipelinePaneConfig.uiInfo.displayMode)"
                ng-init="configIndex = getConfigIndex(errorStageConfig, configDefinition);">
 
             <ng-include ng-if="selectedType !== pipelineConstant.LINK"
@@ -130,7 +130,7 @@
             <div class="form-group "
                  ng-class="{'has-error': getConfigurationIssues(service.config, configDefinition).length > 0}"
                  ng-repeat="configDefinition in service.definition.configDefinitions | orderBy: 'displayPosition'"
-                 ng-if="(verifyDependsOnMap(service.config, configDefinition))"
+                 ng-if="(verifyDependsOnMap(service.config, configDefinition)) && isShownByConfigDisplayMode(configDefinition.displayMode, pipelinePaneConfig.uiInfo.displayMode)"
                  ng-init="configIndex = getConfigIndex(service.config, configDefinition); detailPaneConfig = service.config">
               <ng-include ng-if="selectedType !== pipelineConstant.LINK"
                           src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>

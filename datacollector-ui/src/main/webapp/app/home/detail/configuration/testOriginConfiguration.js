@@ -18,6 +18,10 @@
 angular
   .module('dataCollectorApp.home')
   .controller('TestOriginConfigurationController', function ($scope, pipelineService) {
+    angular.extend($scope, {
+      pipelinePaneConfig: $scope.detailPaneConfig
+    });
+
     var initialize = function() {
       $scope.detailPaneConfig = $scope.testOriginStageConfig;
       $scope.detailPaneServices = [];
@@ -31,6 +35,10 @@ angular
 
     $scope.$watch('testOriginStageConfig', function() {
       initialize();
+    });
+
+    $scope.$watch('$parent.detailPaneConfig', function() {
+      $scope.pipelinePaneConfig = $scope.$parent.detailPaneConfig;
     });
 
     initialize();
