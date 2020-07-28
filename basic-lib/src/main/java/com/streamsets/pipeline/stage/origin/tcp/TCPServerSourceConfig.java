@@ -61,7 +61,8 @@ public class TCPServerSourceConfig {
       defaultValue = "[\"9999\"]",
       description = "Port to listen on",
       group = "TCP",
-      displayPosition = 1
+      displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> ports; // string so we can listen on multiple ports in the future
 
@@ -74,7 +75,8 @@ public class TCPServerSourceConfig {
       dependsOn = "tcpMode",
       triggeredByValue = "FLUME_AVRO_IPC",
       group = "TCP",
-      displayPosition = 4
+      displayPosition = 4,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String bindAddress;
 
@@ -86,7 +88,8 @@ public class TCPServerSourceConfig {
           " option. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "TCP",
-      displayPosition = 5
+      displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean enableEpoll;
 
@@ -99,7 +102,8 @@ public class TCPServerSourceConfig {
       defaultValue = "1",
       min = 1,
       group = "TCP",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int numThreads;
 
@@ -110,7 +114,8 @@ public class TCPServerSourceConfig {
       description = "The mode the TCP server operates in, based on the expected input data format",
       defaultValue = "SYSLOG",
       group = "TCP",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(TCPModeChooserValues.class)
   public TCPMode tcpMode;
@@ -124,6 +129,7 @@ public class TCPServerSourceConfig {
       defaultValue = "OCTET_COUNTING",
       group = "SYSLOG",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "tcpMode",
       triggeredByValue = "SYSLOG"
   )
@@ -140,7 +146,8 @@ public class TCPServerSourceConfig {
       group = "SYSLOG",
       dependsOn = "syslogFramingMode",
       triggeredByValue = "NON_TRANSPARENT_FRAMING",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String nonTransparentFramingSeparatorCharStr;
 
@@ -151,6 +158,7 @@ public class TCPServerSourceConfig {
       label = "Charset",
       description = "The character encoding that Syslog messages will have",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SYSLOG",
       dependsOn = "tcpMode",
       triggeredByValue = "SYSLOG"
@@ -168,7 +176,8 @@ public class TCPServerSourceConfig {
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "DELIMITED_RECORDS",
-      displayPosition = 60
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String recordSeparatorStr;
 
@@ -180,6 +189,7 @@ public class TCPServerSourceConfig {
       description = "The character encoding that the character data with length prefix messages use. Note that the" +
           " length digits themselves, plus space, must be in a single byte encoding.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TCP",
       dependsOn = "tcpMode",
       triggeredByValue = "CHARACTER_BASED_LENGTH_FIELD"
@@ -194,6 +204,7 @@ public class TCPServerSourceConfig {
       label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
       description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NETFLOW_V9",
       dependsOn = "tcpMode",
       triggeredByValue = "NETFLOW"
@@ -208,6 +219,7 @@ public class TCPServerSourceConfig {
       label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
       description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
       displayPosition = 92,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "NETFLOW_V9",
       dependsOn = "tcpMode",
       triggeredByValue = "NETFLOW"
@@ -221,6 +233,7 @@ public class TCPServerSourceConfig {
       label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
       description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
       displayPosition = 95,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "NETFLOW_V9",
       dependsOn = "tcpMode",
       triggeredByValue = "NETFLOW"
@@ -234,6 +247,7 @@ public class TCPServerSourceConfig {
       label = "Max Batch Size (messages)",
       group = "TCP",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -246,6 +260,7 @@ public class TCPServerSourceConfig {
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a batch",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TCP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -259,6 +274,7 @@ public class TCPServerSourceConfig {
       label = "Max Message Size (bytes)",
       description = "Max message size in bytes",
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TCP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -272,6 +288,7 @@ public class TCPServerSourceConfig {
       label = "Charset",
       description = "The character set to be used when sending ack messages back to client",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TCP"
   )
   @ValueChooserModel(CharsetChooserValues.class)
@@ -284,6 +301,7 @@ public class TCPServerSourceConfig {
       label = "Ack Time Zone",
       description = "Time zone to use for ack message evaluation (if time or time now ELs are used)",
       displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TCP"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -295,6 +313,7 @@ public class TCPServerSourceConfig {
       label = "Record Processed Ack Message",
       description = "Acknowledgement message to be sent back to the client upon each successfully processed record.",
       displayPosition = 250,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TCP",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -308,6 +327,7 @@ public class TCPServerSourceConfig {
       description = "Acknowledgement message to be sent back to the client upon each successfully completed batch." +
           " The record in the EL context is the last record processed in the batch.",
       displayPosition = 260,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TCP",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -321,6 +341,7 @@ public class TCPServerSourceConfig {
       label = "Read Timeout (seconds)",
       description = "Period of time a connection can be idle. After that time, the connection is closed",
       displayPosition = 300,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TCP",
       min = 1,
       max = 3600

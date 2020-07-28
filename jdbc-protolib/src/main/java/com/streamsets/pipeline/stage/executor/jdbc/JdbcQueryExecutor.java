@@ -174,7 +174,9 @@ public class JdbcQueryExecutor extends BaseExecutor {
 
       for (String rawQuery : config.getQueries()) {
         if (!rawQuery.trim().isEmpty()) {
-          String query = eval.eval(variables, rawQuery, String.class).trim().toUpperCase();
+          rawQuery = rawQuery.replace(rawQuery.substring(0, rawQuery.indexOf(" ")),
+              rawQuery.substring(0, rawQuery.indexOf(" ")).toUpperCase());
+          String query = eval.eval(variables, rawQuery, String.class).trim();
 
           if (query.startsWith(INSERT)) {
             insertsAndDeletes.add(service.submit(new DBTask(

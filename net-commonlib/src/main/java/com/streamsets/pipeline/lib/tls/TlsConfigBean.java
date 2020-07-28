@@ -81,6 +81,7 @@ public class TlsConfigBean {
       label = "Use TLS",
       description = "Enable transport layer security for this stage.",
       displayPosition = DISPLAY_POSITION_OFFSET + 0,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean tlsEnabled;
@@ -92,6 +93,7 @@ public class TlsConfigBean {
       label = "Use Remote Keystore",
       description = "Use a keystore built from a specified private key and certificate chain instead of loading from a local file",
       displayPosition = DISPLAY_POSITION_OFFSET + 15,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -105,6 +107,7 @@ public class TlsConfigBean {
           + "directory.",
       label = "Keystore File",
       displayPosition = DISPLAY_POSITION_OFFSET + 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -119,6 +122,7 @@ public class TlsConfigBean {
       description = "Private key used in the keystore",
       label = "Private Key",
       displayPosition = DISPLAY_POSITION_OFFSET + 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -133,6 +137,7 @@ public class TlsConfigBean {
       description = "Certificate chain used in the keystore",
       label = "Certificate Chain",
       displayPosition = DISPLAY_POSITION_OFFSET + 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -150,6 +155,7 @@ public class TlsConfigBean {
       label = "Keystore Type",
       description = "The type of certificate/key scheme to use for the keystore.",
       displayPosition = DISPLAY_POSITION_OFFSET + 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -166,6 +172,7 @@ public class TlsConfigBean {
           + "security reasons.",
       label = "Keystore Password",
       displayPosition = DISPLAY_POSITION_OFFSET + 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -181,6 +188,7 @@ public class TlsConfigBean {
       description = "The key manager algorithm to use with the keystore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
       displayPosition = DISPLAY_POSITION_OFFSET + 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -193,6 +201,7 @@ public class TlsConfigBean {
       description = "Use a truststore built from a specified private key and certificate chain instead of loading from a local file",
       label = "Use Remote Truststore",
       displayPosition = DISPLAY_POSITION_OFFSET + 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -206,6 +215,7 @@ public class TlsConfigBean {
           + "directory.",
       label = "Truststore File",
       displayPosition = DISPLAY_POSITION_OFFSET + 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -220,6 +230,7 @@ public class TlsConfigBean {
       description = "Trusted certificates used in the truststore",
       label = "Trusted Certificates",
       displayPosition = DISPLAY_POSITION_OFFSET + 130,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -237,6 +248,7 @@ public class TlsConfigBean {
       label = "Truststore Type",
       description = "The type of certificate/key scheme to use for the truststore.",
       displayPosition = DISPLAY_POSITION_OFFSET + 150,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -253,6 +265,7 @@ public class TlsConfigBean {
           + "security reasons.",
       label = "Truststore Password",
       displayPosition = DISPLAY_POSITION_OFFSET + 170,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
@@ -268,6 +281,7 @@ public class TlsConfigBean {
       description = "The key manager algorithm to use with the truststore.",
       defaultValue = DEFAULT_KEY_MANAGER_ALGORITHM,
       displayPosition = DISPLAY_POSITION_OFFSET + 180,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -282,6 +296,7 @@ public class TlsConfigBean {
           "can be overridden if special circumstances require it.",
       defaultValue = "true",
       displayPosition = DISPLAY_POSITION_OFFSET + 300,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -294,6 +309,7 @@ public class TlsConfigBean {
       label = "Transport Protocols",
       description = "The transport protocols to enable for connections (ex: TLSv1.2, TLSv1.1, etc.).",
       displayPosition = DISPLAY_POSITION_OFFSET + 310,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       defaultValue = "[]",
       dependsOn = "useDefaultProtocols",
@@ -309,6 +325,7 @@ public class TlsConfigBean {
           "overridden if special circumstances require it.",
       defaultValue = "true",
       displayPosition = DISPLAY_POSITION_OFFSET + 350,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "tlsEnabled",
       triggeredByValue = "true"
@@ -321,6 +338,7 @@ public class TlsConfigBean {
       label = "Cipher Suites",
       description = "The cipher suites for connections (ex: TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384, etc.).",
       displayPosition = DISPLAY_POSITION_OFFSET + 360,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       defaultValue = "[]",
       dependsOn = "useDefaultCiperSuites",

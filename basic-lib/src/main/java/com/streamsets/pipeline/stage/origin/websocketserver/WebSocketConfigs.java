@@ -42,6 +42,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "WebSocket Listening Port",
       description = "WebSocket endpoint to listen for data.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET",
       min = 1,
       max = 65535
@@ -55,6 +56,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "Max Concurrent Requests",
       description = "Maximum number of concurrent requests allowed by the origin.",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "WEB_SOCKET",
       min = 1,
       max = 200
@@ -67,6 +69,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "Application ID",
       description = "Only WebSocket requests presenting this token will be accepted.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public CredentialValue appId = () -> "";
@@ -78,6 +81,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "Application ID in URL",
       description = "Use when the application ID is included in a query parameter in the URL instead of in the request header - ws://localhost:8000?sdcApplicationId=<Application ID>",
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "WEB_SOCKET"
   )
   public boolean appIdViaQueryParamAllowed;
@@ -88,6 +92,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "Max Request Size (MB)",
       defaultValue = "100",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "WEB_SOCKET",
       min = 1,
       max = Integer.MAX_VALUE
@@ -100,6 +105,7 @@ public class WebSocketConfigs extends HttpConfigs {
       label = "Idle Timeout (ms)",
       defaultValue = "20000",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "WEB_SOCKET",
       min = 1,
       max = Integer.MAX_VALUE

@@ -37,6 +37,7 @@ public class HttpSourceConfigs extends CommonHttpConfigs{
       description = "HTTP requests must contain one of the listed application IDs. " +
           "If none are listed, HTTP requests do not require an application ID.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @ListBeanModel
@@ -50,6 +51,7 @@ public class HttpSourceConfigs extends CommonHttpConfigs{
       description = "User names and passwords for basic authentication. If none specified, basic authentication " +
           "is disabled. It can be used only if the TLS option is enabled.",
       displayPosition = 1380,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TLS",
       dependsOn = "tlsConfigBean.tlsEnabled",
       triggeredByValue = "true",

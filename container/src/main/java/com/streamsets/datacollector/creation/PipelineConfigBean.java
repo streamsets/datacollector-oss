@@ -120,7 +120,12 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       label = "Execution Mode",
       defaultValue= "STANDALONE",
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      /*
+       The display mode for executionMode here is kind of bogus and is ignored by the UI. This is because the field is
+       re-used between SDC and Transformer and each product needs it on a different value. SDC considers this field
+       as ADVANCED whereas Transformer as BASIC.
+      */
+      displayMode = ConfigDef.DisplayMode.BASIC,
       displayPosition = 10
   )
   @ValueChooserModel(ExecutionModeChooserValues.class)

@@ -77,7 +77,8 @@ public class UDPSourceConfigBean {
       defaultValue = "[\"9995\"]",
       description = "Port to listen on",
       group = "UDP",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> ports; // string so we can listen on multiple ports in the future
 
@@ -88,7 +89,8 @@ public class UDPSourceConfigBean {
       description = "Use multiple receiver threads for each port. Only available on 64-bit Linux systems",
       defaultValue = "false",
       group = "UDP",
-      displayPosition = 15
+      displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean enableEpoll;
 
@@ -102,7 +104,8 @@ public class UDPSourceConfigBean {
       group = "UDP",
       dependsOn = "enableEpoll",
       triggeredByValue = "true",
-      displayPosition = 16
+      displayPosition = 16,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int numThreads;
 
@@ -112,7 +115,8 @@ public class UDPSourceConfigBean {
       label = "Data Format",
       defaultValue = "SYSLOG",
       group = "UDP",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(DatagramModeChooserValues.class)
   public DatagramMode dataFormat;
@@ -124,6 +128,7 @@ public class UDPSourceConfigBean {
       label = "Max Batch Size (messages)",
       group = "UDP",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       max = Integer.MAX_VALUE
   )
@@ -136,6 +141,7 @@ public class UDPSourceConfigBean {
       label = "Batch Wait Time (ms)",
       description = "Max time to wait for data before sending a batch",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "UDP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -148,6 +154,7 @@ public class UDPSourceConfigBean {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "SYSLOG",
       dependsOn = "dataFormat",
       triggeredByValue = "SYSLOG"
@@ -161,6 +168,7 @@ public class UDPSourceConfigBean {
       label = "TypesDB File Path",
       description = "User-specified TypesDB file. Overrides the included version.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
@@ -174,6 +182,7 @@ public class UDPSourceConfigBean {
       label = "Convert Hi-Res Time & Interval",
       description = "Converts high resolution time format interval and timestamp to unix time in (ms).",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
@@ -187,6 +196,7 @@ public class UDPSourceConfigBean {
       label = "Exclude Interval",
       description = "Excludes the interval field from output records.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
@@ -199,6 +209,7 @@ public class UDPSourceConfigBean {
       label = "Auth File",
       description = "",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
@@ -211,6 +222,7 @@ public class UDPSourceConfigBean {
       defaultValue = "UTF-8",
       label = "Charset",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COLLECTD",
       dependsOn = "dataFormat",
       triggeredByValue = "COLLECTD"
@@ -226,6 +238,7 @@ public class UDPSourceConfigBean {
       label = NetflowDataParserFactory.OUTPUT_VALUES_MODE_LABEL,
       description = NetflowDataParserFactory.OUTPUT_VALUES_MODE_TOOLTIP,
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NETFLOW_V9",
       dependsOn = "dataFormat",
       triggeredByValue = "NETFLOW"
@@ -240,6 +253,7 @@ public class UDPSourceConfigBean {
       label = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_LABEL,
       description = NetflowDataParserFactory.MAX_TEMPLATE_CACHE_SIZE_TOOLTIP,
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "NETFLOW_V9",
       dependsOn = "dataFormat",
       triggeredByValue = "NETFLOW"
@@ -253,6 +267,7 @@ public class UDPSourceConfigBean {
       label = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_LABEL,
       description = NetflowDataParserFactory.TEMPLATE_CACHE_TIMEOUT_MS_TOOLTIP,
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "NETFLOW_V9",
       dependsOn = "dataFormat",
       triggeredByValue = "NETFLOW"
@@ -267,6 +282,7 @@ public class UDPSourceConfigBean {
       description = "The mode that controls how the raw packet data should be treated (character-based or binary)." +
           " This selection determines what type of field will be created.",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
@@ -281,6 +297,7 @@ public class UDPSourceConfigBean {
       label = "Charset",
       description = "The character set used to interpret character-based separated data.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "RAW_DATA",
       dependsOn = "rawDataMode",
       triggeredByValue = "CHARACTER"
@@ -295,6 +312,7 @@ public class UDPSourceConfigBean {
       label = "Output field path",
       description = "The output field path to place the separated data values into.",
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
@@ -309,6 +327,7 @@ public class UDPSourceConfigBean {
       description = "How to handle multiple values produced by the parser after applying the separator.",
       defaultValue = DEFAULT_RAW_DATA_MULTI_VALUES_BEHAVIOR_STR,
       displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA"
@@ -328,7 +347,8 @@ public class UDPSourceConfigBean {
       group = "RAW_DATA",
       dependsOn = "dataFormat",
       triggeredByValue = "RAW_DATA",
-      displayPosition = 170
+      displayPosition = 170,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String rawDataSeparatorBytes = DEFAULT_RAW_DATA_SEPARATOR_BYTES;
 

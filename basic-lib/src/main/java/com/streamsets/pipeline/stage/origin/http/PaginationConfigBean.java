@@ -34,7 +34,8 @@ public class PaginationConfigBean {
       label = "Pagination Mode",
       defaultValue = "NONE",
       group = "#0",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(PaginationModeChooserValues.class)
   public PaginationMode mode = PaginationMode.NONE;
@@ -47,7 +48,8 @@ public class PaginationConfigBean {
       group = "#0",
       dependsOn = "mode",
       triggeredByValue = "LINK_FIELD",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String nextPageURLPrefix;
 
@@ -59,7 +61,8 @@ public class PaginationConfigBean {
       group = "#0",
       dependsOn = "mode",
       triggeredByValue = "LINK_FIELD",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String nextPageFieldPath;
@@ -74,7 +77,8 @@ public class PaginationConfigBean {
       group = "#0",
       dependsOn = "mode",
       triggeredByValue = "LINK_FIELD",
-      displayPosition = 35
+      displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String stopCondition;
 
@@ -85,6 +89,7 @@ public class PaginationConfigBean {
       description = "Value of ${startAt} variable the first time the pipeline is run or Reset Origin is invoked",
       group = "#0",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "mode",
       triggeredByValue = { "BY_PAGE", "BY_OFFSET" }
   )
@@ -98,6 +103,7 @@ public class PaginationConfigBean {
       description = "Field path to parse as Records. The field type must be a list.",
       group = "#0",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "mode",
       triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )
@@ -112,6 +118,7 @@ public class PaginationConfigBean {
       defaultValue = "false",
       group = "#0",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "mode",
       triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )
@@ -126,6 +133,7 @@ public class PaginationConfigBean {
       min = 0,
       group = "#0",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "mode",
       triggeredByValue = { "LINK_HEADER", "LINK_FIELD", "BY_PAGE", "BY_OFFSET" }
   )

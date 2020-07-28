@@ -26,6 +26,7 @@ public class KerberosHttpSourceConfigs {
       label = "Use Kerberos with SPNEGO Authentication",
       description = "Use this stage as a service for Kerberos with SPEGNO authentication. Requires access to the krb5.conf file and the login.conf file.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public boolean spnegoEnabled = false;
@@ -36,6 +37,7 @@ public class KerberosHttpSourceConfigs {
       label = "Kerberos Realm",
       description = "Kerberos realm where the service is located",
       displayPosition = 41,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "spnegoEnabled",
       triggeredByValue = "true"
@@ -48,6 +50,7 @@ public class KerberosHttpSourceConfigs {
       label = "HTTP-SPNEGO Principal",
       description = "HTTP service principal declared on the KDC.",
       displayPosition = 42,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "spnegoEnabled",
       triggeredByValue = "true"
@@ -60,6 +63,7 @@ public class KerberosHttpSourceConfigs {
       label = "Keytab file",
       description = "Path where to find the keytab that contains the entry of the HTTP-SPNEGO Principal.",
       displayPosition = 42,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "spnegoEnabled",
       triggeredByValue = "true"

@@ -44,6 +44,7 @@ public class JerseyClientConfigBean {
       label = "Request Transfer Encoding",
       defaultValue = "BUFFERED",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(RequestEntityProcessingChooserValues.class)
@@ -56,6 +57,7 @@ public class JerseyClientConfigBean {
       label = "HTTP Compression",
       defaultValue = "NONE",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(HttpCompressionChooserValues.class)
@@ -69,6 +71,7 @@ public class JerseyClientConfigBean {
       defaultValue = "250000",
       description = "HTTP connection timeout in milliseconds. Must be greater than 0.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int connectTimeoutMillis = 250000;
@@ -81,6 +84,7 @@ public class JerseyClientConfigBean {
       defaultValue = "30000",
       description = "HTTP read timeout in milliseconds. Must be greater than 0.",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int readTimeoutMillis = 30000;
@@ -102,6 +106,7 @@ public class JerseyClientConfigBean {
       label = "Authentication Type",
       defaultValue = "NONE",
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
@@ -114,6 +119,7 @@ public class JerseyClientConfigBean {
       defaultValue = "",
       description = "Principal to be used to authenticate using Kerberos/SPNEGO",
       displayPosition = 151,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       dependsOn = "authType",
       triggeredByValue = {"KERBEROS_SPNEGO"}
@@ -124,6 +130,7 @@ public class JerseyClientConfigBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Principal Password",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "",
       description = "Principal to be used to authenticate using Kerberos/SPNEGO",
       displayPosition = 151,
@@ -137,6 +144,7 @@ public class JerseyClientConfigBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Keytab File",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "",
       description = "Keytab file path where to find the principal.",
       displayPosition = 152,
@@ -153,6 +161,7 @@ public class JerseyClientConfigBean {
       description = "Use OAuth 2 to get access tokens",
       defaultValue = "false",
       displayPosition = 155,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP",
       dependsOn = "authType",
       triggeredByValue = {"NONE", "BASIC", "DIGEST", "UNIVERSAL"}

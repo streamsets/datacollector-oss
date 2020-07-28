@@ -146,8 +146,8 @@ public class TestClassLoaderStageLibraryTask {
     try {
       library.initTask();
       Assert.fail("Expected exception to be thrown");
-    } catch (IllegalArgumentException e) {
-      Assert.assertEquals("Can't load stage library 'default' as it requires at least SDC version 3.1.0.0 whereas current version is 3.0.0", e.getMessage());
+    } catch (RuntimeException e) {
+      Assert.assertEquals("At least one of the stage libraries failed to load.", e.getMessage());
     }
   }
 

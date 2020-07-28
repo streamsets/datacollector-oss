@@ -108,6 +108,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Credentials Grant Type",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useOAuth2^",
       triggeredByValue = "true"
@@ -120,6 +121,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Token URL",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useOAuth2^",
       triggeredByValue = "true"
@@ -131,6 +133,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Client ID",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -145,6 +148,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Client Secret",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -159,6 +163,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -172,6 +177,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -190,6 +196,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Client ID",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -203,6 +210,7 @@ public class OAuth2ConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Client Secret",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -217,6 +225,7 @@ public class OAuth2ConfigBean {
       label = "JWT Signing Algorithm",
       description = "The algorithm to use for signing the JWT",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       defaultValue = "NONE",
       dependencies = {
@@ -233,6 +242,7 @@ public class OAuth2ConfigBean {
       label = "JWT Signing Key (Base64-encoded)",
       description = "Base64 encoded key for signing the JWT",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useOAuth2^", triggeredByValues = "true"),
@@ -250,6 +260,7 @@ public class OAuth2ConfigBean {
       label = "JWT Claims",
       description = "Claims to be used with JWT token request, represented as JSON",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {TimeEL.class, TimeNowEL.class},
       group = "#0",
       dependencies = {
@@ -266,6 +277,7 @@ public class OAuth2ConfigBean {
       label = "Request Transfer Encoding",
       defaultValue = "BUFFERED",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useOAuth2^",
       triggeredByValue = "true"
@@ -279,6 +291,7 @@ public class OAuth2ConfigBean {
       label = "Additional Key-Value pairs in token request body",
       description = "Additional key-value pairs to be sent to the token URL while requesting for a token",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useOAuth2^",
       triggeredByValue = "true"

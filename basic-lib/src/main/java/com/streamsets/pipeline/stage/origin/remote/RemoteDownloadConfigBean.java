@@ -54,7 +54,8 @@ public class RemoteDownloadConfigBean {
       label = "Archive on error",
       description = "On error, should the file be archive to a local directory",
       group = "ERROR",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean archiveOnError;
 
@@ -66,6 +67,7 @@ public class RemoteDownloadConfigBean {
       description = "Directory to archive files, if an irrecoverable error is encountered",
       group = "ERROR",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "archiveOnError",
       triggeredByValue = "true"
   )
@@ -78,7 +80,8 @@ public class RemoteDownloadConfigBean {
       label = "Process Subdirectories",
       description = "Process files in subdirectories of the specified path",
       group = "REMOTE",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean processSubDirectories;
 
@@ -89,6 +92,7 @@ public class RemoteDownloadConfigBean {
       description = "Select whether the File Name Pattern specified uses glob pattern syntax or regex syntax.",
       defaultValue = "GLOB",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REMOTE"
   )
   @ValueChooserModel(FilePatternModeChooserValues.class)
@@ -102,7 +106,8 @@ public class RemoteDownloadConfigBean {
       description =  "A glob or regular expression that defines the pattern of the file names in the directory" +
           " (Glob '*' selects all files). Files are processed in chronological order.",
       group = "REMOTE",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String filePattern;
 
@@ -113,6 +118,7 @@ public class RemoteDownloadConfigBean {
       label = "First File to Process",
       description = "When configured, the Data Collector does not process earlier file names",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REMOTE"
   )
   public String initialFileToProcess;
@@ -124,6 +130,7 @@ public class RemoteDownloadConfigBean {
       label = "File Processing Delay",
       description = "Milliseconds to wait before a new file is processed",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "REMOTE"
   )
   public long processingDelay;
@@ -135,6 +142,7 @@ public class RemoteDownloadConfigBean {
       label = "File Post Processing",
       description = "Action to take after processing a file",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING",
       dependsOn = "dataFormat",
       triggeredByValue = {  // Everything in DataFormat other than "WHOLE_FILE"
@@ -163,6 +171,7 @@ public class RemoteDownloadConfigBean {
       label = "Archive Directory",
       description = "Directory to archive files after they have been processed",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING",
       dependsOn = "postProcessing",
       triggeredByValue = "ARCHIVE"
@@ -177,6 +186,7 @@ public class RemoteDownloadConfigBean {
       description = "If checked, the Archive Directory path is resolved relative to the logged in user's home " +
           "directory, if a username is entered in the Credentials tab or in the URL.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING",
       dependsOn = "postProcessing",
       triggeredByValue = "ARCHIVE"

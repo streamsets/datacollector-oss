@@ -46,6 +46,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.PaginationMode;
+import com.streamsets.pipeline.stage.origin.http.ResponseAction;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import org.apache.commons.lang.StringUtils;
 import org.glassfish.jersey.client.oauth1.OAuth1ClientSupport;
@@ -112,6 +113,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private Response response;
   private boolean lastRequestTimedOut = false;
   private boolean haveMorePages;
+  private boolean appliedRetryAction;
 
   private ELVars resourceVars;
   private ELVars bodyVars;
@@ -391,7 +393,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         int numRecordsLastRequest = 0;
 
         try {
-          close = processResponse(record, future, conf.maxRequestCompletionSecs, false, recordsResponse);
+          close = processResponse(record, future, conf.maxRequestCompletionSecs, false, recordsResponse, start);
 
           Response response = null;
           try {
@@ -404,7 +406,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             throw new OnRecordErrorException(record , Errors.HTTP_03, getResponseStatus(response), e.toString());
           }
 
-          if (conf.pagination.mode != PaginationMode.NONE) {
+          if (conf.pagination.mode != PaginationMode.NONE  && !appliedRetryAction) {
             Record recordResp = recordsResponse.get(0);
             String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
             List listResponse = (List) recordResp.get(resultFieldPath).getValue();
@@ -460,9 +462,10 @@ public class HttpProcessor extends SingleLaneProcessor {
     boolean waitTimeNotExp = !waitTimeExpired(start);
     boolean thereIsNextLink =
         (((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER))
-            && haveMorePages)
-            || (conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
-            conf.pagination.mode == PaginationMode.NONE);
+            && haveMorePages);
+    boolean isLink = !(conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
+        conf.pagination.mode == PaginationMode.NONE);
+
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
     boolean numRetriesExceed = action != null && (responseState.retryCount>action.getMaxNumRetries());
     return waitTimeNotExp &&
@@ -470,7 +473,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         !lastRequestTimedOut &&
         !close &&
         conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
-        thereIsNextLink &&
+        (thereIsNextLink || !isLink || appliedRetryAction) &&
         !numRetriesExceed;
   }
 
@@ -678,7 +681,8 @@ public class HttpProcessor extends SingleLaneProcessor {
       try {
         List<Record> recordsToAddBatch = new ArrayList<>();
         List<Record> output = new ArrayList<>();
-        processResponse(entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output);
+        processResponse(
+            entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output, System.currentTimeMillis());
         Response response = null;
         try {
           response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
@@ -717,16 +721,16 @@ public class HttpProcessor extends SingleLaneProcessor {
       Future<Response> responseFuture,
       long maxRequestCompletionSecs,
       boolean failOn403,
-      List<Record> records
+      List<Record> records,
+      long start
   ) throws StageException {
-
+    appliedRetryAction = false;
     ResponseState responseState;
 
     if (recordsToResponseState.containsKey(record)) {
       responseState = recordsToResponseState.get(record);
     } else {
       responseState = new ResponseState();
-      recordsToResponseState.put(record,responseState);
     }
 
     Response response = null;
@@ -738,15 +742,14 @@ public class HttpProcessor extends SingleLaneProcessor {
       if (response.hasEntity()) {
         responseBody = response.readEntity(InputStream.class);
       }
+      final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
       int responseStatus = response.getStatus();
       if (conf.client.useOAuth2 && (response.getStatus() == 403 || response.getStatus() == 401) && !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
         return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
-        final HttpResponseActionConfigBean action = statusToActionConfigs.get(response.getStatus());
         if (action==null) {
-
           if (conf.propagateAllHttpResponses) {
             Map<String,Field> mapFields = new HashMap<>();
             String responseBodyString = extractResponseBodyStr(response);
@@ -787,10 +790,24 @@ public class HttpProcessor extends SingleLaneProcessor {
           responseState.backoffIntervalExponential = backoffExp.get();
           responseState.backoffIntervalLinear = backoffLin.get();
           responseState.lastRequestTimedOut = true;
+          appliedRetryAction =
+              action.getAction() == ResponseAction.RETRY_EXPONENTIAL_BACKOFF
+                  || action.getAction() == ResponseAction.RETRY_LINEAR_BACKOFF
+                  || action.getAction() == ResponseAction.RETRY_IMMEDIATELY;
         }
       }
       resolvedRecords.remove(record);
-      boolean close = parseResponse(record, responseBody, records);
+      boolean close = false;
+
+      if (action!=null) {
+        if(waitTimeExpired(start)) {
+          close = true;
+          errorRecordHandler.onError(Errors.HTTP_67, getResponseStatus());
+        }
+      } else {
+        close = parseResponse(record, responseBody, records);
+      }
+
       if (conf.httpMethod != HttpMethod.HEAD && responseBody == null && responseStatus != 204) {
         throw new OnRecordErrorException(record, Errors.HTTP_34, responseStatus);
       } else if (responseStatus==204 && records.size()==0) {

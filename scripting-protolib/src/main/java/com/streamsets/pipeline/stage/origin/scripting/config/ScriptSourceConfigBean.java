@@ -31,6 +31,7 @@ public class ScriptSourceConfigBean {
       label = "Batch Size",
       description = "Number of records to generate in a single batch.\n" +
           "Access in user script with sdc.batchSize.",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE,
       group = "PERFORMANCE"
@@ -44,6 +45,7 @@ public class ScriptSourceConfigBean {
       label = "Number of Threads",
       description = "Number of concurrent threads that generate data in parallel.\n" +
           "Access in user script with sdc.numThreads.",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 1,
       max = Integer.MAX_VALUE,
       group = "PERFORMANCE"
@@ -57,6 +59,7 @@ public class ScriptSourceConfigBean {
       label = "Record Type",
       description = "Record type to use during script execution",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(ScriptRecordTypeValueChooser.class)
@@ -70,6 +73,7 @@ public class ScriptSourceConfigBean {
       description = "Parameters and values for use in script.\n" +
           "Access in user script as sdc.userParams.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Map<String, String> params;

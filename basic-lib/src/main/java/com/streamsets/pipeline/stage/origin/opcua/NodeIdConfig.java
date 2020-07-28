@@ -23,7 +23,8 @@ public class NodeIdConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "Field Name"
+      label = "Field Name",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String field;
 
@@ -32,7 +33,8 @@ public class NodeIdConfig {
       type = ConfigDef.Type.STRING,
       label = "Identifier",
       defaultValue = "",
-      description = "The identifier for a node in the address space of an OPC UA server"
+      description = "The identifier for a node in the address space of an OPC UA server",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String identifier = "";
 
@@ -41,7 +43,8 @@ public class NodeIdConfig {
       type = ConfigDef.Type.MODEL,
       label = "Identifier Type",
       description = "The format and data type of the identifier",
-      defaultValue = "NUMERIC"
+      defaultValue = "NUMERIC",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(IdentifierTypeChooserValues.class)
   public IdentifierType identifierType = IdentifierType.NUMERIC;
@@ -52,7 +55,8 @@ public class NodeIdConfig {
       defaultValue = "0",
       label = "Namespace Index",
       description = "The index an OPC UA server uses for a namespace URI",
-      min = 0
+      min = 0,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int namespaceIndex = 0;
 

@@ -69,6 +69,7 @@ public class NiFiHttpServerDPushSource extends DPushSource {
       label = "Max Request Size (MB)",
       defaultValue = "100",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP",
       min = 1,
       max = Integer.MAX_VALUE
@@ -82,6 +83,7 @@ public class NiFiHttpServerDPushSource extends DPushSource {
       description = "Version of FlowFile",
       defaultValue = "FLOWFILE_V3",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(FlowFileVersionsChooserValues.class)
@@ -92,6 +94,7 @@ public class NiFiHttpServerDPushSource extends DPushSource {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(FlowFileDataFormatChooserValues.class)

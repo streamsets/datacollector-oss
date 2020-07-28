@@ -1078,14 +1078,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
       Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
       Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals(
-          "/" + dir.getFileName() + "/" + filePath1.getFileName().toString(),
-          newFileEvent.get("/filepath").getValueAsString()
-      );
-      Assert.assertEquals(
-          "/" + dir.getFileName() + "/" + filePath1.getFileName().toString(),
-          finishedFileEvent.get("/filepath").getValueAsString()
-      );
+      Assert.assertEquals(pathInUri + "/dir/" + filePath1.getFileName().toString(),
+          newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(pathInUri + "/dir/"  + filePath1.getFileName().toString(),
+          finishedFileEvent.get("/filepath").getValueAsString());
       Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
 
       runner.getEventRecords().clear();
@@ -1099,14 +1095,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
 
       Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
       Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals(
-          "/" + dir.getFileName() + "/" + filePath2.getFileName().toString(),
-          newFileEvent.get("/filepath").getValueAsString()
-      );
-      Assert.assertEquals(
-          "/" + dir.getFileName() + "/" + filePath2.getFileName().toString(),
-          finishedFileEvent.get("/filepath").getValueAsString()
-      );
+      Assert.assertEquals(pathInUri + "/dir/"  + filePath2.getFileName().toString(),
+          newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(pathInUri + "/dir/"  + filePath2.getFileName().toString(),
+          finishedFileEvent.get("/filepath").getValueAsString());
       Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
 
       runner.getEventRecords().clear();
@@ -1139,8 +1131,10 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
       finishedFileEvent = eventRecords.get(1);
       Assert.assertEquals("new-file", newFileEvent.getHeader().getAttribute("sdc.event.type"));
       Assert.assertEquals("finished-file", finishedFileEvent.getHeader().getAttribute("sdc.event.type"));
-      Assert.assertEquals(events3Name, newFileEvent.get("/filepath").getValueAsString());
-      Assert.assertEquals(events3Name, finishedFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(pathInUri + "/"  + filePath3.getFileName().toString(),
+          newFileEvent.get("/filepath").getValueAsString());
+      Assert.assertEquals(pathInUri + "/"  + filePath3.getFileName().toString(),
+          finishedFileEvent.get("/filepath").getValueAsString());
       Assert.assertEquals(1, finishedFileEvent.get("/record-count").getValueAsLong());
 
       runner.getEventRecords().clear();

@@ -31,6 +31,7 @@ public class RequestLoggingConfigBean {
       description = "Enable logging of HTTP request and response data.",
       defaultValue = "false",
       displayPosition = BASE_DISPLAY_POSITION + 0,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean enableRequestLogging;
@@ -42,6 +43,7 @@ public class RequestLoggingConfigBean {
       description = "The log level to use when logging messages (from java.util.logging package).",
       defaultValue = JulLogLevelChooserValues.DEFAULT_LEVEL,
       displayPosition = BASE_DISPLAY_POSITION + 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = LOGGING_ENABLED_FIELD_NAME,
       triggeredByValue = "true"
@@ -56,6 +58,7 @@ public class RequestLoggingConfigBean {
       description = "The verbosity to use when logging messages (i.e. which type of request/response data).",
       defaultValue = VerbosityChooserValues.DEFAULT_VERBOSITY_STR,
       displayPosition = BASE_DISPLAY_POSITION + 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = LOGGING_ENABLED_FIELD_NAME,
       triggeredByValue = "true"
@@ -74,6 +77,7 @@ public class RequestLoggingConfigBean {
       defaultValue = DEFAULT_MAX_ENTITY_SIZE_STR,
       min = DEFAULT_MAX_ENTITY_SIZE,
       displayPosition = BASE_DISPLAY_POSITION + 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = LOGGING_ENABLED_FIELD_NAME,
       triggeredByValue = "true"

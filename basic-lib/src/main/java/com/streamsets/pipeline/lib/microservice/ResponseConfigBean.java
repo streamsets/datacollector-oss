@@ -30,6 +30,7 @@ public class ResponseConfigBean {
       label = "Send Raw Response",
       description = "Send raw response back to the originating client without an envelope",
       displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean sendRawResponse;
@@ -41,6 +42,7 @@ public class ResponseConfigBean {
       defaultValue = "JSON",
       description = "HTTP payload data format",
       displayPosition = 220,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(ResponseDataFormatChooserValues.class)

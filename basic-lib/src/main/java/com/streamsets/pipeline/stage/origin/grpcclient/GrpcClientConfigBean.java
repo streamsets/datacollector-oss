@@ -35,6 +35,7 @@ public class GrpcClientConfigBean {
       description = "Specify the gRPC URL",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GRPC"
   )
   public String resourceUrl = "";
@@ -47,6 +48,7 @@ public class GrpcClientConfigBean {
       description = "Specify the service method for gRPC in serviceName/methodName format",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GRPC"
   )
   public String serviceMethod = "";
@@ -57,6 +59,7 @@ public class GrpcClientConfigBean {
       label = "Request Data",
       description = "Data to send as an argument for the gRPC service method",
       displayPosition = 25,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       lines = 2,
       group = "GRPC"
   )
@@ -69,6 +72,7 @@ public class GrpcClientConfigBean {
       description = "Type of service method that the origin calls",
       defaultValue = "UNARY_RPC",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GRPC"
   )
   @ValueChooserModel(GrpcClientModeChooserValues.class)
@@ -80,6 +84,7 @@ public class GrpcClientConfigBean {
       label = "Polling Interval (ms)",
       defaultValue = "5000",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GRPC",
       dependsOn = "gRPCMode",
       triggeredByValue = "UNARY_RPC"
@@ -91,6 +96,7 @@ public class GrpcClientConfigBean {
       type = ConfigDef.Type.NUMBER,
       label = "Connect Timeout (secs)",
       description = "The maximum time, in seconds, to wait for connection to be established.",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "10",
       displayPosition = 40,
       group = "GRPC"
@@ -106,6 +112,7 @@ public class GrpcClientConfigBean {
           "connection is closed and the operation fails.",
       defaultValue = "10",
       displayPosition = 45,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GRPC"
   )
   public long keepaliveTime = 10;
@@ -117,6 +124,7 @@ public class GrpcClientConfigBean {
       description = "These headers will also be included in reflection requests to a server.",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GRPC"
   )
   public Map<String, String> addlHeaders = new HashMap<>();
@@ -128,6 +136,7 @@ public class GrpcClientConfigBean {
       description = "Emit default values for responses",
       defaultValue = "false",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GRPC"
   )
   public boolean emitDefaults = false;
@@ -142,6 +151,7 @@ public class GrpcClientConfigBean {
       description = "Skip server certificate and domain verification. (NOT SECURE!).",
       defaultValue = "false",
       displayPosition = 1001,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TLS",
       dependsOn = "tlsConfig.tlsEnabled",
       triggeredByValue = "true"
@@ -155,6 +165,7 @@ public class GrpcClientConfigBean {
       description = "Value of :authority pseudo-header to be use with underlying HTTP/2 requests. " +
           "It defaults to the given address.",
       displayPosition = 1102,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TLS",
       dependsOn = "tlsConfig.tlsEnabled",
       triggeredByValue = "true"
@@ -167,6 +178,7 @@ public class GrpcClientConfigBean {
       label = "Server Name",
       description = "Override server name when validating TLS certificate.",
       displayPosition = 1103,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TLS",
       dependsOn = "tlsConfig.tlsEnabled",
       triggeredByValue = "true"

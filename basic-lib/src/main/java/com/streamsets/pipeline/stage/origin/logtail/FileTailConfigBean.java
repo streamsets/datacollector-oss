@@ -37,6 +37,7 @@ public class FileTailConfigBean {
       label = "Data Format",
       description = "The data format in the files (IMPORTANT: if Log, Log4j files with stack traces are not handled)",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -50,6 +51,7 @@ public class FileTailConfigBean {
       description = "RegEx pattern to detect main lines for Text and Log files with multi-line elements. " +
           "Use only if required as it impacts reading performance",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat",
       triggeredByValue = { "TEXT", "LOG" }
@@ -63,6 +65,7 @@ public class FileTailConfigBean {
       label = "Maximum Batch Size",
       description = "Max number of lines that will be sent in a single batch",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES",
       min = 0,
       max = Integer.MAX_VALUE
@@ -76,6 +79,7 @@ public class FileTailConfigBean {
       label = "Batch Wait Time (secs)",
       description = " Maximum amount of time to wait to fill a batch before sending it",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES",
       min = 1,
       max = Integer.MAX_VALUE
@@ -88,6 +92,7 @@ public class FileTailConfigBean {
       label = "File to Tail",
       description = "",
       displayPosition  = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FILES",
       elDefs = PatternEL.class
   )
@@ -101,6 +106,7 @@ public class FileTailConfigBean {
       description = "Enables reading from late-arriving directories." +
           " When enabled, the origin does not validate configured paths.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FILES",
       defaultValue = "false"
   )
@@ -113,6 +119,7 @@ public class FileTailConfigBean {
       label = "File Post Processing",
       description = "Action to take after processing a file",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING"
   )
   @ValueChooserModel(PostProcessingOptionsChooserValues.class)
@@ -124,6 +131,7 @@ public class FileTailConfigBean {
       label = "Archive Directory",
       description = "Directory to archive files after they have been processed",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "POST_PROCESSING",
       dependsOn = "postProcessing",
       triggeredByValue = "ARCHIVE"

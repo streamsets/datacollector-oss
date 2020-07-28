@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
@@ -309,7 +310,9 @@ public class AmazonS3Runnable implements Runnable {
         }
       }
     }
-    context.processBatch(batchContext);
+    if (!context.processBatch(batchContext) && context.getDeliveryGuarantee().equals(DeliveryGuarantee.AT_LEAST_ONCE)) {
+      return null;
+    }
     updateGauge(Status.BATCH_GENERATED, offset.toString());
     return offset;
   }

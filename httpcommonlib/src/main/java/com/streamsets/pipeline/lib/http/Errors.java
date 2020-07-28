@@ -77,6 +77,8 @@ public enum Errors implements ErrorCode {
   HTTP_64("HTTP-Status: {}. IOException attempting to parse whole file field '{}' for record '{}': {}"),
   HTTP_65("HTTP-Status: {}. Input field '{}' does not exist in record '{}'"),
   HTTP_66("HTTP-Status: {}. Link field '{}' does not exist in record"),
+  HTTP_67("HTTP-Status: {}. Not able to finish all retries because the batch was timed out. Please " +
+      "increase the 'Batch Wait Time' or decrease the 'Base Backoff Interval'"),
   // HTTP Processor
 
   HTTP_100("Generating error record as per stage configuration: {}"),

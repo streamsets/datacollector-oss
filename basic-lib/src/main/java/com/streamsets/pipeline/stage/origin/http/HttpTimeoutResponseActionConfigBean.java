@@ -45,7 +45,8 @@ public class HttpTimeoutResponseActionConfigBean extends HttpResponseActionConfi
             " parameter)",
         group = "#0",
         defaultValue = "RETRY_IMMEDIATELY",
-        displayPosition = 50
+        displayPosition = 50,
+        displayMode = ConfigDef.DisplayMode.ADVANCED
     )
     @ValueChooserModel(ResponseActionChooserValues.class)
     public ResponseAction action = DEFAULT_ACTION;
@@ -58,6 +59,7 @@ public class HttpTimeoutResponseActionConfigBean extends HttpResponseActionConfi
         defaultValue = ""+ HttpResponseActionConfigBean.DEFAULT_BACKOFF_INTERVAL_MS,
         group = "#0",
         displayPosition = 100,
+        displayMode = ConfigDef.DisplayMode.ADVANCED,
         dependsOn = "action",
         triggeredByValue = { "RETRY_LINEAR_BACKOFF", "RETRY_EXPONENTIAL_BACKOFF" }
     )
@@ -72,6 +74,7 @@ public class HttpTimeoutResponseActionConfigBean extends HttpResponseActionConfi
         defaultValue = ""+ HttpResponseActionConfigBean.DEFAULT_MAX_NUM_RETRIES,
         group = "#0",
         displayPosition = 150,
+        displayMode = ConfigDef.DisplayMode.ADVANCED,
         dependsOn = "action",
         triggeredByValue = { "RETRY_LINEAR_BACKOFF", "RETRY_EXPONENTIAL_BACKOFF", "RETRY_IMMEDIATELY" }
     )

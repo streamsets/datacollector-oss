@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.origin.remote;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Optional;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.FileRef;
 import com.streamsets.pipeline.api.Record;
@@ -70,6 +69,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
+import java.util.Optional;
 import java.util.TreeSet;
 import java.util.UUID;
 
@@ -266,9 +266,10 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             perFileErrorCount = 0;
 
             LOG.debug("Sending New File Event. File: {}", next.getFilePath());
-            NewFileEvent.EVENT_CREATOR.create(getContext())
-                .with(NewFileEvent.FILE_PATH, next.getFilePath())
-                .createAndSend();
+            NewFileEvent.EVENT_CREATOR.create(getContext()).with(
+                NewFileEvent.FILE_PATH,
+                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath())
+            ).createAndSend();
             sendLineageEvent(next);
 
             currentOffset = delegate.createOffset(next.getFilePath());
@@ -378,11 +379,13 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
                 perFileRecordCount,
                 perFileErrorCount
             );
-            FinishedFileEvent.EVENT_CREATOR.create(getContext())
-                .with(FinishedFileEvent.FILE_PATH, next.getFilePath())
-                .with(FinishedFileEvent.RECORD_COUNT, perFileRecordCount)
-                .with(FinishedFileEvent.ERROR_COUNT, perFileErrorCount)
-                .createAndSend();
+            FinishedFileEvent.EVENT_CREATOR.create(getContext()).with(
+                FinishedFileEvent.FILE_PATH,
+                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath())
+            ).with(FinishedFileEvent.RECORD_COUNT, perFileRecordCount).with(
+                FinishedFileEvent.ERROR_COUNT,
+                perFileErrorCount
+            ).createAndSend();
             handlePostProcessing(next.getFilePath());
           } finally {
             parser = null;
@@ -534,9 +537,9 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
       fileDelayer.setDelayed(false);
       queueFiles();
     }
-    Optional<RemoteFile> nextFile = Optional.absent();
+    Optional<RemoteFile> nextFile = Optional.empty();
     if (!fileQueue.isEmpty() && fileDelayer.isFileReady(fileQueue.first())) {
-      nextFile = Optional.fromNullable(fileQueue.pollFirst());
+      nextFile = Optional.ofNullable(fileQueue.pollFirst());
     }
     return nextFile;
   }

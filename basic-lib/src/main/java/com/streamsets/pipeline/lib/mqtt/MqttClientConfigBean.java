@@ -33,6 +33,7 @@ public class MqttClientConfigBean {
       defaultValue = "tcp://localhost:1883",
       description = "Specify the MQTT Broker URL",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MQTT"
   )
   public String brokerUrl = "";
@@ -44,6 +45,7 @@ public class MqttClientConfigBean {
       defaultValue = "${pipeline:id()}",
       description = "Specify the MQTT Client ID. It must be unique across all clients connecting to the same server.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT"
   )
   public String clientId = "";
@@ -55,6 +57,7 @@ public class MqttClientConfigBean {
       defaultValue = "AT_MOST_ONCE",
       description = "Specify the quality of service to publish the message.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT"
   )
   @ValueChooserModel(QualityOfServiceChooserValues.class)
@@ -69,6 +72,7 @@ public class MqttClientConfigBean {
           "at least once (1) or exactly once (2) to be reliably delivered, messages must be stored on both the " +
           "client and server until the delivery of the message is complete.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT"
   )
   @ValueChooserModel(MqttPersistenceMechanismChooserValues.class)
@@ -81,6 +85,7 @@ public class MqttClientConfigBean {
       defaultValue = "/tmp",
       description = "Specify the directory for file-based Persistence Mechanism",
       displayPosition = 51,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT",
       dependsOn = "persistenceMechanism",
       triggeredByValue = {"FILE"}
@@ -94,6 +99,7 @@ public class MqttClientConfigBean {
       label = "Keep Alive Interval (secs)",
       description = "This value defines the maximum time interval between messages sent or received. ",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MQTT"
   )
   public int keepAlive = 60;
@@ -105,6 +111,7 @@ public class MqttClientConfigBean {
       description = "Use Username and Password Authentication",
       defaultValue = "false",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MQTT"
   )
   public boolean useAuth = false;
@@ -116,6 +123,7 @@ public class MqttClientConfigBean {
       label = "Clean Session",
       description = "Controls the 'clean session' flag on the MQTT client; refer to MQTT documentation for specifics",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MQTT"
   )
   public boolean cleanSession;
@@ -125,6 +133,7 @@ public class MqttClientConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 71,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS",
       dependsOn = "useAuth",
       triggeredByValue = { "true" }
@@ -136,6 +145,7 @@ public class MqttClientConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 72,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS",
       dependsOn = "useAuth",
       triggeredByValue = { "true" }

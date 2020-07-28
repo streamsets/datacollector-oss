@@ -71,6 +71,10 @@ public abstract class RemoteFile {
       address = address.substring(0, address.length() - 1);
     }
 
+    if (address.startsWith("//")) {
+      address = address.replaceFirst("//", "/");
+    }
+
     return address.concat(fileName);
   }
 }

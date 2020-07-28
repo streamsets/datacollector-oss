@@ -117,6 +117,9 @@ angular.module('dataCollectorApp.common')
                   configDefinition.model.labels = _.filter(configDefinition.model.labels, function (value) {
                     return value !== 'Batch' && value !== 'Streaming';
                   });
+
+                  // Set executionMode displayMode to ADVANCED because it is different is SDC and Transformer
+                  configDefinition.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
                 }
               });
 

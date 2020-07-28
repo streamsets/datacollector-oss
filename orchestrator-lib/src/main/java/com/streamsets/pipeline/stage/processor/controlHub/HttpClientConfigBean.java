@@ -77,6 +77,7 @@ public class HttpClientConfigBean {
       description = "Use an HTTP proxy to connect to the Control Hub API",
       defaultValue = "false",
       displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public boolean useProxy = false;
