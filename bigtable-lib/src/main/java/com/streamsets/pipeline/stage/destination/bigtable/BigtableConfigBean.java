@@ -30,6 +30,7 @@ public class BigtableConfigBean {
      label = "Instance ID",
      description = "Google Bigtable Instance ID",
      displayPosition = 10,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public String bigtableInstanceID;
@@ -40,6 +41,7 @@ public class BigtableConfigBean {
      label = "Project ID",
      description = "Google Bigtable Project ID",
      displayPosition = 20,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public String bigtableProjectID;
@@ -51,6 +53,7 @@ public class BigtableConfigBean {
      label = "Table Name",
      description = "Google Bigtable Destination Table Name",
      displayPosition = 30,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public String tableName;
@@ -64,6 +67,7 @@ public class BigtableConfigBean {
          "Mapping is unchecked.  Also used when Explicit Field Mapping is checked, " +
          "but a column only specifies a qualifier and does not explicit specify a column family",
      displayPosition = 40,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public String columnFamily;
@@ -76,6 +80,7 @@ public class BigtableConfigBean {
      description = "If checked, specified fields are concatenated to create a row key.  Otherwise,  "
      + "a single field is used as the row key.",
      displayPosition = 45,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      group = "BIGTABLE"
  )
  public boolean createCompositeRowKey;
@@ -87,6 +92,7 @@ public class BigtableConfigBean {
      label = "Row Key",
      description = "Specify field which is a single column row key",
      displayPosition = 50,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      dependsOn = "createCompositeRowKey",
      triggeredByValue = "false",
      group = "BIGTABLE"
@@ -101,6 +107,7 @@ public class BigtableConfigBean {
      label = "Row Key Fields",
      description = "Fields and field widths which comprise the row key.",
      displayPosition = 50,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      dependsOn = "createCompositeRowKey",
      triggeredByValue = "true",
      group = "BIGTABLE"
@@ -114,6 +121,7 @@ public class BigtableConfigBean {
      label = "Create Table and Column Families",
      description = "If checked, the table and column families will be created if they do not exist ",
      displayPosition = 60,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public boolean createTableAndColumnFamilies;
@@ -127,6 +135,7 @@ public class BigtableConfigBean {
      + "any record which is missing a row key field will not be processed and will "
      + "be sent to the error destination.",
      displayPosition = 70,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public boolean ignoreMissingFields;
@@ -143,6 +152,7 @@ public class BigtableConfigBean {
          " If this option is not checked, any specified column family will be ignored " +
          "and Default Column Family will be used for all qualifiers.",
      displayPosition = 70,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  public boolean explicitFieldMapping;
@@ -153,6 +163,7 @@ public class BigtableConfigBean {
      label = "Fields",
      description = "Field Paths in the incoming record, Bigtable column names and Bigtable storage types",
      displayPosition = 80,
+     displayMode = ConfigDef.DisplayMode.BASIC,
      group = "BIGTABLE"
  )
  @ListBeanModel
@@ -165,6 +176,7 @@ public class BigtableConfigBean {
      label = "Time Basis",
      description = "Timestamp value to use as time basis.",
      displayPosition = 90,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      group = "BIGTABLE"
  )
  @ValueChooserModel(TimeBasisChooserValues.class)
@@ -175,6 +187,7 @@ public class BigtableConfigBean {
      label = "Time Stamp Field Name",
      description = "Field name that contains the record's time stamp value",
      displayPosition = 95,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      dependsOn = "timeBasis",
      triggeredByValue = "FROM_RECORD",
      group = "BIGTABLE"
@@ -189,6 +202,7 @@ public class BigtableConfigBean {
      description = "Number of records to buffer per commit to Bigtable.  1 <= number <= 1000",
      min = 1,
      displayPosition = 100,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      group = "BIGTABLE"
  )
  public int numToBuffer;

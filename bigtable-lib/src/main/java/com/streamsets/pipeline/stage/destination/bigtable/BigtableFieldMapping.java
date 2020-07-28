@@ -38,7 +38,8 @@ public class BigtableFieldMapping {
       defaultValue = "/",
       label = "Field Path",
       description = "Field path in the incoming record",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String source;
@@ -50,7 +51,8 @@ public class BigtableFieldMapping {
       label = "Column",
       description = "The column to write into. Enable Explicit Column Family Mapping and use format <COLUMNFAMILY>:<QUALIFIER> " +
           "to override the default column family",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String column;
 
@@ -60,7 +62,8 @@ public class BigtableFieldMapping {
       defaultValue = "TEXT",
       label = "Storage Type",
       description = "The storage type for column",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(BigtableStorageTypeChooserValues.class)
   public BigtableStorageType storageType;

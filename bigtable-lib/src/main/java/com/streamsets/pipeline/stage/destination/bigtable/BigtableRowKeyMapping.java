@@ -26,7 +26,8 @@ public class BigtableRowKeyMapping {
       defaultValue = "/",
       label = "Field Path",
       description = "Field path in the incoming record to use when creating the row key.",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String rowKeyComponent;
@@ -39,7 +40,8 @@ public class BigtableRowKeyMapping {
       description = "If the field path's data type is a String, specify the desired number " +
           "of characters to be used.  String data will be padded or truncated to this length. " +
           "Other data types will use their default width.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int columnWidth;
 
