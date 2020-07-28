@@ -22,11 +22,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.17.0-SNAPSHOT</version>
+    <version>3.17.1-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-jdbc-sqlserver-lib</artifactId>
-  <version>3.17.0-SNAPSHOT</version>
+  <version>3.17.1-SNAPSHOT</version>
   <description>StreamSets Data Collector JDBC SQLServer Lib</description>
   <name>StreamSets Data Collector JDBC SQLServer Lib</name>
 
