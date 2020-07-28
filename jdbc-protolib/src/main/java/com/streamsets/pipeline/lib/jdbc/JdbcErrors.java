@@ -156,11 +156,11 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_501("Connection must be secured, either by SSL encryption or SSH Tunneling"),
   JDBC_502("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
 
-  JDBC_600("Missing redo log files for SCN range {} to {}"),
+  JDBC_600("Missing redo log files for time range ({}, {})"),
   JDBC_601("Could not find a valid LogMiner dictionary: {}"),
   JDBC_602("Could not find any redo log file for datetime {}"),
   JDBC_603("Error while retrieving LogMiner metadata: {}"),
-  JDBC_604("Failed to find a valid SCN >= {}."),
+  JDBC_604("Failed to find a valid SCN >= {}: {}"),
   JDBC_605("Error while querying the current database time: {}."),
   ;
 

@@ -99,69 +99,68 @@ public class LogMinerSession {
   private static final String ADD_LOGFILE_APPEND_CMD = "BEGIN DBMS_LOGMNR.ADD_LOGFILE(?, DBMS_LOGMNR.ADDFILE); END;";
   private static final String REMOVE_LOGFILE_CMD = "BEGIN DBMS_LOGMNR.REMOVE_LOGFILE(?); END;";
 
-  // Template to retrieve the list of redo log files given a SCN range (first, next) of interest.
+  // Template to retrieve the list of redo log files given a time range [first, next) of interest.
   private static final String SELECT_REDO_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
+      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND "
-      + "     ((FIRST_CHANGE# <= :first AND NEXT_CHANGE# > :first) OR "
-      + "      (FIRST_CHANGE# < :next AND NEXT_CHANGE# >= :next) OR "
-      + "      (FIRST_CHANGE# > :first AND NEXT_CHANGE# < :next)) "
+      + "     ((FIRST_TIME <= :first AND NEXT_TIME > :first) OR "
+      + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
+      + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
       + " UNION "
       + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, ARCHIVED "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, STATUS, 'YES' AS ONLINE_LOG, ARCHIVED "
       + " FROM V$LOG, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
       + "      FROM V$LOGFILE) VLOGFILE "
-      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO AND V$LOG.ARCHIVED = 'NO' AND "
-      + "     ((FIRST_CHANGE# <= :first AND NEXT_CHANGE# > :first) OR "
-      + "      (FIRST_CHANGE# < :next AND NEXT_CHANGE# >= :next) OR "
-      + "      (FIRST_CHANGE# > :first AND NEXT_CHANGE# < :next)) ";
+      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO";
   private static final String SELECT_REDO_LOGS_ARG_FIRST = ":first";
   private static final String SELECT_REDO_LOGS_ARG_NEXT = ":next";
+
+  // Template to retrieve the list of redo log files whose SCN range (first, next) covers a given SCN of interest.
+  private static final String SELECT_REDO_LOGS_FOR_SCN_QUERY =
+      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
+      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
+      + " FROM V$ARCHIVED_LOG "
+      + " WHERE STATUS = 'A' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
+      + " UNION "
+      + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, STATUS, 'YES' AS ONLINE_LOG, ARCHIVED "
+      + " FROM V$LOG, "
+      + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
+      + "      FROM V$LOGFILE) VLOGFILE "
+      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO";
+  private static final String SELECT_REDO_LOGS_FOR_SCN_ARG = ":scn";
 
   // Templates to retrieve the redo logs containing the LogMiner dictionary valid for transactions with SCN >= :scn.
   private static final String SELECT_DICTIONARY_END_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
+      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
-      + "                        DICTIONARY_END = 'YES' AND FIRST_CHANGE# <= :scn) ";
+      + "                        DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, 'YES' AS ARCHIVED "
+      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# >= (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                         DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND THREAD# = :thread) AND "
       + "    FIRST_CHANGE# <= :scn AND STATUS = 'A' AND THREAD# = :thread "
       + " ORDER BY FIRST_CHANGE# ";
+  private static final String SELECT_DICTIONARY_TIME_ARG = ":time";
   private static final String SELECT_DICTIONARY_SCN_ARG = ":scn";
   private static final String SELECT_DICTIONARY_THREAD_ARG = ":thread";
 
-  // Template to retrieve all the redo log files with data for a specific point in time.
-  private static final String SELECT_LOGS_FROM_DATE_QUERY =
-      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "     DICTIONARY_END, 'YES' AS ARCHIVED "
-      + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND FIRST_TIME <= :time AND NEXT_TIME > :time "
-      + " UNION "
-      + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, ARCHIVED  "
-      + " FROM V$LOG, "
-      + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
-      + "      FROM V$LOGFILE) VLOGFILE "
-      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO AND V$LOG.ARCHIVED = 'NO' AND "
-      + "     FIRST_TIME <= :time AND (NEXT_TIME > :time OR NEXT_TIME IS NULL) ";
-  private static final String SELECT_LOGS_FROM_DATE_ARG = ":time";
-
-  // Template for the getLocalDateTimeForSCN utility function.
+  // Templates for the getLocalDateTimeForSCN utility function.
   private static final String SELECT_TIMESTAMP_FOR_SCN =
       "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS WHERE SCN >= ? ORDER BY SCN";
   private static final String TIMESTAMP_COLUMN = "TIMESTAMP";
 
   // Query retrieving the current redo log files registered in the current LogMiner session.
-  private final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
+  private static final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
+
+  private static final String LOG_STATUS_CURRENT = "CURRENT";
 
   private final Connection connection;
   private final int databaseVersion;
@@ -399,12 +398,15 @@ public class LogMinerSession {
    *    DICT_FROM_REDO_LOGS is enabled, the function shifts forwards the {@code end} to the NEXT_TIME of the most
    *    recent redo log with relevant data. Available redo records will have a datetime earlier than (the adjusted)
    *    {@code end}.
+   * @return True if the new LogMiner session has successfully started. False when CONTINUOUS_MINE is disabled and
+   *    required redo logs are in a transient state (i.e. current online log is required but log rotation is in
+   *    progress, or archiving process for a relevant log is in progress).
    * @throws StageException If an invalid range was configured, no CDC change is available for the configured range,
    *    some redo logs are missing for the configured range, no dictionary was found (when DICTIONARY_FROM_REDO_LOGS),
    *    database is unavailable, etc. See Table 90-16 in
    *    https://docs.oracle.com/database/121/ARPLS/d_logmnr.htm#ARPLS022 for a complete list of causes.
    */
-  public void start(LocalDateTime start, LocalDateTime end) {
+  public boolean start(LocalDateTime start, LocalDateTime end) {
     Preconditions.checkNotNull(start);
     Preconditions.checkNotNull(end);
     String sessionStart = Utils.format(START_TIME_ARG, start.format(dateTimeFormatter));
@@ -412,14 +414,16 @@ public class LogMinerSession {
     LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
 
     if (!continuousMine) {
-      BigDecimal firstSCN = findEarliestLogCoveringDateTime(start).getFirstChange();
-      BigDecimal lastSCN = findLatestLogCoveringDateTime(end).getNextChange();
-      updateLogList(firstSCN, lastSCN);
+      if (!updateLogList(start, end)) {
+        return false;
+      }
 
       if (dictionaryFromRedoLogs) {
         // When DICT_FROM_REDO_LOGS option is enabled, avoiding to use Timestamps to define the mining window and
         // using SCNs instead. Otherwise an "ORA-01291: missing logfile" is raised when the mining window reaches the
         // current online log.
+        BigDecimal firstSCN = currentLogList.stream().map(RedoLog::getFirstChange).min(BigDecimal::compareTo).get();
+        BigDecimal lastSCN = currentLogList.stream().map(RedoLog::getNextChange).max(BigDecimal::compareTo).get();
         sessionStart = Utils.format(START_SCN_ARG, firstSCN.toPlainString());
         sessionEnd = Utils.format(END_SCN_ARG, lastSCN.toPlainString());
       }
@@ -436,139 +440,8 @@ public class LogMinerSession {
       activeSession = false;
       throw new StageException(JdbcErrors.JDBC_52, e);
     }
-  }
 
-  /**
-   * Starts a new LogMiner session. This closes the currently active session, if any.
-   * The {@code start} and {@code end} parameters define the range of redo records accessible in this session for
-   * mining.
-   *
-   * @param start Available redo records will have a SCN greater than or equal to {@code start}.
-   * @param end Available redo records will have a SCN less than {@code end}.
-   * @throws StageException If an invalid range was configured, no CDC change is available for the configured range,
-   *    some redo logs are missing for the configured range, no dictionary was found (when DICTIONARY_FROM_REDO_LOGS),
-   *    database is unavailable, etc. See Table 90-16 in
-   *    https://docs.oracle.com/database/121/ARPLS/d_logmnr.htm#ARPLS022 for a complete list of causes.
-   */
-  public void start(BigDecimal start, BigDecimal end) {
-    Preconditions.checkNotNull(start);
-    Preconditions.checkNotNull(end);
-    String sessionStart = Utils.format(START_SCN_ARG, start.toPlainString());
-    String sessionEnd = Utils.format(END_SCN_ARG, end.toPlainString());
-    LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
-
-    if (!continuousMine) {
-      updateLogList(start, end);
-    }
-
-    try (Statement statement = connection.createStatement()) {
-      String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, this.configOptions);
-      statement.execute(command);
-      activeSession = true;
-    } catch (SQLException e) {
-      if (!continuousMine) {
-        printCurrentLogs();
-      }
-      activeSession = false;
-      throw new StageException(JdbcErrors.JDBC_52, e);
-    }
-  }
-
-  /**
-   * Starts a new LogMiner session. This closes the currently active session, if any.
-   *
-   * The {@code start} and {@code end} parameters define the range of redo records accessible in this session for
-   * mining. When CONTINUOUS_MINE is not active and DICT_FROM_REDO_LOGS is enabled, the {@code start} is internally
-   * adjusted to the FIRST_TIME of the oldest redo log containing relevant data.
-   *
-   * @param start The initial point where LogMiner will start to mine at. If CONTINUOUS_MINE is not active and
-   *    DICT_FROM_REDO_LOGS is enabled, the function shifts backwards the {@code start} to the FIRST_TIME of the oldest
-   *    redo log with relevant data. Available redo records will have a timestamp later than or equal to (the
-   *    adjusted) {@code start}.
-   * @param end The last SCN where LogMiner will stop to mine at. Available redo records will have a SCN less than
-   *   {@code end}.
-   * @throws StageException If an invalid range was configured, no CDC change is available for the configured range,
-   *    some redo logs are missing for the configured range, no dictionary was found (when DICTIONARY_FROM_REDO_LOGS),
-   *    database is unavailable, etc. See Table 90-16 in
-   *    https://docs.oracle.com/database/121/ARPLS/d_logmnr.htm#ARPLS022 for a complete list of causes.
-   */
-  public void start(LocalDateTime start, BigDecimal end) {
-    Preconditions.checkNotNull(start);
-    Preconditions.checkNotNull(end);
-    String sessionStart = Utils.format(START_TIME_ARG, start.format(dateTimeFormatter));
-    String sessionEnd = Utils.format(END_SCN_ARG, end.toPlainString());
-    LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
-
-    if (!continuousMine) {
-      BigDecimal firstSCN = findEarliestLogCoveringDateTime(start).getFirstChange();
-      updateLogList(firstSCN, end);
-      if (dictionaryFromRedoLogs) {
-        // When DICT_FROM_REDO_LOGS option is enabled, avoiding to use Timestamps to define the mining window and
-        // using SCNs instead. Otherwise an "ORA-01291: missing logfile" is raised when the mining window reaches an
-        // online log.
-        sessionStart = Utils.format(START_SCN_ARG, firstSCN.toPlainString());
-      }
-    }
-
-    try (Statement statement = connection.createStatement()) {
-      String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, this.configOptions);
-      statement.execute(command);
-      activeSession = true;
-    } catch (SQLException e) {
-      if (!continuousMine) {
-        printCurrentLogs();
-      }
-      activeSession = false;
-      throw new StageException(JdbcErrors.JDBC_52, e);
-    }
-  }
-
-  /**
-   * Starts a new LogMiner session. This closes the currently active session, if any.
-   *
-   * The {@code start} and {@code end} parameters define the range of redo records accessible in this session for
-   * mining. When CONTINUOUS_MINE is not active and DICT_FROM_REDO_LOGS is enabled, {@code end} is internally
-   * adjusted to the NEXT_TIME of the most recent redo log containing relevant data.
-   *
-   * @param start The initial SCN where LogMiner will start to mine at. Available redo records will have a SCN
-   *    greater than or equal to {@code start}.
-   * @param end The last point where LogMiner will stop to mine at. If CONTINUOUS_MINE is not active and
-   *    DICT_FROM_REDO_LOGS is enabled, the function shifts the {@code stop} to the NEXT_TIME of the most recent redo
-   *    log with relevant data. Available redo records will have a datetime earlier than (the adjusted) {@code end}.
-   * @throws StageException If an invalid range was configured, no CDC change is available for the configured range,
-   *    some redo logs are missing for the configured range, no dictionary was found (when DICTIONARY_FROM_REDO_LOGS),
-   *    database is unavailable, etc. See Table 90-16 in
-   *    https://docs.oracle.com/database/121/ARPLS/d_logmnr.htm#ARPLS022 for a complete list of causes.
-   */
-  public void start(BigDecimal start, LocalDateTime end) {
-    Preconditions.checkNotNull(start);
-    Preconditions.checkNotNull(end);
-    String sessionStart = Utils.format(START_SCN_ARG, start.toPlainString());
-    String sessionEnd = Utils.format(END_TIME_ARG, end.format(dateTimeFormatter));
-    LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
-
-    if (!continuousMine) {
-      BigDecimal lastSCN = findLatestLogCoveringDateTime(end).getNextChange();
-      updateLogList(start, lastSCN);
-      if (dictionaryFromRedoLogs) {
-        // When DICT_FROM_REDO_LOGS option is enabled, avoiding to use Timestamps to define the mining window and
-        // using SCNs instead. Otherwise an "ORA-01291: missing logfile" is raised when the mining window reaches an
-        // online log.
-        sessionEnd = Utils.format(END_SCN_ARG, lastSCN.toPlainString());
-      }
-    }
-
-    try (Statement statement = connection.createStatement()) {
-      String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, this.configOptions);
-      statement.execute(command);
-      activeSession = true;
-    } catch (SQLException e) {
-      if (!continuousMine) {
-        printCurrentLogs();
-      }
-      activeSession = false;
-      throw new StageException(JdbcErrors.JDBC_52, e);
-    }
+    return true;
   }
 
   /**
@@ -655,30 +528,37 @@ public class LogMinerSession {
    *
    * @param dt The starting point where LogMiner will begin to mine. A valid dictionary must be found in a redo log
    *   with FIRST_TIME before {@code dt}.
+   * @return True if the dictionary has successfully been loaded. False when CONTINUOUS_MINE option is disabled and a
+   *   required redo log is in a transient state (see {@link LogMinerSession#findLogs(BigDecimal, List).
    * @throws StageException No dictionary was found before {@code dt}.
    */
-  public void preloadDictionary(LocalDateTime dt) {
-    RedoLog log = findEarliestLogCoveringDateTime(dt);
-    preloadDictionary(log.getFirstChange());
-  }
-
-  /**
-   * Preload the LogMiner dictionary to use in the next sessions.
-   *
-   * @param scn The starting point where LogMiner will begin to mine. A valid dictionary must be found in a redo log
-   *   with FIRST_CHANGE# before {@code scn}.
-   * @throws StageException No dictionary was found before {@code scn} or database error.
-   */
-  public void preloadDictionary(BigDecimal scn) {
-    List<RedoLog> logList = findDictionary(scn);
+  public boolean preloadDictionary(LocalDateTime dt) {
+    LOG.info("Loading LogMiner dictionary for timestamp {}.", dt);
+    List<RedoLog> logList = findDictionary(dt);
 
     if (continuousMine) {
+      // Implicitly load the LogMiner dictionary by starting a new LogMiner session for the time period (start, end),
+      // where 'start' points to the beginning of the dictionary and 'end' points to the beginning of the redo log
+      // covering 'dt'.
       BigDecimal start = logList.get(0).getFirstChange();
-      start(start, scn);  // Force the dictionary extraction by starting a LogMiner session with a proper range.
+      String sessionStart = Utils.format(START_SCN_ARG, start.toPlainString());
+      String sessionEnd = Utils.format(END_TIME_ARG, dt.format(dateTimeFormatter));
+      String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, this.configOptions);
+
+      try (Statement statement = connection.createStatement()) {
+        statement.execute(command);
+      } catch (SQLException e) {
+        throw new StageException(JdbcErrors.JDBC_52, e);
+      }
+
     } else {
-      BigDecimal start = logList.get(logList.size() - 1).getNextChange();
-      updateLogList(start, scn);
+      LocalDateTime start = logList.get(logList.size() - 1).getNextTime();
+      if (!updateLogList(start, dt)) {
+        return false;
+      }
     }
+
+    return true;
   }
 
   /**
@@ -696,17 +576,38 @@ public class LogMinerSession {
    * which only relies on LogMiner.
    *
    * @param scn The queried SCN.
+   * @param attempts Number of attempts to find the redo logs covering the queried SCN. An attempt can fail when a redo
+   *      log of interest is in a transient state. See {@link LogMinerSession#findLogs(BigDecimal, List).}
    * @return The LocalDateTime for the given SCN.
-   * @throws StageException If any error occurs when starting the LogMiner session or no valid SCN was found.
+   * @throws StageException If any error occurs when starting the LogMiner session, no valid SCN was found or
+   *      attempts where exhausted.
    */
-  public LocalDateTime getLocalDateTimeForSCN(BigDecimal scn) throws StageException {
+  public LocalDateTime getLocalDateTimeForSCN(BigDecimal scn, int attempts) throws StageException {
     LOG.debug("Using LogMiner to find timestamp for SCN = {}", scn);
     LocalDateTime result;
 
     // Find all the redo logs whose range covers the requested SCN.
-    List<RedoLog> logList = findLogs(scn, scn.add(BigDecimal.valueOf(1)));
-    if (logList.isEmpty()) {
-      throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString());
+    List<RedoLog> logList = new ArrayList<>();
+    boolean success = false;
+    while (!success && attempts > 0) {
+      LOG.debug("Attempting to find logs covering SCN = {}", scn);
+      success = findLogs(scn, logList);
+      attempts--;
+      if (!success) {
+        LOG.debug("Failed, detected transient state in required redo log. Sleep and retry...");
+        try {
+          Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+          Thread.currentThread().interrupt();
+        }
+      }
+    }
+
+    if (!success || logList.isEmpty()) {
+      throw new StageException(
+          JdbcErrors.JDBC_604,
+          scn.toPlainString(),
+          Utils.format("Unable to find a valid redo log (success={}, logs={})", success, logList));
     }
     logList.sort(Comparator.comparing(RedoLog::getNextChange));
     BigDecimal lastSCN = logList.get(logList.size() - 1).getNextChange();
@@ -744,7 +645,7 @@ public class LogMinerSession {
       statement.setMaxRows(1);
       ResultSet rs = statement.executeQuery();
       if (!rs.next()) {
-        throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString());
+        throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString(), "V$LOGMNR_CONTENTS returned no result");
       }
       result = rs.getTimestamp(TIMESTAMP_COLUMN).toLocalDateTime();
     } catch (SQLException e) {
@@ -763,71 +664,6 @@ public class LogMinerSession {
   }
 
   /**
-   * Finds the earliest log that were active at a given point in time, where the earliest log is the one with the
-   * lowest FIRST_CHANGE# value.
-   *
-   * @throws StageException No redo log was found covering the specified datetime or database error.
-   */
-  private RedoLog findEarliestLogCoveringDateTime(LocalDateTime dt) {
-    List<RedoLog> logs = findLogsCoveringDateTime(dt, true);
-    return logs.get(0);
-  }
-
-  /**
-   * Finds the latest log that were active at a given point in time, where the latest log is the one with the highest
-   * NEXT_CHANGE# value.
-   *
-   * @throws StageException No redo log was found covering the specified datetime or database error.
-   */
-  private RedoLog findLatestLogCoveringDateTime(LocalDateTime dt) {
-    List<RedoLog> logs = findLogsCoveringDateTime(dt, false);
-    return logs.get(logs.size() - 1);
-  }
-
-  /**
-   * Finds all the logs that were active during a given point in time.
-   *
-   * @param dt The point in time to look for.
-   * @param sortByFirstChange If true, the log list is sorted by FIRST_CHANGE#, otherwise is sorted by NEXT_CHANGE#.
-   * @return The list containing all the redo logs with FIRT_TIME <= dt < NEXT_TIME.
-   * @throws StageException No redo log was found covering the specified range or database error.
-   */
-  private List<RedoLog> findLogsCoveringDateTime(LocalDateTime dt, boolean sortByFirstChange) {
-    List<RedoLog> result = new ArrayList<>();
-    String query = SELECT_LOGS_FROM_DATE_QUERY.replace(SELECT_LOGS_FROM_DATE_ARG, dateTimeToString(dt));
-    try (PreparedStatement statement = connection.prepareCall(query)) {
-      ResultSet rs = statement.executeQuery();
-      while (rs.next()) {
-        RedoLog log = new RedoLog(
-            rs.getString(1),
-            rs.getBigDecimal(2),
-            rs.getBigDecimal(3),
-            rs.getTimestamp(4),
-            rs.getTimestamp(5),
-            rs.getBigDecimal(6),
-            rs.getBigDecimal(7),
-            rs.getBoolean(8),
-            rs.getBoolean(9),
-            rs.getBoolean(10)
-        );
-        result.add(log);
-      }
-    } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_603, e);
-    }
-
-    if (result.isEmpty()) {
-      throw new StageException(JdbcErrors.JDBC_602, dt.format(dateTimeFormatter));
-    }
-    if (sortByFirstChange) {
-      result.sort(Comparator.comparing(RedoLog::getFirstChange));
-    } else {
-      result.sort(Comparator.comparing(RedoLog::getNextChange));
-    }
-    return result;
-  }
-
-  /**
    * Update the V$LOGMNR_LOGS list to cover a given range. The method handles the addition of extra redo logs
    * containing the dictionary (when DICTIONARY_FROM_REDO_LOGS is configured) and any other redo logs required
    * to update the dictionary (when DDL_DICT_TRACKING is also configured).
@@ -837,9 +673,12 @@ public class LogMinerSession {
    *
    * @param start The initial SCN to mine.
    * @param end The final SCN to mine.
+   * @return True if log list was updated, false when it was not possible due to some required redo logs being in a
+   *     transient state (i.e. current online log is required but log rotation is in progress, or archiving process
+   *     for a relevant log is in progress).
    * @throws StageException No redo log was found covering the specified range or database error.
    */
-  private void updateLogList(BigDecimal start, BigDecimal end) {
+  private boolean updateLogList(LocalDateTime start, LocalDateTime end) {
     List<RedoLog> newLogList = new ArrayList<>();
 
     if (dictionaryFromRedoLogs) {
@@ -848,13 +687,17 @@ public class LogMinerSession {
         // When DDL_DICT_TRACKING option is active, we additionally need all the redo log files existing after the
         // dictionary and until the beginning of the mining window. This allows LogMiner to complete the dictionary
         // with any DDL transaction registered in these logs.
-        start = newLogList.get(newLogList.size() - 1).getNextChange();
+        start = newLogList.get(newLogList.size() - 1).getNextTime();
       }
     }
-    newLogList.addAll(findLogs(start, end));
-    newLogList.sort(Comparator.comparing(RedoLog::getFirstChange));
 
-    if (newLogList.size() == 0 || newLogList.get(0).getFirstChange().compareTo(start) > 0) {
+    if (!findLogs(start, end, newLogList)) {
+      return false;
+    }
+
+    newLogList.sort(Comparator.comparing(RedoLog::getFirstTime));
+    if (newLogList.size() == 0 || newLogList.get(0).getFirstTime().compareTo(start) > 0) {
+      LOG.warn("Update log list ({}, {}): logs found: {}", start, end, newLogList);
       throw new StageException(JdbcErrors.JDBC_600, start, end);
     }
 
@@ -895,20 +738,22 @@ public class LogMinerSession {
         }
       }
     }
+
+    return true;
   }
 
   /**
    * Returns the list of redo log files containing a valid dictionary for mining from a given starting point.
    *
-   * @param start The initial SCN to mine.
+   * @param start The initial timestamp to mine.
    * @return The list of redo log files with the dictionary, sorted by FIRST_CHANGE# in ascending order.
-   * @throws StageException No dictionary was found for the specified SCN or database error.
+   * @throws StageException No dictionary was found for the specified timestamp or database error.
    */
-  private List<RedoLog> findDictionary(BigDecimal start) {
+  private List<RedoLog> findDictionary(LocalDateTime start) {
     List<RedoLog> result = new ArrayList<>();
     RedoLog dictionaryEnd;
 
-    String query = SELECT_DICTIONARY_END_QUERY.replace(SELECT_DICTIONARY_SCN_ARG, start.toPlainString());
+    String query = SELECT_DICTIONARY_END_QUERY.replace(SELECT_DICTIONARY_TIME_ARG, dateTimeToString(start));
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
       if (rs.next()) {
@@ -922,10 +767,12 @@ public class LogMinerSession {
             rs.getBigDecimal(7),
             rs.getBoolean(8),
             rs.getBoolean(9),
-            rs.getBoolean(10)
+            rs.getString(10),
+            rs.getBoolean(11),
+            rs.getBoolean(12)
         );
       } else {
-        throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before SCN {}", start));
+        throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before {}", start));
       }
     } catch (SQLException e) {
       throw new StageException(JdbcErrors.JDBC_603, e);
@@ -948,7 +795,9 @@ public class LogMinerSession {
             rs.getBigDecimal(7),
             rs.getBoolean(8),
             rs.getBoolean(9),
-            rs.getBoolean(10)
+            rs.getString(10),
+            rs.getBoolean(11),
+            rs.getBoolean(12)
         );
         result.add(log);
       }
@@ -956,8 +805,8 @@ public class LogMinerSession {
       throw new StageException(JdbcErrors.JDBC_603, e);
     }
 
-    if (result.isEmpty())  {
-      throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before SCN {}", start));
+    if (result.isEmpty()) {
+      throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before {}", start));
     }
 
     return result;
@@ -965,19 +814,23 @@ public class LogMinerSession {
 
   /**
    * Returns the list of redo logs that covers a given range of changes in database. The range is defined as the
-   * interval [start, end) and the list will contain any redo log with some SCN in that range; i.e. it is not necessary
-   * that all the redo log SCNs are in range [start, end).
+   * time interval [start, end) and the list will contain any redo log covering (partial or completely) that range.
    *
-   * @param start Start SCN (inclusive limit).
-   * @param end End SCN (exclusive limit).
-   * @return List of all the redo logs having some SCN in range [start, end).
+   * @param start Start time (inclusive limit).
+   * @param end End time (exclusive limit).
+   * @param dest List where the redo logs will be added (append operation).
+   * @return True if {@code dest} list was updated, false when it was not possible due to some required redo logs being
+   *    in a transient state (i.e. current online log is required but log rotation is in progress, or archiving process
+   *    for a relevant log is in progress).
    * @throws StageException Database error.
    */
-  private List<RedoLog> findLogs(BigDecimal start, BigDecimal end) {
-    List<RedoLog> result = new ArrayList<>();
+  private boolean findLogs(LocalDateTime start, LocalDateTime end, List<RedoLog> dest) {
+    List<RedoLog> onlineLogs = new ArrayList<>();
+    List<RedoLog> selectedLogs = new ArrayList<>();
+
     String query = SELECT_REDO_LOGS_QUERY
-        .replace(SELECT_REDO_LOGS_ARG_FIRST, start.toPlainString())
-        .replace(SELECT_REDO_LOGS_ARG_NEXT, end.toPlainString());
+        .replace(SELECT_REDO_LOGS_ARG_FIRST, dateTimeToString(start))
+        .replace(SELECT_REDO_LOGS_ARG_NEXT, dateTimeToString(end));
 
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
@@ -992,16 +845,164 @@ public class LogMinerSession {
             rs.getBigDecimal(7),
             rs.getBoolean(8),
             rs.getBoolean(9),
-            rs.getBoolean(10)
+            rs.getString(10),
+            rs.getBoolean(11),
+            rs.getBoolean(12)
         );
-        result.add(log);
+        if (log.isOnlineLog()) {
+          onlineLogs.add(log);  // Online logs require further processing.
+        } else {
+          selectedLogs.add(log);  // All the returned archived logs are required.
+          LOG.trace("Find logs ({}, {}): {}, selected", start, end, log);
+        }
       }
     }
     catch (SQLException e) {
       throw new StageException(JdbcErrors.JDBC_603, e);
     }
 
-    return result;
+    if (onlineLogs.isEmpty()) {
+      throw new StageException(JdbcErrors.JDBC_603, "no online redo log found.");
+    }
+
+    boolean missingCurrentLog = true;
+    boolean needsCurrentLog = true;
+    boolean missingArchivedLog = false;
+
+    for (RedoLog log : onlineLogs) {
+      boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 &&
+          (log.getNextTime() == null || log.getNextTime().compareTo(start) > 0);  // nextTime is null for the current online log.
+      boolean overlapRight = log.getFirstTime().compareTo(end) < 0 &&
+          (log.getNextTime() == null || log.getNextTime().compareTo(end) >= 0);
+      boolean inclusion = log.getFirstTime().compareTo(start) > 0 &&
+          (log.getNextTime() != null && log.getNextTime().compareTo(end) < 0);
+
+      if (overlapLeft || overlapRight || inclusion) {
+        if (!log.isArchived()) {
+          selectedLogs.add(log);
+          LOG.trace("Find logs ({}, {}): {}, selected", start, end, log);
+        } else {
+          missingArchivedLog = selectedLogs.stream().noneMatch(sel -> sel.hasSameData(log));
+          if (missingArchivedLog) {
+            LOG.warn("Find logs ({}, {}): detected transient state for {} - archiving process still in progress.",
+                start, end, log);
+            break;
+          } else {
+            LOG.trace("Find logs ({}, {}): {}, discarded (picking archived copy)", start, end, log);
+          }
+        }
+      } else {
+        LOG.trace("Find logs ({}, {}): {}, discarded", start, end, log);
+      }
+      if (log.getStatus().equals(LOG_STATUS_CURRENT)) {
+        missingCurrentLog = false;
+      }
+      if (log.getNextTime() != null && log.getNextTime().compareTo(end) >= 0) {
+        needsCurrentLog = false;  // Time range of interest is before the current redo log range.
+      }
+    }
+
+    if (needsCurrentLog && missingCurrentLog) {
+      LOG.warn("Find logs ({}, {}): detected transient state - current log needed but rotation still in progress.",
+          start, end);
+    }
+
+    boolean statusOK = !(needsCurrentLog && missingCurrentLog) && !missingArchivedLog;
+    if (statusOK) {
+      dest.addAll(selectedLogs);
+    }
+
+    return statusOK;
+  }
+
+  /**
+   * Returns the list of redo logs covering a given SCN point in database.
+   *
+   * @param scn The SCN point in database.
+   * @param dest List where the redo logs will be added (append operation). Added logs has FIRST_CHANGE# <= scn,
+   *     NEXT_CHANGE > scn.
+   * @return True if {@code dest} list was updated, false when it was not possible due to some required redo logs being
+   *    in a transient state (i.e. current online log is required but log rotation is in progress, or archiving process
+   *    for a relevant log is in progress).
+   * @throws StageException Database error.
+   */
+  private boolean findLogs(BigDecimal scn, List<RedoLog> dest) {
+    List<RedoLog> onlineLogs = new ArrayList<>();
+    List<RedoLog> selectedLogs = new ArrayList<>();
+    String query = SELECT_REDO_LOGS_FOR_SCN_QUERY.replace(SELECT_REDO_LOGS_FOR_SCN_ARG, scn.toPlainString());
+
+    try (PreparedStatement statement = connection.prepareCall(query)) {
+      ResultSet rs = statement.executeQuery();
+      while (rs.next()) {
+        RedoLog log = new RedoLog(
+            rs.getString(1),
+            rs.getBigDecimal(2),
+            rs.getBigDecimal(3),
+            rs.getTimestamp(4),
+            rs.getTimestamp(5),
+            rs.getBigDecimal(6),
+            rs.getBigDecimal(7),
+            rs.getBoolean(8),
+            rs.getBoolean(9),
+            rs.getString(10),
+            rs.getBoolean(11),
+            rs.getBoolean(12)
+        );
+        if (log.isOnlineLog()) {
+          onlineLogs.add(log);  // Online logs require further processing.
+        } else {
+          selectedLogs.add(log);  // All the returned archived logs are required.
+          LOG.trace("Find logs ({}): {}, selected", scn, log);
+        }
+      }
+    }
+    catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    if (onlineLogs.isEmpty()) {
+      throw new StageException(JdbcErrors.JDBC_603, "no online redo log found.");
+    }
+
+    boolean missingCurrentLog = true;
+    boolean needsCurrentLog = true;
+    boolean missingArchivedLog = false;
+
+    for (RedoLog log : onlineLogs) {
+      boolean leftCondition = log.getFirstChange().compareTo(scn) <= 0;
+      boolean rightCondition = log.getNextChange() == null || log.getNextChange().compareTo(scn) > 0;
+
+      if (leftCondition && rightCondition) {
+        if (!log.isArchived()) {
+          selectedLogs.add(log);
+          LOG.trace("Find logs ({}): {}, selected", scn, log);
+        } else {
+          missingArchivedLog = selectedLogs.stream().noneMatch(sel -> sel.hasSameData(log));
+          if (missingArchivedLog) {
+            LOG.warn("Find logs ({}): detected transient state for {}, archiving process still in progress.", scn, log);
+            break;
+          }
+        }
+      } else {
+        LOG.trace("Find logs ({}): {}, discarded", scn, log);
+      }
+      if (log.getStatus().equals(LOG_STATUS_CURRENT)) {
+        missingCurrentLog = false;
+      } else if (log.getNextChange().compareTo(scn) > 0) {
+        needsCurrentLog = false;  // Time range of interest is before the current redo log range.
+      }
+    }
+
+    if (needsCurrentLog && missingCurrentLog) {
+      LOG.warn("Find logs ({}): detected transient state - current log needed but rotation still in progress.", scn);
+    }
+
+    boolean statusOK = !(needsCurrentLog && missingCurrentLog) && !missingArchivedLog;
+    if (statusOK) {
+      dest.addAll(selectedLogs);
+    }
+
+    return statusOK;
   }
 
   private String dateTimeToString(LocalDateTime dt) {

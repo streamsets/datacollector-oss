@@ -162,6 +162,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String ZERO = "0";
   private static final String SCHEMA = "schema";
   private static final int MAX_RECORD_GENERATION_ATTEMPTS = 100;
+  private static final int GET_TIME_FOR_SCN_MAX_ATTEMPS = 30;
   private static final int MINING_WAIT_TIME_MS = 1500;
   private static final int ORA_ERROR_TABLE_NOT_EXIST = 942;
 
@@ -406,6 +407,7 @@ public class OracleCDCSource extends BaseSource {
   private void startGeneratorThread(String lastSourceOffset) throws StageException {
     Offset offset = null;
     LocalDateTime startTimestamp;
+    boolean logMinerStarted = false;
     try {
       if (!StringUtils.isEmpty(lastSourceOffset)) {
         offset = new Offset(lastSourceOffset);
@@ -418,10 +420,10 @@ public class OracleCDCSource extends BaseSource {
           if (useLocalBuffering) {
             throw new StageException(JDBC_83);
           }
-          startTimestamp = logMinerSession.getLocalDateTimeForSCN(new BigDecimal(offset.scn));
+          startTimestamp = logMinerSession.getLocalDateTimeForSCN(new BigDecimal(offset.scn), GET_TIME_FOR_SCN_MAX_ATTEMPS);
         }
         offset.timestamp = startTimestamp;
-        startLogMiner(startTimestamp);
+        logMinerStarted = startLogMiner(startTimestamp);
       } else { // reset the start date only if it not set.
         if (configBean.startValue != StartValues.SCN) {
           LocalDateTime startDate;
@@ -430,12 +432,12 @@ public class OracleCDCSource extends BaseSource {
           } else {
             startDate = nowAtDBTz();
           }
-          startLogMiner(startDate);
+          logMinerStarted = startLogMiner(startDate);
           offset = new Offset(offsetVersion, startDate, ZERO, 0,"");
         } else {
           BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
-          final LocalDateTime start = logMinerSession.getLocalDateTimeForSCN(startCommitSCN);
-          startLogMiner(start);
+          final LocalDateTime start = logMinerSession.getLocalDateTimeForSCN(startCommitSCN, GET_TIME_FOR_SCN_MAX_ATTEMPS);
+          logMinerStarted = startLogMiner(start);
           offset = new Offset(offsetVersion, start, startCommitSCN.toPlainString(), 0, "");
         }
       }
@@ -445,9 +447,10 @@ public class OracleCDCSource extends BaseSource {
       throw new StageException(JDBC_52, e);
     }
     final Offset os = offset;
+    final boolean started = logMinerStarted;
     generationExecutor.submit(() -> {
       try {
-        generateRecords(os);
+        generateRecords(os, started);
       } catch (Throwable ex) {
         LOG.error("Error while producing records", ex);
         generationStarted = false;
@@ -455,12 +458,25 @@ public class OracleCDCSource extends BaseSource {
     });
   }
 
-  private void startLogMiner(LocalDateTime startDate) throws StageException {
+  private boolean startLogMiner(LocalDateTime startDate) throws StageException {
+    boolean success = false;
     if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
-      logMinerSession.preloadDictionary(startDate);
+      success = logMinerSession.preloadDictionary(startDate);
+      if (success) {
+        LocalDateTime endDate = getEndTimeForStartTime(startDate);
+        success = logMinerSession.start(startDate, endDate);
+      }
     }
-    LocalDateTime endDate = getEndTimeForStartTime(startDate);
-    logMinerSession.start(startDate, endDate);
+    return success;
+  }
+
+  private boolean startLogMiner(LocalDateTime start, LocalDateTime end, boolean preloadDictionary) {
+    if (preloadDictionary) {
+      if (!logMinerSession.preloadDictionary(start)) {
+        return false;
+      }
+    }
+    return logMinerSession.start(start, end);
   }
 
   private void resetDBConnectionsIfRequired() throws StageException, SQLException {
@@ -498,7 +514,7 @@ public class OracleCDCSource extends BaseSource {
     return localDateTimeToEpoch(nowAtDBTz()) - localDateTimeToEpoch(lastEndTime);
   }
 
-  private void generateRecords(Offset startingOffset) {
+  private void generateRecords(Offset startingOffset, boolean logMinerStarted) {
     // When this is called the first time, Logminer was started either from SCN or from a start date, so we just keep
     // track of the start date etc.
     LOG.info("Attempting to generate records");
@@ -515,191 +531,206 @@ public class OracleCDCSource extends BaseSource {
     while (!getContext().isStopped()) {
       error = false;
       generationStarted = true;
-      try {
-        Offset offset = new Offset(offsetVersion, startTime, lastCommitSCN.toPlainString(), sequenceNumber, lastTxnId);
-        recordQueue.put(new RecordOffset(dummyRecord, offset));
-        resultSet = useLocalBuffering ? logMinerSession.queryContent(startTime)
-                                      : logMinerSession.queryContent(startTime, lastCommitSCN, sequenceNumber);
+      if (logMinerStarted) {
+        try {
+          Offset offset = new Offset(offsetVersion, startTime, lastCommitSCN.toPlainString(), sequenceNumber, lastTxnId);
+          recordQueue.put(new RecordOffset(dummyRecord, offset));
+          resultSet = useLocalBuffering ? logMinerSession.queryContent(startTime)
+                                        : logMinerSession.queryContent(startTime, lastCommitSCN, sequenceNumber);
 
-        if (!sessionWindowInCurrent) {
-          resultSet.setFetchSize(configBean.jdbcFetchSize);
-        } else {
-          LOG.trace(SESSION_WINDOW_CURRENT_MSG, configBean.fetchSizeLatest);
-          resultSet.setFetchSize(configBean.fetchSizeLatest);
-        }
-
-        while (resultSet.next() && !getContext().isStopped()) {
-          LogMinerRecord logMnrRecord = resultSet.getRecord();
-          sqlRedoBuilder.append(logMnrRecord.getSqlRedo());
-
-          // A CDC record is split into several rows when the SQL statement is longer than 4000 bytes. When that
-          // happens, complete SQL statement before continuing the process.
-          if (!logMnrRecord.isEndOfRecord()) {
-            continue;
+          if (!sessionWindowInCurrent) {
+            resultSet.setFetchSize(configBean.jdbcFetchSize);
+          } else {
+            LOG.trace(SESSION_WINDOW_CURRENT_MSG, configBean.fetchSizeLatest);
+            resultSet.setFetchSize(configBean.fetchSizeLatest);
           }
-          String sqlRedo = sqlRedoBuilder.toString();
-          sqlRedoBuilder.setLength(0);
 
-          TransactionIdKey key = new TransactionIdKey(logMnrRecord.getXID());
-          delay.getValue().put("delay", getDelay(logMnrRecord.getLocalDateTime()));
+          while (resultSet.next() && !getContext().isStopped()) {
+            LogMinerRecord logMnrRecord = resultSet.getRecord();
+            sqlRedoBuilder.append(logMnrRecord.getSqlRedo());
 
-          int bufferedRecordsSize = 0;
-          int totRecs = 0;
-          bufferedRecordsLock.lock();
-          try {
-            if (useLocalBuffering &&
-                bufferedRecords.containsKey(key) &&
-                bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0,
-                    logMnrRecord.getRsId(), logMnrRecord.getSsn(), null))) {
+            // A CDC record is split into several rows when the SQL statement is longer than 4000 bytes. When that
+            // happens, complete SQL statement before continuing the process.
+            if (!logMnrRecord.isEndOfRecord()) {
               continue;
             }
-            if (LOG.isDebugEnabled()) {
-              bufferedRecordsSize = bufferedRecords.size();
-              for (Map.Entry<OracleCDCSource.TransactionIdKey, HashQueue<RecordSequence>> r :
-                  bufferedRecords.entrySet()) {
-                totRecs += r.getValue().size();
+            String sqlRedo = sqlRedoBuilder.toString();
+            sqlRedoBuilder.setLength(0);
+
+            TransactionIdKey key = new TransactionIdKey(logMnrRecord.getXID());
+            delay.getValue().put("delay", getDelay(logMnrRecord.getLocalDateTime()));
+
+            int bufferedRecordsSize = 0;
+            int totRecs = 0;
+            bufferedRecordsLock.lock();
+            try {
+              if (useLocalBuffering &&
+                  bufferedRecords.containsKey(key) &&
+                  bufferedRecords.get(key).contains(new RecordSequence(null, null, 0, 0,
+                      logMnrRecord.getRsId(), logMnrRecord.getSsn(), null))) {
+                continue;
               }
+              if (LOG.isDebugEnabled()) {
+                bufferedRecordsSize = bufferedRecords.size();
+                for (Map.Entry<OracleCDCSource.TransactionIdKey, HashQueue<RecordSequence>> r : bufferedRecords.entrySet()) {
+                  totRecs += r.getValue().size();
+                }
+              }
+            } finally {
+              bufferedRecordsLock.unlock();
             }
-          } finally {
-            bufferedRecordsLock.unlock();
-          }
 
-          if (LOG.isDebugEnabled()) {
-            LOG.debug(
-                "Num Active Txns = {} Total Cached Records = {} Commit SCN = {}, SCN = {}, Operation = {}, Txn Id =" +
-                    " {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
-                bufferedRecordsSize,
-                totRecs,
-                logMnrRecord.getCommitSCN() == null ? "" : logMnrRecord.getCommitSCN().toPlainString(),
-                logMnrRecord.getScn().toPlainString(),
-                logMnrRecord.getOperationCode(),
-                logMnrRecord.getXID(),
-                logMnrRecord.getLocalDateTime(),
-                logMnrRecord.getRowId(),
-                sqlRedo
-            );
-          }
+            if (LOG.isDebugEnabled()) {
+              LOG.debug(
+                  "Num Active Txns = {} Total Cached Records = {} Commit SCN = {}, SCN = {}, Operation = {}, Txn Id =" +
+                      " {}, Timestamp = {}, Row Id = {}, Redo SQL = {}",
+                  bufferedRecordsSize,
+                  totRecs,
+                  logMnrRecord.getCommitSCN() == null ? "" : logMnrRecord.getCommitSCN().toPlainString(),
+                  logMnrRecord.getScn().toPlainString(),
+                  logMnrRecord.getOperationCode(),
+                  logMnrRecord.getXID(),
+                  logMnrRecord.getLocalDateTime(),
+                  logMnrRecord.getRowId(),
+                  sqlRedo
+              );
+            }
 
-          switch (logMnrRecord.getOperationCode()) {
-            case INSERT_CODE:
-            case DELETE_CODE:
-            case UPDATE_CODE:
-            case SELECT_FOR_UPDATE_CODE:
-              boolean accepted;
-              if (useLocalBuffering) {
-                accepted = updateBufferedTransaction(key, logMnrRecord, sqlRedo);
-              } else {
-                accepted = enqueueRecord(logMnrRecord, sqlRedo, lastCommitSCN, sequenceNumber);
-                if (accepted) {
-                  lastCommitSCN = logMnrRecord.getCommitSCN();
-                  sequenceNumber = logMnrRecord.getSequence();
+            switch (logMnrRecord.getOperationCode()) {
+              case INSERT_CODE:
+              case DELETE_CODE:
+              case UPDATE_CODE:
+              case SELECT_FOR_UPDATE_CODE:
+                boolean accepted;
+                if (useLocalBuffering) {
+                  accepted = updateBufferedTransaction(key, logMnrRecord, sqlRedo);
+                } else {
+                  accepted = enqueueRecord(logMnrRecord, sqlRedo, lastCommitSCN, sequenceNumber);
+                  if (accepted) {
+                    lastCommitSCN = logMnrRecord.getCommitSCN();
+                    sequenceNumber = logMnrRecord.getSequence();
+                  }
                 }
-              }
-              if (!accepted) {
-                LOG.debug("Discarding record: SCN = {}, Redo SQL = '{}'", logMnrRecord.getScn().toPlainString(), sqlRedo);
-              }
-              break;
-
-            case COMMIT_CODE:
-            case ROLLBACK_CODE:
-              if (useLocalBuffering) {
-                int seq = processBufferedTransaction(key, logMnrRecord, lastCommitSCN, sequenceNumber, lastTxnId);
-                if (seq >= 0) {
-                  lastCommitSCN = logMnrRecord.getScn();
-                  sequenceNumber = seq;
-                  lastTxnId = logMnrRecord.getXID();
+                if (!accepted) {
+                  LOG.debug("Discarding record: SCN = {}, Redo SQL = '{}'",
+                      logMnrRecord.getScn().toPlainString(),
+                      sqlRedo
+                  );
                 }
-              }
-              break;
+                break;
 
-            case DDL_CODE:
-              if (!getContext().isPreview()) {
-                if (!generateEvent(logMnrRecord, sqlRedo)) {
-                  LOG.debug("Discarding record: SCN = {}, Redo SQL = '{}'", logMnrRecord.getScn().toPlainString(), sqlRedo);
+              case COMMIT_CODE:
+              case ROLLBACK_CODE:
+                if (useLocalBuffering) {
+                  int seq = processBufferedTransaction(key, logMnrRecord, lastCommitSCN, sequenceNumber, lastTxnId);
+                  if (seq >= 0) {
+                    lastCommitSCN = logMnrRecord.getScn();
+                    sequenceNumber = seq;
+                    lastTxnId = logMnrRecord.getXID();
+                  }
                 }
-              }
-              break;
-          }
-        }
-      } catch (SQLException ex) {
-        error = true;
-        // force a restart from the same timestamp.
-        if (ex.getErrorCode() == MISSING_LOG_FILE) {
-          LOG.warn("SQL Exception while retrieving records", ex);
-          addToStageExceptionsQueue(new StageException(JDBC_86, ex));
-        } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
-          LOG.warn("SQL Exception while retrieving records", ex);
-        } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
-          LOG.warn("LogMiner select query timed out");
-        } else if (ex.getErrorCode() == LOGMINER_START_MUST_BE_CALLED) {
-          LOG.warn("Last LogMiner session did not start successfully. Will retry", ex);
-        } else {
-          LOG.error("Error while reading data", ex);
-          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
-        }
-      } catch (StageException e) {
-        LOG.error("Error while reading data", e);
-        error = true;
-        addToStageExceptionsQueue(e);
-      } catch (InterruptedException ex) {
-        LOG.error("Interrupted while waiting to add data");
-        Thread.currentThread().interrupt();
-      } catch (Exception ex) {
-        LOG.error("Error while reading data", ex);
-        error = true;
-        addToStageExceptionsQueue(new StageException(JDBC_52, ex));
-      } finally {
-        // If an incomplete batch is seen, it means we are going to move the window forward
-        // Ending this session and starting a new one helps reduce PGA memory usage.
-        try {
-          if (resultSet != null && !resultSet.isClosed()) {
-            resultSet.close();
+                break;
+
+              case DDL_CODE:
+                if (!getContext().isPreview()) {
+                  if (!generateEvent(logMnrRecord, sqlRedo)) {
+                    LOG.debug("Discarding record: SCN = {}, Redo SQL = '{}'",
+                        logMnrRecord.getScn().toPlainString(),
+                        sqlRedo
+                    );
+                  }
+                }
+                break;
+            }
           }
         } catch (SQLException ex) {
-          LOG.warn("Error while attempting to close ResultSet", ex);
-        }
-        try {
-          if (error) {
-            resetConnectionsQuietly();
-            if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
-              // The LogMiner session will be closed after a connection reset. We need to reload the LogMiner
-              // dictionary before opening again a new session.
-              logMinerSession.preloadDictionary(startTime);
-            }
+          error = true;
+          // force a restart from the same timestamp.
+          if (ex.getErrorCode() == MISSING_LOG_FILE) {
+            LOG.warn("SQL Exception while retrieving records", ex);
+            addToStageExceptionsQueue(new StageException(JDBC_86, ex));
+          } else if (ex.getErrorCode() != RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED) {
+            LOG.warn("SQL Exception while retrieving records", ex);
+          } else if (ex.getErrorCode() == QUERY_TIMEOUT) {
+            LOG.warn("LogMiner select query timed out");
+          } else if (ex.getErrorCode() == LOGMINER_START_MUST_BE_CALLED) {
+            LOG.warn("Last LogMiner session did not start successfully. Will retry", ex);
           } else {
-            discardOldUncommitted(startTime);
-            if (sessionWindowInCurrent) {
-              try {
-                Thread.sleep(MINING_WAIT_TIME_MS);
-              } catch (InterruptedException ex) {
-                Thread.currentThread().interrupt();
-              }
-            }
-            startTime = adjustStartTime(endTime);
-            endTime = getEndTimeForStartTime(startTime);
-
-            if (continuousMine) {
-              // When CONTINUOUS_MINE is enabled, explicitly close LogMiner session to ensure PGA resources are
-              // released. This is not needed when CONTINUOUS_MINE is disabled because LogMinerSession#start reuse
-              // the current session and redo logs are manually loaded/removed according to the specified time range.
-              try {
-                logMinerSession.close();
-                if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
-                  // The dictionary is deleted after closing the LogMiner session. We need to reload it again.
-                  logMinerSession.preloadDictionary(startTime);
-                }
-              } catch (SQLException ex) {
-                LOG.error("Error while attempting to close and prepare a new LogMinerSession", ex);
-              }
-            }
+            LOG.error("Error while reading data", ex);
+            addToStageExceptionsQueue(new StageException(JDBC_52, ex));
           }
-          sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
-          logMinerSession.start(startTime, endTime);
-        } catch (StageException ex) {
-          LOG.error("Error while attempting to start LogMiner", ex);
-          addToStageExceptionsQueue(ex);
+        } catch (StageException e) {
+          LOG.error("Error while reading data", e);
+          error = true;
+          addToStageExceptionsQueue(e);
+        } catch (InterruptedException ex) {
+          LOG.error("Interrupted while waiting to add data");
+          Thread.currentThread().interrupt();
+        } catch (Exception ex) {
+          LOG.error("Error while reading data", ex);
+          error = true;
+          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
+        } finally {
+          // If an incomplete batch is seen, it means we are going to move the window forward
+          // Ending this session and starting a new one helps reduce PGA memory usage.
+          try {
+            if (resultSet != null && !resultSet.isClosed()) {
+              resultSet.close();
+            }
+          } catch (SQLException ex) {
+            LOG.warn("Error while attempting to close ResultSet", ex);
+          }
+          try {
+            if (error) {
+              resetConnectionsQuietly();
+            } else {
+              discardOldUncommitted(startTime);
+
+              if (continuousMine) {
+                // When CONTINUOUS_MINE is enabled, explicitly close LogMiner session to ensure PGA resources are
+                // released. This is not needed when CONTINUOUS_MINE is disabled because LogMinerSession#start reuse
+                // the current session and redo logs are manually loaded/removed according to the specified time range.
+                try {
+                  logMinerSession.close();
+                } catch (SQLException ex) {
+                  LOG.error("Error while attempting to close the current LogMinerSession", ex);
+                }
+              }
+
+              if (sessionWindowInCurrent) {
+                sleepCurrentThread(MINING_WAIT_TIME_MS);
+              }
+              startTime = adjustStartTime(endTime);
+              endTime = getEndTimeForStartTime(startTime);
+            }
+          } catch (StageException ex) {
+            LOG.error("Error while attempting to prepare a new LogMinerSession", ex);
+            addToStageExceptionsQueue(ex);
+          }
         }
       }
+      try {
+        sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
+        logMinerStarted = startLogMiner(startTime, endTime, continuousMine || error);
+        if (!logMinerStarted) {
+          // This can happen when 'endTime' is momentarily ahead of the current redo log, which in turn can happen when
+          // a log rotation is in progress. In that case, sleep for a while and try again.
+          LOG.info("Could not start LogMiner session ({}, {}). Sleep thread and retry...", startTime, endTime);
+          sleepCurrentThread(MINING_WAIT_TIME_MS);
+        }
+
+      } catch (StageException ex) {
+        LOG.error("Error while attempting to start LogMiner", ex);
+        addToStageExceptionsQueue(ex);
+      }
+    }
+  }
+
+  private void sleepCurrentThread(int milliseconds) {
+    try {
+      Thread.sleep(milliseconds);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
     }
   }
 

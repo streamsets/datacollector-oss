@@ -33,6 +33,8 @@ public class RedoLog {
   private final BigDecimal nextChange;
   private final boolean dictionaryBegin;
   private final boolean dictionaryEnd;
+  private final String status;
+  private final boolean onlineLog;
   private final boolean archived;
 
   public RedoLog(
@@ -45,6 +47,8 @@ public class RedoLog {
       BigDecimal nextChange,
       boolean dictionaryBegin,
       boolean dictionaryEnd,
+      String status,
+      boolean onlineLog,
       boolean archived
   ) {
     this.path = Preconditions.checkNotNull(path);
@@ -56,6 +60,8 @@ public class RedoLog {
     this.nextChange = Preconditions.checkNotNull(nextChange);
     this.dictionaryBegin = dictionaryBegin;
     this.dictionaryEnd = dictionaryEnd;
+    this.status = Preconditions.checkNotNull(status).toUpperCase();
+    this.onlineLog = onlineLog;
     this.archived = archived;
   }
 
@@ -69,6 +75,8 @@ public class RedoLog {
       BigDecimal nextChange,
       boolean dictionaryBegin,
       boolean dictionaryEnd,
+      String status,
+      boolean onlineLog,
       boolean archived
   ) {
     this(path,
@@ -78,7 +86,13 @@ public class RedoLog {
         nextTime == null ? null : nextTime.toLocalDateTime(), firstChange, nextChange,
         dictionaryBegin,
         dictionaryEnd,
+        status,
+        onlineLog,
         archived);
+  }
+
+  public boolean hasSameData(RedoLog log) {
+    return thread.equals(log.getThread()) && sequence.equals(log.getSequence());
   }
 
   @Override
@@ -94,8 +108,8 @@ public class RedoLog {
       dict = "no";
     }
     return Utils.format(
-        "{}, seq: {}/{}, start: {} ({}), end: {} ({}), dictionary: {}",
-        path, thread, sequence, firstChange, firstTime, nextChange, nextTime, dict
+        "{}, seq: {}/{}, start: {} ({}), end: {} ({}), status: {}, online: {}, archived: {}, dictionary: {}",
+        path, thread, sequence, firstChange, firstTime, nextChange, nextTime, status, onlineLog, archived, dict
     );
   }
 
@@ -110,6 +124,7 @@ public class RedoLog {
     RedoLog log = (RedoLog) o;
     return dictionaryBegin == log.dictionaryBegin &&
         dictionaryEnd == log.dictionaryEnd &&
+        onlineLog == log.onlineLog &&
         archived == log.archived &&
         path.equals(log.path) &&
         thread.equals(log.thread) &&
@@ -117,13 +132,26 @@ public class RedoLog {
         firstTime.equals(log.firstTime) &&
         Objects.equals(nextTime, log.nextTime) &&
         firstChange.equals(log.firstChange) &&
-        nextChange.equals(log.nextChange);
+        nextChange.equals(log.nextChange) &&
+        status.equals(log.status);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(path, thread, sequence, firstTime, nextTime,
-        firstChange, nextChange, dictionaryBegin, dictionaryEnd);
+    return Objects.hash(
+        path,
+        thread,
+        sequence,
+        firstTime,
+        nextTime,
+        firstChange,
+        nextChange,
+        dictionaryBegin,
+        dictionaryEnd,
+        status,
+        onlineLog,
+        archived
+    );
   }
 
   public String getPath() {
@@ -160,6 +188,14 @@ public class RedoLog {
 
   public boolean isDictionaryEnd() {
     return dictionaryEnd;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public boolean isOnlineLog() {
+    return onlineLog;
   }
 
   /**
