@@ -57,6 +57,7 @@ public class GroovyDProcessor extends DProcessor {
       description = "If 'Record by Record' the processor takes care of record error handling, if 'Record batch' " +
                     "the Groovy script must take care of record error handling",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GROOVY"
   )
   @ValueChooserModel(ProcessingModeChooserValues.class)
@@ -69,6 +70,7 @@ public class GroovyDProcessor extends DProcessor {
       defaultValueFromResource = "default_init_script.groovy",
       description = "Place initialization code here. Called on pipeline validate/start.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GROOVY",
       mode = ConfigDef.Mode.GROOVY,
       evaluation = EXPLICIT // Do not evaluate the script as an EL.
@@ -81,6 +83,7 @@ public class GroovyDProcessor extends DProcessor {
       defaultValueFromResource = "default_script.groovy",
       label = "Script",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GROOVY",
       mode = ConfigDef.Mode.GROOVY,
       evaluation = EXPLICIT // Do not evaluate the script as an EL.
@@ -94,6 +97,7 @@ public class GroovyDProcessor extends DProcessor {
       label = "Destroy Script",
       description = "Place cleanup code here. Called on pipeline stop.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GROOVY",
       mode = ConfigDef.Mode.GROOVY,
       evaluation = EXPLICIT // Do not evaluate the script as an EL.
@@ -107,6 +111,7 @@ public class GroovyDProcessor extends DProcessor {
       label = "Record Type",
       description = "Record type to use during script execution",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(ScriptRecordTypeValueChooser.class)
@@ -119,19 +124,21 @@ public class GroovyDProcessor extends DProcessor {
       label = "Enable invokedynamic Compiler Option",
       description = "May improve or worsen script performance depending on use case",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean invokeDynamic = false;
 
   @ConfigDef(
-    required = false,
-    defaultValue = "{}",
-    type = ConfigDef.Type.MAP,
-    label = "Parameters in Script",
-    description = "Parameters and values for use in script.\n" +
-        "Access in user script as sdc.userParams.",
-    displayPosition = 80,
-    group = "ADVANCED"
+      required = false,
+      defaultValue = "{}",
+      type = ConfigDef.Type.MAP,
+      label = "Parameters in Script",
+      description = "Parameters and values for use in script.\n" +
+          "Access in user script as sdc.userParams.",
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "ADVANCED"
   )
   public Map<String, String> userParams;
 

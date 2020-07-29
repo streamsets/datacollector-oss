@@ -49,6 +49,7 @@ public class GroovyDSource extends AbstractScriptingDSource {
       description = "Press F11 (or ESC on Mac OS X) when cursor is in the editor to "
         + "toggle full screen editing.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SCRIPT",
       mode = ConfigDef.Mode.GROOVY)
   public String script;
