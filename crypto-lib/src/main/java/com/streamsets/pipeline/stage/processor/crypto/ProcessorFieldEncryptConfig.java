@@ -39,6 +39,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       label = "Mode",
       description = "Select whether to encrypt or decrypt fields",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ACTION"
   )
   @ValueChooserModel(EncryptionModeChooserValues.class)
@@ -50,6 +51,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       label = "Fields",
       description = "Fields to encrypt",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ACTION"
   )
   @FieldSelectorModel
@@ -63,6 +65,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           "Selects the provider of the master key provider.",
       defaultValue = "USER",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   @ValueChooserModel(MasterKeyProviderChoices.class)
@@ -74,6 +77,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       label = "Cipher",
       defaultValue = "ALG_AES_256_GCM_IV12_TAG16_HKDF_SHA384_ECDSA_P384",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   @ValueChooserModel(CryptoAlgorithmChoices.class)
@@ -87,6 +91,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       defaultValue = "4096",
       min = 0,
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public int frameSize = 4096;
@@ -101,6 +106,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       label = "Base64 Encoded Key",
       description = "Enter an encoded key, use a Base64 function to encode a string, or use a credential function to retrieve the key from a credential store.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "masterKeyProvider", triggeredByValues = {"USER"})
       },
@@ -114,6 +120,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
       label = "Key ID (Optional)",
       description = "An optional identifier for the master key used to encrypt the data.",
       displayPosition = 41,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "masterKeyProvider", triggeredByValues = {"USER"})
       },
@@ -130,6 +137,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public Map<String, String> context = new HashMap<>();
@@ -144,6 +152,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public boolean dataKeyCaching;
@@ -160,6 +169,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public int cacheCapacity;
@@ -176,6 +186,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public long maxKeyAge;
@@ -193,6 +204,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public long maxRecordsPerKey;
@@ -208,6 +220,7 @@ public class ProcessorFieldEncryptConfig implements FieldEncryptConfig {
           @Dependency(configName = "mode", triggeredByValues = {"ENCRYPT"})
       },
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PROVIDER"
   )
   public String maxBytesPerKey;
