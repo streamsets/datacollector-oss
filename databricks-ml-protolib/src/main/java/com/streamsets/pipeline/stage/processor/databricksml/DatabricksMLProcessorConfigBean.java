@@ -34,6 +34,7 @@ public class DatabricksMLProcessorConfigBean {
       description = "Local path to the Spark-trained model. " +
           "Absolute path, or relative to the Data Collector resources directory.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATABRICKS_ML"
   )
   public String modelPath;
@@ -45,6 +46,7 @@ public class DatabricksMLProcessorConfigBean {
       description = "Select the output columns that the model should return",
       defaultValue = "[\"label\", \"prediction\", \"probability\"]",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATABRICKS_ML"
   )
   public List<String> outputColumns = new ArrayList<>();
@@ -56,6 +58,7 @@ public class DatabricksMLProcessorConfigBean {
       description = "JSON value of the input root field to be passed as model input",
       defaultValue = "/",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATABRICKS_ML"
   )
   @FieldSelectorModel(singleValued = true)
@@ -68,6 +71,7 @@ public class DatabricksMLProcessorConfigBean {
       label = "Output Field",
       description = "Field to store the model output",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATABRICKS_ML"
   )
   @FieldSelectorModel(singleValued = true)
