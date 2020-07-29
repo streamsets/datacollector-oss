@@ -64,6 +64,7 @@ public class RawDataDSource extends DSource {
       defaultValue = DEFAULT_RAW_DATA,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RAW"
   )
   public String rawData;
@@ -75,6 +76,7 @@ public class RawDataDSource extends DSource {
       type = ConfigDef.Type.BOOLEAN,
       label = "Stop After First Batch",
       displayPosition = 2,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "RAW"
   )
   public boolean stopAfterFirstBatch = false;
@@ -87,6 +89,7 @@ public class RawDataDSource extends DSource {
       defaultValue = "", // By default empty body and thus "no-op" (no events generated)
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "EVENT"
   )
   public String eventData;

@@ -25,6 +25,7 @@ public class SensorReaderConfigBean {
       label = "Sensor Device",
       description = "Sensor Device Family",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SENSOR"
   )
   @ValueChooserModel(SensorDeviceChooserValues.class)
@@ -37,6 +38,7 @@ public class SensorReaderConfigBean {
       label = "I2C Address",
       description = "I2C Address in hexadecimal string",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "sensorDevice",
       triggeredByValue = "BMxx80",
       group = "SENSOR"
@@ -52,6 +54,7 @@ public class SensorReaderConfigBean {
       min = 0,
       max = Integer.MAX_VALUE,
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SENSOR"
   )
   public long delay;
@@ -63,6 +66,7 @@ public class SensorReaderConfigBean {
       label = "Path to Pseudo-file",
       description = "Location of the sysfs pseudo-file holding the temperature value",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "sensorDevice",
       triggeredByValue = "BCM2835",
       group = "SENSOR"
@@ -78,6 +82,7 @@ public class SensorReaderConfigBean {
       min = 1,
       max = Integer.MAX_VALUE,
       displayPosition = 25,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "sensorDevice",
       triggeredByValue = "BCM2835",
       group = "SENSOR"
