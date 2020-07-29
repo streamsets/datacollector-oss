@@ -30,6 +30,7 @@ public class CouchbaseConfig {
       defaultValue = "localhost",
       label = "Node List",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "A comma-separated list of one or more Couchbase Cluster nodes",
       group = "COUCHBASE"
   )
@@ -40,6 +41,7 @@ public class CouchbaseConfig {
       type = ConfigDef.Type.STRING,
       label = "Bucket",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Name of the Couchbase bucket to write to",
       group = "COUCHBASE"
   )
@@ -52,6 +54,7 @@ public class CouchbaseConfig {
       min = 1,
       label = "Key-Value Timeout (ms)",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "Maximum execution time for each key/value operation",
       group = "COUCHBASE"
   )
@@ -64,6 +67,7 @@ public class CouchbaseConfig {
       min = 1,
       label = "Connect Timeout (ms)",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "Maximum time to wait for connect operations",
       group = "COUCHBASE"
   )
@@ -76,6 +80,7 @@ public class CouchbaseConfig {
       min = 1,
       label = "Disconnect Timeout (ms)",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "Maximum grace period for flushing async operations before a " +
           "bucket is closed",
       group = "COUCHBASE"
@@ -89,6 +94,7 @@ public class CouchbaseConfig {
       description = "CouchbaseEnvironment settings. Consult the Couchbase Java SDK documentation for " +
           "available parameters",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "COUCHBASE"
   )
   @ListBeanModel

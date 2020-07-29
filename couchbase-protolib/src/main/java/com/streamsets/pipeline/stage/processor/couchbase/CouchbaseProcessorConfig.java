@@ -35,6 +35,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       defaultValue = "KV",
       label = "Lookup Type",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Lookup type to perform",
       group = "LOOKUP"
   )
@@ -47,6 +48,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       defaultValue = "${record:attribute('doc_id')}",
       label = "Document Key",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Document key to lookup",
       group = "LOOKUP",
       elDefs = {RecordEL.class, TimeNowEL.class},
@@ -62,6 +64,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       defaultValue = "false",
       label = "Return Properties",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Return specific sub-document properties rather than the full document",
       group = "LOOKUP",
       dependsOn = "lookupType",
@@ -75,6 +78,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Property Mappings",
       description = "Mappings from sub-document properties to field names",
       displayPosition = 31,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP",
       dependsOn = "useSubdoc",
       triggeredByValue = "true"
@@ -87,6 +91,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       type = ConfigDef.Type.STRING,
       label = "SDC Field",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Field to write the lookup data in the outgoing record",
       group = "LOOKUP",
       dependsOn = "useSubdoc",
@@ -106,6 +111,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       dependsOn = "lookupType",
       triggeredByValue = "N1QL",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP"
   )
   public String n1qlQueryEL;
@@ -116,6 +122,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Property Mappings",
       description = "Mappings from N1QL result properties to field names",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP",
       dependsOn = "lookupType",
       triggeredByValue = "N1QL"
@@ -129,6 +136,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Submit as Prepared Statement",
       defaultValue = "true",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Submit the query as a prepared statement",
       group = "LOOKUP",
       dependsOn = "lookupType",
@@ -142,6 +150,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Query Timeout (ms)",
       defaultValue = "75000",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "Server-side timeout for the query",
       group = "LOOKUP",
       dependsOn = "lookupType",
@@ -155,6 +164,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Multiple Value Behavior",
       defaultValue = "FIRST",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "How to handle multiple values",
       group = "LOOKUP",
       dependsOn = "lookupType",
@@ -169,6 +179,7 @@ public class CouchbaseProcessorConfig extends BaseCouchbaseConfig {
       label = "Missing Value Behavior",
       defaultValue = "PASS",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       description = "How to handle missing values",
       group = "LOOKUP"
   )

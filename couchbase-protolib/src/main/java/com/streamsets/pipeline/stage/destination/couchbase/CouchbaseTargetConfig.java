@@ -32,15 +32,16 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
    * Document tab
    */
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "${record:attribute('doc_id')}",
-    label = "Document Key",
-    displayPosition = 10,
-    description = "Document key to write",
-    group = "DOCUMENT",
-    elDefs = {RecordEL.class, TimeNowEL.class},
-    evaluation = ConfigDef.Evaluation.EXPLICIT
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${record:attribute('doc_id')}",
+      label = "Document Key",
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      description = "Document key to write",
+      group = "DOCUMENT",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String documentKeyEL;
 
@@ -50,6 +51,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "0",
       label = "Document Time-To-Live (seconds)",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Expiry TTL to apply to each document. 0 or blank means no expiry",
       group = "DOCUMENT",
       elDefs = {RecordEL.class},
@@ -63,6 +65,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "UPSERT",
       label = "Default Write Operation",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Write operation to perform if CDC sdc.operation.type attribute is not set " +
           "or if sub-document operation type is not specified",
       group = "DOCUMENT"
@@ -76,6 +79,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "DEFAULT",
       label = "Unsupported Operation Handling",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Action to take when CDC or sub-document operation type is not supported",
       group = "DOCUMENT"
   )
@@ -88,6 +92,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "false",
       label = "Use CAS",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Use the couchbase.cas record attribute for writes, if present",
       group = "DOCUMENT"
   )
@@ -99,6 +104,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "false",
       label = "Allow Sub-Document Writes",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Allow sub-document writes",
       group = "DOCUMENT"
   )
@@ -110,6 +116,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "${record:attribute('subdoc_path')}",
       label = "Sub-Document Path",
       displayPosition = 61,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "The path at which to store the sub-document. If no path is provided, " +
           "a full document write will be performed",
       group = "DOCUMENT",
@@ -126,6 +133,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "${record:attribute('subdoc_operation')}",
       label = "Sub-Document Operation",
       displayPosition = 62,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "The sub-document write operation to use. " +
           "Supported operations are: INSERT, REPLACE, UPSERT, DELETE, ARRAY_PREPEND, ARRAY_APPEND, ARRAY_ADD_UNIQUE. " +
           "If not specified, the CDC sdc.operation.type attribute or Default Write Operation will be used",
@@ -143,6 +151,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "NONE",
       label = "Replicate To",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Number of copies of a document to replicate before returning success. " +
           "This must be less than or equal to the number of replicas configured on your bucket",
       group = "DOCUMENT"
@@ -156,6 +165,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       defaultValue = "NONE",
       label = "Persist To",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "Number of copies of a document to persist before returning success. " +
           "This must be less than or equal to 1 + the number of replicas configured on your bucket",
       group = "DOCUMENT"
@@ -177,6 +187,7 @@ public class CouchbaseTargetConfig extends BaseCouchbaseConfig{
       label = "Data Format",
       description = "Data format to use when writing records to Couchbase",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)

@@ -24,6 +24,7 @@ public class N1QLMappingConfig {
       type = ConfigDef.Type.STRING,
       label = "Property Name",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       description = "The document property name",
       group = "SUBDOC"
   )
@@ -35,6 +36,7 @@ public class N1QLMappingConfig {
       label = "SDC Field",
       description = "The field in the record to receive the value",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SUBDOC"
   )
   public String sdcField;

@@ -26,6 +26,7 @@ public class EnvConfig {
       label = "Property Name",
       description = "Name of the CouchbaseEnvironment property to set",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ENVIRONMENT"
   )
   public String name;
@@ -36,6 +37,7 @@ public class EnvConfig {
       label = "Value",
       description = "CouchbaseEnvironment property value",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ENVIRONMENT"
   )
   public String value;
@@ -46,6 +48,7 @@ public class EnvConfig {
       label = "Value Type",
       description="Data type of the property value",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ENVIRONMENT"
   )
   @ValueChooserModel(EnvDataTypeChooserValues.class)
