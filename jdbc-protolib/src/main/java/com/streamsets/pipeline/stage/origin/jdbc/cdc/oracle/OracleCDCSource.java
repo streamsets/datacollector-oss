@@ -67,6 +67,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.Duration;
 import java.time.Instant;
@@ -232,9 +233,9 @@ public class OracleCDCSource extends BaseSource {
     UNKNOWN
   }
 
-  private static final String GET_TIMESTAMPS_FROM_LOGMNR_CONTENTS = "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS WHERE ROWNUM = 1 ORDER BY TIMESTAMP";
   private static final String OFFSET_DELIM = "::";
   private static final int RESULTSET_CLOSED_AS_LOGMINER_SESSION_CLOSED = 1306;
+  private static final String GET_CURRENT_TIMESTAMP = "SELECT CURRENT_TIMESTAMP FROM DUAL";
   private static final String NLS_DATE_FORMAT = "ALTER SESSION SET NLS_DATE_FORMAT = " + DateTimeColumnHandler.DT_SESSION_FORMAT;
   private static final String NLS_NUMERIC_FORMAT = "ALTER SESSION SET NLS_NUMERIC_CHARACTERS = \'.,\'";
   private static final String NLS_TIMESTAMP_FORMAT =
@@ -1715,7 +1716,18 @@ public class OracleCDCSource extends BaseSource {
 
   @NotNull
   private LocalDateTime nowAtDBTz() {
-    return LocalDateTime.now(zoneId);
+    Timestamp ts;
+    try (PreparedStatement query = connection.prepareStatement(GET_CURRENT_TIMESTAMP)) {
+      query.setMaxRows(1);
+      ResultSet rs = query.executeQuery();
+      if (!rs.next()) {
+        throw new StageException(JdbcErrors.JDBC_605, "No result returned");
+      }
+      ts = rs.getTimestamp(1);
+    } catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_605, e.getMessage());
+    }
+    return ts.toInstant().atZone(zoneId).toLocalDateTime();
   }
 
   private void initializeStatements() throws SQLException {
