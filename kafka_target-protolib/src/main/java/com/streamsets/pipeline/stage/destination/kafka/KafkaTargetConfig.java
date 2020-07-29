@@ -100,109 +100,117 @@ public class KafkaTargetConfig {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "localhost:9092",
-    label = "Broker URI",
-    description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
-      "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
-    displayPosition = 10,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "localhost:9092",
+      label = "Broker URI",
+      description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
+        "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public String metadataBrokerList;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Runtime Topic Resolution",
-    description = "Select topic at runtime based on the field values in the record",
-    displayPosition = 15,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Runtime Topic Resolution",
+      description = "Select topic at runtime based on the field values in the record",
+      displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0"
   )
   public boolean runtimeTopicResolution;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "${record:value('/topic')}",
-    label = "Topic Expression",
-    description = "An expression that resolves to the name of the topic to use",
-    displayPosition = 20,
-    elDefs = {RecordEL.class},
-    group = "#0",
-    evaluation = ConfigDef.Evaluation.EXPLICIT,
-    dependsOn = "runtimeTopicResolution",
-    triggeredByValue = "true"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${record:value('/topic')}",
+      label = "Topic Expression",
+      description = "An expression that resolves to the name of the topic to use",
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      elDefs = {RecordEL.class},
+      group = "#0",
+      evaluation = ConfigDef.Evaluation.EXPLICIT,
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "true"
   )
   public String topicExpression;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.TEXT,
-    lines = 5,
-    defaultValue = "*",
-    label = "Topic White List",
-    description = "A comma-separated list of valid topic names. " +
-      "Records with invalid topic names are treated as error records. " +
-      "'*' indicates that all topic names are allowed.",
-    displayPosition = 23,
-    group = "#0",
-    dependsOn = "runtimeTopicResolution",
-    triggeredByValue = "true"
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      lines = 5,
+      defaultValue = "*",
+      label = "Topic White List",
+      description = "A comma-separated list of valid topic names. " +
+        "Records with invalid topic names are treated as error records. " +
+        "'*' indicates that all topic names are allowed.",
+      displayPosition = 23,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "true"
   )
   public String topicWhiteList;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "topicName",
-    label = "Topic",
-    description = "",
-    displayPosition = 25,
-    group = "#0",
-    dependsOn = "runtimeTopicResolution",
-    triggeredByValue = "false"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "topicName",
+      label = "Topic",
+      description = "",
+      displayPosition = 25,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "runtimeTopicResolution",
+      triggeredByValue = "false"
   )
   public String topic;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "ROUND_ROBIN",
-    label = "Partition Strategy",
-    description = "Strategy to select a partition to write to",
-    displayPosition = 30,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ROUND_ROBIN",
+      label = "Partition Strategy",
+      description = "Strategy to select a partition to write to",
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0"
   )
   @ValueChooserModel(PartitionStrategyChooserValues.class)
   public PartitionStrategy partitionStrategy;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    defaultValue = "${0}",
-    label = "Partition Expression",
-    description = "When using the default partition strategy, enter an expression to evaluate the partition key " +
-        "from record, which will be used with hash function to determine the topic's partition. " +
-        "When using Expression, enter an expression that determines the partition number. ",
-    displayPosition = 40,
-    group = "#0",
-    dependsOn = "partitionStrategy",
-    triggeredByValue = {"EXPRESSION", "DEFAULT"},
-    elDefs = {RecordEL.class},
-    evaluation = ConfigDef.Evaluation.EXPLICIT
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = "${0}",
+      label = "Partition Expression",
+      description = "When using the default partition strategy, enter an expression to evaluate the partition key " +
+          "from record, which will be used with hash function to determine the topic's partition. " +
+          "When using Expression, enter an expression that determines the partition number. ",
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "partitionStrategy",
+      triggeredByValue = {"EXPRESSION", "DEFAULT"},
+      elDefs = {RecordEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String partition;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "One Message per Batch",
-    description = "Generates a single Kafka message with all records in the batch",
-    displayPosition = 50,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "One Message per Batch",
+      description = "Generates a single Kafka message with all records in the batch",
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0"
   )
   public boolean singleMessagePerBatch;
 
@@ -213,6 +221,7 @@ public class KafkaTargetConfig {
       description = "Method used to serialize the Kafka message key. Set to Confluent to embed the Avro schema ID in each message the destination writes.",
       defaultValue = "STRING",
       displayPosition = 440,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "messageKeyFormat",
       triggeredByValue = "AVRO",
       group = "KAFKA"
@@ -227,6 +236,7 @@ public class KafkaTargetConfig {
       description = "Method used to serialize the Kafka message value. Set to Confluent to embed the Avro schema ID in each message the destination writes.",
       defaultValue = "DEFAULT",
       displayPosition = 450,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "dataFormat",
       triggeredByValue = "AVRO",
       group = "KAFKA"
@@ -235,13 +245,14 @@ public class KafkaTargetConfig {
   public Serializer valueSerializer = Serializer.DEFAULT;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MAP,
-    defaultValue = "",
-    label = "Kafka Configuration",
-    description = "Additional Kafka properties to pass to the underlying Kafka producer",
-    displayPosition = 60,
-    group = "#0"
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Kafka Configuration",
+      description = "Additional Kafka properties to pass to the underlying Kafka producer",
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public Map<String, String> kafkaProducerConfigs = new HashMap<>();
 
@@ -252,6 +263,7 @@ public class KafkaTargetConfig {
      label = "Provide Keytab",
      description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
      displayPosition = 65,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      group = "#0"
  )
  public boolean provideKeytab;
@@ -263,6 +275,7 @@ public class KafkaTargetConfig {
      label = "Keytab",
      description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 keytab from a credential store.",
      displayPosition = 70,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      dependsOn = "provideKeytab",
      triggeredByValue = "true",
      group = "#0",
@@ -277,6 +290,7 @@ public class KafkaTargetConfig {
      label = "Principal",
      description = "Kerberos service principal to use for this stage.",
      displayPosition = 80,
+     displayMode = ConfigDef.DisplayMode.ADVANCED,
      dependsOn = "provideKeytab",
      triggeredByValue = "true",
      group = "#0"
@@ -290,6 +304,7 @@ public class KafkaTargetConfig {
       label = "Kafka Message Key",
       description = "The Kafka message key",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "messageKeyFormat",
       triggeredByValue = "AVRO",
       group = "#0",
@@ -305,6 +320,7 @@ public class KafkaTargetConfig {
       label = "Kafka Message Key",
       description = "The Kafka message key",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "messageKeyFormat",
       triggeredByValue = "STRING",
