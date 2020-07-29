@@ -31,6 +31,7 @@ public class GenericRecordConverterConfigBean {
       label = "Measurement Field",
       description = "Field whose value will be used as the measurement name.",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "recordConverterType^",
       triggeredByValue = "CUSTOM",
       group = "#0"
@@ -44,6 +45,7 @@ public class GenericRecordConverterConfigBean {
       label = "Time Field",
       description = "Field containing a timestamp value. Leave blank to use the current system time.",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "recordConverterType^",
       triggeredByValue = "CUSTOM",
       group = "#0"
@@ -58,6 +60,7 @@ public class GenericRecordConverterConfigBean {
       description = "Precision of the value in the time field.",
       defaultValue = "MILLISECONDS",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "recordConverterType^",
       triggeredByValue = "CUSTOM",
       group = "#0"
@@ -71,6 +74,7 @@ public class GenericRecordConverterConfigBean {
       label = "Tag Fields",
       description = "Fields which will be used as tag keys and values.",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @FieldSelectorModel
@@ -82,6 +86,7 @@ public class GenericRecordConverterConfigBean {
       label = "Value Fields",
       description = "Fields which will be used as measurement field key and field value pairs.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "recordConverterType^",
       triggeredByValue = "CUSTOM",
       group = "#0"
