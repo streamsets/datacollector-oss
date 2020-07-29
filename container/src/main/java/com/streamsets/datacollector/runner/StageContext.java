@@ -25,7 +25,6 @@ import com.streamsets.datacollector.email.EmailSender;
 import com.streamsets.datacollector.lineage.LineageEventImpl;
 import com.streamsets.datacollector.lineage.LineagePublisherDelegator;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.record.EventRecordImpl;
 import com.streamsets.datacollector.record.HeaderImpl;
@@ -63,13 +62,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StageContext extends ProtoContext implements
     Source.Context, PushSource.Context, Target.Context, Processor.Context {
   private static final String JOB_ID = "JOB_ID";
+  private static final String JOB_NAME = "JOB_NAME";
   private final int runnerId;
   private final List<Stage.Info> pipelineInfo;
   private final Stage.UserContext userContext;
@@ -465,6 +465,7 @@ public class StageContext extends ProtoContext implements
 
   private void toError(Record record, ErrorMessage errorMessage) {
     String jobId = (String) getPipelineConstants().get(JOB_ID);
+    String jobName = (String) getPipelineConstants().get(JOB_NAME);
     RecordImpl recordImpl = recordCloner.cloneRecordIfNeeded(record);
     if (recordImpl.isInitialRecord()) {
       recordImpl.getHeader().setSourceRecord(recordImpl);
@@ -473,6 +474,9 @@ public class StageContext extends ProtoContext implements
     recordImpl.getHeader().setError(stageInfo.getInstanceName(), stageInfo.getLabel(), errorMessage);
     if (jobId != null) {
       recordImpl.getHeader().setErrorJobId(jobId);
+    }
+    if (jobName != null) {
+      recordImpl.getHeader().setErrorJobName(jobName);
     }
     errorSink.addRecord(stageInfo.getInstanceName(), recordImpl);
   }

@@ -16,8 +16,6 @@
 package com.streamsets.datacollector.restapi.bean;
 
 import com.streamsets.datacollector.record.HeaderImpl;
-import com.streamsets.datacollector.restapi.bean.HeaderJson;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -33,7 +31,7 @@ public class TestHeaderBean {
   @Test
   public void testHeaderBean() {
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      System.currentTimeMillis(), "stack trace", new HashMap<>(), null);
+      System.currentTimeMillis(), "stack trace", new HashMap<>(), "jId", "jName");
 
     HeaderJson headerJsonBean = new HeaderJson(header);
 
@@ -54,6 +52,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getStagesPath(), headerJsonBean.getStagesPath());
     Assert.assertEquals(header.getTrackingId(), headerJsonBean.getTrackingId());
     Assert.assertEquals(header.getErrorJobId(), headerJsonBean.getErrorJobId());
+    Assert.assertEquals(header.getErrorJobName(), headerJsonBean.getErrorJobName());
 
   }
 
@@ -61,10 +60,10 @@ public class TestHeaderBean {
   public void testHeaderBeanConstructorWithArgs() {
     long timestamp = System.currentTimeMillis();
     HeaderImpl header = new HeaderImpl("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      timestamp, "stack trace", new HashMap<>(), null);
+      timestamp, "stack trace", new HashMap<>(), "jId", "jName");
 
     HeaderJson headerJsonBean = new HeaderJson("s1", "id1", "/s1", "t1", "t0", null, "byte", "e1", "ep1", "es1", "stageName", "ec", "em",
-      timestamp, "stack trace", null, new HashMap<>());
+      timestamp, "stack trace", "jId", "jName", new HashMap<>());
 
     Assert.assertEquals(header.getErrorCode(), headerJsonBean.getErrorCode());
     Assert.assertEquals(header.getErrorMessage(), headerJsonBean.getErrorMessage());
@@ -103,6 +102,7 @@ public class TestHeaderBean {
     Assert.assertEquals(header.getStagesPath(), headerJsonBean.getHeader().getStagesPath());
     Assert.assertEquals(header.getTrackingId(), headerJsonBean.getHeader().getTrackingId());
     Assert.assertEquals(header.getErrorJobId(), headerJsonBean.getErrorJobId());
+    Assert.assertEquals(header.getErrorJobName(), headerJsonBean.getErrorJobName());
 
   }
 }

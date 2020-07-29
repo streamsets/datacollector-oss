@@ -171,6 +171,8 @@ public class RecordEL {
     ERROR_STACK_TRACE,
     ERROR_DATA_COLLECTOR_ID,
     ERROR_PIPELINE_NAME,
+    ERROR_JOB_ID,
+    ERROR_JOB_NAME,
     ERROR_TIME,
     EVENT_TYPE,
     EVENT_VERSION,
@@ -212,6 +214,12 @@ public class RecordEL {
           break;
         case ERROR_PIPELINE_NAME:
           value = record.getHeader().getErrorPipelineName();
+          break;
+        case ERROR_JOB_ID:
+          value = record.getHeader().getErrorJobId();
+          break;
+        case ERROR_JOB_NAME:
+          value = record.getHeader().getErrorJobName();
           break;
         case ERROR_TIME:
           value = record.getHeader().getErrorTimestamp();
@@ -308,6 +316,22 @@ public class RecordEL {
       description = "Returns the error pipeline name for the record in context")
   public static String getErrorPipelineName() {
     return getFromHeader(HeaderProperty.ERROR_PIPELINE_NAME);
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "errorJobId",
+      description = "Returns the error job id for the record in context")
+  public static String getErrorJobId() {
+    return getFromHeader(HeaderProperty.ERROR_JOB_ID);
+  }
+
+  @ElFunction(
+      prefix = RECORD_EL_PREFIX,
+      name = "errorJobName",
+      description = "Returns the error job name for the record in context")
+  public static String getErrorJobName() {
+    return getFromHeader(HeaderProperty.ERROR_JOB_NAME);
   }
 
   @ElFunction(

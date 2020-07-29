@@ -53,6 +53,7 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   private static final String ERROR_PIPELINE_NAME_ATTR = RESERVED_PREFIX + "pipelineName";
   private static final String ERROR_STACKTRACE = RESERVED_PREFIX + "errorStackTrace";
   private static final String ERROR_JOB_ID = RESERVED_PREFIX + "errorJobId";
+  private static final String ERROR_JOB_NAME = RESERVED_PREFIX + "errorJobName";
   public static final String TRANSFORMER_RECORD = "transformerRecord";
   private static final List<String> REQUIRED_ATTRIBUTES = ImmutableList.of(STAGE_CREATOR_INSTANCE_ATTR,
       RECORD_SOURCE_ID_ATTR);
@@ -166,6 +167,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   }
 
   @Override
+  public String getErrorJobName() {
+    return (String) map.get(ERROR_JOB_NAME);
+  }
+
+  @Override
   public Set<String> getAttributeNames() {
     return ImmutableSet.copyOf(Sets.filter(map.keySet(), this));
   }
@@ -219,7 +225,8 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     long errorTimestamp,
     String errorStackTrace,
     Map<String, Object> map,
-    String errorJobId
+    String errorJobId,
+    String errorJobName
   ) {
     this.map = map;
     setStageCreator(stageCreator);
@@ -246,6 +253,9 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
     map.put(SOURCE_RECORD_ATTR, null);
     if (errorJobId != null) {
       setErrorJobId(errorJobId);
+    }
+    if (errorJobName != null) {
+      setErrorJobName(errorJobName);
     }
   }
 
@@ -289,6 +299,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   public void setErrorJobId(String errorJobId) {
     Preconditions.checkNotNull(errorJobId, "errorJobId cannot be null");
     map.put(ERROR_JOB_ID, errorJobId);
+  }
+
+  public void setErrorJobName(String errorJobName) {
+    Preconditions.checkNotNull(errorJobName, "errorJobName cannot be null");
+    map.put(ERROR_JOB_NAME, errorJobName);
   }
 
   public void setError(String errorStage, String errorStageName, ErrorMessage errorMessage) {

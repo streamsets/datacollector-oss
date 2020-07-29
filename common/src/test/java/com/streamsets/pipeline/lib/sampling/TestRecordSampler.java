@@ -149,6 +149,11 @@ public class TestRecordSampler {
             return null;
           }
 
+          @Override
+          public String getErrorJobName() {
+            return null;
+          }
+
           /** To be removed */
           public Map<String, Object> getAllAttributes() {
             return null;
