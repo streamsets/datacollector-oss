@@ -35,7 +35,8 @@ public class SparkProcessorConfigBean {
       label = "Parallelism (Standalone Mode Only)",
       description = "Number of partitions to create per batch of records. Ignored in Cluster Mode.",
       group = "SPARK",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int threadCount;
 
@@ -46,7 +47,8 @@ public class SparkProcessorConfigBean {
       label = "Application Name  (Standalone Mode Only)",
       description = "Name of the Application submitted to Spark. Ignored in Cluster Mode.",
       group = "SPARK",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String appName;
 
@@ -56,7 +58,8 @@ public class SparkProcessorConfigBean {
       label = "Spark Transformer Class",
       description = "Class that implements SparkTransformer API.",
       group = "SPARK",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String transformerClass;
 
@@ -68,7 +71,8 @@ public class SparkProcessorConfigBean {
           "Use to make external connections or to read configuration or pre-existing data from external systems.",
       elDefs = VaultEL.class,
       group = "SPARK",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> preprocessMethodArgs = new ArrayList<>();
 

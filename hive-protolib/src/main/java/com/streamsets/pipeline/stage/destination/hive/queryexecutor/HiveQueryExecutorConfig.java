@@ -37,6 +37,7 @@ public class HiveQueryExecutorConfig {
       description = "Queries that will be executed on Hive or Impala.",
       defaultValue = "",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
@@ -49,6 +50,7 @@ public class HiveQueryExecutorConfig {
       label = "Stop On Query Failure",
       description = "Determines whether to stop executing the subsequent queries if there is a failure per record",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "QUERY",
       defaultValue = "true"
   )

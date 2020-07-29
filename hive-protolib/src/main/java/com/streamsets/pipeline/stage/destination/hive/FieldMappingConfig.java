@@ -41,7 +41,8 @@ public class FieldMappingConfig {
       defaultValue="",
       label = "SDC Field",
       description = "The field in the incoming record to output.",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String field;
@@ -52,7 +53,8 @@ public class FieldMappingConfig {
       defaultValue="",
       label = "Column Name",
       description="The column name to write this field to.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String columnName;
 }

@@ -28,6 +28,7 @@ public class HBaseLookupParameterConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String rowExpr;
@@ -41,6 +42,7 @@ public class HBaseLookupParameterConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String columnExpr;
@@ -53,6 +55,7 @@ public class HBaseLookupParameterConfig {
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String timestampExpr = "";
@@ -62,6 +65,7 @@ public class HBaseLookupParameterConfig {
       type = ConfigDef.Type.MODEL,
       label = "Output Field",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @FieldSelectorModel(singleValued = true)

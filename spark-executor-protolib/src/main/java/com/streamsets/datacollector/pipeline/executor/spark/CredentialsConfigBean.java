@@ -23,7 +23,8 @@ public class CredentialsConfigBean {
       type = ConfigDef.Type.STRING,
       required = false,
       label = "Kerberos Principal",
-      group = "CREDENTIALS"
+      group = "CREDENTIALS",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String principal = "";
 
@@ -31,7 +32,8 @@ public class CredentialsConfigBean {
       type = ConfigDef.Type.STRING,
       required = false,
       label = "Kerberos Keytab",
-      group = "CREDENTIALS"
+      group = "CREDENTIALS",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String keytab = "";
 

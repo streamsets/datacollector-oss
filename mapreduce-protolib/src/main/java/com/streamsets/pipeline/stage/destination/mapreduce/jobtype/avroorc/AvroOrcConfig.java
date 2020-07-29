@@ -27,6 +27,7 @@ public class AvroOrcConfig {
     description = "Number of records that will be written per ORC writer batch.",
     defaultValue = "" + AvroToOrcRecordConverter.DEFAULT_ORC_BATCH_SIZE,
     displayPosition = 100,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_ORC",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_ORC"

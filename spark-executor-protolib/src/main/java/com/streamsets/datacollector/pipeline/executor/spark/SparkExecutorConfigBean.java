@@ -35,7 +35,8 @@ public class SparkExecutorConfigBean {
       required = false,
       label = "Custom Spark Home",
       group = "SPARK",
-      displayPosition = 120
+      displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String sparkHome = "";
 
@@ -44,7 +45,8 @@ public class SparkExecutorConfigBean {
       required = false,
       label = "Custom Java Home",
       group = "SPARK",
-      displayPosition = 130
+      displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String javaHome = "";
 

@@ -49,6 +49,7 @@ public class ClusterHdfsConfigBean {
       description = "Include the Hadoop FS scheme and authority: <scheme>://<authority> (for example" +
           " hdfs://nameservice).",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsUri;
@@ -60,6 +61,7 @@ public class ClusterHdfsConfigBean {
       label = "Input Paths",
       description = "Location of the input data to be read",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public List<String> hdfsDirLocations; // hdfsDirLocation
@@ -71,6 +73,7 @@ public class ClusterHdfsConfigBean {
       defaultValue = "true",
       description = "Reads all subdirectories within the input paths",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public boolean recursive;
@@ -82,6 +85,7 @@ public class ClusterHdfsConfigBean {
       label = "Produce Single Record",
       description = "Generates a single record for multiple objects within a message",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HADOOP_FS"
   )
   public boolean produceSingleRecordPerMessage;
@@ -93,6 +97,7 @@ public class ClusterHdfsConfigBean {
       defaultValue = "false",
       description = "",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public boolean hdfsKerberos;
@@ -105,6 +110,7 @@ public class ClusterHdfsConfigBean {
       description = "An SDC resource directory or symbolic link with Hadoop configuration files core-site.xml, " +
           "hdfs-site.xml, yarn-site.xml, and mapred-site.xml",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsConfDir;
@@ -116,6 +122,7 @@ public class ClusterHdfsConfigBean {
       description = "If set, the data collector will read from Hadoop FS as this user. " +
           "The data collector user must be configured as a proxy user in Hadoop FS.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsUser;
@@ -126,6 +133,7 @@ public class ClusterHdfsConfigBean {
       label = "Hadoop FS Configuration",
       description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public Map<String, String> hdfsConfigs;
@@ -137,6 +145,7 @@ public class ClusterHdfsConfigBean {
       label = "Max Batch Size (records)",
       description = "Max number of records per batch",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HADOOP_FS",
       min = 1,
       max = Integer.MAX_VALUE
@@ -149,7 +158,8 @@ public class ClusterHdfsConfigBean {
       label = "Access Key ID",
       description = "AWS access key ID",
       group = "S3",
-      displayPosition = 110
+      displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public CredentialValue awsAccessKey = () -> "";
 
@@ -159,7 +169,8 @@ public class ClusterHdfsConfigBean {
       label = "Secret Access Key",
       description = "AWS secret access key",
       group = "S3",
-      displayPosition = 120
+      displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public CredentialValue awsSecretKey = () -> "";
 

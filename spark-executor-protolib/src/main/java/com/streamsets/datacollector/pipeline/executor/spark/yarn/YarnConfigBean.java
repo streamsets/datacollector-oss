@@ -39,7 +39,8 @@ public class YarnConfigBean {
       required = true,
       label = "Deploy Mode",
       group = "SPARK",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(DeployModeChooserValues.class)
   public DeployMode deployMode;
@@ -49,7 +50,8 @@ public class YarnConfigBean {
       required = true,
       label = "Driver Memory",
       group = "SPARK",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String driverMemory = "";
 
@@ -58,7 +60,8 @@ public class YarnConfigBean {
       required = true,
       label = "Executor Memory",
       group = "SPARK",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String executorMemory = "";
 
@@ -69,7 +72,8 @@ public class YarnConfigBean {
       label = "Dynamic Allocation",
       description = "Enable the dynamic allocation of Spark worker nodes",
       group = "SPARK",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean dynamicAllocation = true;
 
@@ -81,8 +85,8 @@ public class YarnConfigBean {
       dependsOn = "dynamicAllocation",
       triggeredByValue = "true",
       group = "SPARK",
-      displayPosition = 60
-
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int minExecutors;
 
@@ -94,7 +98,8 @@ public class YarnConfigBean {
       dependsOn = "dynamicAllocation",
       triggeredByValue = "true",
       group = "SPARK",
-      displayPosition = 70
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int maxExecutors;
 
@@ -106,7 +111,8 @@ public class YarnConfigBean {
       dependsOn = "dynamicAllocation",
       triggeredByValue = "false",
       group = "SPARK",
-      displayPosition = 80
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int numExecutors;
 
@@ -115,7 +121,8 @@ public class YarnConfigBean {
       required = false,
       label = "Proxy User",
       group = "SPARK",
-      displayPosition = 110
+      displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String proxyUser = "";
 
@@ -125,7 +132,8 @@ public class YarnConfigBean {
       label = "Additional Spark Arguments",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
-      displayPosition = 140
+      displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> noValueArgs = new ArrayList<>();
 
@@ -135,7 +143,8 @@ public class YarnConfigBean {
       label = "Additional Spark Arguments and Values",
       description = "Use this to pass any additional arguments to Spark Launcher/Spark Submit. Overrides other parameters",
       group = "SPARK",
-      displayPosition = 150
+      displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public Map<String, String> args = new HashMap<>();
 
@@ -144,7 +153,8 @@ public class YarnConfigBean {
       required = false,
       label = "Environment Variables",
       group = "SPARK",
-      displayPosition = 160
+      displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public Map<String, String> env = new HashMap<>();
 
@@ -156,7 +166,8 @@ public class YarnConfigBean {
       required = true,
       label = "Language",
       group = "APPLICATION",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(LanguageChooserValues.class)
   public Language language;
@@ -166,7 +177,8 @@ public class YarnConfigBean {
       required = true,
       label = "Application Name",
       group = "APPLICATION",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String appName = "";
 
@@ -175,7 +187,8 @@ public class YarnConfigBean {
       required = true,
       label = "Application Resource",
       group = "APPLICATION",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String appResource = "";
 
@@ -186,7 +199,8 @@ public class YarnConfigBean {
       group = "APPLICATION",
       dependsOn = "language",
       triggeredByValue = "JVM",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String mainClass = "";
 
@@ -197,7 +211,8 @@ public class YarnConfigBean {
       elDefs = {RecordEL.class, VaultEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       group = "APPLICATION",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> appArgs = new ArrayList<>();
 
@@ -206,7 +221,8 @@ public class YarnConfigBean {
       required = false,
       label = "Additional JARs",
       group = "APPLICATION",
-      displayPosition = 60
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> additionalJars = new ArrayList<>();
 
@@ -218,7 +234,8 @@ public class YarnConfigBean {
       group = "APPLICATION",
       dependsOn = "language",
       triggeredByValue = "PYTHON",
-      displayPosition = 70
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> pyFiles = new ArrayList<>();
 
@@ -227,7 +244,8 @@ public class YarnConfigBean {
       required = false,
       label = "Additional Files",
       group = "APPLICATION",
-      displayPosition = 80
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public List<String> additionalFiles = new ArrayList<>();
 
@@ -239,7 +257,8 @@ public class YarnConfigBean {
       dependsOn = "deployMode",
       triggeredByValue = "CLUSTER",
       group = "APPLICATION",
-      displayPosition = 90
+      displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean waitForCompletion;
 
@@ -253,7 +272,8 @@ public class YarnConfigBean {
       elDefs = TimeEL.class,
       dependsOn = "waitForCompletion",
       triggeredByValue = "true",
-      displayPosition = 100
+      displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public long waitTimeout;
 
@@ -267,7 +287,8 @@ public class YarnConfigBean {
       description = "Time to wait for the Spark app to be submitted successfully. Note that this cause batch delay" +
           "Enter 0 to not wait for app submission. May cause appId to not be updated",
       group = "APPLICATION",
-      displayPosition = 110
+      displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public long submitTimeout;
 
@@ -278,7 +299,8 @@ public class YarnConfigBean {
       label = "Enable Verbose Logging",
       description = "Enable only for testing, as a lot of additional log data is written to sdc.log",
       group = "APPLICATION",
-      displayPosition = 120
+      displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean verbose;
 

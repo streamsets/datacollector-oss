@@ -35,7 +35,8 @@ public class HdfsActionsConfig {
     label = "Task",
     description = "Task that should be performed.",
     group = "TASKS",
-    displayPosition = 90
+    displayPosition = 90,
+    displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(TaskTypeChooserValues.class)
   public TaskType taskType = TaskType.CHANGE_EXISTING_FILE;
@@ -47,6 +48,7 @@ public class HdfsActionsConfig {
     label = "File Path",
     description = "Full path to the file on which the metadata operations should be executed.",
     displayPosition = 100,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class}
@@ -60,6 +62,7 @@ public class HdfsActionsConfig {
     label = "Move File",
     description = "Moves the file to a different directory. The file name won't be changed.",
     displayPosition = 110,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependencies = {
       @Dependency(configName = "taskType", triggeredByValues = "CHANGE_EXISTING_FILE")
@@ -74,6 +77,7 @@ public class HdfsActionsConfig {
     label = "New Location",
     description = "New location where the file should be moved to. File name will be preserved.",
     displayPosition = 115,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldMoveFile",
     triggeredByValue = "true",
@@ -89,6 +93,7 @@ public class HdfsActionsConfig {
     label = "Rename",
     description = "Renames the file to a different file name.",
     displayPosition = 120,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependencies = {
       @Dependency(configName = "taskType", triggeredByValues = "CHANGE_EXISTING_FILE")
@@ -103,6 +108,7 @@ public class HdfsActionsConfig {
     label = "New name",
     description = "New name for the file.",
     displayPosition = 125,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldRename",
     triggeredByValue = "true",
@@ -118,6 +124,7 @@ public class HdfsActionsConfig {
     label = "Set Ownership",
     description = "Set to change owner and group of the file.",
     displayPosition = 130,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependencies = {
       @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
@@ -131,6 +138,7 @@ public class HdfsActionsConfig {
     defaultValue = "new_owner",
     label = "New Owner",
     displayPosition = 135,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldChangeOwnership",
     triggeredByValue = "true",
@@ -145,6 +153,7 @@ public class HdfsActionsConfig {
     defaultValue = "new_group",
     label = "New Group",
     displayPosition = 140,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldChangeOwnership",
     triggeredByValue = "true",
@@ -160,6 +169,7 @@ public class HdfsActionsConfig {
     label = "Set Permissions",
     description = "Set to override files permissions.",
     displayPosition = 145,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependencies = {
       @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
@@ -174,6 +184,7 @@ public class HdfsActionsConfig {
     label = "New Permissions",
     description = "Permissions in either in octal or symbolic format.",
     displayPosition = 150,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldSetPermissions",
     triggeredByValue = "true",
@@ -189,6 +200,7 @@ public class HdfsActionsConfig {
     label = "Set ACLs",
     description = "Set to set extended access attributes.",
     displayPosition = 155,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependencies = {
       @Dependency(configName = "taskType", triggeredByValues = {"CHANGE_EXISTING_FILE", "CREATE_EMPTY_FILE"})
@@ -203,6 +215,7 @@ public class HdfsActionsConfig {
     label = "New ACLs",
     description = "List of ACLs separated by commas.",
     displayPosition = 160,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "TASKS",
     dependsOn = "shouldSetAcls",
     triggeredByValue = "true",

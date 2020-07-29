@@ -38,7 +38,8 @@ public class KuduOutputColumnMapping {
       defaultValue = "",
       label = "SDC Field",
       description = "Field to write in outgoing record",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String field;
@@ -49,7 +50,8 @@ public class KuduOutputColumnMapping {
       defaultValue="",
       label = "Default Value",
       description = "Default value to use if no value found in Kudu",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String defaultValue;
 

@@ -28,6 +28,7 @@ public class CacheConfig {
       label = "Enable Local Caching",
       description = "Select to enable caching of lookups. This improves performance, but should only be used when values rarely change",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean enabled = false;
@@ -42,6 +43,7 @@ public class CacheConfig {
       dependsOn = "enabled",
       triggeredByValue = "true",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public long maxSize = -1;
@@ -55,6 +57,7 @@ public class CacheConfig {
       dependsOn = "enabled",
       triggeredByValue = "true",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(EvictionPolicyTypeChooserValues.class)
@@ -69,6 +72,7 @@ public class CacheConfig {
       dependsOn = "enabled",
       triggeredByValue = "true",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public long expirationTime = 1;
@@ -81,6 +85,7 @@ public class CacheConfig {
       dependsOn = "enabled",
       triggeredByValue = "true",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(TimeUnitChooserValues.class)

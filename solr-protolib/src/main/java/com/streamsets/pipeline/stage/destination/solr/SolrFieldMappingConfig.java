@@ -43,7 +43,8 @@ public class SolrFieldMappingConfig {
       defaultValue="/",
       label = "Field Path",
       description = "The field-path in the incoming record to output.",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String field;
@@ -54,7 +55,8 @@ public class SolrFieldMappingConfig {
       defaultValue="field",
       label = "Solr Field Name",
       description="The Solr field name to write this field to.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String solrFieldName;
 

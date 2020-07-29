@@ -60,6 +60,7 @@ public class HiveConfigBean {
           "Use a valid JDBC URL format, such as: jdbc:hive2://<host>:<port>/<dbname>.",
       defaultValue = "jdbc:hive2://<host>:<port>/default",
       displayPosition= 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       group = "HIVE"
   )
@@ -72,6 +73,7 @@ public class HiveConfigBean {
       label = "JDBC Driver Name",
       description = "The fully-qualified JDBC driver class name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String hiveJDBCDriver;
@@ -82,6 +84,7 @@ public class HiveConfigBean {
       defaultValue = "false",
       label = "Use Credentials",
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public boolean useCredentials;
@@ -93,6 +96,7 @@ public class HiveConfigBean {
       triggeredByValue = "true",
       label = "Username",
       displayPosition = 22,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public CredentialValue username;
@@ -104,6 +108,7 @@ public class HiveConfigBean {
       triggeredByValue = "true",
       label = "Password",
       displayPosition = 23,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public CredentialValue password;
@@ -115,6 +120,7 @@ public class HiveConfigBean {
       label = "Additional JDBC Configuration Properties",
       description = "Additional properties to pass to the underlying JDBC driver.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HIVE"
   )
   @ListBeanModel
@@ -128,6 +134,7 @@ public class HiveConfigBean {
       description = "An absolute path or a directory under SDC resources directory to load core-site.xml," +
           " hdfs-site.xml and hive-site.xml files.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String confDir;
@@ -138,6 +145,7 @@ public class HiveConfigBean {
       label = "Additional Hadoop Configuration",
       description = "Additional configuration properties. Values here override values loaded from config files.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public Map<String, String> additionalConfigProperties;
@@ -150,6 +158,7 @@ public class HiveConfigBean {
       description = "Configures the cache size for storing table related information." +
           " Use -1 for unlimited number of table entries in the cache.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public long maxCacheSize = -1L;

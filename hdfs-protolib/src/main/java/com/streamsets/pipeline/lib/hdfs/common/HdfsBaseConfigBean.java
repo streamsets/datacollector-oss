@@ -49,6 +49,7 @@ public abstract class HdfsBaseConfigBean {
       label = "File System URI",
       description = "URI for the underlying Hadoop file system. Include the scheme and authority as follows: <scheme>://<authority>",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsUri;
@@ -59,6 +60,7 @@ public abstract class HdfsBaseConfigBean {
       label = "Impersonation User",
       description = "If set, Data Collector writes to the underlying Hadoop file system as this user. The Data Collector user must be configured as a proxy user in the file system",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsUser;
@@ -70,6 +72,7 @@ public abstract class HdfsBaseConfigBean {
       defaultValue = "false",
       description = "If set, Data Collector uses the Kerberos principal and keytab to connect to the file system.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public boolean hdfsKerberos;
@@ -81,6 +84,7 @@ public abstract class HdfsBaseConfigBean {
       label = "Configuration Files Directory",
       description = "A resource directory or symbolic link with configuration files such as core-site.xml and hdfs-site.xml",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   public String hdfsConfDir;
@@ -91,6 +95,7 @@ public abstract class HdfsBaseConfigBean {
       label = "Additional Configuration",
       description = "Additional properties to pass to the underlying Hadoop File System. These properties take precedence over properties in the configuration files in the Configuration Files Directory.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HADOOP_FS"
   )
   @ListBeanModel

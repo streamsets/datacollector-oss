@@ -41,6 +41,7 @@ public class JobConfig {
     description = "Name that will be used for naming the executed mapreduce job.",
     defaultValue = "SDC MapReduceJob",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "JOB"
   )
   public String jobName;
@@ -51,6 +52,7 @@ public class JobConfig {
     label = "Job Type",
     description = "Type of job that will be executed.",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "JOB"
   )
   @ValueChooserModel(JobTypeChooserValues.class)
@@ -62,6 +64,7 @@ public class JobConfig {
     label = "Custom JobCreator",
     description = "Custom class implementing JobCreator interface.",
     displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "JOB",
     dependsOn = "jobType",
     triggeredByValue = "CUSTOM"
@@ -74,6 +77,7 @@ public class JobConfig {
     label = "Job Configuration",
     description = "Specific configuration options for each job, evaluation expressions are allowed here.",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "JOB",
     evaluation = ConfigDef.Evaluation.EXPLICIT,
     elDefs = {RecordEL.class}

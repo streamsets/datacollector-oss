@@ -28,6 +28,7 @@ public class AvroParquetConfig {
     description = "Compression codec that will be used in Parquet. Valid values are for example 'SNAPPY' or 'LZO'. Empty value will use Parquet default.",
     defaultValue = "",
     displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"
@@ -41,6 +42,7 @@ public class AvroParquetConfig {
     description = "Row group size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"
@@ -54,6 +56,7 @@ public class AvroParquetConfig {
     description = "Page size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"
@@ -67,6 +70,7 @@ public class AvroParquetConfig {
     description = "Dictionary page size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 60,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"
@@ -80,6 +84,7 @@ public class AvroParquetConfig {
     description = "Max padding size that will be used in Parquet. Use -1 to use the Parquet default.",
     defaultValue = "-1",
     displayPosition = 70,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"
@@ -93,6 +98,7 @@ public class AvroParquetConfig {
       label = "Data Time Zone",
       description = "Time zone to use for a record.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "AVRO_PARQUET",
       dependsOn = "jobType^",
       triggeredByValue = "AVRO_PARQUET"

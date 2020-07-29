@@ -45,6 +45,7 @@ public class HiveDTarget extends DTarget {
       type = ConfigDef.Type.STRING,
       description = "Hive Metastore Thrift URL in the form: thrift://<host>:<port>",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String hiveUrl;
@@ -56,6 +57,7 @@ public class HiveDTarget extends DTarget {
       defaultValue = "default",
       description = "The Hive schema of the target table. Sometimes also called \"database\".",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String schema;
@@ -65,6 +67,7 @@ public class HiveDTarget extends DTarget {
       label = "Table",
       type = ConfigDef.Type.STRING,
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String table;
@@ -77,6 +80,7 @@ public class HiveDTarget extends DTarget {
       description = "An absolute path or a directory under SDC resources directory to load core-site.xml and" +
           " hive-site.xml files to configure the Hive.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public String hiveConfDir;
@@ -88,6 +92,7 @@ public class HiveDTarget extends DTarget {
       label = "Field to Column Mapping",
       description = "Use to specify additional field mappings when input field name and column name don't match.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   @ListBeanModel
@@ -100,6 +105,7 @@ public class HiveDTarget extends DTarget {
       defaultValue = "true",
       description = "Automatically create partitions if they do not exist.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HIVE"
   )
   public boolean autoCreatePartitions;
@@ -112,6 +118,7 @@ public class HiveDTarget extends DTarget {
       defaultValue = "1000",
       min = 2,
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int txnBatchSize;
@@ -124,6 +131,7 @@ public class HiveDTarget extends DTarget {
       defaultValue = "128",
       min = 1,
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int bufferLimitKb;
@@ -134,6 +142,7 @@ public class HiveDTarget extends DTarget {
       label = "Hive Configuration",
       description = "Additional configuration properties. Values here override values loaded from config files.",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Map<String, String> additionalHiveProperties;

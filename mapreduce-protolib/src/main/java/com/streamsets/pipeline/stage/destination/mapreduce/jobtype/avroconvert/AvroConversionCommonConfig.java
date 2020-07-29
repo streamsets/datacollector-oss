@@ -27,6 +27,7 @@ public class AvroConversionCommonConfig {
     description = "Absolute path to the input avro file on HDFS.",
     defaultValue = "${record:value('/filepath')}",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "AVRO_CONVERSION",
     dependsOn = "jobType^",
     triggeredByValue = {"AVRO_PARQUET", "AVRO_ORC"},
@@ -42,6 +43,7 @@ public class AvroConversionCommonConfig {
     description = "Absolute path to the destination directory on HDFS.",
     defaultValue = "",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "AVRO_CONVERSION",
     dependsOn = "jobType^",
     triggeredByValue = {"AVRO_PARQUET", "AVRO_ORC"},
@@ -57,6 +59,7 @@ public class AvroConversionCommonConfig {
     description = "If checked, the input file will not be removed after the MapReduce converter job ends.",
     defaultValue = "false",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "AVRO_CONVERSION",
     dependsOn = "jobType^",
     triggeredByValue = {"AVRO_PARQUET", "AVRO_ORC"}
@@ -70,6 +73,7 @@ public class AvroConversionCommonConfig {
     description = "If the temporary file exists, overwrite it.",
     defaultValue = "false",
     displayPosition = 80,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "AVRO_CONVERSION",
     dependsOn = "jobType^",
     triggeredByValue = {"AVRO_PARQUET", "AVRO_ORC"}

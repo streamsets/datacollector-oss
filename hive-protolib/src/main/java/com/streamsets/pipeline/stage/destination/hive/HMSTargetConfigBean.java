@@ -60,6 +60,7 @@ public class HMSTargetConfigBean {
           " When selected, the Avro schema URL will not be included in the query.",
       defaultValue = "true",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean storedAsAvro = true;
@@ -71,6 +72,7 @@ public class HMSTargetConfigBean {
       description = "If specified, the data collector will use the hdfs location for serializing avro schemas." +
           " If the path does not start with '/' (relative) it will be relative to table data location in hdfs",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       defaultValue = ".schemas",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -89,6 +91,7 @@ public class HMSTargetConfigBean {
           "schemas in HDFS with specified hdfs user. The data collector" +
           " user must be configured as a proxy user in HDFS.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependsOn = "storedAsAvro",
       triggeredByValue = "false"
@@ -101,6 +104,7 @@ public class HMSTargetConfigBean {
       label = "Header Attribute Expressions",
       description = "Header attributes to insert into the event output",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       defaultValue = "{}",
       evaluation = ConfigDef.Evaluation.EXPLICIT,

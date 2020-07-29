@@ -23,7 +23,8 @@ public class ConnectionPropertyBean {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Property Name",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String property;
 
@@ -31,7 +32,8 @@ public class ConnectionPropertyBean {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Value",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public CredentialValue value;
 

@@ -27,6 +27,7 @@ public class HBaseConnectionConfig {
       description = "Comma separated list of servers in the ZooKeeper Quorum. " +
           "For example, host1.mydomain.com,host2.mydomain.com,host3.mydomain.com ",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public String zookeeperQuorum;
@@ -38,6 +39,7 @@ public class HBaseConnectionConfig {
       label = "ZooKeeper Client Port",
       description = "The ZooKeeper port at which clients connect",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public int clientPort;
@@ -49,6 +51,7 @@ public class HBaseConnectionConfig {
       label = "ZooKeeper Parent Znode",
       description = "Root Znode for HBase in ZooKeeper",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public String zookeeperParentZNode;
@@ -61,6 +64,7 @@ public class HBaseConnectionConfig {
       description = "The qualified table name. Use format <NAMESPACE>.<TABLE>. " +
           "If namespace is not specified, namespace 'default' will be assumed",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public String tableName;
@@ -70,6 +74,7 @@ public class HBaseConnectionConfig {
       defaultValue = "false",
       label = "Kerberos Authentication",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public boolean kerberosAuth;
@@ -81,6 +86,7 @@ public class HBaseConnectionConfig {
       description = "If set, the data collector will write to HBase as this user. " +
           "The data collector user must be configured as a proxy user in HDFS.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public String hbaseUser;
@@ -92,6 +98,7 @@ public class HBaseConnectionConfig {
       label = "HBase Configuration Directory",
       description = "An absolute path or a directory under SDC resources directory to load hbase-site.xml configuration file",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public String hbaseConfDir;
@@ -101,6 +108,7 @@ public class HBaseConnectionConfig {
       label = "HBase Configuration",
       description = "Additional HBase client properties",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE"
   )
   public Map<String, String> hbaseConfigs;

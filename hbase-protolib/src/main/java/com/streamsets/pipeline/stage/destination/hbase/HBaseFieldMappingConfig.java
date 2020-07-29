@@ -43,7 +43,9 @@ public class HBaseFieldMappingConfig {
       defaultValue = "/",
       label = "Field Path",
       description = "The field path in the incoming record to output",
-      displayPosition = 10)
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   @FieldSelectorModel(singleValued = true)
   public String columnValue;
 
@@ -54,7 +56,9 @@ public class HBaseFieldMappingConfig {
       label = "Column",
       description = "The column to write this field into. Use format <COLUMNFAMILY>:<QUALIFIER>. " +
         "The column family must exist",
-      displayPosition = 20)
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   public String columnName;
 
   @ConfigDef(
@@ -63,7 +67,9 @@ public class HBaseFieldMappingConfig {
       defaultValue = "TEXT",
       label = "Storage Type",
       description = "The storage type for column",
-      displayPosition = 30)
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
   @ValueChooserModel(StorageTypeChooserValues.class)
   public StorageType columnStorageType;
 }

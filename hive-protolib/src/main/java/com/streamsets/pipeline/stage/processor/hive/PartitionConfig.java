@@ -34,7 +34,8 @@ public final class PartitionConfig {
       defaultValue="dt",
       label = "Partition Column Name",
       description = "Partition column's name",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String name;
 
@@ -44,7 +45,8 @@ public final class PartitionConfig {
       defaultValue="STRING",
       label = "Partition Value Type",
       description="Partition column's value type",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(PartitionColumnTypeChooserValues.class)
   public HiveType valueType = HiveType.STRING;
@@ -57,7 +59,8 @@ public final class PartitionConfig {
       description="Expression language to obtain partition value from record",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String valueEL;
 

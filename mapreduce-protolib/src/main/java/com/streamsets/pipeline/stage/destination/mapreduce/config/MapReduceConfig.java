@@ -45,6 +45,7 @@ public class MapReduceConfig {
     label = "MapReduce Configuration Directory",
     description = "Directory containing configuration files for MapReduce (core-site.xml, yarn-site.xml, hdfs-site.xml and mapred-site.xml)",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "MAPREDUCE"
   )
   public String mapReduceConfDir;
@@ -56,6 +57,7 @@ public class MapReduceConfig {
     description = "Additional Hadoop properties to pass to the underlying Hadoop Configuration. These properties " +
       "have precedence over properties loaded via the 'MapReduce Configuration Directory' property.",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "MAPREDUCE"
   )
   public Map<String, String> mapreduceConfigs;
@@ -67,6 +69,7 @@ public class MapReduceConfig {
     description = "If set, Data Collector will start the MapReduce job as this user. " +
       "The Data Collector user must be configured as a proxy user in the cluster.",
     displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "MAPREDUCE"
   )
   public String mapreduceUser;
@@ -78,6 +81,7 @@ public class MapReduceConfig {
     defaultValue = "false",
     description = "",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "MAPREDUCE"
   )
   public boolean kerberos;

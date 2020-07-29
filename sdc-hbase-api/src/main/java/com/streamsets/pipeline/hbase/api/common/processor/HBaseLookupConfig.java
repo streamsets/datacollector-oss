@@ -38,6 +38,7 @@ public class HBaseLookupConfig {
       description = "Whether to perform a bulk lookup of all keys in the batch, or perform individual lookups per key.",
       defaultValue = "BATCH",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(LookupModeChooserValues.class)
@@ -48,6 +49,7 @@ public class HBaseLookupConfig {
       type = ConfigDef.Type.MODEL,
       label = "Lookup Parameters",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP"
   )
   @ListBeanModel
@@ -61,6 +63,7 @@ public class HBaseLookupConfig {
       description = "If set, the record will not be treated as error record when a row field path is not present in the " +
           "record or if the row field value is null",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "LOOKUP"
   )
   public boolean ignoreMissingFieldPath = true;

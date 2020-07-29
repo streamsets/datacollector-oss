@@ -40,6 +40,7 @@ public class KuduConfigBean {
       label = "Kudu Masters",
       description = "Comma-separated list of \"host:port\" pairs of the masters",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   public String kuduMaster;
@@ -53,6 +54,7 @@ public class KuduConfigBean {
       label = "Table Name",
       description = "Kudu table to write to. If table doesn't exist, records will be treated as error records.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   public String tableNameTemplate;
@@ -63,6 +65,7 @@ public class KuduConfigBean {
       label = "Field to Column Mapping",
       description = "Optionally specify additional field mappings when input field name and column name don't match.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   @ListBeanModel
@@ -75,6 +78,7 @@ public class KuduConfigBean {
       label = "Default Operation",
       description = "Default operation to perform if sdc.operation.type is not set in record header.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   @ValueChooserModel(KuduOperationChooserValues.class)
@@ -87,6 +91,7 @@ public class KuduConfigBean {
       defaultValue = "NONE",
       description = "If input is a change data capture log, specify the format.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "KUDU"
   )
   @ValueChooserModel(ChangeLogFormatChooserValues.class)
@@ -100,6 +105,7 @@ public class KuduConfigBean {
       label = "External Consistency",
       description = "The external consistency mode",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(ConsistencyModeChooserValues.class)
@@ -113,6 +119,7 @@ public class KuduConfigBean {
         " equal to the number of records in the batch passed from the pipeline.",
       defaultValue = "1000",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int mutationBufferSpace;
@@ -125,6 +132,7 @@ public class KuduConfigBean {
       description = "Set the maximum number of worker threads. If not provided or set to 0, " +
           "the default (2 * the number of available processors) is used.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int numWorkers;
@@ -136,6 +144,7 @@ public class KuduConfigBean {
       label = "Operation Timeout (milliseconds)",
       description = "Default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
       displayPosition = 25,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int operationTimeout = 10000;
@@ -148,6 +157,7 @@ public class KuduConfigBean {
       description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
           "A value of 0 disables the timeout.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int adminOperationTimeout = 30000;
@@ -159,6 +169,7 @@ public class KuduConfigBean {
       label = "Unsupported Operation Handling",
       description = "Action to take when operation type is not supported",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)

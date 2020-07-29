@@ -38,6 +38,7 @@ public class KuduLookupConfig {
       label = "Kudu Masters",
       description = "Comma-separated list of \"host:port\" pairs of the masters",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   public String kuduMaster;
@@ -51,6 +52,7 @@ public class KuduLookupConfig {
       label = "Kudu Table Name",
       description = "Table name to perform lookup",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   public String kuduTableTemplate;
@@ -60,6 +62,7 @@ public class KuduLookupConfig {
       label = "Key Columns Mapping",
       description = "Specify the columns used as keys for the lookup. For best performance, include primary key columns.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   @ListBeanModel
@@ -70,6 +73,7 @@ public class KuduLookupConfig {
       label = "Column to Output Field Mapping",
       description = "Map column names to SDC field names",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KUDU"
   )
   @ListBeanModel
@@ -81,6 +85,7 @@ public class KuduLookupConfig {
       label = "Case Sensitive",
       description = "If not set, the table name and all column names are processed in lowercase",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "KUDU"
   )
   @ListBeanModel
@@ -92,6 +97,7 @@ public class KuduLookupConfig {
       label = "Missing Lookup Behavior",
       description = "Behavior when lookup did not find a matching record. ",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "KUDU"
   )
   @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
@@ -104,6 +110,7 @@ public class KuduLookupConfig {
       description = "Ignore when matching record does not have value in the column " +
           "specified in Column to Output Field Mapping. Otherwise send to error.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "KUDU"
   )
   public boolean ignoreMissing = true;
@@ -115,6 +122,7 @@ public class KuduLookupConfig {
       description = "How to handle multiple values ",
       defaultValue = "FIRST_ONLY",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(KuduLookupMultipleValuesBehaviorChooserValues.class)
@@ -128,6 +136,7 @@ public class KuduLookupConfig {
       description = "Set the maximum number of threads to perform lookup processing. If not provided or set to 0, " +
           "the default number (2 * the number of available processors) is used.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int numWorkers;
@@ -139,6 +148,7 @@ public class KuduLookupConfig {
       label = "Operation Timeout (milliseconds)",
       description = "Sets the default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int operationTimeout = 10000;
@@ -151,6 +161,7 @@ public class KuduLookupConfig {
       description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
           "A value of 0 disables the timeout.",
       displayPosition = 35,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public int adminOperationTimeout = 30000;
@@ -164,6 +175,7 @@ public class KuduLookupConfig {
       description = "Select to enable caching of table information. This improves performance, " +
           "but should only be used when the table schema does not change often",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "LOOKUP"
   )
   public boolean enableTableCache;
@@ -178,6 +190,7 @@ public class KuduLookupConfig {
       dependsOn = "enableTableCache",
       triggeredByValue = "true",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "LOOKUP"
   )
   public int cacheSize = -1;

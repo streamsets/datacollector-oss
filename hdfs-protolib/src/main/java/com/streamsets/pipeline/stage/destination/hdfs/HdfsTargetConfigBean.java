@@ -88,6 +88,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
       label = "Files Suffix",
       description = "File name suffix e.g.'txt'",
       displayPosition = 106,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "OUTPUT_FILES",
       dependsOn = "fileType",
       triggeredByValue = {"TEXT", "SEQUENCE_FILE"}

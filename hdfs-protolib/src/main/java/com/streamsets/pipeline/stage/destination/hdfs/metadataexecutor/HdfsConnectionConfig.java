@@ -49,6 +49,7 @@ public class HdfsConnectionConfig {
     label = "Hadoop FS URI",
     description = "",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "HDFS"
   )
   public String hdfsUri;
@@ -60,6 +61,7 @@ public class HdfsConnectionConfig {
     description = "If set, the data collector will write to HDFS as this user. " +
       "The data collector user must be configured as a proxy user in HDFS.",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "HDFS"
   )
   public String hdfsUser = "";
@@ -71,6 +73,7 @@ public class HdfsConnectionConfig {
     defaultValue = "false",
     description = "",
     displayPosition = 30,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "HDFS"
   )
   public boolean hdfsKerberos;
@@ -82,6 +85,7 @@ public class HdfsConnectionConfig {
     label = "Hadoop FS Configuration Directory",
     description = "An SDC resource directory or symbolic link with HDFS configuration files core-site.xml and hdfs-site.xml",
     displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "HDFS"
   )
   public String hdfsConfDir;
@@ -93,6 +97,7 @@ public class HdfsConnectionConfig {
     description = "Additional Hadoop properties to pass to the underlying Hadoop FileSystem. These properties " +
       "have precedence over properties loaded via the 'Hadoop FS Configuration Directory' property.",
     displayPosition = 60,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "HDFS"
   )
   public Map<String, String> hdfsConfigs = Collections.emptyMap();

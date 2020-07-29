@@ -51,6 +51,7 @@ public class FlumeConfig {
     label = "Hosts Configuration",
     description = "Flume host alias and the address in the form <HOST>:<PORT>",
     displayPosition = 10,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLUME"
   )
   public Map<String, String> flumeHostsConfig;
@@ -61,6 +62,7 @@ public class FlumeConfig {
     defaultValue = "AVRO_FAILOVER",
     label = "Client Type",
     displayPosition = 20,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLUME"
   )
   @ValueChooserModel(ClientTypeChooserValues.class)
@@ -73,6 +75,7 @@ public class FlumeConfig {
     label = "Backoff",
     description = "Temporarily avoid writing to a failed host",
     displayPosition = 40,
+    displayMode = ConfigDef.DisplayMode.BASIC,
     group = "FLUME",
     dependsOn = "clientType",
     triggeredByValue = "AVRO_LOAD_BALANCING"
@@ -87,6 +90,7 @@ public class FlumeConfig {
     description = "Max ms that a client will remain inactive due to a previous failure with that host " +
       "(default: 0, which effectively becomes 30000)",
     displayPosition = 50,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     dependsOn = "clientType",
     triggeredByValue = "AVRO_LOAD_BALANCING",
@@ -102,6 +106,7 @@ public class FlumeConfig {
     label = "Host Selection Strategy",
     description = "Strategy used to load balance between hosts",
     displayPosition = 60,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     dependsOn = "clientType",
     triggeredByValue = "AVRO_LOAD_BALANCING"
@@ -115,6 +120,7 @@ public class FlumeConfig {
     defaultValue = "100",
     label = "Flume Batch Size (events)",
     displayPosition = 70,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     min = 1,
     max = Integer.MAX_VALUE
@@ -127,6 +133,7 @@ public class FlumeConfig {
     defaultValue = "20000",
     label = "Flume Client Connection Timeout (ms)",
     displayPosition = 80,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     min = 1,
     max = Integer.MAX_VALUE
@@ -140,6 +147,7 @@ public class FlumeConfig {
     label = "Flume Client Request Timeout (ms)",
     description = "",
     displayPosition = 90,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     min = 1,
     max = Integer.MAX_VALUE
@@ -153,6 +161,7 @@ public class FlumeConfig {
     label = "Max Retry Attempts",
     description = "Number of times to resend data to the Flume agent in case of failures",
     displayPosition = 100,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     min = 0,
     max = Integer.MAX_VALUE
@@ -166,6 +175,7 @@ public class FlumeConfig {
     label = "Retry Wait Time (ms)",
     description = "Time to wait before resending data to Flume",
     displayPosition = 110,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME",
     min = 1,
     max = Integer.MAX_VALUE
@@ -179,6 +189,7 @@ public class FlumeConfig {
     label = "One Event per Batch",
     description = "Generates a single Flume event with all records in the batch",
     displayPosition = 120,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "FLUME"
   )
   public boolean singleEventPerBatch;
