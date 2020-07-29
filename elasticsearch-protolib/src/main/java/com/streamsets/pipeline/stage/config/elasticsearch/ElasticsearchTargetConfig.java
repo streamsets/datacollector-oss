@@ -38,6 +38,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<field path>\")}'.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -51,6 +52,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       label = "Data Time Zone",
       description = "Time zone to use to resolve the datetime of a time based index",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -62,6 +64,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       label = "Index",
       description = "",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -74,6 +77,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       label = "Mapping",
       description = "",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -87,6 +91,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       description = "An expression which evaluates to a document ID. Required for create/update/delete. " +
           "Optional for index, leave blank to use auto-generated IDs.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ELASTIC_SEARCH",
       elDefs = {RecordEL.class, DataUtilEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -94,26 +99,28 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
   public String docIdTemplate;
 
   @ConfigDef(
-          required = false,
-          type = ConfigDef.Type.STRING,
-          label = "Parent ID",
-          description = "An expression which evaluates to a document ID for the parent in a parent/child hierarchy.",
-          displayPosition = 85,
-          group = "ELASTIC_SEARCH",
-          elDefs = {RecordEL.class, DataUtilEL.class},
-          evaluation = ConfigDef.Evaluation.EXPLICIT
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Parent ID",
+      description = "An expression which evaluates to a document ID for the parent in a parent/child hierarchy.",
+      displayPosition = 85,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "ELASTIC_SEARCH",
+      elDefs = {RecordEL.class, DataUtilEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String parentIdTemplate;
 
   @ConfigDef(
-          required = false,
-          type = ConfigDef.Type.STRING,
-          label = "Routing",
-          description = "An expression which evaluates to a document ID whose shard will be indexed on.",
-          displayPosition = 87,
-          group = "ELASTIC_SEARCH",
-          elDefs = {RecordEL.class, DataUtilEL.class},
-          evaluation = ConfigDef.Evaluation.EXPLICIT
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Routing",
+      description = "An expression which evaluates to a document ID whose shard will be indexed on.",
+      displayPosition = 87,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "ELASTIC_SEARCH",
+      elDefs = {RecordEL.class, DataUtilEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String routingTemplate;
 
@@ -123,6 +130,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       defaultValue = "UTF-8",
       label = "Data Charset",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(CharsetChooserValues.class)
@@ -135,6 +143,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       label = "Default Operation",
       description = "Default operation to perform if sdc.operation.type is not set in record header.",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(ElasticsearchOperationChooserValues.class)
@@ -147,6 +156,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       label = "Unsupported Operation Handling",
       description = "Action to take when operation type is not supported",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   @ValueChooserModel(UnsupportedOperationActionChooserValues.class)
@@ -162,6 +172,7 @@ public class ElasticsearchTargetConfig extends ElasticsearchConfig {
       defaultValue = "{\n}",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   public String rawAdditionalProperties;

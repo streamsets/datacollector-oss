@@ -27,6 +27,7 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       label = "Index",
       description = "Optional index to scope query",
       group = "ELASTIC_SEARCH",
+      displayMode = ConfigDef.DisplayMode.BASIC,
       displayPosition = 50
   )
   public String index;
@@ -37,7 +38,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       label = "Mapping",
       description = "Optional type mapping to scope query",
       group = "ELASTIC_SEARCH",
-      displayPosition = 60
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String mapping;
 
@@ -48,7 +50,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       description = "Fetches data incrementally based on the offset field until the pipeline is stopped",
       defaultValue = "false",
       group = "ELASTIC_SEARCH",
-      displayPosition = 70
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public boolean isIncrementalMode = false;
 
@@ -62,7 +65,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       dependsOn = "isIncrementalMode",
       triggeredByValue = "true",
       group = "ELASTIC_SEARCH",
-      displayPosition = 80
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public long queryInterval = 3600;
 
@@ -75,7 +79,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       dependsOn = "isIncrementalMode",
       triggeredByValue = "true",
       group = "ELASTIC_SEARCH",
-      displayPosition = 90
+      displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String offsetField = "timestamp";
 
@@ -88,7 +93,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       dependsOn = "isIncrementalMode",
       triggeredByValue = "true",
       group = "ELASTIC_SEARCH",
-      displayPosition = 100
+      displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String initialOffset = "now-1d/d";
 
@@ -101,7 +107,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       description = "Elasticsearch query to run",
       elDefs = OffsetEL.class,
       group = "ELASTIC_SEARCH",
-      displayPosition = 130
+      displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String query = "{\n  \"query\": {\n    \"match_all\": {}\n  }\n}";
 
@@ -112,7 +119,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       description = "Maximum amount of time to keep the search context alive",
       defaultValue = "1m",
       group = "ELASTIC_SEARCH",
-      displayPosition = 140
+      displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String cursorTimeout = "1m";
 
@@ -123,7 +131,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       description = "Whether to explicitly delete the scroll on pipeline stop, or let it expire",
       defaultValue = "true",
       group = "ELASTIC_SEARCH",
-      displayPosition = 150
+      displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean deleteCursor = true;
 
@@ -134,7 +143,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       description = "Maximum results to fetch per request from Elasticsearch",
       defaultValue = "1000",
       group = "ELASTIC_SEARCH",
-      displayPosition = 160
+      displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxBatchSize = 1000;
 
@@ -147,7 +157,8 @@ public class ElasticsearchSourceConfig extends ElasticsearchConfig {
       min = 1,
       max = 200,
       group = "ELASTIC_SEARCH",
-      displayPosition = 170
+      displayPosition = 170,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int numSlices = 1;
 }

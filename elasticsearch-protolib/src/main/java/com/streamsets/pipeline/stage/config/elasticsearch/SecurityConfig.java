@@ -35,6 +35,7 @@ public class SecurityConfig {
       triggeredByValue = "true",
       defaultValue = "BASIC",
       displayPosition = 37,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   @ValueChooserModel(SecurityModeChooserValues.class)
@@ -50,6 +51,7 @@ public class SecurityConfig {
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
       },
       displayPosition = 38,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   @ValueChooserModel(AwsRegionChooserValues.class)
@@ -62,6 +64,7 @@ public class SecurityConfig {
       description = "",
       defaultValue = "",
       displayPosition = 39,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "awsRegion",
       triggeredByValue = "OTHER",
       group = "SECURITY"
@@ -78,6 +81,7 @@ public class SecurityConfig {
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
       },
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public CredentialValue awsAccessKeyId = () -> "";
@@ -92,6 +96,7 @@ public class SecurityConfig {
           @Dependency(configName = "securityMode", triggeredByValues = "AWSSIGV4")
       },
       displayPosition = 41,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public CredentialValue awsSecretAccessKey = () -> "";
@@ -109,6 +114,7 @@ public class SecurityConfig {
           @Dependency(configName = "securityMode", triggeredByValues = "BASIC")
       },
       displayPosition = 42,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public CredentialValue securityUser = () -> "";
@@ -123,6 +129,7 @@ public class SecurityConfig {
           @Dependency(configName = "securityMode", triggeredByValues = "BASIC")
       },
       displayPosition = 43,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public CredentialValue securityPassword = () -> "";
@@ -136,6 +143,7 @@ public class SecurityConfig {
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       displayPosition = 44,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public String sslTrustStorePath;
@@ -147,6 +155,7 @@ public class SecurityConfig {
       dependsOn = "useSecurity^",
       triggeredByValue = "true",
       displayPosition = 45,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "SECURITY"
   )
   public CredentialValue sslTrustStorePassword = () -> "";

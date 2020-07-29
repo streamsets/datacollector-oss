@@ -35,6 +35,7 @@ public class ElasticsearchConfig {
       defaultValue = "[\"" + DEFAULT_HTTP_URI + "\"]",
       description = "Elasticsearch HTTP Endpoints.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ELASTIC_SEARCH"
   )
   public List<String> httpUris;
@@ -45,6 +46,7 @@ public class ElasticsearchConfig {
       label = "Additional HTTP Params",
       description = "Additional HTTP Params.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   public Map<String, String> params = new HashMap<>();
@@ -57,6 +59,7 @@ public class ElasticsearchConfig {
       description = "Select to automatically discover additional Elasticsearch nodes in the cluster. " +
           "Do not use if the Data Collector is on a different network from the cluster.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ELASTIC_SEARCH"
   )
   public boolean clientSniff = false;
@@ -68,6 +71,7 @@ public class ElasticsearchConfig {
       defaultValue = "false",
       description = "Use Security",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "ELASTIC_SEARCH"
   )
   public boolean useSecurity = false;
