@@ -93,14 +93,15 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   /* Charset Related -- Shown last */
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "UTF-8",
-    label = "Charset",
-    displayPosition = 1000,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UTF-8",
+      label = "Charset",
+      displayPosition = 1000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = {"TEXT", "JSON", "DELIMITED"}
   )
   @ValueChooserModel(CharsetChooserValues.class)
   public String charset;
@@ -110,102 +111,110 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   /** For DELIMITED Content **/
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "CSV",
-    label = "Delimiter Format",
-    displayPosition = 310,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "CSV",
+      label = "Delimiter Format",
+      displayPosition = 310,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvModeChooserValues.class)
   public CsvMode csvFileFormat;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "NO_HEADER",
-    label = "Header Line",
-    displayPosition = 320,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "NO_HEADER",
+      label = "Header Line",
+      displayPosition = 320,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvHeaderChooserValues.class)
   public CsvHeader csvHeader;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Replace New Line Characters",
-    description = "Replaces new lines characters with configured string constant",
-    displayPosition = 330,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "DELIMITED"
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Replace New Line Characters",
+      description = "Replaces new lines characters with configured string constant",
+      displayPosition = 330,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
   )
   public boolean csvReplaceNewLines;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    defaultValue = " ",
-    label = "New Line Character Replacement",
-    description = "String that will be used to substitute new line characters. Using empty string will remove the new line characters.",
-    displayPosition = 335,
-    group = "#0",
-    dependsOn = "csvReplaceNewLines",
-    triggeredByValue = "true"
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = " ",
+      label = "New Line Character Replacement",
+      description = "String that will be used to substitute new line characters. Using empty string will remove the new line characters.",
+      displayPosition = 335,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "csvReplaceNewLines",
+      triggeredByValue = "true"
   )
   public String csvReplaceNewLinesString;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "|",
-    label = "Delimiter Character",
-    displayPosition = 340,
-    group = "#0",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "|",
+      label = "Delimiter Character",
+      displayPosition = 340,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
   public char csvCustomDelimiter;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "\\",
-    label = "Escape Character",
-    displayPosition = 350,
-    group = "#0",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\\",
+      label = "Escape Character",
+      displayPosition = 350,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
   public char csvCustomEscape;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.CHARACTER,
-    defaultValue = "\"",
-    label = "Quote Character",
-    displayPosition = 360,
-    group = "#0",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\"",
+      label = "Quote Character",
+      displayPosition = 360,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
   public char csvCustomQuote;
 
   @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "MINIMAL",
-    label = "Quote Mode",
-    displayPosition = 365,
-    group = "#0",
-    dependsOn = "csvFileFormat",
-    triggeredByValue = "CUSTOM"
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MINIMAL",
+      label = "Quote Mode",
+      displayPosition = 365,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "csvFileFormat",
+      triggeredByValue = "CUSTOM"
   )
   @ValueChooserModel(DelimitedQuoteModeValueChooser.class)
   public DelimitedQuoteMode csvQuoteMode = DelimitedQuoteMode.MINIMAL;
@@ -213,14 +222,15 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   /** For JSON **/
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "MULTIPLE_OBJECTS",
-    label = "JSON Content",
-    displayPosition = 370,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "JSON"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "MULTIPLE_OBJECTS",
+      label = "JSON Content",
+      displayPosition = 370,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "JSON"
   )
   @ValueChooserModel(JsonModeChooserValues.class)
   public JsonMode jsonMode = JsonMode.MULTIPLE_OBJECTS;
@@ -228,15 +238,16 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   /** For TEXT Content **/
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "/text",
-    label = "Text Field Path",
-    description = "String field that will be written to the destination",
-    displayPosition = 380,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "TEXT"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "/text",
+      label = "Text Field Path",
+      description = "String field that will be written to the destination",
+      displayPosition = 380,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "TEXT"
   )
   @FieldSelectorModel(singleValued = true)
   public String textFieldPath;
@@ -249,6 +260,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Record Separator",
       description = "Value to insert in output between records, defaults to newline",
       displayPosition = 385,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "TEXT",
@@ -257,29 +269,31 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
   public String textRecordSeparator = TextDataGeneratorFactory.RECORD_SEPARATOR_DEFAULT;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "ERROR",
-    label = "On Missing Field",
-    displayPosition = 387,
-    group = "#0",
-    dependsOn = "dataFormat^",
-    triggeredByValue = "TEXT"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "ERROR",
+      label = "On Missing Field",
+      displayPosition = 387,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "TEXT"
   )
   @ValueChooserModel(TextFieldMissingActionChooserValues.class)
   public TextFieldMissingAction textFieldMissingAction;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "false",
-    label = "Insert Record Separator If No Text",
-    description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
-    displayPosition = 390,
-    group = "#0",
-    dependencies = {
-      @Dependency(configName = "textFieldMissingAction", triggeredByValues = "IGNORE")
-    }
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Insert Record Separator If No Text",
+      description = "Specifies whether a record separator should be inserted in output even after an empty value (no text in field)",
+      displayPosition = 390,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0",
+      dependencies = {
+        @Dependency(configName = "textFieldMissingAction", triggeredByValues = "IGNORE")
+      }
   )
   public boolean textEmptyLineIfNull;
 
@@ -291,6 +305,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Avro Schema Location",
       description = "Where to load the Avro Schema from.",
       displayPosition = 400,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO",
       group = "DATA_FORMAT"
@@ -305,6 +320,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       description = "Overrides the schema included in the data (if any). Optionally use the " +
           "runtime:loadResource function to use a schema stored in a file",
       displayPosition = 410,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO"),
@@ -325,6 +341,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "avroSchemaSource", triggeredByValues = {"INLINE", "HEADER"}),
       },
       displayPosition = 420,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   public boolean registerSchema;
@@ -339,6 +356,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "registerSchema", triggeredByValues = "true")
       },
       displayPosition = 430,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
 
   )
@@ -357,6 +375,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
       },
       displayPosition = 431,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
 
   )
@@ -371,6 +390,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "avroSchemaSource", triggeredByValues = "REGISTRY")
       },
       displayPosition = 432,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   public CredentialValue basicAuthUserInfo = () -> "";
@@ -384,6 +404,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       dependsOn = "avroSchemaSource",
       triggeredByValue = "REGISTRY",
       displayPosition = 440,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DestinationAvroSchemaLookupModeChooserValues.class)
@@ -399,6 +420,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "SUBJECT")
       },
       displayPosition = 450,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   public String subject;
@@ -413,6 +435,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "registerSchema", triggeredByValues = "true")
       },
       displayPosition = 451,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   // This config property is duplicated for when registering schemas specified inline.
@@ -429,6 +452,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "registerSchema", triggeredByValues = "true")
       },
       displayPosition = 452,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   public CredentialValue basicAuthUserInfoForRegistration = () -> "";
@@ -443,6 +467,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
           @Dependency(configName = "schemaLookupMode", triggeredByValues = "ID")
       },
       displayPosition = 460,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT"
   )
   public int schemaId;
@@ -454,6 +479,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Include Schema",
       description = "Includes the Avro schema in the output",
       displayPosition = 470,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "AVRO")
@@ -467,6 +493,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       defaultValue = "NULL",
       label = "Avro Compression Codec",
       displayPosition = 480,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "AVRO"
@@ -483,6 +510,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Binary Field Path",
     description = "Output field to contain the binary data",
     displayPosition = 420,
+      displayMode = ConfigDef.DisplayMode.BASIC,
     group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "BINARY"
@@ -499,6 +527,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     label = "Protobuf Descriptor File",
     description = "Protobuf Descriptor File (.desc) path relative to SDC resources directory",
     displayPosition = 430,
+      displayMode = ConfigDef.DisplayMode.BASIC,
     group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
@@ -512,6 +541,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
     description = "Fully Qualified Message Type name. Use format <packageName>.<messageTypeName>",
     label = "Message Type",
     displayPosition = 440,
+      displayMode = ConfigDef.DisplayMode.BASIC,
     group = "#0",
     dependsOn = "dataFormat^",
     triggeredByValue = "PROTOBUF"
@@ -528,6 +558,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       description = "File Name Expression",
       label = "File Name Expression",
       displayPosition = 450,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
@@ -541,6 +572,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "File Exists",
       description = "The action to perform when the file already exists.",
       displayPosition = 470,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
@@ -555,6 +587,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Include Checksum in Events",
       description = "Includes checksum information in whole file transfer events.",
       displayPosition = 480,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "dataFormat^",
       triggeredByValue = "WHOLE_FILE"
@@ -568,6 +601,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Checksum Algorithm",
       description = "The checksum algorithm for calculating checksum for the file.",
       displayPosition = 490,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "includeChecksumInTheEvents",
       triggeredByValue = "true"
@@ -584,6 +618,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Pretty Format",
       description = "Format XML with human readable indentation (requires more bytes on output).",
       displayPosition = 500,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
@@ -598,6 +633,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "Validate Schema",
       description = "Validate that resulting record corresponds to given schema(s).",
       displayPosition = 510,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
           @Dependency(configName = "dataFormat^", triggeredByValues = "XML")
@@ -611,6 +647,7 @@ public class DataGeneratorFormatConfig implements DataFormatConfig {
       label = "XML Schema",
       description = "XML schema that should be used to validate serialized record.",
       displayPosition = 520,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
           @Dependency(configName = "xmlValidateSchema", triggeredByValues = "true")
