@@ -29,6 +29,7 @@ public class BigQueryTargetConfig {
       defaultValue = "${record:attribute('dataset')}",
       description = "Dataset name or an expression to obtain the dataset name from the record",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BIGQUERY",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
@@ -42,6 +43,7 @@ public class BigQueryTargetConfig {
       defaultValue = "${record:attribute('table')}",
       description = "Table name or an expression to obtain the table name from the record",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BIGQUERY",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
@@ -56,6 +58,7 @@ public class BigQueryTargetConfig {
       description = "Expression for the insertId to insert or update. " +
           "Leave blank to perform an insert for each record",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "BIGQUERY",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = {RecordEL.class}
@@ -69,6 +72,7 @@ public class BigQueryTargetConfig {
       label = "Ignore Invalid Column",
       description = "If enabled, field paths that cannot be mapped to columns will be ignored",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "BIGQUERY"
   )
   public boolean ignoreInvalidColumn;
@@ -81,6 +85,7 @@ public class BigQueryTargetConfig {
       description = "Configures the cache size for storing TableId entries." +
           " Use -1 for unlimited number of tableId entries in the cache.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "BIGQUERY",
       min = -1,
       max = Integer.MAX_VALUE

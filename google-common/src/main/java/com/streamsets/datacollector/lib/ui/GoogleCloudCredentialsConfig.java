@@ -25,6 +25,7 @@ public class GoogleCloudCredentialsConfig {
       label = "Credentials File Path (JSON)",
       description = "Absolute path or path relative to Data Collector resources directory",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public String path = "";

@@ -27,6 +27,7 @@ public class PubSubAdvancedConfig {
       defaultValue = "1",
       min = 1,
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public int numSubscribers;
@@ -39,6 +40,7 @@ public class PubSubAdvancedConfig {
       defaultValue = "${5 * 10 * runtime:availableProcessors()}",
       min = 1,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public int numThreadsPerSubscriber;
@@ -49,6 +51,7 @@ public class PubSubAdvancedConfig {
       label = "Custom Endpoint",
       description = "Optional <host>:<port> formatted endpoint, for example to test against a Pub/Sub emulator.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public String customEndpoint;

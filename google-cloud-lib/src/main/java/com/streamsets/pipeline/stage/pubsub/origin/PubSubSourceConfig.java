@@ -31,6 +31,7 @@ public class PubSubSourceConfig {
       label = "Data Format",
       description = "Format of data in the topic",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)
@@ -41,6 +42,7 @@ public class PubSubSourceConfig {
       type = ConfigDef.Type.STRING,
       label = "Subscription ID",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PUBSUB"
   )
   public String subscriptionId;
@@ -61,6 +63,7 @@ public class PubSubSourceConfig {
       label = "Num Pipeline Runners",
       description = "Maximum number of pipeline runners. Sets the parallelism of the pipeline.",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       min = 1,
       max = Integer.MAX_VALUE

@@ -45,46 +45,51 @@ public class GoogleCloudCredentialsConfig {
   public static final String CONF_CREDENTIALS_CREDENTIALS_PROVIDER = "conf.credentials.credentialsProvider";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Project ID",
-    displayPosition = 10,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Project ID",
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public String projectId = "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.MODEL,
-    label = "Credentials Provider",
-    defaultValue = "DEFAULT_PROVIDER",
-    displayPosition = 20,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Credentials Provider",
+      defaultValue = "DEFAULT_PROVIDER",
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   @ValueChooserModel(CredentialsProviderChooserValues.class)
   public CredentialsProviderType credentialsProvider;
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Credentials File Path (JSON)",
-    description = "Path to the credentials file.",
-    dependsOn = "credentialsProvider",
-    triggeredByValue = "JSON_PROVIDER",
-    displayPosition = 30,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Credentials File Path (JSON)",
+      description = "Path to the credentials file.",
+      dependsOn = "credentialsProvider",
+      triggeredByValue = "JSON_PROVIDER",
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public String path = "";
 
-  @ConfigDef(required = true,
-    type = ConfigDef.Type.CREDENTIAL,
-    mode = ConfigDef.Mode.JSON,
-    label = "Credentials File Content (JSON)",
-    description = "Content of the credentials file",
-    dependsOn = "credentialsProvider",
-    triggeredByValue = "JSON",
-    displayPosition = 30,
-    group = "#0"
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      mode = ConfigDef.Mode.JSON,
+      label = "Credentials File Content (JSON)",
+      description = "Content of the credentials file",
+      dependsOn = "credentialsProvider",
+      triggeredByValue = "JSON",
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public CredentialValue credentialsFileContent;
 

@@ -29,6 +29,7 @@ public class GcsOriginErrorConfig {
       label = "Error Handling Option",
       description = "Action to take when an error is encountered",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(PostProcessingOptionsChooserValues.class)
@@ -40,6 +41,7 @@ public class GcsOriginErrorConfig {
       defaultValue = "MOVE_TO_PREFIX",
       label = "Archiving Option",
       displayPosition = 201,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "errorHandlingOption",
       triggeredByValue = { "ARCHIVE" }
@@ -53,6 +55,7 @@ public class GcsOriginErrorConfig {
       label = "Error Prefix",
       description = "Objects in error will be moved/copied into this prefix",
       displayPosition = 202,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "errorHandlingOption",
       triggeredByValue = { "ARCHIVE" }
@@ -65,6 +68,7 @@ public class GcsOriginErrorConfig {
       label = "Error Bucket",
       description = "Objects in error will be moved/copied into this bucket",
       displayPosition = 203,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "archivingOption",
       triggeredByValue = { "MOVE_TO_BUCKET", "COPY_TO_BUCKET" }

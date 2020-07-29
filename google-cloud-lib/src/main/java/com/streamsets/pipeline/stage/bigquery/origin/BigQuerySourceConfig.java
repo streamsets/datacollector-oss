@@ -26,6 +26,7 @@ public class BigQuerySourceConfig {
       type = ConfigDef.Type.TEXT,
       mode = ConfigDef.Mode.SQL,
       label = "Query",
+      displayMode = ConfigDef.DisplayMode.BASIC,
       displayPosition = 10,
       group = "BIGQUERY"
   )
@@ -38,6 +39,7 @@ public class BigQuerySourceConfig {
       description = "By default, standard SQL is used. When checked, legacy SQL is used.",
       defaultValue = "false",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "BIGQUERY"
   )
   public boolean useLegacySql = false;
@@ -48,6 +50,7 @@ public class BigQuerySourceConfig {
       label = "Use cached query results",
       defaultValue = "true",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "BIGQUERY"
   )
   public boolean useQueryCache = true;
@@ -59,6 +62,7 @@ public class BigQuerySourceConfig {
       label = "Query Timeout (sec)",
       elDefs = TimeEL.class,
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "BIGQUERY",
       min = 1
   )
@@ -71,6 +75,7 @@ public class BigQuerySourceConfig {
       label = "Max Batch Size (records)",
       description = "Max number of records per batch",
       displayPosition = 1000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       min = 1,
       max = Integer.MAX_VALUE

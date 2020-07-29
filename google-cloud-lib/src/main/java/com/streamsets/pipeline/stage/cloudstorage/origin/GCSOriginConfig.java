@@ -34,6 +34,7 @@ public class GCSOriginConfig {
         label = "Bucket",
         description = "Expression that will identify bucket for each record.",
         displayPosition = 20,
+        displayMode = ConfigDef.DisplayMode.BASIC,
         evaluation = ConfigDef.Evaluation.IMPLICIT,
         //TODO SDC-7719
         group = "GCS"
@@ -46,6 +47,7 @@ public class GCSOriginConfig {
         label = "Common Prefix",
         description = "The common Prefix",
         displayPosition = 100,
+        displayMode = ConfigDef.DisplayMode.BASIC,
         group = "GCS"
     )
     public String commonPrefix;
@@ -56,6 +58,7 @@ public class GCSOriginConfig {
         label = "Prefix Pattern",
         description = "An Ant-style path pattern that defines the remaining portion of prefix excluding the common prefix",
         displayPosition = 100,
+        displayMode = ConfigDef.DisplayMode.BASIC,
         group = "GCS"
     )
     public String prefixPattern;
@@ -65,7 +68,8 @@ public class GCSOriginConfig {
         type = ConfigDef.Type.NUMBER,
         defaultValue = "1000",
         label = "Max Result Queue Size",
-        group = "GCS"
+        group = "GCS",
+        displayMode = ConfigDef.DisplayMode.ADVANCED
     )
     public int maxResultQueueSize;
 
@@ -74,7 +78,8 @@ public class GCSOriginConfig {
         type = ConfigDef.Type.MODEL,
         label = "Data Format",
         displayPosition = 1,
-        group = "DATA_FORMAT"
+        group = "DATA_FORMAT",
+        displayMode = ConfigDef.DisplayMode.BASIC
     )
     @ValueChooserModel(DataFormatChooserValues.class)
     public DataFormat dataFormat;

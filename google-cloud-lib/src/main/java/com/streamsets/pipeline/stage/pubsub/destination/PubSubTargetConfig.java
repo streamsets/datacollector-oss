@@ -43,6 +43,7 @@ public class PubSubTargetConfig {
       type = ConfigDef.Type.STRING,
       label = "Topic ID",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PUBSUB"
   )
   public String topicId;
@@ -53,6 +54,7 @@ public class PubSubTargetConfig {
       label = "Request Bytes Threshold",
       description = "After this many bytes are accumulated, the messages will be sent as a batch",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "1000",
       min = 1,
       group = "ADVANCED")
@@ -64,6 +66,7 @@ public class PubSubTargetConfig {
       label = "Messages Count Threshold",
       description = "After this many messages are accumulated, they will be sent as a batch",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "100",
       min = 1,
       group = "ADVANCED")
@@ -77,6 +80,7 @@ public class PubSubTargetConfig {
           " be sent as a batch. This value should not be set too high, usually on the order of milliseconds. " +
           "Otherwise, calls might appear to never complete",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "1",
       min = 1,
       group = "ADVANCED")
@@ -90,6 +94,7 @@ public class PubSubTargetConfig {
       description = "Set to send messages as a batch. If set to false, the batch logic will be disabled and the " +
           "simple API call will be used",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean batchingEnabled;
@@ -101,6 +106,7 @@ public class PubSubTargetConfig {
       description = "Maximum number of outstanding messages to keep in memory before enforcing flow control. Set to " +
           "zero to avoid defining a maximum outstanding message count",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "0",
       min = 0,
       group = "ADVANCED")
@@ -113,6 +119,7 @@ public class PubSubTargetConfig {
       description = "Maximum number of outstanding bytes to keep in memory before enforcing flow control. Set to zero" +
           " to avoid defining a maximum outstanding request bytes",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "0",
       min = 0,
       group = "ADVANCED")
@@ -125,6 +132,7 @@ public class PubSubTargetConfig {
       label = "Limit Exceeded Behaviour",
       description = "Specify the behavior of the flow controller when the specified limits are exceeded",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(LimitExceededBehaviourChooserValues.class)

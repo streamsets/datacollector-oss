@@ -38,6 +38,7 @@ public class GCSTargetConfig {
       label = "Bucket",
       description = "Expression that will identify bucket for each record.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       //TODO SDC-7719
       group = "GCS"
@@ -50,6 +51,7 @@ public class GCSTargetConfig {
       label = "Common Prefix",
       description = "",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GCS"
   )
   public String commonPrefix;
@@ -62,6 +64,7 @@ public class GCSTargetConfig {
       label = "Partition Prefix",
       description = "Partition to write to. If the partition doesn't exist on GCS, it will be created.",
       displayPosition = 180,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "GCS"
   )
   public String partitionTemplate;
@@ -73,6 +76,7 @@ public class GCSTargetConfig {
       label = "Data Time Zone",
       description = "Time zone to use to resolve the date time of a time-based partition prefix",
       displayPosition = 190,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GCS"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)
@@ -88,6 +92,7 @@ public class GCSTargetConfig {
       description = "Time basis to use for a record. Enter an expression that evaluates to a datetime. To use the " +
           "processing time, enter ${time:now()}. To use field values, use '${record:value(\"<filepath>\")}'.",
       displayPosition = 200,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GCS"
   )
   public String timeDriverTemplate;
@@ -99,6 +104,7 @@ public class GCSTargetConfig {
       description = "Prefix for object names that will be uploaded on GCS",
       label = "Object Name Prefix",
       displayPosition = 210,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GCS"
   )
   public String fileNamePrefix;
@@ -109,6 +115,7 @@ public class GCSTargetConfig {
       description = "Suffix for object names that will be uploaded on GCS. e.g.'txt'",
       label = "Object Name Suffix",
       displayPosition = 220,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GCS",
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "BINARY", "PROTOBUF", "SDC_JSON", "XML"}
@@ -137,6 +144,7 @@ public class GCSTargetConfig {
       defaultValue = "false",
       label = "Compress with gzip",
       displayPosition = 230,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "GCS",
       dependsOn = "dataFormat",
       triggeredByValue = {"TEXT", "JSON", "DELIMITED", "AVRO", "XML", "PROTOBUF", "SDC_JSON"}
