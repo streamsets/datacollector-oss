@@ -25,6 +25,7 @@ public class CTTableConfigBean {
       label = "Schema",
       description = "Schema Name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       defaultValue = "dbo",
       group = "TABLE"
   )
@@ -36,6 +37,7 @@ public class CTTableConfigBean {
       label = "Table Name Pattern",
       description = "Pattern of the table names to read. Use a SQL like syntax.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       defaultValue = "%",
       group = "TABLE"
   )
@@ -48,6 +50,7 @@ public class CTTableConfigBean {
       description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no exclusion needed.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TABLE"
   )
   public String tableExclusionPattern;
@@ -58,6 +61,7 @@ public class CTTableConfigBean {
       label = "Initial Offset",
       description = "Use -1 to opt out of this option",
       displayPosition =  50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       defaultValue = "-1",
       group = "TABLE"
   )

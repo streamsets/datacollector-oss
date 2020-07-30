@@ -25,6 +25,7 @@ public class CDCTableConfigBean {
       description = "If capture instance is not specified when enabling CDC tables, " +
           "the default value for Capture Instance Name is <schema>_<table>",
       displayPosition =  10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       defaultValue = "dbo_%",
       group = "TABLE"
   )
@@ -37,6 +38,7 @@ public class CDCTableConfigBean {
       description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no exclusion needed.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TABLE"
   )
   public String tableExclusionPattern;
@@ -47,6 +49,7 @@ public class CDCTableConfigBean {
       label = "Initial Offset",
       description = "Use the last-saved offset or leave it empty to process all data",
       displayPosition =  50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "TABLE"
   )
   public String initialOffset;

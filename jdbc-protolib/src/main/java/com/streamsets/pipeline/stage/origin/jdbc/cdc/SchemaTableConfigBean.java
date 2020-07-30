@@ -46,6 +46,7 @@ public class SchemaTableConfigBean {
       description = "Pattern of the table names to exclude from being read. Use a Java regex syntax." +
           " Leave empty if no exclusion needed.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public String excludePattern;

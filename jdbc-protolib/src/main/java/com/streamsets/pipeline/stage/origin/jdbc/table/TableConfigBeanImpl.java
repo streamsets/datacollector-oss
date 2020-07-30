@@ -53,7 +53,7 @@ public class TableConfigBeanImpl implements TableConfigBean {
   public boolean isTablePatternListProvided = false;
 
   @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Table Name Pattern",
