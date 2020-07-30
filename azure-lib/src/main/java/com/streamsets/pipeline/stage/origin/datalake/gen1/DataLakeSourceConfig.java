@@ -133,7 +133,6 @@ public class DataLakeSourceConfig extends HdfsSourceConfigBean {
     this.hdfsConfigs.addAll(this.advancedConfiguration);
 
     this.hdfsConfigs.add(new HadoopConfigBean(ADLS_USER_AGENT_STRING_KEY, AzureUtils.buildUserAgentString(context)));
-    AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
 
     super.init(context, issues);
   }

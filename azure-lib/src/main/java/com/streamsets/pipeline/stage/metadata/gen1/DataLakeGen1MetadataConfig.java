@@ -116,7 +116,6 @@ public class DataLakeGen1MetadataConfig {
     String authEndPoint = resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_TOKEN_ENDPOINT, issues);
     String clientIdString = resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues);
     String clientKeyString = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_KEY, issues);
-    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
 
     hdfsConfigs.put(ADLS_GEN1_ACCESS_TOKEN_PROVIDER_KEY, ADLS_GEN1_ACCESS_TOKEN_PROVIDER_VALUE);
     hdfsConfigs.put(ADLS_GEN1_REFRESH_URL_KEY, authEndPoint);
@@ -124,7 +123,6 @@ public class DataLakeGen1MetadataConfig {
     hdfsConfigs.put(ADLS_GEN1_CLIENT_SECRET_KEY, clientKeyString);
 
     hdfsConfigs.put(AzureUtils.ADLS_USER_AGENT_STRING_KEY, AzureUtils.buildUserAgentString(context));
-    AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
 
     advancedConfiguration.forEach(hadoopConfig -> hdfsConfigs.put(hadoopConfig.key, hadoopConfig.value.get()));
 

@@ -129,8 +129,6 @@ public class DataLakeTargetConfig extends HdfsTargetConfigBean {
         AzureUtils.buildUserAgentString(context)
     ));
 
-    AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
-
     super.init(context, issues);
   }
 

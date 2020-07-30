@@ -222,15 +222,12 @@ public class DataLakeGen2MetadataConfig {
         hdfsConfigs.put(ADLS_CONFIG_CLIENT_SECRET_KEY, clientKeyString
 
         );
-        AzureUtils.sendPartnerTaggingRequest(accountFQDNString, clientKeyString, true);
         break;
       case SHARED_KEY:
         String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDNString;
         hdfsConfigs.put(propertyName,
             resolveCredentialValue(context, this.accountKey, ADLS_CONFIG_ACCOUNT_KEY, issues)
         );
-        String accountKeyString = resolveCredentialValue(context, this.accountKey, "accountKey", issues);
-        AzureUtils.sendPartnerTaggingRequest(accountFQDNString, accountKeyString);
         break;
     }
 
