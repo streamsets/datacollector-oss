@@ -125,14 +125,15 @@
           <thead>
           <tr>
             <th class="custom-field-property"
-                ng-repeat="customeFieldConfigDefintion in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
-                ng-class="{'output-lane': $index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig}">
-              <span>{{customeFieldConfigDefintion.label}}</span>
+                ng-repeat="customFieldConfigDefinition in configDefinition.model.configDefinitions | orderBy: 'displayPosition'"
+                ng-class="{'output-lane': $index === 0 && configDefinition.name === detailPaneConfigDefn.outputStreamsDrivenByConfig}"
+                ng-if="isShownByConfigDisplayMode(customFieldConfigDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)">
+              <span>{{customFieldConfigDefinition.label}}</span>
               <i class="fa fa-info-circle help-icon"
-                 ng-if="customeFieldConfigDefintion.description"
+                 ng-if="customFieldConfigDefinition.description"
                  tooltip-placement="right"
                  tooltip-append-to-body="false"
-                 tooltip="{{customeFieldConfigDefintion.description}}"
+                 tooltip="{{customFieldConfigDefinition.description}}"
                  tooltip-trigger="mouseenter"></i>
             </th>
             <th class="custom-field-buttons"></th>
