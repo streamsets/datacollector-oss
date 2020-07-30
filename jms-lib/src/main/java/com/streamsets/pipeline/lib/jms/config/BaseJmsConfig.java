@@ -28,6 +28,7 @@ public class BaseJmsConfig {
       label = "JMS Initial Context Factory",
       description = "ActiveMQ example: org.apache.activemq.jndi.ActiveMQInitialContextFactory",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JMS"
   )
   public String initialContextFactory;
@@ -38,6 +39,7 @@ public class BaseJmsConfig {
       label = "JNDI Connection Factory",
       description = "ActiveMQ example: ConnectionFactory",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JMS"
   )
   public String connectionFactory;
@@ -48,6 +50,7 @@ public class BaseJmsConfig {
       label = "JMS Provider URL",
       description = "ActiveMQ example: tcp://mqserver:61616",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JMS"
   )
   public String providerURL;
@@ -59,31 +62,34 @@ public class BaseJmsConfig {
       label = "JMS Destination Type",
       description = "Specify the JMS destination type when validation fails with NamingException, destination not found",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JMS"
   )
   @ValueChooserModel(DestinationTypeChooserValues.class)
   public DestinationType destinationType = DestinationType.UNKNOWN; // NOTE: same as above
 
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.BOOLEAN,
-          defaultValue = "false",
-          label = "Use ClientID",
-          description = "Check to specify a clientID for this JMS connection. e.g. Required for Durable Topic Subscriptions",
-          displayPosition = 75,
-          group = "JMS"
-  )
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Use ClientID",
+      description = "Check to specify a clientID for this JMS connection. e.g. Required for Durable Topic Subscriptions",
+      displayPosition = 75,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "JMS"
+)
   public Boolean useClientID = false;
   
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.STRING,
-          label = "Client ID",
-          description = "If specified, must be a unique string used by a single JMS connection instance. Required for Durable Topic Subscriptions",
-          displayPosition = 77,
-          group = "JMS",
-          dependsOn = "useClientID",
-          triggeredByValue = "true"
+      required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Client ID",
+      description = "If specified, must be a unique string used by a single JMS connection instance. Required for Durable Topic Subscriptions",
+      displayPosition = 77,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "JMS",
+      dependsOn = "useClientID",
+      triggeredByValue = "true"
   )
   public String clientID = null;
 
@@ -94,6 +100,7 @@ public class BaseJmsConfig {
       label = "Additional JMS Configuration Properties",
       description = "Additional properties to pass to the underlying JMS context.",
       displayPosition = 999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JMS"
   )
   public Map<String, String> contextProperties = new HashMap<>();

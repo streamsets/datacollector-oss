@@ -27,6 +27,7 @@ public class JmsTargetConfig extends BaseJmsConfig {
       label = "JMS Destination Name",
       description = "Queue or topic name",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = RecordEL.class,
       group = "JMS"

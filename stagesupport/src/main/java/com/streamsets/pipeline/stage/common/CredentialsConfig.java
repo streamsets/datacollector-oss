@@ -21,12 +21,13 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 public class CredentialsConfig {
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.BOOLEAN,
-    defaultValue = "true",
-    label = "Use Credentials",
-    displayPosition = 2000,
-    group = "#0"
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Use Credentials",
+      displayPosition = 2000,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
   )
   public boolean useCredentials = true;
 
@@ -37,18 +38,20 @@ public class CredentialsConfig {
     triggeredByValue = "true",
     label = "Username",
     displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
     group = "CREDENTIALS"
   )
   public CredentialValue username = () -> "";
 
   @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.CREDENTIAL,
-    dependsOn = "useCredentials",
-    triggeredByValue = "true",
-    label = "Password",
-    displayPosition = 20,
-    group = "CREDENTIALS"
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      dependsOn = "useCredentials",
+      triggeredByValue = "true",
+      label = "Password",
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "CREDENTIALS"
   )
   public CredentialValue password = () -> "";
 }
