@@ -22,6 +22,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -231,5 +232,15 @@ public class AclPipelineStoreTask implements PipelineStoreTask {
       boolean draft
   ) throws PipelineException {
     return pipelineStore.createPipelineFragment(user, pipelineId, pipelineTitle, description, draft);
+  }
+
+  @Override
+  public List<PipelineInfo> getSamplePipelines() throws PipelineStoreException {
+    return pipelineStore.getSamplePipelines();
+  }
+
+  @Override
+  public PipelineEnvelopeJson loadSamplePipeline(String samplePipelineId) throws PipelineException {
+    return pipelineStore.loadSamplePipeline(samplePipelineId);
   }
 }

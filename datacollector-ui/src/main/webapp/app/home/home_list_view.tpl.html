@@ -12,7 +12,7 @@
            class="glyphicon glyphicon-unchecked fa-12x header-check-box"></i>
 
         <div class="pipeline-name header"
-             ng-class="{'show-name-column': header.showNameColumn}">
+             ng-class="{'show-name-column': header.showNameColumn && selectedPipelineLabel !== 'system:samplePipelines'}">
           <a ng-click="onSortColumnHeaderClick('TITLE')">
             <span>{{'global.form.title' | translate}}</span>
             <i ng-if="header.sortColumn !== 'TITLE'" class="fa fa-sort" aria-hidden="true"></i>
@@ -23,7 +23,7 @@
 
         <div class="pipeline-name header"
              ng-class="{'show-name-column': header.showNameColumn}"
-             ng-if="header.showNameColumn">
+             ng-if="header.showNameColumn && selectedPipelineLabel !== 'system:samplePipelines'">
           <a ng-click="onSortColumnHeaderClick('NAME')">
             <span>{{'global.form.pipelineId' | translate}}</span>
             <i ng-if="header.sortColumn !== 'NAME'" class="fa fa-sort" aria-hidden="true"></i>
@@ -32,7 +32,7 @@
           </a>
         </div>
 
-        <div class="pipeline-update-time header">
+        <div class="pipeline-update-time header" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
           <a ng-click="onSortColumnHeaderClick('LAST_MODIFIED')">
             <span>{{'global.form.lastUpdated' | translate}}</span>
             <i ng-if="header.sortColumn !== 'LAST_MODIFIED'" class="fa fa-sort" aria-hidden="true"></i>
@@ -41,7 +41,7 @@
           </a>
         </div>
 
-        <div class="pipeline-creator header">
+        <div class="pipeline-creator header" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
           <a ng-click="onSortColumnHeaderClick('CREATOR')">
             <span>{{'global.form.createdBy' | translate}}</span>
             <i ng-if="header.sortColumn !== 'CREATOR'" class="fa fa-sort" aria-hidden="true"></i>
@@ -50,7 +50,7 @@
           </a>
         </div>
 
-        <div class="pipeline-status-header header">
+        <div class="pipeline-status-header header" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
           <a ng-click="onSortColumnHeaderClick('STATUS')">
             <span>{{'global.form.status' | translate}}</span>
             <i ng-if="header.sortColumn !== 'STATUS'" class="fa fa-sort" aria-hidden="true"></i>
@@ -59,7 +59,20 @@
           </a>
         </div>
 
-        <div class="header pull-right">
+
+        <div class="pipeline-tutorial header" ng-if="selectedPipelineLabel === 'system:samplePipelines'">
+          <span>{{'Tutorial' | translate}}</span>
+        </div>
+
+        <div class="pipeline-origins header" ng-if="selectedPipelineLabel === 'system:samplePipelines'">
+          <span>{{'Origin' | translate}}</span>
+        </div>
+
+        <div class="pipeline-destinations header" ng-if="selectedPipelineLabel === 'system:samplePipelines'">
+          <span>{{'Destinations' | translate}}</span>
+        </div>
+
+        <div class="header pull-right" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
           <a ng-if="!showDetails" ng-click="showPipelineDetails()">
             <span>{{'home.header.showDetails' | translate}}</span>
           </a>
@@ -83,7 +96,7 @@
            class="glyphicon glyphicon-unchecked fa-12x"></i>
 
         <div class="pipeline-name"
-             ng-class="{'show-name-column': header.showNameColumn}">
+             ng-class="{'show-name-column': header.showNameColumn && selectedPipelineLabel !== 'system:samplePipelines'}">
 
           <span class="system-pipeline-label"
                 ng-if="isSystemPipeline(pipeline)">Control Hub system</span>
@@ -103,33 +116,49 @@
                 ng-if="common.isDPMEnabled && pipeline.metadata && pipeline.metadata.lastConfigId && (pipeline.metadata.lastConfigId !== pipeline.uuid) && !isSystemPipeline(pipeline) && !isDpmControlledPipeline(pipeline)"></span>
 
           <span class="pipeline-label"
-                ng-if="pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
+                ng-if="selectedPipelineLabel !== 'system:samplePipelines' && pipeline.metadata && pipeline.metadata.labels && pipeline.metadata.labels.length > 0"
                 ng-repeat="label in pipeline.metadata.labels">{{label}}</span>
 
         </div>
 
         <div class="pipeline-name"
              ng-class="{'show-name-column': header.showNameColumn}"
-             ng-if="header.showNameColumn">
+             ng-if="header.showNameColumn && selectedPipelineLabel !== 'system:samplePipelines'">
           <span>{{pipeline.pipelineId}}</span>
         </div>
 
-        <span class="pipeline-update-time">
+        <span class="pipeline-update-time" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
           <span class="time-update" am-time-ago="pipeline.lastModified"></span>
           <span class="time-update" translate="home.ago">ago</span>
         </span>
 
-        <span class="pipeline-creator">{{pipeline.creator}}</span>
+        <span class="pipeline-creator" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">{{pipeline.creator}}</span>
 
-        <span class="pipeline-status {{common.pipelineStatusMap[pipeline.pipelineId].status}}">{{common.pipelineStatusMap[pipeline.pipelineId].status}}</span>
+        <span  ng-if="selectedPipelineLabel !== 'system:samplePipelines'"
+               class="pipeline-status {{common.pipelineStatusMap[pipeline.pipelineId].status}}">{{common.pipelineStatusMap[pipeline.pipelineId].status}}</span>
 
         <span class="pipeline-uptime"
+              ng-if="selectedPipelineLabel !== 'system:samplePipelines'"
               ng-show="common.pipelineStatusMap[pipeline.pipelineId].status === 'RUNNING'">
           <span class="time-update" translate="home.header.uptime">Uptime</span>
           <span class="time-update" am-time-ago="common.pipelineStatusMap[pipeline.pipelineId].timeStamp"></span>
         </span>
 
-        <div class="action-menu pull-right" dropdown>
+        <span class="pipeline-tutorial" ng-if="selectedPipelineLabel === 'system:samplePipelines'">
+          <a
+            ng-if="pipeline.tutorialLink"
+            ng-href="{{pipeline.tutorialLink}}" target="_blank">Click to View</a>
+        </span>
+
+        <span class="pipeline-origins"
+              ng-if="selectedPipelineLabel === 'system:samplePipelines'">{{pipeline.origins}}</span>
+
+        <span class="pipeline-destinations"
+              ng-if="selectedPipelineLabel === 'system:samplePipelines'">{{pipeline.destinations}}</span>
+
+        <div class="action-menu pull-right"
+             ng-if="selectedPipelineLabel !== 'system:samplePipelines'"
+             dropdown>
               <span class="dropdown-toggle" dropdown-toggle
                     ng-click="$event.stopPropagation();">
                 <i class="fa fa-ellipsis-v"></i>

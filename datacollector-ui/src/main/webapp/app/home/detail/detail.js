@@ -102,10 +102,13 @@ angular
     var getDetailTabsList = function(type, isPipelineRunning) {
       var tabsList = [];
       var executionMode = $scope.activeConfigStatus.executionMode;
+      var isSamplePipeline = $scope.isSamplePipeline;
       var clusterExecutionModePipeline = _.contains(pipelineConstant.CLUSTER_MODES, executionMode);
       switch(type) {
         case pipelineConstant.PIPELINE:
-          if (isPipelineRunning) {
+          if (isSamplePipeline) {
+            tabsList = [infoTab, configurationTab, rulesTab];
+          } else if (isPipelineRunning) {
             if (clusterExecutionModePipeline) {
               tabsList = [summaryTab, infoTab, configurationTab, historyTab];
             } else {
@@ -118,7 +121,9 @@ angular
 
           return tabsList;
         case pipelineConstant.STAGE_INSTANCE:
-          if (isPipelineRunning) {
+          if (isSamplePipeline) {
+            tabsList = [infoTab, configurationTab];
+          } else if (isPipelineRunning) {
             if (clusterExecutionModePipeline) {
               tabsList = [summaryTab, infoTab, configurationTab];
             } else {
@@ -132,13 +137,15 @@ angular
             tabsList.push(externalLibrariesTab);
           }
 
-          if ($scope.detailPaneConfigDefn.producingEvents) {
+          if ($scope.detailPaneConfigDefn && $scope.detailPaneConfigDefn.producingEvents) {
             tabsList.push(eventsInfoTab);
           }
 
           return tabsList;
         case pipelineConstant.LINK:
-          if (isPipelineRunning) {
+          if (isSamplePipeline) {
+            return [infoTab, dataRulesTab, dataDriftRulesTab];
+          } else if (isPipelineRunning) {
             if (clusterExecutionModePipeline) {
               return [dataRulesTab, dataDriftRulesTab, infoTab];
             } else {
@@ -518,6 +525,10 @@ angular
     });
 
     var updateHistory = function(pipelineId) {
+      if ($scope.isSamplePipeline) {
+        $scope.pipelineStateHistory = [];
+        return;
+      }
       $scope.showLoading = true;
       api.pipelineAgent.getHistory(pipelineId)
         .then(function(res) {

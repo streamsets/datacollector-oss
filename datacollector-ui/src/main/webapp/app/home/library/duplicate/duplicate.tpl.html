@@ -27,7 +27,7 @@
                 ng-model="newConfig.description"></textarea>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" ng-if="!isSamplePipeline">
       <label class="control-label" translate="global.form.numberOfCopies">Number of Copies</label>
       <input type="number" class="form-control"
              ng-disabled="operationInProgress"

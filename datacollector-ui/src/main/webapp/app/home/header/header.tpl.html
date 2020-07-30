@@ -3,7 +3,10 @@
 
   <div class="panel-heading clearfix" ng-show="pipelineConfig">
 
-    <div class="pull-right fs-unmask" ng-if="pipelineConfig && activeConfigStatus.status !== 'STOPPING' && activeConfigStatus.status !== 'CONNECTING' && activeConfigStatus.status !== 'DISCONNECTING' && activeConfigStatus.status !== 'STARTING_ERROR' && activeConfigStatus.status !== 'RUNNING_ERROR' && activeConfigStatus.status !== 'STOPPING_ERROR' && activeConfigStatus.status !== 'FINISHING'">
+
+
+    <div class="pull-right fs-unmask"
+         ng-if="!isSamplePipeline && pipelineConfig && activeConfigStatus.status !== 'STOPPING' && activeConfigStatus.status !== 'CONNECTING' && activeConfigStatus.status !== 'DISCONNECTING' && activeConfigStatus.status !== 'STARTING_ERROR' && activeConfigStatus.status !== 'RUNNING_ERROR' && activeConfigStatus.status !== 'STOPPING_ERROR' && activeConfigStatus.status !== 'FINISHING'">
 
       <div class="btn-group" dropdown
            ng-hide="previewMode || snapshotMode">
@@ -405,6 +408,22 @@
          ng-click="stopPipeline(true)">{{'home.header.forceStop' | translate}}</a>
     </div>
 
+    <!-- Only for Sample Pipeline -->
+    <div class="pull-right sample-pipeline-duplicate" ng-if="pipelineConfig && isSamplePipeline">
+
+      <a ng-if="tutorialLink" class="btn"
+         ng-href="{{tutorialLink}}" target="_blank">
+        <i class="fa fa-book"></i>
+        <span>Tutorial</span>
+      </a>
+
+      <a class="btn btn-primary"
+         ng-click="duplicatePipelineConfig(activeConfigInfo, $event)">
+        <i class="fa fa-files-o"></i>
+        <span>{{'global.form.duplicate' | translate}}</span>
+      </a>
+    </div>
+
     <div class="pull-left" ng-switch="activeConfigStatus.status">
       <div class="panel-title pull-left" ng-if="activeConfigStatus.executionMode === pipelineConstant.CLUSTER ||
        activeConfigStatus.executionMode === pipelineConstant.CLUSTER_EMR_BATCH ||
@@ -509,6 +528,12 @@
 
       <div class="pipelineAgent-status pull-right" ng-show="common.saveOperationInProgress > 0"
            translate="global.messages.info.savingConfiguration">
+      </div>
+    </div>
+
+    <div class="pull-left" ng-if="pipelineConfig && isSamplePipeline">
+      <div class="panel-title pull-left">
+        <span class="pipeline-status SAMPLE_PIPELINE">Sample Pipeline</span>
       </div>
     </div>
 

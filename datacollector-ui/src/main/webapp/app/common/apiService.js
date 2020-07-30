@@ -467,6 +467,11 @@ angular.module('dataCollectorApp.common')
        */
       getPipelineConfig: function(name) {return $http.get(apiBase + '/pipeline/' + name);},
 
+
+      getSamplePipeline: function(pipelineId) {
+        return $http.get(apiBase + '/pipeline/' + pipelineId + '?get=samplePipeline');
+      },
+
       /**
        * Fetches Pipeline Configuration Information
        *

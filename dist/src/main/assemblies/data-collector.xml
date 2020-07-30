@@ -131,6 +131,12 @@
       <outputDirectory>/data</outputDirectory>
     </fileSet>
 
+    <!-- sample pipelines dir -->
+    <fileSet>
+      <directory>${basedir}/src/main/samplePipelines</directory>
+      <outputDirectory>/samplePipelines</outputDirectory>
+    </fileSet>
+
     <!-- data collector static web -->
     <fileSet>
       <directory>${sdc.ui.dist-dir}</directory>

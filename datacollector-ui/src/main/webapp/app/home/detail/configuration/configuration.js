@@ -709,13 +709,16 @@ angular
        */
       isStageGroupEnabled: function(stageInstance, stageDefinition, services, groupName) {
         // First see if this tab is enabled in normal stage configurations
-        if(this.isGroupEnabled(stageInstance, stageDefinition.configDefinitions, groupName, stageInstance.uiInfo.displayMode)) {
+        if (stageInstance && stageInstance.uiInfo &&
+          this.isGroupEnabled(stageInstance, stageDefinition.configDefinitions, groupName,
+            stageInstance.uiInfo.displayMode)) {
           return true;
         }
 
         var enabled = false;
         angular.forEach(services, function(service) {
-          if($scope.isGroupEnabled(service.config, service.definition.configDefinitions, groupName, stageInstance.uiInfo.displayMode)) {
+          if($scope.isGroupEnabled(service.config, service.definition.configDefinitions, groupName,
+            stageInstance.uiInfo.displayMode)) {
             enabled = true;
           }
         });

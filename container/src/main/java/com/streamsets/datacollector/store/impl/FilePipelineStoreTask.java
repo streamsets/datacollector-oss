@@ -36,10 +36,10 @@ import com.streamsets.datacollector.execution.manager.PipelineStateImpl;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PipelineInfoJson;
 import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.datacollector.runner.production.OffsetFileUtil;
@@ -96,10 +96,11 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
   private Path storeDir;
+  private Path samplePipelinesDir;
   private final ObjectMapper json;
   private final PipelineStateStore pipelineStateStore;
   private final ConcurrentMap<String, RuleDefinitions> pipelineToRuleDefinitionMap;
-  private EventListenerManager eventListenerManager;
+  private final EventListenerManager eventListenerManager;
   private final PipelineCreator pipelineCreator;
   private final PipelineCredentialHandler encryptingCredentialHandler;
 
@@ -145,6 +146,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
   @Override
   public void initTask() {
     storeDir = Paths.get(runtimeInfo.getDataDir(), PipelineDirectoryUtil.PIPELINE_INFO_BASE_DIR);
+    samplePipelinesDir = Paths.get(runtimeInfo.getSamplePipelinesDir());
     if (!Files.exists(storeDir)) {
       try {
         Files.createDirectories(storeDir);
@@ -791,6 +793,63 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
          "statsAggregatorStageInstance",
         "Stats Aggregator -"
     );
+  }
+
+  @Override
+  public List<PipelineInfo> getSamplePipelines() throws PipelineStoreException {
+    if (samplePipelinesDir == null || !Files.exists(samplePipelinesDir)) {
+      return Collections.emptyList();
+    }
+    List<PipelineInfo> pipelineInfoList = new ArrayList<>();
+    List<Path> fileNames = new ArrayList<>();
+    try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(samplePipelinesDir, filterHiddenFiles)) {
+      for (Path path : directoryStream) {
+        fileNames.add(path);
+      }
+    } catch (IOException ex) {
+      throw new PipelineStoreException(ContainerError.CONTAINER_0213, samplePipelinesDir, ex);
+    }
+
+    for (Path fileName : fileNames) {
+      PipelineEnvelopeJson pipelineEnvelopeJson;
+      DataStore dataStoreInfo = new DataStore(fileName.toFile());
+      try (InputStream pipelineEnvelopeFile = dataStoreInfo.getInputStream()){
+        pipelineEnvelopeJson = json.readValue(pipelineEnvelopeFile, PipelineEnvelopeJson.class);
+        PipelineInfo pipelineInfo = BeanHelper.unwrapPipelineInfo(pipelineEnvelopeJson.getPipelineConfig().getInfo());
+
+        // Override sample pipeline Id using the file name, so loadSamplePipeline works without any issue even if
+        // pipelineId inside the JSON doesn't match the file name.
+        pipelineInfo.setPipelineId(fileName.getFileName().toString().replace(".json", ""));
+        pipelineInfoList.add(pipelineInfo);
+      } catch (IOException e) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0216, fileName, e);
+      }
+    }
+    return Collections.unmodifiableList(pipelineInfoList);
+  }
+
+  @Override
+  public PipelineEnvelopeJson loadSamplePipeline(String samplePipelineId) throws PipelineStoreException {
+    synchronized (lockCache.getLock(samplePipelineId)) {
+      if (!hasSamplePipeline(samplePipelineId)) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0215, samplePipelineId);
+      }
+      DataStore dataStorePipeline = new DataStore(getSamplePipelineFile(samplePipelineId).toFile());
+      try (InputStream pipelineFile = dataStorePipeline.getInputStream()) {
+        return json.readValue(pipelineFile, PipelineEnvelopeJson.class);
+      }
+      catch (Exception ex) {
+        throw new PipelineStoreException(ContainerError.CONTAINER_0216, samplePipelineId, ex.toString(), ex);
+      }
+    }
+  }
+
+  public boolean hasSamplePipeline(String pipelineId) {
+    return samplePipelinesDir != null && Files.exists(getSamplePipelineFile(pipelineId));
+  }
+
+  public Path getSamplePipelineFile(String pipelineId) {
+    return samplePipelinesDir.resolve(pipelineId + ".json");
   }
 
 }

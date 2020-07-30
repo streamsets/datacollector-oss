@@ -21,7 +21,7 @@ angular
   .module('dataCollectorApp.home')
   .controller('HeaderController', function (
     $scope, $rootScope, $timeout, _, api, $translate, $location, authService, pipelineService, pipelineConstant,
-    $modal, $q, $route, pipelineTracking
+    $modal, $q, $route, pipelineTracking, tracking, trackingEvent
   ) {
 
     var pipelineValidationInProgress;
@@ -430,13 +430,21 @@ angular
        * Duplicate Pipeline Configuration
        */
       duplicatePipelineConfig: function(pipelineInfo, $event) {
-        $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Pipeline', 1);
-        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event)
+        if ($scope.isSamplePipeline) {
+          tracking.mixpanel.track(trackingEvent.SAMPLE_PIPELINE_DUPLICATED, {
+            'Sample Pipeline ID': pipelineInfo.pipelineId,
+            'Sample Pipeline Title': pipelineInfo.title
+          });
+        } else {
+          $scope.trackEvent(pipelineConstant.BUTTON_CATEGORY, pipelineConstant.CLICK_ACTION, 'Duplicate Pipeline', 1);
+        }
+
+        pipelineService.duplicatePipelineConfigCommand(pipelineInfo, $event, $scope.isSamplePipeline)
           .then(function(newPipelineConfig) {
             if (!angular.isArray(newPipelineConfig)) {
-              $location.path('/collector/pipeline/' + newPipelineConfig.info.pipelineId);
+              $location.search({}).path('/collector/pipeline/' + newPipelineConfig.info.pipelineId);
             } else {
-              $location.path('/collector/pipeline/' + newPipelineConfig[0].info.pipelineId);
+              $location.search({}).path('/collector/pipeline/' + newPipelineConfig[0].info.pipelineId);
             }
           });
       },

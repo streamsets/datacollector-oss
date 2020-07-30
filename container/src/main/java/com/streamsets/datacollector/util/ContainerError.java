@@ -99,6 +99,10 @@ public enum ContainerError implements ErrorCode {
   CONTAINER_0213("Could not retrieve pipelines from Pipeline Store. See stacktrace for additional details: '{}'"),
   CONTAINER_0214("Can't store new pipeline state: {}"),
 
+
+  CONTAINER_0215("Sample pipeline '{}' does not exist"),
+  CONTAINER_0216("Cannot load details for sample pipeline '{}': {}"),
+
   //Previewr
   CONTAINER_0250("Cannot create previewer: '{}'"),
 

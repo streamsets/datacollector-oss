@@ -267,7 +267,7 @@ angular
     $scope.onLabelsLoaded(function(systemPipelineLabels, rawPipelineLabels) {
       $scope.fetchingSystemLabels = false;
       $scope.systemPipelineLabels = systemPipelineLabels;
-      // We have a escapeHTML implmentation available globally
+      // We have a escapeHTML implementation available globally
       $scope.rawPipelineLabels = rawPipelineLabels.map(escapeHtml);
       $scope.pipelineLabels = parsePipelineLabels();
     });

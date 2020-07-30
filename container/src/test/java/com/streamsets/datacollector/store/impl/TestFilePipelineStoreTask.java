@@ -33,6 +33,7 @@ import com.streamsets.datacollector.execution.store.FilePipelineStateStore;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -46,9 +47,9 @@ import com.streamsets.datacollector.util.LockCacheModule;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
-import com.streamsets.pipeline.BootstrapMain;
 import dagger.ObjectGraph;
 import dagger.Provides;
+import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -58,7 +59,9 @@ import org.mockito.Mockito;
 
 import javax.inject.Singleton;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -78,6 +81,7 @@ public class TestFilePipelineStoreTask {
   protected static final String SYSTEM_USER = "system";
   protected PipelineStoreTask store;
   protected ObjectGraph dagger;
+  protected static File samplePipelinesDir;
 
   @dagger.Module(
       injects = {
@@ -103,6 +107,7 @@ public class TestFilePipelineStoreTask {
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
       Mockito.when(mock.getDataDir()).thenReturn("target/" + UUID.randomUUID());
+      Mockito.when(mock.getSamplePipelinesDir()).thenReturn(samplePipelinesDir.getAbsolutePath());
       return mock;
     }
 
@@ -155,7 +160,13 @@ public class TestFilePipelineStoreTask {
   }
 
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    samplePipelinesDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(samplePipelinesDir.mkdirs());
+    String samplePipeline = new File(samplePipelinesDir, "helloWorldPipeline.json").getAbsolutePath();
+    OutputStream os = new FileOutputStream(samplePipeline);
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream("helloWorldPipeline.json"), os);
+
     dagger = ObjectGraph.create(new Module());
     store = dagger.get(FilePipelineStoreTask.class);
   }
@@ -798,6 +809,32 @@ public class TestFilePipelineStoreTask {
       Assert.assertEquals(0, infoAfterDelete.getMetadata().size());
       Assert.assertEquals(infoBeforeDelete.getSdcVersion(), infoAfterDelete.getSdcVersion());
       Assert.assertEquals(infoBeforeDelete.getSdcId(), infoAfterDelete.getSdcId());
+    } finally {
+      store.stop();
+    }
+  }
+
+  @Test
+  public void testSamplePipelines() throws PipelineException {
+    try {
+      store.init();
+      List<PipelineInfo> samplePipelines = store.getSamplePipelines();
+      Assert.assertEquals(1, samplePipelines.size());
+      Assert.assertEquals("helloWorldPipeline", samplePipelines.get(0).getPipelineId());
+
+      PipelineEnvelopeJson pipelineEnvelope = store.loadSamplePipeline("helloWorldPipeline");
+      Assert.assertNotNull(pipelineEnvelope);
+      Assert.assertNotNull(pipelineEnvelope.getPipelineConfig());
+      Assert.assertNotNull(pipelineEnvelope.getPipelineRules());
+
+      // test loading invalid sample pipeline Id
+      try {
+        store.loadSamplePipeline("invalidPipeline");
+        Assert.fail("Excepted exception");
+      } catch (PipelineStoreException ex) {
+        Assert.assertEquals("CONTAINER_0215", ex.getErrorCode().getCode());
+      }
+
     } finally {
       store.stop();
     }

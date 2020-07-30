@@ -112,7 +112,6 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -159,6 +158,7 @@ public class PipelineStoreResource {
   private static final String MICROSERVICE = "MICROSERVICE";
 
   private static final String SYSTEM_ALL_PIPELINES = "system:allPipelines";
+  private static final String SYSTEM_SAMPLE_PIPELINES = "system:samplePipelines";
   private static final String SYSTEM_EDGE_PIPELINES = "system:edgePipelines";
   private static final String SYSTEM_MICROSERVICE_PIPELINES = "system:microServicePipelines";
   private static final String SYSTEM_PUBLISHED_PIPELINES = "system:publishedPipelines";
@@ -176,6 +176,7 @@ public class PipelineStoreResource {
 
   private static final List<String> SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
+      SYSTEM_SAMPLE_PIPELINES,
       SYSTEM_EDGE_PIPELINES,
       SYSTEM_MICROSERVICE_PIPELINES,
       SYSTEM_RUNNING_PIPELINES,
@@ -187,6 +188,7 @@ public class PipelineStoreResource {
 
   private static final List<String> DPM_ENABLED_SYSTEM_PIPELINE_LABELS = ImmutableList.of(
       SYSTEM_ALL_PIPELINES,
+      SYSTEM_SAMPLE_PIPELINES,
       SYSTEM_PUBLISHED_PIPELINES,
       SYSTEM_DPM_CONTROLLED_PIPELINES,
       SYSTEM_LOCAL_PIPELINES,
@@ -316,16 +318,21 @@ public class PipelineStoreResource {
   ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
 
-    final List<PipelineInfo> pipelineInfoList = store.getPipelines().stream().filter(p -> {
-      boolean includeInList = true;
-      try {
-        manager.getPipelineState(p.getPipelineId(), p.getLastRev());
-      } catch (Exception e) {
-        LOG.error(Utils.format("State file not found for pipeline {}", p.getTitle()), e);
-        includeInList = false;
-      }
-      return includeInList;
-    }).collect(Collectors.toList());
+    final List<PipelineInfo> pipelineInfoList;
+    if (SYSTEM_SAMPLE_PIPELINES.equals(label)) {
+      pipelineInfoList = store.getSamplePipelines();
+    } else {
+      pipelineInfoList = store.getPipelines().stream().filter(p -> {
+        boolean includeInList = true;
+        try {
+          manager.getPipelineState(p.getPipelineId(), p.getLastRev());
+        } catch (Exception e) {
+          LOG.error(Utils.format("State file not found for pipeline {}", p.getTitle()), e);
+          includeInList = false;
+        }
+        return includeInList;
+      }).collect(Collectors.toList());
+    }
 
     final Map<String, PipelineState> pipelineStateCache = new HashMap<>();
 
@@ -339,6 +346,7 @@ public class PipelineStoreResource {
           Map<String, Object> metadata = pipelineInfo.getMetadata();
           switch (label) {
             case SYSTEM_ALL_PIPELINES:
+            case SYSTEM_SAMPLE_PIPELINES:
               return true;
             case SYSTEM_EDGE_PIPELINES:
               PipelineState state = manager.getPipelineState(pipelineInfo.getPipelineId(), pipelineInfo.getLastRev());
@@ -465,13 +473,15 @@ public class PipelineStoreResource {
       List<PipelineInfoJson> subList = BeanHelper.wrapPipelineInfo(filteredList.subList(offset, endIndex));
       if (includeStatus) {
         List<PipelineStateJson> statusList = new ArrayList<>(subList.size());
-        for (PipelineInfoJson pipelineInfoJson: subList) {
-          PipelineState state = pipelineStateCache.get(pipelineInfoJson.getPipelineId());
-          if (state == null) {
-            state = manager.getPipelineState(pipelineInfoJson.getPipelineId(), pipelineInfoJson.getLastRev());
-          }
-          if(state != null) {
-            statusList.add(BeanHelper.wrapPipelineState(state, true));
+        if (!SYSTEM_SAMPLE_PIPELINES.equals(label)) {
+          for (PipelineInfoJson pipelineInfoJson: subList) {
+            PipelineState state = pipelineStateCache.get(pipelineInfoJson.getPipelineId());
+            if (state == null) {
+              state = manager.getPipelineState(pipelineInfoJson.getPipelineId(), pipelineInfoJson.getLastRev());
+            }
+            if(state != null) {
+              statusList.add(BeanHelper.wrapPipelineState(state, true));
+            }
           }
         }
         responseData = ImmutableList.of(subList, statusList);
@@ -679,9 +689,11 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("get") @DefaultValue("pipeline") String get,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment
-  ) throws PipelineException, URISyntaxException {
-    PipelineInfo pipelineInfo = store.getInfo(name);
-    RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
+  ) throws PipelineException {
+    if (!get.equals("samplePipeline")) {
+      PipelineInfo pipelineInfo = store.getInfo(name);
+      RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
+    }
     Object data;
     String title = name;
     switch (get) {
@@ -697,6 +709,9 @@ public class PipelineStoreResource {
         break;
       case "history":
         data = BeanHelper.wrapPipelineRevInfo(store.getHistory(name));
+        break;
+      case "samplePipeline":
+        data = store.loadSamplePipeline(name);
         break;
       default:
         throw new IllegalArgumentException(Utils.format("Invalid value for parameter 'get': {}", get));

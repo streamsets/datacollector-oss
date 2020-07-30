@@ -673,6 +673,7 @@
       "selectUsersAndGroupsPlaceholder": "Select users and groups...",
       "sourcePlaceholder":"Select Origin...",
       "system:allPipelines" : "All Pipelines",
+      "system:samplePipelines" : "Sample Pipelines",
       "system:edgePipelines" : "Edge Pipelines",
       "system:publishedPipelines": "Published Pipelines",
       "system:dpmControlledPipelines": "Control Hub Controlled Pipelines",

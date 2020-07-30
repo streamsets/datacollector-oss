@@ -57,7 +57,7 @@
   <div class="bottom-container">
     <div class="center-container">
       <ng-include src="'introHelpTemplate'"></ng-include>
-      <ng-include src="'microServiceHelpTemplate'"></ng-include>
+      <ng-include src="'samplePipelinesHelpTemplate'"></ng-include>
       <ng-include src="'controlHubHelpTemplate'"></ng-include>
     </div>
   </div>
@@ -80,6 +80,22 @@
     <a class="bottom-btn" href="https://streamsets.wistia.com/medias/qfy6qnfnvf" target="_blank" rel="noopener">
       <span>Watch the Tutorial</span>
     </a>
+  </div>
+</script>
+
+<script type="text/ng-template" id="samplePipelinesHelpTemplate">
+  <div class="help-panel">
+    <div class="help-panel-container">
+      <span class="help-panel-title">Sample Pipelines </span>
+
+      <div class="help-panel-body">
+        <p>Try out sample pipelines to see what StreamSets Data Collector can do. Explore simple pipelines designed for
+          new users or advanced pipelines designed for more experienced users.</p>
+      </div>
+    </div>
+    <div class="bottom-btn" ng-click="common.viewSamplePipelines()">
+      <span>Sample Pipelines Library</span>
+    </div>
   </div>
 </script>
 

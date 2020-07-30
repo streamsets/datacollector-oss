@@ -46,6 +46,7 @@ import com.streamsets.datacollector.execution.runner.common.SampledRecord;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.SourceOffsetJson;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.StageOutput;
@@ -78,8 +79,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import javax.ws.rs.core.MultivaluedMap;
@@ -95,13 +94,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.*;
 
 public class TestRemoteDataCollector {
 
@@ -911,6 +906,16 @@ public class TestRemoteDataCollector {
     public boolean isRemotePipeline(String name, String rev) throws PipelineStoreException {
       // TODO Auto-generated method stub
       return false;
+    }
+
+    @Override
+    public List<PipelineInfo> getSamplePipelines() {
+      return null;
+    }
+
+    @Override
+    public PipelineEnvelopeJson loadSamplePipeline(String samplePipelineId) {
+      return null;
     }
 
   }

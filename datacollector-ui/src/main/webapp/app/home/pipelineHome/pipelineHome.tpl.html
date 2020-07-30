@@ -17,7 +17,7 @@
     <bg-pane min-size="0">
 
       <bg-splitter orientation="horizontal" class="stage-library-splitter"
-                   ng-class="{'hide-stage-library-panel': !pipelineConfig || !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode}"
+                   ng-class="{'hide-stage-library-panel': !pipelineConfig || !$storage.hideStageLibraryPanel || $storage.maximizeDetailPane || isPipelineRunning || previewMode || snapshotMode || isSamplePipeline}"
                    ng-cloak>
 
         <bg-pane min-size="0">

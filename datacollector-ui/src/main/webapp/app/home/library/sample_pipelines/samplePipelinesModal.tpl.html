@@ -1,0 +1,47 @@
+<form class="sample-pipelines-modal-form" role="form">
+  <div class="modal-header">
+    <button type="button" class="close" ng-click="close()">
+      <span aria-hidden="true">&times;</span>
+      <span class="sr-only">Close</span>
+    </button>
+    <h3 class="modal-title">Sample Pipelines</h3>
+  </div>
+  <div class="modal-body">
+
+    <ng-include src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Pipeline Title</th>
+        <th>Tutorial</th>
+        <th>Origin</th>
+        <th>Destinations</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="samplePipeline in samplePipelines">
+        <td>
+          <a href="javascript:;"
+             ng-click="openSamplePipeline(samplePipeline)" ><span>{{samplePipeline.title}}</span></a>
+        </td>
+        <td>
+          <a
+            ng-if="samplePipeline.tutorialLink"
+            ng-href="{{samplePipeline.tutorialLink}}" target="_blank">Click to View</a>
+        </td>
+        <td>{{samplePipeline.origins}}</td>
+        <td>{{samplePipeline.destinations}}</td>
+      </tr>
+
+      <tr ng-if="remotePipelines.length === 0">
+        <td colspan="4" class="no-records text-center">No Pipelines to view.</td>
+      </tr>
+
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer">
+    <button type="reset" class="btn btn-default" ng-click="close()" translate="global.form.close">close</button>
+  </div>
+</form>

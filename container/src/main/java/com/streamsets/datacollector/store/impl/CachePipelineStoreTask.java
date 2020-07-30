@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
@@ -42,6 +43,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
   private final PipelineStoreTask pipelineStore;
   private final ConcurrentMap<String, PipelineInfo> pipelineInfoMap;
   private final LockCache<String> lockCache;
+  private List<PipelineInfo> samplePipelines;
 
   @Inject
   public CachePipelineStoreTask(PipelineStoreTask pipelineStore, LockCache<String> lockCache) {
@@ -62,6 +64,7 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
       for (PipelineInfo info: pipelineStore.getPipelines()) {
         pipelineInfoMap.put(info.getPipelineId(), info);
       }
+      samplePipelines = pipelineStore.getSamplePipelines();
     } catch (PipelineStoreException e) {
       throw new RuntimeException(Utils.format("Cannot fetch list of pipelines due to: '{}'", e), e);
     }
@@ -219,5 +222,15 @@ public class CachePipelineStoreTask implements PipelineStoreTask {
       boolean draft
   ) throws PipelineException {
     return pipelineStore.createPipelineFragment(user, pipelineId, pipelineTitle, description, draft);
+  }
+
+  @Override
+  public List<PipelineInfo> getSamplePipelines() {
+    return samplePipelines;
+  }
+
+  @Override
+  public PipelineEnvelopeJson loadSamplePipeline(String samplePipelineId) throws PipelineException {
+    return pipelineStore.loadSamplePipeline(samplePipelineId);
   }
 }

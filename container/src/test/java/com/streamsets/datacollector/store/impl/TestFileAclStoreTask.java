@@ -36,7 +36,6 @@ import com.streamsets.lib.security.acl.dto.Action;
 import com.streamsets.lib.security.acl.dto.Permission;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 import com.streamsets.lib.security.acl.dto.SubjectType;
-import com.streamsets.pipeline.BootstrapMain;
 import dagger.ObjectGraph;
 import dagger.Provides;
 import org.junit.After;
@@ -76,6 +75,7 @@ public class TestFileAclStoreTask {
     public RuntimeInfo provideRuntimeInfo() {
       RuntimeInfo mock = Mockito.mock(RuntimeInfo.class);
       Mockito.when(mock.getDataDir()).thenReturn("target/" + UUID.randomUUID());
+      Mockito.when(mock.getSamplePipelinesDir()).thenReturn("target/" + UUID.randomUUID());
       return mock;
     }
 

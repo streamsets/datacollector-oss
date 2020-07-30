@@ -127,6 +127,10 @@ angular
             var pipelineInfoList = res.data[0];
             var statusList = res.data[1];
 
+            if ($scope.selectedPipelineLabel === 'system:samplePipelines') {
+              pipelineService.processSamplePipelines(pipelineInfoList);
+            }
+
             $scope.filteredPipelines.push.apply($scope.filteredPipelines, pipelineInfoList);
 
             angular.forEach(statusList, function (status) {
@@ -465,11 +469,19 @@ angular
        * @param pipeline
        */
       openPipeline: function(pipeline) {
-        $location.path('/collector/pipeline/' + pipeline.pipelineId);
-        tracking.mixpanel.track(trackingEvent.PIPELINE_SETUP_VIEW, {
-          'Pipeline ID': pipeline.pipelineId,
-          'Pipeline Status': $rootScope.common.pipelineStatusMap[pipeline.pipelineId].status
-        });
+        if ($scope.selectedPipelineLabel === 'system:samplePipelines') {
+          $location.path('/collector/pipeline/' + pipeline.pipelineId).search({'samplePipeline': 'true'});
+          tracking.mixpanel.track(trackingEvent.SAMPLE_PIPELINE_VIEW, {
+            'Sample Pipeline ID': pipeline.pipelineId,
+            'Sample Pipeline Title': pipeline.title
+          });
+        } else {
+          $location.path('/collector/pipeline/' + pipeline.pipelineId);
+          tracking.mixpanel.track(trackingEvent.PIPELINE_SETUP_VIEW, {
+            'Pipeline ID': pipeline.pipelineId,
+            'Pipeline Status': $rootScope.common.pipelineStatusMap[pipeline.pipelineId].status
+          });
+        }
       },
 
       /**

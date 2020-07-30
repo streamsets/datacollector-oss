@@ -19,6 +19,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.execution.StateEventListener;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.PipelineException;
 
@@ -177,5 +178,15 @@ public class StatsCollectorPipelineStoreTask implements PipelineStoreTask {
   @Override
   public Status getStatus() {
     return store.getStatus();
+  }
+
+  @Override
+  public List<PipelineInfo> getSamplePipelines() throws PipelineStoreException {
+    return store.getSamplePipelines();
+  }
+
+  @Override
+  public PipelineEnvelopeJson loadSamplePipeline(String samplePipelineId) throws PipelineException {
+    return store.loadSamplePipeline(samplePipelineId);
   }
 }

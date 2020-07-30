@@ -17,13 +17,26 @@ package com.streamsets.datacollector.store.impl;
 
 import com.streamsets.datacollector.util.LockCache;
 import dagger.ObjectGraph;
+import org.apache.commons.io.IOUtils;
+import org.junit.Assert;
 import org.junit.Before;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.UUID;
 
 public class TestCachePipelineStoreTask extends TestFilePipelineStoreTask {
 
   @Override
   @Before
-  public void setUp() {
+  public void setUp() throws IOException {
+    samplePipelinesDir = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(samplePipelinesDir.mkdirs());
+    String samplePipeline = new File(samplePipelinesDir, "helloWorldPipeline.json").getAbsolutePath();
+    OutputStream os = new FileOutputStream(samplePipeline);
+    IOUtils.copy(getClass().getClassLoader().getResourceAsStream("helloWorldPipeline.json"), os);
     dagger = ObjectGraph.create(new Module());
     store = new CachePipelineStoreTask(dagger.get(FilePipelineStoreTask.class), new LockCache<>());
   }

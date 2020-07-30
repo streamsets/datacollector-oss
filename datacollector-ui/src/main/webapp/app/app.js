@@ -546,7 +546,16 @@ angular.module('dataCollectorApp')
 
       openGithubTutorial: function() {
         window.open('https://github.com/streamsets/tutorials', '_blank');
-      }
+      },
+
+      viewSamplePipelines: function() {
+        $modal.open({
+          templateUrl: 'app/home/library/sample_pipelines/samplePipelinesModal.tpl.html',
+          controller: 'SamplePipelinesModalInstanceController',
+          backdrop: 'static',
+          size: 'lg'
+        });
+      },
     };
 
     api.admin.getServerTime().then(function(res) {

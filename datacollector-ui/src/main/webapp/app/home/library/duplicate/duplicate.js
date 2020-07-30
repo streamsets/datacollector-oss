@@ -19,19 +19,49 @@
 
 angular
   .module('dataCollectorApp.home')
-  .controller('DuplicateModalInstanceController', function ($scope, $modalInstance, pipelineInfo, api, $q) {
+  .controller('DuplicateModalInstanceController', function (
+    $scope, $modalInstance, pipelineInfo, isSamplePipeline, api, $q
+  ) {
+    var newTitle = pipelineInfo.title + ' copy';
+    if (isSamplePipeline) {
+      newTitle = pipelineInfo.title;
+    }
     angular.extend($scope, {
       common: {
         errors: []
       },
       newConfig : {
-        title: pipelineInfo.title + ' copy',
+        title: newTitle,
         description: pipelineInfo.description,
         numberOfCopies: 1
       },
+      isSamplePipeline: isSamplePipeline,
       operationInProgress: false,
+
       save : function () {
-        if ($scope.newConfig.numberOfCopies === 1) {
+        if (isSamplePipeline) {
+          $scope.operationInProgress = true;
+          api.pipelineAgent.getSamplePipeline(pipelineInfo.pipelineId)
+            .then(function(res) {
+              var pipelineEnvelope = res.data;
+              var pipelineObject = pipelineEnvelope.pipelineConfig;
+              var pipelineRulesObject = pipelineEnvelope.pipelineRules;
+              return api.pipelineAgent.duplicatePipelineConfig(
+                $scope.newConfig.title,
+                $scope.newConfig.description,
+                pipelineObject,
+                pipelineRulesObject
+              );
+            }).then(
+            function(configObject) {
+              $modalInstance.close(configObject);
+            },
+            function(res) {
+              $scope.operationInProgress = false;
+              $scope.common.errors = [res.data];
+            }
+          );
+        } else if ($scope.newConfig.numberOfCopies === 1) {
           $scope.operationInProgress = true;
           $q.all([
             api.pipelineAgent.getPipelineConfig(pipelineInfo.pipelineId),

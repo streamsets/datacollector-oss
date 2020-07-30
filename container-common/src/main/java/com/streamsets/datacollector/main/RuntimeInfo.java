@@ -53,6 +53,7 @@ public abstract class RuntimeInfo {
   public static final String SPLITTER = "|";
   public static final String CONFIG_DIR = ".conf.dir";
   public static final String DATA_DIR = ".data.dir";
+  public static final String SAMPLE_PIPELINES_DATA_DIR = ".sample-pipelines.dir";
   public static final String LOG_DIR = ".log.dir";
   public static final String RESOURCES_DIR = ".resources.dir";
   public static final String LIBEXEC_DIR = ".libexec.dir";
@@ -177,6 +178,10 @@ public abstract class RuntimeInfo {
 
   public String getDataDir() {
     return System.getProperty(propertyPrefix + DATA_DIR, getRuntimeDir() + "/var");
+  }
+
+  public String getSamplePipelinesDir() {
+    return System.getProperty(propertyPrefix + SAMPLE_PIPELINES_DATA_DIR, getRuntimeDir() + "/samplePipelines");
   }
 
   public String getLibexecDir() {

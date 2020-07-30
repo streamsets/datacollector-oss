@@ -523,7 +523,7 @@ angular.module('dataCollectorApp.common')
     /**
      * Duplicate Pipeline Configuration Command Handler
      */
-    this.duplicatePipelineConfigCommand = function(pipelineInfo, $event) {
+    this.duplicatePipelineConfigCommand = function(pipelineInfo, $event, isSamplePipeline) {
       var defer = $q.defer();
       var modalInstance = $modal.open({
         templateUrl: 'app/home/library/duplicate/duplicate.tpl.html',
@@ -533,6 +533,9 @@ angular.module('dataCollectorApp.common')
         resolve: {
           pipelineInfo: function () {
             return pipelineInfo;
+          },
+          isSamplePipeline: function () {
+            return isSamplePipeline;
           }
         }
       });
@@ -2183,5 +2186,40 @@ angular.module('dataCollectorApp.common')
       if (this.stageNameToLibraryListMap[stageName]) {
         return this.stageNameToLibraryListMap[stageName];
       }
+    };
+
+
+    /**
+     * Inject tutorial link, origins, and destinations field for the list of sample pipeline info list.
+     */
+    this.processSamplePipelines = function (pipelineInfoList) {
+      // populate tutorial, origin and destinations column data
+      angular.forEach(pipelineInfoList, function (pipelineInfo) {
+        if (pipelineInfo.description) {
+          var tutorialLink = pipelineInfo.description
+            .split('\n', 1)[0]
+            .replace('Tutorial - ', '')
+            .trim();
+          if (tutorialLink && tutorialLink.startsWith('http')) {
+            pipelineInfo.tutorialLink = tutorialLink;
+          }
+        }
+
+        if (pipelineInfo.metadata && pipelineInfo.metadata.labels && pipelineInfo.metadata.labels.length) {
+          var origins = [];
+          var destinations = [];
+          angular.forEach(pipelineInfo.metadata.labels, function (label) {
+            if (label && label.startsWith('origin:')) {
+              origins.push(label.replace('origin:', ''));
+            }
+            if (label && label.startsWith('destination:')) {
+              destinations.push(label.replace('destination:', ''));
+            }
+          });
+
+          pipelineInfo.origins = _(origins).uniq().sort().join(', ');
+          pipelineInfo.destinations = _(destinations).uniq().sort().join(', ');
+        }
+      });
     };
   });

@@ -69,7 +69,9 @@ angular.module('dataCollectorApp.common')
     TAB_SELECTED: 'Tab Selected',
     PIPELINE_SETUP_VIEW: 'Pipeline Setup View',
     RULE_CREATED: 'Rule Created',
-    METRIC_RULE_CREATED: 'Metric Rule Created'
+    METRIC_RULE_CREATED: 'Metric Rule Created',
+    SAMPLE_PIPELINE_VIEW: 'Sample Pipeline View',
+    SAMPLE_PIPELINE_DUPLICATED: 'Sample Pipeline Duplicated'
   })
   .factory('tracking', function() {
     var tracking = {
@@ -155,8 +157,8 @@ angular.module('dataCollectorApp.common')
 
     /**
      * Set up user identity in all tracking services
-     * @param {string} sdcId 
-     * @param {string} userName 
+     * @param {string} sdcId
+     * @param {string} userName
      */
     tracking.initializeUser = function(sdcId, userName) {
       var USER_ID = sdcId + userName;
