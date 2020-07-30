@@ -28,6 +28,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Edgemart Alias",
       description = "The alias of a dataset, which must be unique across an organization.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public String edgemartAliasPrefix;
@@ -38,6 +39,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Edgemart Container",
       description = "The name of the app that contains the dataset. If omitted, then the user's private app is used.",
       displayPosition = 55,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public String edgemartContainer;
@@ -49,6 +51,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Append timestamp to alias",
       description = "Enable this to append a timestamp to the Edgemart Alias. This will avoid datasets overwriting each other.",
       displayPosition = 52,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public boolean appendTimestamp = false;
@@ -60,6 +63,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Operation",
       description = "Indicates which operation to use when you’re loading data into the dataset.",
       displayPosition = 57,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   @ValueChooserModel(OperationChooserValues.class)
@@ -72,6 +76,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Dataset Wait Time (secs)",
       description = "Max time to wait for new data before requesting that the dataset be processed.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FORCE"
   )
   public int datasetWaitTime = 0;
@@ -83,6 +88,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Use Dataflow",
       description = "Enable to use a dataflow to combine successive datasets into one.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public boolean useDataflow;
@@ -94,6 +100,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Dataflow Name",
       description = "Name of a dataflow to combine datasets into one. CAUTION - existing dataflow content will be overwritten!",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "useDataflow",
       triggeredByValue = "true",
       group = "FORCE"
@@ -107,6 +114,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Run Dataflow After Upload",
       description = "Enable this to run the dataflow after each dataset is uploaded. Caution - ensure that your Dataset Wait Time is at least an hour or you will overrun the limit on dataflow runs!",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "useDataflow",
       triggeredByValue = "true",
       group = "FORCE"
@@ -119,6 +127,7 @@ public class WaveAnalyticsConfigBean extends ForceConfigBean {
       label = "Metadata JSON",
       description = "Metadata in JSON format, which describes the structure of the uploaded file.",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public String metadataJson = "";

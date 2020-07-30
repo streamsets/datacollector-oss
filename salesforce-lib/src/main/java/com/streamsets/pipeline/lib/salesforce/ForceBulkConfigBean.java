@@ -33,6 +33,7 @@ public class ForceBulkConfigBean {
           "Note that the 'Query All' option and offsets are not used with PK Chunking, " +
           "and the SOQL Query cannot contain an ORDER BY clause, or contain the Id field in a WHERE clause.",
       displayPosition = 74,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useBulkAPI^",
       triggeredByValue = "true",
       group = "#0"
@@ -47,6 +48,7 @@ public class ForceBulkConfigBean {
       max = 250000,
       label = "Chunk Size",
       displayPosition = 76,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "usePKChunking",
       triggeredByValue = "true",
       group = "#0"
@@ -60,6 +62,7 @@ public class ForceBulkConfigBean {
       description = "Optional 15- or 18-character record ID to be used as the lower boundary for the first chunk. " +
           "If omitted, all records matching the query will be retrieved.",
       displayPosition = 78,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "usePKChunking",
       triggeredByValue = "true",
       group = "#0"

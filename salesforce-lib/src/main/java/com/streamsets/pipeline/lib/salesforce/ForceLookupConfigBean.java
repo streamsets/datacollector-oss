@@ -38,6 +38,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       label = "Lookup Mode",
       description = "Lookup records by a SOQL Query or by the Salesforce record ID.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   @ValueChooserModel(LookupModeChooserValues.class)
@@ -56,6 +57,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "QUERY",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   public String soqlQuery;
@@ -68,6 +70,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
           "otherwise, the Salesforce SOAP API will be used.",
       displayPosition = 72,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "lookupMode",
       triggeredByValue = "QUERY",
       group = "QUERY"
@@ -83,6 +86,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 75,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   @FieldSelectorModel(singleValued = true)
@@ -100,6 +104,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   public String retrieveFields = "";
@@ -113,6 +118,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       dependsOn = "lookupMode",
       triggeredByValue = "RETRIEVE",
       displayPosition = 85,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   public String sObjectType = "";
@@ -124,6 +130,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       defaultValue = "",
       description = "Mappings from Salesforce field names to SDC field names",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "QUERY"
   )
   @ListBeanModel
@@ -136,6 +143,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       description = "How to handle multiple values",
       defaultValue = "FIRST_ONLY",
       displayPosition = 95,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "QUERY"
   )
   @ValueChooserModel(MultipleValuesBehaviorChooserValues.class)
@@ -148,6 +156,7 @@ public class ForceLookupConfigBean extends ForceInputConfigBean {
       description = "How to handle missing values when no default value is defined.",
       defaultValue = "PASS_RECORD_ON",
       displayPosition = 97,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "QUERY"
   )
   @ValueChooserModel(MissingValuesBehaviorChooserValues.class)

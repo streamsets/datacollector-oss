@@ -60,7 +60,8 @@ public class ForceSDCFieldMapping {
       defaultValue="",
       label = "Salesforce Field",
       description = "The Salesforce field name.",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String salesforceField;
 
@@ -70,7 +71,8 @@ public class ForceSDCFieldMapping {
       defaultValue = "",
       label = "SDC Field",
       description = "The field in the record to receive the value.",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String sdcField;
@@ -82,7 +84,8 @@ public class ForceSDCFieldMapping {
       label = "Default Value",
       description = "The default value to be used when Salesforce returns no row. " +
           "If not set, the Missing Values Behavior applies.",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String defaultValue;
 

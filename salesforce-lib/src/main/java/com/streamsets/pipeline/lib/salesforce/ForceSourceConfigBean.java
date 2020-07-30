@@ -32,6 +32,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "If enabled, records will be read and written via the Salesforce Bulk API, " +
           "otherwise, the Salesforce SOAP API will be used.",
       displayPosition = 72,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
       group = "QUERY"
@@ -48,6 +49,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       elDefs = {OffsetEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "queryExistingData",
       triggeredByValue = "true",
       group = "QUERY"
@@ -61,6 +63,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Repeat Query",
       description = "Select one of the options to repeat the query, or not",
       displayPosition = 85,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "false")
@@ -76,6 +79,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       defaultValue = "${1 * MINUTES}",
       label = "Query Interval",
       displayPosition = 87,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "false"),
@@ -95,6 +99,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "Initial value to insert for ${offset}." +
           " Subsequent queries will use the result of the Next Offset Query",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
       },
@@ -109,6 +114,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Offset Field",
       description = "Field checked to track current offset.",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
       },
@@ -123,6 +129,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Subscribe for Notifications",
       description = "If enabled, the origin will subscribe to the Force.com Streaming API for notifications.",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public boolean subscribeToStreaming;
@@ -134,6 +141,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "Select Push Topic (to subscribe to SObject record changes) or Platform Event.",
       defaultValue = "PUSH_TOPIC",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
       },
@@ -148,6 +156,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Push Topic",
       description = "Push Topic name, for example AccountUpdates. The Push Topic must be defined in your Salesforce environment.",
       displayPosition = 125,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
           @Dependency(configName = "subscriptionType", triggeredByValues = "PUSH_TOPIC"),
@@ -162,6 +171,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       label = "Platform Event API Name",
       description = "Platform Event API Name, for example Low_Ink__e. The Platform Event must be defined in your Salesforce environment.",
       displayPosition = 125,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
           @Dependency(configName = "subscriptionType", triggeredByValues = "PLATFORM_EVENT"),
@@ -171,16 +181,17 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
   public String platformEvent;
 
   @ConfigDef(
-          required = false,
-          type = ConfigDef.Type.STRING,
-          label = "Change Data Capture Object",
-          description = "The object for which you want to receive change events. Leave blank to receive all change events.",
-          displayPosition = 126,
-          dependencies = {
-                  @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
-                  @Dependency(configName = "subscriptionType", triggeredByValues = "CDC"),
-          },
-          group = "SUBSCRIBE"
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Change Data Capture Object",
+      description = "The object for which you want to receive change events. Leave blank to receive all change events.",
+      displayPosition = 126,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      dependencies = {
+              @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
+              @Dependency(configName = "subscriptionType", triggeredByValues = "CDC"),
+      },
+      group = "SUBSCRIBE"
   )
   public String cdcObject;
 
@@ -191,6 +202,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "Choose which events to receive when the pipeline first starts.",
       defaultValue = "NEW_EVENTS",
       displayPosition = 127,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
           @Dependency(configName = "subscriptionType", triggeredByValues = "PLATFORM_EVENT"),
@@ -207,6 +219,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       description = "Streaming buffer size, in bytes. Increase this if you see 'buffering capacity exceeded' errors.",
       defaultValue = "1048576",
       displayPosition = 128,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
       },
@@ -222,6 +235,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
           "presence of ${OFFSET} or ORDER BY clause.",
       defaultValue = "false",
       displayPosition = 300,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean disableValidation = false;

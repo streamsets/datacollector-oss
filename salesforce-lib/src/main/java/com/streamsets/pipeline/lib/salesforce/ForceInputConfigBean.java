@@ -31,6 +31,7 @@ public class ForceInputConfigBean extends ForceConfigBean {
       label = "Query Existing Data",
       description = "If enabled, existing data will be read from Force.com.",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FORCE"
   )
   public boolean queryExistingData;
@@ -45,6 +46,7 @@ public class ForceInputConfigBean extends ForceConfigBean {
       description = "When enabled, the processor will additionally retrieve deleted records from the Recycle Bin",
       defaultValue = "false",
       displayPosition = 82,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "queryExistingData", triggeredByValues = "true"),
       },
@@ -59,6 +61,7 @@ public class ForceInputConfigBean extends ForceConfigBean {
       description = "Generates record header and field attributes that provide additional details about source data, such as the source object and original data type.",
       defaultValue = "true",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean createSalesforceNsHeaders = true;
@@ -70,6 +73,7 @@ public class ForceInputConfigBean extends ForceConfigBean {
       description = "Prefix for the header and field attributes, used as follows: <prefix>.<type of information>. For example: salesforce.precision and salesforce.scale",
       defaultValue = "salesforce.",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependsOn = "createSalesforceNsHeaders",
       triggeredByValue = "true"
@@ -83,6 +87,7 @@ public class ForceInputConfigBean extends ForceConfigBean {
       description = "How to handle fields with types that do not match the schema.",
       defaultValue = "PRESERVE_DATA",
       displayPosition = 310,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   @ValueChooserModel(MismatchedTypesOptionChooserValues.class)

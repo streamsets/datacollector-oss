@@ -34,6 +34,7 @@ public class ForceConfigBean {
       label = "Username",
       description = "Salesforce username, in the form user@example.com",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public CredentialValue username;
@@ -44,6 +45,7 @@ public class ForceConfigBean {
       label = "Password",
       description = "Salesforce password, or an EL to load the password from a resource, for example, ${runtime:loadResource('forcePassword.txt',true)}",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public CredentialValue password;
@@ -55,6 +57,7 @@ public class ForceConfigBean {
       label = "Auth Endpoint",
       description = "Salesforce SOAP API Authentication Endpoint: login.salesforce.com for production/Developer Edition, test.salesforce.com for sandboxes",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "FORCE"
   )
   public String authEndpoint;
@@ -66,6 +69,7 @@ public class ForceConfigBean {
       label = "API Version",
       description = "Salesforce API Version",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "FORCE"
   )
   public String apiVersion;
@@ -77,6 +81,7 @@ public class ForceConfigBean {
       description = "Connect to Salesforce via a proxy server.",
       defaultValue = "false",
       displayPosition = 400,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean useProxy = false;
@@ -88,6 +93,7 @@ public class ForceConfigBean {
       description = "Proxy Server Hostname",
       defaultValue = "",
       displayPosition = 410,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependsOn = "useProxy",
       triggeredByValue = "true"
@@ -101,6 +107,7 @@ public class ForceConfigBean {
       description = "Proxy Server Port Number",
       defaultValue = "",
       displayPosition = 420,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependsOn = "useProxy",
       triggeredByValue = "true"
@@ -114,6 +121,7 @@ public class ForceConfigBean {
       description = "Enable if you need to supply a username/password to connect via the proxy server.",
       defaultValue = "false",
       displayPosition = 430,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependsOn = "useProxy",
       triggeredByValue = "true"
@@ -126,6 +134,7 @@ public class ForceConfigBean {
       label = "Proxy Realm",
       description = "Authenticaton realm for the proxy server.",
       displayPosition = 435,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependencies = {
           @Dependency(configName = "useProxy", triggeredByValues = "true"),
@@ -140,6 +149,7 @@ public class ForceConfigBean {
       label = "Proxy Username",
       description = "Username for the proxy server.",
       displayPosition = 440,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependencies = {
           @Dependency(configName = "useProxy", triggeredByValues = "true"),
@@ -154,6 +164,7 @@ public class ForceConfigBean {
       label = "Proxy Password",
       description = "Password for the proxy server, or an EL to load the password from a resource, for example, ${runtime:loadResource('proxyPassword.txt',true)}",
       displayPosition = 450,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED",
       dependencies = {
           @Dependency(configName = "useProxy", triggeredByValues = "true"),

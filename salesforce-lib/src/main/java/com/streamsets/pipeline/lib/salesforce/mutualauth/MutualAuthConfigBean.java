@@ -48,6 +48,7 @@ public class MutualAuthConfigBean {
       label = "Use Mutual Authentication",
       description = "If enabled, you must configure Salesforce for Mutual Authentication",
       displayPosition = 500,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean useMutualAuth = false;
@@ -59,6 +60,7 @@ public class MutualAuthConfigBean {
       label = "Use Remote Keystore",
       description = "Use a keystore built from a specified private key and certificate chain instead of loading from a local file",
       displayPosition = 505,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependsOn = "useMutualAuth",
       triggeredByValue = "true"
@@ -72,6 +74,7 @@ public class MutualAuthConfigBean {
       description = "The path to the keystore file.  Absolute path, or relative to the Data Collector resources "
           + "directory.",
       displayPosition = 510,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
@@ -117,6 +120,7 @@ public class MutualAuthConfigBean {
       label = "Keystore Type",
       description = "The type of certificate/key scheme to use for the key tore.",
       displayPosition = 540,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
@@ -133,6 +137,7 @@ public class MutualAuthConfigBean {
       description = "The password to the keystore file, if applicable.  Using a password is highly recommended for "
           + "security reasons.",
       displayPosition = 550,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
@@ -148,6 +153,7 @@ public class MutualAuthConfigBean {
       description = "The key manager algorithm to use with the keystore.",
       defaultValue = TlsConfigBean.DEFAULT_KEY_MANAGER_ALGORITHM,
       displayPosition = 560,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useMutualAuth",
       triggeredByValue = "true",
       group = "ADVANCED"
