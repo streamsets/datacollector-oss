@@ -68,6 +68,7 @@ public class FirehoseConfigBean extends KinesisConfigBean {
       label = "Maximum Record Size (KB)",
       description = "Records larger than this will be sent to the error pipeline.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public int maxRecordSize = 1000;

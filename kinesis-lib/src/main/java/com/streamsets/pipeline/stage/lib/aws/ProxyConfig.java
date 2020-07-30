@@ -31,6 +31,7 @@ public class ProxyConfig {
       defaultValue = "10",
       description = "Set connection timeout (in seconds)",
       displayPosition = 4995,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer connectionTimeout = 10;
@@ -42,6 +43,7 @@ public class ProxyConfig {
       defaultValue = "50",
       description = "Set socket timeout (in seconds) for read and write operations. ",
       displayPosition = 4997,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer socketTimeout = 50;
@@ -54,6 +56,7 @@ public class ProxyConfig {
       description = "Sets the maximum number of retry attempts for failed " +
           "retry-able requests (ex: 5xx error).",
       displayPosition = 4999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public Integer retryCount = 3;
@@ -66,6 +69,7 @@ public class ProxyConfig {
       description = "Whether or not to connect to AWS through a proxy",
       defaultValue = "false",
       displayPosition = 5000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "ADVANCED"
   )
   public boolean useProxy;
@@ -76,6 +80,7 @@ public class ProxyConfig {
       label = "Proxy Host",
       description = "Optional proxy host the client will connect through",
       displayPosition = 5010,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useProxy",
       triggeredByValue = "true",
       group = "ADVANCED"
@@ -88,6 +93,7 @@ public class ProxyConfig {
       label = "Proxy Port",
       description = "Optional proxy port the client will connect through",
       displayPosition = 5020,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useProxy",
       triggeredByValue = "true",
       group = "ADVANCED"
@@ -100,6 +106,7 @@ public class ProxyConfig {
       label = "Proxy User",
       description = "Optional proxy user name to use if connecting through a proxy",
       displayPosition = 5030,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useProxy",
       triggeredByValue = "true",
       group = "ADVANCED"
@@ -112,6 +119,7 @@ public class ProxyConfig {
       label = "Proxy Password",
       description = "Optional proxy password to use when connecting through a proxy",
       displayPosition = 5040,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "useProxy",
       triggeredByValue = "true",
       group = "ADVANCED"

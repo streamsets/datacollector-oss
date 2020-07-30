@@ -28,6 +28,7 @@ public class LeaseTableConfig {
       label = "Tags",
       description = "Tags to apply to the lease table in DynamoDB",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public Map<String, String> tags = new HashMap<>();

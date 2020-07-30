@@ -42,6 +42,7 @@ public class AWSConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Access Key ID",
       displayPosition = -110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "credentialMode",
       triggeredByValue = "WITH_CREDENTIALS"
@@ -53,6 +54,7 @@ public class AWSConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Secret Access Key",
       displayPosition = -100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "credentialMode",
       triggeredByValue = "WITH_CREDENTIALS"

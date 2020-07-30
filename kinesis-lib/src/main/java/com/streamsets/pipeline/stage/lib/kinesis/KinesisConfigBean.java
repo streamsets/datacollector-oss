@@ -33,6 +33,7 @@ public class KinesisConfigBean {
       defaultValue = "US_WEST_2",
       label = "Region",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KINESIS"
   )
   @ValueChooserModel(AwsRegionChooserValues.class)
@@ -45,6 +46,7 @@ public class KinesisConfigBean {
       description = "",
       defaultValue = "",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "region",
       triggeredByValue = "OTHER",
       group = "KINESIS"
@@ -56,6 +58,7 @@ public class KinesisConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Stream Name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "KINESIS"
   )
   public String streamName;
