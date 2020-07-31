@@ -27,6 +27,7 @@ public class TensorConfig {
       label = "Operation",
       description = "Operation",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   public String operation;
@@ -38,6 +39,7 @@ public class TensorConfig {
       label = "Index",
       description = "Index",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   public int index;
@@ -49,6 +51,7 @@ public class TensorConfig {
       label = "Tensor Type",
       description = "Datatype of the tensor",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   @ValueChooserModel(DataTypeChooserValues.class)

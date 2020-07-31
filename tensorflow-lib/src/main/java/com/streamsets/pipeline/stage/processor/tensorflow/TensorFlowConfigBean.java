@@ -31,6 +31,7 @@ public class TensorFlowConfigBean {
       label = "Saved Model Path",
       description = "Local path to the model. Absolute path, or relative to the Data Collector resources directory.",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   public String modelPath;
@@ -42,6 +43,7 @@ public class TensorFlowConfigBean {
       label = "Model Tags",
       description = "Tags applied to the TensorFlow model",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   @ListBeanModel
@@ -54,6 +56,7 @@ public class TensorFlowConfigBean {
       label = "Input Configs",
       description = "Input tensor information as configured during the training and exporting of the model",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   @ListBeanModel
@@ -65,6 +68,7 @@ public class TensorFlowConfigBean {
       label = "Output Configs",
       description = "Output tensor information as configured during the training and exporting of the model",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   @ListBeanModel
@@ -79,6 +83,7 @@ public class TensorFlowConfigBean {
       description = "Evaluates the full batch at once. Select when the TensorFlow model expects many inputs to " +
           "generate one output. Clear when the TensorFlow model expects one input to generate one output.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW"
   )
   public boolean useEntireBatch = false;
@@ -90,6 +95,7 @@ public class TensorFlowConfigBean {
       label = "Output Field",
       description = "Output field for the prediction or classification result",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TENSOR_FLOW",
       dependsOn = "useEntireBatch",
       triggeredByValue = "false"
