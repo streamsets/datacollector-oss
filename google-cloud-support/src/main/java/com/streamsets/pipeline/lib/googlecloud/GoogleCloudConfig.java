@@ -168,7 +168,7 @@ public class GoogleCloudConfig {
   @ConfigDef(
     required = true,
     type = ConfigDef.Type.NUMBER,
-    min = 1,
+    min = 2,
     label = "Worker Count",
     group = "DATAPROC",
     displayPosition = 150,
