@@ -362,13 +362,6 @@ public class KafkaTargetConfig {
       validateConfluentSerializerConfigs(context, issues);
     }
 
-    // Expression partition strategy uses partition key instead of message key
-    // and hence requires the key serializer to be String serializer
-    if(partitionStrategy == PartitionStrategy.EXPRESSION){
-      keySerializer = Serializer.STRING;
-      messageKeyFormat = ProducerKeyFormat.STRING;
-    }
-
     // Configure serializers.
     kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, keySerializer.getKeyClass());
     kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
