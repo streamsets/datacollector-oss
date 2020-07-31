@@ -34,6 +34,7 @@ public class MongoTargetConfigBean {
       description = "Unique key field(s) is required for update and replace while optional for inserts and deletes",
       required = false,
       displayPosition = 1000,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   public List<String> uniqueKeyField;
@@ -45,6 +46,7 @@ public class MongoTargetConfigBean {
       description = "Sets the Upsert flag for Update and Replace operations",
       required = true,
       displayPosition = 1010,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   public boolean isUpsert;
@@ -56,6 +58,7 @@ public class MongoTargetConfigBean {
       defaultValue = "JOURNALED",
       required = true,
       displayPosition = 1020,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   @ValueChooserModel(WriteConcernChooserValues.class)

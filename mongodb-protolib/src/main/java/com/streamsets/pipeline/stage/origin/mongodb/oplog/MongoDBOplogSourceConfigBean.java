@@ -30,6 +30,7 @@ public class MongoDBOplogSourceConfigBean {
       label = "Initial Timestamp (secs)",
       description = "Specify the initial timestamp in seconds. Leave -1 to opt out.",
       displayPosition = 1003,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB",
       min = -1
   )
@@ -42,6 +43,7 @@ public class MongoDBOplogSourceConfigBean {
       label = "Initial Ordinal",
       description = "Specify the initial ordinal after timestamp. Leave -1 to Opt out.",
       displayPosition = 1004,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB",
       min = -1,
       max = Integer.MAX_VALUE
@@ -55,6 +57,7 @@ public class MongoDBOplogSourceConfigBean {
       defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\"]",
       description="Oplog Operation types to read",
       displayPosition = 1005,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   @MultiValueChooserModel(OplogOpTypeChooserValues.class)

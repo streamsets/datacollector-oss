@@ -58,7 +58,8 @@ public class MongoDBConfig {
           "[/[database][?options]]",
       required = true,
       group = "MONGODB",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String connectionString;
 
@@ -69,6 +70,7 @@ public class MongoDBConfig {
       label = "Enable Single Mode",
       description = "Connects to the first MongoDB server in the connection string",
       displayPosition = 11,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   public boolean isSingleMode;
@@ -78,7 +80,8 @@ public class MongoDBConfig {
       label = "Database",
       required = true,
       group = "MONGODB",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String database;
 
@@ -87,7 +90,8 @@ public class MongoDBConfig {
       label = "Collection",
       required = true,
       group = "MONGODB",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String collection;
 
@@ -97,7 +101,8 @@ public class MongoDBConfig {
       defaultValue = "NONE",
       required = true,
       group = "CREDENTIALS",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(AuthenticationTypeChooserValues.class)
   public AuthenticationType authenticationType;
@@ -109,7 +114,8 @@ public class MongoDBConfig {
       dependsOn = "authenticationType",
       triggeredByValue = {"USER_PASS","LDAP"},
       group = "CREDENTIALS",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public CredentialValue username;
 
@@ -120,7 +126,8 @@ public class MongoDBConfig {
       dependsOn = "authenticationType",
       triggeredByValue = {"USER_PASS","LDAP"},
       group = "CREDENTIALS",
-      displayPosition = 60
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public CredentialValue password;
 
@@ -132,7 +139,8 @@ public class MongoDBConfig {
       dependsOn = "authenticationType",
       triggeredByValue = "USER_PASS",
       group = "CREDENTIALS",
-      displayPosition = 65
+      displayPosition = 65,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String authSource = "";
 
@@ -145,7 +153,8 @@ public class MongoDBConfig {
       defaultValue = "100",
       required = false,
       group = "ADVANCED",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int connectionsPerHost = 100;
 
@@ -156,7 +165,8 @@ public class MongoDBConfig {
       defaultValue = "0",
       required = false,
       group = "ADVANCED",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int minConnectionsPerHost = 0;
 
@@ -167,7 +177,8 @@ public class MongoDBConfig {
       defaultValue = "10000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int connectTimeout = 10000;
 
@@ -178,7 +189,8 @@ public class MongoDBConfig {
       defaultValue = "0",
       required = false,
       group = "ADVANCED",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxConnectionIdleTime = 0;
 
@@ -189,7 +201,8 @@ public class MongoDBConfig {
       defaultValue = "0",
       required = false,
       group = "ADVANCED",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxConnectionLifeTime = 0;
 
@@ -200,7 +213,8 @@ public class MongoDBConfig {
       defaultValue = "120000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 60
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxWaitTime = 120000;
 
@@ -212,7 +226,8 @@ public class MongoDBConfig {
       defaultValue = "30000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 70
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int serverSelectionTimeout = 30000;
 
@@ -222,7 +237,8 @@ public class MongoDBConfig {
       defaultValue = "5",
       required = false,
       group = "ADVANCED",
-      displayPosition = 80
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int threadsAllowedToBlockForConnectionMultiplier = 5;
 
@@ -233,7 +249,8 @@ public class MongoDBConfig {
       defaultValue = "10000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 90
+      displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int heartbeatFrequency = 10000;
 
@@ -244,7 +261,8 @@ public class MongoDBConfig {
       defaultValue = "500",
       required = false,
       group = "ADVANCED",
-      displayPosition = 100
+      displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int minHeartbeatFrequency = 500;
 
@@ -255,7 +273,8 @@ public class MongoDBConfig {
       defaultValue = "20000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 110
+      displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int heartbeatConnectTimeout = 20000;
 
@@ -266,7 +285,8 @@ public class MongoDBConfig {
       defaultValue = "20000",
       required = false,
       group = "ADVANCED",
-      displayPosition = 120
+      displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int heartbeatSocketTimeout = 20000;
 
@@ -277,7 +297,8 @@ public class MongoDBConfig {
       defaultValue = "15",
       required = false,
       group = "ADVANCED",
-      displayPosition = 130
+      displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int localThreshold = 15;
 
@@ -288,7 +309,8 @@ public class MongoDBConfig {
       defaultValue = "",
       required = false,
       group = "ADVANCED",
-      displayPosition = 140
+      displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public String requiredReplicaSetName = "";
 
@@ -299,7 +321,8 @@ public class MongoDBConfig {
       defaultValue = "true",
       required = false,
       group = "ADVANCED",
-      displayPosition = 150
+      displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean cursorFinalizerEnabled = true;
 
@@ -310,7 +333,8 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 160
+      displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean socketKeepAlive = false;
 
@@ -321,7 +345,8 @@ public class MongoDBConfig {
       defaultValue = "0",
       required = false,
       group = "ADVANCED",
-      displayPosition = 170
+      displayPosition = 170,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int socketTimeout = 0;
 
@@ -332,7 +357,8 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 180
+      displayPosition = 180,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean sslEnabled = false;
 
@@ -343,7 +369,8 @@ public class MongoDBConfig {
       defaultValue = "false",
       required = false,
       group = "ADVANCED",
-      displayPosition = 190
+      displayPosition = 190,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean sslInvalidHostNameAllowed = false;
 

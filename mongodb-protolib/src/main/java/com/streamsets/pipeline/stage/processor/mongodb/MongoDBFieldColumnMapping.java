@@ -23,23 +23,25 @@ public class MongoDBFieldColumnMapping {
   public MongoDBFieldColumnMapping() {}
 
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.STRING,
-          defaultValue="",
-          label = "Document Field",
-          description = "Field name in document. It allows dot notation for embedded documents. " +
-                  "For example 'field1.field2.field3'",
-          displayPosition = 10
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue="",
+      label = "Document Field",
+      description = "Field name in document. It allows dot notation for embedded documents. " +
+              "For example 'field1.field2.field3'",
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String keyName;
 
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.MODEL,
-          defaultValue = "",
-          label = "SDC Field",
-          description = "The field in the record to receive the value.",
-          displayPosition = 20
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "",
+      label = "SDC Field",
+      description = "The field in the record to receive the value.",
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String sdcField;

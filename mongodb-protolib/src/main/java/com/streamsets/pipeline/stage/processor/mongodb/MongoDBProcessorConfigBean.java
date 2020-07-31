@@ -35,47 +35,51 @@ public class MongoDBProcessorConfigBean {
   public MongoDBConfig mongoConfig;
 
   @ConfigDef(
-          type = ConfigDef.Type.MODEL,
-          label = "Document to SDC Field Mappings",
-          description = "Mapping between SDC record to Document fields to construct a find() query",
-          required = true,
-          displayPosition = 50,
-          group = "LOOKUP"
+      type = ConfigDef.Type.MODEL,
+      label = "Document to SDC Field Mappings",
+      description = "Mapping between SDC record to Document fields to construct a find() query",
+      required = true,
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "LOOKUP"
   )
   @ListBeanModel
   public List<MongoDBFieldColumnMapping> fieldMapping;
 
   @ConfigDef(
-          type = ConfigDef.Type.STRING,
-          label = "Result Field",
-          description = "Field name to store lookup result. It should start with '/'",
-          required = true,
-          displayPosition = 55,
-          group = "LOOKUP"
+      type = ConfigDef.Type.STRING,
+      label = "Result Field",
+      description = "Field name to store lookup result. It should start with '/'",
+      required = true,
+      displayPosition = 55,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "LOOKUP"
   )
   @ListBeanModel
   public String resultField;
 
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.MODEL,
-          label = "Multiple Values Behavior",
-          description = "How to handle multiple values",
-          defaultValue = "FIRST_ONLY",
-          displayPosition = 60,
-          group = "LOOKUP"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Multiple Values Behavior",
+      description = "How to handle multiple values",
+      defaultValue = "FIRST_ONLY",
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "LOOKUP"
   )
   @ValueChooserModel(MongoDBLookupMultipleValuesBehaviorChooserValues.class)
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   @ConfigDef(
-          required = true,
-          type = ConfigDef.Type.MODEL,
-          label = "Missing Values Behavior",
-          description = "How to handle missing values",
-          defaultValue = "PASS_RECORD_ON",
-          displayPosition = 70,
-          group = "LOOKUP"
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Missing Values Behavior",
+      description = "How to handle missing values",
+      defaultValue = "PASS_RECORD_ON",
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "LOOKUP"
   )
   @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
   public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
@@ -87,7 +91,8 @@ public class MongoDBProcessorConfigBean {
       label = "Read Preference",
       description = "Sets the read preference",
       group = "MONGODB",
-      displayPosition = 180
+      displayPosition = 180,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(ReadPreferenceChooserValues.class)
   public ReadPreferenceLabel readPreference;

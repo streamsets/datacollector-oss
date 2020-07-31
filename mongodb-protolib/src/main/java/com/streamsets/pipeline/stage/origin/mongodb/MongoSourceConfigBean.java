@@ -33,6 +33,7 @@ public class MongoSourceConfigBean {
       label = "Capped Collection",
       description = "Un-check this box if querying an uncapped collection.",
       displayPosition = 1001,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MONGODB"
   )
   public boolean isCapped;
@@ -45,6 +46,7 @@ public class MongoSourceConfigBean {
       description = "Must be provided in timestamp format: YYYY-MM-DD HH:mm:ss if offset field is ObjectId type. " +
                     "If offset field is String type, provide an initial string. Oldest data to be retrieved.",
       displayPosition = 1002,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   public String initialOffset;
@@ -56,6 +58,7 @@ public class MongoSourceConfigBean {
       label = "Offset Field Type",
       description = "Offset field type. Currently ObjectId and String types are supported.",
       displayPosition = 1003,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   @ValueChooserModel(OffsetFieldTypeChooserValues.class)
@@ -68,6 +71,7 @@ public class MongoSourceConfigBean {
       label = "Offset Field",
       description = "Field checked to track current offset.",
       displayPosition = 1010,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "MONGODB"
   )
   public String offsetField;
@@ -79,6 +83,7 @@ public class MongoSourceConfigBean {
       required = true,
       min = 2, // Batch size of 1 in MongoDB is special and analogous to LIMIT 1
       displayPosition = 1011,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MONGODB"
   )
   public int batchSize;
@@ -91,6 +96,7 @@ public class MongoSourceConfigBean {
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 1012,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "MONGODB"
   )
   public long maxBatchWaitTime;
@@ -102,7 +108,8 @@ public class MongoSourceConfigBean {
       label = "Read Preference",
       description = "Sets the read preference",
       group = "MONGODB",
-      displayPosition = 1013
+      displayPosition = 1013,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   @ValueChooserModel(ReadPreferenceChooserValues.class)
   public ReadPreferenceLabel readPreference;
