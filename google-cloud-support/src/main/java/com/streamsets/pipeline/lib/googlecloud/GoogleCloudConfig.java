@@ -60,7 +60,7 @@ public class GoogleCloudConfig {
   public String gcsStagingUri;
 
   @ConfigDef(
-    required = true,
+    required = false,
     type = ConfigDef.Type.BOOLEAN,
     label = "Create Cluster",
     group = "DATAPROC",
