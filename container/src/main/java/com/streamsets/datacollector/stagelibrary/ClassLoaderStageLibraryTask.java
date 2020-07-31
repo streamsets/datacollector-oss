@@ -737,7 +737,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       // Load Connections
       for(Class klass : loadClassesFromResource(libDef, cl, CONNECTIONS_DEFINITION_RESOURCE)) {
         ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(libDef, klass);
-        String key = createKey(libDef.getName(), def.getName());
+        String key = createKey(libDef.getName(), def.getType());
         LOG.debug("Loaded connection '{}'", def.getName());
         localConnectionList.add(def);
         localConnectionMap.put(key, def);
