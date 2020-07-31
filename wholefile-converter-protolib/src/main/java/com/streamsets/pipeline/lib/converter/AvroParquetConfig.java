@@ -28,7 +28,7 @@ public class AvroParquetConfig {
     description = "Compression codec that will be used in Parquet. Valid values are for example 'SNAPPY' or 'LZO'. Empty value will use Parquet default.",
     defaultValue = "",
     displayPosition = 30,
-    displayMode = ConfigDef.DisplayMode.BASIC,
+    displayMode = ConfigDef.DisplayMode.ADVANCED,
     group = "AVRO_PARQUET",
     dependsOn = "jobType^",
     triggeredByValue = "AVRO_PARQUET"

@@ -33,6 +33,7 @@ public class JobConfig {
       description = "Type of job that will be executed.",
       defaultValue = "AVRO_PARQUET",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   @ValueChooserModel(JobTypeChooserValues.class)
@@ -45,6 +46,7 @@ public class JobConfig {
       label = "Temporary File Directory",
       description = "Directory for the temporary Parquet files",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       elDefs = {RecordEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -58,6 +60,7 @@ public class JobConfig {
       label = "Files Prefix",
       description = "File name prefix",
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       elDefs = SdcEL.class
   )
@@ -70,6 +73,7 @@ public class JobConfig {
       label = "Files Suffix",
       description = "File name suffix e.g.'.parquet'",
       displayPosition = 22,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB"
   )
   public String fileNameSuffix;
@@ -82,6 +86,7 @@ public class JobConfig {
       label = "Buffer Size (bytes)",
       description = "Size of the Buffer used to copy the file.",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       min = 1,
       max = Integer.MAX_VALUE
@@ -97,6 +102,7 @@ public class JobConfig {
       description = "Rate / sec to manipulate bandwidth requirements for File Transfer." +
           " Use <= 0 to opt out. Default unit is B/sec",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       elDefs = {DataUnitsEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
