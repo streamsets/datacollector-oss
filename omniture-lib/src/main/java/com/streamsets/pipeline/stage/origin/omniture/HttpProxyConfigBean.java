@@ -28,6 +28,7 @@ public class HttpProxyConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Proxy URI",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useProxy^",
       triggeredByValue = "true"
@@ -39,6 +40,7 @@ public class HttpProxyConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useProxy^",
       triggeredByValue = "true"
@@ -50,6 +52,7 @@ public class HttpProxyConfigBean {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "useProxy^",
       triggeredByValue = "true"
