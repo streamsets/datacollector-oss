@@ -26,6 +26,7 @@ public class CommonConfigBean {
       label = "Windows log to read from",
       description = "Log Name",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(LogNameChooserValues.class)
@@ -37,6 +38,7 @@ public class CommonConfigBean {
       defaultValue = "",
       label = "Custom Log Name",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "logName",
       triggeredByValue = {"Custom"}
@@ -50,6 +52,7 @@ public class CommonConfigBean {
       label = "Read Mode",
       description = "Read all events in the log or only new events that occur after the pipeline starts",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(ReadModeChooserValues.class)
@@ -62,6 +65,7 @@ public class CommonConfigBean {
       label = "Buffer Size",
       description = "Buffer Size used to render events. Leave -1 for auto assignment.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       min = -1,
       max = Integer.MAX_VALUE
