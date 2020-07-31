@@ -26,7 +26,8 @@ public class InputConfig {
       defaultValue = "",
       label = "MLeap Input Field",
       description = "MLeap Input Field",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String pmmlFieldName;
 
@@ -36,7 +37,8 @@ public class InputConfig {
       defaultValue="",
       label = "Field to Convert",
       description = "Field in the record to convert to MLeap Input Field",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String fieldName;
