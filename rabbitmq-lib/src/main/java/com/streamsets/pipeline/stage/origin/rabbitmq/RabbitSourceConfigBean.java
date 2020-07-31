@@ -31,6 +31,7 @@ public class RabbitSourceConfigBean extends BaseRabbitConfigBean {
       defaultValue = "",
       description = "Leave blank to use an auto-generated tag.",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String consumerTag = "";
@@ -42,6 +43,7 @@ public class RabbitSourceConfigBean extends BaseRabbitConfigBean {
       label = "One Record per Message",
       description = "Generates a single Record for a Rabbit MQ message",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean produceSingleRecordPerMessage = false;
@@ -54,6 +56,7 @@ public class RabbitSourceConfigBean extends BaseRabbitConfigBean {
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(DataFormatChooserValues.class)

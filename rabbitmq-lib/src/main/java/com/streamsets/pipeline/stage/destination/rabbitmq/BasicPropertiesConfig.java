@@ -29,6 +29,7 @@ public class BasicPropertiesConfig {
       label = "Set AMQP Message Properties",
       description = "Set AMQP Message Properties",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean setAMQPMessageProperties = false;
@@ -40,6 +41,7 @@ public class BasicPropertiesConfig {
       label = "Content-Type",
       description = "Content Type",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -53,6 +55,7 @@ public class BasicPropertiesConfig {
       label = "Content-Encoding",
       description = "Content Encoding",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -66,6 +69,7 @@ public class BasicPropertiesConfig {
       label = "Headers",
       description = "Headers",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -79,6 +83,7 @@ public class BasicPropertiesConfig {
       label = "Delivery Mode",
       description = "DeliveryMode",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -93,6 +98,7 @@ public class BasicPropertiesConfig {
       label = "Priority",
       description = "Priority",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -107,6 +113,7 @@ public class BasicPropertiesConfig {
       label = "Correlation Id",
       description = "Correlation Id",
       displayPosition = 110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -120,6 +127,7 @@ public class BasicPropertiesConfig {
       label = "Reply To",
       description = "Reply To",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -133,6 +141,7 @@ public class BasicPropertiesConfig {
       label = "Set Expiration",
       description = "Sets the expiration time in message properties",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -146,6 +155,7 @@ public class BasicPropertiesConfig {
       label = "Expiration",
       description = "Expiration Time",
       displayPosition = 135,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setExpiration",
       triggeredByValue = "true",
       group = "#0"
@@ -159,6 +169,7 @@ public class BasicPropertiesConfig {
       label = "Message Id",
       description = "Message Id",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -172,6 +183,7 @@ public class BasicPropertiesConfig {
       label = "Set Current Time",
       description = "Set Current Time Stamp",
       displayPosition = 150,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -185,6 +197,7 @@ public class BasicPropertiesConfig {
       label = "Time Stamp",
       description = "Time Stamp",
       displayPosition = 160,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
       dependsOn = "setCurrentTime",
       triggeredByValue = "false"
@@ -198,6 +211,7 @@ public class BasicPropertiesConfig {
       label = "Message Type",
       description = "Message Type",
       displayPosition = 170,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -211,6 +225,7 @@ public class BasicPropertiesConfig {
       label = "User Id",
       description = "Optional user ID. Verified by RabbitMQ against the actual connection username.",
       displayPosition = 180,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"
@@ -224,6 +239,7 @@ public class BasicPropertiesConfig {
       label = "App Id",
       description = "Identifier of the application that produced the message.",
       displayPosition = 190,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "setAMQPMessageProperties",
       triggeredByValue = "true",
       group = "#0"

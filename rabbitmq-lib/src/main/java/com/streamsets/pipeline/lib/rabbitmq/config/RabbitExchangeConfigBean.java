@@ -29,6 +29,7 @@ public class RabbitExchangeConfigBean {
       type = ConfigDef.Type.STRING,
       label = "Name",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String name = "";
@@ -39,6 +40,7 @@ public class RabbitExchangeConfigBean {
       label = "Type",
       defaultValue = "DIRECT",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   @ValueChooserModel(ExchangeTypeChooserValues.class)
@@ -50,6 +52,7 @@ public class RabbitExchangeConfigBean {
       label = "Durable",
       defaultValue = "true",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean durable = true;
@@ -60,6 +63,7 @@ public class RabbitExchangeConfigBean {
       label = "Auto-delete",
       defaultValue = "false",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean autoDelete = false;
@@ -73,6 +77,7 @@ public class RabbitExchangeConfigBean {
       dependsOn = "type",
       triggeredByValue = {"DIRECT", "TOPIC"},
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String routingKey = "";
@@ -84,6 +89,7 @@ public class RabbitExchangeConfigBean {
       label = "Declaration Properties",
       description = "Additional exchange declaration configuration.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public Map<String, Object> declarationProperties = new HashMap<>();
@@ -95,6 +101,7 @@ public class RabbitExchangeConfigBean {
       label = "Binding Properties",
       description = "Additional exchange binding configuration.",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public Map<String, Object> bindingProperties = new HashMap<>();

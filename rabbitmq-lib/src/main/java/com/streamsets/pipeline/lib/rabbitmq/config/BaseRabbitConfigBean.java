@@ -35,6 +35,7 @@ public class BaseRabbitConfigBean {
       defaultValue = "amqp://",
       description = "RabbitMQ URI e.g. amqp://host:port/virtualhost",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public String uri = "amqp://";
@@ -51,6 +52,7 @@ public class BaseRabbitConfigBean {
       label = "Bindings",
       description = "Optional list of exchange bindings.",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "EXCHANGE"
   )
   @ListBeanModel
@@ -65,6 +67,7 @@ public class BaseRabbitConfigBean {
       defaultValue = "",
       label = "Additional Client Configuration",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public Map<String, Object> rabbitmqProperties = new HashMap<>();

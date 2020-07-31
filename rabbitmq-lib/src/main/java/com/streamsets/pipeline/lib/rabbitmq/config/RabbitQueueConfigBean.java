@@ -36,6 +36,7 @@ public class RabbitQueueConfigBean {
       label = "Durable",
       defaultValue = "true",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean durable = true;
@@ -46,6 +47,7 @@ public class RabbitQueueConfigBean {
       label = "Exclusive",
       defaultValue = "false",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean exclusive = false;
@@ -56,6 +58,7 @@ public class RabbitQueueConfigBean {
       label = "Auto-delete",
       defaultValue = "false",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean autoDelete = false;
@@ -67,6 +70,7 @@ public class RabbitQueueConfigBean {
       label = "Declaration Properties",
       description = "Additional queue declaration configuration.",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public Map<String, Object> properties = new HashMap<>();

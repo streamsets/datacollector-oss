@@ -30,6 +30,7 @@ public class RabbitTargetConfigBean extends BaseRabbitConfigBean{
       label = "One Message per Batch",
       description = "Generates a single Rabbit MQ message with all records in the batch",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean singleMessagePerBatch = false;
@@ -41,6 +42,7 @@ public class RabbitTargetConfigBean extends BaseRabbitConfigBean{
       label = "Mandatory",
       description = "Publish Rabbit MQ message with mandatory flag set",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
   public boolean mandatory = false;
@@ -55,6 +57,7 @@ public class RabbitTargetConfigBean extends BaseRabbitConfigBean{
       type = ConfigDef.Type.MODEL,
       label = "Data Format",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT"
   )
   @ValueChooserModel(ProducerDataFormatChooserValues.class)

@@ -25,6 +25,7 @@ public class RabbitAdvancedConfigBean {
       label = "Automatic Recovery Enabled",
       defaultValue = "true",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   public boolean automaticRecoveryEnabled = true;
@@ -37,6 +38,7 @@ public class RabbitAdvancedConfigBean {
       description = "How long automatic recovery will wait before attempting to reconnect, in ms",
       defaultValue = "5000",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -48,6 +50,7 @@ public class RabbitAdvancedConfigBean {
       label = "Connection Timeout (ms)",
       defaultValue = "0",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -59,6 +62,7 @@ public class RabbitAdvancedConfigBean {
       label = "Handshake Timeout (ms)",
       defaultValue = "10000",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -70,6 +74,7 @@ public class RabbitAdvancedConfigBean {
       label = "Shutdown Timeout (ms)",
       defaultValue = "10000",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -82,6 +87,7 @@ public class RabbitAdvancedConfigBean {
       description = "Heartbeat timeout in seconds. Zero disables heartbeats",
       defaultValue = "0",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -94,6 +100,7 @@ public class RabbitAdvancedConfigBean {
       description = "Zero for no limit",
       defaultValue = "0",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
@@ -106,6 +113,7 @@ public class RabbitAdvancedConfigBean {
       description = "Zero for no limit",
       defaultValue = "0",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       min = 0,
       group = "#0"
   )
