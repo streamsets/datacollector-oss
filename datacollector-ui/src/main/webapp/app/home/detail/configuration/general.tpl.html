@@ -108,9 +108,35 @@
 <form class="form-horizontal" role="form"
       ng-class="{'form-group-sm': ($storage.displayDensity === pipelineConstant.DENSITY_COZY || $storage.displayDensity === pipelineConstant.DENSITY_COMPACT)}"
       name="{{selectedType === pipelineConstant.STAGE_INSTANCE ? 'd' + detailPaneConfig.instanceName : 'pipeline'}}">
+
+  <div class="form-group"
+      ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
+      ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: '', displayMode: '!ADVANCED'} | orderBy: 'displayPosition'"
+      ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === '' && isShownByConfigDisplayMode(configDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)"
+      ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
+
+   <ng-include ng-if="selectedType !== pipelineConstant.LINK"
+               src="'app/home/detail/configuration/groupConfiguration.tpl.html'"></ng-include>
+  </div>
+  <div class="show-advanced-button fs-unmask form-group">
+    <button class="btn btn-link dropdown-toggle col-lg-3 col-md-4" type="button"
+        ng-click="toggleConfigDisplayMode()"
+        ng-if="groupHasEnabledAdvancedConfig(detailPaneConfig, detailPaneConfigDefn.configDefinitions, [], '')">
+      <div ng-switch="detailPaneConfig.uiInfo.displayMode">
+        <div ng-switch-when="ADVANCED">
+          Hide Advanced Options
+          <i class="glyphicon glyphicon-menu-up"></i>
+        </div>
+        <div ng-switch-default>
+          Show Advanced Options
+          <i class="glyphicon glyphicon-menu-down"></i>
+        </div>
+      </div>
+    </button>
+  </div>
   <div class="form-group"
        ng-class="{'has-error': getConfigurationIssues(detailPaneConfig, configDefinition).length > 0}"
-       ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: ''} | orderBy: 'displayPosition'"
+       ng-repeat="configDefinition in detailPaneConfigDefn.configDefinitions | filter: {group: '', displayMode: 'ADVANCED'} | orderBy: 'displayPosition'"
        ng-if="(verifyDependsOnMap(detailPaneConfig, configDefinition)) && configDefinition.group === '' && isShownByConfigDisplayMode(configDefinition.displayMode, detailPaneConfig.uiInfo.displayMode)"
        ng-init="configIndex = getConfigIndex(detailPaneConfig, configDefinition)">
 

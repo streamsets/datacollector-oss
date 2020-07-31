@@ -667,8 +667,9 @@ angular
         angular.forEach(configDefinitions, function(configDefinition) {
           if (configDefinition.group === groupName &&
               $scope.verifyDependsOnMap(stageInstance, configDefinition) &&
-              $scope.isShownByConfigDisplayMode(configDefinition.displayMode, displayMode)) {
-            enabled = true;
+              $scope.isShownByConfigDisplayMode(configDefinition.displayMode, displayMode)
+            ) {
+          enabled = true;
           }
         });
 
@@ -695,6 +696,41 @@ angular
         });
 
         return visible;
+      },
+
+      internalGroupHasEnabledConfig: function(stageInstance, configDefinitions, groupName) {
+        return configDefinitions.some(function (configDefinition) {
+          return (
+            configDefinition.group === groupName &&
+            $scope.verifyDependsOnMap(stageInstance, configDefinition) &&
+            (configDefinition.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED ||
+              (configDefinition &&
+                configDefinition.model &&
+                configDefinition.model.configDefinitions &&
+                configDefinition.model.configDefinitions.some(function (x) {
+                  return (
+                    x.displayMode ===
+                    $scope.pipelineConstant.DISPLAY_MODE_ADVANCED
+                  );
+                })))
+          );
+        });
+      },
+
+      /**
+       * Returns true if at least one advanced config is enabled in given group. This will calculate
+       * what is enabled in the main stage configuration and all declared services.
+       *
+       * @param stageInstance
+       * @param stageDefinition
+       * @param services {[]}
+       * @param groupName
+       * @returns {boolean}
+       */
+      groupHasEnabledAdvancedConfig: function(stageInstance, configDefinitions, services, groupName) {
+        return $scope.internalGroupHasEnabledConfig(stageInstance, configDefinitions, groupName) || services.some(function(service) {
+          return $scope.internalGroupHasEnabledConfig(service.config, service.definition.configDefinitions, groupName);
+        });
       },
 
       /**
@@ -836,6 +872,11 @@ angular
             }
           }
         });
+      },
+
+      toggleConfigDisplayMode: function() {
+        $scope.detailPaneConfig.uiInfo.displayMode =
+          $scope.detailPaneConfig.uiInfo.displayMode === 'ADVANCED' ? 'BASIC' : 'ADVANCED';
       }
     });
 

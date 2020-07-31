@@ -272,12 +272,17 @@ angular
       },
 
       /**
-       * Checks if configDefinitions has any configs with ADVANCED displayMode
+       * Checks if configDefinitions has any configs with ADVANCED displayMode, including services
        * @param {*} configDefinitions
+       * @param {[]} services
        * @returns {Boolean}
        */
-      hasAdvancedConfig: function(configDefinitions) {
-        return configDefinitions.some(function (x) {
+      hasAdvancedConfig: function(configDefinitions, services) {
+        services = services || [];
+        var serviceConfigDefs = services.reduce(function(acc, service) {
+          return acc.concat(service.definition.configDefinitions);
+        }, []);
+        return configDefinitions.concat(serviceConfigDefs).some(function (x) {
           return x.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
         }) || configDefinitions.some(function(configDef) {
           return configDef && configDef.model && configDef.model.configDefinitions && configDef.model.configDefinitions.some(function(x) {
