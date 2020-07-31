@@ -28,6 +28,7 @@ public class SchedulerConfig {
       label = "Cron Schedule",
       description = "Cron expression that defines when to generate a record",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CRON"
   )
   public String cronExpression;
@@ -39,6 +40,7 @@ public class SchedulerConfig {
       label = "Time Zone",
       description = "The time zone in which to base the schedule",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CRON"
   )
   @ValueChooserModel(TimeZoneChooserValues.class)

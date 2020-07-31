@@ -31,6 +31,7 @@ public class StartPipelineConfig {
       label = "Task Name",
       description = "Task name to use in the generated record. Must be unique within the pipeline.",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public String taskName;
@@ -42,6 +43,7 @@ public class StartPipelineConfig {
       label = "Execution Engine URL",
       description = "URL of Data Collector, Edge, or Transformer to run the pipelines",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public String baseUrl = "http://localhost:18630";
@@ -52,6 +54,7 @@ public class StartPipelineConfig {
       type = ConfigDef.Type.MODEL,
       description="Pipelines to start in parallel",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   @ListBeanModel
@@ -64,6 +67,7 @@ public class StartPipelineConfig {
       description = "When possible, resets the origin before starting a pipeline",
       defaultValue = "false",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public boolean resetOrigin = false;
@@ -75,6 +79,7 @@ public class StartPipelineConfig {
       description = "Indicates the execution engine is registered with Control Hub",
       defaultValue = "false",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public boolean controlHubEnabled = false;
@@ -86,6 +91,7 @@ public class StartPipelineConfig {
       label = "Control Hub URL",
       description = "Control Hub URL",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE",
       dependsOn = "controlHubEnabled",
       triggeredByValue = { "true" }
@@ -100,6 +106,7 @@ public class StartPipelineConfig {
           "If not selected, the record passes downstream after all started pipelines finish.",
       defaultValue = "false",
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public boolean runInBackground = false;
@@ -111,6 +118,7 @@ public class StartPipelineConfig {
       label = "Status Check Interval",
       description = "Milliseconds to wait between pipeline status checks",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "PIPELINE",
       min = 0,
       max = Integer.MAX_VALUE,
@@ -127,6 +135,7 @@ public class StartPipelineConfig {
           "or specify a Control Hub user for execution engines registered with Control Hub",
       defaultValue = "admin",
       displayPosition = 81,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue username = () -> "admin";
@@ -138,6 +147,7 @@ public class StartPipelineConfig {
       description = "Password",
       defaultValue = "admin",
       displayPosition = 82,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue password = () -> "admin";

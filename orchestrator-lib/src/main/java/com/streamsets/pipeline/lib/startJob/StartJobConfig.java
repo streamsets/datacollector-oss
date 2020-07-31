@@ -35,6 +35,7 @@ public class StartJobConfig {
       label = "Task Name",
       description = "Task name to use in the generated record. Must be unique within the pipeline.",
       displayPosition = 5,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   public String taskName;
@@ -46,6 +47,7 @@ public class StartJobConfig {
       label = "Control Hub URL",
       description = "URL for the Control Hub that runs the specified jobs",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   public String baseUrl = "https://cloud.streamsets.com";
@@ -57,6 +59,7 @@ public class StartJobConfig {
       description = "Start one or more instances of a job template in parallel",
       defaultValue = "false",
       displayPosition = 11,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   public boolean jobTemplate = false;
@@ -67,6 +70,7 @@ public class StartJobConfig {
       label = "Job Template ID",
       description = "ID of the job template to start",
       displayPosition = 12,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -82,6 +86,7 @@ public class StartJobConfig {
       defaultValue = "COUNTER",
       description = "Method to generate the suffix to uniquely name job instances",
       displayPosition = 13,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       dependsOn = "jobTemplate",
       triggeredByValue = { "true" }
@@ -95,6 +100,7 @@ public class StartJobConfig {
       label = "Parameter Name",
       description = "Name of the parameter",
       displayPosition = 14,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       dependsOn = "instanceNameSuffix",
       triggeredByValue = { "PARAM_VALUE" }
@@ -108,6 +114,7 @@ public class StartJobConfig {
       label = "Job Instance Runtime Parameters",
       description = "Runtime parameters and values for each job instance",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -122,6 +129,7 @@ public class StartJobConfig {
       type = ConfigDef.Type.MODEL,
       description="Jobs to start in parallel",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       dependsOn = "jobTemplate",
       triggeredByValue = { "false" }
@@ -136,6 +144,7 @@ public class StartJobConfig {
       description = "Reset the origin before starting the job",
       defaultValue = "false",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB",
       dependsOn = "jobTemplate",
       triggeredByValue = { "false" }
@@ -150,6 +159,7 @@ public class StartJobConfig {
           "When not enabled, the record passes downstream after all started jobs finish.",
       defaultValue = "false",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   public boolean runInBackground = false;
@@ -161,6 +171,7 @@ public class StartJobConfig {
       label = "Status Check Interval",
       description = "Milliseconds to wait between job status checks",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       min = 0,
       max = Integer.MAX_VALUE,
@@ -175,6 +186,7 @@ public class StartJobConfig {
       label = "Control Hub User Name",
       description = "Control Hub user to start the jobs",
       displayPosition = 71,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue username;
@@ -185,6 +197,7 @@ public class StartJobConfig {
       label = "Password",
       description = "Password",
       displayPosition = 72,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue password;

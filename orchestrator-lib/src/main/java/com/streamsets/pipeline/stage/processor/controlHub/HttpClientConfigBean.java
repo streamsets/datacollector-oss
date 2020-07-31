@@ -41,6 +41,7 @@ public class HttpClientConfigBean {
       defaultValue = "0",
       description = "HTTP connection timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 120,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int connectTimeoutMillis = 0;
@@ -52,6 +53,7 @@ public class HttpClientConfigBean {
       defaultValue = "0",
       description = "HTTP read timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int readTimeoutMillis = 0;
@@ -63,6 +65,7 @@ public class HttpClientConfigBean {
       defaultValue = "1",
       description = "Maximum number of requests to make in parallel",
       displayPosition = 140,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public int numThreads = 1;
@@ -77,7 +80,7 @@ public class HttpClientConfigBean {
       description = "Use an HTTP proxy to connect to the Control Hub API",
       defaultValue = "false",
       displayPosition = 160,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   public boolean useProxy = false;

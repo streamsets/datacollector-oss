@@ -27,6 +27,7 @@ public class PipelineIdConfig {
       label = "Pipeline ID Type",
       defaultValue = "ID",
       displayPosition = 15,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   @ValueChooserModel(PipelineIdTypeChooserValues.class)
@@ -38,6 +39,7 @@ public class PipelineIdConfig {
       label = "Pipeline ID",
       description = "ID of the pipeline to start",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -51,6 +53,7 @@ public class PipelineIdConfig {
       label = "Runtime Parameters",
       description = "Runtime parameters to pass to the pipeline",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE",
       elDefs = {RecordEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT

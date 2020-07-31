@@ -29,6 +29,7 @@ public class WaitForJobCompletionConfig {
       label = "Control Hub URL",
       description = "URL for the Control Hub running the jobs",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "JOB"
   )
   public String baseUrl = "https://cloud.streamsets.com";
@@ -40,6 +41,7 @@ public class WaitForJobCompletionConfig {
       label = "Status Check Interval",
       description = "Milliseconds to wait between job status checks",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "JOB",
       min = 0,
       max = Integer.MAX_VALUE
@@ -52,6 +54,7 @@ public class WaitForJobCompletionConfig {
       label = "Control Hub User Name",
       description = "Control Hub user to perform status checks",
       displayPosition = 71,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue username;
@@ -62,6 +65,7 @@ public class WaitForJobCompletionConfig {
       label = "Password",
       description = "Password",
       displayPosition = 72,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue password;

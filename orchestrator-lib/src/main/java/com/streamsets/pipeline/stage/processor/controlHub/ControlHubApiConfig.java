@@ -41,6 +41,7 @@ public class ControlHubApiConfig {
       label = "Control Hub API URL",
       description = "URL for the Control Hub API",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP",
       elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
       evaluation = ConfigDef.Evaluation.EXPLICIT
@@ -53,6 +54,7 @@ public class ControlHubApiConfig {
       label = "Output Field",
       description = "Field to store the response",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @FieldSelectorModel(singleValued = true)
@@ -65,6 +67,7 @@ public class ControlHubApiConfig {
       description = "Headers to include in the request",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       elDefs = {RecordEL.class, VaultEL.class},
       group = "HTTP"
   )
@@ -79,6 +82,7 @@ public class ControlHubApiConfig {
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HTTP"
   )
   @ValueChooserModel(HttpMethodChooserValues.class)
@@ -90,6 +94,7 @@ public class ControlHubApiConfig {
       label = "HTTP Method Expression",
       description = "Expression that evaluates to a valid HTTP method",
       displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "httpMethod",
       elDefs = RecordEL.class,
       evaluation = ConfigDef.Evaluation.EXPLICIT,
@@ -104,6 +109,7 @@ public class ControlHubApiConfig {
       label = "Request Data",
       description = "Data to include with the request",
       displayPosition = 100,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       lines = 2,
       dependsOn = "httpMethod",
       elDefs = {RecordEL.class, VaultEL.class},
@@ -124,6 +130,7 @@ public class ControlHubApiConfig {
       defaultValue = "60",
       description = "Maximum number of seconds to wait for a request to complete",
       displayPosition = 999,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;

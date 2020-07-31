@@ -29,6 +29,7 @@ public class WaitForPipelineCompletionConfig {
       label = "Execution Engine URL",
       description = "URL of Data Collector, Edge, or Transformer running the pipelines",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public String baseUrl = "http://localhost:18630";
@@ -40,6 +41,7 @@ public class WaitForPipelineCompletionConfig {
       description = "Indicates if the execution engine is registered with Control Hub",
       defaultValue = "false",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE"
   )
   public boolean controlHubEnabled = false;
@@ -51,6 +53,7 @@ public class WaitForPipelineCompletionConfig {
       label = "Control Hub URL",
       description = "Control Hub URL where the execution engine is registered",
       displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "PIPELINE",
       dependsOn = "controlHubEnabled",
       triggeredByValue = { "true" }
@@ -64,6 +67,7 @@ public class WaitForPipelineCompletionConfig {
       label = "Status Check Interval",
       description = "Milliseconds to wait between pipeline status checks",
       displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "PIPELINE",
       min = 0,
       max = Integer.MAX_VALUE
@@ -78,6 +82,7 @@ public class WaitForPipelineCompletionConfig {
           "or a Control Hub user if the engine is registered with Control Hub.",
       defaultValue = "admin",
       displayPosition = 81,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue username = () -> "admin";
@@ -89,6 +94,7 @@ public class WaitForPipelineCompletionConfig {
       description = "Password",
       defaultValue = "admin",
       displayPosition = 82,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "CREDENTIALS"
   )
   public CredentialValue password = () -> "admin";
