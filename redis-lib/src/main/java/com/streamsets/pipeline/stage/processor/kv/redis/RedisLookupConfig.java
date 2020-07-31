@@ -33,6 +33,7 @@ public class RedisLookupConfig {
       label = "URI",
       description = "Use format redis://[:password@]host:port[/[database]]",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REDIS"
   )
   public String uri = "redis://:password@localhost:6379/0";
@@ -44,7 +45,8 @@ public class RedisLookupConfig {
       required = true,
       min = 1,
       group = "REDIS",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int connectionTimeout = 60;
 
@@ -55,6 +57,7 @@ public class RedisLookupConfig {
       description = "Whether to perform a bulk lookup of all keys in the batch, or perform individual lookups per key.",
       defaultValue = "BATCH",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0"
   )
   @ValueChooserModel(LookupModeChooserValues.class)
@@ -65,7 +68,8 @@ public class RedisLookupConfig {
       type = ConfigDef.Type.MODEL,
       label = "Lookup Parameters",
       displayPosition = 20,
-      group = "LOOKUP"
+      group = "LOOKUP",
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ListBeanModel
   public List<RedisLookupParameterConfig> lookups = new ArrayList<>();

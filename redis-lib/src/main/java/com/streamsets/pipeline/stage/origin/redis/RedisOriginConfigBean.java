@@ -33,7 +33,8 @@ public class RedisOriginConfigBean {
       label = "URI",
       description = "Use format redis://[:password@]host:port[/[database]]",
       group = "REDIS",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public String uri = "redis://:password@localhost:6379/0";
 
@@ -45,7 +46,8 @@ public class RedisOriginConfigBean {
       defaultValue = "60",
       min = 1,
       group = "REDIS",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int connectionTimeout;
 
@@ -55,7 +57,8 @@ public class RedisOriginConfigBean {
       label = "Channels",
       description = "Channels to subscribe to",
       group = "REDIS",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> subscriptionChannels;
 
@@ -65,7 +68,8 @@ public class RedisOriginConfigBean {
       label = "Pattern",
       description = "Subscribes to channels with names that match the pattern",
       group = "REDIS",
-      displayPosition = 50
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public List<String> subscriptionPatterns;
 
@@ -92,7 +96,8 @@ public class RedisOriginConfigBean {
       group = "REDIS",
       min = 1,
       max = Integer.MAX_VALUE,
-      displayPosition = 1000
+      displayPosition = 1000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxWaitTime = 2000;
 
@@ -105,7 +110,8 @@ public class RedisOriginConfigBean {
       group = "REDIS",
       min = 1,
       max = Integer.MAX_VALUE,
-      displayPosition = 1001
+      displayPosition = 1001,
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public int maxBatchSize = 1000;
 }

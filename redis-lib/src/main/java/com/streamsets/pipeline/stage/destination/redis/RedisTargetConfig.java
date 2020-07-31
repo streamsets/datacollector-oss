@@ -35,6 +35,7 @@ public class RedisTargetConfig {
       label = "URI",
       description = "Use format redis://[:password@]host:port[/[database]]",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REDIS"
   )
   public String uri = "redis://:password@localhost:6379/0";
@@ -46,6 +47,7 @@ public class RedisTargetConfig {
       required = true,
       min = 1,
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "REDIS"
   )
   public int connectionTimeout = 60;
@@ -57,6 +59,7 @@ public class RedisTargetConfig {
       required = true,
       min = 0,
       displayPosition = 21,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "REDIS"
   )
   public int maxRetries = 0;
@@ -69,6 +72,7 @@ public class RedisTargetConfig {
       elDefs = {TimeEL.class},
       evaluation = ConfigDef.Evaluation.IMPLICIT,
       displayPosition = 22,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "REDIS"
   )
   public long maxBatchWaitTime;
@@ -80,6 +84,7 @@ public class RedisTargetConfig {
       description = "Whether to write the data in batches as key-value pairs or to publish the data as messages",
       defaultValue = "BATCH",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REDIS"
   )
   @ValueChooserModel(ModeTypeChooserValues.class)
@@ -92,6 +97,7 @@ public class RedisTargetConfig {
       label = "Fields",
       description = "Key names, their values and storage type",
       displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REDIS",
       dependsOn = "mode",
       triggeredByValue = {"BATCH"}
@@ -105,6 +111,7 @@ public class RedisTargetConfig {
       label = "Data Format",
       defaultValue = "JSON",
       displayPosition = 1,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "mode",
       triggeredByValue = {"PUBLISH"}
@@ -119,6 +126,7 @@ public class RedisTargetConfig {
       label = "Channel",
       description = "Channel to publish the messages to",
       displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "REDIS",
       dependsOn = "mode",
       triggeredByValue = {"PUBLISH"}

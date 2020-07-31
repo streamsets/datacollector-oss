@@ -34,7 +34,8 @@ public class RedisFieldMappingConfig {
       defaultValue = "/",
       label = "Key",
       description = "Field to use for the key",
-      displayPosition = 10
+      displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String keyExpr;
@@ -45,7 +46,8 @@ public class RedisFieldMappingConfig {
       defaultValue = "/",
       label = "Value",
       description = "Field to use for the value",
-      displayPosition = 20
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @FieldSelectorModel(singleValued = true)
   public String valExpr;
@@ -56,7 +58,8 @@ public class RedisFieldMappingConfig {
       defaultValue = "STRING",
       label = "Data Type",
       description = "The data type for the value",
-      displayPosition = 30
+      displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   @ValueChooserModel(DataTypeChooserValues.class)
   public DataType dataType = DataType.STRING;
@@ -67,7 +70,8 @@ public class RedisFieldMappingConfig {
       defaultValue = "",
       label = "TTL (sec)",
       description = "Set a timeout on key (sec)",
-      displayPosition = 40
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC
   )
   public int ttl = -1;
 }
