@@ -354,9 +354,9 @@ angular.module('dataCollectorApp.common')
      */
     this.defaultShowAdvancedConfigs = function() {
       if (self.config && self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== undefined) {
-        return self.config[UI_DEFAULT_CONFIGURATION_VIEW] !== 'BASIC';
+        return self.config[UI_DEFAULT_CONFIGURATION_VIEW] === 'ADVANCED';
       }
-      return true;
+      return false;
     };
 
     /**
