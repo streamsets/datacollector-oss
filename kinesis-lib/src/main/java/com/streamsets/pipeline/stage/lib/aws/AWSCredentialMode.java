@@ -19,7 +19,8 @@ import com.streamsets.pipeline.api.Label;
 
 public enum AWSCredentialMode implements Label {
   WITH_CREDENTIALS("AWS Keys"),
-  WITH_IAM_ROLES("IAM Role"),
+  // IAM Role is not really the right term: https://medium.com/devops-dudes/the-difference-between-an-aws-role-and-an-instance-profile-ae81abd700d
+  WITH_IAM_ROLES("Instance Profile"),
   ;
 
   private final String label;

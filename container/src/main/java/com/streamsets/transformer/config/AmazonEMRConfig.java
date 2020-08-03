@@ -55,12 +55,13 @@ public class AmazonEMRConfig {
   )
   public String userRegionCustom;
 
+  // IAM Role is not really the right term: https://medium.com/devops-dudes/the-difference-between-an-aws-role-and-an-instance-profile-ae81abd700d
   @ConfigDef(
       required = true,
-      label = "Use IAM Roles",
+      label = "Use Instance Profiles",
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
-      description = "Use IAM roles instead of AWS credentials to connect to AWS",
+      description = "Use Instance Profiles instead of AWS credentials to connect to AWS",
       displayPosition = 108,
       group = "EMR",
       dependencies = {
@@ -73,7 +74,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Access Key ID",
-      description = "AWS access key ID. Required when not connecting with IAM roles.",
+      description = "AWS access key ID.",
       group = "EMR",
       displayPosition = 110,
       dependencies = {
@@ -87,7 +88,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "Secret Access Key",
-      description = "AWS secret access key. Required when not connecting with IAM roles.",
+      description = "AWS secret access key.",
       group = "EMR",
       displayPosition = 120,
       dependencies = {
