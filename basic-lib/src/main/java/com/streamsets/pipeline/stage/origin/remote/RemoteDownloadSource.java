@@ -277,7 +277,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
           if (conf.dataFormat == DataFormat.WHOLE_FILE) {
             Map<String, Object> metadata = new HashMap<>(7);
             long size = delegate.populateMetadata(next.getFilePath(), metadata);
-            metadata.put(HeaderAttributeConstants.FILE, next.getFilePath());
+            metadata.put(HeaderAttributeConstants.FILE, RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath()));
             metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.getFilePath()));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
