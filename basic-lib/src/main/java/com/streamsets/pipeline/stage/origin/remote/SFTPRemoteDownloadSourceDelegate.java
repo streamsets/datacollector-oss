@@ -76,7 +76,7 @@ class SFTPRemoteDownloadSourceDelegate extends SFTPRemoteConnector implements Re
       }
     }
 
-    if (!remoteConfig.disableReadAheadStream) {
+    if (issues.isEmpty() && !remoteConfig.disableReadAheadStream) {
       int wholeFileMaxObjectLen = conf.dataFormatConfig.wholeFileMaxObjectLen;
       if (wholeFileMaxObjectLen>0) {
         sftpClient.setBufferSizeReadAheadStream(wholeFileMaxObjectLen);
