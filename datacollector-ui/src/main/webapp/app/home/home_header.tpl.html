@@ -32,7 +32,7 @@
              btn-radio="true"><span class="glyphicon glyphicon-th"></span></label>
     </div>
 
-    <div class="pull-right">
+    <div class="pull-right" ng-if="selectedPipelineLabel !== 'system:samplePipelines'">
 
       <div class="btn-group" dropdown
            ng-if="isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
