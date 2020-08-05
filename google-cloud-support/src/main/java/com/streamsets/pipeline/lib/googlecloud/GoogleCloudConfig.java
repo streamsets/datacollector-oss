@@ -64,6 +64,7 @@ public class GoogleCloudConfig {
     type = ConfigDef.Type.BOOLEAN,
     label = "Create Cluster",
     group = "DATAPROC",
+    defaultValue = "false",
     displayPosition = 70
   )
   public boolean create;
@@ -172,6 +173,7 @@ public class GoogleCloudConfig {
     label = "Worker Count",
     group = "DATAPROC",
     displayPosition = 150,
+    defaultValue = "2",
     dependsOn = "create",
     triggeredByValue = "true"
   )
