@@ -206,10 +206,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
       queueRecord.add(record);
 
       if (columnsToParameters.isEmpty()) {
-        // no parameters found for configured columns
-        if (LOG.isWarnEnabled()) {
-          LOG.warn("No parameters found for record with ID {}; skipping", record.getHeader().getSourceId());
-        }
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_90, getTableName()));
         continue;
       }
 

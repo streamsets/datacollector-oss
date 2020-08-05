@@ -24,10 +24,13 @@ import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
+import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -219,10 +222,11 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         opCode == OperationType.UPDATE_CODE ? getColumnsToFieldNoPK() : getColumnsToFields()
     );
 
+    // Neither of the records have schema matching the table, so we will move all records to error stream
     if (columnsToParameters.isEmpty()) {
-      // no parameters found for configured columns
-      if (LOG.isWarnEnabled()) {
-        LOG.warn("No parameters found for record with ID {}; skipping", first.getHeader().getSourceId());
+      while(!queue.isEmpty()) {
+        Record record = queue.removeFirst();
+        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_90, getTableName()));
       }
       return;
     }

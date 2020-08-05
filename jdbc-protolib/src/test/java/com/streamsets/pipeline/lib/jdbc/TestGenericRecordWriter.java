@@ -428,7 +428,7 @@ public class TestGenericRecordWriter {
     );
     List<Record> batch = ImmutableList.of(record);
     final List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());
-    assertTrue(errors.isEmpty());
+    assertEquals(1, errors.size());
   }
 
   private void executeSetParameters(

@@ -456,7 +456,7 @@ public class TestJdbcMultiRowRecordWriter {
     );
     List<Record> batch = Collections.singletonList(RecordCreator.create());
     List<OnRecordErrorException> errors = writer.writeBatch(batch.iterator());
-    Assert.assertTrue(errors.isEmpty());
+    assertEquals(1, errors.size());
   }
 
   private List<Record> generateRecords(int numRecords) {
