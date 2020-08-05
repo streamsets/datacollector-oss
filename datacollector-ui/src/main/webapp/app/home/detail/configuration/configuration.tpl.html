@@ -215,7 +215,7 @@
           <div class="show-advanced-button fs-unmask form-group">
             <button class="btn btn-link dropdown-toggle col-lg-3 col-md-4" type="button"
                 ng-click="toggleConfigDisplayMode()"
-                ng-if="hasAdvancedConfig(detailPaneConfigDefn.configDefinitions)">
+                ng-if="hasAdvancedConfig(errorStageConfigDefn.configDefinitions, detailPaneServices)">
               <div ng-switch="pipelinePaneConfig.uiInfo.displayMode">
                 <div ng-switch-when="ADVANCED">
                   Hide Advanced Options
