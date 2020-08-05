@@ -38,7 +38,7 @@
       <div class="checkbox advanced-options-select"
         ng-if="(selectedType == pipelineConstant.STAGE_INSTANCE || selectedType == pipelineConstant.PIPELINE)
         && detailPaneConfigDefn
-        && hasAdvancedConfig(detailPaneConfigDefn.configDefinitions)">
+        && hasAdvancedConfig(detailPaneConfigDefn.configDefinitions, detailPaneServices)">
         <label
           ng-class="{'advanced-issue': configHasAdvancedIssues}"
           tooltip="{{configHasAdvancedIssues ? ('home.detailPane.advancedIssuesNeedFix' | translate) : ''}}">
