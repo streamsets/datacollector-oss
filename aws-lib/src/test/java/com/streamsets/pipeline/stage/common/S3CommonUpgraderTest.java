@@ -96,16 +96,16 @@ public abstract class S3CommonUpgraderTest {
         configs.add(new Config(getPrefix() + "s3Config.awsConfig.awsSecretAccessKey", "v2"));
         configs.add(new Config(getPrefix() + "s3Config.region", "v3"));
         configs.add(new Config(getPrefix() + "s3Config.endpoint", "v4"));
-        configs.add(new Config(getPrefix() + "proxy.connectionTimeout", "v5"));
-        configs.add(new Config(getPrefix() + "proxy.socketTimeout", "v6"));
-        configs.add(new Config(getPrefix() + "proxy.retryCount", "v7"));
-        configs.add(new Config(getPrefix() + "proxy.useProxy", "v8"));
-        configs.add(new Config(getPrefix() + "proxy.proxyHost", "v9"));
-        configs.add(new Config(getPrefix() + "proxy.proxyPort", "v10"));
-        configs.add(new Config(getPrefix() + "proxy.proxyUser", "v11"));
-        configs.add(new Config(getPrefix() + "proxy.proxyPassword", "v12"));
-        configs.add(new Config(getPrefix() + "proxy.proxyDomain", "v13"));
-        configs.add(new Config(getPrefix() + "proxy.proxyWorkstation", "v14"));
+        configs.add(new Config(getPrefix() + "proxyConfig.connectionTimeout", "v5"));
+        configs.add(new Config(getPrefix() + "proxyConfig.socketTimeout", "v6"));
+        configs.add(new Config(getPrefix() + "proxyConfig.retryCount", "v7"));
+        configs.add(new Config(getPrefix() + "proxyConfig.useProxy", "v8"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyHost", "v9"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyPort", "v10"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyUser", "v11"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyPassword", "v12"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyDomain", "v13"));
+        configs.add(new Config(getPrefix() + "proxyConfig.proxyWorkstation", "v14"));
 
         Mockito.doReturn(getConnectionIntroductionUpgradeVersion() - 1).when(context).getFromVersion();
         Mockito.doReturn(getConnectionIntroductionUpgradeVersion()).when(context).getToVersion();
@@ -114,19 +114,20 @@ public abstract class S3CommonUpgraderTest {
 
         UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.awsConfig.awsAccessKeyId", "v1");
         UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.awsConfig.awsSecretAccessKey", "v2");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.useRegion", true);
         UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.region", "v3");
         UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.endpoint", "v4");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.connectionTimeout", "v5");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.socketTimeout", "v6");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.retryCount", "v7");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.useProxy", "v8");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyHost", "v9");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyPort", "v10");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyUser", "v11");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyPassword", "v12");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyDomain", "v13");
-        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxy.proxyWorkstation", "v14");
-        Assert.assertEquals(14, configs.size());
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.connectionTimeout", "v5");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.socketTimeout", "v6");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.retryCount", "v7");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.useProxy", "v8");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyHost", "v9");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyPort", "v10");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyUser", "v11");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyPassword", "v12");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyDomain", "v13");
+        UpgraderTestUtils.assertExists(configs, getPrefix() + "s3Config.connection.proxyConfig.proxyWorkstation", "v14");
+        Assert.assertEquals(15, configs.size());
     }
 
     protected abstract int getConnectionIntroductionUpgradeVersion();

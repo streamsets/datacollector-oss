@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.common.InterfaceAudience;
@@ -60,10 +61,24 @@ public class AwsS3Connection {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use Specific Region",
+      description = "Enables choosing a specific region or endpoint, instead of the S3 default global endpoint " +
+          "(s3.amazonaws.com)",
+      displayPosition = -98,
+      group = "#0",
+      defaultValue = "false"
+  )
+  public boolean useRegion = false;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "US_WEST_2",
       label = "Region",
       displayPosition = -95,
+      dependsOn = "useRegion",
+      triggeredByValue = "true",
       group = "#0"
   )
   @ValueChooserModel(AwsRegionChooserValues.class)
@@ -76,8 +91,10 @@ public class AwsS3Connection {
       description = "",
       defaultValue = "",
       displayPosition = -90,
-      dependsOn = "region",
-      triggeredByValue = "OTHER",
+      dependencies = {
+          @Dependency(configName = "useRegion", triggeredByValues = "true"),
+          @Dependency(configName = "region", triggeredByValues = "OTHER")
+      },
       group = "#0"
   )
   public String endpoint;
@@ -117,14 +134,18 @@ public class AwsS3Connection {
         .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
         .withPathStyleAccessEnabled(usePathAddressModel);
 
-    if (region == AwsRegion.OTHER) {
-      if (endpoint == null || endpoint.isEmpty()) {
-        issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
-        return;
+    if (useRegion) {
+      if (region == AwsRegion.OTHER) {
+        if (endpoint == null || endpoint.isEmpty()) {
+          issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
+          return;
+        }
+        builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null));
+      } else {
+        builder.withRegion(region.getId());
       }
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null));
     } else {
-      builder.withRegion(region.getId());
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("s3.amazonaws.com", null));
     }
     s3Client = builder.build();
   }

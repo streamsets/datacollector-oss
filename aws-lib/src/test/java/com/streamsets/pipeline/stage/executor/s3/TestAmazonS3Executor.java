@@ -301,6 +301,7 @@ public class TestAmazonS3Executor {
   private AmazonS3ExecutorConfig getConfig() {
     AmazonS3ExecutorConfig config = new AmazonS3ExecutorConfig();
 
+    config.s3Config.connection.useRegion = true;
     config.s3Config.connection.region = AwsRegion.OTHER;
     config.s3Config.connection.endpoint = "http://localhost:" + port;
     config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
