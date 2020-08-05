@@ -23,11 +23,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.17.0</version>
+    <version>3.17.0-0021</version>
     <relativePath>../root</relativePath>
   </parent>
   <artifactId>streamsets-testing</artifactId>
-  <version>3.17.0</version>
+  <version>3.17.0-0021</version>
   <description>StreamSets Testing Library</description>
   <name>StreamSets Testing Library</name>
   <packaging>jar</packaging>
