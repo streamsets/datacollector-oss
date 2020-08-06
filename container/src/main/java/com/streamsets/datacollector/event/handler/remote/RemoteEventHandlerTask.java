@@ -128,6 +128,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final long DEFAULT_PIPELINE_METRICS_INTERVAL = -1;
   private static final long SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL = 30000;
   private static final String REMOTE_CONTROL = AbstractSSOService.CONFIG_PREFIX + "remote.control.";
+  private static final long DEFAULT_PREVIEW_TIMEOUT = 10000L;
 
   public static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
   private static final String REMOTE_URL_PING_INTERVAL = REMOTE_CONTROL  + "ping.frequency";
@@ -428,6 +429,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           final List<StageOutput> stageOutputs = stageOutputJsons.stream().map(
               json -> json.getStageOutput()
           ).collect(Collectors.toList());
+          long timeoutMillis = pipelinePreviewEvent.getTimeoutMillis() > 0 ?
+              pipelinePreviewEvent.getTimeoutMillis() : DEFAULT_PREVIEW_TIMEOUT;
           result = RemoteDataCollectorResult.immediate(remoteDataCollector.previewPipeline(
               pipelinePreviewEvent.getUser(),
               pipelinePreviewEvent.getName(),
@@ -438,7 +441,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelinePreviewEvent.isSkipLifecycleEvents(),
               pipelinePreviewEvent.getStopStage(),
               stageOutputs,
-              pipelinePreviewEvent.getTimeoutMillis(),
+              timeoutMillis,
               pipelinePreviewEvent.isTestOrigin(),
               pipelinePreviewEvent.getInterceptorConfiguration(),
               pipelinePreviewEvent.getAfterActionsFunction(),

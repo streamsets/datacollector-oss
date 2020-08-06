@@ -338,7 +338,7 @@ public class RemoteDataCollector implements DataCollector {
       Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
-    previewer.validateConfigs(10000l);
+    previewer.validateConfigs(timeoutMillis);
 
     if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {
       previewer.start(
