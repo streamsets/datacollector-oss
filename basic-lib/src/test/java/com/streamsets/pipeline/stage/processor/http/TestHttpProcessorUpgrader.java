@@ -381,4 +381,14 @@ public class TestHttpProcessorUpgrader {
     UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
     UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
+
+  @Test
+  public void testV15ToV16() {
+    Mockito.doReturn(15).when(context).getFromVersion();
+    Mockito.doReturn(16).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs,"conf.missingValuesBehavior", "PASS_RECORD_ON");
+  }
 }

@@ -29,6 +29,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.http.DataFormatChooserValues;
 import com.streamsets.pipeline.lib.http.HttpMethod;
 import com.streamsets.pipeline.lib.http.JerseyClientConfigBean;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.origin.http.PaginationConfigBean;
@@ -230,6 +232,18 @@ public class HttpProcessorConfig {
       group = "HTTP"
   )
   public long maxRequestCompletionSecs = 60L;
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    label = "Missing Values Behavior",
+    description = "How to handle missing values when no default value is defined.",
+    defaultValue = "PASS_RECORD_ON",
+    displayPosition = 11,
+    group = "HTTP"
+  )
+  @ValueChooserModel(MissingValuesBehaviorChooserValues.class)
+  public MissingValuesBehavior missingValuesBehavior = MissingValuesBehavior.DEFAULT;
 
   @ConfigDef(
       required = true,

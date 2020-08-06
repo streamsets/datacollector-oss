@@ -46,3 +46,8 @@ upgrades:
       - setConfig:
           name: conf.client.tlsConfig.trustedCertificates
           value: []
+  - toVersion: 16
+    actions:
+      - setConfig:
+          name: conf.missingValuesBehavior
+          value: "PASS_RECORD_ON"

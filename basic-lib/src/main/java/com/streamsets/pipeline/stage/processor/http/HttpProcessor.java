@@ -44,6 +44,7 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.PaginationMode;
 import com.streamsets.pipeline.stage.origin.http.ResponseAction;
@@ -603,47 +604,67 @@ public class HttpProcessor extends SingleLaneProcessor {
           currentRecordList = Arrays.asList(currentRecord.get());
         }
 
-        switch (conf.multipleValuesBehavior) {
-          case FIRST_ONLY:
-            Map<String, Field> fieldsMap = new HashMap<>((Map<String, Field>) inRec.get().getValue());
-            Field resFieldHeaders = createResponseHeaders(inRec, response);
-            if (resFieldHeaders != null) {
-              fieldsMap.put(conf.headerOutputField.replace("/", ""), resFieldHeaders);
-            }
-            fieldsMap.put(conf.outputField.replace("/", ""), currentRecordList.get(0));
-            Record recToAddToBatch = getContext().cloneRecord(inRec);
-            recToAddToBatch.set(Field.create(fieldsMap));
-            recordsProcessed.add(recToAddToBatch);
-            break;
-          case ALL_AS_LIST:
-            Map<String, Field> fs = new HashMap<>((Map<String, Field>) inRec.get().getValue());
-            Field resField = createResponseHeaders(inRec, response);
-            if (resField != null) {
-              fs.put(conf.headerOutputField.replace("/", ""), resField);
-            }
-            fs.put(conf.outputField.replace("/", ""), Field.create(currentRecordList));
-            Record recToAddToBatchList = getContext().cloneRecord(inRec);
-            recToAddToBatchList.set(Field.create(fs));
-            recordsProcessed.add(recToAddToBatchList);
-            break;
-          case SPLIT_INTO_MULTIPLE_RECORDS:
-            int size = currentRecordList.size();
-            for (int i = 0; i < size; i++) {
-              Record parsedRecord = getContext().createRecord("");
-              parsedRecord.set(currentRecordList.get(i));
-              Map<String, Field> fields = new HashMap<>((Map<String, Field>) inRec.get().getValue());
-              Field responseField = createResponseHeaders(inRec, response);
-              if (responseField != null) {
-                fields.put(conf.headerOutputField.replace("/", ""), responseField);
+        if (currentRecordList.isEmpty()) {
+          // No results
+          switch (conf.missingValuesBehavior) {
+            case SEND_TO_ERROR:
+              LOG.error(Errors.HTTP_68.getMessage(), getResponseStatus(response));
+              Record cloneRecord = getContext().cloneRecord(inRec);
+              errorRecordHandler.onError(new OnRecordErrorException(
+                cloneRecord,
+                Errors.HTTP_68,
+                getResponseStatus(response))
+              );
+              break;
+            case PASS_RECORD_ON:
+              Record recToAddToBatch = getContext().cloneRecord(inRec);
+              recordsProcessed.add(recToAddToBatch);
+              break;
+            default:
+              throw new IllegalStateException("Unknown missing value behavior: " + conf.missingValuesBehavior);
+          }
+        } else {
+          switch (conf.multipleValuesBehavior) {
+            case FIRST_ONLY:
+              Map<String, Field> fieldsMap = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+              Field resFieldHeaders = createResponseHeaders(inRec, response);
+              if (resFieldHeaders != null) {
+                fieldsMap.put(conf.headerOutputField.replace("/", ""), resFieldHeaders);
               }
-              fields.put(conf.outputField.replace("/", ""), parsedRecord.get());
-              Record recToAddToBatchSplit = getContext().cloneRecord(inRec);
-              recToAddToBatchSplit.set(Field.create(fields));
-              recordsProcessed.add(recToAddToBatchSplit);
-            }
-            break;
+              fieldsMap.put(conf.outputField.replace("/", ""), currentRecordList.get(0));
+              Record recToAddToBatch = getContext().cloneRecord(inRec);
+              recToAddToBatch.set(Field.create(fieldsMap));
+              recordsProcessed.add(recToAddToBatch);
+              break;
+            case ALL_AS_LIST:
+              Map<String, Field> fs = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+              Field resField = createResponseHeaders(inRec, response);
+              if (resField != null) {
+                fs.put(conf.headerOutputField.replace("/", ""), resField);
+              }
+              fs.put(conf.outputField.replace("/", ""), Field.create(currentRecordList));
+              Record recToAddToBatchList = getContext().cloneRecord(inRec);
+              recToAddToBatchList.set(Field.create(fs));
+              recordsProcessed.add(recToAddToBatchList);
+              break;
+            case SPLIT_INTO_MULTIPLE_RECORDS:
+              int size = currentRecordList.size();
+              for (int i = 0; i < size; i++) {
+                Record parsedRecord = getContext().createRecord("");
+                parsedRecord.set(currentRecordList.get(i));
+                Map<String, Field> fields = new HashMap<>((Map<String, Field>) inRec.get().getValue());
+                Field responseField = createResponseHeaders(inRec, response);
+                if (responseField != null) {
+                  fields.put(conf.headerOutputField.replace("/", ""), responseField);
+                }
+                fields.put(conf.outputField.replace("/", ""), parsedRecord.get());
+                Record recToAddToBatchSplit = getContext().cloneRecord(inRec);
+                recToAddToBatchSplit.set(Field.create(fields));
+                recordsProcessed.add(recToAddToBatchSplit);
+              }
+              break;
+          }
         }
-
       } catch (DataParserException ex) {
         throw new OnRecordErrorException(inRec,
             Errors.HTTP_61,
@@ -853,7 +874,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
-  
+
   private String extractResponseBodyStr(Response response) {
     String bodyStr = "";
     if (response != null) {

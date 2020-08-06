@@ -79,6 +79,7 @@ public enum Errors implements ErrorCode {
   HTTP_66("HTTP-Status: {}. Link field '{}' does not exist in record"),
   HTTP_67("HTTP-Status: {}. Not able to finish all retries because the batch was timed out. Please " +
       "increase the 'Batch Wait Time' or decrease the 'Base Backoff Interval'"),
+  HTTP_68("No results for request: '{}'"),
   // HTTP Processor
 
   HTTP_100("Generating error record as per stage configuration: {}"),
