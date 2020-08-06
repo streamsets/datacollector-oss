@@ -32,7 +32,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.MODEL,
       label = "Region",
       description = "AWS region",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 100,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
@@ -45,7 +45,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "AWS User Region (Custom)",
-      group = "EMR",
+      group = "CLUSTER",
       dependsOn = "userRegion",
       triggeredByValue = "OTHER",
       displayPosition = 105,
@@ -63,7 +63,7 @@ public class AmazonEMRConfig {
       defaultValue = "false",
       description = "Use Instance Profiles instead of AWS credentials to connect to AWS",
       displayPosition = 108,
-      group = "EMR",
+      group = "CLUSTER",
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
       }
@@ -75,7 +75,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Access Key ID",
       description = "AWS access key ID.",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 110,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -89,7 +89,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Secret Access Key",
       description = "AWS secret access key.",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 120,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -105,7 +105,7 @@ public class AmazonEMRConfig {
       label = "S3 Staging URI",
       description =
           "S3 URI where Transformer resources are staged for pipeline execution. Use the format: s3://<path>.",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 140,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -119,7 +119,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.BOOLEAN,
       label = "Provision a New Cluster",
       description = "Provisions a new cluster when the pipeline starts",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 150,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR")
@@ -131,7 +131,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Cluster ID",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 160,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -144,7 +144,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "EMR Version",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 190,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -157,7 +157,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Cluster Name Prefix",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 200,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -172,7 +172,7 @@ public class AmazonEMRConfig {
       defaultValue = "false",
       label = "Terminate Cluster",
       description = "Terminates the cluster when the pipeline stops",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 210,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
@@ -187,7 +187,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Logging Enabled",
-      group = "EMR",
+      group = "CLUSTER",
       description = "Copies cluster log files to the specified S3 location. Use to enable continued access to log files.",
       displayPosition = 220,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -203,7 +203,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "S3 Log URI",
       description = "S3 URI to store log files. Use the format: s3://<path>.",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 230,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -220,7 +220,7 @@ public class AmazonEMRConfig {
       label = "Service Role",
       description = "EMR role used by the cluster when provisioning resources and performing other service-level " +
           "tasks",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 260,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
@@ -236,7 +236,7 @@ public class AmazonEMRConfig {
       defaultValue = JOB_FLOW_ROLE_DEFAULT,
       label = "Job Flow Role",
       description = "EMR role for EC2. Used by EC2 instances within the cluster.",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 270,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
@@ -251,7 +251,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Visible to All Users",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 280,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
@@ -266,7 +266,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "EC2 Subnet ID",
       description = "ID of the EC2 subnet to launch the cluster in",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 290,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -281,7 +281,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Master Security Group",
       description = "ID of the security group for the master node",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 300,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -295,7 +295,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Slave Security Group",
       description = "ID of the security group for slave nodes",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 310,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -309,7 +309,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Service Access Security Group",
       description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 315,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -325,7 +325,7 @@ public class AmazonEMRConfig {
       label = "Instance Count",
       description = "EC2 instances in the cluster. Minimum of 2. Adding instances for multiple partitions " +
       "can improve performance",
-      group = "EMR",
+      group = "CLUSTER",
       min = 2,
       displayPosition = 320,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -340,7 +340,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Master Instance Type",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 330,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -354,7 +354,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Master Instance Type (Custom)",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 340,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -368,7 +368,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Slave Instance Type",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 350,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -382,7 +382,7 @@ public class AmazonEMRConfig {
       required = true,
       type = ConfigDef.Type.STRING,
       label = "Slave Instance Type (Custom)",
-      group = "EMR",
+      group = "CLUSTER",
       displayPosition = 360,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),

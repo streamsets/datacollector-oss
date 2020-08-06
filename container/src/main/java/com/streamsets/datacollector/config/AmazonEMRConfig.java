@@ -27,6 +27,8 @@ import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
 
 import java.util.Properties;
 
+// All configs in this file are set to ADVANCED because they are all depending on a change in execution Mode that is
+// itself marked as and ADVANCED for Data Collector. This way we completely hide the EMR cluster.
 public class AmazonEMRConfig {
 
   @ConfigDef(
@@ -35,6 +37,7 @@ public class AmazonEMRConfig {
       label = "Region",
       description = "AWS region",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 100,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
@@ -48,6 +51,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "AWS user region (Custom)",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependsOn = "userRegion",
       triggeredByValue = "OTHER",
       displayPosition = 105,
@@ -62,6 +66,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "AWS access key",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 110,
       dependencies = {
       @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
@@ -74,6 +79,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.CREDENTIAL,
       label = "AWS secret key",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 120,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
@@ -89,6 +95,7 @@ public class AmazonEMRConfig {
       description =
           "S3 Location where the SDC configuration and resources will be uploaded for the execution of the pipeline",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 140,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -103,6 +110,7 @@ public class AmazonEMRConfig {
       label = "Provision a New Cluster",
       description = "Provisions a new cluster when the pipeline starts",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 150,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH")
@@ -115,6 +123,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Cluster ID",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 160,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -128,6 +137,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Cluster Name Prefix",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 200,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -173,6 +183,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "S3 Log URI",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 230,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -254,6 +265,7 @@ public class AmazonEMRConfig {
       label = "EC2 subnet ID",
       description = "EC2 subnet identifier to launch the cluster in",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 290,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -269,6 +281,7 @@ public class AmazonEMRConfig {
       label = "Master Security Group",
       description = "Security group ID for the master node",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 300,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -283,6 +296,7 @@ public class AmazonEMRConfig {
       label = "Slave Security Group",
       description = "Security group ID for the slave nodes",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 310,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -311,6 +325,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.MODEL,
       label = "Master Instance Type",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 330,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -325,6 +340,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Master Instance type (Custom)",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 340,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -339,6 +355,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.MODEL,
       label = "Slave Instance Type",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 350,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),
@@ -353,6 +370,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Slave Instance type (Custom)",
       group = "EMR",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       displayPosition = 360,
       dependencies = {
           @Dependency(configName = "^executionMode", triggeredByValues = "EMR_BATCH"),

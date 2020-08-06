@@ -23,8 +23,8 @@ public enum PipelineGroups implements Label {
   NOTIFICATIONS("Notifications"),
   BAD_RECORDS("Error Records"),
   STATS("Statistics"),
+  // EMR Tab is only used by SDC, Tranformer shows EMR configs on "CLUSTER" tab like all other cluster types
   EMR("EMR"),
-  DATAPROC("Dataproc"),
   ADVANCED("Advanced"),
   ;
 
