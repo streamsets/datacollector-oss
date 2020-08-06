@@ -91,6 +91,7 @@ public class JdbcDTarget extends DTarget {
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       required = false,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "[]",
       label = "Field to Column Mapping",
       description = "Optionally specify additional field mappings when input field name and column name don't match.",
       displayPosition = 40,
