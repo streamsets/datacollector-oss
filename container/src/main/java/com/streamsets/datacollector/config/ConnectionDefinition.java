@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.config;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -42,7 +41,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final Map<String, ConfigDefinition> configDefinitionsMap;
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
-  private final ConnectionVerifierDefinition verifierDefinition;
   private final ConnectionEngine[] supportedEngines;
 
   @SuppressWarnings("unchecked")
@@ -58,7 +56,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     configDefinitionsMap = def.configDefinitionsMap;
     configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
-    verifierDefinition = def.verifierDefinition;
     supportedEngines = def.supportedEngines;
   }
 
@@ -72,7 +69,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       List<ConfigDefinition> configDefinitions,
       ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
-      ConnectionVerifierDefinition verifierDefinition,
       ConnectionEngine[] supportedEngines
   ) {
     this.connectionDef = connectionDef;
@@ -98,7 +94,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       }
     }
     this.yamlUpgrader = yamlUpgrader;
-    this.verifierDefinition = verifierDefinition;
     this.supportedEngines = supportedEngines;
   }
 
@@ -172,13 +167,9 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' verifier='{}' supported engines='{}']",
-        getLibrary(), getName(), getVersion(), getType(), verifierDefinition, supportedEngines
+        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' supported engines='{}']",
+        getLibrary(), getName(), getVersion(), getType(), supportedEngines
     );
-  }
-
-  public ConnectionVerifierDefinition getVerifierDefinition() {
-    return verifierDefinition;
   }
 
   public ConnectionEngine[] getSupportedEngines() {

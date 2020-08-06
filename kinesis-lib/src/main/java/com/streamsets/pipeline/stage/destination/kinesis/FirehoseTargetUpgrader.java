@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.List;

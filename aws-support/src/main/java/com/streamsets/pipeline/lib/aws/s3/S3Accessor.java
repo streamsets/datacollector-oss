@@ -38,8 +38,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.aws.Errors;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

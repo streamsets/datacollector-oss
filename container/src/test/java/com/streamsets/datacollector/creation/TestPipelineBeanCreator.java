@@ -421,7 +421,6 @@ public class TestPipelineBeanCreator {
       type = "MYCONN",
       version = 1,
       upgraderDef = "foo.yaml",
-      verifier = ConnectionVerifier.class,
       supportedEngines = ConnectionEngine.COLLECTOR
   )
   public static class MyConnection {

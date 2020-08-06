@@ -17,8 +17,8 @@ package com.streamsets.pipeline.stage.lib.aws;
 
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable

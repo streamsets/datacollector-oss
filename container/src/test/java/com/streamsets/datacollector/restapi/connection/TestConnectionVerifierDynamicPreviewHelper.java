@@ -77,6 +77,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
             "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
             "connection",
             "connectionSelection"
+            ,"com.streamsets.pipeline.stage.common.s3.AwsS3Connection"
         ),
         "streamsets-datacollector-aws-lib"
     );

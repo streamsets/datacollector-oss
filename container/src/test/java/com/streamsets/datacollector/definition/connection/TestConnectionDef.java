@@ -22,9 +22,9 @@ import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Label;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 
 public class TestConnectionDef {
 
@@ -76,7 +76,6 @@ public class TestConnectionDef {
       description = "Connects to Test Connection",
       version = 1,
       upgraderDef = "upgrader/TestConnection.yaml",
-      verifier = TestConnectionVerifier.class,
       supportedEngines = { ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER }
   )
   @ConfigGroups(TestConnectionGroups.class)

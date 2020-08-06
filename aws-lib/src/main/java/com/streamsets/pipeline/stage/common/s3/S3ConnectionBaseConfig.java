@@ -15,14 +15,15 @@
  */
 package com.streamsets.pipeline.stage.common.s3;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
 import com.streamsets.pipeline.stage.origin.s3.Groups;
@@ -93,6 +94,12 @@ public abstract class S3ConnectionBaseConfig {
   )
   public boolean usePathAddressModel = false;
 
+  private AmazonS3 s3Client;
+
+  public AmazonS3 getS3Client() {
+    return s3Client;
+  }
+
   /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
    */
   public void init(
@@ -103,7 +110,14 @@ public abstract class S3ConnectionBaseConfig {
   ) {
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
     try {
-      connection.initConnection(context, configPrefix, issues, maxErrorRetries, usePathAddressModel);
+      s3Client = S3ConnectionCreator.createS3Client(
+          connection,
+          context,
+          configPrefix,
+          issues,
+          maxErrorRetries,
+          usePathAddressModel
+      );
     } catch (StageException ex) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), ex.toString(), ex);
       issues.add(
@@ -115,5 +129,9 @@ public abstract class S3ConnectionBaseConfig {
           )
       );
     }
+  }
+
+  public void destroy() {
+    S3ConnectionCreator.destroyS3Client(s3Client);
   }
 }

@@ -17,13 +17,13 @@ package com.streamsets.pipeline.lib.elasticsearch;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.aws.AwsUtil;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
 import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
 import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.Header;

@@ -40,6 +40,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.definition.TestStageDefinitionExtractor;
 import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
@@ -805,6 +806,11 @@ public class MockStages {
         }
       }
       return null;
+    }
+
+    @Override
+    public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
+      return Collections.emptyMap();
     }
 
     @Override

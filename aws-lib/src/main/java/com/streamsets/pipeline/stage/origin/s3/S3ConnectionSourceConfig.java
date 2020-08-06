@@ -59,7 +59,7 @@ public class S3ConnectionSourceConfig extends S3ConnectionBaseConfig {
   ) {
     try {
       //check if the credentials are right by trying to list an object in the common prefix
-      connection.getS3Client().listObjects(new ListObjectsRequest(
+      getS3Client().listObjects(new ListObjectsRequest(
           bucket,
           commonPrefix,
           null,

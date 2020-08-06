@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
@@ -43,6 +44,11 @@ import java.util.Properties;
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
 @ConfigGroups(JdbcConnectionGroups.class)
+@ConnectionVerifierDef(
+    verifierType = JdbcConnection.TYPE,
+    connectionFieldName = "connection",
+    connectionSelectionFieldName = "connectionSelection"
+)
 public class JdbcConnectionVerifier extends ConnectionVerifier {
 
   private final static Logger LOG = LoggerFactory.getLogger(JdbcConnection.class);

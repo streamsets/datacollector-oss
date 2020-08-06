@@ -31,7 +31,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;

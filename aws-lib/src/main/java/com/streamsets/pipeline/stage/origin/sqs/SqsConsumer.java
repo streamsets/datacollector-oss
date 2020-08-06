@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;

@@ -15,8 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable

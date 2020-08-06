@@ -20,9 +20,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
+import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
@@ -32,7 +33,6 @@ import com.streamsets.pipeline.common.InterfaceStability;
     description = "Connects to JDBC",
     version = 1,
     upgraderDef = "upgrader/JdbcConnectionUpgrader.yaml",
-    verifier = JdbcConnectionVerifier.class,
     supportedEngines = { ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER }
 )
 @ConfigGroups(JdbcConnectionGroups.class)

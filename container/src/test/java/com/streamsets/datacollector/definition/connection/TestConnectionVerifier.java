@@ -20,12 +20,18 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@ConnectionVerifierDef(
+    verifierType = TestConnectionDef.TestConnection.TYPE,
+    connectionFieldName = "connection",
+    connectionSelectionFieldName = "connectionSelection"
+)
 public class TestConnectionVerifier extends ConnectionVerifier {
 
   @ConfigDef(

@@ -98,7 +98,7 @@ public class AmazonS3Target extends BaseTarget {
 
     transferManager = TransferManagerBuilder
         .standard()
-        .withS3Client(s3TargetConfigBean.s3Config.connection.getS3Client())
+        .withS3Client(s3TargetConfigBean.s3Config.getS3Client())
         .withExecutorFactory(() -> Executors.newFixedThreadPool(s3TargetConfigBean.tmConfig.threadPoolSize))
         .withMinimumUploadPartSize(s3TargetConfigBean.tmConfig.minimumUploadPartSize)
         .withMultipartUploadThreshold(s3TargetConfigBean.tmConfig.multipartUploadThreshold)
@@ -137,7 +137,7 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public void destroy() {
-    s3TargetConfigBean.s3Config.connection.destroy();
+    s3TargetConfigBean.destroy();
     if (transferManager != null) {
       // don't shut down s3 client again since it's already closed by s3Config.destroy().
       transferManager.shutdownNow(false);

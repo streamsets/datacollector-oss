@@ -16,10 +16,10 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.google.common.base.Throwables;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

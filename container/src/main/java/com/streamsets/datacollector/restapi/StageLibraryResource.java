@@ -23,12 +23,14 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
+import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
@@ -525,8 +527,11 @@ public class StageLibraryResource {
   @PermitAll
   public Response getConnections() {
     List<ConnectionDefinition> connectionDefs = stageLibrary.getConnections();
-    ConnectionsJson connectionDefinitions = new ConnectionsJson(connectionDefs);
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(connectionDefinitions).build();
+    Map<String, ConnectionVerifierDefinition> verifierMap = stageLibrary.getConnectionVerifierMap();
+    List<ConnectionDefinitionJson> definitionsJson = new ArrayList<>();
+    for (ConnectionDefinition connection : connectionDefs) {
+      definitionsJson.add(new ConnectionDefinitionJson(connection, verifierMap.get(connection.getType())));
+    }
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitionsJson).build();
   }
-
 }

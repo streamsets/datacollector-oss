@@ -26,17 +26,20 @@ public class ConnectionVerifierDefinition {
   private String verifierClass;
   private String verifierConnectionFieldName;
   private String verifierConnectionSelectionFieldName;
+  private String verifierType;
 
   public ConnectionVerifierDefinition() { }
 
   public ConnectionVerifierDefinition(
       String verifierClass,
       String verifierConnectionFieldName,
-      String verifierConnectionSelectionFieldName
+      String verifierConnectionSelectionFieldName,
+      String verifierType
   ) {
     this.verifierClass = verifierClass;
     this.verifierConnectionFieldName = verifierConnectionFieldName;
     this.verifierConnectionSelectionFieldName = verifierConnectionSelectionFieldName;
+    this.verifierType = verifierType;
   }
 
   public String getVerifierClass() {
@@ -51,11 +54,18 @@ public class ConnectionVerifierDefinition {
     return verifierConnectionSelectionFieldName;
   }
 
+  public String getVerifierType() {
+    return verifierType;
+  }
+
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionVerifierDefinition[verifierClass='{}', verifierConnectionFieldName='{}', verifierConnectionSelectionFieldName='{}']",
-        verifierClass, verifierConnectionFieldName, verifierConnectionSelectionFieldName
+        "ConnectionVerifierDefinition[verifierClass='{}', " +
+            "verifierConnectionFieldName='{}', " +
+            "verifierConnectionSelectionFieldName='{}'," +
+            "verifierType='{}']",
+        verifierClass, verifierConnectionFieldName, verifierConnectionSelectionFieldName, verifierType
     );
   }
 }

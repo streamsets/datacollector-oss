@@ -24,6 +24,7 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
+import com.streamsets.datacollector.definition.connection.TestConnectionDef;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
@@ -34,6 +35,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
@@ -64,13 +66,14 @@ public class TestConfigInjector {
   @ConnectionDef(
       label = "My Connection",
       description = "",
-      type = "MYCONN",
+      type = MyConnection.TYPE,
       version = 2,
       upgraderDef = "upgrader/MyConnUpgrader.yaml",
-      verifier = MyConnection.MyConnectionVerifier.class,
       supportedEngines = ConnectionEngine.COLLECTOR
   )
   public static class MyConnection {
+
+    public static final String TYPE = "MYCONN";
 
     @ConfigDef(
         label = "URL",
@@ -83,6 +86,11 @@ public class TestConfigInjector {
     @ConfigDefBean
     public SubBean beanSubBean;
 
+    @ConnectionVerifierDef(
+        verifierType = MyConnection.TYPE,
+        connectionFieldName = "connection",
+        connectionSelectionFieldName = "connectionSelection"
+    )
     public static class MyConnectionVerifier extends ConnectionVerifier {
       @Override
       protected List<ConfigIssue> init() {

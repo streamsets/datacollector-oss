@@ -18,9 +18,9 @@ package com.streamsets.pipeline.stage.origin.s3;
 import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
@@ -92,11 +92,11 @@ public class S3ConfigBean {
     errorConfig.errorPrefix = AWSUtil.normalizePrefix(errorConfig.errorPrefix, s3Config.delimiter);
     postProcessingConfig.postProcessPrefix = AWSUtil.normalizePrefix(postProcessingConfig.postProcessPrefix, s3Config.delimiter);
 
-    if(s3Config.connection.getS3Client() != null) {
+    if(s3Config.getS3Client() != null) {
       validateBucket(
           context,
           issues,
-          s3Config.connection.getS3Client(),
+          s3Config.getS3Client(),
           s3Config.bucket,
           Groups.S3.name(),
           S3_CONFIG_PREFIX + "bucket"
@@ -155,7 +155,7 @@ public class S3ConfigBean {
       // source prefix
       if(s3ArchivingOption == S3ArchivingOption.MOVE_TO_BUCKET) {
         //If archive option is move to bucket, then bucket must be specified.
-        validateBucket(context, issues, s3Config.connection.getS3Client(), postProcessBucket,groupName, bucketConfig);
+        validateBucket(context, issues, s3Config.getS3Client(), postProcessBucket,groupName, bucketConfig);
         //If the specified bucket is same as the source bucket then prefix must be specified
         if(postProcessBucket != null && !postProcessBucket.isEmpty() &&postProcessBucket.equals(s3Config.bucket)) {
           validatePostProcessingPrefix(context, postProcessBucket, postProcessFolder, groupName, prefixConfig, issues);
@@ -174,7 +174,7 @@ public class S3ConfigBean {
   }
 
   public void destroy() {
-    s3Config.connection.destroy();
+    s3Config.destroy();
   }
 
   private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3 s3Client,

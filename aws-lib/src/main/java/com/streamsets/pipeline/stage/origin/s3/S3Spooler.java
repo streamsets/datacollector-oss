@@ -55,7 +55,7 @@ public class S3Spooler {
   public S3Spooler(PushSource.Context context, S3ConfigBean s3ConfigBean) {
     this.context = context;
     this.s3ConfigBean = s3ConfigBean;
-    this.s3Client = s3ConfigBean.s3Config.connection.getS3Client();
+    this.s3Client = s3ConfigBean.s3Config.getS3Client();
     lastElementAddedToQueue = null;
     newDataAfterEventSent = true;
   }

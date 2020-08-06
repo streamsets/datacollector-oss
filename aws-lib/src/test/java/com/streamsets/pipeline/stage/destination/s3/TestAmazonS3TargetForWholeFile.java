@@ -34,7 +34,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.api.service.dataformats.WholeFileChecksumAlgorithm;
 import com.streamsets.pipeline.config.ChecksumAlgorithm;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.hashing.HashingUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;

@@ -16,9 +16,9 @@
 package com.streamsets.pipeline.stage.origin.s3;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 
 @InterfaceAudience.LimitedPrivate

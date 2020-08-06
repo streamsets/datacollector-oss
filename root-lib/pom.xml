@@ -97,6 +97,16 @@
       </dependency>
       <dependency>
         <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-aws-s3-connection</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-jdbc-connection</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-aws-support</artifactId>
         <version>${project.version}</version>
       </dependency>

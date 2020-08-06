@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 
 import java.util.List;
 import java.util.stream.Collectors;

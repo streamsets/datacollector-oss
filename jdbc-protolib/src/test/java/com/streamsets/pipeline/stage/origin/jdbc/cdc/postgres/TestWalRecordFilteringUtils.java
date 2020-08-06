@@ -15,9 +15,9 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
+import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -32,7 +32,6 @@ import org.postgresql.replication.LogSequenceNumber;
 
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;

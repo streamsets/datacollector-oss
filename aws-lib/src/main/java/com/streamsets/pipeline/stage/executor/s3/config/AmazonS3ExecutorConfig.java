@@ -38,7 +38,7 @@ public class AmazonS3ExecutorConfig {
   }
 
   public void destroy() {
-    s3Config.connection.destroy();
+    s3Config.destroy();
   }
 
 }

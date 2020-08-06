@@ -157,6 +157,6 @@ public class S3TargetConfigBean {
   }
 
   public void destroy() {
-    s3Config.connection.destroy();
+    s3Config.destroy();
   }
 }

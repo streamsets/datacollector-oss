@@ -15,11 +15,13 @@
  */
 package com.streamsets.pipeline.stage.common.s3;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
@@ -41,6 +43,11 @@ import java.util.UUID;
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
 @ConfigGroups(AwsS3ConnectionGroups.class)
+@ConnectionVerifierDef(
+    verifierType = AwsS3Connection.TYPE,
+    connectionFieldName = "connection",
+    connectionSelectionFieldName = "connectionSelection"
+)
 public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   private final static Logger LOG = LoggerFactory.getLogger(AwsS3ConnectionVerifier.class);
 
@@ -66,14 +73,16 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
   )
   public AwsS3Connection connection;
 
+  private AmazonS3 s3Client;
+
   @Override
   protected List<ConfigIssue> initConnection() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     try {
-      connection.initConnection(getContext(), "connection", issues, -1, false);
+      s3Client = S3ConnectionCreator.createS3Client(connection, getContext(), "connection", issues, -1, false);
       if (issues.isEmpty()) {
         // We don't actually care if the bucket exists or not, we're only interested in if this will throw an Exception
-        connection.getS3Client().doesBucketExistV2(BUCKET_EXIST_PREFIX + UUID.randomUUID().toString());
+        s3Client.doesBucketExistV2(BUCKET_EXIST_PREFIX + UUID.randomUUID().toString());
       }
     } catch (Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.getMessage(), e);
@@ -84,6 +93,6 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
 
   @Override
   protected void destroyConnection() {
-    connection.destroy();
+    S3ConnectionCreator.destroyS3Client(s3Client);
   }
 }
