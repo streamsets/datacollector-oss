@@ -54,8 +54,7 @@ public class HttpSourceConfigs extends CommonHttpConfigs{
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "TLS",
       dependsOn = "tlsConfigBean.tlsEnabled",
-      triggeredByValue = "true",
-      defaultValue = "[]"
+      triggeredByValue = "true"
   )
   @ListBeanModel
   public List<CredentialValueUserPassBean> basicAuthUsers = new ArrayList<>();

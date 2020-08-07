@@ -122,7 +122,6 @@ public class RedisTargetConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
-      defaultValue = "[]",
       label = "Channel",
       description = "Channel to publish the messages to",
       displayPosition = 50,

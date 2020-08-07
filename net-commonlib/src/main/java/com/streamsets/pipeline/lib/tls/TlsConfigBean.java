@@ -142,8 +142,7 @@ public class TlsConfigBean {
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
-      },
-      defaultValue = "[]"
+      }
   )
   @ListBeanModel
   public List<CredentialValueBean> certificateChain = new ArrayList<>();
@@ -235,8 +234,7 @@ public class TlsConfigBean {
       dependencies = {
           @Dependency(configName = "tlsEnabled", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteTrustStore", triggeredByValues = "true")
-      },
-      defaultValue = "[]"
+      }
   )
   @ListBeanModel
   public List<CredentialValueBean> trustedCertificates = new ArrayList<>();
@@ -311,7 +309,6 @@ public class TlsConfigBean {
       displayPosition = DISPLAY_POSITION_OFFSET + 310,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
-      defaultValue = "[]",
       dependsOn = "useDefaultProtocols",
       triggeredByValue = "false"
   )
@@ -340,7 +337,6 @@ public class TlsConfigBean {
       displayPosition = DISPLAY_POSITION_OFFSET + 360,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0",
-      defaultValue = "[]",
       dependsOn = "useDefaultCiperSuites",
       triggeredByValue = "false"
   )

@@ -158,7 +158,6 @@ public class GoogleCloudConfig {
     required = false,
     type = ConfigDef.Type.LIST,
     label = "Network Tags",
-    defaultValue = "[]",
     group = "CLUSTER",
     displayPosition = 140,
     dependsOn = "create",

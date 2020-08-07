@@ -518,9 +518,9 @@ public class PipelineConfigBean implements Stage {
   )
   public long runnerIdleTIme = 60;
 
-  @ConfigDef(required = true,
+  @ConfigDef(
+      required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "[]",
       label = "Webhooks",
       description = "Webhooks",
       displayPosition = 210,

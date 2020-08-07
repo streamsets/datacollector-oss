@@ -53,7 +53,6 @@ public class Configs {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
-      defaultValue = "[]",
       label = "SDC RPC Connection",
       description = "Connection information for the destination pipeline. Use the format <host>:<port>.",
       displayPosition = 10,

@@ -30,7 +30,6 @@ public class MqttClientSourceConfigBean {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Topic Filter",
-      defaultValue = "[]",
       description = "Specify the topics to subscribe to, which can include wildcards.",
       displayPosition = 30,
       displayMode = ConfigDef.DisplayMode.BASIC,

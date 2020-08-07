@@ -51,6 +51,10 @@ public enum ModelType {
   private static class EmptyListDefaultPreparer implements DefaultPreparer {
     @Override
     public Object prepare(Object defaultValue) {
+      if(defaultValue == null) {
+        return null;
+      }
+
       return Collections.emptyList();
     }
   }

@@ -1226,7 +1226,6 @@ public class DataParserFormatConfig implements DataFormatConfig {
       required = true,
       type = ConfigDef.Type.LIST,
       label = "Import Sheets",
-      defaultValue = "[]",
       description = "Names of the sheets that should be imported. Other sheets will be ignored.",
       displayPosition = 1020,
       displayMode = ConfigDef.DisplayMode.BASIC,

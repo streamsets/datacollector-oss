@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
 import com.streamsets.pipeline.api.FieldSelectorModel;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.PredicateModel;
 
 import com.streamsets.pipeline.api.credential.CredentialValue;
@@ -188,6 +189,51 @@ public class TestConfigDefinitionExtractor {
     Assert.assertTrue(config.getElConstantDefinitions().isEmpty());
   }
 
+  public static class ListBeanDefaultEmptyString {
+
+    @ConfigDef(
+        label = "L",
+        description = "D",
+        type = ConfigDef.Type.MODEL,
+        defaultValue = "",
+        required = true,
+        elDefs = ELs.class
+    )
+    @ListBeanModel
+    public List<Ok4> inner;
+  }
+  @Test
+  public void testDefaultExtractionOfListBeanModelWithEmptyString() {
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(ListBeanDefaultEmptyString.class, Collections.emptyList(), "x");
+    Assert.assertEquals(1, configs.size());
+    ConfigDefinition config = configs.get(0);
+
+    Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
+    Assert.assertEquals(null, config.getDefaultValue());
+  }
+
+  public static class ListBeanDefaultEmptyArray {
+
+    @ConfigDef(
+        label = "L",
+        description = "D",
+        type = ConfigDef.Type.MODEL,
+        defaultValue = "[]",
+        required = true,
+        elDefs = ELs.class
+    )
+    @ListBeanModel
+    public List<Ok4> inner;
+  }
+  @Test
+  public void testDefaultExtractionOfListBeanModelWithEmptyArray() {
+    List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(ListBeanDefaultEmptyArray.class, Collections.emptyList(), "x");
+    Assert.assertEquals(1, configs.size());
+    ConfigDefinition config = configs.get(0);
+
+    Assert.assertEquals(ConfigDef.Type.MODEL, config.getType());
+    Assert.assertEquals(Collections.emptyList(), config.getDefaultValue());
+  }
   @Test
   public void testModelELConfigOk() {
     List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(Ok3.class, Collections.<String>emptyList(),

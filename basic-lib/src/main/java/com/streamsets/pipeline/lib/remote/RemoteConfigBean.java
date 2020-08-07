@@ -278,8 +278,7 @@ public class RemoteConfigBean {
       dependencies = {
           @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
-      },
-      defaultValue = "[]"
+      }
   )
   @ListBeanModel
   public List<CredentialValueBean> ftpsCertificateChain = new ArrayList<>();

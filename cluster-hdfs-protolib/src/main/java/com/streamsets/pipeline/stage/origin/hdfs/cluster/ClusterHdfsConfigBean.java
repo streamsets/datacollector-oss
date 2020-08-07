@@ -57,7 +57,6 @@ public class ClusterHdfsConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
-      defaultValue = "[]",
       label = "Input Paths",
       description = "Location of the input data to be read",
       displayPosition = 20,

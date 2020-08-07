@@ -107,8 +107,7 @@ public class MutualAuthConfigBean {
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
-      },
-      defaultValue = "[]"
+      }
   )
   @ListBeanModel
   public List<CredentialValueBean> certificateChain = new ArrayList<>();
