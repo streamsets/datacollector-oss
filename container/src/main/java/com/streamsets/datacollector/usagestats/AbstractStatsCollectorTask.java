@@ -18,6 +18,7 @@ package com.streamsets.datacollector.usagestats;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
@@ -435,6 +436,57 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
   }
 
   protected boolean reportStats(List<StatsBean> stats) {
+    return reportStats(stats, null);
+  }
+
+  /**
+   *
+   * @param stats Normal uploads should provide this list. Mutually exclusive with rawStats.
+   * @param rawStats When provided, then will simply report these raw stats without updating any state. Used for
+   *                 uploading air-gapped stats. Must be an API stats object, StatsInfo, or a JSON array of StatsBeans.
+   * @return
+   */
+  protected boolean reportStats(List<StatsBean> stats, String rawStats) {
+    Preconditions.checkArgument(stats == null ^ rawStats == null,
+        "Must provide exactly one of the two arguments");
+
+    String sdcId;
+    String rawStatsToUpload = null;
+    if (stats != null) {
+      sdcId = getRuntimeInfo().getId();
+    } else {
+      try {
+        Object deserializedStats = OBJECT_MAPPER.readValue(rawStats, Object.class);
+        List<Map<String, Object>> rawEntries;
+        if (deserializedStats instanceof List) {
+          rawEntries = (List<Map<String, Object>>) deserializedStats;
+          rawStatsToUpload = rawStats;
+        } else {
+          Map<String, Object> rawStatsInfo = (Map<String, Object>) deserializedStats;
+          if (!rawStatsInfo.containsKey("collectedStats")) {
+            if (!rawStatsInfo.containsKey("stats")) {
+              throw new IllegalArgumentException("No stats provided. Make sure Usage Statistics is enabled, and the "
+                  + "argument is an API stats object, StatsInfo (stats.json), or a JSON array of StateBeans.");
+            }
+            // this is an API /system/stats object, unwrap the StatsInfo
+            rawStatsInfo = (Map<String,Object>) rawStatsInfo.get("stats");
+          }
+          Preconditions.checkArgument(rawStatsInfo.containsKey("collectedStats"),
+              "Argument must be an API stats object, StatsInfo (stats.json), or a JSON array of StateBeans.");
+          rawEntries = (List<Map<String, Object>>) rawStatsInfo.get("collectedStats");
+          rawStatsToUpload = OBJECT_MAPPER.writeValueAsString(rawEntries);
+        }
+        if (rawEntries.isEmpty()) {
+          // nothing to report
+          return true;
+        }
+        Preconditions.checkArgument(rawEntries.get(0).containsKey("sdcId"), "stats must have an sdcId");
+        sdcId = (String) rawEntries.get(0).get("sdcId");
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
     boolean reported = false;
     String getTelemetryUrlEndpoint = config.get(GET_TELEMETRY_URL_ENDPOINT, GET_TELEMETRY_URL_ENDPOINT_DEFAULT);
     if (isTelemetryEnabled(getTelemetryUrlEndpoint)) {
@@ -446,11 +498,11 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
             getTelemetryUrlEndpoint.length() - getTelemetryUrl.getPath().length());
         RestClient client = RestClient.builder(baseUrl)
             .json(true)
-            .name(getRuntimeInfo().getId())
+            .name(sdcId)
             .path(getTelemetryUrl.getPath())
             .build();
         ImmutableMap.Builder<String, String> argsMapBuilder = ImmutableMap.builder();
-        argsMapBuilder.put(GET_TELEMETRY_URL_ARG_CLIENT_ID, getRuntimeInfo().getId());
+        argsMapBuilder.put(GET_TELEMETRY_URL_ARG_CLIENT_ID, sdcId);
         argsMapBuilder.put(GET_TELEMETRY_URL_ARG_EXTENSION, GET_TELEMETRY_URL_ARG_EXTENSION_JSON);
         if (config.get(TELEMETRY_USE_TEST_BUCKET, TELEMETRY_USE_TEST_BUCKET_DEFAULT)) {
           argsMapBuilder.put(GET_TELEMETRY_URL_ARG_TEST_BUCKET, "True"); // any non-empty string is treated as true
@@ -460,9 +512,9 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
           Map<String, String> responseData = response.getData(new TypeReference<Map<String, String>>(){});
           String uploadUrlString = responseData.get(TELEMETRY_URL_KEY);
           if (null != uploadUrlString) {
-            reported = uploadToUrl(stats, uploadUrlString);
+            reported = uploadToUrl(stats, rawStatsToUpload, uploadUrlString);
 
-            if (reported) {
+            if (reported && stats != null) {
               // setting stats as reported
               stats.forEach(s -> s.setReported());
             }
@@ -504,9 +556,15 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     return client.post(data);
   }
 
-  private boolean uploadToUrl(List<StatsBean> stats, String uploadUrlString) throws IOException {
+  private boolean uploadToUrl(List<StatsBean> stats, String rawStats, String uploadUrlString) throws IOException {
+    Preconditions.checkArgument(stats == null ^ rawStats == null,
+        "Must provide exactly one of the two arguments for stats");
     boolean reported = false;
-    LOG.debug("Uploading {} stats to url {}", stats.size(), uploadUrlString);
+    if (stats != null) {
+      LOG.debug("Uploading {} stats to url {}", stats.size(), uploadUrlString);
+    } else {
+      LOG.debug("Uploading raw stats of size {} to url {}", rawStats.length(), uploadUrlString);
+    }
     URL uploadUrl = new URL(uploadUrlString);
     // Avoid RestClient since sometimes extra headers cause a problem with signed URLs
     HttpURLConnection connection = getHttpURLConnection(uploadUrl);
@@ -514,7 +572,11 @@ public abstract class AbstractStatsCollectorTask extends AbstractTask implements
     connection.setDoOutput(true);
     connection.setRequestMethod("PUT");
     OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-    OBJECT_MAPPER.writeValue(out, stats);
+    if (stats != null) {
+      OBJECT_MAPPER.writeValue(out, stats);
+    } else {
+      out.write(rawStats);
+    }
     out.close();
     int responseCode = connection.getResponseCode();
     if (responseCode == HttpURLConnection.HTTP_OK) {

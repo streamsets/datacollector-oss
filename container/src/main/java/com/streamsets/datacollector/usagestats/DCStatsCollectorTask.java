@@ -41,4 +41,13 @@ public class DCStatsCollectorTask extends AbstractStatsCollectorTask {
   protected List<AbstractStatsExtension> provideStatsExtensions() {
     return Collections.emptyList();
   }
+
+  /**
+   *
+   * @param rawStats raw stats.json or json array of collected stats to report
+   * @return
+   */
+  public boolean reportStats(String rawStats) {
+    return reportStats(null, rawStats);
+  }
 }

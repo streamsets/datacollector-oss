@@ -52,7 +52,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getConfiguration () throws ApiException {
+  public Map<String, Object> getConfiguration() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -86,7 +86,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getUIConfiguration () throws ApiException {
+  public Map<String, Object> getUIConfiguration() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -120,7 +120,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getSDCDirectories () throws ApiException {
+  public Map<String, Object> getSDCDirectories() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -154,7 +154,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getBuildInfo () throws ApiException {
+  public Map<String, Object> getBuildInfo() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -188,7 +188,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getUserInfo () throws ApiException {
+  public Map<String, Object> getUserInfo() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -222,7 +222,7 @@ public class SystemApi {
    *
    * @return Map<String, Object>
    */
-  public Map<String, Object> getServerTime () throws ApiException {
+  public Map<String, Object> getServerTime() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -252,12 +252,46 @@ public class SystemApi {
   }
 
   /**
+   * Returns Stats
+   *
+   * @return Map<String, Object>
+   */
+  public Map<String, Object> getStats() throws ApiException {
+    Object postBody = null;
+    byte[] postBinaryBody = null;
+
+    // create path and map variables
+    String path = "/v1/system/stats".replaceAll("\\{format\\}","json");
+
+    // query params
+    List<Pair> queryParams = new ArrayList<Pair>();
+    Map<String, String> headerParams = new HashMap<String, String>();
+    Map<String, Object> formParams = new HashMap<String, Object>();
+
+    final String[] accepts = {
+        "application/json"
+    };
+    final String accept = apiClient.selectHeaderAccept(accepts);
+
+    final String[] contentTypes = {
+
+    };
+    final String contentType = apiClient.selectHeaderContentType(contentTypes);
+
+    String[] authNames = new String[] { "basic" };
+
+    TypeRef returnType = new TypeRef<Map<String, Object>>() {};
+    return apiClient.invokeAPI(path, "GET", queryParams, postBody, postBinaryBody, headerParams, formParams, accept,
+        contentType, authNames, returnType);
+  }
+
+  /**
    * Return latest log file contents
    *
    * @param endingOffset
    * @return void
    */
-  public void currentLog (Long endingOffset) throws ApiException {
+  public void currentLog(Long endingOffset) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -293,7 +327,7 @@ public class SystemApi {
    *
    * @return List<Map<String, Object>>
    */
-  public List<Map<String, Object>> listLogFiles () throws ApiException {
+  public List<Map<String, Object>> listLogFiles() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -329,7 +363,7 @@ public class SystemApi {
    * @param attachment
    * @return String
    */
-  public String getLogFile (String logName, Boolean attachment) throws ApiException {
+  public String getLogFile(String logName, Boolean attachment) throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -372,7 +406,7 @@ public class SystemApi {
    *
    * @return void
    */
-  public void shutdown () throws ApiException {
+  public void shutdown() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -405,7 +439,7 @@ public class SystemApi {
    *
    * @return List<Map<String, Object>>
    */
-  public List<Map<String, Object>> getThreadsDump () throws ApiException {
+  public List<Map<String, Object>> getThreadsDump() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 
@@ -440,7 +474,7 @@ public class SystemApi {
    *
    * @return void
    */
-  public void enableDPM (DPMInfoJson dpmInfo) throws ApiException {
+  public void enableDPM(DPMInfoJson dpmInfo) throws ApiException {
     Object postBody = dpmInfo;
     byte[] postBinaryBody = null;
 
@@ -478,7 +512,7 @@ public class SystemApi {
    *
    * @return void
    */
-  public void disableDPM () throws ApiException {
+  public void disableDPM() throws ApiException {
     Object postBody = null;
     byte[] postBinaryBody = null;
 

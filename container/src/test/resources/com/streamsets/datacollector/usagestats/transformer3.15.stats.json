@@ -1,0 +1,280 @@
+{
+  "activeStats" : {
+    "extensions" : [ {
+      "class" : "com.streamsets.datatransformer.usagestats.TransformerStatsExtension",
+      "version" : "1.1",
+      "pipelineEntries" : { }
+    } ],
+    "version" : "1.3",
+    "startTime" : 1597084810512,
+    "endTime" : 0,
+    "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+    "productName" : "transformer",
+    "dataCollectorVersion" : "3.16.0-SNAPSHOT",
+    "buildRepoSha" : "55b6de9b16ae38eba59e2fe21b206cce1b670835",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 18439748,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_242",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 8,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 26320488
+    },
+    "dpmEnabled" : false,
+    "upTime" : {
+      "name" : "upTime",
+      "accumulatedTime" : 0
+    },
+    "pipelineStats" : { },
+    "stages" : [ ],
+    "recordCount" : 0,
+    "errorCodes" : { },
+    "createToPreview" : { },
+    "createToRun" : { },
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+      "firstUseOn" : 1596564074419,
+      "expiration" : 1599202800000,
+      "validSdcIds" : [ "7cac8108-d67c-11ea-80e3-414ee1f55860" ],
+      "additionalInfo" : {
+        "licenseType" : "INTERNAL",
+        "createdBy" : "dlo@streamsets.com",
+        "spark.maxExecutors" : "4",
+        "createdOn" : "1596564175534",
+        "productName" : "TRANSFORMER"
+      },
+      "valid" : true
+    },
+    "pipelines" : [ ]
+  },
+  "collectedStats" : [ {
+    "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+    "productName" : "transformer",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.16.0-SNAPSHOT",
+    "buildRepoSha" : "55b6de9b16ae38eba59e2fe21b206cce1b670835",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 18439748,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_242",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 8,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 26320488
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1597084640940,
+    "endTime" : 1597084640950,
+    "upTime" : 9,
+    "activePipelines" : 0,
+    "pipelineMilliseconds" : 0,
+    "pipelineRunReports" : [ ],
+    "stageMilliseconds" : { },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ {
+      "class" : "com.streamsets.datatransformer.usagestats.TransformerStatsBeanExtension",
+      "version" : "1.1",
+      "pipelineRunReports" : [ ]
+    } ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+      "firstUseOn" : 1596564074419,
+      "expiration" : 1599202800000,
+      "validSdcIds" : [ "7cac8108-d67c-11ea-80e3-414ee1f55860" ],
+      "additionalInfo" : {
+        "licenseType" : "INTERNAL",
+        "createdBy" : "dlo@streamsets.com",
+        "spark.maxExecutors" : "4",
+        "createdOn" : "1596564175534",
+        "productName" : "TRANSFORMER"
+      },
+      "valid" : true
+    }
+  }, {
+    "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+    "productName" : "transformer",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.16.0-SNAPSHOT",
+    "buildRepoSha" : "55b6de9b16ae38eba59e2fe21b206cce1b670835",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 18439748,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_242",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 8,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 26320488
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1597084640950,
+    "endTime" : 1597084735403,
+    "upTime" : 94454,
+    "activePipelines" : 1,
+    "pipelineMilliseconds" : 9296,
+    "pipelineRunReports" : [ {
+      "hashedId" : "580d5ed5bebce736dde65751792a16de7de71008a9c09140e1086a343c5eb319",
+      "startTime" : 1597084653827,
+      "runMillis" : 9296,
+      "runnerCount" : 1,
+      "executionMode" : "BATCH",
+      "finalState" : "FINISHED"
+    } ],
+    "stageMilliseconds" : {
+      "streamsets-spark-basic-lib::com_streamsets_pipeline_spark_origin_dev_RawDataDOrigin" : 9296,
+      "streamsets-spark-basic-lib::com_streamsets_pipeline_spark_destination_dev_NullDTarget" : 9296
+    },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ {
+      "class" : "com.streamsets.datatransformer.usagestats.TransformerStatsBeanExtension",
+      "version" : "1.1",
+      "pipelineRunReports" : [ {
+        "hashedPipelineId" : "580d5ed5bebce736dde65751792a16de7de71008a9c09140e1086a343c5eb319",
+        "startTime" : 1597084653827,
+        "maxExecutors" : 4,
+        "maxExecutorCores" : 1,
+        "clusterType" : "LOCAL",
+        "engineRuns" : {
+          "class" : "com.streamsets.pipeline.spark.usagestats.report.SparkEngineRunReport",
+          "sparkTaskTimesSummary" : {
+            "taskTime" : 623,
+            "shuffleReadTime" : 0,
+            "shuffleWriteTime" : 4628119,
+            "serializationTime" : 5,
+            "deserializationTime" : 364,
+            "executorRunTime" : 211,
+            "gettingResultTime" : 0
+          },
+          "executorTime" : 982
+        }
+      } ]
+    } ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+      "firstUseOn" : 1596564074419,
+      "expiration" : 1599202800000,
+      "validSdcIds" : [ "7cac8108-d67c-11ea-80e3-414ee1f55860" ],
+      "additionalInfo" : {
+        "licenseType" : "INTERNAL",
+        "createdBy" : "dlo@streamsets.com",
+        "spark.maxExecutors" : "4",
+        "createdOn" : "1596564175534",
+        "productName" : "TRANSFORMER"
+      },
+      "valid" : true
+    }
+  }, {
+    "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+    "productName" : "transformer",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.16.0-SNAPSHOT",
+    "buildRepoSha" : "55b6de9b16ae38eba59e2fe21b206cce1b670835",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 18439748,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_242",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 8,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 26320488
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1597084735403,
+    "endTime" : 1597084758832,
+    "upTime" : 23427,
+    "activePipelines" : 0,
+    "pipelineMilliseconds" : 0,
+    "pipelineRunReports" : [ ],
+    "stageMilliseconds" : { },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ {
+      "class" : "com.streamsets.datatransformer.usagestats.TransformerStatsBeanExtension",
+      "version" : "1.1",
+      "pipelineRunReports" : [ ]
+    } ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+      "firstUseOn" : 1596564074419,
+      "expiration" : 1599202800000,
+      "validSdcIds" : [ "7cac8108-d67c-11ea-80e3-414ee1f55860" ],
+      "additionalInfo" : {
+        "licenseType" : "INTERNAL",
+        "createdBy" : "dlo@streamsets.com",
+        "spark.maxExecutors" : "4",
+        "createdOn" : "1596564175534",
+        "productName" : "TRANSFORMER"
+      },
+      "valid" : true
+    }
+  }, {
+    "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+    "productName" : "transformer",
+    "version" : "1.3",
+    "dataCollectorVersion" : "3.16.0-SNAPSHOT",
+    "buildRepoSha" : "55b6de9b16ae38eba59e2fe21b206cce1b670835",
+    "extraInfo" : {
+      "cloudProvider" : "UNKNOWN",
+      "sysVCores" : 0,
+      "sysMem" : 18439748,
+      "distributionChannel" : "docker",
+      "javaVersion" : "1.8.0_242",
+      "useCGroupMemorySet" : false,
+      "jvmCores" : 8,
+      "jvmMaxHeap" : 1037959168,
+      "jvmPeakMetaspaceUsed" : 26320488
+    },
+    "dpmEnabled" : false,
+    "startTime" : 1597084758832,
+    "endTime" : 1597084810512,
+    "upTime" : 0,
+    "activePipelines" : 0,
+    "pipelineMilliseconds" : 0,
+    "pipelineRunReports" : [ ],
+    "stageMilliseconds" : { },
+    "recordsOM" : -1,
+    "errorCodes" : { },
+    "createToPreview" : [ ],
+    "createToRun" : [ ],
+    "extensions" : [ {
+      "class" : "com.streamsets.datatransformer.usagestats.TransformerStatsBeanExtension",
+      "version" : "1.1",
+      "pipelineRunReports" : [ ]
+    } ],
+    "activationInfo" : {
+      "activationType" : "rsa-signed",
+      "sdcId" : "7cac8108-d67c-11ea-80e3-414ee1f55860",
+      "firstUseOn" : 1596564074419,
+      "expiration" : 1599202800000,
+      "validSdcIds" : [ "7cac8108-d67c-11ea-80e3-414ee1f55860" ],
+      "additionalInfo" : {
+        "licenseType" : "INTERNAL",
+        "createdBy" : "dlo@streamsets.com",
+        "spark.maxExecutors" : "4",
+        "createdOn" : "1596564175534",
+        "productName" : "TRANSFORMER"
+      },
+      "valid" : true
+    }
+  } ]
+}

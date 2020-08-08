@@ -19,6 +19,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.Files;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
@@ -36,6 +37,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -57,6 +59,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -74,6 +77,8 @@ public class TestStatsCollectorTask {
   private static final Map<String, Object> DEFAULT_SYS_INFO_MAP = ImmutableMap.of("cloudProvider", SysInfo.UNKNOWN);
   private static final String POST_TELEMETRY_URL = "https://fake-url.com/post/telemetry/here";
   private static final String SDC_313_STATS_JSON_FIXTURE = "/com/streamsets/datacollector/usagestats/sdc3.13.stats.json";
+  private static final String TRANSFORMER_315_STATS_JSON_FIXTURE = "/com/streamsets/datacollector/usagestats/transformer3.15.stats.json";
+  private static final String TRANSFORMER_315_STATS_JSON_SDC_ID = "7cac8108-d67c-11ea-80e3-414ee1f55860";
 
   private Runnable runnable;
   private HttpURLConnection[] uploadConnectionHolder = new HttpURLConnection[1];
@@ -1025,6 +1030,161 @@ public class TestStatsCollectorTask {
         new TypeReference<List<StatsBean>>(){});
     Assert.assertEquals(1, uploadedStats.size());
     Assert.assertEquals(5, uploadedStats.get(0).getActivePipelines());
+  }
+
+  @Test
+  public void testReportRawStatsArray() throws Exception {
+    // simulates uploading just the array of collected stats
+    String expectedSdcId = "expected-sdc-id";
+    long testTime = System.currentTimeMillis();
+    long periodStartTime = testTime - TimeUnit.HOURS.toMillis(1);
+    int netPipelineStarts = 5;
+
+    StatsBean statsBean = createStatsBeanForReportRawStatsTests(
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+
+    reportAndVerifyRawStats(OBJECT_MAPPER.writeValueAsString(ImmutableList.of(statsBean)),
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+  }
+
+  @Test
+  public void testReportRawStatsJson() throws Exception {
+    // simulates uploading a full stats.json (serialized StatsInfo)
+    String expectedSdcId = "expected-sdc-id";
+    long testTime = System.currentTimeMillis();
+    long periodStartTime = testTime - TimeUnit.HOURS.toMillis(1);
+    int netPipelineStarts = 7;
+
+    StatsBean statsBean = createStatsBeanForReportRawStatsTests(
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+
+    StatsInfo statsInfo = new StatsInfo(ImmutableList.of(new TestModelStatsExtension()));
+    statsInfo.getCollectedStats().add(statsBean);
+
+    reportAndVerifyRawStats(OBJECT_MAPPER.writeValueAsString(statsInfo),
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+  }
+
+  @Test
+  public void testReportRawStatsFromApiResponse() throws Exception {
+    // simulates uploading a the response to the system/stats API endpoint
+    String expectedSdcId = "expected-sdc-id";
+    long testTime = System.currentTimeMillis();
+    long periodStartTime = testTime - TimeUnit.HOURS.toMillis(1);
+    int netPipelineStarts = 11;
+
+    StatsBean statsBean = createStatsBeanForReportRawStatsTests(
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+
+    StatsInfo statsInfo = new StatsInfo(ImmutableList.of(new TestModelStatsExtension()));
+    statsInfo.getCollectedStats().add(statsBean);
+
+    Map<String, Object> restResponseMap = ImmutableMap.of(
+        "opted", true,
+        "active", true,
+        "stats", statsInfo
+    );
+
+    reportAndVerifyRawStats(OBJECT_MAPPER.writeValueAsString(restResponseMap),
+        expectedSdcId, periodStartTime, testTime, netPipelineStarts);
+  }
+
+  @Test
+  public void testReportTransformerRawStats() throws Exception {
+    // simulates uploading transformer stats, which has extension types not known to DataCollector
+    long testTime = System.currentTimeMillis();
+
+    String rawStats = Files.asCharSource(
+        new File(this.getClass().getResource(TRANSFORMER_315_STATS_JSON_FIXTURE).getPath()), StandardCharsets.UTF_8)
+        .read();
+
+    String reportedRawStats = reportAndVerifyRawStatsBasicCalls(rawStats, TRANSFORMER_315_STATS_JSON_SDC_ID);
+
+    // Spot check that we didn't lose any info from the unknown extension class
+    List<Map<String, Object>> reportedRawList = OBJECT_MAPPER.readValue(reportedRawStats,
+        new TypeReference<List<Map<String, Object>>>(){});
+    Assert.assertEquals(4, reportedRawList.size());
+    Map<String, Object> interestingEntry = reportedRawList.get(1);
+    Assert.assertTrue(interestingEntry.containsKey("extensions"));
+    List<Map<String, Object>> extensions = (List<Map<String, Object>>) interestingEntry.get("extensions");
+    Assert.assertEquals(1, extensions.size());
+    Map<String, Object> extension = extensions.get(0);
+    Assert.assertEquals("com.streamsets.datatransformer.usagestats.TransformerStatsBeanExtension",
+        extension.get("class"));
+    List<Map<String, Object>> pipelineRunReports = (List<Map<String, Object>>) extension.get("pipelineRunReports");
+    Assert.assertEquals(1, pipelineRunReports.size());
+    Assert.assertEquals("LOCAL", pipelineRunReports.get(0).get("clusterType"));
+  }
+
+  @Test
+  public void testReportRawStatsOptedOutError() throws Exception {
+    String rawStats = OBJECT_MAPPER.writeValueAsString(ImmutableMap.of(
+        "opted", false,
+        "active", false
+    ));
+    try {
+      reportAndVerifyRawStatsBasicCalls(rawStats, null);
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().startsWith("No stats provided"));
+    }
+  }
+
+  private StatsBean createStatsBeanForReportRawStatsTests(String sdcId, long startTime, long endTime, int netPipelineStarts) {
+    TestStatsBean.TestModelStatsBeanExtension beanExtension = new TestStatsBean.TestModelStatsBeanExtension();
+    beanExtension.setNetPipelineStarts(netPipelineStarts);
+
+    StatsBean statsBean = new StatsBean();
+    statsBean.setSdcId(sdcId);
+    statsBean.setStartTime(startTime);
+    statsBean.setEndTime(endTime);
+    statsBean.setExtensions(ImmutableList.of(beanExtension));
+
+    return statsBean;
+  }
+
+  private void reportAndVerifyRawStats(String rawStats, String expectedSdcId, long expectedStartTime,
+      long expectedEndTime, int expectedNetPipelineStarts) throws Exception {
+    String rawOutput = reportAndVerifyRawStatsBasicCalls(rawStats, expectedSdcId);
+    List<StatsBean> reportedBeans = OBJECT_MAPPER.readValue(rawOutput, new TypeReference<List<StatsBean>>(){});
+    Assert.assertEquals(1, reportedBeans.size());
+    StatsBean reportedBean = reportedBeans.get(0);
+    Assert.assertEquals(expectedSdcId, reportedBean.getSdcId());
+    Assert.assertEquals(expectedStartTime, reportedBean.getStartTime());
+    Assert.assertEquals(expectedEndTime, reportedBean.getEndTime());
+    Assert.assertEquals(1, reportedBean.getExtensions().size());
+    Assert.assertTrue(reportedBean.getExtensions().get(0) instanceof TestStatsBean.TestModelStatsBeanExtension);
+    TestStatsBean.TestModelStatsBeanExtension reportedBeanExtension =
+        (TestStatsBean.TestModelStatsBeanExtension) reportedBean.getExtensions().get(0);
+    Assert.assertEquals(expectedNetPipelineStarts, reportedBeanExtension.getNetPipelineStarts());
+  }
+
+  private String reportAndVerifyRawStatsBasicCalls(String rawStats, String expectedSdcId) throws Exception {
+    File testDir = createTestDir();
+
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("v1");
+
+    String sdcId = "should-not-be-used";
+    RuntimeInfo runtimeInfo = mockRuntimeInfo(sdcId, testDir);
+
+    Configuration config = new Configuration();
+
+    AbstractStatsCollectorTask task = mockStatsCollectorTask(buildInfo, runtimeInfo, null, config, null, true);
+
+    task.reportStats(null, rawStats);
+
+    ArgumentCaptor<Object> getUrlDataCaptor = ArgumentCaptor.forClass(Object.class);
+    Mockito.verify(task).postToGetTelemetryUrl(Mockito.any(), getUrlDataCaptor.capture());
+
+    Map<String, String> getUrlData = (Map<String, String>) getUrlDataCaptor.getValue();
+    Assert.assertEquals(
+        ImmutableMap.of(
+            AbstractStatsCollectorTask.GET_TELEMETRY_URL_ARG_CLIENT_ID, expectedSdcId,
+            AbstractStatsCollectorTask.GET_TELEMETRY_URL_ARG_EXTENSION, AbstractStatsCollectorTask.GET_TELEMETRY_URL_ARG_EXTENSION_JSON),
+        getUrlData);
+
+    ByteArrayOutputStream outputStream = (ByteArrayOutputStream) uploadConnectionHolder[0].getOutputStream();
+    return outputStream.toString(StandardCharsets.UTF_8.name());
   }
 
   @Test

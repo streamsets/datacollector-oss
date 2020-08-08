@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.client.api;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.client.ApiClient;
 import com.streamsets.datacollector.client.ApiException;
 import com.streamsets.datacollector.client.util.TestUtil;
@@ -67,6 +68,7 @@ public class TestSystemApi {
       testGetBuildInfo(systemApi);
       testGetUserInfo(systemApi);
       testGetServerTime(systemApi);
+      testGetStats(systemApi);
       testGetThreadsDump(systemApi);
 
       TestUtil.stopServer(server);
@@ -121,6 +123,15 @@ public class TestSystemApi {
     Map<String, Object> serverTime = systemApi.getServerTime();
     Assert.assertNotNull(serverTime);
     Assert.assertNotNull(serverTime.get("serverTime"));
+  }
+
+  public void testGetStats(SystemApi systemApi) throws ApiException {
+    Map<String, Object> stats = systemApi.getStats();
+    Assert.assertNotNull(stats);
+    Assert.assertEquals(ImmutableMap.of(
+        "opted", false,
+        "active", false
+    ), stats);
   }
 
   public void testGetThreadsDump(SystemApi systemApi) throws ApiException  {

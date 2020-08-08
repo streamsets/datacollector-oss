@@ -59,6 +59,7 @@ import com.streamsets.datacollector.client.cli.command.system.EnableDPMCommand;
 import com.streamsets.datacollector.client.cli.command.system.InfoCommand;
 import com.streamsets.datacollector.client.cli.command.system.ServerTimeCommand;
 import com.streamsets.datacollector.client.cli.command.system.ShutdownCommand;
+import com.streamsets.datacollector.client.cli.command.system.StatsCommand;
 import com.streamsets.datacollector.client.cli.command.system.ThreadsCommand;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Help;
@@ -134,6 +135,7 @@ public class DataCollector {
             CurrentUserCommand.class,
             ServerTimeCommand.class,
             ShutdownCommand.class,
+            StatsCommand.class,
             ThreadsCommand.class,
             EnableDPMCommand.class,
             DisableDPMCommand.class

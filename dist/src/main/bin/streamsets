@@ -28,6 +28,7 @@ done
 
 BASEDIR=`dirname ${PRG}`
 BASEDIR=`cd ${BASEDIR}/..;pwd`
+ORIG_PWD="$PWD"
 cd ${BASEDIR}
 
 while test $# -gt 0; do
@@ -42,6 +43,7 @@ while test $# -gt 0; do
       ;;
     cli)
       shift
+      cd ${ORIG_PWD} # needed so passing in file names is sensible
       exec ${BASEDIR}/libexec/_cli "$@"
       ;;
     jks-cs)
@@ -50,6 +52,11 @@ while test $# -gt 0; do
       echo "WARNING: Sub-command jks-cs is deprecated, use 'streamsets stagelib-cli jks-credentialstore'"
       echo ""
       exec ${BASEDIR}/libexec/_stagelib_cli jks-credentialstore "$@"
+      ;;
+    telemetry)
+      shift
+      cd ${ORIG_PWD} # needed so passing in file names is sensible
+      exec ${BASEDIR}/libexec/_telemetry "$@"
       ;;
     sch)
       shift

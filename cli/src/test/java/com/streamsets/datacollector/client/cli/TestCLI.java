@@ -82,6 +82,7 @@ public class TestCLI {
         testSystemInfoCommand(authType);
         testSystemCurrentUserCommand(authType);
         testSystemServerTimeCommand(authType);
+        // TODO testSystemStatsCommand if we ever re-enable these tests
         testSystemThreadsCommand(authType);
 
         testStoreListCommand(authType);
