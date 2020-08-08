@@ -327,12 +327,14 @@ public class PipelineConfigBean implements Stage {
       type = ConfigDef.Type.MODEL,
       label = "Error Records",
       displayPosition = 90,
+      defaultValue = TRASH_TARGET,
       group = "BAD_RECORDS",
       dependsOn = "executionMode",
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING", "EDGE", "EMR_BATCH"}
   )
   @ValueChooserModel(ErrorHandlingChooserValues.class)
-  public String badRecordsHandling;
+  public String badRecordsHandling = TRASH_TARGET;
 
   @ConfigDef(
       required = true,
