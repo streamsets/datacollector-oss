@@ -43,8 +43,6 @@ import java.time.Clock;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -261,19 +259,19 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
       if (!context.isPreview() && commitQueueUrlsToMessages.size() > 0) {
         for (String queueUrl : commitQueueUrlsToMessages.keySet()) {
           try {
-            List<DeleteMessageBatchRequestEntry> deleteRequestEntries = new LinkedList<>();
+            Map<String, DeleteMessageBatchRequestEntry> deleteRequestEntries = new HashMap<>();
             for (Message message : commitQueueUrlsToMessages.get(queueUrl)) {
-              deleteRequestEntries.add(new DeleteMessageBatchRequestEntry()
+              deleteRequestEntries.put(message.getMessageId(), new DeleteMessageBatchRequestEntry()
                   .withReceiptHandle(message.getReceiptHandle())
                   .withId(message.getMessageId())
               );
               if (deleteRequestEntries.size() >= numMessagesPerRequest) {
-                sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries);
+                sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
                 deleteRequestEntries.clear();
               }
             }
             if (!deleteRequestEntries.isEmpty()) {
-              sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries);
+              sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
             }
           } catch (InterruptedException e) {
             LOG.error(
@@ -298,7 +296,7 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
   }
 
   private void sendDeleteMessageBatchRequest(
-      String queueUrl, List<DeleteMessageBatchRequestEntry> deleteRequestEntries
+      String queueUrl, Collection<DeleteMessageBatchRequestEntry> deleteRequestEntries
   ) throws InterruptedException {
     DeleteMessageBatchRequest deleteRequest = new DeleteMessageBatchRequest()
         .withQueueUrl(queueUrl)
