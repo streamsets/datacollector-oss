@@ -336,23 +336,38 @@ public class RemoteDataCollector implements DataCollector {
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction,
       Map<String, ConnectionConfiguration> connections
-  ) throws PipelineException {
-    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
-    previewer.validateConfigs(timeoutMillis);
+  ) {
+    String previewerId = null;
+    try {
+      previewerId = GroupsInScope.executeIgnoreGroups(() -> {
+        final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
+        previewer.validateConfigs(timeoutMillis);
 
-    if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {
-      previewer.start(
-          batches,
-          batchSize,
-          skipTargets,
-          skipLifecycleEvents,
-          stopStage,
-          stagesOverride,
-          timeoutMillis,
-          testOrigin
-      );
+        if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR, PreviewStatus.INVALID).contains(previewer.getStatus())) {
+          previewer.start(
+              batches,
+              batchSize,
+              skipTargets,
+              skipLifecycleEvents,
+              stopStage,
+              stagesOverride,
+              timeoutMillis,
+              testOrigin
+          );
+        }
+        return previewer.getId();
+      });
+    } catch (Exception ex) {
+      LOG.warn(Utils.format("Error while previewing pipeline: {} is {}", name, ex), ex);
+      if (ex.getCause() != null) {
+        ExceptionUtils.throwUndeclared(ex.getCause());
+      } else {
+        ExceptionUtils.throwUndeclared(ex);
+      }
+    } finally {
+      MDC.clear();
     }
-    return previewer.getId();
+    return previewerId;
   }
 
   static class StopAndDeleteCallable implements Callable<AckEvent> {
