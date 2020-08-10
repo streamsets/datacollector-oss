@@ -1246,6 +1246,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   public ConnectionDefinition getConnection(String library, String type) {
-    return connectionMap.get(createKey(library, type));
+    return connectionMap.get(type);
   }
 }
