@@ -35,7 +35,8 @@ public class PipelineCreator {
   private final String sdcVersion;
   private final String sdcId;
   private final Supplier<StageConfiguration> defaultStatsAggrInstanceSupplier;
-  private final Supplier<StageConfiguration> defaultTestOriginStageInstance;
+  private final Supplier<StageConfiguration> defaultTestOriginStageInstanceSupplier;
+  private final Supplier<StageConfiguration> defaultErrorStageInstanceSupplier;
 
 
   public PipelineCreator(
@@ -44,14 +45,16 @@ public class PipelineCreator {
       String sdcVersion,
       String sdcId,
       Supplier<StageConfiguration> defaultStatsAggrInstanceSupplier,
-      Supplier<StageConfiguration> defaultTestOriginStageInstance
+      Supplier<StageConfiguration> defaultTestOriginStageInstanceSupplier,
+      Supplier<StageConfiguration> defaultErrorStageInstanceSupplier
   ) {
     this.pipelineDefinition = pipelineDefinition;
     this.schemaVersion = schemaVersion;
     this.sdcVersion = sdcVersion;
     this.sdcId = sdcId;
     this.defaultStatsAggrInstanceSupplier = defaultStatsAggrInstanceSupplier;
-    this.defaultTestOriginStageInstance = defaultTestOriginStageInstance;
+    this.defaultTestOriginStageInstanceSupplier = defaultTestOriginStageInstanceSupplier;
+    this.defaultErrorStageInstanceSupplier = defaultErrorStageInstanceSupplier;
   }
 
   public PipelineConfiguration create(String user, String pipelineId, String pipelineTitle, String description, Date date) {
@@ -83,11 +86,11 @@ public class PipelineCreator {
           Collections.emptyMap(),
           null,
           Collections.emptyList(),
-          null,
+          defaultErrorStageInstanceSupplier.get(),
           defaultStatsAggrInstanceSupplier.get(),
           Collections.emptyList(),
           Collections.emptyList(),
-          defaultTestOriginStageInstance.get()
+          defaultTestOriginStageInstanceSupplier.get()
       );
 
       pipeline.setPipelineInfo(info);

@@ -86,8 +86,10 @@ public class PipelineConfigBean implements Stage {
   public static final String STATS_AGGREGATOR_DEFAULT = "streamsets-datacollector-basic-lib" +
       "::com_streamsets_pipeline_stage_destination_devnull_StatsNullDTarget::1";
 
-  private static final String TRASH_TARGET = "streamsets-datacollector-basic-lib" +
-      "::com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget::1";
+  public static final String TRASH_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
+  public static final String TRASH_STAGE_NAME = "com_streamsets_pipeline_stage_destination_devnull_ToErrorNullDTarget";
+  public static final String TRASH_STAGE_VERSION = "1";
+  private static final String TRASH_TARGET =  TRASH_LIBRARY_NAME + "::" + TRASH_STAGE_NAME + "::" + TRASH_STAGE_VERSION;
 
   public static final String DEFAULT_TEST_ORIGIN_LIBRARY_NAME = "streamsets-datacollector-dev-lib";
 

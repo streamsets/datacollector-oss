@@ -128,7 +128,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         buildInfo.getVersion(),
         runtimeInfo.getId(),
         this::getDefaultStatsAggrStageInstance,
-        this::getDefaultTestOriginStageInstance
+        this::getDefaultTestOriginStageInstance,
+        this::getDefaultErrorStageInstance
     );
     this.eventListenerManager = eventListenerManager;
     this.encryptingCredentialHandler = encryptingCredentialHandler;
@@ -792,6 +793,16 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         PipelineConfigBean.DEFAULT_STATS_AGGREGATOR_STAGE_NAME,
          "statsAggregatorStageInstance",
         "Stats Aggregator -"
+    );
+  }
+
+  private StageConfiguration getDefaultErrorStageInstance() {
+    return PipelineConfigurationUtil.getStageConfigurationWithDefaultValues(
+        stageLibrary,
+        PipelineConfigBean.TRASH_LIBRARY_NAME,
+        PipelineConfigBean.TRASH_STAGE_NAME,
+        "errorStageStageInstance",
+        "Error -"
     );
   }
 
