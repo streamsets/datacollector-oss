@@ -1024,7 +1024,7 @@ angular.module('dataCollectorApp.common')
             outputLane: stageInstance.outputLanes[0],
             predicate: 'default'
           }];
-        } else if (configDefinition.model.modelType === 'LIST_BEAN') {
+        } else if (configDefinition.model.modelType === 'LIST_BEAN' && !config.value) {
           var complexFieldObj = {};
           angular.forEach(configDefinition.model.configDefinitions, function (complexFiledConfigDefinition) {
             var complexFieldConfig = self.setDefaultValueForConfig(stage, complexFiledConfigDefinition, stageInstance);
@@ -1040,7 +1040,7 @@ angular.module('dataCollectorApp.common')
       } else if (configDefinition.type === 'BOOLEAN' && config.value === undefined) {
         config.value = false;
       } else if (configDefinition.type === 'LIST' && !config.value) {
-        config.value = [];
+        config.value = [''];
       } else if (configDefinition.type === 'MAP' && !config.value) {
         config.value = [];
       }
