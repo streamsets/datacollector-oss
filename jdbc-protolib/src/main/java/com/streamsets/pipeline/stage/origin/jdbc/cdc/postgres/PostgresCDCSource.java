@@ -22,14 +22,16 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
-import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import org.postgresql.replication.LogSequenceNumber;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -37,13 +39,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
-import org.postgresql.replication.LogSequenceNumber;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
@@ -59,6 +61,10 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
   private final PostgresCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
   private PostgresCDCWalReceiver walReceiver = null;
+  private BlockingQueue<PostgresWalRecord> cdcQueue;
+  private Map<String, Object> cdcMetrics;
+  private SafeScheduledExecutorService cdcExecutor;
+  private Future<?> cdcGeneratorFuture;
 
   /**
    * The initial offset according the the configuration. Used only for the first run of the pipeline (aka when
@@ -159,12 +165,12 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
     } catch (StageException | InterruptedException | SQLException  | TimeoutException e) {
       LOG.error("Error while connecting to DB", e);
       issues.add(getContext()
-              .createConfigIssue(
-                  Groups.JDBC.name(),
-                  CONNECTION_STR,
-                  JdbcErrors.JDBC_00,
-                  e.toString()
-              )
+          .createConfigIssue(
+              Groups.JDBC.name(),
+              CONNECTION_STR,
+              JdbcErrors.JDBC_00,
+              e.toString()
+          )
       );
 
       return issues;
@@ -178,13 +184,20 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
               ex.toString()
           )
       );
+    }
 
+    if (issues.isEmpty()) {
+      this.cdcQueue = new LinkedBlockingQueue<>(configBean.generatorQueueMaxSize);
+      this.cdcExecutor = new SafeScheduledExecutorService(1, "Postgres CDC Generator");
+      this.cdcGeneratorFuture = cdcExecutor.schedule(getCdcReadRunnable(), 1, TimeUnit.SECONDS);
+      this.cdcMetrics = getContext().createGauge("CDC Metrics").getValue();
+      updateCDCMetrics();
     }
 
     return issues;
   }
 
-  private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime, boolean isNewRecordNull) {
+  private boolean isBatchDone(int currentBatchSize, int maxBatchSize, long startTime) {
     return getContext().isStopped() ||
         currentBatchSize >= maxBatchSize || // batch is full
         System.currentTimeMillis() - startTime >= configBean.maxBatchWaitTime;
@@ -194,6 +207,33 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
   public void commit(String offset) throws StageException {
     //we simply ask the wal receiver to commit its current position which matches with the offset.
     walReceiver.commitCurrentOffset();
+  }
+
+  private Runnable getCdcReadRunnable() {
+    return () -> {
+      try {
+        while (!getContext().isStopped()) {
+          PostgresWalRecord record = getWalReceiver().read();
+          if (record != null) {
+            cdcQueue.put(record);
+            updateCDCMetrics();
+          } else {
+            // No data, wait for polling
+            Thread.sleep(TimeUnit.SECONDS.toMillis(configBean.pollInterval));
+          }
+        }
+      } catch (InterruptedException e) {
+        LOG.warn("Interrupted generator thread during polling");
+      } catch (Exception e) {
+        LOG.error("Error from CDC generator", e);
+        throw new RuntimeException(e);
+      }
+    };
+  }
+
+  private void updateCDCMetrics() {
+    cdcMetrics.put("Queue Size",  cdcQueue.size());
+    cdcMetrics.put("Queue Capacity", cdcQueue.remainingCapacity());
   }
 
   @Override
@@ -210,25 +250,46 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
         !isBatchDone(
             currentBatchSize,
             maxBatchSize,
-            startTime,
-            postgresWalRecord == null
+            startTime
         )
     ) {
 
-      postgresWalRecord = getWalReceiver().read();
+      if (cdcGeneratorFuture.isDone()) {
+        try {
+          cdcGeneratorFuture.get();
+          return lastSourceOffset;
+        } catch (Exception e) {
+          LOG.error("Error during generator thread", e);
+          throw new StageException(JdbcErrors.JDBC_607, e.getMessage());
+        }
+      }
+
+      long timeElapsed = System.currentTimeMillis() - startTime;
+      long waitTimeMillis = Math.max(1000, configBean.maxBatchWaitTime - timeElapsed);
+
+      try {
+        postgresWalRecord = cdcQueue.poll(waitTimeMillis, TimeUnit.MILLISECONDS);
+      } catch (InterruptedException e) {
+        LOG.warn("Interrupted during queue cdc poll");
+        Thread.currentThread().interrupt();
+        return lastSourceOffset;
+      }
 
       if (postgresWalRecord == null) {
         LOG.debug("Received null postgresWalRecord");
-        ThreadUtil.sleep((long) configBean.pollInterval * 1000);
-      }
-      else {
+      } else {
+        //sets next LSN - to be flushed at end of this batch
+        getWalReceiver().setNextLSN(LogSequenceNumber.valueOf(postgresWalRecord.getNextLSN()));
+        updateCDCMetrics();
+
         // filter out non data records or old data records
         PostgresWalRecord dataRecord = WalRecordFilteringUtils.filterRecord(postgresWalRecord, this);
         if (dataRecord == null) {
           LOG.debug("Received CDC with LSN {} from stream value filtered out", postgresWalRecord.getLsn().asString());
         } else {
-         String recordLsn = dataRecord.getLsn().asString();
-          LOG.debug("Received CDC with LSN {} from stream value - {}", recordLsn, dataRecord.getChanges());
+
+          String recordLsn = dataRecord.getLsn().asString();
+          LOG.debug("Received CDC with LSN {} from stream value", recordLsn);
 
           if (LOG.isTraceEnabled()) {
             LOG.trace("Valid CDC: {} ", dataRecord);
@@ -350,6 +411,18 @@ public class PostgresCDCSource extends BaseSource implements OffsetCommitter {
 
   @Override
   public void destroy() {
+    if (cdcGeneratorFuture != null) {
+      cdcGeneratorFuture.cancel(true);
+    }
+    if (cdcExecutor != null) {
+      cdcExecutor.shutdown();
+      try {
+        cdcExecutor.awaitTermination(5, TimeUnit.MINUTES);
+      } catch (InterruptedException e) {
+        LOG.warn("Interrupted when waiting for CDC Executor to finish");
+        Thread.currentThread().interrupt();
+      }
+    }
     if (getWalReceiver() != null) {
       if (configBean.removeSlotOnClose) {
         try {

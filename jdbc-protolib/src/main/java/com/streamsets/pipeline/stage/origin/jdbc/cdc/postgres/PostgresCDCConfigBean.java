@@ -215,13 +215,26 @@ public class PostgresCDCConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Poll Interval",
-      description = "Interval between checking for CDC updates. Should be at least 1/3 of configured timeout in postgres.",
+      description = "Interval between checking for CDC updates when no data.",
       displayPosition = 140,
       group = "CDC",
       elDefs = TimeEL.class,
-      defaultValue = "${10 * SECONDS}"
+      defaultValue = "${1 * SECONDS}"
   )
   public int pollInterval;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      label = "CDC Generator Queue Size",
+      description = "CDC Generator Queue Size.",
+      displayPosition = 150,
+      group = "CDC",
+      min = 1,
+      max = Integer.MAX_VALUE,
+      defaultValue = "500"
+  )
+  public int generatorQueueMaxSize;
 
   //HIDDEN
   @ConfigDef(

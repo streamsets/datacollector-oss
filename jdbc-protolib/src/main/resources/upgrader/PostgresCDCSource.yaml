@@ -24,3 +24,9 @@ upgrades:
       - setConfig:
           name: postgresCDCConfigBean.maxBatchWaitTime
           value: 15000
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: postgresCDCConfigBean.generatorQueueMaxSize
+          value: ${value("postgresCDCConfigBean.baseConfigBean.maxBatchSize") * 5}
+

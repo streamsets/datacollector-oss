@@ -80,7 +80,6 @@ public class PostgresCDCWalReceiver {
   private List<SchemaAndTable> schemasAndTables;
   PostgresCDCConfigBean configBean;
   private HikariPoolConfigBean hikariConfigBean;
-
   private volatile LogSequenceNumber nextLSN;
   private final Object sendUpdatesMutex = new Object();
   private SafeScheduledExecutorService heartBeatSender = new SafeScheduledExecutorService(1, "Postgres Heart Beat Sender");
@@ -137,7 +136,7 @@ public class PostgresCDCWalReceiver {
     }
     if (isThereAFilter() && schemasAndTables.isEmpty()) {
       issues.add(getContext().createConfigIssue(Groups.CDC.name(),
-                  "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
+          "configBean.baseConfigBean.schemaTableConfigs", JdbcErrors.JDBC_66));
     }
     return Optional.ofNullable(issues);
   }
@@ -482,16 +481,15 @@ public class PostgresCDCWalReceiver {
 
   public PostgresWalRecord read() {
     PostgresWalRecord ret = null;
+    ByteBuffer buffer;
     try {
-      ByteBuffer buffer = readNonBlocking();
+      buffer = readNonBlocking();
       if(buffer != null) {
         ret = new PostgresWalRecord(
             buffer,
             getCurrentLSN(),
             configBean.decoderValue
         );
-        //sets next LSN
-        setNextLSN(LogSequenceNumber.valueOf(ret.getNextLSN()));
       } else {
         LOG.debug("Buffer null");
       }
@@ -513,7 +511,7 @@ public class PostgresCDCWalReceiver {
     return jdbcUtil;
   }
 
-    public Context getContext() {
-        return context;
-    }
+  public Context getContext() {
+    return context;
+  }
 }

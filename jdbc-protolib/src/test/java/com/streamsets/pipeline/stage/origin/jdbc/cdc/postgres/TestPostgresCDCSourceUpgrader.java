@@ -52,6 +52,30 @@ public class TestPostgresCDCSourceUpgrader {
     Config configValue = configs.get(0);
     Assert.assertEquals("postgresCDCConfigBean.maxBatchWaitTime", configValue.getName());
     Assert.assertEquals(15000, configValue.getValue());
-
   }
+
+  @Test
+  public void testV2ToV3() {
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("postgresCDCConfigBean.baseConfigBean.maxBatchSize", 500));
+
+    configs = postgresCDCSourceUpgrader.upgrade(configs, context);
+
+    Assert.assertEquals(2, configs.size());
+
+    for (Config config : configs) {
+      if (config.getName().equals("postgresCDCConfigBean.baseConfigBean.maxBatchSize")) {
+        Assert.assertEquals(500, config.getValue());
+      } else if (config.getName().equals("postgresCDCConfigBean.generatorQueueMaxSize")) {
+        Assert.assertEquals("2500", config.getValue());
+      } else {
+        Assert.fail("Unexpected config :" + config.getName());
+      }
+    }
+  }
+
 }

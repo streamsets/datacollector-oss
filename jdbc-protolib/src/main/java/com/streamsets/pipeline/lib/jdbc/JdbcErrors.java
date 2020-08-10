@@ -168,6 +168,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_603("Error while retrieving LogMiner metadata: {}"),
   JDBC_604("Failed to find a valid SCN >= {}: {}"),
   JDBC_605("Error while querying the current database time: {}."),
+  JDBC_607("CDC Generator is not active. Reason : {}"),
   ;
 
   private final String msg;

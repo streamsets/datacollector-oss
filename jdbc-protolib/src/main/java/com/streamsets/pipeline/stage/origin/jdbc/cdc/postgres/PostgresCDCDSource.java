@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "PostgreSQL CDC Client",
     description = "Origin that reads change events from a PostgreSQL database",
     icon = "rdbms.png",
@@ -39,7 +39,7 @@ import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 @GenerateResourceBundle
 @ConfigGroups(Groups.class)
 @HideConfigs({
-  "hikariConf.autoCommit",
+    "hikariConf.autoCommit",
     "postgresCDCConfigBean.baseConfigBean.caseSensitive",
     "postgresCDCConfigBean.baseConfigBean.changeTypes",
     "postgresCDCConfigBean.parseQuery",
