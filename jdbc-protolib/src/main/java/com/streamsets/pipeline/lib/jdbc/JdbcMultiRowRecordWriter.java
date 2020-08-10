@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.Stage.Context;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
@@ -159,7 +160,7 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
         processQueue(queue, errorRecords, connection, maxRowsPerBatch, prevOpCode);
 
         if (!queue.isEmpty()) {
-          throw new IllegalStateException("Queue processed, but was not empty upon completion.");
+          throw new IllegalStateException(Utils.format("Queue processed, but was not empty upon completion ({} remaining items).", queue.size()));
         }
 
         queue.add(record);

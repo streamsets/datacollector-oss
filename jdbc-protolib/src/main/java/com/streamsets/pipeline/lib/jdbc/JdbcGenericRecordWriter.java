@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage.Context;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import org.apache.commons.lang3.tuple.Pair;
@@ -161,7 +162,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         processQueue(queue, errorRecords, connection, prevOpCode, perRecord);
 
         if (!queue.isEmpty()) {
-          throw new IllegalStateException("Queue processed, but was not empty upon completion.");
+          throw new IllegalStateException(Utils.format("Queue processed, but was not empty upon completion ({} remaining items).", queue.size()));
         }
 
         queue.add(Pair.of(record, columnsToParameters));
