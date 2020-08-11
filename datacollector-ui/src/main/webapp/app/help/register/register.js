@@ -106,7 +106,7 @@ angular
       operationDone: false,
       operationInProgress: false,
       activationInfo: activationInfo,
-      activationKeyFilledFromURL: Boolean(getActivationKeyFromURL()),
+      showEmailSent: !getActivationKeyFromURL() && activationInfo.info && activationInfo.info.expiration === 0,
       activationStep: getInitialActivationStep(activationInfo),
       activationData: {
         activationText: '',
@@ -153,6 +153,11 @@ angular
         $scope.activationStep = 1;
       },
 
+      goToKeyEntry: function() {
+        $scope.showEmailSent = false;
+        $scope.activationStep = 2;
+      },
+
       sendRegistration: function() {
         $scope.operationInProgress = true;
         api.externalRegistration.sendRegistration(
@@ -170,11 +175,12 @@ angular
           // $location.protocol() + '://' + $location.host() + ':' + $location.port()
         ).then(function(res) {
           $scope.operationInProgress = false;
+          $scope.showEmailSent = true;
           $scope.activationStep = 2;
         }, function(err) {
           $scope.operationInProgress = false;
           if (err.data === 'Error: Too many attempts') {
-            $scope.common.errors = ['You seem to be having trouble registering, and you will need to wait at least an hour before trying again. ' + 
+            $scope.common.errors = ['You seem to be having trouble registering, and you will need to wait at least an hour before trying again. ' +
               'If you are a customer, please reach out to support@streamsets.com. Otherwise, community support options can be found at ' +
               'https://streamsets.com/community/'];
           } else {
@@ -232,7 +238,7 @@ angular
     previouslyValid = activationInfo.info.valid;
     if (getInitialActivationStep(activationInfo) === 1) {
       activationUpdateInterval = $interval(function() {
-        if ($scope.activationStep === 2) {
+        if ($scope.activationStep === 2 && $scope.showEmailSent) {
           api.activation.getActivation().then(function(res) {
             var newActivationInfo = res.data;
             if (previouslyValid) {
@@ -247,7 +253,7 @@ angular
             }
           });
         }
-      }, 2000);      
+      }, 2000);
     }
 
     $scope.$on('$destroy', function() {
