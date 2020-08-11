@@ -136,7 +136,8 @@ public abstract class ExtendedFormatParser extends LogCharDataParser {
       value = ext.substring(index, m.start());
       index = m.end();
       int lastSepIndex = value.lastIndexOf(attrSeparator);
-      if (lastSepIndex > 0) {
+      // lastSepIndex is zero when value is empty
+      if (lastSepIndex >= 0) {
         String temp = value.substring(0, lastSepIndex).trim();
         putLabelIntoAppropriateMap(labelMap, extMap, key, temp);
         key = value.substring(lastSepIndex + offset).trim();
