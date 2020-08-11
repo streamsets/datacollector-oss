@@ -54,7 +54,7 @@ public class HBaseDTarget extends DTarget {
       type = ConfigDef.Type.STRING,
       defaultValue = "",
       label = "Row Key",
-      description = "Field path row key",
+      description = "Field path for the field in the record that acts as the row key in the table",
       displayPosition = 50,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE")
@@ -76,7 +76,7 @@ public class HBaseDTarget extends DTarget {
       type = ConfigDef.Type.MODEL,
       defaultValue = "",
       label = "Fields",
-      description = "Column names, their values and storage type",
+      description = "Map record fields to table columns",
       displayPosition = 70,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "HBASE")
@@ -97,7 +97,7 @@ public class HBaseDTarget extends DTarget {
   @ConfigDef(required = false,
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
-    label = "Implicit field mapping",
+    label = "Implicit Field Mapping",
     description = "If set, field paths will be implicitly mapped to HBase columns; " + "E.g record field cf:a will be inserted"
       + " in the given HBase table with column family 'cf' and qualifier 'a'",
     displayPosition = 90,
