@@ -19,37 +19,44 @@
  */
 
 angular.module('dataCollectorApp.common')
-  .factory('activationTracking', function(tracking, api, configuration, trackingEvent) {
+  .factory('activationTracking', function(tracking, api, configuration, trackingEvent, $q) {
     var activationTracking = {};
 
     activationTracking.trackActivationEvent = function(activationInfo, previousActivationInfo) {
       // Stats opt in may be changed by activation, so update it
-      api.system.getStats().then(function(res) {
-        configuration.setAnalyticsEnabled(res.data.active);
-        var trackingData = {};
-        var info = previousActivationInfo.info;
-        trackingData['Previous Expiration Date'] = info.expiration;
-        trackingData['Previous Valid Activation'] = info.valid;
-        trackingData['Basic Stages Only'] = info.valid && info.expiration === 0;
-        api.pipelineAgent.getPipelinesCount().then(function(res) {
-          if (res.data) {
-            trackingData['Pipeline Count'] = res.data.count;
-          }
-        }).catch(function(err) {
-          // If permission error happens, we can assume 0
-          trackingData['Pipeline Count'] = 0;
-        }).finally(function() {
-          tracking.mixpanel.track(trackingEvent.ACTIVATION, trackingData);
-          tracking.mixpanel.people.set({'$email': activationInfo.info.userInfo});
-          var additionalInfo = activationInfo.info.additionalInfo;
-          var firstName = additionalInfo['user.firstName'];
-          var lastName = additionalInfo['user.lastName'];
-          tracking.mixpanel.people.set({
-            '$first_name': firstName,
-            '$last_name': lastName,
-            '$name': firstName + ' ' + lastName,
-            'Company': additionalInfo['user.company']
-          });
+      var info = previousActivationInfo.info;
+      var trackingData = {};
+      trackingData['Previous Expiration Date'] = info.expiration;
+      trackingData['Previous Valid Activation'] = info.valid;
+      trackingData['Basic Stages Only'] = info.valid && info.expiration === 0;
+      $q.all([
+        api.system.getStats(),
+        api.admin.getBuildInfo(),
+        api.pipelineAgent.getPipelinesCount()
+      ]).then(function (sbaResults) {
+        var statsResult = sbaResults[0];
+        var buildResult = sbaResults[1];
+        var pipelinesCountResult = sbaResults[2];
+
+        configuration.setAnalyticsEnabled(statsResult.data.active);
+        tracking.trackExtraUserInfo(buildResult, statsResult);
+        if (pipelinesCountResult.data) {
+          trackingData['Pipeline Count'] = pipelinesCountResult.data.count;
+        }
+      }).catch(function(err) {
+        // If permission error happens, we can assume 0
+        trackingData['Pipeline Count'] = 0;
+      }).finally(function() {
+        tracking.mixpanel.track(trackingEvent.ACTIVATION, trackingData);
+        tracking.mixpanel.people.set({'$email': activationInfo.info.userInfo});
+        var additionalInfo = activationInfo.info.additionalInfo;
+        var firstName = additionalInfo['user.firstName'];
+        var lastName = additionalInfo['user.lastName'];
+        tracking.mixpanel.people.set({
+          '$first_name': firstName,
+          '$last_name': lastName,
+          '$name': firstName + ' ' + lastName,
+          'Company': additionalInfo['user.company']
         });
       });
     };

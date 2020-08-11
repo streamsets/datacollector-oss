@@ -73,7 +73,7 @@ angular.module('dataCollectorApp.common')
     SAMPLE_PIPELINE_VIEW: 'Sample Pipeline View',
     SAMPLE_PIPELINE_DUPLICATED: 'Sample Pipeline Duplicated'
   })
-  .factory('tracking', function() {
+  .factory('tracking', function($timeout, Analytics) {
     var tracking = {
       FS: {},
       mixpanel: {
@@ -179,6 +179,50 @@ angular.module('dataCollectorApp.common')
         UserID: USER_ID,
         sdcId: sdcId,
       });
+    };
+
+    /**
+     * Track extra user info that requires API calls
+     */
+    tracking.trackExtraUserInfo = function(buildResult, statsResult) {
+      if (buildResult && buildResult.data) {
+        tracking.mixpanel.register({ 'sdcVersion': buildResult.data.version });
+        tracking.FS.setUserVars({ 'sdcVersion': buildResult.data.version });
+        tracking.mixpanel.people.set({ 'sdcVersion': buildResult.data.version });
+        $timeout(function () {
+          Analytics.set('dimension1', buildResult.data.version); // dimension1 is sdcVersion
+        }, 1000);
+      }
+      if (statsResult.data.active &&
+        statsResult.data.stats &&
+        statsResult.data.stats.activeStats &&
+        statsResult.data.stats.activeStats.extraInfo) {
+        var stats = statsResult.data.stats;
+        if (stats.activeStats.extraInfo) {
+          if (stats.activeStats.extraInfo.cloudProvider) {
+            tracking.mixpanel.register({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
+            tracking.FS.setUserVars({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
+            tracking.mixpanel.people.set({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
+            $timeout(function () {
+              Analytics.set(
+                'dimension2',
+                stats.activeStats.extraInfo.cloudProvider
+              ); // dimension2 is cloudProvider
+            }, 1000);
+          }
+          if (stats.activeStats.extraInfo.distributionChannel) {
+            tracking.mixpanel.register({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
+            tracking.FS.setUserVars({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
+            tracking.mixpanel.people.set({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
+            $timeout(function () {
+              Analytics.set(
+                "dimension3",
+                stats.activeStats.extraInfo.distributionChannel
+              ); // dimension3 is distributionChannel
+            }, 1000);
+          }
+        }
+      }
     };
 
     return tracking;
