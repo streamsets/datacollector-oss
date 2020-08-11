@@ -44,7 +44,7 @@ import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    eventDefs = {NoMoreDataEvent.class},
+    eventDefs = {NoMoreDataEvent.class, JDBCQuerySuccessEvent.class, JDBCQueryFailureEvent.class},
     onlineHelpRefUrl ="index.html?contextID=task_ryz_tkr_bs"
 )
 @ConfigGroups(value = Groups.class)

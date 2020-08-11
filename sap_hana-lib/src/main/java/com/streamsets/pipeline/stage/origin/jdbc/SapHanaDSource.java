@@ -38,7 +38,7 @@ import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
     recordsByRef = true,
     resetOffset = true,
     producesEvents = true,
-    eventDefs = {NoMoreDataEvent.class},
+    eventDefs = {NoMoreDataEvent.class, JDBCQuerySuccessEvent.class, JDBCQueryFailureEvent.class},
     onlineHelpRefUrl = "index.html?contextID=task_xkt_kww_gmb")
 @GenerateResourceBundle
 @HideConfigs({
