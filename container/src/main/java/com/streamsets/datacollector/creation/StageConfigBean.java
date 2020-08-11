@@ -43,6 +43,7 @@ public class StageConfigBean {
       label = "On Record Error",
       description = "Action to take with records sent to error",
       displayPosition = 30,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = ""
   )
   @ValueChooserModel(OnRecordErrorChooserValues.class)
@@ -56,6 +57,7 @@ public class StageConfigBean {
       label = "Required Fields",
       description = "Records without any of these fields are sent to error",
       displayPosition = 10,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = ""
   )
   @FieldSelectorModel
@@ -65,10 +67,11 @@ public class StageConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.LIST,
-      defaultValue="",
+      defaultValue="[]",
       label = "Preconditions",
       description = "Records that don't satisfy all the preconditions are sent to error",
       displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "",
       evaluation = ConfigDef.Evaluation.EXPLICIT,
       elDefs = { RecordEL.class, RuntimeEL.class }
