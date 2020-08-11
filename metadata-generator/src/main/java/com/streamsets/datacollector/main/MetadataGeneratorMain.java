@@ -299,6 +299,7 @@ public class MetadataGeneratorMain {
           BUILD_INFO.getVersion(),
           runtimeInfo.getId(),
           () -> null,
+          () -> null,
           () -> null
       );
 
