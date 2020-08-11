@@ -75,7 +75,6 @@ public class ConnectionConfigurationUpgrader {
    * @param libraryTask Stage Library
    * @param connectionConfiguration The Connection to upgrade
    * @param issues Issues
-   * @return Upgraded stage configuration or null on any error
    */
   public void upgradeIfNecessary(
       StageLibraryTask libraryTask,
@@ -95,6 +94,11 @@ public class ConnectionConfigurationUpgrader {
     }
   }
 
+  /**
+   * @param upgradeContext The upgrade context
+   * @param connectionConfiguration The connection configuration to upgrade if necessary
+   * @param issues The list of issues
+   */
   private void upgradeIfNecessary(
       ConnectionUpgradeContext upgradeContext,
       ConnectionConfiguration connectionConfiguration,
@@ -103,7 +107,7 @@ public class ConnectionConfigurationUpgrader {
     Preconditions.checkArgument(issues.isEmpty(), "Given list of issues must be empty.");
     boolean upgrade = needsUpgrade(upgradeContext, issues);
 
-    if(upgrade) {
+    if (upgrade) {
       try {
         upgrade(upgradeContext, connectionConfiguration, issues);
       } catch (Exception ex) {

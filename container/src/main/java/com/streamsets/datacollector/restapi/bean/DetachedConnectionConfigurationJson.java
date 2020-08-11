@@ -52,6 +52,10 @@ public class DetachedConnectionConfigurationJson {
     return BeanHelper.wrapIssues(detachedConnectionConfigurationJson.getIssues());
   }
 
+  public int getLatestAvailableVersion() {
+    return detachedConnectionConfigurationJson.getLatestAvailableVersion();
+  }
+
   @JsonIgnore
   public DetachedConnectionConfiguration getDetachedConnectionConfiguration() {
     return detachedConnectionConfigurationJson;

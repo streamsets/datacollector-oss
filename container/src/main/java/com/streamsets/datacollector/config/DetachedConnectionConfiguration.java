@@ -30,6 +30,9 @@ public class DetachedConnectionConfiguration {
   // Stage configuration itself
   ConnectionConfiguration connectionConfiguration;
 
+  // latest available version for upgrade
+  int latestAvailableVersion;
+
   // Issues associated with this
   Issues issues;
 
@@ -60,5 +63,13 @@ public class DetachedConnectionConfiguration {
 
   public void setValidation(DetachedConnectionValidator validation) {
     issues = validation.getIssues();
+  }
+
+  public int getLatestAvailableVersion() {
+    return latestAvailableVersion;
+  }
+
+  public void setLatestAvailableVersion(int latestAvailableVersion) {
+    this.latestAvailableVersion = latestAvailableVersion;
   }
 }

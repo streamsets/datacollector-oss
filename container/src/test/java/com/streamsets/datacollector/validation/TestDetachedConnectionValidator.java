@@ -74,7 +74,7 @@ public class TestDetachedConnectionValidator {
     StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
     DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
     DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
-    validator.validate();
+    validator.validate(false);
     List<Issue> issues = validator.getIssues().getIssues();
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals("YAML_UPGRADER_07", issues.get(0).getErrorCode());
@@ -100,24 +100,21 @@ public class TestDetachedConnectionValidator {
     StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
     DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
     DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
-    validator.validate();
+    validator.validate(false);
     List<Issue> issues = validator.getIssues().getIssues();
     Assert.assertEquals(0, issues.size());
     configs = connConfig.getConfiguration();
-    Assert.assertEquals(4, configs.size());
+    Assert.assertEquals(2, configs.size());
     configs.sort(Comparator.comparing(Config::getName));
     // Upgrade sets prop1.subprop1, replacing original value
     Assert.assertEquals("prop1.subprop1", configs.get(0).getName());
-    Assert.assertEquals("fromUpgrader1", configs.get(0).getValue());
+    Assert.assertEquals("original-value-1", configs.get(0).getValue());
     // Upgrade adds new prop1.subprop2
-    Assert.assertEquals("prop1.subprop2", configs.get(1).getName());
-    Assert.assertEquals("fromUpgrader2", configs.get(1).getValue());
-    // Upgrade leaves other properties alone
-    Assert.assertEquals("prop2.subprop1", configs.get(2).getName());
-    Assert.assertEquals("original-value-2", configs.get(2).getValue());
-    // Default only sets values for properties not provided by user or upgrade
-    Assert.assertEquals("prop3", configs.get(3).getName());
-    Assert.assertEquals("fromDefault4", configs.get(3).getValue());
+    Assert.assertEquals("prop2.subprop1", configs.get(1).getName());
+    Assert.assertEquals("original-value-2", configs.get(1).getValue());
+    // Current and latest available versions
+    Assert.assertEquals(1, detachedConnConfig.getConnectionConfiguration().getVersion());
+    Assert.assertEquals(2, detachedConnConfig.getLatestAvailableVersion());
   }
 
   @Test
@@ -141,7 +138,7 @@ public class TestDetachedConnectionValidator {
     StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
     DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
     DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
-    validator.validate();
+    validator.validate(false);
     // All 3 props are required: prop1 is set by the user, prop2 is set by the defaults, and prop3 is unset
     List<Issue> issues = validator.getIssues().getIssues();
     Assert.assertEquals(1, issues.size());
@@ -174,11 +171,54 @@ public class TestDetachedConnectionValidator {
     StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
     DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
     DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
-    validator.validate();
+    validator.validate(false);
     // All 3 props are numbers: prop1 and prop2 are numbers, but prop3 is a string
     List<Issue> issues = validator.getIssues().getIssues();
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals("VALIDATION_0009", issues.get(0).getErrorCode());
     Assert.assertEquals("prop3", issues.get(0).getConfigName());
+  }
+
+  @Test
+  public void testValidateForceUpgrade() {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("prop1.subprop1", "original-value-1"));
+    configs.add(new Config("prop2.subprop1", "original-value-2"));
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, configs);
+    List<ConfigDefinition> configDefinitions = new ArrayList<>();
+    configDefinitions.add(createConfigDefinition("prop1.subprop1", "fromDefault1"));
+    configDefinitions.add(createConfigDefinition("prop1.subprop2", "fromDefault2"));
+    configDefinitions.add(createConfigDefinition("prop2.subprop1", "fromDefault3"));
+    configDefinitions.add(createConfigDefinition("prop3", "fromDefault4"));
+    ConnectionDefinition connectionDefinition = createConnectionDefinition(
+        "type1",
+        2,
+        "upgrader/TestDetachedConnectionValidatorUpgrader.yaml",
+        configDefinitions
+    );
+    StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
+    DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
+    DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
+    validator.validate(true);
+    List<Issue> issues = validator.getIssues().getIssues();
+    Assert.assertEquals(0, issues.size());
+    configs = connConfig.getConfiguration();
+    Assert.assertEquals(4, configs.size());
+    configs.sort(Comparator.comparing(Config::getName));
+    // Upgrade sets prop1.subprop1, replacing original value
+    Assert.assertEquals("prop1.subprop1", configs.get(0).getName());
+    Assert.assertEquals("fromUpgrader1", configs.get(0).getValue());
+    // Upgrade adds new prop1.subprop2
+    Assert.assertEquals("prop1.subprop2", configs.get(1).getName());
+    Assert.assertEquals("fromUpgrader2", configs.get(1).getValue());
+    // Upgrade leaves other properties alone
+    Assert.assertEquals("prop2.subprop1", configs.get(2).getName());
+    Assert.assertEquals("original-value-2", configs.get(2).getValue());
+    // Default only sets values for properties not provided by user or upgrade
+    Assert.assertEquals("prop3", configs.get(3).getName());
+    Assert.assertEquals("fromDefault4", configs.get(3).getValue());
+    // Current and latest available versions
+    Assert.assertEquals(2, detachedConnConfig.getConnectionConfiguration().getVersion());
+    Assert.assertEquals(2, detachedConnConfig.getLatestAvailableVersion());
   }
 }

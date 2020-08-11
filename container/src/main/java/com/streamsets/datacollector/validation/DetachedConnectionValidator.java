@@ -15,9 +15,11 @@
  */
 package com.streamsets.datacollector.validation;
 
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.DetachedConnectionConfiguration;
 import com.streamsets.datacollector.configupgrade.ConnectionConfigurationUpgrader;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.api.Config;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,17 +39,33 @@ public class DetachedConnectionValidator {
     this.issues = new Issues();
   }
 
-  public DetachedConnectionConfiguration validate() {
+  /**
+   * @param forceUpgrade Whether to force upgrade the connection
+   * @return A detached connection configuration:
+   *  The original one if forceUpgrade=false or the upgraded connection if forceUpgrade=true
+   */
+  public DetachedConnectionConfiguration validate(boolean forceUpgrade) {
+    ConnectionDefinition connDef = stageLibraryTask.getConnection(connectionConf.getConnectionConfiguration().getType());
+    connectionConf.setLatestAvailableVersion(connDef.getVersion());
+    List<Config> originalConfigs = new ArrayList<>();
+    originalConfigs.addAll(connectionConf.getConnectionConfiguration().getConfiguration());
+    int originalVersion = connectionConf.getConnectionConfiguration().getVersion();
+
     upgrade();
 
     // If there are any issues until this point, it does not make sense to continue
-    if(issues.hasIssues()) {
+    if (issues.hasIssues()) {
       return connectionConf;
     }
 
     ValidationUtil.addMissingConfigsToConnection(stageLibraryTask, connectionConf.getConnectionConfiguration());
     validateConnectionConfiguration();
 
+    if (!forceUpgrade) {
+      // restore original version and configurations if we don't want to force upgrade the connection
+      connectionConf.getConnectionConfiguration().setConfig(originalConfigs);
+      connectionConf.getConnectionConfiguration().setVersion(originalVersion);
+    }
     return connectionConf;
   }
 

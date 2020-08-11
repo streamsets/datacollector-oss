@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
@@ -64,14 +63,9 @@ import com.streamsets.lib.security.acl.dto.Permission;
 import com.streamsets.lib.security.acl.dto.ResourceType;
 import com.streamsets.lib.security.acl.dto.SubjectType;
 import com.streamsets.pipeline.api.ExecutionMode;
-import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.http.HttpStatus;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
-import org.glassfish.jersey.media.multipart.ContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
-import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -88,21 +82,16 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class TestPipelineStoreResource extends JerseyTest {
 

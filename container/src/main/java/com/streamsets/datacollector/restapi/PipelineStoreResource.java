@@ -1706,11 +1706,13 @@ public class PipelineStoreResource {
       AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
   })
   public Response validateDetachedConnection(
-      @ApiParam(name="connection", required = true) DetachedConnectionConfigurationJson detachedConnection
+      @ApiParam(name="connection", required = true) DetachedConnectionConfigurationJson detachedConnection,
+      @QueryParam("forceUpgrade") @DefaultValue("false") final boolean forceUpgrade
   ) {
     DetachedConnectionConfiguration connectionConf = detachedConnection.getDetachedConnectionConfiguration();
     DetachedConnectionValidator validator = new DetachedConnectionValidator(stageLibrary, connectionConf);
-    return Response.ok().entity(new DetachedConnectionConfigurationJson(validator.validate())).build();
+    DetachedConnectionConfiguration detachedConnConf = validator.validate(forceUpgrade);
+    return Response.ok().entity(new DetachedConnectionConfigurationJson(detachedConnConf)).build();
   }
 
   private void setStreamingModeDefaults(PipelineConfiguration pipelineConfig) {
