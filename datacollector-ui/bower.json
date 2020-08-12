@@ -1,6 +1,6 @@
 {
   "name": "data-collector-ui",
-  "version": "3.16.2",
+  "version": "3.16.3-SNAPSHOT",
   "dependencies": {
     "d3": "3.5.6",
     "jquery": "2.1.1",
