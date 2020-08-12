@@ -21,7 +21,7 @@ angular
   .module('dataCollectorApp.home')
 
   .controller('SnapshotController', function ($scope, $rootScope, _, api, $timeout, previewService, pipelineConstant) {
-    var snapshotBatchSize = 10,
+    var snapshotBatchSize = 50000,
       captureSnapshotStatusTimer;
 
     angular.extend($scope, {

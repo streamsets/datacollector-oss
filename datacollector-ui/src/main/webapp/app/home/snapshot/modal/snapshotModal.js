@@ -23,7 +23,7 @@ angular
     $scope, $rootScope, $modalInstance, pipelineConfig, isPipelineRunning, canExecute, api, $timeout
   ) {
     var defaultSnapshotName = 'Snapshot1',
-      snapshotBatchSize = 10,
+      snapshotBatchSize = 50000,
       captureSnapshotStatusTimer;
 
     angular.extend($scope, {
