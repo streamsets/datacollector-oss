@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.17.1-SNAPSHOT</version>
+    <version>3.17.1</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdc-solr_7</artifactId>
-  <version>3.17.1-SNAPSHOT</version>
+  <version>3.17.1</version>
   <description>StreamSets Data Collector SDC Solr 7</description>
   <name>StreamSets Data Collector SDC Solr 7</name>
   <packaging>jar</packaging>
