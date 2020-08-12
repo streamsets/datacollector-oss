@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label="XML Parser",
     description = "Parses a string field with XML data",
     icon="xmlparser.png",
-    recordsByRef = true,
     upgraderDef = "upgrader/XmlParserDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_txd_55q_k5"
 )

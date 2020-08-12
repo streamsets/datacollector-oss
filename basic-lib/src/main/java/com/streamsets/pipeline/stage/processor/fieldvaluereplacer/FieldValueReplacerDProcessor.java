@@ -35,7 +35,6 @@ import java.util.List;
     label="Value Replacer",
     description = "Replaces null values with a constant and replaces values with NULL",
     icon="replacer.png",
-    recordsByRef = true,
     onlineHelpRefUrl ="index.html?contextID=task_ihq_ymf_zq",
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgrader = FieldValueReplacerUpgrader.class,

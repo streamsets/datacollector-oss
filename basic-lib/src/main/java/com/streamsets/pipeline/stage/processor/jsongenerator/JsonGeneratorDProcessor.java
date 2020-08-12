@@ -30,7 +30,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label = "JSON Generator",
     description = "Serializes a field to a string field in JSON format",
     icon = "json.png",
-    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgraderDef = "upgrader/JsonGeneratorDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_kgk_3w1_h1b"

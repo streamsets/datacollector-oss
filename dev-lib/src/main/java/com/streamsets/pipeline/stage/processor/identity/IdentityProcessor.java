@@ -27,7 +27,6 @@ import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
     version = 1,
     label = "Dev Identity",
     description = "It echoes every record it receives without changing, other than stage header information",
-    recordsByRef = true,
     icon="dev.png",
     execution = {
         ExecutionMode.STANDALONE,

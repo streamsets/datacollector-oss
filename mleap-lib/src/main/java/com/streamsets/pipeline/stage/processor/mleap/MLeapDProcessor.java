@@ -29,7 +29,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     description = "Uses machine learning models stored in MLeap format to " +
         "generate evaluations, scoring, or classifications of data",
     icon = "mleap.png",
-    recordsByRef = true,
     execution = {
         ExecutionMode.STANDALONE,
         ExecutionMode.CLUSTER_BATCH,
