@@ -581,7 +581,7 @@ public class PipelineConfigBean implements Stage {
 
   @ConfigDefBean(dependencies = {
     @Dependency(configName = "clusterConfig.clusterType", triggeredByValues = "DATAPROC")
-  }, groups = "CLUSTER")
+  }, groups = "DATAPROC")
   // The dependency does not resolve corrrectly if this inside another bean, so adding it here.
   public GoogleCloudCredentialsConfig googleCloudCredentialsConfig = new GoogleCloudCredentialsConfig();
 

@@ -18,17 +18,13 @@ package com.streamsets.datacollector.config;
 import com.streamsets.pipeline.api.Label;
 
 public enum PipelineGroups implements Label {
-  // All Transformer configs are on this tab/group - some of them can be basic, some of them can be advanced
   CLUSTER("Cluster"),
-  // All SDC Configs are on this group/tab - all configs here should be advanced since they depend on executionMode
-  // that is itself advanced.
-  CLUSTER_SDC("Cluster"),
   PARAMETERS("Parameters"),
   NOTIFICATIONS("Notifications"),
   BAD_RECORDS("Error Records"),
   STATS("Statistics"),
-  // EMR Tab is only used by SDC, Tranformer shows EMR configs on "CLUSTER" tab like all other cluster types
   EMR("EMR"),
+  DATAPROC("Dataproc"),
   ADVANCED("Advanced"),
   ;
 
