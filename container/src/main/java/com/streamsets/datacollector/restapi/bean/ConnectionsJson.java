@@ -16,33 +16,28 @@
 
 package com.streamsets.datacollector.restapi.bean;
 
-import com.streamsets.datacollector.config.ConnectionDefinition;
-import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
-
 import java.util.List;
 
 public class ConnectionsJson {
 
   private final String schemaVersion = "1";
-  private List<ConnectionDefinition> connections;
-  private ConnectionVerifierDefinition verifierDefinition;
+  private List<ConnectionDefinitionJson> connections;
 
   public ConnectionsJson() {}
 
-  public ConnectionsJson(List<ConnectionDefinition> connections, ConnectionVerifierDefinition verifierDefinition) {
+  public ConnectionsJson(List<ConnectionDefinitionJson> connections) {
     this.connections = connections;
-    this.verifierDefinition = verifierDefinition;
   }
 
   public String getSchemaVersion() {
     return schemaVersion;
   }
 
-  public List<ConnectionDefinition> getConnections() {
+  public List<ConnectionDefinitionJson> getConnections() {
     return connections;
   }
 
-  public void setConnections(List<ConnectionDefinition> connections) {
+  public void setConnections(List<ConnectionDefinitionJson> connections) {
     this.connections = connections;
   }
 }

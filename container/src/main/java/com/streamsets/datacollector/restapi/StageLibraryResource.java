@@ -29,7 +29,6 @@ import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
-import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
 import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
@@ -532,6 +531,7 @@ public class StageLibraryResource {
     for (ConnectionDefinition connection : connectionDefs) {
       definitionsJson.add(new ConnectionDefinitionJson(connection, verifierMap.get(connection.getType())));
     }
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitionsJson).build();
+    ConnectionsJson connectionDefinitions = new ConnectionsJson(definitionsJson);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(connectionDefinitions).build();
   }
 }
