@@ -35,7 +35,6 @@ import java.util.Map;
     label = "Stream Selector",
     description = "Passes records to streams based on conditions",
     icon="laneSelector.png",
-    recordsByRef = true,
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "lanePredicates",
     flags = StageBehaviorFlags.PASSTHROUGH,

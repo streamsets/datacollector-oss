@@ -27,7 +27,6 @@ import com.streamsets.pipeline.lib.fragment.FragmentConfigBean;
     version = 1,
     label = "Fragment Processor",
     icon="fragment.png",
-    recordsByRef = true,
     outputStreams = StageDef.VariableOutputStreams.class,
     outputStreamsDrivenByConfig = "conf.fragmentId",
     execution = {

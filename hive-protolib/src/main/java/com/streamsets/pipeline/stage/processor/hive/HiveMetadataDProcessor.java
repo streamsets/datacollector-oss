@@ -41,7 +41,6 @@ import java.util.TimeZone;
     description = "Generates Hive metadata and write information for HDFS",
     icon="metadata.png",
     outputStreams = HiveMetadataOutputStreams.class,
-    recordsByRef = true,
     privateClassLoader = true,
     onlineHelpRefUrl ="index.html?contextID=task_hpg_pft_zv",
     upgrader = HiveMetadataProcessorUpgrader.class,

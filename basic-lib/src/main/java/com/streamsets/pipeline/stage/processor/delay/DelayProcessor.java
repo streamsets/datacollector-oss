@@ -44,7 +44,6 @@ import java.util.Iterator;
 
     },
     flags = StageBehaviorFlags.PASSTHROUGH,
-    recordsByRef = true,
     upgraderDef = "upgrader/DelayProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_jh5_qxf_wbb"
 )
