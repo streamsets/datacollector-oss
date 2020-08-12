@@ -15,8 +15,10 @@
  */
 package com.streamsets.datacollector.publicrestapi;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.event.binding.MessagingDtoJsonMapper;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -25,6 +27,8 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.lib.security.http.DisconnectedSecurityInfo;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.security.DenyAll;
 import javax.annotation.security.PermitAll;
@@ -43,6 +47,7 @@ import java.util.Map;
 @DenyAll
 public class PublicClusterResource {
 
+  private static final Logger LOG = LoggerFactory.getLogger(PublicClusterResource.class);
   private final Manager manager;
   private final RuntimeInfo runtimeInfo;
 
@@ -54,9 +59,25 @@ public class PublicClusterResource {
 
   Map<String, Object> updateSlaveCallbackInfo(CallbackInfoJson callbackInfoJson) throws PipelineException {
     Runner runner = manager.getRunner(callbackInfoJson.getName(), callbackInfoJson.getRev());
-    if (!runner.getState().getStatus().isActive()) {
-      throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",
-          callbackInfoJson.getName(), callbackInfoJson.getRev(), runner.getState().getStatus()));
+    PipelineState pipelineState = runner.getState();
+    if (!pipelineState.getStatus().isActive()) {
+      if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
+        throw new RuntimeException(Utils.format("Pipeline '{}::{}' is not active, but is '{}'",
+            callbackInfoJson.getName(), callbackInfoJson.getRev(), runner.getState().getStatus()));
+      } else {
+        // For Transformer, send terminate response if launcher pipeline status is not active to clean up the
+        // dangling spark application in the cluster
+        LOG.warn(
+            "Driver Callback: Pipeline '{}' is not active, but is '{}', sending terminate message to the driver",
+            callbackInfoJson.getName(),
+            runner.getState().getStatus()
+        );
+        return ImmutableMap.of(
+            "terminate", true,
+            "status", pipelineState.getStatus(),
+            "message", pipelineState.getMessage() != null ? pipelineState.getMessage() : ""
+        );
+      }
     }
     return runner.updateSlaveCallbackInfo(callbackInfoJson.getCallbackInfo());
   }
