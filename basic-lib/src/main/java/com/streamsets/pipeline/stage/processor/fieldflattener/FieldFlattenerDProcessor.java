@@ -28,7 +28,6 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
     label="Field Flattener",
     description="Flattens nested structures.",
     icon="flattener.png",
-    recordsByRef = true,
     flags = StageBehaviorFlags.PURE_FUNCTION,
     upgraderDef = "upgrader/FieldFlattenerDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_xdv_kkk_fx"

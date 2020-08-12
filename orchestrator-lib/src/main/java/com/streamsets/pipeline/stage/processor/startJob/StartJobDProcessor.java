@@ -31,7 +31,6 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
     label = "Start Jobs",
     description = "Starts Control Hub jobs",
     icon="job.png",
-    recordsByRef = true,
     execution = {
         ExecutionMode.STANDALONE
     },

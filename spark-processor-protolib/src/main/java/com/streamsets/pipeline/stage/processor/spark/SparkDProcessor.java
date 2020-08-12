@@ -29,7 +29,6 @@ import java.util.concurrent.Semaphore;
     version = 1,
     label = "Spark Evaluator",
     description = "Process Records in Spark",
-    recordsByRef = true,
     icon = "spark-logo-hd.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.CLUSTER_YARN_STREAMING},
     upgraderDef = "upgrader/SparkDProcessor.yaml",

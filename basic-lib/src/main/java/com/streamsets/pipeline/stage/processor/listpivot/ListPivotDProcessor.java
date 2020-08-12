@@ -31,7 +31,6 @@ import com.streamsets.pipeline.config.OnStagePreConditionFailureChooserValues;
     label="Field Pivoter",
     description = "Produce new records for each element of a list or map field",
     icon="pivoter.png",
-    recordsByRef = true,
     upgrader = ListPivotProcessorUpgrader.class,
     upgraderDef = "upgrader/ListPivotDProcessor.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_dn1_k13_qw"
