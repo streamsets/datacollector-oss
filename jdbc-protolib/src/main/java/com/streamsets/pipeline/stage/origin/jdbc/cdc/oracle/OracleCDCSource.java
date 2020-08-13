@@ -729,12 +729,8 @@ public class OracleCDCSource extends BaseSource {
     }
 
     Map<String, String> attributes = createRecordHeaderAttributes(logMnrRecord, sqlRedo);
-    Offset offset = null;
-
-    if (!getContext().isPreview()) {
-      offset = new Offset(offsetVersion, logMnrRecord.getLocalDateTime(), logMnrRecord.getCommitSCN().toPlainString(),
+    Offset offset = new Offset(offsetVersion, logMnrRecord.getLocalDateTime(), logMnrRecord.getCommitSCN().toPlainString(),
           logMnrRecord.getSequence(), logMnrRecord.getXID());
-    }
 
     try {
       Record record = generateRecord(sqlRedo, attributes, logMnrRecord.getOperationCode());
