@@ -18,7 +18,6 @@ package com.streamsets.pipeline.stage.executor.s3.config;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.destination.s3.S3ConnectionTargetConfig;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 
 import java.util.List;
 
@@ -27,18 +26,14 @@ public class AmazonS3ExecutorConfig {
   public static final String BEAN_PREFIX = "config.";
   public static final String S3_CONFIG_PREFIX = BEAN_PREFIX + "s3Config.";
 
-  @ConfigDefBean(groups = "S3")
+  @ConfigDefBean(groups = {"S3", "ADVANCED"})
   public S3ConnectionTargetConfig s3Config = new S3ConnectionTargetConfig();
-
-  @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig proxyConfig = new ProxyConfig();
 
   @ConfigDefBean(groups = "TASKS")
   public S3TaskConfig taskConfig = new S3TaskConfig();
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    s3Config.init(context, S3_CONFIG_PREFIX, proxyConfig, issues, -1);
-
+    s3Config.init(context, S3_CONFIG_PREFIX, issues, -1);
     return issues;
   }
 

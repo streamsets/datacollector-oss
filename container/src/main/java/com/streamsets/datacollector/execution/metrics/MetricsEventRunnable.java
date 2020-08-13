@@ -133,6 +133,8 @@ public class MetricsEventRunnable implements Runnable {
     this.scheduledDelay = configuration.get(REFRESH_INTERVAL_PROPERTY, REFRESH_INTERVAL_PROPERTY_DEFAULT);
     this.configuration = configuration;
     this.runtimeInfo = runtimeInfo;
+
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   public void onStopOrFinishPipeline() {
@@ -322,7 +324,7 @@ public class MetricsEventRunnable implements Runnable {
       isDPMPipeline = isRemotePipeline(state);
       if (isDPMPipeline && isWriteStatsToDPMDirectlyEnabled()) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(pipelineConfiguration, new ArrayList<>(), null);
+            .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
         for (String key : pipelineConfigBean.constants.keySet()) {
           switch (key) {
             case PIPELINE_COMMIT_ID:

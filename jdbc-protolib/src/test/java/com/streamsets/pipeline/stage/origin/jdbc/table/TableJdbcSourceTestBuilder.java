@@ -16,7 +16,8 @@
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -196,11 +197,12 @@ public class TableJdbcSourceTestBuilder {
   }
 
   public TableJdbcSource build() {
-    HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
-    hikariPoolConfigBean.useCredentials = useCredentials;
-    hikariPoolConfigBean.connectionString = connectionString;
-    hikariPoolConfigBean.username = () -> username;
-    hikariPoolConfigBean.password = () -> password;
+    JdbcHikariPoolConfigBean hikariPoolConfigBean = new JdbcHikariPoolConfigBean();
+    hikariPoolConfigBean.connection = new JdbcConnection();
+    hikariPoolConfigBean.connection.useCredentials = useCredentials;
+    hikariPoolConfigBean.connection.connectionString = connectionString;
+    hikariPoolConfigBean.connection.username = () -> username;
+    hikariPoolConfigBean.connection.password = () -> password;
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;

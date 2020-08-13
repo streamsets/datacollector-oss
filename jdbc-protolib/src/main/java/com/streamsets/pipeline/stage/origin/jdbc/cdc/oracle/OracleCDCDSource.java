@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 @StageDef(
@@ -44,7 +45,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 public class OracleCDCDSource extends DSource {
 
   @ConfigDefBean
-  public HikariPoolConfigBean hikariConf = new HikariPoolConfigBean();
+  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
 
   @ConfigDefBean
   public OracleCDCConfigBean oracleCDCConfigBean = new OracleCDCConfigBean();

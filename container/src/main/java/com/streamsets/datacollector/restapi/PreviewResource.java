@@ -19,7 +19,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewConstants;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
@@ -43,11 +45,14 @@ import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionPreviewJson;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
+import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.PreviewInfoJson;
 import com.streamsets.datacollector.restapi.bean.PreviewOutputJson;
 import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.restapi.connection.ConnectionVerifierDynamicPreviewHelper;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -151,6 +156,7 @@ public class PreviewResource {
     this.eventHandlerTask = eventHandlerTask;
     this.pipelineStoreTask = pipelineStoreTask;
     this.blobStoreTask = blobStoreTask;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
 
     if (runtimeInfo.isDPMEnabled()) {
       currentUser = new UserJson((SSOPrincipal)principal);
@@ -255,7 +261,7 @@ public class PreviewResource {
     int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
     batches = Math.min(maxBatches, batches);
 
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote, new HashMap<>());
     try {
       previewer.start(
           batches,
@@ -332,21 +338,33 @@ public class PreviewResource {
         dynamicPreviewWithOverridesRequest.getStageOutputsToOverrideJson()
     ));
 
-    final DynamicPreviewEventJson dynamicPreviewEvent = getDynamicPreviewEvent(
-        controlHubBaseUrl,
-        "/dynamic_preview/rest/v2/dynamic_preview/createDynamicPreviewEvent",
-        runtimeInfo.getAppAuthToken(),
-        runtimeInfo.getId(),
-        dynamicPreviewRequest
-    );
+    DynamicPreviewEventJson dynamicPreviewEvent;
+    Map<String, ConnectionConfiguration> connections = new HashMap<>();
+    if (DynamicPreviewType.CONNECTION_VERIFIER.equals(dynamicPreviewRequest.getType())) {
+      // build the dynamic preview pipeline and events
+      ConnectionVerifierDynamicPreviewHelper verifierHelper = new ConnectionVerifierDynamicPreviewHelper();
+      ConnectionDefinitionPreviewJson connection = verifierHelper.getConnectionPreviewJson(dynamicPreviewRequest);
+      PipelineEnvelopeJson verifierPipeline = verifierHelper.getVerifierDynamicPreviewPipeline(connection);
+      dynamicPreviewEvent = verifierHelper.getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);
+      connections = verifierHelper.getVerifierConfigurationJson(connection);
+    } else {
+      // for classification and protection policies get the preview event from SCH
+      dynamicPreviewEvent = getDynamicPreviewEvent(
+          controlHubBaseUrl,
+          "/dynamic_preview/rest/v2/dynamic_preview/createDynamicPreviewEvent",
+          runtimeInfo.getAppAuthToken(),
+          runtimeInfo.getId(),
+          dynamicPreviewRequest
+      );
+    }
 
-
-    String generatedPipelineId = null;
+    String generatedPipelineId;
     try {
       generatedPipelineId = handlePreviewEvents(
           "before",
           dynamicPreviewEvent.getBeforeActionsEventTypeIds(),
-          dynamicPreviewEvent.getBeforeActions()
+          dynamicPreviewEvent.getBeforeActions(),
+          connections
       );
     } catch (IOException e) {
       throw new StageException(PreviewError.PREVIEW_0101, "before", e.getMessage(), e);
@@ -366,7 +384,8 @@ public class PreviewResource {
         handlePreviewEvents(
             "after",
             dynamicPreviewEvent.getAfterActionsEventTypeIds(),
-            dynamicPreviewEvent.getAfterActions()
+            dynamicPreviewEvent.getAfterActions(),
+            new HashMap<>()
         );
       } catch (IOException e) {
         LOG.error(
@@ -378,13 +397,14 @@ public class PreviewResource {
       return null;
     });
 
+
     final RemoteDataCollectorResult previewEventResult = eventHandlerTask.handleLocalEvent(
         previewEvent,
-        EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId())
+        EventType.fromValue(dynamicPreviewEvent.getPreviewEventTypeId()),
+        connections
     );
 
-    String previewerId = null;
-
+    String previewerId;
     if (previewEventResult.getImmediateResult() == null) {
       throw new StageException(PreviewError.PREVIEW_0102);
     } else {
@@ -394,6 +414,7 @@ public class PreviewResource {
     if (previewer == null) {
       throw new StageException(PreviewError.PREVIEW_0105);
     }
+
     final PreviewInfoJson previewInfoJson = new PreviewInfoJson(
         previewer.getId(),
         previewer.getStatus(),
@@ -415,6 +436,9 @@ public class PreviewResource {
         break;
       case PROTECTION_POLICY:
         // permissions on specific policies will be checked on DPM side
+        break;
+      case CONNECTION_VERIFIER:
+        // if the user could run the preview then it should have the appropriate roles
         break;
     }
   }
@@ -453,7 +477,12 @@ public class PreviewResource {
     }
   }
 
-  private String handlePreviewEvents(String kind, List<Integer> eventTypeIds, List<EventJson> events) throws IOException {
+  private String handlePreviewEvents(
+      String kind,
+      List<Integer> eventTypeIds,
+      List<EventJson> events,
+      Map<String, ConnectionConfiguration> connections
+  ) throws IOException {
     String generatedPipelineId = null;
     if (eventTypeIds == null && events == null) {
       LOG.debug("Null {} events; nothing to do", kind);
@@ -472,7 +501,8 @@ public class PreviewResource {
       final EventType eventType = EventType.fromValue(eventTypeId);
       final RemoteDataCollectorResult result = eventHandlerTask.handleLocalEvent(
           MessagingJsonToFromDto.INSTANCE.asDto(events.get(i), eventTypeId),
-          eventType
+          eventType,
+          connections
       );
       if (eventType == EventType.SAVE_PIPELINE && result.getImmediateResult() != null) {
         generatedPipelineId = (String) result.getImmediateResult();
@@ -594,7 +624,7 @@ public class PreviewResource {
       }
     }
     Previewer previewer = manager.getPreviewer(previewerId);
-    if(previewer == null) {
+    if (previewer == null) {
       return Response.status(Response.Status.NOT_FOUND).entity("Cannot find previewer with id " + previewerId).build();
     }
     PipelineInfo pipelineInfo = store.getInfo(previewer.getName());
@@ -628,7 +658,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     MultivaluedMap<String, String> previewParams = uriInfo.getQueryParameters();
-    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, false);
+    Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, false, new HashMap<>());
     RawPreview rawPreview = previewer.getRawSource(4 * 1024, previewParams);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(rawPreview).build();
   }
@@ -668,7 +698,7 @@ public class PreviewResource {
     PipelineInfo pipelineInfo = store.getInfo(pipelineId);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     try {
-      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote);
+      Previewer previewer = manager.createPreviewer(this.user, pipelineId, rev, Collections.emptyList(), p -> null, remote, new HashMap<>());
       previewer.validateConfigs(timeout);
       PreviewStatus previewStatus = previewer.getStatus();
       if(previewStatus == null) {
@@ -690,5 +720,4 @@ public class PreviewResource {
       }
     }
   }
-
 }

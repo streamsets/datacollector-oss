@@ -16,16 +16,17 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
-import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import net.sf.cglib.asm.$Attribute;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -34,6 +35,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.security.Principal;
+import java.util.HashMap;
 
 @Path("/v1")
 @Api(value = "upgrader")
@@ -41,14 +44,20 @@ public class PipelineUpgraderResource {
 
   private final StageLibraryTask stageLibrary;
   private final BuildInfo buildInfo;
+  private final String user;
 
   @Inject
   public PipelineUpgraderResource(
       StageLibraryTask stageLibrary,
-      BuildInfo buildInfo
+      BuildInfo buildInfo,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo,
+      Principal principal
   ) {
     this.stageLibrary = stageLibrary;
     this.buildInfo = buildInfo;
+    this.user = principal.getName();
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   @Path("/pipeline-upgrader")
@@ -59,7 +68,14 @@ public class PipelineUpgraderResource {
   public Response upgrade(@ApiParam(name = "pipeline", required = true) PipelineConfigurationJson pipeline) {
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
     String name = pipelineConfig.getTitle();
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        name,
+        pipelineConfig,
+        user,
+        new HashMap<>()
+    );
     pipelineConfig = validator.validate();
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
   }

@@ -60,6 +60,11 @@
       <artifactId>streamsets-datacollector-stagesupport</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-aws-s3-connection</artifactId>
+      <scope>compile</scope>
+    </dependency>
 
     <dependency>
       <groupId>com.amazonaws</groupId>

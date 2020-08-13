@@ -123,4 +123,8 @@ public class ConfigDefinitionJson {
     return configDefinition.getDisplayMode();
   }
 
+  public String getConnectionType() {
+    return configDefinition.getConnectionType();
+  }
+
 }

@@ -25,7 +25,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -217,6 +217,7 @@ public class TestEmrClusterProvider {
         mockFile,
         mockFile,
         mockFile,
+        "",
         "",
         "",
         "",

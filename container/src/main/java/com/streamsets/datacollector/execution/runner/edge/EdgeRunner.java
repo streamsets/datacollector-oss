@@ -18,6 +18,7 @@ package com.streamsets.datacollector.execution.runner.edge;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.config.PipelineConfiguration;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.AbstractRunner;
 import com.streamsets.datacollector.execution.PipelineStatus;
 import com.streamsets.datacollector.execution.Runner;
@@ -52,6 +53,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
   public EdgeRunner(String name, String rev, ObjectGraph objectGraph) {
     super(name, rev);
     objectGraph.inject(this);
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo());
   }
 
   @Override
@@ -61,7 +63,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public void resetOffset(String user) throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration(user);
     EdgeUtil.resetOffset(pipelineConfiguration);
   }
 
@@ -91,7 +93,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson currentState;
     PipelineStateJson toState;
 
-    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration(user);
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && !currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in stopped state {}",
@@ -141,7 +143,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
     PipelineStateJson toState;
 
     setStartPipelineContext(context);
-    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration(context.getUser());
     currentState = EdgeUtil.getEdgePipelineState(pipelineConfiguration);
     if (currentState != null && currentState.getPipelineState().getStatus().isActive()) {
       LOG.warn("Pipeline {}:{} is already in active state {}",
@@ -230,7 +232,7 @@ public class EdgeRunner extends AbstractRunner implements StateListener {
 
   @Override
   public Object getMetrics() throws PipelineException {
-    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
+    PipelineConfiguration pipelineConfiguration = getPipelineConfiguration(null);
     return EdgeUtil.getEdgePipelineMetrics(pipelineConfiguration);
   }
 

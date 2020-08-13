@@ -16,6 +16,7 @@
 
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.event.dto.AckEvent;
@@ -82,7 +83,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
       SourceOffset offset,
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
-      Acl acl, Map<String, Object> metadata
+      Acl acl, Map<String, Object> metadata,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     Map<String, Object> attribs = new HashMap<>();
     attribs.put(RemoteDataCollector.IS_REMOTE_PIPELINE, true);
@@ -96,7 +98,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
         pipelineConfiguration,
         ruleDefinitions,
         acl,
-        attribs
+        attribs,
+        connections
     );
   }
 
@@ -178,7 +181,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
       long timeoutMillis,
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     return remoteDataCollector.previewPipeline(
         user,
@@ -193,7 +197,8 @@ public class PipelineIdEncodedRemoteDatacollector implements DataCollector {
         timeoutMillis,
         testOrigin,
         interceptorConfs,
-        afterActionsFunction
+        afterActionsFunction,
+        connections
     );
   }
 

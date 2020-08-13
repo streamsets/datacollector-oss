@@ -54,6 +54,7 @@ import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
 })
 @ConfigGroups(value = SapHanaGroups.class)
 public class SapHanaDSource extends JdbcDSource {
+
   @ConfigDefBean
   public SapHanaHikariPoolConfigBean hikariConfigBean;
 

@@ -29,12 +29,12 @@ import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 
 @StageDef(
-    //We bumped to 12, so we keep this in sync with other repos -> mysql, postgres, sqlserver
-    version = 12,
+    version = 13,
     label = "JDBC Query Consumer",
     description = "Reads data from a JDBC source using a query.",
     icon = "rdbms.png",
@@ -164,7 +164,7 @@ public class JdbcDSource extends DSource {
   public int txnMaxSize;
 
   @ConfigDefBean()
-  public HikariPoolConfigBean hikariConfigBean;
+  public JdbcHikariPoolConfigBean hikariConfigBean;
 
   /**
    * Returns the Hikari config bean.

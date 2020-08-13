@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution.manager.standalone;
 
 import com.codahale.metrics.MetricRegistry;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -77,9 +78,10 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.function.Function;
@@ -180,6 +182,7 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -193,7 +196,8 @@ public class TestStandalonePipelineManager {
           pipelineStateStore,
           new EventListenerManager(),
           lockCache,
-          pipelineCredentialsHandler
+          pipelineCredentialsHandler,
+          configuration
       );
       filePipelineStoreTask.init();
       return filePipelineStoreTask;
@@ -269,13 +273,15 @@ public class TestStandalonePipelineManager {
             ObjectGraph objectGraph,
             List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
             Function<Object, Void> afterActionsFunction,
-            boolean remote
+            boolean remote,
+            Map<String, ConnectionConfiguration> connections
         ) {
           Previewer mock = Mockito.mock(Previewer.class);
           Mockito.when(mock.getId()).thenReturn(UUID.randomUUID().toString());
           Mockito.when(mock.getName()).thenReturn(name);
           Mockito.when(mock.getRev()).thenReturn(rev);
           Mockito.when(mock.getInterceptorConfs()).thenReturn(interceptorConfs);
+          Mockito.when(mock.getConnections()).thenReturn(connections);
           Mockito.doAnswer(a -> {
             if (afterActionsFunction != null) {
               afterActionsFunction.apply(this);
@@ -369,10 +375,14 @@ public class TestStandalonePipelineManager {
     interceptorConf.setParameters(Collections.singletonMap("paramKey", "paramValue"));
 
     interceptorConfs.add(interceptorConf);
-    Previewer previewer = pipelineManager.createPreviewer("user", "abcd", "0", interceptorConfs, p -> {
-      this.afterActionsFunctionCallParam = p;
-      return null;
-    }, false);
+    Previewer previewer = pipelineManager.createPreviewer(
+        "user", "abcd", "0",
+        interceptorConfs, p -> {
+          this.afterActionsFunctionCallParam = p;return null;
+        },
+        false,
+        new HashMap<>()
+    );
     assertEquals(previewer, pipelineManager.getPreviewer(previewer.getId()));
     assertEquals(interceptorConfs, previewer.getInterceptorConfs());
     ((StandaloneAndClusterPipelineManager)pipelineManager).outputRetrieved(previewer.getId());

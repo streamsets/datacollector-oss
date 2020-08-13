@@ -37,6 +37,7 @@ import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
 
 import com.streamsets.datacollector.store.PipelineStoreTask;
+import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,8 +70,16 @@ TestMetricObserverRunner {
         new MetricRegistry(),
         Arrays.asList(TestDataRuleEvaluator.class.getClassLoader())
     );
-    metricObserverRunner = new MetricsObserverRunner(PIPELINE_NAME, REVISION, false, metrics,
-      new AlertManager(PIPELINE_NAME, PIPELINE_TITLE, REVISION, null, metrics, runtimeInfo, new EventListenerManager()), null);
+    metricObserverRunner = new MetricsObserverRunner(
+        PIPELINE_NAME,
+        REVISION,
+        false,
+        metrics,
+        new AlertManager(PIPELINE_NAME, PIPELINE_TITLE, REVISION, null, metrics, runtimeInfo, new EventListenerManager()),
+        null,
+        new Configuration(),
+        runtimeInfo
+    );
   }
 
   @Test

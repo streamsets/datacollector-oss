@@ -936,7 +936,7 @@ public class JdbcUtil {
     HikariConfig config = new HikariConfig();
 
     config.setJdbcUrl(hikariConfigBean.getConnectionString());
-    if (hikariConfigBean.useCredentials){
+    if (hikariConfigBean.useCredentials()){
       config.setUsername(hikariConfigBean.getUsername().get());
       config.setPassword(hikariConfigBean.getPassword().get());
     }

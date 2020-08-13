@@ -20,6 +20,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -181,6 +182,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(false,
         stageLibraryTask,
         pipelineConfiguration,
+        null,
+        null,
         null,
         new ArrayList<>()
     );
@@ -452,7 +455,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   ) throws IOException, TimeoutException, StageException {
     File stagingDir = new File(outputDir, "staging");
     if (!stagingDir.mkdirs() || !stagingDir.isDirectory()) {
@@ -478,7 +482,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
           ruleDefinitions,
           acl,
           interceptorCreatorContextBuilder,
-          blobStoreResources
+          blobStoreResources,
+          user
       );
     } finally {
       // in testing mode the staging dir is used by yarn
@@ -519,7 +524,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       RuleDefinitions ruleDefinitions,
       Acl acl,
       InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
-      List<String> blobStoreResources
+      List<String> blobStoreResources,
+      String user
   ) throws IOException, TimeoutException, StageException {
     // create libs.tar.gz file for pipeline
     Map<String, List<URL>> streamsetsLibsCl = new HashMap<>();
@@ -531,11 +537,14 @@ public abstract class BaseClusterProvider implements ClusterProvider {
     String clusterToken = UUID.randomUUID().toString();
     Set<String> jarsToShip = new LinkedHashSet<>();
     List<Issue> errors = new ArrayList<>();
+    HashMap<String, ConnectionConfiguration> connections = new HashMap<>();
     PipelineBean pipelineBean = PipelineBeanCreator.get().create(
         false,
         stageLibrary,
         pipelineConfiguration,
         interceptorCreatorContextBuilder,
+        user,
+        connections,
         errors
     );
     if (!errors.isEmpty()) {
@@ -855,6 +864,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
 
         clusterBootstrapApiJar,
 
+        user,
+
         errors
     );
   }
@@ -914,6 +925,8 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       String mesosHostingJarDir,
       String mesosURL,
       String clusterBootstrapApiJar,
+
+      String user,
 
       List<Issue> errors
   ) throws IOException, StageException;

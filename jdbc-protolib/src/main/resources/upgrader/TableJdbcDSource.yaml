@@ -33,3 +33,17 @@ upgrades:
             - setConfig:
                 name: tablePatternList
                 value: []
+  - toVersion: 10
+    actions:
+      - renameConfig:
+          oldNamePattern: hikariConfigBean.connectionString
+          newNamePattern: hikariConfigBean.connection.connectionString
+      - renameConfig:
+          oldNamePattern: hikariConfigBean.useCredentials
+          newNamePattern: hikariConfigBean.connection.useCredentials
+      - renameConfig:
+          oldNamePattern: hikariConfigBean.username
+          newNamePattern: hikariConfigBean.connection.username
+      - renameConfig:
+          oldNamePattern: hikariConfigBean.password
+          newNamePattern: hikariConfigBean.connection.password

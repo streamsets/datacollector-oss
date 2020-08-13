@@ -17,6 +17,7 @@ package com.streamsets.datacollector.execution;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 public class AclManager implements Manager {
@@ -81,10 +83,11 @@ public class AclManager implements Manager {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction,
-      boolean remote
+      boolean remote,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     aclStore.validateExecutePermission(name, currentUser);
-    return manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, remote);
+    return manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, remote, connections);
   }
 
   @Override

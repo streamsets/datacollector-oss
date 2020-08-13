@@ -15,12 +15,14 @@
  */
 package com.streamsets.datacollector.execution;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.util.PipelineException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 // one per SDC
@@ -42,7 +44,8 @@ public interface Manager extends Task {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction,
-      boolean remote
+      boolean remote,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException;
 
   // returns the previewer from the cache with the specified ID

@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.zaxxer.hikari.HikariDataSource;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class JdbcQueryExecutorConfig {
   private static final Logger LOG = LoggerFactory.getLogger(JdbcQueryExecutorConfig.class);
 
   @ConfigDefBean()
-  public HikariPoolConfigBean hikariConfigBean;
+  public JdbcHikariPoolConfigBean hikariConfigBean;
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.BASIC,

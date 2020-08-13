@@ -277,8 +277,9 @@ public class TestShellClusterProvider {
         ),
         null,
         null,
+        null,
         null
-        ).getAppId());
+    ).getAppId());
   }
 
   @Test
@@ -323,6 +324,7 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
         null,
         null,
         null
@@ -379,6 +381,7 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
         null,
         null,
         null
@@ -439,6 +442,7 @@ public class TestShellClusterProvider {
             UUID.randomUUID(),
             Collections.<Config>emptyList()
         ),
+        null,
         null,
         null,
         null
@@ -507,8 +511,9 @@ public class TestShellClusterProvider {
         ),
         null,
         null,
+        null,
         null
-        ).getAppId());
+    ).getAppId());
     Assert.assertEquals(ShellClusterProvider.CLUSTER_TYPE_MAPREDUCE, MockSystemProcess.env.get(ShellClusterProvider.CLUSTER_TYPE));
     Assert.assertTrue(MockSystemProcess.args.contains(
         "<masked>/bootstrap-lib/main/streamsets-datacollector-bootstrap-1.7.0.0-SNAPSHOT.jar," + "<masked>/avro-1.7.7" +
@@ -546,6 +551,7 @@ public class TestShellClusterProvider {
           ),
           null,
           null,
+          null,
           null
       ).getAppId();
       Assert.fail("Expected IO Exception");
@@ -581,8 +587,9 @@ public class TestShellClusterProvider {
         ),
         null,
         null,
+        null,
         null
-        ).getAppId());
+    ).getAppId());
       Assert.assertArrayEquals(
         new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
             "--executor-memory", "512m",
@@ -666,8 +673,9 @@ public class TestShellClusterProvider {
         ),
         null,
         null,
+        null,
         null
-        ).getAppId());
+    ).getAppId());
     Assert.assertArrayEquals(
         new String[]{"<masked>/libexec/_cluster-manager", "start", "--master", "yarn", "--deploy-mode", "cluster",
             "--executor-memory", "512m",

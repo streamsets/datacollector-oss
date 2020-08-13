@@ -15,10 +15,10 @@
  */
 package com.streamsets.pipeline.stage.lib.aws;
 
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
+import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
@@ -31,8 +31,8 @@ public class ProxyConfig {
       defaultValue = "10",
       description = "Set connection timeout (in seconds)",
       displayPosition = 4995,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0",
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public Integer connectionTimeout = 10;
 
@@ -44,7 +44,7 @@ public class ProxyConfig {
       description = "Set socket timeout (in seconds) for read and write operations. ",
       displayPosition = 4997,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public Integer socketTimeout = 50;
 
@@ -57,7 +57,7 @@ public class ProxyConfig {
           "retry-able requests (ex: 5xx error).",
       displayPosition = 4999,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public Integer retryCount = 3;
 
@@ -70,7 +70,7 @@ public class ProxyConfig {
       defaultValue = "false",
       displayPosition = 5000,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public boolean useProxy;
 
@@ -83,7 +83,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public String proxyHost;
 
@@ -96,7 +96,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public int proxyPort;
 
@@ -109,7 +109,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public CredentialValue proxyUser;
 
@@ -122,7 +122,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public CredentialValue proxyPassword;
 
@@ -135,7 +135,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public String proxyDomain;
 
@@ -148,7 +148,7 @@ public class ProxyConfig {
       dependsOn = "useProxy",
       triggeredByValue = "true",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
+      group = "#0"
   )
   public String proxyWorkstation;
 }

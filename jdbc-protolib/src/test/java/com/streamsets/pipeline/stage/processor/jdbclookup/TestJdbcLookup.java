@@ -22,8 +22,9 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.DataType;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -103,11 +104,12 @@ public class TestJdbcLookup {
 
   private JdbcLookupDProcessor createProcessor() {
     JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
-    processor.hikariConfigBean = new HikariPoolConfigBean();
-    processor.hikariConfigBean.connectionString = h2ConnectionString;
-    processor.hikariConfigBean.useCredentials = true;
-    processor.hikariConfigBean.username = () -> username;
-    processor.hikariConfigBean.password = () -> password;
+    processor.hikariConfigBean = new JdbcHikariPoolConfigBean();
+    processor.hikariConfigBean.connection = new JdbcConnection();
+    processor.hikariConfigBean.connection.connectionString = h2ConnectionString;
+    processor.hikariConfigBean.connection.useCredentials = true;
+    processor.hikariConfigBean.connection.username = () -> username;
+    processor.hikariConfigBean.connection.password = () -> password;
     processor.cacheConfig = new CacheConfig();
     processor.cacheConfig.evictionPolicyType = EvictionPolicyType.EXPIRE_AFTER_WRITE;
 
@@ -349,7 +351,7 @@ public class TestJdbcLookup {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
 
     JdbcLookupDProcessor processor = createProcessor();
-    processor.hikariConfigBean.connectionString = "bad connection string";
+    processor.hikariConfigBean.connection.connectionString = "bad connection string";
 
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)
@@ -370,8 +372,8 @@ public class TestJdbcLookup {
     List<JdbcFieldColumnMapping> columnMappings = ImmutableList.of(new JdbcFieldColumnMapping("P_ID", "[2]"));
 
     JdbcLookupDProcessor processor = createProcessor();
-    processor.hikariConfigBean.username = () -> "foo";
-    processor.hikariConfigBean.password = () -> "bar";
+    processor.hikariConfigBean.connection.username = () -> "foo";
+    processor.hikariConfigBean.connection.password = () -> "bar";
 
     ProcessorRunner processorRunner = new ProcessorRunner.Builder(JdbcLookupDProcessor.class, processor)
         .addConfiguration("query", listQuery)

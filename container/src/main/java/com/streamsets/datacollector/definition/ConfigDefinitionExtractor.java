@@ -501,12 +501,13 @@ public abstract class ConfigDefinitionExtractor {
         String mode = (annotation.mode() != null) ? getMimeString(annotation.mode()) : null;
         int lines = annotation.lines();
         ConfigDef.Evaluation evaluation = annotation.evaluation();
+        String connectionType = annotation.connectionType();
 
         def = new ConfigDefinition(field, configPrefix + name, type, upload, label, description, defaultValue,
                                    defaultValueFromResource, required, group,
                                    fieldName, model, dependsOn, triggeredByValues, displayPosition,
                                    elFunctionDefinitions, elConstantDefinitions, min, max, mode, lines, elDefs,
-                                   evaluation, dependsOnMap, annotation.displayMode());
+                                   evaluation, dependsOnMap, annotation.displayMode(), connectionType);
       }
       return def;
     } else {

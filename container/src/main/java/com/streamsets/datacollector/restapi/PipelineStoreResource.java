@@ -22,6 +22,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.config.DataRuleDefinition;
+import com.streamsets.datacollector.config.DetachedConnectionConfiguration;
 import com.streamsets.datacollector.config.DetachedStageConfiguration;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -45,6 +46,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.AddLabelsRequestJson;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
+import com.streamsets.datacollector.restapi.bean.DetachedConnectionConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.DetachedStageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.MultiStatusResponseJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -69,6 +71,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.EdgeUtil;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.DetachedConnectionValidator;
 import com.streamsets.datacollector.validation.DetachedStageValidator;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.datacollector.validation.PipelineFragmentConfigurationValidator;
@@ -238,6 +241,7 @@ public class PipelineStoreResource {
     this.configuration = configuration;
     this.manager = manager;
     this.activation = activation;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
 
     UserJson currentUser;
     if (runtimeInfo.isDPMEnabled()) {
@@ -699,7 +703,14 @@ public class PipelineStoreResource {
     switch (get) {
       case "pipeline":
         PipelineConfiguration pipeline = store.load(name, rev);
-        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipeline);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+            stageLibrary,
+            buildInfo,
+            name,
+            pipeline,
+            user,
+            new HashMap<>()
+        );
         pipeline = validator.validate();
         data = BeanHelper.wrapPipelineConfiguration(pipeline);
         title = pipeline.getTitle() != null ? pipeline.getTitle() : pipeline.getInfo().getPipelineId();
@@ -866,7 +877,9 @@ public class PipelineStoreResource {
         stageLibrary,
         buildInfo,
         pipelineId,
-        pipelineConfig
+        pipelineConfig,
+        user,
+        new HashMap<>()
     );
     pipelineConfig = validator.validate();
 
@@ -957,7 +970,9 @@ public class PipelineStoreResource {
         stageLibrary,
         buildInfo,
         pipelineId,
-        pipelineFragmentConfig
+        pipelineFragmentConfig,
+        user,
+        new HashMap<>()
     );
     pipelineFragmentConfig = validator.validateFragment();
 
@@ -1020,7 +1035,14 @@ public class PipelineStoreResource {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipeline);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        name,
+        pipelineConfig,
+        user,
+        new HashMap<>()
+    );
     pipelineConfig = validator.validate();
     pipelineConfig = store.save(user, name, rev, description, pipelineConfig, encryptCredentials);
     return Response.ok().entity(BeanHelper.wrapPipelineConfiguration(pipelineConfig)).build();
@@ -1082,7 +1104,7 @@ public class PipelineStoreResource {
     if(ruleDefinitions != null) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
       PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, new ArrayList<>(), null);
+          .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
       RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
           pipelineId,
           ruleDefinitions,
@@ -1120,7 +1142,7 @@ public class PipelineStoreResource {
     RuleDefinitions ruleDefs = BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson);
     PipelineConfiguration pipelineConfiguration = store.load(pipelineId, rev);
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         pipelineId,
         ruleDefs,
@@ -1149,7 +1171,14 @@ public class PipelineStoreResource {
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
 
     PipelineConfiguration pipelineConfig = store.load(name, rev);
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        name,
+        pipelineConfig,
+        user,
+        new HashMap<>()
+    );
     pipelineConfig = validator.validate();
     RuleDefinitions ruleDefinitions = store.retrieveRules(name, rev);
     PipelineEnvelopeJson pipelineEnvelope = PipelineConfigurationUtil.getPipelineEnvelope(
@@ -1298,7 +1327,14 @@ public class PipelineStoreResource {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
 
-    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, name, pipelineConfig);
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        name,
+        pipelineConfig,
+        user,
+        new HashMap<>()
+    );
     pipelineConfig = validator.validate();
 
     RuleDefinitionsJson ruleDefinitionsJson = pipelineEnvelope.getPipelineRules();
@@ -1342,7 +1378,7 @@ public class PipelineStoreResource {
     }
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfig, new ArrayList<>(), null);
+        .create(pipelineConfig, new ArrayList<>(), null, null, null);
     RuleDefinitionValidator ruleDefinitionValidator = new RuleDefinitionValidator(
         name,
         ruleDefinitions,
@@ -1399,7 +1435,9 @@ public class PipelineStoreResource {
         stageLibrary,
         buildInfo,
         fragmentId,
-        fragmentConfig
+        fragmentConfig,
+        user,
+        new HashMap<>()
     );
     fragmentConfig = validator.validateFragment();
 
@@ -1454,7 +1492,14 @@ public class PipelineStoreResource {
 
         metadata.put("labels", metaLabels);
         RestAPIUtils.injectPipelineInMDC(pipelineConfig.getInfo().getTitle(), pipelineId);
-        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary, buildInfo, pipelineId, pipelineConfig);
+        PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+            stageLibrary,
+            buildInfo,
+            pipelineId,
+            pipelineConfig,
+            user,
+            new HashMap<>()
+        );
         pipelineConfig = validator.validate();
         store.save(user, pipelineId, "0", pipelineConfig.getDescription(), pipelineConfig, false);
         successEntities.add(pipelineId);
@@ -1496,7 +1541,7 @@ public class PipelineStoreResource {
     for (String pipelineId: pipelineIdArr) {
       PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
       PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-          .create(pipelineConfiguration, new ArrayList<>(), null);
+          .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
       if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
         throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
       }
@@ -1562,7 +1607,9 @@ public class PipelineStoreResource {
               stageLibrary,
               buildInfo,
               pipelineConfig.getPipelineId(),
-              pipelineConfig
+              pipelineConfig,
+              user,
+              new HashMap<>()
           );
           pipelineConfig = validator.validate();
 
@@ -1645,6 +1692,25 @@ public class PipelineStoreResource {
     DetachedStageConfiguration stageConf = detachedStage.getDetachedStageConfiguration();
     DetachedStageValidator validator = new DetachedStageValidator(stageLibrary, stageConf);
     return Response.ok().entity(new DetachedStageConfigurationJson(validator.validate())).build();
+  }
+
+  @Path("/detachedconnection")
+  @POST
+  @ApiOperation(value = "Validates given detached connection and performs any necessary upgrade.",
+    response = DetachedConnectionConfigurationJson.class,
+    authorizations = @Authorization(value = "basic")
+  )
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({
+      AuthzRole.CREATOR, AuthzRole.ADMIN, AuthzRole.CREATOR_REMOTE, AuthzRole.ADMIN_REMOTE
+  })
+  public Response validateDetachedConnection(
+      @ApiParam(name="connection", required = true) DetachedConnectionConfigurationJson detachedConnection
+  ) {
+    DetachedConnectionConfiguration connectionConf = detachedConnection.getDetachedConnectionConfiguration();
+    DetachedConnectionValidator validator = new DetachedConnectionValidator(stageLibrary, connectionConf);
+    return Response.ok().entity(new DetachedConnectionConfigurationJson(validator.validate())).build();
   }
 
   private void setStreamingModeDefaults(PipelineConfiguration pipelineConfig) {

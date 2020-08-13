@@ -232,13 +232,14 @@ public class ShellClusterProvider extends BaseClusterProvider {
       String mesosHostingJarDir,
       String mesosURL,
       String clusterBootstrapApiJar,
+      String user,
       List<Issue> errors
   ) throws IOException {
     ExecutionMode executionMode = PipelineBeanCreator.get().getExecutionMode(pipelineConfiguration, new ArrayList<>());
     Map<String, String> environment = new HashMap<>(pipelineConfigBean.clusterLauncherEnv);
     addKerberosConfiguration(environment);
     errors.clear();
-    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors, null);
+    PipelineConfigBean config = PipelineBeanCreator.get().create(pipelineConfiguration, errors, null, user, new HashMap<>());
     Utils.checkArgument(config != null, Utils.formatL("Invalid pipeline configuration: {}", errors));
     String numExecutors = config.workerCount == 0 ?
                           sourceInfo.get(ClusterModeConstants.NUM_EXECUTORS_KEY) : String.valueOf(config.workerCount);

@@ -45,7 +45,7 @@ public class TestPipeBatch {
     List<Issue> errors = new ArrayList<>();
     StageLibraryTask library = MockStages.createStageLibrary();
     PipelineConfiguration pipelineConf = MockStages.createPipelineConfigurationSourceTarget();
-    PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, errors);
+    PipelineBean pipelineBean = PipelineBeanCreator.get().create(false, library, pipelineConf, null, null, null, errors);
     if (pipelineBean == null) {
       Assert.fail(errors.toString());
     }

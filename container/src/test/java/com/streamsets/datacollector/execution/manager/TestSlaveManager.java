@@ -54,6 +54,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -114,25 +115,25 @@ public class TestSlaveManager {
       return Mockito.spy(new EventListenerManager());
     }
 
-
     @Provides
     @Singleton
     public PipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         EventListenerManager eventListenerManager,
         PipelineStateStore pipelineStateStore
     ) {
-      PipelineStoreTask pipelineStoreTask =
-        new SlavePipelineStoreTask(new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
-            buildInfo,
-            runtimeInfo,
-            stageLibraryTask,
-            eventListenerManager,
-            new FilePipelineStateStore(runtimeInfo, provideConfiguration())
-        ));
-      return pipelineStoreTask;
+      return new SlavePipelineStoreTask(
+            new TestUtil.TestPipelineStoreModuleNew().providePipelineStore(
+                buildInfo,
+                configuration,
+                runtimeInfo,
+                stageLibraryTask,
+                eventListenerManager,
+                new FilePipelineStateStore(runtimeInfo, provideConfiguration()))
+        );
     }
 
     @Provides

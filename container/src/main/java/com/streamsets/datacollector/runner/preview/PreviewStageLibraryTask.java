@@ -17,6 +17,7 @@ package com.streamsets.datacollector.runner.preview;
 
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -27,6 +28,7 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
@@ -219,5 +221,20 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   @Override
   public StageLibraryDefinition getStageLibraryDefinition(String libraryName) {
     return library.getStageLibraryDefinition(libraryName);
+  }
+
+  @Override
+  public List<ConnectionDefinition> getConnections() {
+    return library.getConnections();
+  }
+
+  @Override
+  public ConnectionDefinition getConnection(String library, String type) {
+    return this.library.getConnection(library, type);
+  }
+
+  @Override
+  public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
+    return library.getConnectionVerifierMap();
   }
 }

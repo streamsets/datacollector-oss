@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.function.Function;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -60,7 +61,8 @@ public interface DataCollector {
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl,
-      Map<String, Object> metadata
+      Map<String, Object> metadata,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException;
 
   void savePipelineRules(String name, String rev, RuleDefinitions ruleDefinitions) throws PipelineException;
@@ -105,7 +107,8 @@ public interface DataCollector {
       long timeoutMillis,
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException;
 
   Future<AckEvent> stopAndDelete(String user, String name, String rev,

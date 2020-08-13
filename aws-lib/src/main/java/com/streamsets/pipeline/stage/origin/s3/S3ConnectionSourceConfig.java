@@ -20,7 +20,6 @@ import com.amazonaws.services.s3.model.ListObjectsRequest;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.common.s3.S3ConnectionBaseConfig;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,12 +42,11 @@ public class S3ConnectionSourceConfig extends S3ConnectionBaseConfig {
   public void init(
     Stage.Context context,
     String configPrefix,
-    ProxyConfig proxyConfig,
     boolean prefixHasWildcard,
     List<Stage.ConfigIssue> issues,
     int maxErrorRetries
   ) {
-    super.init(context, configPrefix, proxyConfig, issues, maxErrorRetries);
+    super.init(context, configPrefix, issues, maxErrorRetries);
     if (prefixHasWildcard && issues.isEmpty()) {
       validateConnection(context, configPrefix, issues);
     }
@@ -61,7 +59,13 @@ public class S3ConnectionSourceConfig extends S3ConnectionBaseConfig {
   ) {
     try {
       //check if the credentials are right by trying to list an object in the common prefix
-      getS3Client().listObjects(new ListObjectsRequest(bucket, commonPrefix, null, delimiter, 1).withEncodingType("url"));
+      getS3Client().listObjects(new ListObjectsRequest(
+          bucket,
+          commonPrefix,
+          null,
+          delimiter,
+          1
+      ).withEncodingType("url"));
     } catch (AmazonS3Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.toString(), e);
       issues.add(

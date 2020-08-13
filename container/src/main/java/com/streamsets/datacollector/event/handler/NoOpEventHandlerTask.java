@@ -17,10 +17,13 @@ package com.streamsets.datacollector.event.handler;
 
 import javax.inject.Inject;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
 import com.streamsets.datacollector.task.AbstractTask;
+
+import java.util.Map;
 
 public class NoOpEventHandlerTask extends AbstractTask implements EventHandlerTask {
 
@@ -30,12 +33,12 @@ public class NoOpEventHandlerTask extends AbstractTask implements EventHandlerTa
   }
 
   @Override
-  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType, Map<String, ConnectionConfiguration> connections) {
     return RemoteDataCollectorResult.empty();
   }
 
   @Override
-  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType, Map<String, ConnectionConfiguration> connections) {
     return RemoteDataCollectorResult.empty();
   }
 }

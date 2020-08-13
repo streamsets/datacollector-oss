@@ -24,6 +24,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.dto.PipelineConfigAndRules;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
@@ -69,7 +70,6 @@ import com.streamsets.datacollector.execution.StartPipelineContextBuilder;
 import com.streamsets.datacollector.io.DataStore;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
-import com.streamsets.datacollector.main.ProductBuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
@@ -128,6 +128,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   private static final long DEFAULT_PIPELINE_METRICS_INTERVAL = -1;
   private static final long SYSTEM_LIMIT_MIN_STATUS_EVENTS_INTERVAL = 30000;
   private static final String REMOTE_CONTROL = AbstractSSOService.CONFIG_PREFIX + "remote.control.";
+  private static final long DEFAULT_PREVIEW_TIMEOUT = 10000L;
 
   public static final String REMOTE_JOB_LABELS = REMOTE_CONTROL + "job.labels";
   private static final String REMOTE_URL_PING_INTERVAL = REMOTE_CONTROL  + "ping.frequency";
@@ -262,6 +263,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
     requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
+    PipelineBeanCreator.prepareForConnections(conf, runtimeInfo);
     stopWatch = Stopwatch.createUnstarted();
     stopWatchForSyncEvents = Stopwatch.createUnstarted();
 
@@ -401,7 +403,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   }
 
   @Override
-  public RemoteDataCollectorResult handleLocalEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleLocalEvent(
+      Event event,
+      EventType eventType,
+      Map<String, ConnectionConfiguration> connections
+  ) {
     RemoteDataCollectorResult result;
     try {
       switch (eventType) {
@@ -423,6 +429,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           final List<StageOutput> stageOutputs = stageOutputJsons.stream().map(
               json -> json.getStageOutput()
           ).collect(Collectors.toList());
+          long timeoutMillis = pipelinePreviewEvent.getTimeoutMillis() > 0 ?
+              pipelinePreviewEvent.getTimeoutMillis() : DEFAULT_PREVIEW_TIMEOUT;
           result = RemoteDataCollectorResult.immediate(remoteDataCollector.previewPipeline(
               pipelinePreviewEvent.getUser(),
               pipelinePreviewEvent.getName(),
@@ -433,14 +441,15 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
               pipelinePreviewEvent.isSkipLifecycleEvents(),
               pipelinePreviewEvent.getStopStage(),
               stageOutputs,
-              pipelinePreviewEvent.getTimeoutMillis(),
+              timeoutMillis,
               pipelinePreviewEvent.isTestOrigin(),
               pipelinePreviewEvent.getInterceptorConfiguration(),
-              pipelinePreviewEvent.getAfterActionsFunction()
+              pipelinePreviewEvent.getAfterActionsFunction(),
+              connections
           ));
           break;
         default:
-          result = handleEventHelper(event, eventType);
+          result = handleEventHelper(event, eventType, connections);
           break;
       }
     } catch (Exception e) {
@@ -455,10 +464,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   }
 
   @Override
-  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType) {
+  public RemoteDataCollectorResult handleRemoteEvent(Event event, EventType eventType, Map<String, ConnectionConfiguration> connections) {
     RemoteDataCollectorResult result;
     try {
-      result = handleEventHelper(event, eventType);
+      result = handleEventHelper(event, eventType, connections);
     } catch (Exception ex) {
       LOG.error("Encountered exception handling remote event type: '{}': {}", eventType, ex.getMessage(), ex);
       result = RemoteDataCollectorResult.error(Utils.format(
@@ -470,7 +479,11 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     return result;
   }
 
-  private RemoteDataCollectorResult handleEventHelper(Event event, EventType eventType) throws Exception {
+  private RemoteDataCollectorResult handleEventHelper(
+      Event event,
+      EventType eventType,
+      Map<String, ConnectionConfiguration> connections
+  ) throws Exception {
     RemoteDataCollectorResult result = RemoteDataCollectorResult.empty();
     switch (eventType) {
       case PING_FREQUENCY_ADJUSTMENT:
@@ -500,7 +513,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
             BeanHelper.unwrapPipelineConfiguration(pipelineConfigJson),
             BeanHelper.unwrapRuleDefinitions(ruleDefinitionsJson),
             pipelineSaveEvent.getAcl(),
-            new HashMap<>()
+            new HashMap<>(),
+            connections
         );
         result = RemoteDataCollectorResult.immediate(pipelineId);
         break;
@@ -1089,7 +1103,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Event event = serverEvent.getEvent();
       EventType eventType = serverEvent.getEventType();
       LOG.info("Handling {} event: '{}' ", eventType, serverEvent);
-      RemoteDataCollectorResult result = handleRemoteEvent(event, eventType);
+      RemoteDataCollectorResult result = handleRemoteEvent(event, eventType, new HashMap<>());
       if (result.isError()) {
         LOG.error(result.getErrorMessage());
         ackEventMessage = result.getErrorMessage();
@@ -1223,7 +1237,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
       Runner runner = remoteDataCollector.getRunner(pipelineState.getPipelineId(), pipelineState.getRev());
       if (runner != null) {
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get()
-            .create(runner.getPipelineConfiguration(), new ArrayList<>(), null);
+            .create(runner.getPipelineConfiguration(pipelineState.getUser()), new ArrayList<>(), null, null, null);
         SDCMetricsJson sdcMetricsJson = new SDCMetricsJson();
 
         Object metrics = runner.getMetrics();

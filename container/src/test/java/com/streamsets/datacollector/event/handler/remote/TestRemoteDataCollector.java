@@ -18,6 +18,7 @@ package com.streamsets.datacollector.event.handler.remote;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -158,7 +159,8 @@ public class TestRemoteDataCollector {
         String rev,
         List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
         Function<Object, Void> afterActionsFunction,
-        boolean remote
+        boolean remote,
+        Map<String, ConnectionConfiguration> connections
     ) throws PipelineStoreException {
       final MockPreviewer mockPreviewer = new MockPreviewer(user, name, rev, interceptorConfs, afterActionsFunction);
       Previewer previewer = mockPreviewer;
@@ -300,12 +302,17 @@ public class TestRemoteDataCollector {
     }
 
     @Override
+    public Map<String, ConnectionConfiguration> getConnections() {
+      return null;
+    }
+
+    @Override
     public String getPipelineTitle() throws PipelineException {
       return null;
     }
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return null;
     }
 
@@ -506,121 +513,6 @@ public class TestRemoteDataCollector {
     @Override
     public Runner getDelegatingRunner() {
       return null;
-    }
-  }
-
-  private static class MockPreviewer implements Previewer {
-
-    private String user;
-    private String name;
-    private String rev;
-    public static int validateConfigsCalled;
-    public boolean isValid;
-    private final List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs;
-    public boolean previewStarted;
-    public boolean previewStopped;
-    private final Function afterActionsFunction;
-
-    MockPreviewer(
-        String user,
-        String name,
-        String rev,
-        List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-        Function<Object, Void> afterActionsFunction
-    ) {
-      this.user = user;
-      this.name = name;
-      this.rev = rev;
-      this.interceptorConfs = interceptorConfs;
-      this.afterActionsFunction = afterActionsFunction;
-    }
-
-    @Override
-    public String getId() {
-      return user + name + rev;
-    }
-
-    @Override
-    public String getName() {
-      return name;
-    }
-
-    @Override
-    public String getRev() {
-      // TODO Auto-generated method stub
-      return rev;
-    }
-
-    @Override
-    public List<PipelineStartEvent.InterceptorConfiguration> getInterceptorConfs() {
-      return interceptorConfs;
-    }
-
-    @Override
-    public void validateConfigs(long timeoutMillis) {
-      if (name.equals("ns:name")) {
-        isValid = true;
-      } else {
-        isValid = false;
-      }
-      validateConfigsCalled++;
-    }
-
-    @Override
-    public RawPreview getRawSource(
-        int maxLength,
-        MultivaluedMap<String, String> previewParams
-    ) {
-      // TODO Auto-generated method stub
-      return null;
-    }
-
-    @Override
-    public void start(
-        int batches,
-        int batchSize,
-        boolean skipTargets,
-        boolean skipLifecycleEvents,
-        String stopStage,
-        List<StageOutput> stagesOverride,
-        long timeoutMillis,
-        boolean testOrigin
-    ) {
-      previewStarted = true;
-    }
-
-    @Override
-    @SuppressWarnings("ReturnValueIgnored") // needed for lambda call, which always returns null
-    public void stop() {
-      previewStopped = true;
-      if (afterActionsFunction != null) {
-        afterActionsFunction.apply(this);
-      }
-    }
-
-    @Override
-    public boolean waitForCompletion(long timeoutMillis) throws PipelineException {
-      // TODO Auto-generated method stub
-      return false;
-    }
-
-    @Override
-    public PreviewStatus getStatus() {
-      if (isValid) {
-        return PreviewStatus.VALID;
-      } else {
-        return PreviewStatus.INVALID;
-      }
-    }
-
-    @Override
-    public PreviewOutput getOutput() {
-      if (isValid) {
-        return new PreviewOutputImpl(PreviewStatus.VALID, null, (List)null);
-      } else {
-        Issues issues = new Issues();
-        return new PreviewOutputImpl(PreviewStatus.INVALID, issues, (List)null);
-      }
     }
   }
 
@@ -1109,7 +1001,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         acl,
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        new HashMap<>()
     );
     Mockito.verify(aclStoreTask, Mockito.times(1)).saveAcl(Mockito.eq("foo"), Mockito.eq(acl));
   }
@@ -1177,7 +1070,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         new Acl(),
-        Collections.emptyMap()
+        Collections.emptyMap(),
+        new HashMap<>()
     );
     Mockito.verify(pipelineStoreTask).save(
         Mockito.eq("user"),
@@ -1222,7 +1116,8 @@ public class TestRemoteDataCollector {
         mockPipelineConfiguration(),
         null,
         new Acl(),
-        new HashMap<String, Object>()
+        new HashMap<String, Object>(),
+        new HashMap<>()
     );
     assertTrue("Offset File doesn't exist", OffsetFileUtil.getPipelineOffsetFile(runtimeInfo, "foo", "0").exists());
     assertEquals(
@@ -1410,7 +1305,8 @@ public class TestRemoteDataCollector {
         p -> {
           this.afterActionsFunctionParam = p;
           return null;
-        }
+        },
+        new HashMap<>()
     );
     final MockPreviewer lastPreviewer = manager.getLastPreviewer();
 

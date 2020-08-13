@@ -17,6 +17,7 @@ package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
@@ -30,9 +31,11 @@ import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.InterceptorCreatorContextBuilder;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderReleaser;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 import com.streamsets.datacollector.validation.IssueCreator;
 import com.streamsets.pipeline.api.Config;
@@ -68,6 +71,10 @@ public abstract class PipelineBeanCreator {
 
   public static PipelineBeanCreator get() {
     return CREATOR;
+  }
+
+  public static void prepareForConnections(Configuration configuration, RuntimeInfo runtimeInfo) {
+    ConfigInjector.prepareForConnections(configuration, runtimeInfo);
   }
 
   public static final StageDefinition PIPELINE_DEFINITION = getPipelineDefinition();
@@ -124,10 +131,18 @@ public abstract class PipelineBeanCreator {
   public PipelineConfigBean create(
       PipelineConfiguration pipelineConf,
       List<Issue> errors,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
     int priorErrors = errors.size();
-    PipelineConfigBean pipelineConfigBean = createPipelineConfigs(pipelineConf, errors, runtimeParameters);
+    PipelineConfigBean pipelineConfigBean = createPipelineConfigs(
+        pipelineConf,
+        errors,
+        runtimeParameters,
+        user,
+        connections
+    );
     return (errors.size() == priorErrors) ? pipelineConfigBean : null;
   }
 
@@ -138,7 +153,15 @@ public abstract class PipelineBeanCreator {
       Map<String, Object> runtimeParameters
   ) {
     RuleDefinitionsConfigBean ruleDefinitionsConfigBean = new RuleDefinitionsConfigBean();
-    ConfigInjector.get().injectStage(ruleDefinitionsConfigBean, RULES_DEFINITION, getRulesConfAsStageConf(ruleDefinitions), runtimeParameters, errors);
+    ConfigInjector.get().injectStage(
+        ruleDefinitionsConfigBean,
+        RULES_DEFINITION,
+        getRulesConfAsStageConf(ruleDefinitions),
+        runtimeParameters,
+        null,
+        null,
+        errors
+    );
     return ruleDefinitionsConfigBean;
   }
 
@@ -147,9 +170,11 @@ public abstract class PipelineBeanCreator {
       StageLibraryTask library,
       PipelineConfiguration pipelineConf,
       InterceptorCreatorContextBuilder interceptorContextBuilder,
+      String user,
+      Map<String, ConnectionConfiguration> connections,
       List<Issue> errors
   ) {
-    return create(forExecution, library, pipelineConf, interceptorContextBuilder, errors, null);
+    return create(forExecution, library, pipelineConf, interceptorContextBuilder, errors, null, user, connections);
   }
 
   /**
@@ -166,10 +191,12 @@ public abstract class PipelineBeanCreator {
       PipelineConfiguration pipelineConf,
       InterceptorCreatorContextBuilder interceptorContextBuilder,
       List<Issue> errors,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
     int priorErrors = errors.size();
-    PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors, runtimeParameters);
+    PipelineConfigBean pipelineConfigBean = create(pipelineConf, errors, runtimeParameters, user, connections);
     StageBean errorStageBean = null;
     StageBean statsStageBean = null;
     StageBean origin = null;
@@ -196,6 +223,8 @@ public abstract class PipelineBeanCreator {
             false,
             resolvedConstants,
             interceptorContextBuilder,
+            user,
+            connections,
             errors
         );
 
@@ -205,6 +234,8 @@ public abstract class PipelineBeanCreator {
             pipelineConf.getStages().subList(1, pipelineConf.getStages().size()),
             interceptorContextBuilder,
             resolvedConstants,
+            user,
+            connections,
             errors
         );
       }
@@ -221,6 +252,8 @@ public abstract class PipelineBeanCreator {
             false,
             resolvedConstants,
             interceptorContextBuilder,
+            user,
+            connections,
             errors
         );
       }
@@ -237,6 +270,8 @@ public abstract class PipelineBeanCreator {
             false,
             resolvedConstants,
             interceptorContextBuilder,
+            user,
+            connections,
             errors
         );
       } else if (!(pipelineConfigBean.executionMode.equals(ExecutionMode.BATCH) ||
@@ -260,6 +295,8 @@ public abstract class PipelineBeanCreator {
             true,
             resolvedConstants,
             interceptorContextBuilder,
+            user,
+            connections,
             errors
         );
       }
@@ -275,6 +312,8 @@ public abstract class PipelineBeanCreator {
             true,
             resolvedConstants,
             interceptorContextBuilder,
+            user,
+            connections,
             errors
         );
       }
@@ -321,6 +360,8 @@ public abstract class PipelineBeanCreator {
     List<StageConfiguration> stageConfigurations,
     InterceptorCreatorContextBuilder interceptorContextBuilder,
     Map<String, Object> constants,
+    String user,
+    Map<String, ConnectionConfiguration> connections,
     List<Issue> errors
   ) {
     List<StageBean> stageBeans = new ArrayList<>(stageConfigurations.size());
@@ -335,6 +376,8 @@ public abstract class PipelineBeanCreator {
           false,
           constants,
           interceptorContextBuilder,
+          user,
+          connections,
           errors
       );
 
@@ -362,6 +405,8 @@ public abstract class PipelineBeanCreator {
     PipelineStageBeans pipelineStageBeans,
     InterceptorCreatorContextBuilder interceptorCreatorContextBuilder,
     Map<String, Object> constants,
+    String user,
+    Map<String, ConnectionConfiguration> connections,
     List<Issue> errors
   ) {
     List<StageBean> stageBeans = new ArrayList<>(pipelineStageBeans.size());
@@ -381,6 +426,8 @@ public abstract class PipelineBeanCreator {
           services::get,
           interceptorCreatorContextBuilder,
           constants,
+          user,
+          connections,
           errors
       );
 
@@ -462,6 +509,8 @@ public abstract class PipelineBeanCreator {
    * @param errorStage True if the stage needs to be declared as error stage
    * @param pipelineLifecycleStage True if the stage needs to be declared as pipeline lifecycle stage
    * @param constants Pipeline constants (runtime parameters)
+   * @param user The user who is creating the pipeline
+   * @param connections A map of Connections
    * @param errors List where all errors will be persisted
    * @return New StageBean instance or null on any error
    */
@@ -474,6 +523,8 @@ public abstract class PipelineBeanCreator {
       boolean pipelineLifecycleStage,
       Map<String, Object> constants,
       InterceptorCreatorContextBuilder interceptorContextBuilder,
+      String user,
+      Map<String, ConnectionConfiguration> connections,
       List<Issue> errors
   ) {
     IssueCreator issueCreator = IssueCreator.getStage(stageConf.getInstanceName());
@@ -512,6 +563,8 @@ public abstract class PipelineBeanCreator {
         serviceClass -> library.getServiceDefinition(serviceClass, true),
         interceptorContextBuilder,
         constants,
+        user,
+        connections,
         errors
       );
     } else {
@@ -569,11 +622,19 @@ public abstract class PipelineBeanCreator {
   private PipelineConfigBean createPipelineConfigs(
       PipelineConfiguration pipelineConf,
       List<Issue> errors,
-      Map<String, Object> runtimeParameters
+      Map<String, Object> runtimeParameters,
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
     PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
     StageConfiguration stageConf = getPipelineConfAsStageConf(pipelineConf);
-    if (ConfigInjector.get().createConfigBeans(pipelineConfigBean, "", new ConfigInjector.StageInjectorContext(PIPELINE_DEFINITION, stageConf, runtimeParameters, errors))) {
+    ConfigInjector.StageInjectorContext context = new ConfigInjector.StageInjectorContext(PIPELINE_DEFINITION,
+        stageConf, runtimeParameters, user, connections, errors);
+    if (ConfigInjector.get().createConfigBeans(
+        pipelineConfigBean,
+        "",
+        context
+    )) {
 
       // To support parameters in Pipeline Configuration inject "parameters" (constants) field first
       Config parametersConfigConf = stageConf.getConfig(PARAMETERS);
@@ -585,7 +646,7 @@ public abstract class PipelineBeanCreator {
               PipelineConfigBean.class.getField(PARAMETERS),
               parametersConfigConf.getValue(),
               parametersConfigDef,
-              new ConfigInjector.StageInjectorContext(PIPELINE_DEFINITION, stageConf, Collections.EMPTY_MAP, errors)
+              new ConfigInjector.StageInjectorContext(context, Collections.EMPTY_MAP)
           );
         } catch (NoSuchFieldException ex) {
           IssueCreator issueCreator = IssueCreator.getStage(stageConf.getStageName());
@@ -610,7 +671,11 @@ public abstract class PipelineBeanCreator {
         }
       }
 
-      ConfigInjector.get().injectConfigs(pipelineConfigBean, "", new ConfigInjector.StageInjectorContext(PIPELINE_DEFINITION, stageConf, pipelineConfigBean.constants, errors));
+      ConfigInjector.get().injectConfigs(
+          pipelineConfigBean,
+          "",
+          new ConfigInjector.StageInjectorContext(context, pipelineConfigBean.constants)
+      );
 
       if (runtimeParameters != null) {
         pipelineConfigBean.constants = resolvedConstants;
@@ -627,6 +692,8 @@ public abstract class PipelineBeanCreator {
       Function<Class, ServiceDefinition> serviceDefinitionResolver,
       InterceptorCreatorContextBuilder interceptorContextBuilder,
       Map<String, Object> pipelineConstants,
+      String user,
+      Map<String, ConnectionConfiguration> connections,
       List<Issue> errors
   ) {
     Stage stage;
@@ -635,13 +702,13 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(stageDef.getStageClassLoader());
       stage = createStageInstance(stageDef, stageConf.getInstanceName(), errors);
       if (stage != null) {
-        ConfigInjector.get().injectStage(stage,stageDef, stageConf, pipelineConstants, errors);
+        ConfigInjector.get().injectStage(stage,stageDef, stageConf, pipelineConstants, user, connections, errors);
       }
     } finally {
       Thread.currentThread().setContextClassLoader(classLoader);
     }
     StageConfigBean stageConfigBean = new StageConfigBean();
-    ConfigInjector.get().injectStage(stageConfigBean, stageDef, stageConf, pipelineConstants, errors);
+    ConfigInjector.get().injectStage(stageConfigBean, stageDef, stageConf, pipelineConstants, user, connections, errors);
 
     // Create services
     List<ServiceBean> services = new ArrayList<>();
@@ -654,6 +721,8 @@ public abstract class PipelineBeanCreator {
         classLoaderReleaser,
         serviceConf,
         pipelineConstants,
+        user,
+        connections,
         errors
       );
 
@@ -695,6 +764,8 @@ public abstract class PipelineBeanCreator {
       ClassLoaderReleaser classLoaderReleaser,
       ServiceConfiguration serviceConf,
       Map<String, Object> pipelineConstants,
+      String user,
+      Map<String, ConnectionConfiguration> connections,
       List<Issue> errors
   ) {
     Utils.checkNotNull(serviceDef, "ServiceDefinition for " + serviceConf.getService().getName());
@@ -704,7 +775,16 @@ public abstract class PipelineBeanCreator {
       Thread.currentThread().setContextClassLoader(serviceDef.getStageClassLoader());
       service = createServiceInstance(stageName, serviceDef, errors);
       if (service != null) {
-        ConfigInjector.get().injectService(service, stageName, serviceDef, serviceConf, pipelineConstants, errors);
+        ConfigInjector.get().injectService(
+            service,
+            stageName,
+            serviceDef,
+            serviceConf,
+            pipelineConstants,
+            user,
+            connections,
+            errors
+        );
       }
     } finally {
       Thread.currentThread().setContextClassLoader(classLoader);

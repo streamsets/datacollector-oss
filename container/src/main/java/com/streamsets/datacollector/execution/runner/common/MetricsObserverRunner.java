@@ -22,8 +22,10 @@ import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.RuleDefinitionsConfigBean;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.execution.alerts.MetricRuleEvaluator;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
 
 import java.util.ArrayList;
@@ -51,7 +53,9 @@ public class MetricsObserverRunner {
       boolean statsAggregationEnabled,
       MetricRegistry metrics,
       AlertManager alertManager,
-      Map<String, Object> resolvedParameters
+      Map<String, Object> resolvedParameters,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo
   ) {
     this.metrics = metrics;
     this.alertManager = alertManager;
@@ -59,6 +63,7 @@ public class MetricsObserverRunner {
     this.rev = rev;
     this.statsAggregationEnabled = statsAggregationEnabled;
     this.resolvedParameters = resolvedParameters;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   public void setPipelineStartTime(long pipelineStartTime) {

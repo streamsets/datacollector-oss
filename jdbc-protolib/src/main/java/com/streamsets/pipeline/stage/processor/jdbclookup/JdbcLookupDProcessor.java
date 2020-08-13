@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
@@ -37,7 +38,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
@@ -119,7 +120,7 @@ public class JdbcLookupDProcessor extends DProcessor {
   public int maxBlobSize;
 
   @ConfigDefBean()
-  public HikariPoolConfigBean hikariConfigBean;
+  public JdbcHikariPoolConfigBean hikariConfigBean;
 
   /**
    * Returns the Hikari config bean.

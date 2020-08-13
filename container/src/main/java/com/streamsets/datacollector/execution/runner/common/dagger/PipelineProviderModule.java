@@ -109,14 +109,21 @@ public class PipelineProviderModule {
   }
 
   @Provides @Singleton
-  public MetricsObserverRunner provideMetricsObserverRunner(MetricRegistry metricRegistry, AlertManager alertManager) {
+  public MetricsObserverRunner provideMetricsObserverRunner(
+      MetricRegistry metricRegistry,
+      AlertManager alertManager,
+      Configuration configuration,
+      RuntimeInfo runtimeInfo
+  ) {
     return new MetricsObserverRunner(
         pipelineId,
         rev,
         statsAggregationEnabled,
         metricRegistry,
         alertManager,
-        resolvedParameters
+        resolvedParameters,
+        configuration,
+        runtimeInfo
     );
   }
 
@@ -175,7 +182,8 @@ public class PipelineProviderModule {
       ThreadHealthReporter threadHealthReporter,
       MetricRegistry metricRegistry,
       AlertManager alertManager,
-      Configuration configuration
+      Configuration configuration,
+      RuntimeInfo runtimeInfo
   ) {
     return new DataObserverRunnable(
         pipelineId,
@@ -184,6 +192,7 @@ public class PipelineProviderModule {
         metricRegistry,
         alertManager,
         configuration,
+        runtimeInfo,
         resolvedParameters
     );
   }

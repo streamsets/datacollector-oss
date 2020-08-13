@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.stagelibrary;
 
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.InterceptorDefinition;
 import com.streamsets.datacollector.config.LineagePublisherDefinition;
@@ -26,9 +27,11 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.task.Task;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
 import java.util.List;
@@ -49,6 +52,10 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   String INTERCEPTOR_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.INTERCEPTORS_FILE;
 
   String DELEGATE_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.DELEGATE_LIST_FILE;
+
+  String CONNECTIONS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CONNECTIONS_LIST_FILE;
+
+  String CONNECTION_VERIFIERS_DEFINITION_RESOURCE = PipelineAnnotationsProcessor.CONNECTION_VERIFIERS_LIST_FILE;
 
   PipelineDefinition getPipeline();
 
@@ -93,4 +100,10 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   Map<String, EventDefinitionJson> getEventDefinitions();
 
   StageLibraryDefinition getStageLibraryDefinition(String libraryName);
+
+  List<ConnectionDefinition> getConnections();
+
+  ConnectionDefinition getConnection(String library, String type);
+
+  Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap();
 }

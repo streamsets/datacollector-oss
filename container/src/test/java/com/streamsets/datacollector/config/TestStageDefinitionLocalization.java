@@ -53,7 +53,7 @@ public class TestStageDefinitionLocalization {
                                      Collections.<ElFunctionDefinition>emptyList(),
                                      Collections.<ElConstantDefinition>emptyList(),
                                      0, 0, "mode", 1,
-      Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC));
+      Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, ""));
     ModelDefinition model = new ModelDefinition(ModelType.VALUE_CHOOSER, OptionsChooserValues.class.getName(),
                                                 ImmutableList.of("OPTION"), ImmutableList.of("Option"), null,  null, null);
     configs.add(new ConfigDefinition("c2", ConfigDef.Type.MODEL, ConfigDef.Upload.NO, "Config2Label", "Config2Description", "default",
@@ -61,7 +61,7 @@ public class TestStageDefinitionLocalization {
                                      Collections.<ElFunctionDefinition>emptyList(),
                                      Collections.<ElConstantDefinition>emptyList(),
                                      0, 0, "mode", 1,
-      Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC));
+      Collections.<Class> emptyList(), ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, ""));
     RawSourceDefinition rawSource = new RawSourceDefinition(TRawSourcePreviewer.class.getName(), "*/*", configs);
     ConfigGroupDefinition configGroup = new ConfigGroupDefinition(ImmutableSet.of("GROUP"),
         (Map)ImmutableMap.of(Groups.class.getName(), ImmutableList.of(Groups.GROUP.name())),

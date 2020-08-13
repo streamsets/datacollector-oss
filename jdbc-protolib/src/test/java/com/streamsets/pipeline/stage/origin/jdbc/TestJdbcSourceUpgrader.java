@@ -18,13 +18,33 @@ package com.streamsets.pipeline.stage.origin.jdbc;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TestJdbcSourceUpgrader {
+
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/JdbcDSource.yaml");
+    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
+  }
 
   @Test
   public void testUpgradeV9toV10() throws StageException {
@@ -44,4 +64,17 @@ public class TestJdbcSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, "queryInterval", queryInterval);
   }
 
+  @Test
+  public void testUpgradeV12toV13() throws StageException {
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        upgrader,
+        context,
+        "hikariConfigBean.",
+        "connection."
+    );
+  }
 }

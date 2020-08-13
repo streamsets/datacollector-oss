@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
@@ -57,7 +58,7 @@ public class TestWalRecordFilteringUtils {
   private Stage.Context contextMock;
 
   private void createConfigBeans() {
-    HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
+    BrandedHikariPoolConfigBean hikariConfigBean = new BrandedHikariPoolConfigBean();
     hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
     hikariConfigBean.useCredentials = true;
     hikariConfigBean.username = () -> username;

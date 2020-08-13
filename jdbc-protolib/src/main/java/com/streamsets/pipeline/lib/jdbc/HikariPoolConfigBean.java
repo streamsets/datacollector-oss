@@ -41,7 +41,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-public class HikariPoolConfigBean {
+public abstract class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
 
   private static final String GENERIC_CONNECTION_STRING_TEMPLATE = "://%s:%d%s";
@@ -79,51 +79,6 @@ public class HikariPoolConfigBean {
   public static final String READ_ONLY_NAME = "readOnly";
 
   private Properties additionalProperties = new Properties();
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JDBC Connection String",
-      displayPosition = 10,
-      group = "JDBC"
-  )
-  public String connectionString = "";
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Use Credentials",
-      displayPosition = 15,
-      group = "JDBC"
-  )
-  public boolean useCredentials = true;
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      dependsOn = "useCredentials",
-      triggeredByValue = "true",
-      label = "Username",
-      displayPosition = 110,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      dependsOn = "useCredentials",
-      triggeredByValue = "true",
-      label = "Password",
-      displayPosition = 120,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue password;
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -453,14 +408,6 @@ public class HikariPoolConfigBean {
     return additionalProperties;
   }
 
-  public String getConnectionString() {
-    return connectionString;
-  }
-
-  public DatabaseVendor getVendor() {
-    return DatabaseVendor.forUrl(connectionString);
-  }
-
   public void addExtraDriverProperties(Map<String, String> keyValueProperties) {
     for (Map.Entry<String, String> property : keyValueProperties.entrySet()) {
       additionalProperties.setProperty(property.getKey(), property.getValue());
@@ -493,13 +440,15 @@ public class HikariPoolConfigBean {
     return autoCommit;
   }
 
-  public CredentialValue getUsername() {
-    return username;
-  }
+  public abstract String getConnectionString();
 
-  public CredentialValue getPassword() {
-    return password;
-  }
+  public abstract DatabaseVendor getVendor();
+
+  public abstract CredentialValue getUsername();
+
+  public abstract CredentialValue getPassword();
+
+  public abstract boolean useCredentials();
 
   public void setConnectionString(String connectionString) {
     // Do nothing, in this case since we are using the generic JDBC we don't want to change the original connection

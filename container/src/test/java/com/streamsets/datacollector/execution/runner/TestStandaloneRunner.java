@@ -764,7 +764,7 @@ public class TestStandaloneRunner {
     PreviewerProvider previewerProvider = objectGraph.get(PreviewerProvider.class);
 
     pipelineManager.createPreviewer(
-        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false);
+        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false, new HashMap<>());
 
     Mockito.verify(previewerProvider).createPreviewer(
         Mockito.anyString(),
@@ -774,14 +774,16 @@ public class TestStandaloneRunner {
         Mockito.same(objectGraph),
         Mockito.anyListOf(PipelineStartEvent.InterceptorConfiguration.class),
         Mockito.any(),
-        Mockito.anyBoolean());
+        Mockito.anyBoolean(),
+        Mockito.anyMap()
+    );
   }
 
   @Test
   public void testPreviewStateChangeUpdatesStats() throws Exception {
     // the previewer is mocked, so we can only test registration and invoking the listener method separately
     Previewer previewer = pipelineManager.createPreviewer(
-        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false);
+        "user", TestUtil.MY_PIPELINE, "0", Collections.emptyList(), x -> null, false, new HashMap<>());
 
     pipelineManager.statusChange(previewer.getId(), PreviewStatus.VALIDATING);
     Mockito.verify(statsCollector).previewStatusChanged(PreviewStatus.VALIDATING, previewer);

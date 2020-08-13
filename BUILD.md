@@ -97,7 +97,15 @@ From within the Data Collector directory, execute:
 
 The release tarball will be created at:
 
-`release/target/streamsets-datacollector-all-3.19.0-SNAPSHOT.tgz`
+`release/target/streamsets-datacollector-all-3.17.0-CATALOG.tgz`
+
+Extract the tarball to your preferred location :
+
+`tar xf streamsets-datacollector-all-3.17.0-CATALOG.tgz`
+
+To start the DataCollector, execute:
+
+`streamsets-datacollector-all-3.17.0-CATALOG/bin/streamsets dc`
 
 Extract the tarball to your preferred location :
 
@@ -105,7 +113,7 @@ Extract the tarball to your preferred location :
 
 To start the DataCollector, execute:
 
-`streamsets-datacollector-all-3.19.0-SNAPSHOT/bin/streamsets dc`
+`streamsets-datacollector-all-3.18.0-SNAPSHOT/bin/streamsets dc`
 
 ## Troubleshooting
 

@@ -137,7 +137,7 @@ public class AmazonS3Target extends BaseTarget {
 
   @Override
   public void destroy() {
-    s3TargetConfigBean.s3Config.destroy();
+    s3TargetConfigBean.destroy();
     if (transferManager != null) {
       // don't shut down s3 client again since it's already closed by s3Config.destroy().
       transferManager.shutdownNow(false);

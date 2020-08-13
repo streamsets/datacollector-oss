@@ -15,23 +15,16 @@
  */
 package com.streamsets.pipeline.stage.common.s3;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.InterfaceAudience;
+import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.common.InterfaceAudience;
-import com.streamsets.pipeline.common.InterfaceStability;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
-import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
 import com.streamsets.pipeline.stage.origin.s3.Groups;
 import org.slf4j.Logger;
@@ -43,35 +36,29 @@ import java.util.List;
 @InterfaceStability.Unstable
 public abstract class S3ConnectionBaseConfig {
 
-  public static final String AWS_CONFIG_PREFIX = "awsConfig.";
+  public static final String AWS_CONFIG_PREFIX = "connection.awsConfig.";
   private final static Logger LOG = LoggerFactory.getLogger(S3ConnectionBaseConfig.class);
-
-  @ConfigDefBean(groups = "S3")
-  public AWSConfig awsConfig;
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.MODEL,
-    defaultValue = "US_WEST_2",
-    label = "Region",
-    displayPosition = 10,
-    group = "#0"
+    type = ConfigDef.Type.CONNECTION,
+    connectionType = AwsS3Connection.TYPE,
+    defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+    label = "Connection",
+    group = "#0",
+    displayPosition = -500
   )
-  @ValueChooserModel(AwsRegionChooserValues.class)
-  public AwsRegion region;
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Endpoint",
-      description = "",
-      defaultValue = "",
-      displayPosition = 15,
-      dependsOn = "region",
-      triggeredByValue = "OTHER",
-      group = "#0"
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
   )
-  public String endpoint;
+  public AwsS3Connection connection;
 
   @ConfigDef(
     required = false,
@@ -107,10 +94,10 @@ public abstract class S3ConnectionBaseConfig {
   )
   public boolean usePathAddressModel = false;
 
-  private int maxErrorRetries;
+  private AmazonS3 s3Client;
 
-  public int getMaxErrorRetries(){
-    return maxErrorRetries;
+  public AmazonS3 getS3Client() {
+    return s3Client;
   }
 
   /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
@@ -118,14 +105,19 @@ public abstract class S3ConnectionBaseConfig {
   public void init(
       Stage.Context context,
       String configPrefix,
-      ProxyConfig proxyConfig,
       List<Stage.ConfigIssue> issues,
       int maxErrorRetries
   ) {
-    this.maxErrorRetries = maxErrorRetries;
     commonPrefix = AWSUtil.normalizePrefix(commonPrefix, delimiter);
     try {
-      createConnection(context, configPrefix, proxyConfig, issues, maxErrorRetries);
+      s3Client = S3ConnectionCreator.createS3Client(
+          connection,
+          context,
+          configPrefix,
+          issues,
+          maxErrorRetries,
+          usePathAddressModel
+      );
     } catch (StageException ex) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), ex.toString(), ex);
       issues.add(
@@ -140,47 +132,6 @@ public abstract class S3ConnectionBaseConfig {
   }
 
   public void destroy() {
-    if(s3Client != null) {
-      s3Client.shutdown();
-    }
-  }
-
-  public AmazonS3 getS3Client() {
-    return s3Client;
-  }
-
-  private AmazonS3 s3Client;
-
-  private void createConnection(
-      Stage.Context context,
-      String configPrefix,
-      ProxyConfig proxyConfig,
-      List<Stage.ConfigIssue> issues,
-      int maxErrorRetries
-  ) throws StageException {
-    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(awsConfig);
-    ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(proxyConfig);
-
-    if (maxErrorRetries >= 0) {
-      clientConfig.setMaxErrorRetry(maxErrorRetries);
-    }
-
-    AmazonS3ClientBuilder builder = AmazonS3ClientBuilder
-        .standard()
-        .withCredentials(credentials)
-        .withClientConfiguration(clientConfig)
-        .withChunkedEncodingDisabled(awsConfig.disableChunkedEncoding)
-        .withPathStyleAccessEnabled(usePathAddressModel);
-
-    if (region == AwsRegion.OTHER) {
-      if (endpoint == null || endpoint.isEmpty()) {
-        issues.add(context.createConfigIssue(Groups.S3.name(), configPrefix + "endpoint", Errors.S3_SPOOLDIR_10));
-        return;
-      }
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endpoint, null));
-    } else {
-      builder.withRegion(region.getId());
-    }
-    s3Client = builder.build();
+    S3ConnectionCreator.destroyS3Client(s3Client);
   }
 }

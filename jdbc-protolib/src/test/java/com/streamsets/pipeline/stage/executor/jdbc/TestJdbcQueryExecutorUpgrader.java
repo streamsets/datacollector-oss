@@ -17,8 +17,10 @@
 package com.streamsets.pipeline.stage.executor.jdbc;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Before;
@@ -36,6 +38,7 @@ public class TestJdbcQueryExecutorUpgrader {
 
   private List<Config> configs;
   private StageUpgrader.Context context;
+  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
 
   @Before
   public void setUp() {
@@ -43,6 +46,7 @@ public class TestJdbcQueryExecutorUpgrader {
     upgrader = new SelectorStageUpgrader("stage", new JdbcQueryExecutorUpgrader(), yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
   }
 
   /**
@@ -105,5 +109,19 @@ public class TestJdbcQueryExecutorUpgrader {
         Assert.assertEquals(queryConfigValue, ((List<String>) config.getValue()).get(0));
       }
     }
+  }
+
+  @Test
+  public void testUpgradeV4toV5() throws StageException {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        upgrader,
+        context,
+        "config.hikariConfigBean.",
+        "connection."
+    );
   }
 }

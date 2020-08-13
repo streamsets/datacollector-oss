@@ -78,6 +78,11 @@ public enum CreationError implements ErrorCode {
 
   // Cluster Type support
   CREATION_1000("Invalid cluster manager type '{}'"),
+
+  CREATION_1102("Retrieved connection type is '{}' which does not match the connection type from the stage configuration ('{}')"),
+  CREATION_1104("There was a problem retrieving the connection: {}"),
+  CREATION_1105("Using connections requires that Control Hub is enabled"),
+  CREATION_1106("Could not determine Connection ID: {}"),
   ;
 
   private final String msg;

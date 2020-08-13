@@ -16,24 +16,43 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.event.dto.Event;
+import com.streamsets.datacollector.event.dto.EventType;
+import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
+import com.streamsets.datacollector.event.handler.remote.MockPreviewer;
+import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
+import com.streamsets.datacollector.event.handler.remote.TestRemoteDataCollector;
 import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.execution.PreviewOutput;
+import com.streamsets.datacollector.execution.PreviewStatus;
+import com.streamsets.datacollector.execution.Previewer;
+import com.streamsets.datacollector.execution.RawPreview;
+import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
+import com.streamsets.datacollector.runner.MockStages;
+import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.lib.security.http.SSOPrincipal;
+import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -45,10 +64,15 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.function.Function;
 
 
 @RunWith(PowerMockRunner.class)
@@ -63,7 +87,6 @@ import java.util.HashSet;
 public class TestPreviewResource extends JerseyTest {
 
   private static Logger LOG = LoggerFactory.getLogger(TestPipelineStoreResource.class);
-
 
   static Manager manager = PowerMockito.mock(Manager.class);
   static Configuration configuration = PowerMockito.mock(Configuration.class);
@@ -83,8 +106,8 @@ public class TestPreviewResource extends JerseyTest {
     try {
       requestWithOverridesJson = new ObjectMapper().readValue(
               "{" + "\"stageOutputsToOverrideJson\":[]," + "\"dynamicPreviewRequestJson\":" + "{\"batchSize\":1," + "\"batches\":1,\"timeout\":10000,\"type\":\"PROTECTION_POLICY\"," + "\"parameters\":{\"read.policy" + ".id\":\"66999139-d2d8-44ca-82a7-707dfbc03a00:test\",\"write.policy" + ".id\":\"f6de0b15-f9b4-4e15-9e39-e8d9e2999be6:test\"," + "\"pipelineId\":\"a95f9210-0d0f-484b-b297" + "-3f252ae789d7:test\"," + "\"pipelineCommitId\":\"23e3dbbd-6f21-4f21-b31d-d50bc37ce505:test\"}}}",
-            DynamicPreviewRequestWithOverridesJson.class
-        );
+              DynamicPreviewRequestWithOverridesJson.class
+      );
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -227,7 +250,27 @@ public class TestPreviewResource extends JerseyTest {
     } catch (Exception ex) {
       Assert.assertTrue(ex.getCause().getMessage().contains("cannot be null"));
     }
-
   }
 
+  @Test
+  public void testDynamicPreviewConnectionVerifier() throws IOException {
+    RemoteDataCollectorResult okResult = RemoteDataCollectorResult.immediate("pipeline-id");
+    PowerMockito
+        .when(eventHandlerTask.handleLocalEvent(Mockito.any(Event.class), Mockito.any(EventType.class), Mockito.anyMap()))
+        .thenReturn(okResult);
+    PowerMockito
+        .when(manager.getPreviewer(Mockito.anyString()))
+        .thenReturn(new MockPreviewer("test", "test", "0", Collections.emptyList(), x -> null));
+
+    String requestRawJson = IOUtils.toString(
+        this.getClass().getResource("/com/streamsets/datacollector/restapi/connectionVerifierDynamicPreviewRequest.json"),
+        Charsets.UTF_8
+    );
+    DynamicPreviewRequestWithOverridesJson connectionVerifierPreviewRequest = new ObjectMapper().readValue(
+        requestRawJson,
+        DynamicPreviewRequestWithOverridesJson.class
+    );
+    target("/v1/pipeline/dynamicPreview").request()
+        .post(Entity.json(connectionVerifierPreviewRequest));
+  }
 }

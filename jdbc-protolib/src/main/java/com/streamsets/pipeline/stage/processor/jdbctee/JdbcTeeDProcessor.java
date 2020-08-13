@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnParamMapping;
 import com.streamsets.pipeline.lib.jdbc.JDBCOperationChooserValues;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JDBCOperationType;
@@ -41,7 +42,7 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import java.util.List;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "JDBC Tee",
     description = "Write records to JDBC and enrich records with generated columns",
     upgrader = JdbcTeeUpgrader.class,
@@ -190,7 +191,7 @@ public class JdbcTeeDProcessor extends DProcessor {
   public boolean rollbackOnError;
 
   @ConfigDefBean()
-  public HikariPoolConfigBean hikariConfigBean;
+  public JdbcHikariPoolConfigBean hikariConfigBean;
 
   /**
    * Returns the Hikari config bean.

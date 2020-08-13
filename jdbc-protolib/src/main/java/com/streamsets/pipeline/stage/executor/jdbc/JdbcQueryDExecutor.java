@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "JDBC Query",
     description = "Executes queries against JDBC compliant database",
     upgrader = JdbcQueryExecutorUpgrader.class,

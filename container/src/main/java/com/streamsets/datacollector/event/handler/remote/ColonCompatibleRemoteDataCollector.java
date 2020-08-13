@@ -17,6 +17,7 @@
 package com.streamsets.datacollector.event.handler.remote;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.PipelineState;
 import com.streamsets.datacollector.config.RuleDefinitions;
@@ -107,7 +108,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
       PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl,
-      Map<String, Object> metadata
+      Map<String, Object> metadata,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     return remoteDataCollector.savePipeline(
         user,
@@ -118,7 +120,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
         pipelineConfiguration,
         ruleDefinitions,
         acl,
-        metadata
+        metadata,
+        connections
     );
   }
 
@@ -158,7 +161,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
       long timeoutMillis,
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     return remoteDataCollector.previewPipeline(
         user,
@@ -173,7 +177,8 @@ public class ColonCompatibleRemoteDataCollector implements DataCollector {
         timeoutMillis,
         testOrigin,
         interceptorConfs,
-        afterActionsFunction
+        afterActionsFunction,
+        connections
     );
   }
 

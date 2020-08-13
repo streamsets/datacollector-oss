@@ -25,7 +25,9 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -179,12 +181,13 @@ public class TestJdbcSource {
     connection.close();
   }
 
-  private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
-    HikariPoolConfigBean bean = Mockito.mock(HikariPoolConfigBean.class);
-    bean.connectionString = connectionString;
-    bean.useCredentials = true;
-    bean.username = () -> username;
-    bean.password = () -> password;
+  private JdbcHikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
+    JdbcHikariPoolConfigBean bean = Mockito.mock(JdbcHikariPoolConfigBean.class);
+    bean.connection = new JdbcConnection();
+    bean.connection.connectionString = connectionString;
+    bean.connection.useCredentials = true;
+    bean.connection.username = () -> username;
+    bean.connection.password = () -> password;
 
     return bean;
   }
@@ -1475,7 +1478,7 @@ public class TestJdbcSource {
 
   @Test
   public void testNonSecureConnection() throws Exception {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+    JdbcHikariPoolConfigBean bean = new JdbcHikariPoolConfigBean();
     JdbcSource origin = new JdbcSource(
         true,
         query,

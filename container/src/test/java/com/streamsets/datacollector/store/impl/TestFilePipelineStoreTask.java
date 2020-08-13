@@ -85,6 +85,7 @@ public class TestFilePipelineStoreTask {
 
   @dagger.Module(
       injects = {
+          Configuration.class,
           RuntimeInfo.class,
           FilePipelineStoreTask.class,
           LockCache.class,
@@ -95,6 +96,12 @@ public class TestFilePipelineStoreTask {
   )
   public static class Module {
     public Module() {
+    }
+
+    @Provides
+    @Singleton
+    public Configuration provideConfiguration() {
+      return new Configuration();
     }
     @Provides
     @Singleton
@@ -140,6 +147,7 @@ public class TestFilePipelineStoreTask {
     @Singleton
     public FilePipelineStoreTask providePipelineStoreTask(
         BuildInfo buildInfo,
+        Configuration configuration,
         RuntimeInfo runtimeInfo,
         StageLibraryTask stageLibraryTask,
         PipelineStateStore pipelineStateStore,
@@ -154,7 +162,8 @@ public class TestFilePipelineStoreTask {
           pipelineStateStore,
           eventListenerManager,
           lockCache,
-          encryptingCredentialsHandler
+          encryptingCredentialsHandler,
+          configuration
       );
     }
   }

@@ -22,6 +22,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 
 public class AwsUtil {
   public static AWSCredentialsProvider getCredentialsProvider(

@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi.bean;
 import com.streamsets.datacollector.bundles.BundleContentGeneratorDefinition;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -1422,5 +1423,23 @@ public class BeanHelper {
     return messages.stream()
         .map(m -> new AntennaDoctorMessage(m.getSummary(), m.getDescription()))
         .collect(Collectors.toList());
+  }
+
+  public static ConnectionConfigurationJson wrapConnectionConfiguration(
+      ConnectionConfiguration connectionConfiguration
+  ) {
+    if(connectionConfiguration == null) {
+      return null;
+    }
+    return new ConnectionConfigurationJson(connectionConfiguration);
+  }
+
+  public static ConnectionConfiguration unwrapConnectionConfiguration(
+      ConnectionConfigurationJson connectionConfigurationJson
+  ) {
+    if(connectionConfigurationJson == null) {
+      return null;
+    }
+    return connectionConfigurationJson.getConnectionConfiguration();
   }
 }

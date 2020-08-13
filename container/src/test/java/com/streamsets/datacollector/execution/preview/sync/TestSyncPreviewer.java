@@ -28,11 +28,22 @@ import org.mockito.Mockito;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class TestSyncPreviewer extends TestPreviewer {
 
   protected Previewer createPreviewer() {
-    return new SyncPreviewer(ID, "test-user", NAME, REV, previewerListener, objectGraph, Collections.emptyList(), p -> null);
+    return new SyncPreviewer(
+        ID,
+        "test-user",
+        NAME,
+        REV,
+        previewerListener,
+        objectGraph,
+        Collections.emptyList(),
+        p -> null,
+        new HashMap<>()
+    );
   }
 
   @Test

@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.execution;
 
 import com.streamsets.datacollector.callback.CallbackInfo;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.usagestats.StatsCollector;
@@ -50,6 +51,11 @@ public class StatsCollectorPreviewer implements Previewer {
   @Override
   public String getRev() {
     return previewer.getRev();
+  }
+
+  @Override
+  public Map<String, ConnectionConfiguration> getConnections() {
+    return previewer.getConnections();
   }
 
   @Override

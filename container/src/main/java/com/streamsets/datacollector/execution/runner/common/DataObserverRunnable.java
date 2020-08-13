@@ -16,8 +16,10 @@
 package com.streamsets.datacollector.execution.runner.common;
 
 import com.codahale.metrics.MetricRegistry;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.execution.alerts.AlertManager;
 import com.streamsets.datacollector.event.json.MetricRegistryJson;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.runner.production.DataRulesEvaluationRequest;
 import com.streamsets.datacollector.runner.production.PipelineErrorNotificationRequest;
 import com.streamsets.datacollector.runner.production.RulesConfigurationChangeRequest;
@@ -48,6 +50,7 @@ public class DataObserverRunnable implements Runnable {
       MetricRegistry metrics,
       AlertManager alertManager,
       Configuration configuration,
+      RuntimeInfo runtimeInfo,
       Map<String, Object> resolvedParameters
   ) {
     this.dataObserverRunner = new DataObserverRunner(
@@ -59,6 +62,7 @@ public class DataObserverRunnable implements Runnable {
         resolvedParameters
     );
     this.threadHealthReporter = threadHealthReporter;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   public void setRequestQueue(BlockingQueue<Object> requestQueue) {

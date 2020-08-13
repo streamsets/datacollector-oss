@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
@@ -193,7 +194,7 @@ public class SQLServerCTSourceTestBuilder {
   }
 
   public SQLServerCTSource build() {
-    HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
+    BrandedHikariPoolConfigBean hikariPoolConfigBean = new BrandedHikariPoolConfigBean();
     hikariPoolConfigBean.useCredentials = useCredentials;
     hikariPoolConfigBean.connectionString = connectionString;
     hikariPoolConfigBean.username = () -> username;

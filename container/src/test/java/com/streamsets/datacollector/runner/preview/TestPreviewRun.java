@@ -180,6 +180,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         pipelineConfiguration,
@@ -188,7 +189,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
     List<StageOutput> output = previewOutput.getBatchesOutput().get(0);
@@ -228,6 +230,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         pipelineConfiguration,
@@ -236,7 +239,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
 
     PreviewPipelineOutput previewOutput = pipeline.run();
@@ -262,6 +266,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         pipelineConfiguration,
@@ -270,7 +275,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -294,6 +300,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         pipelineConfiguration,
@@ -302,7 +309,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -326,6 +334,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name1",
         "0",
         pipelineConfiguration,
@@ -334,7 +343,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -347,6 +357,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name1",
         "0",
         pipelineConfiguration,
@@ -355,7 +366,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     previewOutput = pipeline.run();
     output = previewOutput.getBatchesOutput().get(0);
@@ -396,6 +408,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         pipelineConfiguration,
@@ -404,7 +417,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     PreviewPipelineOutput previewOutput = pipeline.run();
   }
@@ -447,6 +461,7 @@ public class TestPreviewRun {
         MockStages.createStageLibrary(),
         buildInfo,
         configuration,
+        runtimeInfo,
         "name",
         "0",
         MockStages.createPipelineConfigurationSourceProcessorTarget(),
@@ -455,7 +470,8 @@ public class TestPreviewRun {
         Mockito.mock(LineagePublisherTask.class),
         Mockito.mock(StatsCollector.class),
         false,
-        Collections.emptyList()
+        Collections.emptyList(),
+        Collections.emptyMap()
     ).build(MockStages.userContext(), runner);
     Assert.assertFalse(pp.validateConfigs().isEmpty());
   }

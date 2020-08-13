@@ -19,5 +19,6 @@ package com.streamsets.datacollector.dynamicpreview;
 public enum DynamicPreviewType {
   CLASSIFICATION_CATALOG,
   PROTECTION_POLICY,
+  CONNECTION_VERIFIER,
   ;
 }

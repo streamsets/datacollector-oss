@@ -19,8 +19,8 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
-import com.streamsets.pipeline.lib.aws.AwsRegionChooserValues;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 
 import static com.streamsets.datacollector.config.AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT;
 import static com.streamsets.datacollector.config.AmazonEMRConfig.SERVICE_ROLE_DEFAULT;

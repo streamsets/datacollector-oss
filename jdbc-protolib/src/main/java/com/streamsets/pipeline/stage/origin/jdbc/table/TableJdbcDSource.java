@@ -25,13 +25,13 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.multithread.SchemaFinishedEvent;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableFinishedEvent;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
 @StageDef(
-    //We bumped to 7, so we keep this in sync with other repos -> mysql, postgres, sqlserver
-    version = 9,
+    version = 10,
     label = "JDBC Multitable Consumer",
     description = "Reads data from a JDBC source using table names.",
     icon = "rdbms_multithreaded.png",
@@ -60,7 +60,7 @@ public class TableJdbcDSource extends DPushSource {
   public CommonSourceConfigBean commonSourceConfigBean;
 
   @ConfigDefBean
-  public HikariPoolConfigBean hikariConfigBean;
+  public JdbcHikariPoolConfigBean hikariConfigBean;
 
   /**
    * Returns the Hikari config bean.

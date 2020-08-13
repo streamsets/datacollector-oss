@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.DataRuleDefinition;
 import com.streamsets.datacollector.config.DriftRuleDefinition;
 import com.streamsets.datacollector.config.MetricElement;
@@ -646,7 +647,8 @@ public class TestRemoteEventHandler {
         String description,
         SourceOffset offset,
         PipelineConfiguration pipelineConfiguration,
-        RuleDefinitions ruleDefinitions, Acl acl, Map<String, Object> metadata
+        RuleDefinitions ruleDefinitions, Acl acl, Map<String, Object> metadata,
+        Map<String, ConnectionConfiguration> connections
     ) throws PipelineStoreException {
       savePipelineCalled = true;
       return "";
@@ -694,7 +696,8 @@ public class TestRemoteEventHandler {
         long timeoutMillis,
         boolean testOrigin,
         List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-        Function<Object, Void> afterActionsFunction
+        Function<Object, Void> afterActionsFunction,
+        Map<String, ConnectionConfiguration> connections
     ) throws PipelineException {
       // no-op for now
       return null;
@@ -805,7 +808,7 @@ public class TestRemoteEventHandler {
   public static class MockMetricsRunner extends TestRemoteDataCollector.MockRunner {
 
     @Override
-    public PipelineConfiguration getPipelineConfiguration() throws PipelineException {
+    public PipelineConfiguration getPipelineConfiguration(String user) throws PipelineException {
       return new PipelineConfiguration(
           1,
           1,
@@ -1349,7 +1352,8 @@ public class TestRemoteEventHandler {
         Mockito.anyLong(),
         Mockito.anyBoolean(),
         Mockito.anyList(),
-        Mockito.any()
+        Mockito.any(),
+        Mockito.anyMap()
     )).thenReturn(previewerId);
     final MockBaseEventSenderReceiver eventSenderReceiver = new MockBaseEventSenderReceiver();
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
@@ -1378,7 +1382,7 @@ public class TestRemoteEventHandler {
         false,
         null,
         Arrays.asList("all")
-    ), EventType.PREVIEW_PIPELINE);
+    ), EventType.PREVIEW_PIPELINE, new HashMap<>());
 
     assertThat(result.isError(), equalTo(false));
     assertThat(result.getImmediateResult(), notNullValue());

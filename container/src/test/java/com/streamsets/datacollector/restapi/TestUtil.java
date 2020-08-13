@@ -126,19 +126,19 @@ public class TestUtil {
     ConfigDefinition configDef1 = new ConfigDefinition("string", ConfigDef.Type.STRING, ConfigDef.Upload.NO, "l1", "d1", "--", true, "g",
         "stringVar", null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);
+      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, "");
     ConfigDefinition configDef2 = new ConfigDefinition("int", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "l2", "d2", "-1", true, "g", "intVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);
+      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, "");
     ConfigDefinition configDef3 = new ConfigDefinition("long", ConfigDef.Type.NUMBER, ConfigDef.Upload.NO, "l3", "d3", "-2", true, "g", "longVar", null, "",
       new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);
+      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, "");
     ConfigDefinition configDef4 = new ConfigDefinition("boolean", ConfigDef.Type.BOOLEAN, ConfigDef.Upload.NO, "l4", "d4", "false", true, "g", "booleanVar",
       null, "", new ArrayList<>(), 0, Collections.<ElFunctionDefinition>emptyList(),
       Collections.<ElConstantDefinition>emptyList(), Long.MIN_VALUE, Long.MAX_VALUE, "text/plain", 0, Collections.<Class> emptyList(),
-      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC);
+      ConfigDef.Evaluation.IMPLICIT, null, ConfigDef.DisplayMode.BASIC, "");
     StageDefinition sourceDef = new StageDefinitionBuilder(TestUtil.class.getClassLoader(), TSource.class, "source")
       .withStageDef(Mockito.mock(StageDef.class))
       .withConfig(configDef1, configDef2, configDef3, configDef4)

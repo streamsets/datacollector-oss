@@ -19,6 +19,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
@@ -67,6 +68,7 @@ import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -143,7 +145,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction,
-      boolean remote
+      boolean remote,
+      Map<String, ConnectionConfiguration> connections
   ) throws PipelineException {
     if (!pipelineStore.hasPipeline(name)) {
       throw new PipelineStoreException(ContainerError.CONTAINER_0200, name);
@@ -156,7 +159,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         objectGraph,
         interceptorConfs,
         afterActionsFunction,
-        remote
+        remote,
+        connections
     );
     previewer = new StatsCollectorPreviewer(previewer, statsCollector);
     previewerCache.put(previewer.getId(), previewer);

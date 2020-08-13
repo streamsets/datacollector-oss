@@ -18,11 +18,13 @@ package com.streamsets.datacollector.restapi;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.BuildInfo;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.configuration.JsonConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -33,6 +35,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
+import java.security.Principal;
 
 public class TestPipelineUpgraderResource extends JerseyTest {
 
@@ -42,6 +45,9 @@ public class TestPipelineUpgraderResource extends JerseyTest {
     protected void configure() {
       bindFactory(TestUtil.StageLibraryTestInjector.class).to(StageLibraryTask.class);
       bindFactory(TestUtil.BuildInfoTestInjector.class).to(BuildInfo.class);
+      bindFactory(ConfigurationTestInjector.class).to(Configuration.class);
+      bindFactory(TestPipelineStoreResource.RuntimeInfoTestInjector.class).to(RuntimeInfo.class);
+      bindFactory(TestUtil.PrincipalTestInjector.class).to(Principal.class);
     }
 
   }

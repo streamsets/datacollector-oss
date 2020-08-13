@@ -44,3 +44,22 @@ upgrades:
           elseValue: WITH_CREDENTIALS
       - removeConfigs:
           namePattern: temp.aws.creds.flag
+  - toVersion: 3
+    actions:
+      # Added STREAMSETS_AWS_S3 Connection type and need to move a few configs around
+      - renameConfig:
+          oldNamePattern: ^config.s3Config.awsConfig.(.*$)
+          newNamePattern: config.s3Config.connection.awsConfig.(0)
+      - renameConfig:
+          oldNamePattern: ^config.s3Config.region$
+          newNamePattern: config.s3Config.connection.region
+      - renameConfig:
+          oldNamePattern: ^config.s3Config.endpoint$
+          newNamePattern: config.s3Config.connection.endpoint
+      - renameConfig:
+          oldNamePattern: ^config.proxyConfig.(.*$)
+          newNamePattern: config.s3Config.connection.proxyConfig.(0)
+      # New pipelines have this set to false; but set to true to maintain original region behavior in older pipelines
+      - setConfig:
+          name: config.s3Config.connection.useRegion
+          value: true

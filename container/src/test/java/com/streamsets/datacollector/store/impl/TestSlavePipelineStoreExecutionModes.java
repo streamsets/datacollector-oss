@@ -26,6 +26,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
@@ -71,7 +72,8 @@ public class TestSlavePipelineStoreExecutionModes {
         new SlavePipelineStateStore(),
         new EventListenerManager(),
         new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        new Configuration()
     );
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();
@@ -93,7 +95,8 @@ public class TestSlavePipelineStoreExecutionModes {
         new SlavePipelineStateStore(),
         new EventListenerManager(),
         new LockCache<>(),
-        Mockito.mock(PipelineCredentialHandler.class)
+        Mockito.mock(PipelineCredentialHandler.class),
+        new Configuration()
     );
     SlavePipelineStoreTask slavePipelineStoreTask = new SlavePipelineStoreTask(pipelineStoreTask);
     slavePipelineStoreTask.init();

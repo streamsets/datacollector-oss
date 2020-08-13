@@ -20,9 +20,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.config.dto.ValidationStatus;
+import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.event.client.api.EventClient;
 import com.streamsets.datacollector.event.client.impl.EventClientImpl;
 import com.streamsets.datacollector.event.dto.AckEvent;
@@ -146,6 +148,7 @@ public class RemoteDataCollector implements DataCollector {
     this.stageLibrary = stageLibrary;
     this.blobStoreTask = blobStoreTask;
     this.eventHandlerExecutor = eventHandlerExecutor;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
     String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
     ));
@@ -244,7 +247,8 @@ public class RemoteDataCollector implements DataCollector {
       final PipelineConfiguration pipelineConfiguration,
       RuleDefinitions ruleDefinitions,
       Acl acl,
-      Map<String, Object> metadata
+      Map<String, Object> metadata,
+      Map<String, ConnectionConfiguration> connections
   ) {
     UUID uuid = null;
     try {
@@ -260,7 +264,9 @@ public class RemoteDataCollector implements DataCollector {
         PipelineConfigurationValidator validator = new PipelineConfigurationValidator(stageLibrary,
             buildInfo,
             name,
-            pipelineConfiguration
+            pipelineConfiguration,
+            user,
+            connections
         );
         PipelineConfiguration validatedPipelineConfig = validator.validate();
         //By default encrypt credentials from Remote data collector
@@ -309,7 +315,7 @@ public class RemoteDataCollector implements DataCollector {
       String rev,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs
   ) throws PipelineException {
-    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null, false);
+    Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, p -> null, false, new HashMap<>());
     previewer.validateConfigs(1000L);
     validatorIdList.add(previewer.getId());
   }
@@ -328,24 +334,40 @@ public class RemoteDataCollector implements DataCollector {
       long timeoutMillis,
       boolean testOrigin,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
-      Function<Object, Void> afterActionsFunction
-  ) throws PipelineException {
-    final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false);
-    previewer.validateConfigs(10000l);
+      Function<Object, Void> afterActionsFunction,
+      Map<String, ConnectionConfiguration> connections
+  ) {
+    String previewerId = null;
+    try {
+      previewerId = GroupsInScope.executeIgnoreGroups(() -> {
+        final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
+        previewer.validateConfigs(timeoutMillis);
 
-    if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR,  PreviewStatus.INVALID).contains(previewer.getStatus())) {
-      previewer.start(
-          batches,
-          batchSize,
-          skipTargets,
-          skipLifecycleEvents,
-          stopStage,
-          stagesOverride,
-          timeoutMillis,
-          testOrigin
-      );
+        if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR, PreviewStatus.INVALID).contains(previewer.getStatus())) {
+          previewer.start(
+              batches,
+              batchSize,
+              skipTargets,
+              skipLifecycleEvents,
+              stopStage,
+              stagesOverride,
+              timeoutMillis,
+              testOrigin
+          );
+        }
+        return previewer.getId();
+      });
+    } catch (Exception ex) {
+      LOG.warn(Utils.format("Error while previewing pipeline: {} is {}", name, ex), ex);
+      if (ex.getCause() != null) {
+        ExceptionUtils.throwUndeclared(ex.getCause());
+      } else {
+        ExceptionUtils.throwUndeclared(ex);
+      }
+    } finally {
+      MDC.clear();
     }
-    return previewer.getId();
+    return previewerId;
   }
 
   static class StopAndDeleteCallable implements Callable<AckEvent> {

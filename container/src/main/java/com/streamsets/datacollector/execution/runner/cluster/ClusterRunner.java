@@ -213,6 +213,7 @@ public class ClusterRunner extends AbstractRunner {
       eventListenerManager,
       aclStoreTask
     );
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo());
     this.runnerExecutor = executorService;
     this.tempDir = Files.createTempDir();
     if (clusterHelper == null) {
@@ -231,6 +232,7 @@ public class ClusterRunner extends AbstractRunner {
     super(name, rev);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
+    PipelineBeanCreator.prepareForConnections(getConfiguration(), getRuntimeInfo());
     this.tempDir = new File(Files.createTempDir(), PipelineUtils.
       escapedPipelineName(Utils.format("cluster-pipeline-{}-{}", name, rev)));
     FileUtils.deleteQuietly(tempDir);
@@ -252,7 +254,7 @@ public class ClusterRunner extends AbstractRunner {
       // CLUSTER is old state, upgrade to cluster batch or cluster streaming based on source
       if (getState().getExecutionMode() == ExecutionMode.CLUSTER) {
         String sourceName = null;
-        PipelineConfiguration pipelineConf = getPipelineConf(name, rev);
+        PipelineConfiguration pipelineConf = getPipelineConf(name, rev, null);
         for (StageConfiguration stageConf : pipelineConf.getStages()) {
           if (stageConf.getInputLanes().isEmpty()) {
             sourceName = stageConf.getStageName();
@@ -388,9 +390,11 @@ public class ClusterRunner extends AbstractRunner {
       } else {
         ApplicationState appState = new ApplicationState((Map) getState().getAttributes().get(APPLICATION_STATE));
         PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
-          getPipelineConfiguration(),
+          getPipelineConfiguration(user),
           new ArrayList<>(),
-          getStartPipelineContext().getRuntimeParameters()
+          getStartPipelineContext().getRuntimeParameters(),
+          user,
+          getConnections()
         );
         stop(user, appState, pipelineConf, pipelineConfigBean);
       }
@@ -414,7 +418,7 @@ public class ClusterRunner extends AbstractRunner {
     } else {
       try {
         slaveCallbackManager.setClusterToken(appState.getSdcToken());
-        pipelineConf = getPipelineConf(getName(), getRev());
+        pipelineConf = getPipelineConf(getName(), getRev(), context.getUser());
       } catch (PipelineRunnerException | PipelineStoreException e) {
         setStateTransition(context.getUser(), PipelineStatus.CONNECT_ERROR, e.toString(), attributes);
         throw e;
@@ -422,7 +426,9 @@ public class ClusterRunner extends AbstractRunner {
       PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
           pipelineConf,
           new ArrayList<>(),
-          getStartPipelineContext().getRuntimeParameters()
+          getStartPipelineContext().getRuntimeParameters(),
+          context.getUser(),
+          getConnections()
       );
       connect(context.getUser(), appState, pipelineConf, pipelineConfigBean);
       if (getState().getStatus().isActive()) {
@@ -488,7 +494,7 @@ public class ClusterRunner extends AbstractRunner {
 
       setStartPipelineContext(context);
       LOG.debug("State of pipeline for '{}::{}' is '{}' ", getName(), getRev(), getState());
-      pipelineConf = getPipelineConf(getName(), getRev());
+      pipelineConf = getPipelineConf(getName(), getRev(), context.getUser());
       if (context.getRuntimeParameters() != null) {
         // merge pipeline parameters with runtime parameters
         List<Config> pipelineConfiguration = pipelineConf.getConfiguration();
@@ -520,7 +526,9 @@ public class ClusterRunner extends AbstractRunner {
       PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
           pipelineConf,
           new ArrayList<>(),
-          getStartPipelineContext().getRuntimeParameters()
+          getStartPipelineContext().getRuntimeParameters(),
+          runningUser.getUser(),
+          getConnections()
       );
       if (pipelineConfigBean != null) {
         JobEL.setConstantsInContext(pipelineConfigBean.constants);
@@ -882,8 +890,13 @@ public class ClusterRunner extends AbstractRunner {
         getConfiguration().get(
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED,
             RemoteSSOService.DPM_USER_ALIAS_NAME_ENABLED_DEFAULT
-        )
-    ), pipelineConfiguration, getState().getTimeStamp(), context.getInterceptorConfigurations(), null);
+        )),
+        pipelineConfiguration,
+        getState().getTimeStamp(),
+        context.getInterceptorConfigurations(),
+        null,
+        getConnections()
+    );
   }
 
   static class ManagerRunnable implements Runnable {
@@ -1032,7 +1045,13 @@ public class ClusterRunner extends AbstractRunner {
         metricsEventRunnable.clearSlaveMetrics();
       }
       List<Issue> errors = new ArrayList<>();
-      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(pipelineConf, errors, runtimeParameters);
+      PipelineConfigBean pipelineConfigBean = PipelineBeanCreator.get().create(
+          pipelineConf,
+          errors,
+          runtimeParameters,
+          user,
+          getConnections()
+      );
       if (pipelineConfigBean == null) {
         throw new PipelineRunnerException(ContainerError.CONTAINER_0116, errors);
       }
@@ -1076,7 +1095,8 @@ public class ClusterRunner extends AbstractRunner {
           getRules(),
           acl,
           interceptorCreatorContextBuilder,
-          blobStoreResources
+          blobStoreResources,
+          user
       );
       // set state of running before adding callback which modified attributes
       Map<String, Object> attributes = createNewStateAttributes();

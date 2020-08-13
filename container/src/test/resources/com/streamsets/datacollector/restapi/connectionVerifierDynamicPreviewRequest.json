@@ -1,0 +1,35 @@
+{
+  "stageOutputsToOverrideJson": [],
+  "dynamicPreviewRequestJson": {
+    "batchSize": 1,
+    "batches": 1,
+    "timeout": 10000,
+    "type": "CONNECTION_VERIFIER",
+    "parameters": {
+      "connection": {
+        "version" : "1",
+        "type" : "STREAMSETS_AWS_S3",
+        "library": "streamsets-datacollector-aws-lib",
+        "verifierDefinition": {
+          "verifierClass": "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
+          "verifierConnectionFieldName": "connection",
+          "verifierConnectionSelectionFieldName": "connectionSelection"
+        },
+        "configuration" : [
+          {
+            "name" : "awsConfig.credentialMode",
+            "value" : "WITH_CREDENTIALS"
+          },
+          {
+            "name" : "awsConfig.awsAccessKeyId",
+            "value" : "test-aws-key"
+          },
+          {
+            "name" : "awsConfig.awsSecretAccessKey",
+            "value" : "test-aws-secret"
+          }
+        ]
+      }
+    }
+  }
+}

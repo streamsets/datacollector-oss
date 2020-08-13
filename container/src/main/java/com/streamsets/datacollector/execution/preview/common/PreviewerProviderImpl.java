@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.preview.common;
 
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.execution.Previewer;
 import com.streamsets.datacollector.execution.PreviewerListener;
@@ -27,6 +28,7 @@ import dagger.ObjectGraph;
 import javax.inject.Inject;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -45,7 +47,8 @@ public class PreviewerProviderImpl implements PreviewerProvider {
       ObjectGraph objectGraph,
       List<PipelineStartEvent.InterceptorConfiguration> interceptorConfs,
       Function<Object, Void> afterActionsFunction,
-      boolean remote
+      boolean remote,
+      Map<String, ConnectionConfiguration> connections
   ) {
 
     objectGraph = objectGraph.plus(SyncPreviewerInjectorModule.class);
@@ -57,7 +60,8 @@ public class PreviewerProviderImpl implements PreviewerProvider {
         listener,
         objectGraph,
         interceptorConfs,
-        afterActionsFunction
+        afterActionsFunction,
+        connections
     ));
     return objectGraph.get(Previewer.class);
   }

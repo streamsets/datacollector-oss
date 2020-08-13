@@ -49,6 +49,7 @@ import com.streamsets.datacollector.store.PipelineRevInfo;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.LockCache;
 import com.streamsets.datacollector.util.LogUtil;
@@ -112,7 +113,8 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
       PipelineStateStore pipelineStateStore,
       EventListenerManager eventListenerManager,
       LockCache<String> lockCache,
-      PipelineCredentialHandler encryptingCredentialHandler
+      PipelineCredentialHandler encryptingCredentialHandler,
+      Configuration configuration
   ) {
     super("filePipelineStore");
     this.stageLibrary = stageLibrary;
@@ -133,6 +135,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
     );
     this.eventListenerManager = eventListenerManager;
     this.encryptingCredentialHandler = encryptingCredentialHandler;
+    PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
   }
 
   @VisibleForTesting
@@ -437,7 +440,7 @@ public class FilePipelineStoreTask extends AbstractTask implements PipelineStore
         dataStoreInfo.commit(infoFile);
         if (pipelineStateStore != null) {
           List<Issue> errors = new ArrayList<>();
-          PipelineBeanCreator.get().create(pipeline, errors, null);
+          PipelineBeanCreator.get().create(pipeline, errors, null, user, new HashMap<>());
           pipelineStateStore.edited(user,
               name,
               tag,

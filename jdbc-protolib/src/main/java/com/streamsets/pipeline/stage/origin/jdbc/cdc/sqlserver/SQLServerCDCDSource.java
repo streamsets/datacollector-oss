@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
@@ -43,7 +43,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 public class SQLServerCDCDSource extends DPushSource {
 
   @ConfigDefBean
-  public HikariPoolConfigBean hikariConf = new HikariPoolConfigBean();
+  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
 
   @ConfigDefBean
   public CommonSourceConfigBean commonSourceConfigBean = new CommonSourceConfigBean();

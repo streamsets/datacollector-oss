@@ -26,6 +26,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.classpath.ClasspathValidator;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
+import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.CredentialStoreDefinition;
 import com.streamsets.datacollector.config.ErrorHandlingChooserValues;
 import com.streamsets.datacollector.config.InterceptorDefinition;
@@ -42,6 +43,9 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.config.StatsTargetChooserValues;
+import com.streamsets.datacollector.definition.ConnectionDefinitionExtractor;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
+import com.streamsets.datacollector.definition.ConnectionVerifierDefinitionExtractor;
 import com.streamsets.datacollector.definition.CredentialStoreDefinitionExtractor;
 import com.streamsets.datacollector.definition.EventDefinitionExtractor;
 import com.streamsets.datacollector.definition.InterceptorDefinitionExtractor;
@@ -68,6 +72,7 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.SDCClassLoader;
+import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -181,6 +186,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<InterceptorDefinition> interceptorList;
   private List<StageLibraryDelegateDefinitition> delegateList;
   private Map<String, StageLibraryDelegateDefinitition> delegateMap;
+  private List<ConnectionDefinition> connectionList;
+  private Map<String, ConnectionDefinition> connectionMap;
+  private Map<String, ConnectionVerifierDefinition> connectionVerifierMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
   private Map<String, Object> gaugeMap;
@@ -300,6 +308,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = new ArrayList<>();
     delegateList = new ArrayList<>();
     delegateMap = new HashMap<>();
+    connectionList = new ArrayList<>();
+    connectionMap = new HashMap<>();
+    connectionVerifierMap = new HashMap<>();
 
     // Initialize static classes
     try {
@@ -343,8 +354,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         throw new RuntimeException("At least one of the stage libraries failed to load.");
       }
 
-      LOG.info(
-          "Loaded {} libraries with a total of {} stages, {} lineage publishers, {} services, {} interceptors, {} delegates and {} credentialStores in {}",
+      LOG.info("Loaded {} libraries with a total of {} stages, {} lineage publishers, {} services, {} interceptors, " +
+              "{} delegates, {} credentialStores, and {} connections in {}",
           stageLibraries.size(),
           stageList.size(),
           lineagePublisherDefinitions.size(),
@@ -352,6 +363,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           interceptorList.size(),
           delegateList.size(),
           credentialStoreDefinitions.size(),
+          connectionList.size(),
           DurationFormatUtils.formatDuration(System.currentTimeMillis() - start, "H:m:s.S", false)
       );
     } catch (InterruptedException e) {
@@ -373,6 +385,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = ImmutableList.copyOf(interceptorList);
     delegateList = ImmutableList.copyOf(delegateList);
     delegateMap = ImmutableMap.copyOf(delegateMap);
+    connectionList = ImmutableList.copyOf(connectionList);
+    connectionMap = ImmutableMap.copyOf(connectionMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -594,6 +608,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     List<StageLibraryDelegateDefinitition> localDelegateList = new LinkedList<>();
     Map<String, StageLibraryDelegateDefinitition> localDelegateMap = new HashMap<>();
     Map<String, EventDefinitionJson> localEventDefinitionMap = new HashMap<>();
+    List<ConnectionDefinition> localConnectionList = new ArrayList<>();
+    List<ConnectionVerifierDefinition> localVerifierList = new ArrayList<>();
 
     try {
       // Before loading any stages, let's verify that given stage library is compatible with our current JVM version
@@ -722,6 +738,39 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       synchronized (delegateMap) {
         delegateMap.putAll(localDelegateMap);
       }
+
+      // Load Connections
+      for (Class klass : loadClassesFromResource(libDef, cl, CONNECTIONS_DEFINITION_RESOURCE)) {
+        ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(libDef, klass);
+        LOG.debug("Loaded connection '{}'", def.getName());
+        localConnectionList.add(def);
+      }
+      synchronized (connectionMap) {
+        localConnectionList.forEach(connectionDefinition -> {
+          ConnectionDefinition existingConnectionDefintion = connectionMap.get(connectionDefinition.getType());
+          if (existingConnectionDefintion == null
+              || existingConnectionDefintion.getVersion() > connectionDefinition.getVersion()) {
+            connectionMap.put(connectionDefinition.getType(), connectionDefinition);
+            connectionList.add(connectionDefinition);
+          }
+        });
+      }
+
+      // Load Connection Verifiers
+      for(Class klass : loadClassesFromResource(libDef, cl, CONNECTION_VERIFIERS_DEFINITION_RESOURCE)) {
+        ConnectionVerifierDefinition def = ConnectionVerifierDefinitionExtractor.get().extract(klass);
+        LOG.debug("Loaded connection verifier: '{}'", def.getVerifierClass());
+        localVerifierList.add(def);
+      }
+      synchronized (connectionVerifierMap) {
+        localVerifierList.forEach(connectionVerifierDef -> {
+          String key = connectionVerifierDef.getVerifierType();
+          if (connectionVerifierMap.get(key) == null) {
+            connectionVerifierMap.put(key, connectionVerifierDef);
+          }
+        });
+      }
+
     } catch (IOException | ClassNotFoundException ex) {
       throw new RuntimeException(
           Utils.format("Could not load stages definition from '{}', {}", cl, ex.toString()), ex);
@@ -1211,4 +1260,18 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     return this.stageLibraryMap.get(libraryName);
   }
 
+  @Override
+  public List<ConnectionDefinition> getConnections() {
+    return connectionList;
+  }
+
+  @Override
+  public ConnectionDefinition getConnection(String library, String type) {
+    return connectionMap.get(type);
+  }
+
+  @Override
+  public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
+    return connectionVerifierMap;
+  }
 }

@@ -143,6 +143,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
       String mesosHostingJarDir,
       String mesosURL,
       String clusterBootstrapApiJar,
+      String user,
       List<Issue> errors
   ) throws IOException, StageException {
     jarsToShip = Sets.newHashSet(jarsToShip);

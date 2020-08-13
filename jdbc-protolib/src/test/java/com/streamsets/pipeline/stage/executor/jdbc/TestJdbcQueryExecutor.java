@@ -21,6 +21,8 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.ExecutorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -178,18 +180,19 @@ public class TestJdbcQueryExecutor {
     assertEquals(runner.getEventRecords().get(0).get().getValueAsMap().get("query-result").getValue(), "1 row(s) returned");
   }
 
-  JdbcQueryExecutorConfig createJdbcQueryExecutorConfig(){
+  private JdbcQueryExecutorConfig createJdbcQueryExecutorConfig(){
     JdbcQueryExecutorConfig config = new JdbcQueryExecutorConfig();
-    config.hikariConfigBean = new HikariPoolConfigBean();
-    config.getHikariConfigBean().connectionString = JDBC_CONNECTION;
-    config.getHikariConfigBean().useCredentials = true;
-    config.getHikariConfigBean().username = () -> JDBC_USER;
-    config.getHikariConfigBean().password = () -> JDBC_PASSWD;
+    config.hikariConfigBean = new JdbcHikariPoolConfigBean();
+    config.hikariConfigBean.connection = new JdbcConnection();
+    config.hikariConfigBean.connection.connectionString = JDBC_CONNECTION;
+    config.hikariConfigBean.connection.useCredentials = true;
+    config.hikariConfigBean.connection.username = () -> JDBC_USER;
+    config.hikariConfigBean.connection.password = () -> JDBC_PASSWD;
 
     return config;
   }
 
-  JdbcQueryExecutor createExecutor(String query, boolean queryResultCount){
+  private JdbcQueryExecutor createExecutor(String query, boolean queryResultCount){
     JdbcQueryExecutorConfig config = createJdbcQueryExecutorConfig();
     config.queries = Collections.singletonList(query);
     config.queryResultCount = queryResultCount;

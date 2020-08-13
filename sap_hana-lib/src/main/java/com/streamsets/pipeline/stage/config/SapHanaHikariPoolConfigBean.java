@@ -19,12 +19,13 @@ package com.streamsets.pipeline.stage.config;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 
 import java.util.List;
 import java.util.Properties;
 
-public class SapHanaHikariPoolConfigBean extends HikariPoolConfigBean {
+public class SapHanaHikariPoolConfigBean extends BrandedHikariPoolConfigBean {
 
   private static final String JDBC_SAP_CONNECTION_WITH_PORT_STRING_TEMPLATE = "jdbc:sap://%s:%d/?databaseName=%s";
   public static final String SPLIT_BATCH_COMMANDS = "splitBatchCommands";

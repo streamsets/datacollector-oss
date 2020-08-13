@@ -21,9 +21,8 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
-import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 
 @StageDef(
     version = 2,
@@ -51,7 +50,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 public class PostgresCDCDSource extends DSourceOffsetCommitter {
 
   @ConfigDefBean
-  public HikariPoolConfigBean hikariConf = new HikariPoolConfigBean();
+  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
 
   @ConfigDefBean
   public PostgresCDCConfigBean postgresCDCConfigBean = new PostgresCDCConfigBean();

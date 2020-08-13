@@ -26,7 +26,7 @@ public class TestHikariPoolConfigBean {
 
   @Test
   public void testGetDriverProperties() throws StageException {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+    HikariPoolConfigBean bean = new JdbcHikariPoolConfigBean();
     ConnectionPropertyBean configBean = new ConnectionPropertyBean();
     configBean.key = "name";
     configBean.value = () -> "value";

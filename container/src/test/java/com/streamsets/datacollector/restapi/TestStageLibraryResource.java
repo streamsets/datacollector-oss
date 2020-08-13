@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.el.RuleELRegistry;
+import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -94,4 +95,10 @@ public class TestStageLibraryResource extends JerseyTest {
     Assert.assertTrue(response.getEntity() != null);
   }
 
+  @Test
+  public void testGetConnections() throws IOException {
+    Response response = target("/v1/definitions/connections").request().get();
+    Assert.assertNotNull(response.getEntity());
+    response.readEntity(ConnectionsJson.class); // make sure the entity is the expected ConnectionsJson type
+  }
 }

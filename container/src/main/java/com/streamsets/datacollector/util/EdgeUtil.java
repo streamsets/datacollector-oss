@@ -51,7 +51,7 @@ public class EdgeUtil {
     String pipelineId = pipelineConfiguration.getPipelineId();
 
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
@@ -119,7 +119,7 @@ public class EdgeUtil {
   ) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
@@ -154,7 +154,7 @@ public class EdgeUtil {
   ) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), runtimeParameters);
+        .create(pipelineConfiguration, new ArrayList<>(), runtimeParameters, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
@@ -193,7 +193,7 @@ public class EdgeUtil {
   ) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), runtimeParameters);
+        .create(pipelineConfiguration, new ArrayList<>(), runtimeParameters, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
@@ -231,7 +231,7 @@ public class EdgeUtil {
   ) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }
@@ -263,7 +263,7 @@ public class EdgeUtil {
   public static void resetOffset(PipelineConfiguration pipelineConfiguration) throws PipelineException {
     String pipelineId = pipelineConfiguration.getPipelineId();
     PipelineConfigBean pipelineConfigBean =  PipelineBeanCreator.get()
-        .create(pipelineConfiguration, new ArrayList<>(), null);
+        .create(pipelineConfiguration, new ArrayList<>(), null, null, null);
     if (!pipelineConfigBean.executionMode.equals(ExecutionMode.EDGE)) {
       throw new PipelineException(ContainerError.CONTAINER_01600, pipelineConfigBean.executionMode);
     }

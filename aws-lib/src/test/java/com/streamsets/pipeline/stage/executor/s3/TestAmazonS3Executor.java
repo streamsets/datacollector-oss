@@ -32,7 +32,7 @@ import com.streamsets.pipeline.api.EventRecord;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.common.FakeS3;
@@ -301,13 +301,14 @@ public class TestAmazonS3Executor {
   private AmazonS3ExecutorConfig getConfig() {
     AmazonS3ExecutorConfig config = new AmazonS3ExecutorConfig();
 
-    config.s3Config.region = AwsRegion.OTHER;
-    config.s3Config.endpoint = "http://localhost:" + port;
+    config.s3Config.connection.useRegion = true;
+    config.s3Config.connection.region = AwsRegion.OTHER;
+    config.s3Config.connection.endpoint = "http://localhost:" + port;
     config.s3Config.bucketTemplate = "${record:attribute('bucket')}";
-    config.s3Config.awsConfig = new AWSConfig();
-    config.s3Config.awsConfig.awsAccessKeyId = () -> "foo";
-    config.s3Config.awsConfig.awsSecretAccessKey = () -> "bar";
-    config.s3Config.awsConfig.disableChunkedEncoding = true;
+    config.s3Config.connection.awsConfig = new AWSConfig();
+    config.s3Config.connection.awsConfig.awsAccessKeyId = () -> "foo";
+    config.s3Config.connection.awsConfig.awsSecretAccessKey = () -> "bar";
+    config.s3Config.connection.awsConfig.disableChunkedEncoding = true;
 
     config.taskConfig.taskType = TaskType.CHANGE_EXISTING_OBJECT;
     config.taskConfig.objectPath = "${record:value('/object')}";

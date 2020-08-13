@@ -20,6 +20,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.streamsets.datacollector.config.ConfigDefinition;
+import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.PipelineFragmentConfiguration;
 import com.streamsets.datacollector.config.SparkClusterType;
@@ -61,6 +62,8 @@ public class PipelineFragmentConfigurationValidator {
   protected final StageLibraryTask stageLibrary;
   protected final String name;
   private PipelineFragmentConfiguration pipelineFragmentConfiguration;
+  protected final String user;
+  protected final Map<String, ConnectionConfiguration> connections;
   protected final Issues issues;
   private final List<String> openLanes;
   boolean validated;
@@ -73,7 +76,9 @@ public class PipelineFragmentConfigurationValidator {
       StageLibraryTask stageLibrary,
       BuildInfo buildInfo,
       String name,
-      PipelineFragmentConfiguration pipelineFragmentConfiguration
+      PipelineFragmentConfiguration pipelineFragmentConfiguration,
+      String user,
+      Map<String, ConnectionConfiguration> connections
   ) {
     this.stageLibrary = Preconditions.checkNotNull(stageLibrary, "stageLibrary cannot be null");
     this.buildInfo = buildInfo;
@@ -82,6 +87,8 @@ public class PipelineFragmentConfigurationValidator {
         pipelineFragmentConfiguration,
         "pipelineFragmentConfiguration cannot be null"
     );
+    this.user = user;
+    this.connections = connections;
     issues = new Issues();
     openLanes = new ArrayList<>();
     this.constants = ElUtil.getConstants(pipelineFragmentConfiguration.getConfiguration());
@@ -363,6 +370,8 @@ public class PipelineFragmentConfigurationValidator {
         stageLibrary,
         pipelineConfiguration,
         null,
+        user,
+        connections,
         errors
     );
     if (pipelineFragmentConfiguration.getTitle() != null && pipelineFragmentConfiguration.getTitle().isEmpty()) {
