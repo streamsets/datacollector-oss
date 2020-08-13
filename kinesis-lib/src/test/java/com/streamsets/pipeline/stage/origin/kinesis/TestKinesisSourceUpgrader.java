@@ -27,7 +27,9 @@ import org.mockito.Mockito;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -74,5 +76,16 @@ public class TestKinesisSourceUpgrader {
     kinesisSourceUpgrader.upgrade("a", "b", "c", 7, 8, configs);
     assertEquals("kinesisConfig.awsConfig.credentialMode", configs.get(2).getName());
     assertEquals(AWSCredentialMode.WITH_CREDENTIALS, configs.get(2).getValue());
+  }
+
+  @Test
+  public void testUpgradeV9toV10() {
+    Mockito.doReturn(9).when(context).getFromVersion();
+    Mockito.doReturn(10).when(context).getToVersion();
+
+    Map<String, String> property = new HashMap<>();
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "kinesisConfig.kinesisConsumerConfigs", property);
   }
 }

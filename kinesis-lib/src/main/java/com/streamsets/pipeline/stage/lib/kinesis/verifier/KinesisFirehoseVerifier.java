@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.destination.kinesis.Groups;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisConnectionGroups;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisFirehoseConnection;
@@ -87,7 +87,7 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(AWSUtil
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(AWSKinesisUtil
           .getCredentialsProvider(connection.awsConfig));
 
       if (connection.region == AwsRegion.OTHER) {

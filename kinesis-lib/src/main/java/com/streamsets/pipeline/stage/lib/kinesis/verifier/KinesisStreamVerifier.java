@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.common.s3;
+package com.streamsets.pipeline.stage.lib.kinesis.verifier;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisStreamConnection;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisConnectionGroups;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
@@ -82,7 +82,7 @@ public class KinesisStreamVerifier extends ConnectionVerifier {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     try {
       KinesisUtil.getShardCount(
-          AWSUtil.getClientConfiguration(connection.proxyConfig),
+          AWSKinesisUtil.getClientConfiguration(connection.proxyConfig),
           connection,
           STREAM_EXIST_PREFIX + UUID.randomUUID().toString()
       );

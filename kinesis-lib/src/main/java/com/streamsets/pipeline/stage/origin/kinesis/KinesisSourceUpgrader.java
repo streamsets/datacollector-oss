@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.upgrade.DataFormatUpgradeHelper;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisBaseUpgrader;
 
 import java.util.Collections;
@@ -81,6 +81,16 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
       // fall through
       case 7:
         upgradeV7toV8(configs);
+        if (toVersion == 8) {
+          break;
+        }
+      case 8:
+        // handled by YAML upgrader
+        if (toVersion == 9) {
+          break;
+        }
+      case 9:
+        // handled by YAML upgrader
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -123,7 +133,7 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
   }
 
   private static void upgradeV2toV3(List<Config> configs) {
-    AWSUtil.renameAWSCredentialsConfigs(configs);
+    AWSKinesisUtil.renameAWSCredentialsConfigs(configs);
 
     configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.csvSkipStartLines", 0));
   }
@@ -147,4 +157,5 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
   private void upgradeV7toV8(List<Config> configs) {
     updateCredentialMode(configs);
   }
+
 }

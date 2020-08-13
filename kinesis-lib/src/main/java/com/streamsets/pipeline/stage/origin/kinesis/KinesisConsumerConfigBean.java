@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisStreamConfigBean;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
+import java.util.HashMap;
+import java.util.Map;
 
 public class KinesisConsumerConfigBean extends KinesisStreamConfigBean {
 
@@ -121,6 +123,18 @@ public class KinesisConsumerConfigBean extends KinesisStreamConfigBean {
       max = Integer.MAX_VALUE
   )
   public int maxRecordProcessors;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.MAP,
+      defaultValue = "",
+      label = "Kinesis Configuration",
+      description = "Additional Kinesis properties to pass to Kinesis",
+      displayPosition = 90,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
+  )
+  public Map<String, String> kinesisConsumerConfigs = new HashMap<>();
 
   @ConfigDef(
       required = false,

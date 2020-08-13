@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,24 +20,38 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.retry.RetryMode;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.kinesis.AdditionalClientConfiguration;
+import com.streamsets.pipeline.stage.lib.kinesis.Errors;
+import com.streamsets.pipeline.stage.origin.kinesis.Groups;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class AWSUtil {
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
+
+public class AWSKinesisUtil {
+  private static final Logger LOG = LoggerFactory.getLogger(AWSKinesisUtil.class);
+
   private static final int MILLIS = 1000;
-  private AWSUtil() {}
+
+  private AWSKinesisUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
       if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
-        credentialsProvider = new AWSStaticCredentialsProvider(
-            new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
-        );
+        credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.awsAccessKeyId.get(),
+            config.awsSecretAccessKey.get()
+        ));
       }
     }
     return credentialsProvider;
@@ -90,5 +104,61 @@ public class AWSUtil {
 
     configs.removeAll(configsToRemove);
     configs.addAll(configsToAdd);
+  }
+
+  public static ClientConfiguration addAdditionalClientConfiguration(
+      ClientConfiguration conf, Map<String, String> additionalConfiguration, List<Stage.ConfigIssue> issues,
+      Stage.Context context) {
+    for (Map.Entry<String, String> property : additionalConfiguration.entrySet()) {
+      try {
+        switch (AdditionalClientConfiguration.getName(property.getKey())) {
+          case USER_AGENT_PREFIX:
+            conf.setUserAgentPrefix(property.getValue());
+            break;
+          case USER_AGENT_SUFFIX:
+            conf.setUserAgentSuffix(property.getValue());
+            break;
+          case MAX_CONNECTIONS:
+            conf.setMaxConnections(Integer.parseInt(property.getValue()));
+            break;
+          case REQUEST_TIMEOUT:
+            conf.setRequestTimeout(Integer.parseInt(property.getValue()));
+            break;
+          case CLIENT_EXECUTION_TIMEOUT:
+            conf.setClientExecutionTimeout(Integer.parseInt(property.getValue()));
+            break;
+          case THROTTLE_RETRIES:
+            conf.withThrottledRetries(Boolean.parseBoolean(property.getValue()));
+            break;
+          case CONNECTION_MAX_IDLE_MILLIS:
+            conf.setConnectionMaxIdleMillis(Long.parseLong(property.getValue()));
+            break;
+          case VALIDATE_AFTER_INACTIVITY_MILLIS:
+            conf.setValidateAfterInactivityMillis(Integer.parseInt(property.getValue()));
+            break;
+          case USE_EXPECT_CONTINUE:
+            conf.setUseExpectContinue(Boolean.parseBoolean(property.getValue()));
+            break;
+          case MAX_CONSECUTIVE_RETRIES_BEFORE_THROTTLING:
+            conf.setMaxConsecutiveRetriesBeforeThrottling(Integer.parseInt(property.getValue()));
+            break;
+          case RETRY_MODE:
+            RetryMode retryMode = RetryMode.fromName(property.getValue());
+            conf.setRetryMode(retryMode);
+            break;
+          default:
+            LOG.error(Errors.KINESIS_21.getMessage(), property.getKey());
+            break;
+        }
+      } catch (IllegalArgumentException ex) {
+        LOG.error(Utils.format(Errors.KINESIS_25.getMessage(), ex.toString()), ex);
+        issues.add(context.createConfigIssue(Groups.KINESIS.name(),
+            KINESIS_CONFIG_BEAN + ".kinesisConsumerConfigs",
+            Errors.KINESIS_25,
+            ex.toString()
+        ));
+      }
+    }
+    return conf;
   }
 }

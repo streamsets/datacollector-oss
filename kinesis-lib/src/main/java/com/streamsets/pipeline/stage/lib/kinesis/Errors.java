@@ -43,8 +43,10 @@ public enum Errors implements ErrorCode {
   KINESIS_19("Endpoint is invalid or doesn't include region"),
   KINESIS_20("Firehose data stream: '{}' is not yet ready"),
   KINESIS_21("Firehose data stream: '{}' doesn't exist, error: '{}'"),
-  KINESIS_22("Connecting to Firehose Data Stream failed due to: '{}'")
-
+  KINESIS_22("Connecting to Firehose Data Stream failed due to: '{}'"),
+  KINESIS_23("Can't resolve credentials with additional configuration: {}"),
+  KINESIS_24("Invalid setting for '{}' property"),
+  KINESIS_25("Invalid format for the setting value, at '{}' property"),
   ;
   private final String msg;
 

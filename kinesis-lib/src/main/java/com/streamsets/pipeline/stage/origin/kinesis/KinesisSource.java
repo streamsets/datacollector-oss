@@ -56,9 +56,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
+import com.streamsets.pipeline.stage.lib.kinesis.AdditionalClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -99,12 +101,14 @@ public class KinesisSource extends BasePushSource {
   private ExecutorService executor;
 
   private ClientConfiguration clientConfiguration;
+  private KinesisClientLibConfiguration kclConfig;
   private AWSCredentialsProvider credentials;
   private AmazonDynamoDB dynamoDBClient;
   private AmazonCloudWatch cloudWatchClient;
   private IMetricsFactory metricsFactory = null;
   private Worker worker;
   private AtomicBoolean resetOffsetAttempted;
+  private Map<String, String> kinesisConsumerValidConfigurations;
 
   public KinesisSource(KinesisConsumerConfigBean conf) {
     this.conf = conf;
@@ -125,9 +129,23 @@ public class KinesisSource extends BasePushSource {
       return issues;
     }
 
+    kinesisConsumerValidConfigurations = conf.kinesisConsumerConfigs;
+    for (Map.Entry<String, String> property : conf.kinesisConsumerConfigs.entrySet()) {
+      if (!AdditionalClientConfiguration.propertyExists(property.getKey())) {
+        issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
+            KINESIS_CONFIG_BEAN + ".kinesisConsumerConfigs",
+            Errors.KINESIS_24,
+            property.getKey()
+        ));
+        kinesisConsumerValidConfigurations.remove(property.getKey());
+      }
+    }
+
+    boolean clientConfigurationCredentialsCorrect = true;
+    clientConfiguration = AWSKinesisUtil.getClientConfiguration(conf.connection.proxyConfig);
     try {
       KinesisUtil.checkStreamExists(
-          AWSUtil.getClientConfiguration(conf.connection.proxyConfig),
+          clientConfiguration,
           conf.connection,
           conf.streamName,
           issues,
@@ -141,13 +159,37 @@ public class KinesisSource extends BasePushSource {
           Errors.KINESIS_12,
           ex.toString()
       ));
+      clientConfigurationCredentialsCorrect = false;
+    }
+
+    if (kinesisConsumerValidConfigurations != null) {
+      clientConfiguration = AWSKinesisUtil.addAdditionalClientConfiguration(clientConfiguration,
+          kinesisConsumerValidConfigurations, issues, getContext());
+
+      if (clientConfigurationCredentialsCorrect) {
+        try {
+          KinesisUtil.checkStreamExists(
+              clientConfiguration,
+              conf.connection,
+              conf.streamName,
+              issues,
+              getContext()
+          );
+        } catch (StageException ex) {
+          LOG.error(Utils.format(Errors.KINESIS_23.getMessage(), ex.toString()), ex);
+          issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
+              KINESIS_CONFIG_BEAN + ".kinesisConsumerConfigs",
+              Errors.KINESIS_23,
+              ex.toString()
+          ));
+        }
+      }
     }
 
     conf.dataFormatConfig.stringBuilderPoolSize = getNumberOfThreads();
 
     if (issues.isEmpty()) {
-      conf.dataFormatConfig.init(
-          getContext(),
+      conf.dataFormatConfig.init(getContext(),
           conf.dataFormat,
           Groups.KINESIS.name(),
           KINESIS_DATA_FORMAT_CONFIG_PREFIX,
@@ -159,8 +201,7 @@ public class KinesisSource extends BasePushSource {
     }
 
     try {
-      clientConfiguration = AWSUtil.getClientConfiguration(conf.connection.proxyConfig);
-      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig);
+      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig);
     } catch (StageException ex) {
       LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
       issues.add(getContext().createConfigIssue(
@@ -196,6 +237,12 @@ public class KinesisSource extends BasePushSource {
 
     resetOffsetAttempted = new AtomicBoolean(false);
 
+    kclConfig = new KinesisClientLibConfiguration(conf.applicationName, conf.streamName, credentials, getWorkerId());
+    if (kinesisConsumerValidConfigurations != null) {
+      kclConfig = KinesisUtil.addAdditionalKinesisClientConfiguration(kclConfig, kinesisConsumerValidConfigurations,
+          issues, getContext());
+    }
+
     return issues;
   }
 
@@ -209,24 +256,26 @@ public class KinesisSource extends BasePushSource {
     this.metricsFactory = metricsFactory;
   }
 
-  private Worker createKinesisWorker(IRecordProcessorFactory recordProcessorFactory, int maxBatchSize) {
-    KinesisClientLibConfiguration kclConfig =
-        new KinesisClientLibConfiguration(
-            conf.applicationName,
-            conf.streamName,
-            credentials,
-            getWorkerId()
-        );
+  @VisibleForTesting
+  Map<String, String> getAdditionalProperties() {
+    Map<String, String> additionalProperties = new HashMap<>();
+    additionalProperties.put("maxConsecutiveRetriesBeforeThrottling",
+        Integer.toString(this.clientConfiguration.getMaxConnections())
+    );
+    additionalProperties.put("maxLeaseRenewalThreads", Integer.toString(this.kclConfig.getMaxLeaseRenewalThreads()));
+    return additionalProperties;
+  }
 
-    kclConfig
-        .withMaxRecords(maxBatchSize)
-        .withCallProcessRecordsEvenForEmptyRecordList(false)
-        .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
-        .withKinesisClientConfig(clientConfiguration);
+  private Worker createKinesisWorker(IRecordProcessorFactory recordProcessorFactory, int maxBatchSize) {
+    kclConfig.withMaxRecords(maxBatchSize)
+             .withCallProcessRecordsEvenForEmptyRecordList(false)
+             .withIdleTimeBetweenReadsInMillis(conf.idleTimeBetweenReads)
+             .withKinesisClientConfig(clientConfiguration);
 
     if (conf.initialPositionInStream == InitialPositionInStream.AT_TIMESTAMP) {
       kclConfig.withTimestampAtInitialPositionInStream(new Date(conf.initialTimestamp));
-    } else if (conf.initialPositionInStream == InitialPositionInStream.LATEST || conf.initialPositionInStream == InitialPositionInStream.TRIM_HORIZON) {
+    } else if (conf.initialPositionInStream == InitialPositionInStream.LATEST ||
+        conf.initialPositionInStream == InitialPositionInStream.TRIM_HORIZON) {
       kclConfig.withInitialPositionInStream(conf.initialPositionInStream);
     }
 
@@ -240,14 +289,13 @@ public class KinesisSource extends BasePushSource {
       kclConfig.withRegionName(conf.connection.region.getId());
     }
 
-    return new Worker.Builder()
-        .recordProcessorFactory(recordProcessorFactory)
-        .metricsFactory(metricsFactory)
-        .dynamoDBClient(dynamoDBClient)
-        .cloudWatchClient(cloudWatchClient)
-        .execService(executor)
-        .config(kclConfig)
-        .build();
+    return new Worker.Builder().recordProcessorFactory(recordProcessorFactory)
+                               .metricsFactory(metricsFactory)
+                               .dynamoDBClient(dynamoDBClient)
+                               .cloudWatchClient(cloudWatchClient)
+                               .execService(executor)
+                               .config(kclConfig)
+                               .build();
   }
 
   private String getWorkerId() {
@@ -261,12 +309,9 @@ public class KinesisSource extends BasePushSource {
   }
 
   private void previewProcess(
-      int maxBatchSize,
-      BatchMaker batchMaker
+      int maxBatchSize, BatchMaker batchMaker
   ) throws IOException, StageException {
-    ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.connection.proxyConfig);
-
-    String shardId = KinesisUtil.getLastShardId(awsClientConfig, conf, conf.streamName);
+    String shardId = KinesisUtil.getLastShardId(clientConfiguration, conf, conf.streamName);
 
     GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
     getShardIteratorRequest.setStreamName(conf.streamName);
@@ -282,7 +327,7 @@ public class KinesisSource extends BasePushSource {
     }
 
     List<com.amazonaws.services.kinesis.model.Record> results = KinesisUtil.getPreviewRecords(
-        awsClientConfig,
+        clientConfiguration,
         conf,
         Math.min(conf.maxBatchSize, maxBatchSize),
         getShardIteratorRequest
@@ -293,11 +338,8 @@ public class KinesisSource extends BasePushSource {
     for (int index = 0; index < batchSize; index++) {
       com.amazonaws.services.kinesis.model.Record record = results.get(index);
       UserRecord userRecord = new UserRecord(record);
-      KinesisUtil.processKinesisRecord(
-          getShardIteratorRequest.getShardId(),
-          userRecord,
-          parserFactory
-      ).forEach(batchMaker::addRecord);
+      KinesisUtil.processKinesisRecord(getShardIteratorRequest.getShardId(), userRecord, parserFactory).forEach(
+          batchMaker::addRecord);
     }
   }
 
@@ -364,8 +406,7 @@ public class KinesisSource extends BasePushSource {
     createLeaseTableIfNotExists();
 
     executor = Executors.newFixedThreadPool(getNumberOfThreads());
-    IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(
-        getContext(),
+    IRecordProcessorFactory recordProcessorFactory = new StreamSetsRecordProcessorFactory(getContext(),
         parserFactory,
         Math.min(conf.maxBatchSize, maxBatchSize),
         error,
@@ -409,28 +450,32 @@ public class KinesisSource extends BasePushSource {
 
     DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
     KinesisClientLeaseSerializer leaseSerializer = new KinesisClientLeaseSerializer();
-    CreateTableRequest createTableRequest = new CreateTableRequest()
-        .withTableName(conf.applicationName)
-        .withKeySchema(leaseSerializer.getKeySchema())
-        .withAttributeDefinitions(leaseSerializer.getAttributeDefinitions())
-        .withProvisionedThroughput(new ProvisionedThroughput().withReadCapacityUnits(
-            DEFAULT_INITIAL_LEASE_TABLE_READ_CAPACITY)
-            .withWriteCapacityUnits(DEFAULT_INITIAL_LEASE_TABLE_WRITE_CAPACITY));
+    CreateTableRequest createTableRequest = new CreateTableRequest().withTableName(conf.applicationName)
+                                                                    .withKeySchema(leaseSerializer.getKeySchema())
+                                                                    .withAttributeDefinitions(leaseSerializer.getAttributeDefinitions())
+                                                                    .withProvisionedThroughput(new ProvisionedThroughput()
+                                                                        .withReadCapacityUnits(
+                                                                            DEFAULT_INITIAL_LEASE_TABLE_READ_CAPACITY)
+                                                                        .withWriteCapacityUnits(
+                                                                            DEFAULT_INITIAL_LEASE_TABLE_WRITE_CAPACITY));
 
     try {
       Table leaseTable = dynamoDB.createTable(createTableRequest);
       LOG.debug("Waiting up to 2 minutes for table creation and readiness");
       await().atMost(2, TimeUnit.MINUTES).until(this::leaseTableExists);
       Collection<Tag> tags = conf.leaseTable.tags.entrySet()
-          .stream()
-          .map(e -> new Tag().withKey(e.getKey()).withValue(e.getValue())).collect(Collectors.toSet());
+                                                 .stream()
+                                                 .map(e -> new Tag().withKey(e.getKey())
+                                                                    .withValue(e.getValue()))
+                                                 .collect(Collectors.toSet());
 
       if (!tags.isEmpty()) {
-        TagResourceRequest tagRequest = new TagResourceRequest().withTags(tags).withResourceArn(leaseTable.getDescription().getTableArn());
+        TagResourceRequest tagRequest = new TagResourceRequest().withTags(tags)
+                                                                .withResourceArn(leaseTable.getDescription()
+                                                                                           .getTableArn());
 
         if (LOG.isInfoEnabled()) {
-          LOG.info(
-              "Tagging lease table {} with tags: '{}'",
+          LOG.info("Tagging lease table {} with tags: '{}'",
               conf.applicationName,
               Joiner.on(",").withKeyValueSeparator("=").join(conf.leaseTable.tags)
           );

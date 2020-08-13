@@ -36,7 +36,7 @@ import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.slf4j.Logger;
@@ -89,8 +89,9 @@ public class FirehoseTarget extends BaseTarget {
 
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(AWSUtil
-          .getCredentialsProvider(conf.connection.awsConfig));
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder
+        .standard()
+        .withCredentials(AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig));
 
       if (conf.connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(conf.connection.endpoint);

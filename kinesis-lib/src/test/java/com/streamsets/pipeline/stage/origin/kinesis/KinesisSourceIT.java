@@ -81,6 +81,7 @@ public class KinesisSourceIT {
   private static final String SINGLE_SHARD_STREAM = "SINGLE_SHARD_STREAM";
   private static final String MULTI_SHARD_STREAM = "MULTI_SHARD_STREAM";
   private static final String BAD_RECORD_STREAM = "BAD_RECORD_STREAM";
+  private static final String[] CONF_VERSION = {"CONSUME", "PREVIEW", "STOPERROR"};
 
   @Parameters
   public static Collection<Object[]> streams() {
@@ -102,15 +103,15 @@ public class KinesisSourceIT {
   @ClassRule
   public static GenericContainer dynamo = new GenericContainer(
       new ImageFromDockerfile()
-      .withDockerfileFromBuilder(builder ->{
-        builder
-            .from("java:8")
-            .run("curl -sL http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz | " +
-                "tar xz && rm -rf LICENSE.txt README.txt third_party_licenses/")
-            .expose(DYNAMO_DB_PORT)
-            .entryPoint("java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb")
-            .build();
-      })
+          .withDockerfileFromBuilder(builder ->{
+            builder
+                .from("java:8")
+                .run("curl -sL http://dynamodb-local.s3-website-us-west-2.amazonaws.com/dynamodb_local_latest.tar.gz | " +
+                    "tar xz && rm -rf LICENSE.txt README.txt third_party_licenses/")
+                .expose(DYNAMO_DB_PORT)
+                .entryPoint("java", "-Djava.library.path=./DynamoDBLocal_lib", "-jar", "DynamoDBLocal.jar", "-sharedDb")
+                .build();
+          })
   ).withExposedPorts(DYNAMO_DB_PORT);
 
   @ClassRule
@@ -186,14 +187,14 @@ public class KinesisSourceIT {
 
   @Test
   public void testConsume() throws Exception {
-    KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName);
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName, CONF_VERSION[0]);
     final Map<String, String> lastSourceOffsets = new HashMap<>();
 
     for (int i = 0; i < 2; i++) {
       KinesisSource kinesisSource = new KinesisSource(config);
       PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource).addOutputLane("lane")
-          .setOnRecordError(OnRecordError.TO_ERROR)
-          .build();
+                                                                                                 .setOnRecordError(OnRecordError.TO_ERROR)
+                                                                                                 .build();
 
       runner.runInit();
       kinesisSource.setDynamoDBClient(getDynamoDBClient());
@@ -226,7 +227,7 @@ public class KinesisSourceIT {
 
   @Test
   public void testPreview() throws Exception {
-    KinesisConsumerConfigBean config = getKinesisConsumerConfig(SINGLE_SHARD_STREAM);
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig(SINGLE_SHARD_STREAM, CONF_VERSION[1]);
 
     KinesisSource kinesisSource = new KinesisSource(config);
     PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource)
@@ -263,7 +264,7 @@ public class KinesisSourceIT {
       return;
     }
 
-    KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName);
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName, CONF_VERSION[2]);
 
     KinesisSource kinesisSource = new KinesisSource(config);
     PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource)
@@ -287,9 +288,9 @@ public class KinesisSourceIT {
       assertEquals(0, runner.getErrorRecords().size());
     } catch (Exception e) {
       List<Throwable> stageExceptions = Throwables.getCausalChain(e)
-          .stream()
-          .filter(t -> StageException.class.isAssignableFrom(t.getClass()))
-          .collect(Collectors.toList());
+                                                  .stream()
+                                                  .filter(t -> StageException.class.isAssignableFrom(t.getClass()))
+                                                  .collect(Collectors.toList());
       assertEquals(1, stageExceptions.size());
       assertEquals(Errors.KINESIS_03, ((OnRecordErrorException) stageExceptions.get(0)).getErrorCode());
     } finally {
@@ -300,7 +301,41 @@ public class KinesisSourceIT {
     assertEquals(4, records.size());
   }
 
-  private KinesisConsumerConfigBean getKinesisConsumerConfig(String streamName) {
+  @Test
+  public void testAdditionalProperties() throws Exception {
+    KinesisConsumerConfigBean config = getKinesisConsumerConfig(streamName, CONF_VERSION[1]);
+
+    KinesisSource kinesisSource = new KinesisSource(config);
+    PushSourceRunner runner = new PushSourceRunner.Builder(KinesisDSource.class, kinesisSource)
+        .addOutputLane("lane")
+        .setOnRecordError(OnRecordError.STOP_PIPELINE)
+        .build();
+
+    runner.runInit();
+    kinesisSource.setDynamoDBClient(getDynamoDBClient());
+    kinesisSource.setMetricsFactory(new NullMetricsFactory());
+    Map<String, String> additionalProperties = kinesisSource.getAdditionalProperties();
+
+    final List<Record> records = new ArrayList<>(numRecords);
+    final AtomicInteger batchCount = new AtomicInteger(0);
+    try {
+      runner.runProduce(new HashMap<>(), 10, output -> {
+        batchCount.incrementAndGet();
+        records.addAll(output.getRecords().get("lane"));
+      });
+
+      runner.waitOnProduce();
+      assertEquals(1, batchCount.get());
+      assertEquals(10, records.size());
+
+      assertEquals("110", additionalProperties.get("maxConsecutiveRetriesBeforeThrottling"));
+      assertEquals("20", additionalProperties.get("maxLeaseRenewalThreads"));
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  private KinesisConsumerConfigBean getKinesisConsumerConfig(String streamName, String configsVersion) {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();
     conf.dataFormatConfig = new DataParserFormatConfig();
     conf.connection.awsConfig = new AWSConfig();
@@ -321,6 +356,28 @@ public class KinesisSourceIT {
     conf.initialPositionInStream = InitialPositionInStream.TRIM_HORIZON;
     conf.maxBatchSize = 1000;
     conf.maxRecordProcessors = 2; // Must be at least 1
+
+    // Use random and custom configuration to test the basic performance at consume, preview and stop on error.
+    Map<String, String> additionalConfigurations = new HashMap<>();
+    switch (configsVersion) {
+      case "CONSUME":
+        additionalConfigurations.put("maxConnections", "60");
+        additionalConfigurations.put("tableName", "AbCdEf");
+        conf.kinesisConsumerConfigs = additionalConfigurations;
+        break;
+      case "PREVIEW":
+        additionalConfigurations.put("maxConsecutiveRetriesBeforeThrottling", "110");
+        additionalConfigurations.put("maxLeaseRenewalThreads", "20");
+        conf.kinesisConsumerConfigs = additionalConfigurations;
+        break;
+      case "STOPERROR":
+        additionalConfigurations.put("failoverTimeMillis", "11000");
+        additionalConfigurations.put("validateSequenceNumberBeforeCheckpointing", "false");
+        conf.kinesisConsumerConfigs = additionalConfigurations;
+        break;
+      default:
+        break;
+    }
 
     return conf;
   }
