@@ -19,10 +19,10 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.TransactionIsolationLevel;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,19 +93,18 @@ public class PrivateHikariConfigBean {
   @ListBeanModel
   public List<ConnectionPropertyBean> driverProperties = new ArrayList<>();
 
-  private HikariPoolConfigBean underlying;
+  private BrandedHikariPoolConfigBean underlying;
 
   public HikariPoolConfigBean getUnderlying() {
     return underlying;
   }
 
   public List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-    underlying = new HikariPoolConfigBean();
-    underlying.connection = new JdbcConnection();
-    underlying.connection.connectionString = connectionString;
-    underlying.connection.useCredentials = useCredentials;
-    underlying.connection.username = username;
-    underlying.connection.password = password;
+    underlying = new BrandedHikariPoolConfigBean();
+    underlying.connectionString = connectionString;
+    underlying.useCredentials = useCredentials;
+    underlying.username = username;
+    underlying.password = password;
     underlying.driverProperties = driverProperties;
     underlying.readOnly = true;
     underlying.setAutoCommit(true);

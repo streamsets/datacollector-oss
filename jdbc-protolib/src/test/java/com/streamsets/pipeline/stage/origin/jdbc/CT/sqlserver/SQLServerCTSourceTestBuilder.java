@@ -15,9 +15,9 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -30,7 +30,10 @@ import java.util.List;
 import java.util.Map;
 
 public class SQLServerCTSourceTestBuilder {
-  private JdbcConnection connection;
+  private String connectionString;
+  private boolean useCredentials;
+  private String username;
+  private String password;
   private List<ConnectionPropertyBean> driverProperties;
   private  String driverClassName;
   private String connectionTestQuery;
@@ -52,11 +55,10 @@ public class SQLServerCTSourceTestBuilder {
 
 
   public SQLServerCTSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
-    this.connection = new JdbcConnection();
-    this.connection.connectionString = jdbcUrl;
-    this.connection.useCredentials = useCredentials;
-    this.connection.username = () -> username;
-    this.connection.password = () -> password;
+    this.connectionString = jdbcUrl;
+    this.useCredentials = useCredentials;
+    this.username = username;
+    this.password = password;
     this.driverProperties = new ArrayList<>();
     this.driverClassName = "";
     this.connectionTestQuery = "";
@@ -82,17 +84,17 @@ public class SQLServerCTSourceTestBuilder {
   }
 
   public SQLServerCTSourceTestBuilder connectionString(String connectionString) {
-    this.connection.connectionString = connectionString;
+    this.connectionString = connectionString;
     return this;
   }
 
   public SQLServerCTSourceTestBuilder useCredentials(boolean useCredentials) {
-    this.connection.useCredentials = useCredentials;
+    this.useCredentials = useCredentials;
     return this;
   }
 
   public SQLServerCTSourceTestBuilder password(String password) {
-    this.connection.password = () -> password;
+    this.username = password;
     return this;
   }
 
@@ -192,12 +194,11 @@ public class SQLServerCTSourceTestBuilder {
   }
 
   public SQLServerCTSource build() {
-    HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
-    hikariPoolConfigBean.connection = new JdbcConnection();
-    hikariPoolConfigBean.connection.useCredentials = this.connection.useCredentials;
-    hikariPoolConfigBean.connection.connectionString = this.connection.connectionString;
-    hikariPoolConfigBean.connection.username = this.connection.username;
-    hikariPoolConfigBean.connection.password = this.connection.password;
+    BrandedHikariPoolConfigBean hikariPoolConfigBean = new BrandedHikariPoolConfigBean();
+    hikariPoolConfigBean.useCredentials = useCredentials;
+    hikariPoolConfigBean.connectionString = connectionString;
+    hikariPoolConfigBean.username = () -> username;
+    hikariPoolConfigBean.password = () -> password;
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;

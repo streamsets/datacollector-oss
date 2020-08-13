@@ -15,13 +15,13 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
-import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Stage.ConfigIssue;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import org.junit.Assert;
@@ -32,6 +32,7 @@ import org.postgresql.replication.LogSequenceNumber;
 
 import java.nio.ByteBuffer;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -57,12 +58,11 @@ public class TestWalRecordFilteringUtils {
   private Stage.Context contextMock;
 
   private void createConfigBeans() {
-    HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connection = new JdbcConnection();
-    hikariConfigBean.connection.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
-    hikariConfigBean.connection.useCredentials = true;
-    hikariConfigBean.connection.username = () -> username;
-    hikariConfigBean.connection.password = () -> password;
+    BrandedHikariPoolConfigBean hikariConfigBean = new BrandedHikariPoolConfigBean();
+    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
+    hikariConfigBean.useCredentials = true;
+    hikariConfigBean.username = () -> username;
+    hikariConfigBean.password = () -> password;
 
     configBean = new PostgresCDCConfigBean();
     configBean.slot = "slot";

@@ -17,9 +17,6 @@ package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
-import com.streamsets.pipeline.api.ConnectionDef;
-import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
@@ -27,7 +24,6 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import org.slf4j.Logger;
@@ -45,7 +41,7 @@ import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-public class HikariPoolConfigBean {
+public abstract class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
 
   private static final String GENERIC_CONNECTION_STRING_TEMPLATE = "://%s:%d%s";
@@ -83,27 +79,6 @@ public class HikariPoolConfigBean {
   public static final String READ_ONLY_NAME = "readOnly";
 
   private Properties additionalProperties = new Properties();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CONNECTION,
-      connectionType = JdbcConnection.TYPE,
-      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
-      label = "Connection",
-      group = "#0",
-      displayPosition = -500
-  )
-  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
-
-  @ConfigDefBean(
-      dependencies = {
-          @Dependency(
-              configName = "connectionSelection",
-              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
-          )
-      }
-  )
-  public JdbcConnection connection;
 
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.ADVANCED,
@@ -433,14 +408,6 @@ public class HikariPoolConfigBean {
     return additionalProperties;
   }
 
-  public String getConnectionString() {
-    return connection.connectionString;
-  }
-
-  public DatabaseVendor getVendor() {
-    return DatabaseVendor.forUrl(connection.connectionString);
-  }
-
   public void addExtraDriverProperties(Map<String, String> keyValueProperties) {
     for (Map.Entry<String, String> property : keyValueProperties.entrySet()) {
       additionalProperties.setProperty(property.getKey(), property.getValue());
@@ -473,17 +440,15 @@ public class HikariPoolConfigBean {
     return autoCommit;
   }
 
-  public CredentialValue getUsername() {
-    return connection.username;
-  }
+  public abstract String getConnectionString();
 
-  public CredentialValue getPassword() {
-    return connection.password;
-  }
+  public abstract DatabaseVendor getVendor();
 
-  public boolean useCredentials() {
-    return connection.useCredentials;
-  }
+  public abstract CredentialValue getUsername();
+
+  public abstract CredentialValue getPassword();
+
+  public abstract boolean useCredentials();
 
   public void setConnectionString(String connectionString) {
     // Do nothing, in this case since we are using the generic JDBC we don't want to change the original connection

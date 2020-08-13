@@ -163,8 +163,8 @@ public class TestJdbcTarget {
     }
   }
 
-  private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+  private JdbcHikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
+    JdbcHikariPoolConfigBean bean = new JdbcHikariPoolConfigBean();
     bean.connection = new JdbcConnection();
     bean.connection.connectionString = connectionString;
     bean.connection.useCredentials = true;

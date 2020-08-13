@@ -22,8 +22,8 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.jdbc.DataType;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
+import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
@@ -104,7 +104,7 @@ public class TestJdbcLookup {
 
   private JdbcLookupDProcessor createProcessor() {
     JdbcLookupDProcessor processor = new JdbcLookupDProcessor();
-    processor.hikariConfigBean = new HikariPoolConfigBean();
+    processor.hikariConfigBean = new JdbcHikariPoolConfigBean();
     processor.hikariConfigBean.connection = new JdbcConnection();
     processor.hikariConfigBean.connection.connectionString = h2ConnectionString;
     processor.hikariConfigBean.connection.useCredentials = true;

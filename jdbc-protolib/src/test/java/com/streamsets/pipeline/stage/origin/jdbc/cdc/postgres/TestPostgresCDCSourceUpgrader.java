@@ -17,10 +17,7 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres;
 
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
@@ -35,44 +32,26 @@ import java.util.List;
 public class TestPostgresCDCSourceUpgrader {
 
   private StageUpgrader postgresCDCSourceUpgrader;
-  private List<Config> configs;
-  private StageUpgrader.Context context;
-  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
 
   @Before
   public void setUp() {
     URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/PostgresCDCSource.yaml");
     postgresCDCSourceUpgrader = new SelectorStageUpgrader("stage", new StageUpgrader() {}, yamlResource);
-    configs = new ArrayList<>();
-    context = Mockito.mock(StageUpgrader.Context.class);
-    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
   }
 
   @Test
   public void testV1ToV2() {
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
     Mockito.doReturn(1).when(context).getFromVersion();
     Mockito.doReturn(2).when(context).getToVersion();
 
-    configs = postgresCDCSourceUpgrader.upgrade(new ArrayList<>(), context);
+    List<Config> configs = postgresCDCSourceUpgrader.upgrade(new ArrayList<>(), context);
 
     Assert.assertEquals(1, configs.size());
 
     Config configValue = configs.get(0);
     Assert.assertEquals("postgresCDCConfigBean.maxBatchWaitTime", configValue.getName());
     Assert.assertEquals(15000, configValue.getValue());
-  }
 
-  @Test
-  public void testUpgradeV2toV3() throws StageException {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
-
-    connectionUpgradeTester.testJdbcConnectionIntroduction(
-        configs,
-        postgresCDCSourceUpgrader,
-        context,
-        "hikariConf.",
-        "connection."
-    );
   }
 }

@@ -21,12 +21,12 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcSchemaReader;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
@@ -105,13 +105,12 @@ public class TestJdbcMetadata {
       .put(Types.VARCHAR, Field.Type.STRING)
       .build();
 
-  private HikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
-    bean.connection = new JdbcConnection();
-    bean.connection.connectionString = connectionString;
-    bean.connection.useCredentials = true;
-    bean.connection.username = () -> username;
-    bean.connection.password = () -> password;
+  private BrandedHikariPoolConfigBean createConfigBean(String connectionString, String username, String password) {
+    BrandedHikariPoolConfigBean bean = new BrandedHikariPoolConfigBean();
+    bean.connectionString = connectionString;
+    bean.useCredentials = true;
+    bean.username = () -> username;
+    bean.password = () -> password;
 
     return bean;
   }

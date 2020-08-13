@@ -17,12 +17,9 @@
 package com.streamsets.pipeline.stage.upgrader;
 
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
-import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.net.URL;
@@ -32,6 +29,7 @@ import java.util.List;
 public class TestSapHanaDSourceUpgrader {
 
   private StageUpgrader upgrader;
+
   private List<Config> configs;
   private StageUpgrader.Context context;
 
@@ -41,27 +39,5 @@ public class TestSapHanaDSourceUpgrader {
     upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
-  }
-
-  @Test
-  public void testUpgradeV1toV2() throws StageException {
-    Mockito.doReturn(1).when(context).getFromVersion();
-    Mockito.doReturn(2).when(context).getToVersion();
-
-    configs.add(new Config("hikariConfigBean.useCredentials", true));
-    configs.add(new Config("hikariConfigBean.username", "upgrade-test-username"));
-    configs.add(new Config("hikariConfigBean.password", "upgrade-test-password"));
-
-    configs = upgrader.upgrade(configs, context);
-
-    UpgraderTestUtils.assertNoneExist(
-        configs,
-        "hikariConfigBean.useCredentials",
-        "hikariConfigBean.username",
-        "hikariConfigBean.password"
-    );
-    UpgraderTestUtils.assertExists(configs, "hikariConfigBean.connection.useCredentials", true);
-    UpgraderTestUtils.assertExists(configs, "hikariConfigBean.connection.username", "upgrade-test-username");
-    UpgraderTestUtils.assertExists(configs, "hikariConfigBean.connection.password", "upgrade-test-password");
   }
 }

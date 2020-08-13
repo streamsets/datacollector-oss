@@ -45,18 +45,4 @@ public class TestJdbcMetadataUpgrader {
     context = Mockito.mock(StageUpgrader.Context.class);
     connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
   }
-
-  @Test
-  public void testUpgradeV1toV2() throws StageException {
-    Mockito.doReturn(1).when(context).getFromVersion();
-    Mockito.doReturn(2).when(context).getToVersion();
-
-    connectionUpgradeTester.testJdbcConnectionIntroduction(
-        configs,
-        upgrader,
-        context,
-        "conf.hikariConfigBean.",
-        "connection."
-    );
-  }
 }

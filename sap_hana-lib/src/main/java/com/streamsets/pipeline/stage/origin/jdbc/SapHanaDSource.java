@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.config.SapHanaGroups;
 import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
 
 
-@StageDef(version = 2,
+@StageDef(version = 1,
     label = "SAP HANA Query Consumer",
     description = "Reads data from SAP HANA using a query",
     icon = "sapHanaIcon.png",
@@ -46,7 +46,7 @@ import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
     "commonSourceConfigBean.enableSchemaChanges",
     "commonSourceConfigBean.queriesPerSecond",
     "commonSourceConfigBean.txnWindow",
-    "hikariConfigBean.connection.connectionString",
+    "hikariConfigBean.connectionString",
     "hikariConfigBean.driverClassName",
     "hikariConfigBean.connectionTestQuery",
     "txnIdColumnName",
@@ -54,6 +54,7 @@ import com.streamsets.pipeline.stage.config.SapHanaHikariPoolConfigBean;
 })
 @ConfigGroups(value = SapHanaGroups.class)
 public class SapHanaDSource extends JdbcDSource {
+
   @ConfigDefBean
   public SapHanaHikariPoolConfigBean hikariConfigBean;
 

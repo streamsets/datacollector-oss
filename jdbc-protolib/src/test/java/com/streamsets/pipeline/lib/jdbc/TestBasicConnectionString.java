@@ -28,7 +28,7 @@ public class TestBasicConnectionString {
 
   @BeforeClass
   public static void setUp() {
-    HikariPoolConfigBean hikariPoolConfigBean = new HikariPoolConfigBean();
+    JdbcHikariPoolConfigBean hikariPoolConfigBean = new JdbcHikariPoolConfigBean();
     hikariPoolConfigBean.connection = new JdbcConnection();
     basicConnectionString = new BasicConnectionString(hikariPoolConfigBean.getPatterns(),
         hikariPoolConfigBean.getConnectionStringTemplate()

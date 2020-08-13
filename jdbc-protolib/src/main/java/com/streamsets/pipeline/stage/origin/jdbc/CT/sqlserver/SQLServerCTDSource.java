@@ -22,13 +22,13 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
-    version = 3,
+    version = 2,
     label = "SQL Server Change Tracking Client",
     description = "Origin that an read change events from an SQL Server Database",
     icon = "sql-server-multithreaded.png",
@@ -49,7 +49,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 public class SQLServerCTDSource extends DPushSource {
 
   @ConfigDefBean
-  public HikariPoolConfigBean hikariConf = new HikariPoolConfigBean();
+  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
 
   @ConfigDefBean
   public CommonSourceConfigBean commonSourceConfigBean = new CommonSourceConfigBean();

@@ -18,24 +18,17 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
-import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
-import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class TestSQLServerCDCSourceUpgrader {
-
   private static final String TABLECONFIG = "cdcTableJdbcConfigBean.tableConfigs";
   private static final String SCHEMA_CONFIG = "schema";
   private static final String TABLEPATTERN_CONFIG = "tablePattern";
@@ -43,20 +36,6 @@ public class TestSQLServerCDCSourceUpgrader {
   private static final String TABLE_INITIALOFFSET_CONFIG = "initialOffset";
   private static final String TABLE_CAPTURE_INSTANCE_CONFIG = "capture_instance";
   private static final String TABLE_TIMEZONE_ID = "cdcTableJdbcConfigBean.timeZoneID";
-
-  private StageUpgrader upgrader;
-  private List<Config> configs;
-  private StageUpgrader.Context context;
-  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
-
-  @Before
-  public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/SQLServerCDCDSource.yaml");
-    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
-    configs = new ArrayList<>();
-    context = Mockito.mock(StageUpgrader.Context.class);
-    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
-  }
 
   @Test
   public void testUpgradeV1toV2WithBasicConfig() throws StageException {
@@ -244,19 +223,5 @@ public class TestSQLServerCDCSourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, SQLServerCDCSourceUpgrader.TXN_WINDOW, "${1 * HOURS}");
     UpgraderTestUtils.assertExists(configs, SQLServerCDCSourceUpgrader.USE_TABLE, true);
-  }
-
-  @Test
-  public void testUpgradeV5toV6() throws StageException {
-    Mockito.doReturn(5).when(context).getFromVersion();
-    Mockito.doReturn(6).when(context).getToVersion();
-
-    connectionUpgradeTester.testJdbcConnectionIntroduction(
-        configs,
-        upgrader,
-        context,
-        "hikariConf.",
-        "connection."
-    );
   }
 }

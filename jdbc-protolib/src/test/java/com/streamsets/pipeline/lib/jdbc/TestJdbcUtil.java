@@ -62,8 +62,8 @@ public class TestJdbcUtil {
   private final String emptyTableName = "EMPTY_TABLE";
   private final String dataTypesTestTable = "DATA_TYPES_TEST";
 
-  private HikariPoolConfigBean createConfigBean() {
-    HikariPoolConfigBean bean = new HikariPoolConfigBean();
+  private JdbcHikariPoolConfigBean createConfigBean() {
+    JdbcHikariPoolConfigBean bean = new JdbcHikariPoolConfigBean();
     bean.connection = new JdbcConnection();
     bean.connection.connectionString = h2ConnectionString;
     bean.connection.useCredentials = true;

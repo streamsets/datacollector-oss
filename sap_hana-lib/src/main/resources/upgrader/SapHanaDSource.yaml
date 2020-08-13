@@ -16,15 +16,4 @@
 
 upgraderVersion: 1
 
-upgrades:
-  - toVersion: 2
-    actions:
-      - renameConfig:
-          oldNamePattern: hikariConfigBean.useCredentials
-          newNamePattern: hikariConfigBean.connection.useCredentials
-      - renameConfig:
-          oldNamePattern: hikariConfigBean.username
-          newNamePattern: hikariConfigBean.connection.username
-      - renameConfig:
-          oldNamePattern: hikariConfigBean.password
-          newNamePattern: hikariConfigBean.connection.password
+upgrades: []

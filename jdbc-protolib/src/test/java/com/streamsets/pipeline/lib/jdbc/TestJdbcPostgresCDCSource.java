@@ -32,12 +32,11 @@ public class TestJdbcPostgresCDCSource {
   private String password = "postgres";
 
   private void createConfigBeans() {
-    HikariPoolConfigBean hikariConfigBean = new HikariPoolConfigBean();
-    hikariConfigBean.connection = new JdbcConnection();
-    hikariConfigBean.connection.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
-    hikariConfigBean.connection.useCredentials = true;
-    hikariConfigBean.connection.username = () -> username;
-    hikariConfigBean.connection.password = () -> password;
+    BrandedHikariPoolConfigBean hikariConfigBean = new BrandedHikariPoolConfigBean();
+    hikariConfigBean.connectionString = "jdbc:postgresql://localhost:5432/sdctest";
+    hikariConfigBean.useCredentials = true;
+    hikariConfigBean.username = () -> username;
+    hikariConfigBean.password = () -> password;
 
     PostgresCDCConfigBean configBean = new PostgresCDCConfigBean();
     configBean.slot = "slot";
