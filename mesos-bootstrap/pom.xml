@@ -23,7 +23,7 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.17.1</version>
+    <version>3.17.2-SNAPSHOT</version>
     <relativePath>../root</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-mesos-bootstrap</artifactId>
