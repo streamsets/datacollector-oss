@@ -53,7 +53,7 @@ public class ConnectionDefinitionJson {
     this.verifierDefinition = verifier;
   }
 
-  public String getLibraryDefinition() {
+  public String getLibrary() {
     return libraryDefinition;
   }
 
