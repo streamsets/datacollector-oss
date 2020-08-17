@@ -180,13 +180,16 @@ public class WebHookNotifier implements StateEventListener {
               }
               response = builder.post(Entity.entity(payload, webhookConfig.contentType));
 
-              if (response.getStatus() != Response.Status.OK.getStatusCode()) {
+              LOG.info("Received status code '{}' ", response.getStatus());
+
+              if (response.getStatusInfo().getFamily() != Response.Status.Family.SUCCESSFUL) {
                 LOG.error(
                     "Error calling Webhook URL, status code '{}': {}",
                     response.getStatus(),
                     response.readEntity(String.class)
                 );
               }
+
             } catch (Exception e) {
               LOG.error("Error calling Webhook URL '{}' on state {}: {}", webhookConfig.webhookUrl, toState.getStatus().name(), e.toString(), e);
             } finally {
