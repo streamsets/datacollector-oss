@@ -152,7 +152,7 @@ public abstract class MysqlSource extends BaseSource {
     } catch (HikariPool.PoolInitializationException e) {
       LOG.error("Error connecting to MySql: {}", e.getMessage(), e);
       issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), null, Errors.MYSQL_010, e.getMessage(), e
+          Groups.MYSQL.name(), null, Errors.MYSQL_003, e.getMessage(), e
       ));
     }
     return issues;
