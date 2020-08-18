@@ -187,7 +187,7 @@ input[type="submit"]:hover {
 	text-decoration:none;
 }
 .wh_logo_and_publication_title a.wh_logo {
-    background-image: url("https://19ttqs47cfw33zkecq3dz58m-wpengine.netdna-ssl.com/wp-content/uploads/2016/08/StreamSets-logo-small.png");
+    background-image: url("https://static.streamsetscloud.com/assets/streamsets_logo_small.png");
     background-size: contain;
     background-repeat: no-repeat;
     width: 260px;
