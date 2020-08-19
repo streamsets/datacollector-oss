@@ -49,20 +49,28 @@
             </div>
           </div>
           <div class="show-advanced-button fs-unmask form-group">
-            <button class="btn btn-link dropdown-toggle col-lg-3 col-md-4" type="button"
-                ng-click="toggleConfigDisplayMode()"
-                ng-if="groupHasEnabledAdvancedConfig(detailPaneConfig, detailPaneConfigDefn.configDefinitions, detailPaneServices, groupNameToLabelMap.name)">
-              <div ng-switch="detailPaneConfig.uiInfo.displayMode">
-                <div ng-switch-when="ADVANCED">
-                  Hide Advanced Options
-                  <i class="glyphicon glyphicon-menu-up"></i>
+            <div class="tooltip-wrapper col-lg-3 col-md-4"
+                ng-class="{'disabled': configHasAdvancedIssues}"
+                tooltip="{{configHasAdvancedIssues ? ('home.detailPane.advancedIssuesNeedFix' | translate) : ''}}"
+                tooltip-append-to-body="true"
+                tooltip-placement="right">
+              <button class="btn btn-link dropdown-toggle" type="button"
+              ng-click="toggleConfigDisplayMode()"
+              ng-if="groupHasEnabledAdvancedConfig(detailPaneConfig, detailPaneConfigDefn.configDefinitions, detailPaneServices, groupNameToLabelMap.name)"
+              ng-disabled="configHasAdvancedIssues"
+              >
+                <div ng-switch="detailPaneConfig.uiInfo.displayMode">
+                  <div ng-switch-when="ADVANCED">
+                    Hide Advanced Options
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                  </div>
+                  <div ng-switch-default>
+                    Show Advanced Options
+                    <i class="glyphicon glyphicon-menu-down"></i>
+                  </div>
                 </div>
-                <div ng-switch-default>
-                  Show Advanced Options
-                  <i class="glyphicon glyphicon-menu-down"></i>
-                </div>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
 
           <div class="form-group "
@@ -123,20 +131,27 @@
           </div>
 
           <div class="show-advanced-button fs-unmask form-group">
-            <button class="btn btn-link dropdown-toggle col-lg-3 col-md-4" type="button"
-                ng-click="toggleConfigDisplayMode()"
-                ng-if="hasAdvancedConfig(detailPaneConfigDefn.configDefinitions, detailPaneServices)">
-              <div ng-switch="pipelinePaneConfig.uiInfo.displayMode">
-                <div ng-switch-when="ADVANCED">
-                  Hide Advanced Options
-                  <i class="glyphicon glyphicon-menu-up"></i>
+            <div class="tooltip-wrapper col-lg-3 col-md-4"
+                ng-class="{'disabled': configHasAdvancedIssues}"
+                tooltip="{{configHasAdvancedIssues ? ('home.detailPane.advancedIssuesNeedFix' | translate) : ''}}"
+                tooltip-append-to-body="true"
+                tooltip-placement="right">
+              <button class="btn btn-link dropdown-toggle" type="button"
+                  ng-click="toggleConfigDisplayMode()"
+                  ng-if="hasAdvancedConfig(detailPaneConfigDefn.configDefinitions, detailPaneServices)"
+                  ng-disabled="configHasAdvancedIssues">
+                <div ng-switch="pipelinePaneConfig.uiInfo.displayMode">
+                  <div ng-switch-when="ADVANCED">
+                    Hide Advanced Options
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                  </div>
+                  <div ng-switch-default>
+                    Show Advanced Options
+                    <i class="glyphicon glyphicon-menu-down"></i>
+                  </div>
                 </div>
-                <div ng-switch-default>
-                  Show Advanced Options
-                  <i class="glyphicon glyphicon-menu-down"></i>
-                </div>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
 
           <div class="form-group"
@@ -213,20 +228,27 @@
           </div>
 
           <div class="show-advanced-button fs-unmask form-group">
-            <button class="btn btn-link dropdown-toggle col-lg-3 col-md-4" type="button"
-                ng-click="toggleConfigDisplayMode()"
-                ng-if="hasAdvancedConfig(errorStageConfigDefn.configDefinitions, detailPaneServices)">
-              <div ng-switch="pipelinePaneConfig.uiInfo.displayMode">
-                <div ng-switch-when="ADVANCED">
-                  Hide Advanced Options
-                  <i class="glyphicon glyphicon-menu-up"></i>
+            <div class="tooltip-wrapper col-lg-3 col-md-4"
+                ng-class="{'disabled': configHasAdvancedIssues}"
+                tooltip="{{configHasAdvancedIssues ? ('home.detailPane.advancedIssuesNeedFix' | translate) : ''}}"
+                tooltip-append-to-body="true"
+                tooltip-placement="right">
+              <button class="btn btn-link dropdown-toggle" type="button"
+                  ng-click="toggleConfigDisplayMode()"
+                  ng-if="hasAdvancedConfig(errorStageConfigDefn.configDefinitions, detailPaneServices)"
+            ng-disabled="configHasAdvancedIssues">
+                <div ng-switch="pipelinePaneConfig.uiInfo.displayMode">
+                  <div ng-switch-when="ADVANCED">
+                    Hide Advanced Options
+                    <i class="glyphicon glyphicon-menu-up"></i>
+                  </div>
+                  <div ng-switch-default>
+                    Show Advanced Options
+                    <i class="glyphicon glyphicon-menu-down"></i>
+                  </div>
                 </div>
-                <div ng-switch-default>
-                  Show Advanced Options
-                  <i class="glyphicon glyphicon-menu-down"></i>
-                </div>
-              </div>
-            </button>
+              </button>
+            </div>
           </div>
 
           <div class="form-group"

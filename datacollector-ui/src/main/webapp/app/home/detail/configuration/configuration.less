@@ -150,10 +150,22 @@
   }
 
   .show-advanced-button {
-    .btn {
-      @media (min-width: 768px) {
+    .tooltip-wrapper {
+      padding: 0;
+      @media (min-width: 1092px) {
         text-align: right;
       }
+      .btn[disabled] {
+        /* don't let button block mouse events from reaching wrapper */
+        pointer-events: none;
+        cursor: not-allowed;
+      }
+    }
+    .tooltip-wrapper.disabled {
+      /* pointer-events setting above blocks cursor setting, so set it here */
+      cursor: not-allowed;
+    }
+    .btn {
       padding-left: 14px;
       padding-right: 14px;
       i {

@@ -157,21 +157,6 @@ angular
       }
     };
 
-    /**
-     * Checks if configuration has any advanced issues.
-     *
-     * @param {Object} issues - a list of issues for a single stage
-     * @param {Object} configDefinitions - a list of configuration defintions
-     * @returns {Boolean} - Returns true if any issue is for an advanced configuration
-     */
-    var hasAdvancedConfigurationIssues = function(issues, configDefinitions) {
-      var advancedDefinitionNames = configDefinitions
-        .filter(function(config) {return config.displayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;})
-        .map(function(config) {return config.name;});
-      var issueConfigNames = issues.map(function(issue) {return issue.configName;});
-      return issueConfigNames.some(function(issueName) {return advancedDefinitionNames.includes(issueName);});
-    };
-
     angular.extend($scope, {
       detailPaneTabs: getDetailTabsList(pipelineConstant.PIPELINE, false),
       timeRange: 'latest',
@@ -456,61 +441,6 @@ angular
         });
       }
     });
-
-    /**
-     * Checks if the active stage has advanced issues
-     * @param stageIssues {Object} an object of lists of issues per stage
-     * @param selectedInstanceName {String} the selected stage
-     * @param commonErrors {Object} the global error object
-     * @param configDefinitions {Object} configuration definitions for the stage
-     */
-    var stageHasAdvancedIssues = function(stageIssues, selectedInstanceName, commonErrors, configDefinitions) {
-      if (selectedInstanceName) {
-        var issues = [];
-        if (stageIssues && stageIssues[selectedInstanceName]) {
-          issues = stageIssues[selectedInstanceName];
-        }
-        var errorIssues = [];
-        var validationIssues = [];
-        if (commonErrors && commonErrors.length && commonErrors[0].stageIssues) {
-          errorIssues = commonErrors[0].stageIssues;
-          if (errorIssues && errorIssues[selectedInstanceName]) {
-            validationIssues = errorIssues[selectedInstanceName];
-          }
-        }
-        var allIssues = issues.concat(validationIssues);
-        return hasAdvancedConfigurationIssues(
-          allIssues,
-          configDefinitions
-        );
-      }
-    };
-
-    // Force advanced issues to be shown if there are errors
-    $scope.$watchGroup(
-      ['pipelineConfig.issues.stageIssues', 'selectedObject', 'common.errors'],
-      function(newValues, _oldValues, scope) {
-        var stageIssues = newValues[0];
-        var selectedObject = newValues[1];
-        var commonErrors = newValues[2];
-        if (
-          selectedObject.stageName &&
-          selectedObject.instanceName &&
-          scope.detailPaneConfigDefn &&
-          stageHasAdvancedIssues(
-            stageIssues,
-            selectedObject.instanceName,
-            commonErrors,
-            scope.detailPaneConfigDefn.configDefinitions
-          )
-        ) {
-          scope.configHasAdvancedIssues = true;
-          scope.detailPaneConfig.uiInfo.displayMode = pipelineConstant.DISPLAY_MODE_ADVANCED;
-        } else {
-          scope.configHasAdvancedIssues = false;
-        }
-      }
-    );
 
     $scope.$watch('selectedObject', function() {
       if (($scope.selectedType === pipelineConstant.STAGE_INSTANCE || $scope.selectedType == pipelineConstant.PIPELINE) &&
