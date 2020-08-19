@@ -19,6 +19,7 @@ import com.streamsets.datacollector.antennadoctor.AntennaDoctor;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
+import com.streamsets.datacollector.aster.EntitlementSyncTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.http.SlaveWebServerTask;
@@ -43,7 +44,8 @@ public class SlavePipelineTask extends PipelineTask {
     BlobStoreTask blobStoreTask,
     CredentialStoresTask credentialStoresTask,
     StatsCollector statsCollector,
-    AntennaDoctor antennaDoctor
+    AntennaDoctor antennaDoctor,
+    EntitlementSyncTask entitlementSyncTask
   ) {
     super(
       library,
@@ -56,7 +58,8 @@ public class SlavePipelineTask extends PipelineTask {
       blobStoreTask,
       credentialStoresTask,
       statsCollector,
-      antennaDoctor
+      antennaDoctor,
+      entitlementSyncTask
     );
   }
 }

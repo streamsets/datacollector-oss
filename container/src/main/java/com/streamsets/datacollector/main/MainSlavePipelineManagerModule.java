@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.main;
 
 import com.streamsets.datacollector.activation.ActivationOverrideModule;
+import com.streamsets.datacollector.aster.EntitlementSyncModule;
 import com.streamsets.datacollector.event.handler.dagger.EventHandlerModule;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
@@ -46,6 +47,7 @@ public class MainSlavePipelineManagerModule { //Need better name
             new ActivationOverrideModule(objectGraph),
             new WebServerModule(m),
             EventHandlerModule.class,
+            EntitlementSyncModule.class,
             SlavePipelineTaskModule.class);
   }
 
