@@ -183,7 +183,8 @@ public class JerseyClientConfigBean {
       label = "Use Proxy",
       defaultValue = "false",
       displayPosition = 160,
-      group = "HTTP"
+      group = "HTTP",
+      displayMode = ConfigDef.DisplayMode.ADVANCED
   )
   public boolean useProxy = false;
 
