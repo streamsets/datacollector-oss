@@ -261,14 +261,22 @@ public class SqsConsumer extends BasePushSource {
         Thread.currentThread().interrupt();
       } catch (ExecutionException e) {
         Throwable cause = Throwables.getRootCause(e);
-        if (cause != null && cause instanceof StageException) {
+        if (cause instanceof StageException) {
           throw (StageException) cause;
+        } else if (cause instanceof AmazonSQSException) {
+          AmazonSQSException exception = (AmazonSQSException) cause;
+          LOG.debug("Error while reading from SQS: %s", cause);
+          throw new StageException(Errors.SQS_13, getQueueName(exception.getLocalizedMessage()), exception.getErrorCode());
         } else {
           LOG.error("ExecutionException attempting to get completion service result: {}", e.getMessage(), e);
           throw new StageException(Errors.SQS_03, e.toString(), e);
         }
       }
     }
+  }
+
+  private static String getQueueName(String localizedMessage) {
+    return localizedMessage.split("https://")[1].split(" ")[0];
   }
 
   private void shutdownExecutorIfNeeded() {
