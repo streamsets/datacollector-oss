@@ -41,3 +41,11 @@ upgrades:
           elseValue: WITH_CREDENTIALS
       - removeConfigs:
           namePattern: temp.aws.creds.flag
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: sqsConfig.specifyQueueURL
+          value: false
+      - setConfig:
+          name: sqsConfig.queueUrls
+          value: []

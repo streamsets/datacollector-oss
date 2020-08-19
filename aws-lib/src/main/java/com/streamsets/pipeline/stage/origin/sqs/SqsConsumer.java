@@ -22,17 +22,17 @@ import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.ListQueuesRequest;
 import com.amazonaws.services.sqs.model.ListQueuesResult;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ToErrorContext;
 import com.streamsets.pipeline.api.base.BasePushSource;
-import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +55,6 @@ import java.util.stream.IntStream;
 public class SqsConsumer extends BasePushSource {
   private static final Logger LOG = LoggerFactory.getLogger(SqsConsumer.class);
   private static final String SQS_CONFIG_PREFIX = "sqsConfig.";
-  private static final String SQS_DATA_FORMAT_CONFIG_PREFIX = SQS_CONFIG_PREFIX + "dataFormatConfig.";
-  private static final int ONE_MB = 1024 * 1024;
   private static final String SQS_THREAD_PREFIX = "SQS Consumer Worker - ";
   private final SqsConsumerConfigBean conf;
   private final BlockingQueue<Throwable> error = new SynchronousQueue<>();
@@ -76,23 +74,15 @@ public class SqsConsumer extends BasePushSource {
     List<ConfigIssue> issues = super.init();
 
     if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
-      issues.add(getContext().createConfigIssue(
-          Groups.SQS.name(),
-          SQS_CONFIG_PREFIX + "endpoint",
-          Errors.SQS_01
-      ));
+      issues.add(getContext().createConfigIssue(Groups.SQS.name(), SQS_CONFIG_PREFIX + "endpoint", Errors.SQS_01));
 
       return issues;
     }
 
-    // Propagate StringBuilder size to the service
-    getContext().getService(DataFormatParserService.class).setStringBuilderPoolSize(getNumberOfThreads());
-
     try {
       clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
     } catch (StageException e) {
-      issues.add(getContext().createConfigIssue(
-          Groups.SQS.name(),
+      issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "proxyConfig",
           Errors.SQS_10,
           e.getMessage(),
@@ -103,8 +93,7 @@ public class SqsConsumer extends BasePushSource {
     try {
       credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
     } catch (StageException e) {
-      issues.add(getContext().createConfigIssue(
-          Groups.SQS.name(),
+      issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "awsConfig",
           Errors.SQS_11,
           e.getMessage(),
@@ -114,40 +103,38 @@ public class SqsConsumer extends BasePushSource {
     }
 
     AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
-        .withClientConfiguration(clientConfiguration)
-        .withCredentials(credentials);
-    if(conf.region == AwsRegion.OTHER) {
+                                                           .withClientConfiguration(clientConfiguration)
+                                                           .withCredentials(credentials);
+    if (conf.region == AwsRegion.OTHER) {
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
     } else {
       builder.withRegion(conf.region.getId());
     }
 
-    AmazonSQS validationClient = builder.build();
-
-    for (int i = 0; i < conf.queuePrefixes.size(); i++) {
-      final String queueNamePrefix = conf.queuePrefixes.get(i);
-      ListQueuesResult result = validationClient.listQueues(new ListQueuesRequest(queueNamePrefix));
-      if (LOG.isDebugEnabled()) {
-        LOG.debug("ListQueuesResult for prefix {}: {}", queueNamePrefix, result);
+    if (conf.specifyQueueURL) {
+      conf.queueUrls.forEach(url -> queueUrlToPrefix.put(url, url));
+    } else {
+      AmazonSQS validationClient = builder.build();
+      for (int i = 0; i < conf.queuePrefixes.size(); i++) {
+        final String queueNamePrefix = conf.queuePrefixes.get(i);
+        ListQueuesResult result = validationClient.listQueues(new ListQueuesRequest(queueNamePrefix));
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("ListQueuesResult for prefix {}: {}", queueNamePrefix, result);
+        }
+        if (result.getQueueUrls().isEmpty()) {
+          //TODO: set index in issue when API-138 is implemented
+          issues.add(getContext().createConfigIssue(Groups.SQS.name(),
+              SQS_CONFIG_PREFIX + "queuePrefixes",
+              Errors.SQS_02,
+              queueNamePrefix
+          ));
+        }
+        result.getQueueUrls().forEach(url -> queueUrlToPrefix.put(url, queueNamePrefix));
       }
-      if (result.getQueueUrls().size() == 0) {
-        //TODO: set index in issue when API-138 is implemented
-        issues.add(getContext().createConfigIssue(
-            Groups.SQS.name(),
-            SQS_CONFIG_PREFIX + "queuePrefixes",
-            Errors.SQS_02,
-            queueNamePrefix
-        ));
-      }
-      result.getQueueUrls().forEach(url -> queueUrlToPrefix.put(url, queueNamePrefix));
     }
 
     if (queueUrlToPrefix.isEmpty()) {
-      issues.add(getContext().createConfigIssue(
-          Groups.SQS.name(),
-          SQS_CONFIG_PREFIX + "queuePrefixes",
-          Errors.SQS_09
-      ));
+      issues.add(getContext().createConfigIssue(Groups.SQS.name(), SQS_CONFIG_PREFIX + "queuePrefixes", Errors.SQS_09));
     }
 
     return issues;
@@ -155,7 +142,7 @@ public class SqsConsumer extends BasePushSource {
 
   private AmazonSQSAsync buildAsyncClient() {
     final AmazonSQSAsyncClientBuilder builder = AmazonSQSAsyncClientBuilder.standard();
-    if(conf.region == AwsRegion.OTHER) {
+    if (conf.region == AwsRegion.OTHER) {
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
     } else {
       builder.withRegion(conf.region.getId());
@@ -178,7 +165,7 @@ public class SqsConsumer extends BasePushSource {
   }
 
   @Override
-  public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+  public void produce(Map<String, String> lastOffsets, int maxBatchSize) {
     try {
       int batchSize = Math.min(conf.maxBatchSize, maxBatchSize);
       if (!getContext().isPreview() && conf.maxBatchSize > maxBatchSize) {
@@ -191,7 +178,10 @@ public class SqsConsumer extends BasePushSource {
       ExecutorCompletionService<Exception> completionService = new ExecutorCompletionService<>(executorService);
 
       IntStream.range(0, numThreads).forEach(threadNumber -> {
-        final List<String> threadQueueUrls = getQueueUrlsForThread(new ArrayList<>(queueUrlToPrefix.keySet()), threadNumber, numThreads);
+        final List<String> threadQueueUrls = getQueueUrlsForThread(new ArrayList<>(queueUrlToPrefix.keySet()),
+            threadNumber,
+            numThreads
+        );
         final Map<String, String> threadQueueUrlsToNames = new HashMap<>();
         threadQueueUrls.forEach(url -> threadQueueUrlsToNames.put(url, queueUrlToPrefix.get(url)));
         if (threadQueueUrlsToNames.isEmpty()) {
@@ -199,8 +189,7 @@ public class SqsConsumer extends BasePushSource {
             LOG.warn("No queues available for thread {}, so it will not be run", threadNumber);
           }
         } else {
-          SqsConsumerWorkerCallable workerCallable = new SqsConsumerWorkerCallable(
-              buildAsyncClient(),
+          SqsConsumerWorkerCallable workerCallable = new SqsConsumerWorkerCallable(buildAsyncClient(),
               getContext(),
               threadQueueUrlsToNames,
               conf.numberOfMessagesPerRequest,
@@ -249,13 +238,13 @@ public class SqsConsumer extends BasePushSource {
 
   private static List<String> getQueueUrlsForThread(List<String> allUrls, int threadNumber, int maxThreads) {
     final List<String> urls = new LinkedList<>();
-    IntStream.range(0, allUrls.size()).filter(i -> i % maxThreads == threadNumber).forEach(
-        i -> urls.add(allUrls.get(i))
-    );
+    IntStream.range(0, allUrls.size())
+             .filter(i -> i % maxThreads == threadNumber)
+             .forEach(i -> urls.add(allUrls.get(i)));
     return urls;
   }
 
-  private void checkWorkerStatus(ExecutorCompletionService<Exception> completionService) throws StageException {
+  private void checkWorkerStatus(ExecutorCompletionService<Exception> completionService) {
     Future<Exception> future = completionService.poll();
     if (future != null) {
       try {

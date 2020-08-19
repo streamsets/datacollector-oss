@@ -78,4 +78,15 @@ public class SqsDSourceUpgraderTest {
     UpgraderTestUtils.assertExists(configs, "sqsConfig.awsConfig.credentialMode", expectedCredentialsMode);
 
   }
+
+  @Test
+  public void testV4toV5() throws StageException {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "sqsConfig.specifyQueueURL", false);
+    UpgraderTestUtils.assertExists(configs, "sqsConfig.queueUrls", new ArrayList<>());
+  }
 }

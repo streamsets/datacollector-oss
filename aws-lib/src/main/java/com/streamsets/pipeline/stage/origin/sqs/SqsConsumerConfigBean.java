@@ -18,9 +18,9 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 
 import java.util.List;
@@ -54,6 +54,16 @@ public class SqsConsumerConfigBean {
   )
   public String endpoint;
 
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Specify Queue URL directly",
+      description = "Allows specifying URL instead of prefix which disables validation of existence.",
+      displayPosition = 105,
+      group = "SQS",
+      displayMode = ConfigDef.DisplayMode.BASIC)
+  public boolean specifyQueueURL;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.LIST,
@@ -61,12 +71,24 @@ public class SqsConsumerConfigBean {
       description = "The name prefixes of queues to fetch messages from. All unique queue names having these prefixes" +
           " will be assigned to all available threads in a round-robin fashion.",
       displayPosition = 110,
-      group = "SQS"
-  )
+      dependsOn = "specifyQueueURL",
+      triggeredByValue = "false",
+      group = "SQS",
+      displayMode = ConfigDef.DisplayMode.BASIC)
   public List<String> queuePrefixes;
 
-  @ConfigDef(
-      required = true,
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.LIST,
+      label = "Queue URLs",
+      description = "The URLs of the queues",
+      displayPosition = 110,
+      dependsOn = "specifyQueueURL",
+      triggeredByValue = "true",
+      group = "SQS",
+      displayMode = ConfigDef.DisplayMode.BASIC)
+  public List<String> queueUrls;
+
+  @ConfigDef(required = true,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "10",
       label = "Number of Messages per Request",

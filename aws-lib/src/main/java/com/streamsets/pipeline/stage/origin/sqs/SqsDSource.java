@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Amazon SQS Consumer",
     description = "Reads messages from Amazon SQS",
     icon = "sqs.png",
