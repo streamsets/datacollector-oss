@@ -29,10 +29,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Collections;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 public class TestAsterServiceImpl {
+
+  private AsterServiceHook hook;
 
   private AsterServiceImpl createService(File file) {
     Configuration innerConfig = new Configuration();
@@ -50,6 +52,8 @@ public class TestAsterServiceImpl {
 
     AsterServiceImpl asterService = new AsterServiceImpl(config, file);
     AsterServiceProvider.getInstance().set(asterService);
+    hook = Mockito.mock(AsterServiceHook.class);
+    asterService.registerHooks(Collections.singletonList(hook));
     return asterService;
   }
 
@@ -166,6 +170,8 @@ public class TestAsterServiceImpl {
     String redirUrl = service.handleEngineRegistration("http://e", req, res);
     Assert.assertEquals("http://original", redirUrl);
     Mockito.verify(asterRest, Mockito.times(1)).registerEngine(Mockito.eq(asterRequest), Mockito.eq("CODE"));
+
+    Mockito.verify(hook).onSuccessfulRegistration("http://original");
   }
 
   @Test
@@ -217,6 +223,8 @@ public class TestAsterServiceImpl {
     Mockito.when(asterRest.getUserInfo(Mockito.eq(asterRequest), Mockito.eq("CODE"))).thenReturn(user);
 
     Assert.assertEquals(user, service.handleUserLogin("http://e", req, res));
+
+    Mockito.verifyNoMoreInteractions(hook);
   }
 
 }

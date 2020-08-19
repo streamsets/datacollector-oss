@@ -18,11 +18,9 @@ package com.streamsets.lib.security.http.aster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import com.streamsets.datacollector.util.Configuration;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +29,10 @@ import org.springframework.security.oauth2.common.util.RandomValueStringGenerato
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * The {@link AsterServiceImpl} encapsulates the interaction with Aster to register the engine
@@ -67,6 +67,7 @@ public class AsterServiceImpl implements AsterService {
   private volatile AsterRestClientImpl asterRest;
   private final RandomValueStringGenerator randomValueStringGenerator;
   private final Cache<String, String> callbackUrlCache;
+  private final Collection<AsterServiceHook> hooks;
 
   /**
    * Constructor, sets the created instance as the singleton one.
@@ -76,6 +77,7 @@ public class AsterServiceImpl implements AsterService {
         "To use Aster, you must configure a valid " + AsterServiceProvider.ASTER_URL);
     this.config = config;
     this.tokensFile = tokensFile;
+    this.hooks = new ArrayList<>();
     randomValueStringGenerator = new RandomValueStringGenerator();
     callbackUrlCache = CacheBuilder.newBuilder().expireAfterWrite(60, TimeUnit.SECONDS).build();
     if (service != null) {
@@ -96,7 +98,19 @@ public class AsterServiceImpl implements AsterService {
   }
 
   @Override
-  public synchronized void registerHooks(Collection<AsterServiceHook> hooks) {
+  public void registerHooks(Collection<AsterServiceHook> hooks) {
+    if (null == hooks) {
+      LOG.debug("Ignoring registration of null hooks");
+      return;
+    }
+    synchronized (this.hooks) {
+        this.hooks.addAll(hooks);
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Registering hooks " + hooks.stream()
+              .map(h -> h.getClass().getSimpleName())
+              .collect(Collectors.joining(", ")));
+        }
+    }
   }
 
   /**
@@ -209,7 +223,11 @@ public class AsterServiceImpl implements AsterService {
     String code = getRequiredParameter(httpReq, CODE_QS_PARAM);
     AsterAuthorizationRequest request = getRestClient().findRequest(state);
     getRestClient().registerEngine(request, code);
-    return request.getLocalState();
+    String originalRequestedEngineUrl = request.getLocalState();
+    synchronized (hooks) {
+      hooks.forEach(h -> h.onSuccessfulRegistration(originalRequestedEngineUrl));
+    }
+    return originalRequestedEngineUrl;
   }
 
   /**
