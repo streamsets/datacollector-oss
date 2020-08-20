@@ -22,7 +22,6 @@ import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.ConnectionDefinition;
-import com.streamsets.datacollector.config.KeytabSource;
 import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -170,7 +169,7 @@ public class ValidationUtil {
     StageLibraryTask stageLibrary,
     ConnectionConfiguration connectionConf
   ) {
-    ConnectionDefinition connDef = stageLibrary.getConnection(connectionConf.getLibrary(), connectionConf.getType());
+    ConnectionDefinition connDef = stageLibrary.getConnection(connectionConf.getType());
     if (connDef != null) {
       for (ConfigDefinition configDef : connDef.getConfigDefinitions()) {
         String configName = configDef.getName();
@@ -225,11 +224,10 @@ public class ValidationUtil {
       List<Issue> issues
   ) {
     boolean valid;
-    ConnectionDefinition connDef = stageLibrary.getConnection(connConf.getLibrary(), connConf.getType());
+    ConnectionDefinition connDef = stageLibrary.getConnection(connConf.getType());
     if (connDef == null) {
       issues.add(issueCreator.create(
           ValidationError.VALIDATION_0038,
-          connConf.getLibrary(),
           connConf.getType(),
           connConf.getVersion()
       ));

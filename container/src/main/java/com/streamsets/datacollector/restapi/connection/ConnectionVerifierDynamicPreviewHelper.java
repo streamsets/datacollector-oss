@@ -80,7 +80,7 @@ public class ConnectionVerifierDynamicPreviewHelper {
     rawDataStage.getUiInfo().put("label", "Connection Verifier");
     StageConfigurationJson verifierStage = new StageConfigurationJson(
         connection.getVerifierStageName().concat("_01"),
-        connection.getLibrary(),
+        connection.getVerifierDefinition().getLibrary(),
         connection.getVerifierStageName(),
         connection.getVersion(),
         verifierConfig,
@@ -232,7 +232,6 @@ public class ConnectionVerifierDynamicPreviewHelper {
     connectionConfig.put(
       connection.getConnectionId(),
       new ConnectionConfiguration(
-          connection.getLibrary(),
           connection.getType(),
           Integer.valueOf(connection.getVersion()),
           configs

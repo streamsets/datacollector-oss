@@ -15,13 +15,9 @@
  */
 package com.streamsets.datacollector.definition;
 
-import com.google.common.base.Strings;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
@@ -30,7 +26,6 @@ import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -80,11 +75,10 @@ public abstract class ConnectionDefinitionExtractor {
    * Reads the ConnectionDef annotation of the given class and parses its information, including version, label,
    * description, type, upgrader, config definitions and group definitions
    *
-   * @param libraryDef The definition of the library containing the given class
    * @param klass The class having the ConnectionDef annotation to be read
    * @return The ConnectionDefinition object containing the annotation information
    */
-  public ConnectionDefinition extract(StageLibraryDefinition libraryDef, Class<?> klass) {
+  public ConnectionDefinition extract(Class<?> klass) {
     ConnectionDef conDef = klass.getAnnotation(ConnectionDef.class);
     Utils.formatL("Connection Definition: Connection='{}'", conDef.label());
     try {
@@ -100,7 +94,6 @@ public abstract class ConnectionDefinitionExtractor {
 
       return new ConnectionDefinition(
           conDef,
-          libraryDef,
           version,
           label,
           description,

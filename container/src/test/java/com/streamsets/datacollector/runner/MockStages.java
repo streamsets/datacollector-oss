@@ -88,6 +88,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -794,23 +795,18 @@ public class MockStages {
     }
 
     @Override
-    public List<ConnectionDefinition> getConnections() {
+    public Collection<ConnectionDefinition> getConnections() {
       return Collections.emptyList();
     }
 
     @Override
-    public ConnectionDefinition getConnection(String library, String type) {
-      for (ConnectionDefinition conn : getConnections()) {
-        if (conn.getLibrary().equals(library) && conn.getType().equals(type)) {
-          return conn;
-        }
-      }
+    public ConnectionDefinition getConnection(String type) {
       return null;
     }
 
     @Override
-    public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
-      return Collections.emptyMap();
+    public Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type) {
+      return Collections.emptySet();
     }
 
     @Override

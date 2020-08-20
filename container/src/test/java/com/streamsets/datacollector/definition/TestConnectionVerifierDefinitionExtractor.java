@@ -16,20 +16,31 @@
 
 package com.streamsets.datacollector.definition;
 
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.connection.TestConnectionDef;
 import com.streamsets.datacollector.definition.connection.TestConnectionVerifier;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Properties;
+
 public class TestConnectionVerifierDefinitionExtractor {
+
+  private static final StageLibraryDefinition MOCK_LIB_DEF =
+      new StageLibraryDefinition(
+          TestConnectionVerifierDefinitionExtractor.class.getClassLoader(),
+          "Test Library Name", "Test Library Description",
+          new Properties(), null, null, null
+      );
 
   @Test
   public void testExtractConnectionVerifierDef() {
     ConnectionVerifierDefinition verifierDef =
-        ConnectionVerifierDefinitionExtractor.get().extract(TestConnectionVerifier.class);
+        ConnectionVerifierDefinitionExtractor.get().extract(MOCK_LIB_DEF, TestConnectionVerifier.class);
     Assert.assertEquals(TestConnectionDef.TestConnection.TYPE, verifierDef.getVerifierType());
     Assert.assertEquals(TestConnectionVerifier.class.getCanonicalName(), verifierDef.getVerifierClass());
     Assert.assertEquals("connection", verifierDef.getVerifierConnectionFieldName());
     Assert.assertEquals("connectionSelection", verifierDef.getVerifierConnectionSelectionFieldName());
+    Assert.assertEquals(MOCK_LIB_DEF.getName(), verifierDef.getLibrary());
   }
 }

@@ -590,7 +590,7 @@ public class TestPipelineBeanCreator {
     String connectionId = "connId";
     HashMap<String, ConnectionConfiguration> connections = new HashMap<>();
     connections.put(connectionId,
-        new ConnectionConfiguration("lib", "MYCONN", 1, Collections.singletonList(new Config("URL", "http://new.place"))));
+        new ConnectionConfiguration("MYCONN", 1, Collections.singletonList(new Config("URL", "http://new.place"))));
 
     StageConfiguration sourceConf = new StageConfigurationBuilder("si", "s")
       .withConfig(

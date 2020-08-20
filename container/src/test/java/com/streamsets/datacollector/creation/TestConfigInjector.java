@@ -24,7 +24,6 @@ import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.credential.CredentialEL;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
-import com.streamsets.datacollector.definition.connection.TestConnectionDef;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.validation.Issue;
@@ -431,7 +430,7 @@ public class TestConfigInjector {
     configs.add(new Config("URL", "http://new.place"));
     configs.add(new Config("extra.non-existent.config", "foo"));
     configs.add(new Config("beanSubBean.subBeanString", "StreamSets"));
-    ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 2, configs);
+    ConnectionConfiguration cc = new ConnectionConfiguration("MYCONN", 2, configs);
     connections.put(connectionId, cc);
     ConfigInjector.prepareForConnections(connectionRetriever);
 
@@ -480,7 +479,7 @@ public class TestConfigInjector {
     configs.add(new Config("URL", "http://new.place"));
     configs.add(new Config("extra.non-existent.config", "foo"));
     configs.add(new Config("beanSubBean.subBeanString", "StreamSets"));
-    ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 2, configs);
+    ConnectionConfiguration cc = new ConnectionConfiguration("MYCONN", 2, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
     ConfigInjector.prepareForConnections(connectionRetriever);
 
@@ -528,7 +527,7 @@ public class TestConfigInjector {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("URL", "http://new.place"));
     // connection configuration is older version
-    ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 1, configs);
+    ConnectionConfiguration cc = new ConnectionConfiguration("MYCONN", 1, configs);
     connections.put(connectionId, cc);
     ConfigInjector.prepareForConnections(connectionRetriever);
 
@@ -575,7 +574,7 @@ public class TestConfigInjector {
 
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
-    ConnectionConfiguration cc = new ConnectionConfiguration("lib", "WRONG_TYPE", 1, configs);
+    ConnectionConfiguration cc = new ConnectionConfiguration("WRONG_TYPE", 1, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
     ConfigInjector.prepareForConnections(connectionRetriever);
 
@@ -611,7 +610,7 @@ public class TestConfigInjector {
     ConnectionRetriever connectionRetriever = Mockito.mock(ConnectionRetriever.class);
     List<Config> configs = new ArrayList<>();
     // connection configuration is newer version
-    ConnectionConfiguration cc = new ConnectionConfiguration("lib", "MYCONN", 3, configs);
+    ConnectionConfiguration cc = new ConnectionConfiguration("MYCONN", 3, configs);
     Mockito.when(connectionRetriever.get(Mockito.eq(connectionId), Mockito.any())).thenReturn(cc);
     ConfigInjector.prepareForConnections(connectionRetriever);
 

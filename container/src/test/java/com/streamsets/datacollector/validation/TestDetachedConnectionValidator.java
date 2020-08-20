@@ -38,21 +38,18 @@ public class TestDetachedConnectionValidator {
 
   private StageLibraryTask createStageLibraryTask(ConnectionDefinition connectionDefinition) {
     StageLibraryTask libTask = Mockito.mock(StageLibraryTask.class);
-    Mockito.when(libTask.getConnection(connectionDefinition.getLibrary(), connectionDefinition.getType()))
-        .thenReturn(connectionDefinition);
+    Mockito.when(libTask.getConnection(connectionDefinition.getType())).thenReturn(connectionDefinition);
     Mockito.when(libTask.getConnections()).thenReturn(Collections.singletonList(connectionDefinition));
     return libTask;
   }
 
   private ConnectionDefinition createConnectionDefinition(
-      String lib,
       String type,
       int version,
       String upgraderDef,
       List<ConfigDefinition> configDefinitions
   ) {
     ConnectionDefinition connectionDefinition = Mockito.mock(ConnectionDefinition.class);
-    Mockito.when(connectionDefinition.getLibrary()).thenReturn(lib);
     Mockito.when(connectionDefinition.getType()).thenReturn(type);
     Mockito.when(connectionDefinition.getVersion()).thenReturn(version);
     Mockito.when(connectionDefinition.getUpgrader()).thenReturn(upgraderDef);
@@ -72,8 +69,8 @@ public class TestDetachedConnectionValidator {
 
   @Test
   public void testValidateUpgradeFileNotExist() {
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, Collections.emptyList());
-    ConnectionDefinition connectionDefinition = createConnectionDefinition("lib1", "type1", 2, "not-exist", Collections.emptyList());
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, Collections.emptyList());
+    ConnectionDefinition connectionDefinition = createConnectionDefinition("type1", 2, "not-exist", Collections.emptyList());
     StageLibraryTask libTask = createStageLibraryTask(connectionDefinition);
     DetachedConnectionConfiguration detachedConnConfig = new DetachedConnectionConfiguration(connConfig);
     DetachedConnectionValidator validator = new DetachedConnectionValidator(libTask, detachedConnConfig);
@@ -88,14 +85,13 @@ public class TestDetachedConnectionValidator {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("prop1.subprop1", "original-value-1"));
     configs.add(new Config("prop2.subprop1", "original-value-2"));
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, configs);
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, configs);
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
     configDefinitions.add(createConfigDefinition("prop1.subprop1", "fromDefault1"));
     configDefinitions.add(createConfigDefinition("prop1.subprop2", "fromDefault2"));
     configDefinitions.add(createConfigDefinition("prop2.subprop1", "fromDefault3"));
     configDefinitions.add(createConfigDefinition("prop3", "fromDefault4"));
     ConnectionDefinition connectionDefinition = createConnectionDefinition(
-        "lib1",
         "type1",
         2,
         "upgrader/TestDetachedConnectionValidatorUpgrader.yaml",
@@ -128,7 +124,7 @@ public class TestDetachedConnectionValidator {
   public void testValidateRequiredValues() {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("prop1", "original-value-1"));
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, configs);
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, configs);
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
     configDefinitions.add(createConfigDefinition("prop1", "fromDefault1"));
     Mockito.when(configDefinitions.get(0).isRequired()).thenReturn(true);
@@ -137,7 +133,6 @@ public class TestDetachedConnectionValidator {
     configDefinitions.add(createConfigDefinition("prop3", null));
     Mockito.when(configDefinitions.get(2).isRequired()).thenReturn(true);
     ConnectionDefinition connectionDefinition = createConnectionDefinition(
-        "lib1",
         "type1",
         1,
         "not-exist",
@@ -159,7 +154,7 @@ public class TestDetachedConnectionValidator {
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("prop1", 1));
     configs.add(new Config("prop3", "hello"));
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, configs);
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, configs);
     List<ConfigDefinition> configDefinitions = new ArrayList<>();
     configDefinitions.add(createConfigDefinition("prop1", 1));
     Mockito.when(configDefinitions.get(0).getType()).thenReturn(ConfigDef.Type.NUMBER);
@@ -171,7 +166,6 @@ public class TestDetachedConnectionValidator {
     Mockito.when(configDefinitions.get(2).getType()).thenReturn(ConfigDef.Type.NUMBER);
     Mockito.when(configDefinitions.get(2).getMax()).thenReturn(100L);
     ConnectionDefinition connectionDefinition = createConnectionDefinition(
-        "lib1",
         "type1",
         1,
         "not-exist",

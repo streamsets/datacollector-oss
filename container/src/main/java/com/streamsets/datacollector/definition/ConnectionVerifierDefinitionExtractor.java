@@ -15,9 +15,8 @@
  */
 package com.streamsets.datacollector.definition;
 
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.ConnectionVerifierDef;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class ConnectionVerifierDefinitionExtractor {
 
@@ -27,13 +26,14 @@ public abstract class ConnectionVerifierDefinitionExtractor {
     return EXTRACTOR;
   }
 
-  public ConnectionVerifierDefinition extract(Class<?> klass) {
+  public ConnectionVerifierDefinition extract(StageLibraryDefinition libraryDef, Class<?> klass) {
     ConnectionVerifierDef verifierDef = klass.getAnnotation(ConnectionVerifierDef.class);
     return new ConnectionVerifierDefinition(
         klass.getCanonicalName(),
         verifierDef.connectionFieldName(),
         verifierDef.connectionSelectionFieldName(),
-        verifierDef.verifierType()
+        verifierDef.verifierType(),
+        libraryDef.getName()
     );
   }
 }

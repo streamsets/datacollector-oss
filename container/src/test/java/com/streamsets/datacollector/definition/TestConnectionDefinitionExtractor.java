@@ -18,30 +18,17 @@ package com.streamsets.datacollector.definition;
 
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.connection.TestConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 
 import org.junit.Assert;
 
 public class TestConnectionDefinitionExtractor {
-
-  private static final StageLibraryDefinition MOCK_LIB_DEF =
-      new StageLibraryDefinition(
-          TestStageDefinitionExtractor.class.getClassLoader(),
-          "Test Library Name", "Test Library Description",
-          new Properties(), null, null, null
-      );
 
   private void validateGroups(ConfigGroupDefinition groupsDef) {
     List<String> groupNames = new ArrayList<>();
@@ -79,11 +66,9 @@ public class TestConnectionDefinitionExtractor {
 
   @Test
   public void testExtractConnection() {
-    ConnectionDefinition def = ConnectionDefinitionExtractor.get()
-        .extract(MOCK_LIB_DEF, TestConnectionDef.TestConnection.class);
+    ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(TestConnectionDef.TestConnection.class);
 
     // Assert connection fields
-    Assert.assertEquals("Test Library Name", def.getLibrary());
     Assert.assertEquals(1, def.getVersion());
     Assert.assertEquals("Test Connection", def.getLabel());
     Assert.assertEquals("Connects to Test Connection", def.getDescription());

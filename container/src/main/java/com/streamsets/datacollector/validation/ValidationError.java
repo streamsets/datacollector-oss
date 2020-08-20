@@ -73,7 +73,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0035("Value for configuration '{}' cannot be less than '{}'"),
   VALIDATION_0036("{} cannot have event streams '{}'"),
   VALIDATION_0037("Stage can't be on the main pipeline canvas"),
-  VALIDATION_0038("Connection definition does not exist, library '{}', type '{}', version '{}'"),
+  VALIDATION_0038("Connection definition does not exist, type '{}', version '{}'"),
 
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),

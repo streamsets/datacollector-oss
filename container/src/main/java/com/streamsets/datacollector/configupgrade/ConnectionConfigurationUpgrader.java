@@ -60,7 +60,6 @@ public class ConnectionConfigurationUpgrader {
       List<Issue> issues
   ) {
     ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(
-        connectionConfiguration.getLibrary(),
         connectionConfiguration.getType(),
         connectionId,
         connectionConfiguration.getVersion(),
@@ -83,13 +82,9 @@ public class ConnectionConfigurationUpgrader {
       ConnectionConfiguration connectionConfiguration,
       List<Issue> issues
   ) {
-    ConnectionDefinition connDef = libraryTask.getConnection(
-        connectionConfiguration.getLibrary(),
-        connectionConfiguration.getType()
-    );
+    ConnectionDefinition connDef = libraryTask.getConnection(connectionConfiguration.getType());
     if (connDef != null) {
       ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(
-          connectionConfiguration.getLibrary(),
           connectionConfiguration.getType(),
           null,
           connectionConfiguration.getVersion(),
@@ -154,7 +149,6 @@ public class ConnectionConfigurationUpgrader {
 
   private static class ConnectionUpgradeContext implements StageUpgrader.Context {
 
-    private final String library;
     private final String type;
     private final String connectionId;
     private final int fromVersion;
@@ -162,14 +156,12 @@ public class ConnectionConfigurationUpgrader {
     private final String upgraderDef;
 
     public ConnectionUpgradeContext(
-        String library,
         String type,
         String connectionId,
         int fromVersion,
         int toVersion,
         String upgraderDef
     ) {
-      this.library = library;
       this.type = type;
       this.connectionId = connectionId;
       this.fromVersion = fromVersion;
@@ -179,7 +171,7 @@ public class ConnectionConfigurationUpgrader {
 
     @Override
     public String getLibrary() {
-      return library;
+      return "";  // not used for Connections (YAML upgrader doesn't use it), but is required by StageUpgrader.Context
     }
 
     @Override

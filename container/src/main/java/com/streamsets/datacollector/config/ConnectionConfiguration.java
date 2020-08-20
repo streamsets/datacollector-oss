@@ -26,27 +26,17 @@ import java.util.Map;
 
 public class ConnectionConfiguration implements Serializable, UserConfigurable {
 
-  private String library;
   private String type;
   private int version;
   private final List<Config> configuration;
   private final Map<String, Config> configurationMap;
 
-  public ConnectionConfiguration(String library, String type, int version, List<Config> configuration) {
-    this.library = library;
+  public ConnectionConfiguration(String type, int version, List<Config> configuration) {
     this.type = type;
     this.version = version;
     this.configuration = new ArrayList<>();
     this.configurationMap = new HashMap<>();
     setConfig(configuration);
-  }
-
-  public String getLibrary() {
-    return library;
-  }
-
-  public void setLibrary(String library) {
-    this.library = library;
   }
 
   public String getType() {
@@ -95,7 +85,7 @@ public class ConnectionConfiguration implements Serializable, UserConfigurable {
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionConfiguration[library='{}' type='{}' version='{}']",
-        getLibrary(), getType(), getVersion());
+        "ConnectionConfiguration[type='{}' version='{}']",
+        getType(), getVersion());
   }
 }

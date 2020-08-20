@@ -29,21 +29,9 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ConnectionConfigurationJson {
 
-  private String library = null;
   private String type = null;
   private String version = null;
   private List<ConfigConfigurationJson> configuration = new ArrayList<>();
-
-  /**
-   **/
-  @ApiModelProperty(value = "")
-  @JsonProperty("library")
-  public String getLibrary() {
-    return library;
-  }
-  public void setLibrary(String library) {
-    this.library = library;
-  }
 
   /**
    **/
@@ -84,7 +72,6 @@ public class ConnectionConfigurationJson {
     StringBuilder sb = new StringBuilder();
     sb.append("class ConnectionConfigurationJson {\n");
 
-    sb.append("    library: ").append(StringUtil.toIndentedString(library)).append("\n");
     sb.append("    type: ").append(StringUtil.toIndentedString(type)).append("\n");
     sb.append("    version: ").append(StringUtil.toIndentedString(version)).append("\n");
     sb.append("    configuration: ").append(StringUtil.toIndentedString(configuration)).append("\n");

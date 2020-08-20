@@ -72,7 +72,6 @@ import com.streamsets.datacollector.task.AbstractTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.Version;
 import com.streamsets.pipeline.SDCClassLoader;
-import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.ext.DataCollectorServices;
 import com.streamsets.pipeline.api.ext.json.JsonMapper;
 import com.streamsets.pipeline.api.impl.LocaleInContext;
@@ -100,6 +99,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -186,9 +186,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private List<InterceptorDefinition> interceptorList;
   private List<StageLibraryDelegateDefinitition> delegateList;
   private Map<String, StageLibraryDelegateDefinitition> delegateMap;
-  private List<ConnectionDefinition> connectionList;
   private Map<String, ConnectionDefinition> connectionMap;
-  private Map<String, ConnectionVerifierDefinition> connectionVerifierMap;
+  private Map<String, Set<ConnectionVerifierDefinition>> connectionVerifierMap;
   private ObjectMapper json;
   private KeyedObjectPool<String, ClassLoader> privateClassLoaderPool;
   private Map<String, Object> gaugeMap;
@@ -308,7 +307,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = new ArrayList<>();
     delegateList = new ArrayList<>();
     delegateMap = new HashMap<>();
-    connectionList = new ArrayList<>();
     connectionMap = new HashMap<>();
     connectionVerifierMap = new HashMap<>();
 
@@ -355,7 +353,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       }
 
       LOG.info("Loaded {} libraries with a total of {} stages, {} lineage publishers, {} services, {} interceptors, " +
-              "{} delegates, {} credentialStores, and {} connections in {}",
+              "{} delegates, {} credentialStores, {} connections, and {} connection verifiers in {}",
           stageLibraries.size(),
           stageList.size(),
           lineagePublisherDefinitions.size(),
@@ -363,7 +361,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           interceptorList.size(),
           delegateList.size(),
           credentialStoreDefinitions.size(),
-          connectionList.size(),
+          connectionMap.size(),
+          connectionVerifierMap.size(),
           DurationFormatUtils.formatDuration(System.currentTimeMillis() - start, "H:m:s.S", false)
       );
     } catch (InterruptedException e) {
@@ -385,8 +384,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     interceptorList = ImmutableList.copyOf(interceptorList);
     delegateList = ImmutableList.copyOf(delegateList);
     delegateMap = ImmutableMap.copyOf(delegateMap);
-    connectionList = ImmutableList.copyOf(connectionList);
     connectionMap = ImmutableMap.copyOf(connectionMap);
+    connectionVerifierMap = ImmutableMap.copyOf(connectionVerifierMap);
 
     // localization cache for definitions
     localizedStageList = CacheBuilder.newBuilder().build(new CacheLoader<Locale, List<StageDefinition>>() {
@@ -608,8 +607,8 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
     List<StageLibraryDelegateDefinitition> localDelegateList = new LinkedList<>();
     Map<String, StageLibraryDelegateDefinitition> localDelegateMap = new HashMap<>();
     Map<String, EventDefinitionJson> localEventDefinitionMap = new HashMap<>();
-    List<ConnectionDefinition> localConnectionList = new ArrayList<>();
-    List<ConnectionVerifierDefinition> localVerifierList = new ArrayList<>();
+    List<ConnectionDefinition> localConnectionList = new LinkedList<>();
+    List<ConnectionVerifierDefinition> localConnectionVerifierList = new LinkedList<>();
 
     try {
       // Before loading any stages, let's verify that given stage library is compatible with our current JVM version
@@ -741,33 +740,40 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
       // Load Connections
       for (Class klass : loadClassesFromResource(libDef, cl, CONNECTIONS_DEFINITION_RESOURCE)) {
-        ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(libDef, klass);
-        LOG.debug("Loaded connection '{}'", def.getName());
+        ConnectionDefinition def = ConnectionDefinitionExtractor.get().extract(klass);
+        LOG.debug("Loaded connection '{}' from '{}'", def.getType(), libDef.getName());
         localConnectionList.add(def);
       }
       synchronized (connectionMap) {
         localConnectionList.forEach(connectionDefinition -> {
-          ConnectionDefinition existingConnectionDefintion = connectionMap.get(connectionDefinition.getType());
-          if (existingConnectionDefintion == null
-              || existingConnectionDefintion.getVersion() > connectionDefinition.getVersion()) {
+          ConnectionDefinition prevConnectionDefinition = connectionMap.get(connectionDefinition.getType());
+          if (prevConnectionDefinition != null) {
+            // We'll use the oldest version available when there's a conflict because it'll be the most compatible
+            if (prevConnectionDefinition.getVersion() > connectionDefinition.getVersion()) {
+              LOG.debug("Found connection version conflict for '{}' ({} vs {}), using {}",
+                  connectionDefinition.getType(), connectionDefinition.getVersion(),
+                  prevConnectionDefinition.getVersion(), prevConnectionDefinition.getVersion());
+              connectionMap.put(connectionDefinition.getType(), connectionDefinition);
+            }
+          } else {
             connectionMap.put(connectionDefinition.getType(), connectionDefinition);
-            connectionList.add(connectionDefinition);
           }
         });
+
       }
 
       // Load Connection Verifiers
       for(Class klass : loadClassesFromResource(libDef, cl, CONNECTION_VERIFIERS_DEFINITION_RESOURCE)) {
-        ConnectionVerifierDefinition def = ConnectionVerifierDefinitionExtractor.get().extract(klass);
-        LOG.debug("Loaded connection verifier: '{}'", def.getVerifierClass());
-        localVerifierList.add(def);
+        ConnectionVerifierDefinition def = ConnectionVerifierDefinitionExtractor.get().extract(libDef, klass);
+        LOG.debug("Loaded connection verifier: '{}' from '{}'", def.getVerifierType(), libDef.getName());
+        localConnectionVerifierList.add(def);
       }
       synchronized (connectionVerifierMap) {
-        localVerifierList.forEach(connectionVerifierDef -> {
-          String key = connectionVerifierDef.getVerifierType();
-          if (connectionVerifierMap.get(key) == null) {
-            connectionVerifierMap.put(key, connectionVerifierDef);
-          }
+        localConnectionVerifierList.forEach(connectionVerifierDefinition -> {
+          Set<ConnectionVerifierDefinition> existingConnectionVerifierSet =
+              connectionVerifierMap.computeIfAbsent(connectionVerifierDefinition.getVerifierType(),
+                  k -> new HashSet<>());
+          existingConnectionVerifierSet.add(connectionVerifierDefinition);
         });
       }
 
@@ -1261,17 +1267,17 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   }
 
   @Override
-  public List<ConnectionDefinition> getConnections() {
-    return connectionList;
+  public Collection<ConnectionDefinition> getConnections() {
+    return connectionMap.values();
   }
 
   @Override
-  public ConnectionDefinition getConnection(String library, String type) {
+  public ConnectionDefinition getConnection(String type) {
     return connectionMap.get(type);
   }
 
   @Override
-  public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
-    return connectionVerifierMap;
+  public Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type) {
+    return connectionVerifierMap.getOrDefault(type, Collections.emptySet());
   }
 }

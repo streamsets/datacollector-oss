@@ -30,7 +30,6 @@ public class ConnectionDefinitionPreviewJson {
   private String type;
   private List<ConfigConfigurationJson> configuration;
   private ConnectionVerifierDefinition verifierDefinition;
-  private String library;
 
   @JsonIgnore
   public String connectionId;
@@ -41,14 +40,12 @@ public class ConnectionDefinitionPreviewJson {
       String version,
       String type,
       List<ConfigConfigurationJson> configuration,
-      ConnectionVerifierDefinition verifierDefinition,
-      String library
+      ConnectionVerifierDefinition verifierDefinition
   ) {
     this.version = version;
     this.type = type;
     this.configuration = configuration;
     this.verifierDefinition = verifierDefinition;
-    this.library = library;
   }
 
   public String getVersion() {
@@ -73,14 +70,6 @@ public class ConnectionDefinitionPreviewJson {
 
   public void setConfiguration(List<ConfigConfigurationJson> configuration) {
     this.configuration = configuration;
-  }
-
-  public String getLibrary() {
-    return library;
-  }
-
-  public void setLibrary(String library) {
-    this.library = library;
   }
 
   public String getConnectionId() {

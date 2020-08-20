@@ -44,6 +44,8 @@ import java.util.UUID;
 
 public class TestConnectionVerifierDynamicPreviewHelper {
 
+  private static final String LIB_NAME = "streamsets-datacollector-aws-lib";
+
   private ConnectionVerifierDynamicPreviewHelper verifierPreviewHelper;
   private DynamicPreviewRequestJson dynamicPreviewRequest;
   private ConnectionDefinitionPreviewJson connection;
@@ -77,9 +79,9 @@ public class TestConnectionVerifierDynamicPreviewHelper {
             "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
             "connection",
             "connectionSelection"
-            ,"com.streamsets.pipeline.stage.common.s3.AwsS3Connection"
-        ),
-        "streamsets-datacollector-aws-lib"
+            ,"com.streamsets.pipeline.stage.common.s3.AwsS3Connection",
+            LIB_NAME
+        )
     );
     connection.setConnectionId(UUID.randomUUID().toString());
 
@@ -115,7 +117,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     // assert verifier stage configuration
     StageConfigurationJson verifierStage = verifierPipeline.getPipelineConfig().getStages().get(0);
     Assert.assertEquals(connection.getVerifierStageName().concat("_01"), verifierStage.getInstanceName());
-    Assert.assertEquals(connection.getLibrary(), verifierStage.getLibrary());
+    Assert.assertEquals(connection.getVerifierDefinition().getLibrary(), verifierStage.getLibrary());
     Assert.assertEquals(connection.getVerifierStageName(), verifierStage.getStageName());
     Assert.assertEquals(
         connection.connectionId,
@@ -191,7 +193,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     Assert.assertEquals(BeanHelper.unwrapConfigConfiguration(connection.getConfiguration()), connectionConfiguration.getConfiguration());
     Assert.assertEquals(connection.getType(), connectionConfiguration.getType());
     Assert.assertEquals(connection.getVersion(), String.valueOf(connectionConfiguration.getVersion()));
-    Assert.assertEquals(connection.getLibrary(), connectionConfiguration.getLibrary());
+    Assert.assertEquals(connection.getVerifierDefinition().getLibrary(), LIB_NAME);
   }
 
   @Test
@@ -207,7 +209,7 @@ public class TestConnectionVerifierDynamicPreviewHelper {
         connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName()
     );
     Assert.assertEquals(parsedConnection.getType(), connection.getType());
-    Assert.assertEquals(parsedConnection.getLibrary(), connection.getLibrary());
+    Assert.assertEquals(parsedConnection.getVerifierDefinition().getLibrary(), LIB_NAME);
     Assert.assertEquals(parsedConnection.getVersion(), connection.getVersion());
     Assert.assertEquals(parsedConnection.getConfiguration().size(), connection.getConfiguration().size());
     for (ConfigConfigurationJson config : connection.getConfiguration()) {

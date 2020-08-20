@@ -38,10 +38,12 @@ import com.streamsets.pipeline.api.StageType;
 import com.streamsets.pipeline.api.StageUpgrader;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class PreviewStageLibraryTask extends TaskWrapper implements StageLibraryTask {
   public static final String LIBRARY = ":system:";
@@ -224,17 +226,17 @@ public class PreviewStageLibraryTask extends TaskWrapper implements StageLibrary
   }
 
   @Override
-  public List<ConnectionDefinition> getConnections() {
+  public Collection<ConnectionDefinition> getConnections() {
     return library.getConnections();
   }
 
   @Override
-  public ConnectionDefinition getConnection(String library, String type) {
-    return this.library.getConnection(library, type);
+  public ConnectionDefinition getConnection(String type) {
+    return this.library.getConnection(type);
   }
 
   @Override
-  public Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap() {
-    return library.getConnectionVerifierMap();
+  public Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type) {
+    return library.getConnectionVerifiers(type);
   }
 }

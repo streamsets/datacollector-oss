@@ -31,11 +31,12 @@ import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.task.Task;
-import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
@@ -101,9 +102,9 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
 
   StageLibraryDefinition getStageLibraryDefinition(String libraryName);
 
-  List<ConnectionDefinition> getConnections();
+  Collection<ConnectionDefinition> getConnections();
 
-  ConnectionDefinition getConnection(String library, String type);
+  ConnectionDefinition getConnection(String type);
 
-  Map<String, ConnectionVerifierDefinition> getConnectionVerifierMap();
+  Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type);
 }

@@ -19,17 +19,15 @@ package com.streamsets.datacollector.restapi.bean;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
-import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
-import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public class ConnectionDefinitionJson {
 
-  private final String libraryDefinition;
   private final int version;
   private final String label;
   private final String description;
@@ -38,10 +36,9 @@ public class ConnectionDefinitionJson {
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
   private final ConnectionEngine[] supportedEngines;
-  private final ConnectionVerifierDefinition verifierDefinition;
+  private final Set<ConnectionVerifierDefinition> verifierDefinitions;
 
-  public ConnectionDefinitionJson(ConnectionDefinition connection, ConnectionVerifierDefinition verifier) {
-    this.libraryDefinition = connection.getLibrary();
+  public ConnectionDefinitionJson(ConnectionDefinition connection, Set<ConnectionVerifierDefinition> verifiers) {
     this.version = connection.getVersion();
     this.label = connection.getLabel();
     this.description = connection.getDescription();
@@ -50,11 +47,7 @@ public class ConnectionDefinitionJson {
     this.configGroupDefinition = connection.getConfigGroupDefinition();
     this.yamlUpgrader = connection.getUpgrader();
     this.supportedEngines = connection.getSupportedEngines();
-    this.verifierDefinition = verifier;
-  }
-
-  public String getLibrary() {
-    return libraryDefinition;
+    this.verifierDefinitions = new HashSet<>(verifiers);
   }
 
   public int getVersion() {
@@ -89,7 +82,7 @@ public class ConnectionDefinitionJson {
     return supportedEngines;
   }
 
-  public ConnectionVerifierDefinition getVerifierDefinition() {
-    return verifierDefinition;
+  public Set<ConnectionVerifierDefinition> getVerifierDefinitions() {
+    return verifierDefinitions;
   }
 }

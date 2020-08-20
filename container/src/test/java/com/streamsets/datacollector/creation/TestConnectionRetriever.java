@@ -52,7 +52,7 @@ public class TestConnectionRetriever {
     List<ConfigConfigurationJson> configs = new ArrayList<>();
     configs.add(new ConfigConfigurationJson("a", "A"));
     configs.add(new ConfigConfigurationJson("b", "B"));
-    ConnectionConfigurationJson ccj = new ConnectionConfigurationJson("lib1", "type1", "1", configs);
+    ConnectionConfigurationJson ccj = new ConnectionConfigurationJson("type1", "1", configs);
     Mockito.when(response.getData(ConnectionConfigurationJson.class)).thenReturn(ccj);
     ConnectionRetriever connectionRetriever = Mockito.spy(
         new FakeConnectionRetriever(configuration, runtimeInfo, builder)
@@ -61,7 +61,6 @@ public class TestConnectionRetriever {
     Mockito.when(context.getUser()).thenReturn("user1");
     ConnectionConfiguration cc = connectionRetriever.get("connId", context);
 
-    Assert.assertEquals("lib1", cc.getLibrary());
     Assert.assertEquals("type1", cc.getType());
     Assert.assertEquals(1, cc.getVersion());
     Assert.assertEquals(2, cc.getConfiguration().size());

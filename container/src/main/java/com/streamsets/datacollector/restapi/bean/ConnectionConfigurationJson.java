@@ -29,13 +29,11 @@ public class ConnectionConfigurationJson {
 
   @JsonCreator
   public ConnectionConfigurationJson(
-    @JsonProperty("library") String library,
     @JsonProperty("type") String type,
     @JsonProperty("version") String version,
     @JsonProperty("configuration") List<ConfigConfigurationJson> configuration
   ) {
     this.connectionConfiguration = new ConnectionConfiguration(
-        library,
         type,
         Integer.parseInt(version),
         BeanHelper.unwrapConfigConfiguration(configuration)
@@ -45,10 +43,6 @@ public class ConnectionConfigurationJson {
   public ConnectionConfigurationJson(ConnectionConfiguration connectionConfiguration) {
     Utils.checkNotNull(connectionConfiguration, "connectionConfiguration");
     this.connectionConfiguration = connectionConfiguration;
-  }
-
-  public String getLibrary() {
-    return connectionConfiguration.getLibrary();
   }
 
   public String getType() {

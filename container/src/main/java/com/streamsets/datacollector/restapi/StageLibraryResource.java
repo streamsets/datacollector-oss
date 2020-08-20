@@ -81,6 +81,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -525,12 +526,10 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getConnections() {
-    List<ConnectionDefinition> connectionDefs = stageLibrary.getConnections();
-    Map<String, ConnectionVerifierDefinition> verifierMap = stageLibrary.getConnectionVerifierMap();
-    List<ConnectionDefinitionJson> definitionsJson = new ArrayList<>();
-    for (ConnectionDefinition connection : connectionDefs) {
-      definitionsJson.add(new ConnectionDefinitionJson(connection, verifierMap.get(connection.getType())));
-    }
+    Collection<ConnectionDefinition> connectionDefs = stageLibrary.getConnections();
+    List<ConnectionDefinitionJson> definitionsJson =
+        connectionDefs.stream().map(connection -> new ConnectionDefinitionJson(connection,
+            stageLibrary.getConnectionVerifiers(connection.getType()))).collect(Collectors.toList());
     ConnectionsJson connectionDefinitions = new ConnectionsJson(definitionsJson);
     return Response.ok().type(MediaType.APPLICATION_JSON).entity(connectionDefinitions).build();
   }

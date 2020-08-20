@@ -54,7 +54,7 @@ public class TestConnectionConfigurationUpgrader {
   private ConnectionDef connDef;
   private StageLibraryTask libTask;
 
-  private void prep(String lib, String type, int version, String upgraderDef) {
+  private void prep(String type, int version, String upgraderDef) {
     connDef = Mockito.mock(ConnectionDef.class);
     Mockito.when(connDef.version()).thenReturn(version);
     Mockito.when(connDef.upgraderDef()).thenReturn(upgraderDef);
@@ -63,7 +63,7 @@ public class TestConnectionConfigurationUpgrader {
     ConnectionDefinition connectionDefinition = Mockito.mock(ConnectionDefinition.class);
     Mockito.when(connectionDefinition.getVersion()).thenReturn(version);
     Mockito.when(connectionDefinition.getUpgrader()).thenReturn(upgraderDef);
-    Mockito.when(libTask.getConnection(lib, type)).thenReturn(connectionDefinition);
+    Mockito.when(libTask.getConnection(type)).thenReturn(connectionDefinition);
   }
 
   private List<Issue> run(ConnectionConfiguration connectionConfiguration) {
@@ -83,16 +83,16 @@ public class TestConnectionConfigurationUpgrader {
 
   @Test
   public void testVersionSame() {
-    prep("lib1", "type1", 1, "not-exist");
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, Collections.emptyList());
+    prep("type1", 1, "not-exist");
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, Collections.emptyList());
     List<Issue> issues = run(connConfig);
     Assert.assertEquals(0, issues.size());
   }
 
   @Test
   public void testVersionConnectionNew() {
-    prep("lib1", "type1", 1, "not-exist");
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 2, Collections.emptyList());
+    prep("type1", 1, "not-exist");
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 2, Collections.emptyList());
     List<Issue> issues = run(connConfig);
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals("CONTAINER_0902", issues.get(0).getErrorCode());
@@ -100,11 +100,11 @@ public class TestConnectionConfigurationUpgrader {
 
   @Test
   public void testUpgrade() {
-    prep("lib1", "type1", 2, "upgrader/TestConnectionConfigurationUpgrader1.yaml");
+    prep("type1", 2, "upgrader/TestConnectionConfigurationUpgrader1.yaml");
     List<Config> configs = new ArrayList<>();
     configs.add(new Config("prop1.subprop1", "original-value-1"));
     configs.add(new Config("prop2.subprop1", "original-value-2"));
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, configs);
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, configs);
     List<Issue> issues = run(connConfig);
     Assert.assertEquals(0, issues.size());
     configs = connConfig.getConfiguration();
@@ -124,8 +124,8 @@ public class TestConnectionConfigurationUpgrader {
 
   @Test
   public void testUpgradeFileNotExist() {
-    prep("lib1", "type1", 2, "not-exist");
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, Collections.emptyList());
+    prep("type1", 2, "not-exist");
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, Collections.emptyList());
     List<Issue> issues = run(connConfig);
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals("YAML_UPGRADER_07", issues.get(0).getErrorCode());
@@ -133,8 +133,8 @@ public class TestConnectionConfigurationUpgrader {
 
   @Test
   public void testUpgradeFileInvalid() {
-    prep("lib1", "type1", 2, "upgrader/TestConnectionConfigurationUpgrader2.yaml");
-    ConnectionConfiguration connConfig = new ConnectionConfiguration("lib1", "type1", 1, Collections.emptyList());
+    prep("type1", 2, "upgrader/TestConnectionConfigurationUpgrader2.yaml");
+    ConnectionConfiguration connConfig = new ConnectionConfiguration("type1", 1, Collections.emptyList());
     List<Issue> issues = run(connConfig);
     Assert.assertEquals(1, issues.size());
     Assert.assertEquals("CONTAINER_0900", issues.get(0).getErrorCode());

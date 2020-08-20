@@ -28,11 +28,9 @@ import java.util.Map;
  * Captures the configuration options for a {@link ConnectionDef}.
  *
  */
-public class ConnectionDefinition implements PrivateClassLoaderDefinition {
+public class ConnectionDefinition {
 
   private final ConnectionDef connectionDef;
-  private final StageLibraryDefinition libraryDefinition;
-  private final ClassLoader classLoader;
   private final int version;
   private final String label;
   private final String description;
@@ -44,10 +42,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   private final ConnectionEngine[] supportedEngines;
 
   @SuppressWarnings("unchecked")
-  public ConnectionDefinition(ConnectionDefinition def, ClassLoader classLoader) {
+  public ConnectionDefinition(ConnectionDefinition def) {
     connectionDef = def.connectionDef;
-    libraryDefinition = def.libraryDefinition;
-    this.classLoader = classLoader;
     version = def.version;
     label = def.label;
     description = def.description;
@@ -61,7 +57,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
 
   public ConnectionDefinition(
       ConnectionDef connectionDef,
-      StageLibraryDefinition libraryDefinition,
       int version,
       String label,
       String description,
@@ -72,8 +67,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
       ConnectionEngine[] supportedEngines
   ) {
     this.connectionDef = connectionDef;
-    this.libraryDefinition = libraryDefinition;
-    this.classLoader = libraryDefinition.getClassLoader();
     this.version = version;
     this.label = label;
     this.description = description;
@@ -97,18 +90,6 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     this.supportedEngines = supportedEngines;
   }
 
-  @JsonIgnore
-  @Override
-  public ClassLoader getStageClassLoader() {
-    return classLoader;
-  }
-
-  @Override
-  public boolean isPrivateClassLoader() {
-    return false;
-  }
-
-  @Override
   public String getName() {
     return label;
   }
@@ -129,21 +110,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
     return type;
   }
 
-  public String getLibrary() {
-    return libraryDefinition.getName();
-  }
-
   public String getUpgrader() {
     return yamlUpgrader;
-  }
-
-  public void addConfiguration(ConfigDefinition confDef) {
-    if (configDefinitionsMap.containsKey(confDef.getName())) {
-      throw new IllegalArgumentException(Utils.format("Connection '{}:{}:{}', configuration definition '{}' already exists",
-              getLibrary(), getName(), getVersion(), confDef.getName()));
-    }
-    configDefinitionsMap.put(confDef.getName(), confDef);
-    configDefinitions.add(confDef);
   }
 
   public List<ConfigDefinition> getConfigDefinitions() {
@@ -167,8 +135,8 @@ public class ConnectionDefinition implements PrivateClassLoaderDefinition {
   @Override
   public String toString() {
     return Utils.format(
-        "ConnectionDefinition[library='{}' name='{}' version='{}' type='{}' supported engines='{}']",
-        getLibrary(), getName(), getVersion(), getType(), supportedEngines
+        "ConnectionDefinition[name='{}' version='{}' type='{}' supported engines='{}']",
+        getName(), getVersion(), getType(), supportedEngines
     );
   }
 
