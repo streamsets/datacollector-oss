@@ -22,7 +22,7 @@ public enum GoogleCloudRegion implements Label {
   US_WEST_2("us-west2"),
   US_WEST_3("us-west3"),
   US_EAST_1("us-east1"),
-  US_EAST_2("us-east2"),
+  US_EAST_4("us-east4"),
   US_CENTRAL_1("us-central1"),
   ASIA_EAST_1("asia-east1"),
   ASIA_EAST_2("asia-east2"),
@@ -40,12 +40,11 @@ public enum GoogleCloudRegion implements Label {
   EUROPE_WEST_6("europe-west6"),
   NORTH_AMERICA_NORTH_EAST_1("northamerica-northeast1"),
   SOUTH_AMERICA_EAST_1("southamerica-east1"),
-  
   CUSTOM("Custom")
   ;
-  
+
   private final String label;
-  
+
   GoogleCloudRegion(String label) {
     this.label = label;
   }
@@ -53,6 +52,5 @@ public enum GoogleCloudRegion implements Label {
   public String getLabel() {
     return label;
   }
-  
 
 }
