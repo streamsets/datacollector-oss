@@ -489,7 +489,7 @@ angular
 
           var  startTimeStamp = getStartTimestamp(pipelineStateHistory, index);
 
-          var metrics = JSON.parse(pipelineState.metrics);
+          var metrics = pipelineState.metrics ? JSON.parse(pipelineState.metrics) : null;
           var inputRecords = 0;
           var outputRecords = 0;
           var errorRecordsAndMessages = 0;
