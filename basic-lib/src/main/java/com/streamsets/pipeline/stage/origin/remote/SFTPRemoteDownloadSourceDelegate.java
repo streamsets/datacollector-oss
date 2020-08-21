@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.remote.ChrootSFTPClient;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
@@ -52,27 +51,19 @@ class SFTPRemoteDownloadSourceDelegate extends SFTPRemoteConnector implements Re
   public void initAndConnect(
       List<Stage.ConfigIssue> issues, Source.Context context, URI remoteURI, String archiveDir
   ) {
-    super.initAndConnect(
-        issues,
-        context,
-        remoteURI,
-        Groups.REMOTE,
-        Groups.CREDENTIALS
-    );
+    super.initAndConnect(issues, context, remoteURI, Groups.REMOTE, Groups.CREDENTIALS);
 
-    if (issues.isEmpty()) {
-      if (archiveDir != null) {
-        try {
-          sftpClient.setArchiveDir(archiveDir, conf.archiveDirUserDirIsRoot);
-        } catch (IOException ioe) {
-          issues.add(context.createConfigIssue(
-              Groups.POST_PROCESSING.name(),
-              CONF_PREFIX + "archiveDir",
-              Errors.REMOTE_DOWNLOAD_08,
-              ioe.getMessage(),
-              ioe
-          ));
-        }
+    if (issues.isEmpty() && archiveDir != null) {
+      try {
+        sftpClient.setArchiveDir(archiveDir, conf.archiveDirUserDirIsRoot);
+      } catch (IOException ioe) {
+        issues.add(context.createConfigIssue(
+            Groups.POST_PROCESSING.name(),
+            CONF_PREFIX + "archiveDir",
+            Errors.REMOTE_DOWNLOAD_08,
+            ioe.getMessage(),
+            ioe
+        ));
       }
     }
 
@@ -89,12 +80,7 @@ class SFTPRemoteDownloadSourceDelegate extends SFTPRemoteConnector implements Re
   @Override
   public Offset createOffset(String file) throws IOException {
     FileAttributes attributes = sftpClient.stat(file);
-    Offset offset =
-        new Offset(slashify(file),
-        convertSecsToMillis(attributes.getMtime()),
-        ZERO
-    );
-    return offset;
+    return new Offset(slashify(file), convertSecsToMillis(attributes.getMtime()), ZERO);
   }
 
   @Override
@@ -116,39 +102,38 @@ class SFTPRemoteDownloadSourceDelegate extends SFTPRemoteConnector implements Re
   }
 
   @Override
-  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
-      IOException, StageException {
+  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter)
+      throws IOException {
     verifyAndReconnect();
     queueFiles(fqc, fileQueue, fileFilter, null);
   }
 
-  private void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter, String remoteDirPath)
-      throws IOException {
-    List<ChrootSFTPClient.SimplifiedRemoteResourceInfo> theFiles = (remoteDirPath == null)
-      ? sftpClient.ls(fileFilter)
-      : sftpClient.ls(remoteDirPath, fileFilter);
+  private void queueFiles(
+      FileQueueChecker queueChecker, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter, String remoteDirPath
+  ) throws IOException {
+    List<ChrootSFTPClient.SimplifiedRemoteResourceInfo> theFiles = remoteDirPath == null
+                                                                   ? sftpClient.ls(fileFilter)
+                                                                   : sftpClient.ls(remoteDirPath, fileFilter);
 
     for (ChrootSFTPClient.SimplifiedRemoteResourceInfo remoteFileInfo : theFiles) {
       LOG.debug("Checking {}", remoteFileInfo.getPath());
       if (conf.processSubDirectories && remoteFileInfo.getType() == FileMode.Type.DIRECTORY) {
-        queueFiles(fqc, fileQueue, fileFilter, remoteFileInfo.getPath());
-        continue;
-      }
-
-      if (remoteFileInfo.getType() != FileMode.Type.REGULAR) {
+        LOG.trace("Recursively looking for subdirectories under: {}", remoteFileInfo.getPath());
+        queueFiles(queueChecker, fileQueue, fileFilter, remoteFileInfo.getPath());
+      } else if (remoteFileInfo.getType() != FileMode.Type.REGULAR) {
         LOG.trace("Skipping {} because it is not a file", remoteFileInfo.getPath());
-        continue;
-      }
-
-      RemoteFile tempFile = new SFTPRemoteFile(
-          slashify(remoteFileInfo.getPath()),
-          convertSecsToMillis(remoteFileInfo.getModifiedTime()),
-          sftpClient);
-      if (fqc.shouldQueue(tempFile)) {
-        LOG.debug("Queuing file {} with modtime {}", tempFile.getFilePath(), tempFile.getLastModified());
-        // If we are done with all files, the files with the final mtime might get re-ingested over and over.
-        // So if it is the one of those, don't pull it in.
-        fileQueue.add(tempFile);
+      } else {
+        LOG.trace("Found candidate file to be queued: {}", remoteFileInfo.getPath());
+        RemoteFile tempFile = new SFTPRemoteFile(slashify(remoteFileInfo.getPath()),
+            convertSecsToMillis(remoteFileInfo.getModifiedTime()),
+            sftpClient
+        );
+        if (queueChecker.shouldQueue(tempFile)) {
+          LOG.debug("Queuing file {} with modtime {}", tempFile.getFilePath(), tempFile.getLastModified());
+          // If we are done with all files, the files with the final mtime might get re-ingested over and over.
+          // So if it is the one of those, don't pull it in.
+          fileQueue.add(tempFile);
+        }
       }
     }
   }

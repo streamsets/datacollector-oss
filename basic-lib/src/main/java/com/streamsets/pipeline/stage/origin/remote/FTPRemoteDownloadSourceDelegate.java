@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.origin.remote;
 
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
 import com.streamsets.pipeline.lib.remote.FTPRemoteFile;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
@@ -45,7 +44,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableSet;
-import java.util.regex.Matcher;
 
 class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements RemoteDownloadSourceDelegate {
 
@@ -82,12 +80,7 @@ class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements Remo
   @Override
   public Offset createOffset(String file) throws IOException {
     FileObject fileObject = resolveChild(file);
-    Offset offset = new Offset(
-        relativizeToRoot(fileObject.getName().getPath()),
-        getModTime(fileObject),
-        ZERO
-    );
-    return offset;
+    return new Offset(relativizeToRoot(fileObject.getName().getPath()), getModTime(fileObject), ZERO);
   }
 
   @Override
@@ -102,8 +95,8 @@ class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements Remo
   }
 
   @Override
-  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter) throws
-      IOException, StageException {
+  public void queueFiles(FileQueueChecker fqc, NavigableSet<RemoteFile> fileQueue, FileFilter fileFilter)
+      throws IOException {
     verifyAndReconnect();
 
     FileObject[] theFiles = remoteDir.getChildren();
@@ -116,22 +109,17 @@ class FTPRemoteDownloadSourceDelegate extends FTPRemoteConnector implements Remo
       LOG.debug("Checking {}", path);
       if (file.getType() != FileType.FILE) {
         LOG.trace("Skipping {} because it is not a file", path);
-        continue;
-      }
-
-      //check if base name matches - not full path.
-      Matcher matcher = fileFilter.getRegex().matcher(file.getName().getBaseName());
-      if (!matcher.matches()) {
+      } else if (!fileFilter.getRegex().matcher(file.getName().getBaseName()).matches()) {
+        //check if base name matches - not full path.
         LOG.trace("Skipping {} because it does not match the regex", path);
-        continue;
-      }
-
-      RemoteFile tempFile = new FTPRemoteFile(path, getModTime(file), file);
-      if (fqc.shouldQueue(tempFile)) {
-        LOG.debug("Queuing file {} with modtime {}", tempFile.getFilePath(), tempFile.getLastModified());
-        // If we are done with all files, the files with the final mtime might get re-ingested over and over.
-        // So if it is the one of those, don't pull it in.
-        fileQueue.add(tempFile);
+      } else {
+        RemoteFile tempFile = new FTPRemoteFile(path, getModTime(file), file);
+        if (fqc.shouldQueue(tempFile)) {
+          LOG.debug("Queuing file {} with modtime {}", tempFile.getFilePath(), tempFile.getLastModified());
+          // If we are done with all files, the files with the final mtime might get re-ingested over and over.
+          // So if it is the one of those, don't pull it in.
+          fileQueue.add(tempFile);
+        }
       }
     }
   }
