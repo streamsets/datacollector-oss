@@ -523,6 +523,7 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
+      defaultValue = "[]",
       label = "Webhooks",
       description = "Webhooks",
       displayPosition = 210,
