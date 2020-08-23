@@ -18,7 +18,7 @@
 angular
   .module('dataCollectorApp.home')
   .controller('SamplePipelinesModalInstanceController', function (
-    $scope, $modalInstance, $location, api, pipelineService, trackingEvent
+    $scope, $modalInstance, $location, api, pipelineService, tracking, trackingEvent
   ) {
     angular.extend($scope, {
       common: {
