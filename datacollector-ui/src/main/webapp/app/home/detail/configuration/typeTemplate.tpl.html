@@ -688,7 +688,10 @@
 <script type="text/ng-template" id="fieldSelectorSingleValuedConfigurationTemplate">
   <div class="controls col-lg-7 col-md-8">
     <div class="input-group">
-      <input type="text" class="form-control" ng-model="detailPaneConfig.configuration[configIndex].value">
+      <input type="text"
+             class="form-control"
+             ng-readonly="isPipelineReadOnly || isPipelineRunning"
+             ng-model="detailPaneConfig.configuration[configIndex].value">
       <div class="input-group-btn">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
         <ul class="dropdown-menu dropdown-menu-right" role="menu">
