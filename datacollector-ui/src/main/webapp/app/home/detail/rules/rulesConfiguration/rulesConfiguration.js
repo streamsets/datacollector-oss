@@ -158,10 +158,11 @@ angular
        * Remove Object from Custom Field Configuration.
        *
        * @param stageInstance
+       * @param config
        * @param configValue
        * @param $index
        */
-      removeFromCustomField: function(stageInstance, configValue, $index) {
+      removeFromCustomField: function(stageInstance, config, configValue, $index) {
         configValue.splice($index, 1);
       },
 
@@ -185,6 +186,18 @@ angular
         });
 
         return returnValue;
+      },
+
+      /**
+       * Checks if a configuration should be shown, based on displayMode and stage settings
+       * @param {String} configurationItemDisplayMode
+       * @param {String} stageDisplayMode
+       * @returns {Boolean}
+       */
+      isShownByConfigDisplayMode: function(configurationItemDisplayMode, stageDisplayMode) {
+        stageDisplayMode = stageDisplayMode || $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
+        return configurationItemDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_BASIC ||
+            stageDisplayMode === $scope.pipelineConstant.DISPLAY_MODE_ADVANCED;
       },
 
       /**
