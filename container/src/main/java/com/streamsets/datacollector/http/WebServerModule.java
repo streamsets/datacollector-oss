@@ -18,8 +18,6 @@ package com.streamsets.datacollector.http;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.jmx.JmxReporter;
 import com.streamsets.datacollector.activation.Activation;
-import com.streamsets.datacollector.activation.ActivationLoader;
-import com.streamsets.datacollector.activation.ActivationModule;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
@@ -74,7 +72,6 @@ import org.glassfish.jersey.server.ServerProperties;
 import org.glassfish.jersey.servlet.ServletContainer;
 import org.glassfish.jersey.servlet.ServletProperties;
 
-import javax.inject.Singleton;
 import javax.servlet.DispatcherType;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -240,6 +237,10 @@ public class WebServerModule {
         params.put(CrossOriginFilter.ALLOWED_HEADERS_PARAM,
             conf.get(CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS,
                 CORSConstants.HTTP_ACCESS_CONTROL_ALLOW_HEADERS_DEFAULT));
+
+        params.put(CrossOriginFilter.EXPOSED_HEADERS_PARAM,
+            conf.get(CORSConstants.HTTP_ACCESS_CONTROL_EXPOSED_HEADERS,
+                CORSConstants.HTTP_ACCESS_CONTROL_EXPOSED_HEADERS_DEFAULT));
 
         crossOriginFilter.setInitParameters(params);
         context.addFilter(crossOriginFilter, "/*", EnumSet.of(DispatcherType.REQUEST));
