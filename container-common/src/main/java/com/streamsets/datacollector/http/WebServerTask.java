@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.codahale.metrics.jetty9.InstrumentedHandler;
+import com.codahale.metrics.jetty9.InstrumentedQueuedThreadPool;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
@@ -30,6 +32,7 @@ import com.streamsets.lib.security.RegistrationResponseJson;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.lib.security.http.DisconnectedSSOService;
 import com.streamsets.lib.security.http.FailoverSSOService;
+import com.streamsets.lib.security.http.LimitedMethodServer;
 import com.streamsets.lib.security.http.ProxySSOService;
 import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -38,7 +41,6 @@ import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.lib.security.http.LimitedMethodServer;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -264,13 +266,26 @@ public abstract class WebServerTask extends AbstractTask implements Registration
 
       appHandler.setSecurityHandler(createSecurityHandler(server, appConf, appHandler, contextPath));
       contextPaths.add(contextPath);
-      appHandlers.addHandler(appHandler);
+      final InstrumentedHandler instrumentedAppHandler = new InstrumentedHandler(
+          getRuntimeInfo().getMetrics(),
+          appHandler.getClass().getPackage().getName() + appHandler.getContextPath().replace('/', '.')
+      );
+      instrumentedAppHandler.setHandler(appHandler);
+      instrumentedAppHandler.setServer(server);
+
+      appHandlers.addHandler(instrumentedAppHandler);
     }
 
     ServletContextHandler appHandler = configureRootContext(sessionHandler);
     appHandler.setSecurityHandler(createSecurityHandler(server, conf, appHandler, "/"));
     Handler handler = configureRedirectionRules(appHandler);
-    appHandlers.addHandler(handler);
+    final InstrumentedHandler instrumentedHandler = new InstrumentedHandler(
+        getRuntimeInfo().getMetrics(),
+        handler.getClass().getPackage().getName() + ".root"
+    );
+    instrumentedHandler.setHandler(handler);
+    instrumentedHandler.setServer(server);
+    appHandlers.addHandler(instrumentedHandler);
 
     server.setHandler(appHandlers);
 
@@ -625,7 +640,10 @@ public abstract class WebServerTask extends AbstractTask implements Registration
 
     String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
 
-    QueuedThreadPool qtp = new QueuedThreadPool(conf.get(HTTP_MAX_THREADS, HTTP_MAX_THREADS_DEFAULT));
+    QueuedThreadPool qtp = new InstrumentedQueuedThreadPool(
+        getRuntimeInfo().getMetrics(),
+        conf.get(HTTP_MAX_THREADS, HTTP_MAX_THREADS_DEFAULT)
+    );
     qtp.setName(serverName);
     qtp.setDaemon(true);
     Server server = new LimitedMethodServer(qtp);

@@ -81,6 +81,11 @@
     </dependency>
     <dependency>
       <groupId>io.dropwizard.metrics</groupId>
+      <artifactId>metrics-jetty9</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.dropwizard.metrics</groupId>
       <artifactId>metrics-jvm</artifactId>
       <scope>compile</scope>
     </dependency>
