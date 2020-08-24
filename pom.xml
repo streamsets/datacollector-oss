@@ -151,6 +151,9 @@
     <module>aws-sqs-connection</module>
     <module>salesforce-connection</module>
 
+    <!-- cluster connections -->
+    <module>cluster-connections/emr-cluster-connection</module>
+
     <module>root-lib</module>
 
     <module>stagesupport</module>

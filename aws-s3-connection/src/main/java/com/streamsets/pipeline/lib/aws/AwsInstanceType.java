@@ -20,6 +20,10 @@ import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
 public enum AwsInstanceType implements Label {
+  /* HACK ALERT
+     These aren't relevant to S3, just parking it here for now so it's available to the EMR connection module. It (and
+     the chooser values class) will be moved to a new module under SDC-15575
+  */
   M4_LARGE("m4.large"),
   M4_XLARGE("m4.xlarge"),
   M4_2XLARGE("m4.2xlarge"),

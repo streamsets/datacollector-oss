@@ -462,6 +462,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-emr-cluster-connection</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>fr.xebia.extras</groupId>
       <artifactId>selma-processor</artifactId>
       <scope>provided</scope>
