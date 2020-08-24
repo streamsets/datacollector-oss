@@ -18,6 +18,7 @@ package com.streamsets.datacollector.configupgrade;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
 import com.streamsets.datacollector.config.ConnectionDefinition;
+import com.streamsets.datacollector.config.ServiceConfiguration;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.validation.Issue;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.upgrader.YamlStageUpgraderLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectionConfigurationUpgrader {
@@ -83,14 +85,23 @@ public class ConnectionConfigurationUpgrader {
   ) {
     ConnectionDefinition connDef = libraryTask.getConnection(connectionConfiguration.getType());
     if (connDef != null) {
-      ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(
-          connectionConfiguration.getType(),
-          null,
-          connectionConfiguration.getVersion(),
-          connDef.getVersion(),
-          connDef.getUpgrader()
-      );
-      upgradeIfNecessary(upgradeContext, connectionConfiguration, issues);
+      ClassLoader cl = Thread.currentThread().getContextClassLoader();
+      try {
+        Thread.currentThread().setContextClassLoader(connDef.getClassLoader());
+        LOG.info("Upgrading connection '{}' from version '{}' to version '{}'",
+            connDef.getName(), connectionConfiguration.getVersion(), connDef.getVersion());
+
+        ConnectionUpgradeContext upgradeContext = new ConnectionUpgradeContext(
+            connectionConfiguration.getType(),
+            null,
+            connectionConfiguration.getVersion(),
+            connDef.getVersion(),
+            connDef.getUpgrader()
+        );
+        upgradeIfNecessary(upgradeContext, connectionConfiguration, issues);
+      } finally {
+        Thread.currentThread().setContextClassLoader(cl);
+      }
     }
   }
 
@@ -130,7 +141,7 @@ public class ConnectionConfigurationUpgrader {
     try {
       StageUpgrader upgrader = new YamlStageUpgraderLoader(
           connectionConfiguration.getType(),
-          getClass().getClassLoader().getResource(upgradeContext.getUpgraderDef())
+          Thread.currentThread().getContextClassLoader().getResource(upgradeContext.getUpgraderDef())
       ).get();
       connectionConfiguration.setConfig(upgrader.upgrade(connectionConfiguration.getConfiguration(), upgradeContext));
       connectionConfiguration.setVersion(upgradeContext.toVersion);

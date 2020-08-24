@@ -57,6 +57,7 @@ public class TestDetachedConnectionValidator {
     Map<String, ConfigDefinition> configDefinitionsMap = configDefinitions.stream()
         .collect(Collectors.toMap(ConfigDefinition::getName, Function.identity()));
     Mockito.when(connectionDefinition.getConfigDefinitionsMap()).thenReturn(configDefinitionsMap);
+    Mockito.when(connectionDefinition.getClassLoader()).thenReturn(getClass().getClassLoader());
     return connectionDefinition;
   }
 

@@ -63,6 +63,7 @@ public class TestConnectionConfigurationUpgrader {
     ConnectionDefinition connectionDefinition = Mockito.mock(ConnectionDefinition.class);
     Mockito.when(connectionDefinition.getVersion()).thenReturn(version);
     Mockito.when(connectionDefinition.getUpgrader()).thenReturn(upgraderDef);
+    Mockito.when(connectionDefinition.getClassLoader()).thenReturn(getClass().getClassLoader());
     Mockito.when(libTask.getConnection(type)).thenReturn(connectionDefinition);
   }
 

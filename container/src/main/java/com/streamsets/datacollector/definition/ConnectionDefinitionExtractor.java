@@ -18,6 +18,7 @@ package com.streamsets.datacollector.definition;
 import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
+import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
@@ -75,10 +76,11 @@ public abstract class ConnectionDefinitionExtractor {
    * Reads the ConnectionDef annotation of the given class and parses its information, including version, label,
    * description, type, upgrader, config definitions and group definitions
    *
+   * @param libraryDef The definition of the library containing the given class
    * @param klass The class having the ConnectionDef annotation to be read
    * @return The ConnectionDefinition object containing the annotation information
    */
-  public ConnectionDefinition extract(Class<?> klass) {
+  public ConnectionDefinition extract(StageLibraryDefinition libraryDef, Class<?> klass) {
     ConnectionDef conDef = klass.getAnnotation(ConnectionDef.class);
     Utils.formatL("Connection Definition: Connection='{}'", conDef.label());
     try {
@@ -101,7 +103,8 @@ public abstract class ConnectionDefinitionExtractor {
           configDefinitions,
           configGroupDefinition,
           yamlUpgrader,
-          supportedEngines
+          supportedEngines,
+          libraryDef.getClassLoader()
       );
     } catch (Exception e) {
       throw new IllegalStateException("Exception while extracting connection definition for " + conDef.label(), e);

@@ -40,6 +40,7 @@ public class ConnectionDefinition {
   private final ConfigGroupDefinition configGroupDefinition;
   private final String yamlUpgrader;
   private final ConnectionEngine[] supportedEngines;
+  private final ClassLoader classLoader;
 
   @SuppressWarnings("unchecked")
   public ConnectionDefinition(ConnectionDefinition def) {
@@ -53,6 +54,7 @@ public class ConnectionDefinition {
     configGroupDefinition = def.configGroupDefinition;
     yamlUpgrader = (def.yamlUpgrader.isEmpty()) ? null : def.yamlUpgrader;
     supportedEngines = def.supportedEngines;
+    classLoader = def.classLoader;
   }
 
   public ConnectionDefinition(
@@ -64,7 +66,8 @@ public class ConnectionDefinition {
       List<ConfigDefinition> configDefinitions,
       ConfigGroupDefinition configGroupDefinition,
       String yamlUpgrader,
-      ConnectionEngine[] supportedEngines
+      ConnectionEngine[] supportedEngines,
+      ClassLoader classloader
   ) {
     this.connectionDef = connectionDef;
     this.version = version;
@@ -88,6 +91,7 @@ public class ConnectionDefinition {
     }
     this.yamlUpgrader = yamlUpgrader;
     this.supportedEngines = supportedEngines;
+    this.classLoader = classloader;
   }
 
   public String getName() {
@@ -142,5 +146,9 @@ public class ConnectionDefinition {
 
   public ConnectionEngine[] getSupportedEngines() {
     return supportedEngines;
+  }
+
+  public ClassLoader getClassLoader() {
+    return classLoader;
   }
 }
