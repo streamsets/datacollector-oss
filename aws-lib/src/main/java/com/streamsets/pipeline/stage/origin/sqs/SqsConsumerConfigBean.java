@@ -17,42 +17,35 @@ package com.streamsets.pipeline.stage.origin.sqs;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
+import com.streamsets.pipeline.stage.common.sqs.AwsSqsConnection;
 
 import java.util.List;
 
 public class SqsConsumerConfigBean {
 
-  @ConfigDefBean(groups = "SQS")
-  public AWSConfig awsConfig;
-
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "US_WEST_2",
-      label = "Region",
-      displayPosition = 100,
-      group = "SQS"
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = AwsSqsConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  @ValueChooserModel(AwsRegionChooserValues.class)
-  public AwsRegion region;
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Endpoint",
-      description = "",
-      defaultValue = "",
-      displayPosition = 100,
-      dependsOn = "region",
-      triggeredByValue = "OTHER",
-      group = "SQS"
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
   )
-  public String endpoint;
+  public AwsSqsConnection connection;
 
   @ConfigDef(required = true,
       type = ConfigDef.Type.BOOLEAN,
@@ -99,9 +92,6 @@ public class SqsConsumerConfigBean {
       min = 1
   )
   public int numberOfMessagesPerRequest;
-
-  @ConfigDefBean(groups = "ADVANCED")
-  public ProxyConfig proxyConfig = new ProxyConfig();
 
   @ConfigDef(
       required = true,

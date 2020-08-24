@@ -49,3 +49,18 @@ upgrades:
       - setConfig:
           name: sqsConfig.queueUrls
           value: []
+  - toVersion: 6
+    actions:
+      # Added STREAMSETS_AWS_SQS Connection type and need to move a few configs around
+      - renameConfig:
+          oldNamePattern: ^sqsConfig.awsConfig.(.*$)
+          newNamePattern: sqsConfig.connection.awsConfig.(0)
+      - renameConfig:
+          oldNamePattern: ^sqsConfig.region$
+          newNamePattern: sqsConfig.connection.region
+      - renameConfig:
+          oldNamePattern: ^sqsConfig.endpoint$
+          newNamePattern: sqsConfig.connection.endpoint
+      - renameConfig:
+          oldNamePattern: ^sqsConfig.proxyConfig.(.*$)
+          newNamePattern: sqsConfig.connection.proxyConfig.(0)

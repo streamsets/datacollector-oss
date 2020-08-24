@@ -73,14 +73,15 @@ public class SqsConsumer extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.connection.region == AwsRegion.OTHER &&
+        (conf.connection.endpoint == null || conf.connection.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(), SQS_CONFIG_PREFIX + "endpoint", Errors.SQS_01));
 
       return issues;
     }
 
     try {
-      clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
+      clientConfiguration = AWSUtil.getClientConfiguration(conf.connection.proxyConfig);
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "proxyConfig",
@@ -91,7 +92,7 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
     try {
-      credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
+      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig);
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "awsConfig",
@@ -105,10 +106,10 @@ public class SqsConsumer extends BasePushSource {
     AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
                                                            .withClientConfiguration(clientConfiguration)
                                                            .withCredentials(credentials);
-    if (conf.region == AwsRegion.OTHER) {
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+    if (conf.connection.region == AwsRegion.OTHER) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint, null));
     } else {
-      builder.withRegion(conf.region.getId());
+      builder.withRegion(conf.connection.region.getId());
     }
 
     if (conf.specifyQueueURL) {
@@ -142,10 +143,10 @@ public class SqsConsumer extends BasePushSource {
 
   private AmazonSQSAsync buildAsyncClient() {
     final AmazonSQSAsyncClientBuilder builder = AmazonSQSAsyncClientBuilder.standard();
-    if (conf.region == AwsRegion.OTHER) {
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+    if (conf.connection.region == AwsRegion.OTHER) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint, null));
     } else {
-      builder.withRegion(conf.region.getId());
+      builder.withRegion(conf.connection.region.getId());
     }
     builder.setCredentials(credentials);
     builder.setClientConfiguration(clientConfiguration);
@@ -195,7 +196,7 @@ public class SqsConsumer extends BasePushSource {
               conf.numberOfMessagesPerRequest,
               conf.maxBatchTimeMs,
               batchSize,
-              conf.region.getId(),
+              conf.connection.region.getId(),
               conf.sqsAttributesOption,
               new DefaultErrorRecordHandler(getContext(), (ToErrorContext) getContext()),
               conf.pollWaitTimeSeconds,

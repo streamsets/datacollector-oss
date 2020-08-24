@@ -34,6 +34,7 @@ public enum Errors implements ErrorCode {
   SQS_11("Error initilizing AWS client credentials: {}"),
   SQS_12("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   SQS_13("Error reading from queue: {} error: {}"),
+  SQS_14("Error verifying Amazon SQS connection when listing queues: {}")
   ;
 
   private final String msg;

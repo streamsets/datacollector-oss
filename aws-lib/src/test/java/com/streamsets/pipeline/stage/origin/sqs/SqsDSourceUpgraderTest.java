@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -88,5 +89,46 @@ public class SqsDSourceUpgraderTest {
 
     UpgraderTestUtils.assertExists(configs, "sqsConfig.specifyQueueURL", false);
     UpgraderTestUtils.assertExists(configs, "sqsConfig.queueUrls", new ArrayList<>());
+  }
+
+  @Test
+  public void testV5toV6() throws StageException {
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    configs.add(new Config("sqsConfig.awsConfig.awsAccessKeyId", "v1"));
+    configs.add(new Config("sqsConfig.awsConfig.awsSecretAccessKey", "v2"));
+    configs.add(new Config("sqsConfig.region", "v3"));
+    configs.add(new Config("sqsConfig.endpoint", "v4"));
+    configs.add(new Config("sqsConfig.proxyConfig.connectionTimeout", "v5"));
+    configs.add(new Config("sqsConfig.proxyConfig.socketTimeout", "v6"));
+    configs.add(new Config("sqsConfig.proxyConfig.retryCount", "v7"));
+    configs.add(new Config("sqsConfig.proxyConfig.useProxy", "v8"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyHost", "v9"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyPort", "v10"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyUser", "v11"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyPassword", "v12"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyDomain", "v13"));
+    configs.add(new Config("sqsConfig.proxyConfig.proxyWorkstation", "v14"));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.awsConfig.awsAccessKeyId", "v1");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.awsConfig.awsSecretAccessKey", "v2");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.region", "v3");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.endpoint", "v4");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.connectionTimeout", "v5");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.socketTimeout", "v6");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.retryCount", "v7");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.useProxy", "v8");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyHost", "v9");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyPort", "v10");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyUser", "v11");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyPassword", "v12");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyDomain", "v13");
+    UpgraderTestUtils.assertExists(configs,"sqsConfig.connection.proxyConfig.proxyWorkstation", "v14");
+
+    Assert.assertEquals(14, configs.size());
+
   }
 }

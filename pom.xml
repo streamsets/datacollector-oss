@@ -146,6 +146,7 @@
     <module>aws-support</module>
     <module>aws-s3-connection</module>
     <module>jdbc-connection</module>
+    <module>aws-sqs-connection</module>
 
     <module>root-lib</module>
 
