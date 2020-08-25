@@ -105,12 +105,13 @@ public class BigQueryTarget extends BaseTarget {
     conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(provider -> {
       if (issues.isEmpty()) {
         try {
-          Optional.ofNullable(provider.getCredentials()).ifPresent(c -> bigQuery = BigQueryDelegate.getBigquery(c, conf.credentials.projectId));
+          Optional.ofNullable(provider.getCredentials()).ifPresent(credentials ->
+              bigQuery
+                  = BigQueryDelegate.getBigquery(credentials, conf.credentials.getProjectId()));
         } catch (IOException e) {
           LOG.error(Errors.BIGQUERY_05.getMessage(), e);
-          issues.add(getContext().createConfigIssue(
-              Groups.CREDENTIALS.name(),
-              "conf.credentials.credentialsProvider",
+          issues.add(getContext().createConfigIssue(Groups.CREDENTIALS.name(),
+              "conf.credentials.connection.credentialsProvider",
               Errors.BIGQUERY_05
           ));
         }
@@ -156,7 +157,7 @@ public class BigQueryTarget extends BaseTarget {
                 Errors.BIGQUERY_17,
                 datasetName,
                 tableName,
-                conf.credentials.projectId
+                conf.credentials.getProjectId()
             ));
           }
           else {

@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.bigquery.origin;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.lib.googlecloud.BigQueryCredentialsConfig;
 
 public class BigQuerySourceConfig {
   @ConfigDef(
@@ -83,5 +83,5 @@ public class BigQuerySourceConfig {
   public int maxBatchSize = 1000;
 
   @ConfigDefBean(groups = "CREDENTIALS")
-  public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+  public BigQueryCredentialsConfig credentials = new BigQueryCredentialsConfig();
 }

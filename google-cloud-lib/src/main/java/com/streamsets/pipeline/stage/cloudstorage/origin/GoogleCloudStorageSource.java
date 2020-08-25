@@ -104,8 +104,8 @@ public class GoogleCloudStorageSource extends BaseSource {
           .setCredentials(credentialsProvider.getCredentials())
           .build()
           .getService();
-    } catch (IOException e) {
-      LOG.error("Error when initializing storage. Reason : {}", e);
+    } catch (IOException | NullPointerException e) {
+      LOG.error("Error when initializing storage. Reason : {}", e.toString());
       issues.add(getContext().createConfigIssue(
           Groups.CREDENTIALS.name(),
           "gcsOriginConfig.credentials.credentialsProvider",

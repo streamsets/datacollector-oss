@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.stage.bigquery.lib.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Google BigQuery",
     description = "Executes a query job and processes the result from Google BigQuery",
     icon="bigquery.png",

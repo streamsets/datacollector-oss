@@ -55,6 +55,10 @@
   <dependencies>
     <!-- Compile Dependencies -->
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-google-connection</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.cloud</groupId>
       <artifactId>google-cloud-bigquery</artifactId>
       <version>${gcp-bigquery.version}</version>

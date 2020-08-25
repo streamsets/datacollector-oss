@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,24 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.lib.googlecloud;
+package com.streamsets.pipeline.stage.common;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.Label;
 
-@GenerateResourceBundle
-public class CredentialsProviderChooserValues extends BaseEnumChooserValues<CredentialsProviderType> {
-  public CredentialsProviderChooserValues() {
-    super(CredentialsProviderType.class);
+public enum CredentialsProviderType implements Label {
+  DEFAULT_PROVIDER("Default Credentials Provider"),
+  JSON_PROVIDER("Service Account Credentials File (JSON)"),
+  JSON("Service Account Credentials (JSON)"),
+  ;
+
+  private final String label;
+
+  CredentialsProviderType(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

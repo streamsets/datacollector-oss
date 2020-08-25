@@ -22,3 +22,8 @@ upgrades:
       - setConfig:
           name: conf.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 3
+    actions:
+      - renameConfig:
+          oldNamePattern: ^conf.credentials.(.*$)
+          newNamePattern: conf.credentials.connection.(0)

@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.lib.googlecloud.CloudStorageCredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
@@ -94,7 +94,7 @@ public class GCSOriginConfig {
     public GcsOriginErrorConfig gcsOriginErrorConfig;
 
     @ConfigDefBean(groups = "CREDENTIALS")
-    public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+    public CloudStorageCredentialsConfig credentials = new CloudStorageCredentialsConfig();
 
     List<Stage.ConfigIssue> init(Stage.Context context, List<Stage.ConfigIssue> issues) {
         dataParserFormatConfig.init(

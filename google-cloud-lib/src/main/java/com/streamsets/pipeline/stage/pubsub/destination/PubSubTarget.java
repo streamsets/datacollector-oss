@@ -101,7 +101,7 @@ public class PubSubTarget extends BaseTarget {
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
     }
 
-    ProjectTopicName topic = ProjectTopicName.of(conf.credentials.projectId, conf.topicId);
+    ProjectTopicName topic = ProjectTopicName.of(conf.credentials.getProjectId(), conf.topicId);
 
     conf.credentials.getCredentialsProvider(getContext(), issues).ifPresent(p -> credentialsProvider = p);
 

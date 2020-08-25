@@ -21,10 +21,10 @@ import com.google.auth.Credentials;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.pubsub.v1.SubscriptionAdminSettings;
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.stage.common.AbstractGoogleConnection;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,59 +39,17 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
-
-public class GoogleCloudCredentialsConfig {
+public abstract class GoogleCloudCredentialsConfig {
   private static final Logger LOG = LoggerFactory.getLogger(GoogleCloudCredentialsConfig.class);
-  public static final String CONF_CREDENTIALS_CREDENTIALS_PROVIDER = "conf.credentials.credentialsProvider";
+  public static final String CONF_CREDENTIALS_CREDENTIALS_PROVIDER = "conf.credentials.connection.credentialsProvider";
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Project ID",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  public String projectId = "";
+  public abstract CredentialsProviderType getCredentialsProvider();
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      label = "Credentials Provider",
-      defaultValue = "DEFAULT_PROVIDER",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  @ValueChooserModel(CredentialsProviderChooserValues.class)
-  public CredentialsProviderType credentialsProvider;
+  public abstract String getPath();
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Credentials File Path (JSON)",
-      description = "Path to the credentials file.",
-      dependsOn = "credentialsProvider",
-      triggeredByValue = "JSON_PROVIDER",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  public String path = "";
+  public abstract String getProjectId();
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      mode = ConfigDef.Mode.JSON,
-      label = "Credentials File Content (JSON)",
-      description = "Content of the credentials file",
-      dependsOn = "credentialsProvider",
-      triggeredByValue = "JSON",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  public CredentialValue credentialsFileContent;
+  public abstract CredentialValue getCredentialsFileContent();
 
   /**
    * Tries to create a {@link CredentialsProvider} for the appropriate type of credentials supplied.
@@ -103,10 +61,10 @@ public class GoogleCloudCredentialsConfig {
   public Optional<CredentialsProvider> getCredentialsProvider(Stage.Context context, List<Stage.ConfigIssue> issues) {
     CredentialsProvider provider = null;
 
-    if (credentialsProvider.equals(CredentialsProviderType.DEFAULT_PROVIDER)) {
+    if (getCredentialsProvider().equals(CredentialsProviderType.DEFAULT_PROVIDER)) {
       return Optional.of(SubscriptionAdminSettings.defaultCredentialsProviderBuilder().build());
-    } else if (credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER) || credentialsProvider.equals(
-        CredentialsProviderType.JSON)) {
+    } else if (getCredentialsProvider().equals(CredentialsProviderType.JSON_PROVIDER) ||
+        getCredentialsProvider().equals(CredentialsProviderType.JSON)) {
       Credentials credentials = getCredentials(context, issues);
       provider = new FixedCredentialsProvider() {
         @Nullable
@@ -135,10 +93,7 @@ public class GoogleCloudCredentialsConfig {
       }
     } catch (IOException | IllegalArgumentException e) {
       LOG.error(Errors.GOOGLE_02.getMessage(), e);
-      issues.add(context.createConfigIssue("CREDENTIALS",
-          CONF_CREDENTIALS_CREDENTIALS_PROVIDER,
-          Errors.GOOGLE_02
-      ));
+      issues.add(context.createConfigIssue("CREDENTIALS", CONF_CREDENTIALS_CREDENTIALS_PROVIDER, Errors.GOOGLE_02));
     }
 
     return credentials;
@@ -147,12 +102,12 @@ public class GoogleCloudCredentialsConfig {
   @VisibleForTesting
   InputStream getCredentialsInputStream(Stage.Context context, List<Stage.ConfigIssue> issues)
       throws FileNotFoundException {
-    if (credentialsProvider.equals(CredentialsProviderType.JSON_PROVIDER)) {
+    if (getCredentialsProvider().equals(CredentialsProviderType.JSON_PROVIDER)) {
       File credentialsFile;
-      if (Paths.get(path).isAbsolute()) {
-        credentialsFile = new File(path);
+      if (Paths.get(getPath()).isAbsolute()) {
+        credentialsFile = new File(getPath());
       } else {
-        credentialsFile = new File(context.getResourcesDirectory(), path);
+        credentialsFile = new File(context.getResourcesDirectory(), getPath());
       }
 
       if (!credentialsFile.exists() || !credentialsFile.isFile()) {
@@ -165,8 +120,9 @@ public class GoogleCloudCredentialsConfig {
         return null;
       }
       return new FileInputStream(credentialsFile);
-    } else if (credentialsProvider.equals(CredentialsProviderType.JSON) && !credentialsFileContent.get().isEmpty()) {
-      return new ByteArrayInputStream(credentialsFileContent.get().getBytes());
+    } else if (getCredentialsProvider().equals(CredentialsProviderType.JSON) &&
+        !getCredentialsFileContent().get().isEmpty()) {
+      return new ByteArrayInputStream(getCredentialsFileContent().get().getBytes());
     }
     return null;
   }

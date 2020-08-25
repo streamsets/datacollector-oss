@@ -20,17 +20,36 @@ import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class TestPipelineConfigUpgrader {
+
+  private StageUpgrader upgrader;
+
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/PipelineConfigBeanUpgrader.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new PipelineConfigUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testPipelineConfigUpgrader() throws StageException {
@@ -208,6 +227,43 @@ public class TestPipelineConfigUpgrader {
   @Test
   public void testPipelineConfigUpgradeV18ToV19() throws StageException {
     doTestDataprocConfigs(18, 19);
+  }
+
+  @Test
+  public void testPipelineConfigUpgradeV19ToV20() throws StageException {
+    Mockito.doReturn(19).when(context).getFromVersion();
+    Mockito.doReturn(20).when(context).getToVersion();
+
+    String prefix = "conf.credentials.";
+    String newPrefix = "conf.credentials.connection.";
+
+    String projectId = "projectId";
+    String projectIdValue = "someProjectId";
+    String credentialsProvider = "credentialsProvider";
+    CredentialsProviderType credentialsProviderValue = CredentialsProviderType.JSON;
+    String path = "path";
+    String pathValue = "path";
+    String credentialsFileContent = "credentialsFileContent";
+    String credentialsFileContentValue = "This is the content of the credentials file";
+
+    configs.add(new Config(prefix + projectId, projectIdValue));
+    configs.add(new Config(prefix + path, pathValue));
+    configs.add(new Config(prefix + credentialsFileContent, credentialsFileContentValue));
+    configs.add(new Config(prefix + credentialsProvider, credentialsProviderValue));
+
+
+    configs = upgrader.upgrade(configs, context);
+    Assert.assertEquals(newPrefix + projectId, configs.get(0).getName());
+    Assert.assertEquals(projectIdValue, configs.get(0).getValue());
+
+    Assert.assertEquals(newPrefix + path, configs.get(1).getName());
+    Assert.assertEquals(pathValue, configs.get(1).getValue());
+
+    Assert.assertEquals(newPrefix + credentialsFileContent, configs.get(2).getName());
+    Assert.assertEquals(credentialsFileContentValue, configs.get(2).getValue());
+
+    Assert.assertEquals(newPrefix + credentialsProvider, configs.get(3).getName());
+    Assert.assertEquals(credentialsProviderValue, configs.get(3).getValue());
   }
 
   private void doTestEMRConfigs(int from, int to) {

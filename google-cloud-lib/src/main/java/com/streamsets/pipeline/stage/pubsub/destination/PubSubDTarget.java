@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.pubsub.lib.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Google Pub Sub Publisher",
     description = "Publishes messages to Google Pub/Sub",
     icon = "pubsub.png",

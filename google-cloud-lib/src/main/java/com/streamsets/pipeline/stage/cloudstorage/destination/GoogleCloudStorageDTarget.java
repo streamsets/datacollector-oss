@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Google Cloud Storage",
     description = "Writes to google cloud storage.",
     icon = "cloud-storage-logo.png",

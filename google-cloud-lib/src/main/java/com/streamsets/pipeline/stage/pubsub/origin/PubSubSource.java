@@ -150,11 +150,10 @@ public class PubSubSource extends BasePushSource {
 
     TopicAdminSettings settings;
     try {
-      settings =
-          (TopicAdminSettings) TopicAdminSettings
-              .newBuilder()
-              .setCredentialsProvider(credentialsProvider)
-              .build();
+      settings = TopicAdminSettings
+          .newBuilder()
+          .setCredentialsProvider(credentialsProvider)
+          .build();
 
     } catch (IOException e) {
       LOG.error(Errors.PUBSUB_04.getMessage(), e.toString(), e);
@@ -183,7 +182,7 @@ public class PubSubSource extends BasePushSource {
         ListSubscriptionsRequest listSubscriptionsRequest =
             ListSubscriptionsRequest
                 .newBuilder()
-                .setProject("projects/"+conf.credentials.projectId)
+                .setProject("projects/"+conf.credentials.getProjectId())
                 .build();
         ListSubscriptionsPagedResponse response =
             subscriptionAdminClient.listSubscriptions(listSubscriptionsRequest);
@@ -204,7 +203,7 @@ public class PubSubSource extends BasePushSource {
       permissions.add(PUBSUB_SUBSCRIPTIONS_GET_PERMISSION);
       ProjectSubscriptionName subscriptionName = ProjectSubscriptionName
           .of(
-              conf.credentials.projectId,
+              conf.credentials.getProjectId(),
               conf.subscriptionId
           );
       TestIamPermissionsResponse testedPermissions =
@@ -235,7 +234,7 @@ public class PubSubSource extends BasePushSource {
 
     ProjectSubscriptionName subscriptionName = ProjectSubscriptionName
         .of(
-            conf.credentials.projectId,
+            conf.credentials.getProjectId(),
             conf.subscriptionId
         );
 

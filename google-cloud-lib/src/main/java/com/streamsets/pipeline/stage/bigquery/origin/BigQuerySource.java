@@ -73,7 +73,7 @@ public class BigQuerySource extends BaseSource {
           LOG.error(BIGQUERY_05.getMessage(), e);
           issues.add(getContext().createConfigIssue(
               Groups.CREDENTIALS.name(),
-              "conf.credentials.credentialsProvider",
+              "conf.credentials.connection.credentialsProvider",
               BIGQUERY_05
           ));
         }
@@ -84,7 +84,7 @@ public class BigQuerySource extends BaseSource {
 
   @VisibleForTesting
   BigQuery getBigQuery(Credentials credentials) {
-    return BigQueryDelegate.getBigquery(credentials, conf.credentials.projectId);
+    return BigQueryDelegate.getBigquery(credentials, conf.credentials.getProjectId());
   }
 
   @Override
@@ -111,7 +111,7 @@ public class BigQuerySource extends BaseSource {
 
     // process one page (batch)
     for (FieldValueList row : result.getValues()) {
-      sourceOffset = Utils.format("projectId:{}::rowNum:{}", conf.credentials.projectId, count);
+      sourceOffset = Utils.format("projectId:{}::rowNum:{}", conf.credentials.getProjectId(), count);
       Record r = getContext().createRecord(sourceOffset);
 
       LinkedHashMap<String, Field> root = delegate.fieldsToMap(schema.getFields(), row);

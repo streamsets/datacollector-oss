@@ -32,6 +32,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.googlecloud.BigQueryCredentialsConfig;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -77,7 +78,7 @@ import java.util.stream.IntStream;
     BigQueryError.class,
     Table.class,
     Credentials.class,
-    GoogleCloudCredentialsConfig.class
+    BigQueryCredentialsConfig.class
 })
 public class TestBigQueryTarget {
 
@@ -90,7 +91,7 @@ public class TestBigQueryTarget {
   @Before
   public void setup() {
     PowerMockito.replace(
-        MemberMatcher.method(GoogleCloudCredentialsConfig.class, "getCredentials", Stage.Context.class, List.class)
+        MemberMatcher.method(BigQueryCredentialsConfig.class, "getCredentials", Stage.Context.class, List.class)
     ).with((proxy,method,args) -> PowerMockito.mock(Credentials.class));
   }
 

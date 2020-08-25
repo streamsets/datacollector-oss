@@ -18,10 +18,15 @@ package com.streamsets.pipeline.stage.pubsub.destination;
 
 import com.google.common.base.Joiner;
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +34,30 @@ public class TestPubSubTargetUpgrader {
 
   private static final String PUB_SUB_TARGET_CONFIG = "conf";
 
-  @Test
-  public void testUpgrade() throws StageException {
-    List<Config> configs = new ArrayList<>();
+  private StageUpgrader upgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
 
-    PubSubTargetUpgrader pubSubTargetUpgrader = new PubSubTargetUpgrader();
-    List<Config> upgradedConfigs = pubSubTargetUpgrader.upgrade("library", "stage", "stageInst", 1, 2, configs);
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/PubSubDTarget.yaml");
+    upgrader = new SelectorStageUpgrader("stage", new PubSubTargetUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = Mockito.mock(StageUpgrader.Context.class);
+  }
+
+  @Test
+  public void testUpgradeV1ToV2() {
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.dataFormatConfig.";
+    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
+    configs = upgrader.upgrade(configs, context);
 
     Joiner p = Joiner.on(".");
 
-    UpgraderTestUtils.assertAllExist(upgradedConfigs,
+    UpgraderTestUtils.assertAllExist(configs,
         p.join(PUB_SUB_TARGET_CONFIG, "requestBytesThreshold"),
         p.join(PUB_SUB_TARGET_CONFIG, "elementsCountThreshold"),
         p.join(PUB_SUB_TARGET_CONFIG, "defaultDelayThreshold"),
@@ -46,5 +65,35 @@ public class TestPubSubTargetUpgrader {
         p.join(PUB_SUB_TARGET_CONFIG, "maxOutstandingElementCount"),
         p.join(PUB_SUB_TARGET_CONFIG, "maxOutstandingRequestBytes"),
         p.join(PUB_SUB_TARGET_CONFIG, "limitExceededBehavior"));
+  }
+
+  @Test
+  public void testUpgradeV2ToV3() {
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    String prefix = "conf.credentials.";
+    String newPrefix = "conf.credentials.connection.";
+
+    String projectId = "projectId";
+    String projectIdValue = "someProjectId";
+    String credentialsProvider = "credentialsProvider";
+    CredentialsProviderType credentialsProviderValue = CredentialsProviderType.JSON;
+    String path = "path";
+    String pathValue = "path";
+    String credentialsFileContent = "credentialsFileContent";
+    String credentialsFileContentValue = "This is the content of the credentials file";
+
+    configs.add(new Config(prefix + projectId, projectIdValue));
+    configs.add(new Config(prefix + path, pathValue));
+    configs.add(new Config(prefix + credentialsFileContent, credentialsFileContentValue));
+    configs.add(new Config(prefix + credentialsProvider, credentialsProviderValue));
+
+
+    configs = upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertExists(configs, newPrefix + projectId, projectIdValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + path, pathValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + credentialsFileContent, credentialsFileContentValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + credentialsProvider, credentialsProviderValue);
   }
 }

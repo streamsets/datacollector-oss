@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.lib.googlecloud.PubSubCredentialsConfig;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.pubsub.origin.DataFormatChooserValues;
 
@@ -153,5 +154,5 @@ public class PubSubTargetConfig {
   public boolean isDelimited;
 
   @ConfigDefBean(groups = "CREDENTIALS")
-  public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+  public PubSubCredentialsConfig credentials = new PubSubCredentialsConfig();
 }

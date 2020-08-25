@@ -17,9 +17,8 @@
 package com.streamsets.pipeline.stage.bigquery.origin;
 
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class BigQuerySourceUpgrader implements StageUpgrader {
   @Override
   public List<Config> upgrade(
       String library, String stageName, String stageInstance, int fromVersion, int toVersion, List<Config> configs
-  ) throws StageException {
+  ) {
     List<Config> newConfigs;
     switch (fromVersion) {
       case 1:

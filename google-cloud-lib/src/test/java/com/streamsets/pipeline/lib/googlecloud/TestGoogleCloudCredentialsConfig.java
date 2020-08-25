@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 import com.streamsets.pipeline.stage.pubsub.origin.PubSubDSource;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -42,7 +43,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 public class TestGoogleCloudCredentialsConfig {
   @Test
   public void testJsonCredentialsNotFound() {
-    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    DataProcCredentialsConfig credentialsConfig = new DataProcCredentialsConfig();
     credentialsConfig.projectId = "test";
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     credentialsConfig.path = "/tmp/does-not-exist.json";
@@ -57,7 +58,7 @@ public class TestGoogleCloudCredentialsConfig {
   @Test
   public void testInvalidJsonCredentials() throws Exception {
     Path tempFile = Files.createTempFile("creds", "json");
-    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    DataProcCredentialsConfig credentialsConfig = new DataProcCredentialsConfig();
     credentialsConfig.projectId = "test";
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     credentialsConfig.path = tempFile.toString();
@@ -72,7 +73,7 @@ public class TestGoogleCloudCredentialsConfig {
   @Test
   public void testGetCredentialInputStream_CredentialsFile() throws Exception {
     Path tempFile = Files.createTempFile("creds", "json");
-    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    DataProcCredentialsConfig credentialsConfig = new DataProcCredentialsConfig();
     credentialsConfig.projectId = "test";
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     credentialsConfig.path = tempFile.toString();
@@ -94,7 +95,7 @@ public class TestGoogleCloudCredentialsConfig {
 
     when(cred.get()).thenReturn("{JSON}");
 
-    GoogleCloudCredentialsConfig credentialsConfig = new GoogleCloudCredentialsConfig();
+    DataProcCredentialsConfig credentialsConfig = new DataProcCredentialsConfig();
     credentialsConfig.projectId = "test";
     credentialsConfig.credentialsProvider = CredentialsProviderType.JSON;
     credentialsConfig.credentialsFileContent = cred;

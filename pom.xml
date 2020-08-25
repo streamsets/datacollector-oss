@@ -134,6 +134,7 @@
     <module>container-common</module>
     <module>metadata-generator</module>
     <module>google-common</module>
+    <module>google-connection</module>
     <module>json-dto</module>
     <module>messaging-client</module>
     <module>container</module>

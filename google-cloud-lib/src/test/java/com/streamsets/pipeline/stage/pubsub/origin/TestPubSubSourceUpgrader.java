@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.pubsub.origin;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,5 +53,35 @@ public class TestPubSubSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
+  }
+
+  @Test
+  public void testUpgradeV2ToV3() {
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    String prefix = "conf.credentials.";
+    String newPrefix = "conf.credentials.connection.";
+
+    String projectId = "projectId";
+    String projectIdValue = "someProjectId";
+    String credentialsProvider = "credentialsProvider";
+    CredentialsProviderType credentialsProviderValue = CredentialsProviderType.JSON;
+    String path = "path";
+    String pathValue = "path";
+    String credentialsFileContent = "credentialsFileContent";
+    String credentialsFileContentValue = "This is the content of the credentials file";
+
+    configs.add(new Config(prefix + projectId, projectIdValue));
+    configs.add(new Config(prefix + path, pathValue));
+    configs.add(new Config(prefix + credentialsFileContent, credentialsFileContentValue));
+    configs.add(new Config(prefix + credentialsProvider, credentialsProviderValue));
+
+
+    configs = upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertExists(configs, newPrefix + projectId, projectIdValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + path, pathValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + credentialsFileContent, credentialsFileContentValue);
+    UpgraderTestUtils.assertExists(configs, newPrefix + credentialsProvider, credentialsProviderValue);
   }
 }

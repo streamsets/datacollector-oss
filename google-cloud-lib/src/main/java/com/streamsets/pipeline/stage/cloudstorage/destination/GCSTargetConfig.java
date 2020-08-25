@@ -25,7 +25,7 @@ import com.streamsets.pipeline.config.TimeZoneChooserValues;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.lib.googlecloud.CloudStorageCredentialsConfig;
 import com.streamsets.pipeline.stage.cloudstorage.lib.Errors;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 
@@ -136,7 +136,7 @@ public class GCSTargetConfig {
   public DataGeneratorFormatConfig dataGeneratorFormatConfig;
 
   @ConfigDefBean(groups = "CREDENTIALS")
-  public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+  public CloudStorageCredentialsConfig credentials = new CloudStorageCredentialsConfig();
 
   @ConfigDef(
       required = true,

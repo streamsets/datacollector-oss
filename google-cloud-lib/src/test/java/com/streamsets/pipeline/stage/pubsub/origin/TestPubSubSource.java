@@ -19,29 +19,23 @@ package com.streamsets.pipeline.stage.pubsub.origin;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
+import com.streamsets.pipeline.lib.googlecloud.PubSubCredentialsConfig;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
-import org.junit.After;
-import org.junit.Before;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 
 import static com.streamsets.pipeline.lib.googlecloud.Errors.GOOGLE_01;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 
 public class TestPubSubSource {
-  @Before
-  public void setUp() throws Exception {
-  }
-
-  @After
-  public void tearDown() throws Exception {
-  }
 
   @Test
-  public void testInvalidDefaultCredentials() throws Exception {
+  public void testInvalidDefaultCredentials() {
     PubSubSourceConfig config = getConfig();
 
     PubSubSource source = new PubSubSource(config);
@@ -56,10 +50,10 @@ public class TestPubSubSource {
   }
 
   @Test
-  public void testJsonCredentialsNotFound() throws Exception {
+  public void testJsonCredentialsNotFound() {
     PubSubSourceConfig config = getConfig();
-    config.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
-    config.credentials.path = "/tmp/does_not_exist.json";
+    config.credentials.connection.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
+    config.credentials.connection.path = "/tmp/does_not_exist.json";
 
     PubSubSource source = new PubSubSource(config);
     PushSourceRunner runner = new PushSourceRunner.Builder(PubSubDSource.class, source)
@@ -76,8 +70,8 @@ public class TestPubSubSource {
     PubSubSourceConfig config = new PubSubSourceConfig();
     config.basic.maxWaitTime = 1000;
     config.basic.maxBatchSize = 2;
-    config.credentials.credentialsProvider = CredentialsProviderType.DEFAULT_PROVIDER;
-    config.credentials.projectId = "test";
+    config.credentials.connection.credentialsProvider  = CredentialsProviderType.DEFAULT_PROVIDER;
+    config.credentials.connection.projectId = "test";
     config.maxThreads = 1;
     config.subscriptionId = "test";
     config.dataFormat = DataFormat.TEXT;

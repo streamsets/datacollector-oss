@@ -15,7 +15,8 @@
  */
 package com.streamsets.pipeline.stage.bigquery.destination;
 
-import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
+
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 
 public class BigQueryTargetConfigBuilder {
   private String projectId;
@@ -58,14 +59,14 @@ public class BigQueryTargetConfigBuilder {
     return this;
   }
 
-  public BigQueryTargetConfig build() throws Exception {
+  public BigQueryTargetConfig build() {
     BigQueryTargetConfig config = new BigQueryTargetConfig();
-    config.credentials.projectId = projectId;
+    config.credentials.connection.projectId = projectId;
+    config.credentials.connection.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     config.datasetEL = datasetEL;
     config.tableNameEL = tableNameEL;
     config.ignoreInvalidColumn = ignoreInvalidColumns;
     config.rowIdExpression = rowIdExpression;
-    config.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     return config;
   }
 

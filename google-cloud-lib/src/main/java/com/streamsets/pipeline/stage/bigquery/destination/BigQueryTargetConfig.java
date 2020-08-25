@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.bigquery.destination;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
+import com.streamsets.pipeline.lib.googlecloud.BigQueryCredentialsConfig;
 
 public class BigQueryTargetConfig {
 
@@ -93,6 +93,6 @@ public class BigQueryTargetConfig {
   public int maxCacheSize = -1;
 
   @ConfigDefBean(groups = "CREDENTIALS")
-  public GoogleCloudCredentialsConfig credentials = new GoogleCloudCredentialsConfig();
+  public BigQueryCredentialsConfig credentials = new BigQueryCredentialsConfig();
 
 }

@@ -104,7 +104,7 @@ public class GoogleCloudStorageTarget extends BaseTarget {
 
     try {
       storage = StorageOptions.newBuilder().setCredentials(credentialsProvider.getCredentials()).build().getService();
-    } catch (IOException e) {
+    } catch (IOException | NullPointerException e) {
       issues.add(getContext().createConfigIssue(
           Groups.CREDENTIALS.name(),
           GoogleCloudCredentialsConfig.CONF_CREDENTIALS_CREDENTIALS_PROVIDER,

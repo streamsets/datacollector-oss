@@ -26,11 +26,11 @@ import com.google.cloud.bigquery.JobStatus;
 import com.google.cloud.bigquery.TableResult;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.lib.googlecloud.CredentialsProviderType;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
 import com.streamsets.pipeline.stage.bigquery.lib.BigQueryDelegate;
 import com.streamsets.pipeline.stage.bigquery.lib.TestBigQueryDelegate;
+import com.streamsets.pipeline.stage.common.CredentialsProviderType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -90,9 +90,9 @@ public class TestBigQuerySource {
   @Test
   public void testMissingCredentialsFile() throws Exception {
     BigQuerySourceConfig conf = new BigQuerySourceConfig();
-    conf.credentials.projectId = "test";
-    conf.credentials.path = "/bogus";
-    conf.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
+    conf.credentials.connection.projectId = "test";
+    conf.credentials.connection.path = "/bogus";
+    conf.credentials.connection.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
 
     BigQuerySource bigquerySource = new BigQuerySource(conf);
     SourceRunner runner = new SourceRunner.Builder(BigQueryDSource.class, bigquerySource)
@@ -110,9 +110,9 @@ public class TestBigQuerySource {
     tempFile.deleteOnExit();
 
     BigQuerySourceConfig conf = new BigQuerySourceConfig();
-    conf.credentials.projectId = "test";
-    conf.credentials.path = tempFile.getAbsolutePath();
-    conf.credentials.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
+    conf.credentials.connection.projectId = "test";
+    conf.credentials.connection.path = tempFile.getAbsolutePath();
+    conf.credentials.connection.credentialsProvider = CredentialsProviderType.JSON_PROVIDER;
     conf.query = "SELECT * FROM [test:table]";
 
 

@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Google Cloud Storage",
     description = "Reads from Google Cloud Storage",
     icon = "cloud-storage-logo.png",
