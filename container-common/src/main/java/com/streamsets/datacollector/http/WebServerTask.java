@@ -281,7 +281,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     Handler handler = configureRedirectionRules(appHandler);
     final InstrumentedHandler instrumentedHandler = new InstrumentedHandler(
         getRuntimeInfo().getMetrics(),
-        handler.getClass().getPackage().getName() + ".root"
+        String.format("%s.%s.%s", handler.getClass().getPackage().getName(), serverName, "root")
     );
     instrumentedHandler.setHandler(handler);
     instrumentedHandler.setServer(server);
