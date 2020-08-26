@@ -335,7 +335,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
           while ((cl = queue.poll()) != null) {
             try {
               loadStageLibrary(cl, javaVersion, sdcVersion);
-            } catch(Exception e) {
+            } catch (Throwable e) {
               LOG.error("Error while loading stage library", e);
               failure.set(true);
             }
@@ -535,7 +535,9 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   @Override
   protected void stopTask() {
-    privateClassLoaderPool.close();
+    if (privateClassLoaderPool != null) {
+      privateClassLoaderPool.close();
+    }
     super.stopTask();
   }
 
