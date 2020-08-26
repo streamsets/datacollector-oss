@@ -83,6 +83,7 @@ import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN_CONNECTION;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 import static org.awaitility.Awaitility.await;
 
@@ -113,10 +114,11 @@ public class KinesisSource extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.connection.region == AwsRegion.OTHER && (conf.connection.endpoint == null || conf.
+        connection.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN + ".endpoint",
+          KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
           Errors.KINESIS_09
       ));
 
@@ -125,8 +127,8 @@ public class KinesisSource extends BasePushSource {
 
     try {
       KinesisUtil.checkStreamExists(
-          AWSUtil.getClientConfiguration(conf.proxyConfig),
-          conf,
+          AWSUtil.getClientConfiguration(conf.connection.proxyConfig),
+          conf.connection,
           conf.streamName,
           issues,
           getContext()
@@ -135,7 +137,7 @@ public class KinesisSource extends BasePushSource {
       LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+          KINESIS_CONFIG_BEAN_CONNECTION + ".awsConfig.awsAccessKeyId",
           Errors.KINESIS_12,
           ex.toString()
       ));
@@ -157,13 +159,13 @@ public class KinesisSource extends BasePushSource {
     }
 
     try {
-      clientConfiguration = AWSUtil.getClientConfiguration(conf.proxyConfig);
-      credentials = AWSUtil.getCredentialsProvider(conf.awsConfig);
+      clientConfiguration = AWSUtil.getClientConfiguration(conf.connection.proxyConfig);
+      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig);
     } catch (StageException ex) {
       LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+          KINESIS_CONFIG_BEAN_CONNECTION + ".awsConfig.awsAccessKeyId",
           Errors.KINESIS_12,
           ex.toString()
       ));
@@ -173,19 +175,19 @@ public class KinesisSource extends BasePushSource {
     dynamoDBClient = new AmazonDynamoDBClient(credentials, clientConfiguration);
     cloudWatchClient = new AmazonCloudWatchClient(credentials, clientConfiguration);
     Region region = null;
-    if (conf.region == AwsRegion.OTHER) {
-      Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.endpoint);
+    if (conf.connection.region == AwsRegion.OTHER) {
+      Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
       if (matcher.find()) {
         region = Region.getRegion(Regions.valueOf(matcher.group(1).toUpperCase().replaceAll("-", "_")));
       } else {
         issues.add(getContext().createConfigIssue(
             com.streamsets.pipeline.stage.destination.kinesis.Groups.KINESIS.name(),
-            KINESIS_CONFIG_BEAN + ".endpoint",
+            KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
             Errors.KINESIS_19
         ));
       }
     } else {
-      region = Region.getRegion(Regions.valueOf(conf.region.name()));
+      region = Region.getRegion(Regions.valueOf(conf.connection.region.name()));
     }
     if (region != null) {
       dynamoDBClient.setRegion(region);
@@ -228,14 +230,14 @@ public class KinesisSource extends BasePushSource {
       kclConfig.withInitialPositionInStream(conf.initialPositionInStream);
     }
 
-    if (conf.region == AwsRegion.OTHER) {
-      Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.endpoint);
+    if (conf.connection.region == AwsRegion.OTHER) {
+      Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
       if (matcher.find()) {
         kclConfig.withRegionName(matcher.group(1));
-        kclConfig.withKinesisEndpoint(conf.endpoint.substring(matcher.start(), matcher.end()));
+        kclConfig.withKinesisEndpoint(conf.connection.endpoint.substring(matcher.start(), matcher.end()));
       }
     } else {
-      kclConfig.withRegionName(conf.region.getId());
+      kclConfig.withRegionName(conf.connection.region.getId());
     }
 
     return new Worker.Builder()
@@ -262,7 +264,7 @@ public class KinesisSource extends BasePushSource {
       int maxBatchSize,
       BatchMaker batchMaker
   ) throws IOException, StageException {
-    ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.proxyConfig);
+    ClientConfiguration awsClientConfig = AWSUtil.getClientConfiguration(conf.connection.proxyConfig);
 
     String shardId = KinesisUtil.getLastShardId(awsClientConfig, conf, conf.streamName);
 

@@ -52,6 +52,7 @@ public class KinesisUtil {
   public static final int KB = 1024; // KiB
   public static final int ONE_MB = 1024 * KB; // MiB
   public static final String KINESIS_CONFIG_BEAN = "kinesisConfig";
+  public static final String KINESIS_CONFIG_BEAN_CONNECTION = KINESIS_CONFIG_BEAN + ".connection";
   public static final String LEASE_TABLE_BEAN = "leaseTable";
 
   public static final Pattern REGION_PATTERN = Pattern.compile(
@@ -63,14 +64,14 @@ public class KinesisUtil {
   /**
    * Checks for existence of the requested stream and adds
    * any configuration issues to the list.
-   * @param conf
+   * @param kinesisConnection
    * @param streamName
    * @param issues
    * @param context
    */
   public static long checkStreamExists(
       ClientConfiguration awsClientConfig,
-      KinesisConfigBean conf,
+      AwsKinesisStreamConnection kinesisConnection,
       String streamName,
       List<Stage.ConfigIssue> issues,
       Stage.Context context
@@ -78,7 +79,7 @@ public class KinesisUtil {
     long numShards = 0;
 
     try {
-      numShards = getShardCount(awsClientConfig, conf, streamName);
+      numShards = getShardCount(awsClientConfig, kinesisConnection, streamName);
     } catch (AmazonClientException|StageException e) {
       LOG.error(Errors.KINESIS_01.getMessage(), e.toString(), e);
       issues.add(context.createConfigIssue(
@@ -91,9 +92,10 @@ public class KinesisUtil {
 
   public static long getShardCount(
     ClientConfiguration awsClientConfig,
-    KinesisConfigBean conf, String streamName
+    AwsKinesisStreamConnection conn,
+    String streamName
   ) throws StageException {
-    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
+    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conn);
 
     try {
       long numShards = 0;
@@ -127,17 +129,22 @@ public class KinesisUtil {
     }
   }
 
-  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisConfigBean conf) throws StageException {
+  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisStreamConfigBean conf) throws
+      StageException {
+    return getKinesisClient(awsClientConfig, conf.connection);
+  }
 
-    AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder
-        .standard()
-        .withClientConfiguration(checkNotNull(awsClientConfig))
-        .withCredentials(AWSUtil.getCredentialsProvider(conf.awsConfig));
+  private static AmazonKinesis getKinesisClient(
+      ClientConfiguration awsClientConfig,
+      AwsKinesisStreamConnection connection
+  ) throws StageException {
+    AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder.standard().withClientConfiguration(checkNotNull(
+        awsClientConfig)).withCredentials(AWSUtil.getCredentialsProvider(connection.awsConfig));
 
-    if (AwsRegion.OTHER == conf.region) {
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.endpoint, null));
+    if (AwsRegion.OTHER == connection.region) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint, null));
     } else {
-      builder.withRegion(conf.region.getId());
+      builder.withRegion(connection.region.getId());
     }
 
     return builder.build();
@@ -152,7 +159,7 @@ public class KinesisUtil {
    */
   public static String getLastShardId(
       ClientConfiguration awsClientConfig,
-      KinesisConfigBean conf,
+      KinesisStreamConfigBean conf,
       String streamName
   ) throws StageException {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
@@ -181,7 +188,7 @@ public class KinesisUtil {
 
   public static List<com.amazonaws.services.kinesis.model.Record> getPreviewRecords(
       ClientConfiguration awsClientConfig,
-      KinesisConfigBean conf,
+      KinesisStreamConfigBean conf,
       int maxBatchSize,
       GetShardIteratorRequest getShardIteratorRequest
   ) throws StageException {
@@ -219,4 +226,5 @@ public class KinesisUtil {
     return shardId + "::" + record.getPartitionKey() + "::" + record.getSequenceNumber() + "::" + ((UserRecord)
         record).getSubSequenceNumber();
   }
+
 }

@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 8,
+    version = 9,
     label = "Kinesis Consumer",
     description = "Reads data from Kinesis",
     icon = "kinesis_multithreaded.png",
@@ -39,7 +39,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 @GenerateResourceBundle
 public class KinesisDSource extends DPushSource {
 
-  @ConfigDefBean(groups = {"KINESIS", "LEASE_TABLE", "ADVANCED"})
+  @ConfigDefBean(groups = {"KINESIS", "ADVANCED", "LEASE_TABLE"})
   public KinesisConsumerConfigBean kinesisConfig;
 
   @Override

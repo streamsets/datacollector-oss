@@ -29,7 +29,7 @@ import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
+import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisStreamConnection;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisTestUtil;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -107,7 +107,7 @@ public class TestKinesisTarget {
 
     when(KinesisUtil.checkStreamExists(
         any(ClientConfiguration.class),
-        any(KinesisConfigBean.class),
+        any(AwsKinesisStreamConnection.class),
         any(String.class),
         any(List.class),
         any(Stage.Context.class)
@@ -185,12 +185,13 @@ public class TestKinesisTarget {
 
   private KinesisProducerConfigBean getKinesisTargetConfig() {
     KinesisProducerConfigBean conf = new KinesisProducerConfigBean();
+    conf.connection = new AwsKinesisStreamConnection();
     conf.dataFormatConfig = new DataGeneratorFormatConfig();
-    conf.awsConfig = new AWSConfig();
+    conf.connection.awsConfig = new AWSConfig();
 
-    conf.awsConfig.awsAccessKeyId = () -> "AKIAAAAAAAAAAAAAAAAA";
-    conf.awsConfig.awsSecretAccessKey = () -> StringUtils.repeat("a", 40);
-    conf.region = AwsRegion.US_WEST_1;
+    conf.connection.awsConfig.awsAccessKeyId = () -> "AKIAAAAAAAAAAAAAAAAA";
+    conf.connection.awsConfig.awsSecretAccessKey = () -> StringUtils.repeat("a", 40);
+    conf.connection.region = AwsRegion.US_WEST_1;
     conf.streamName = STREAM_NAME;
 
     conf.dataFormat = DataFormat.JSON;

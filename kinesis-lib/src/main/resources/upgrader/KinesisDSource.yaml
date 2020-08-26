@@ -22,3 +22,20 @@ upgrades:
       - setConfig:
           name: kinesisConfig.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 9
+    actions:
+      # Added STREAMSETS_AWS_KINESIS_STREAM Connection type and need to move a few configs around
+      - renameConfig:
+          oldNamePattern: ^kinesisConfig.awsConfig.(.*$)
+          newNamePattern: kinesisConfig.connection.awsConfig.(0)
+      - renameConfig:
+          oldNamePattern: ^kinesisConfig.region$
+          newNamePattern: kinesisConfig.connection.region
+      - renameConfig:
+          oldNamePattern: ^kinesisConfig.endpoint$
+          newNamePattern: kinesisConfig.connection.endpoint
+      - renameConfig:
+          oldNamePattern: ^kinesisConfig.proxyConfig.(.*$)
+          newNamePattern: kinesisConfig.connection.proxyConfig.(0)
+
+

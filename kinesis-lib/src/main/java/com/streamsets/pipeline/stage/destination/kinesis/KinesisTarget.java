@@ -63,6 +63,7 @@ import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
+import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN_CONNECTION;
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.ONE_MB;
 
 public class KinesisTarget extends BaseTarget {
@@ -106,10 +107,10 @@ public class KinesisTarget extends BaseTarget {
       );
     }
 
-    if (conf.region == AwsRegion.OTHER && (conf.endpoint == null || conf.endpoint.isEmpty())) {
+    if (conf.connection.region == AwsRegion.OTHER && (conf.connection.endpoint == null || conf.connection.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(
           Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN + ".endpoint",
+          KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
           Errors.KINESIS_09
       ));
       return issues;
@@ -117,7 +118,7 @@ public class KinesisTarget extends BaseTarget {
 
     KinesisUtil.checkStreamExists(
         new ClientConfiguration(),
-        conf,
+        conf.connection,
         conf.streamName,
         issues,
         getContext()
@@ -135,22 +136,22 @@ public class KinesisTarget extends BaseTarget {
       try {
         KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
             .fromProperties(additionalConfigs)
-            .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.awsConfig));
+            .setCredentialsProvider(AWSUtil.getCredentialsProvider(conf.connection.awsConfig));
 
-        if (conf.region == AwsRegion.OTHER) {
-          Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.endpoint);
+        if (conf.connection.region == AwsRegion.OTHER) {
+          Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
           if (matcher.find()) {
-            producerConfig.setKinesisEndpoint(conf.endpoint.substring(matcher.start(), matcher.end()));
+            producerConfig.setKinesisEndpoint(conf.connection.endpoint.substring(matcher.start(), matcher.end()));
             producerConfig.setRegion(matcher.group(1));
           } else {
             issues.add(getContext().createConfigIssue(
                 Groups.KINESIS.name(),
-                KINESIS_CONFIG_BEAN + ".endpoint",
+                KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
                 Errors.KINESIS_19
             ));
           }
         } else {
-          producerConfig.setRegion(conf.region.getId());
+          producerConfig.setRegion(conf.connection.region.getId());
         }
 
         // Mock injected during testing, we shouldn't clobber it.
@@ -161,7 +162,7 @@ public class KinesisTarget extends BaseTarget {
         LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
         issues.add(getContext().createConfigIssue(
             Groups.KINESIS.name(),
-            KINESIS_CONFIG_BEAN + ".awsConfig.awsAccessKeyId",
+            KINESIS_CONFIG_BEAN_CONNECTION + ".awsConfig.awsAccessKeyId",
             Errors.KINESIS_12,
             ex.toString()
         ));

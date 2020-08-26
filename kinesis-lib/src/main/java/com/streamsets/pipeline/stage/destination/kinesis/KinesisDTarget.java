@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
@@ -27,7 +28,7 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 @StageDef(
     // We're reusing upgrader for both ToErrorKinesisDTarget & KinesisDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 9,
+    version = 10,
     label = "Kinesis Producer",
     description = "Writes data to Amazon Kinesis",
     icon = "kinesis.png",
@@ -45,6 +46,12 @@ import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 )
 @ConfigGroups(value = Groups.class)
 @GenerateResourceBundle
+@HideConfigs(value = {
+    "kinesisConfig.connection.proxyConfig.connectionTimeout",
+    "kinesisConfig.connection.proxyConfig.socketTimeout",
+    "kinesisConfig.connection.proxyConfig.retryCount",
+    "kinesisConfig.connection.proxyConfig.useProxy",
+})
 public class KinesisDTarget extends DTarget {
 
   @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})

@@ -59,6 +59,7 @@
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
@@ -89,6 +90,11 @@
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-aws-support</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-aws-kinesis-connection</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -159,6 +165,7 @@
       <artifactId>mockito-core</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.powermock</groupId>
       <artifactId>powermock-module-junit4</artifactId>

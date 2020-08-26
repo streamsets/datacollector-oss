@@ -303,12 +303,12 @@ public class KinesisSourceIT {
   private KinesisConsumerConfigBean getKinesisConsumerConfig(String streamName) {
     KinesisConsumerConfigBean conf = new KinesisConsumerConfigBean();
     conf.dataFormatConfig = new DataParserFormatConfig();
-    conf.awsConfig = new AWSConfig();
-    conf.awsConfig.awsAccessKeyId = () -> "foo";
-    conf.awsConfig.awsSecretAccessKey = () -> "boo";
+    conf.connection.awsConfig = new AWSConfig();
+    conf.connection.awsConfig.awsAccessKeyId = () -> "foo";
+    conf.connection.awsConfig.awsSecretAccessKey = () -> "boo";
 
-    conf.region = AwsRegion.OTHER;
-    conf.endpoint = getKinesisEndpoint();
+    conf.connection.region = AwsRegion.OTHER;
+    conf.connection.endpoint = getKinesisEndpoint();
     conf.streamName = streamName;
 
     conf.dataFormat = DataFormat.JSON;

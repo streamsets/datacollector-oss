@@ -145,6 +145,7 @@
     <module>jks-common</module>
     <module>aws-support</module>
     <module>aws-s3-connection</module>
+    <module>aws-kinesis-connection</module>
     <module>jdbc-connection</module>
     <module>aws-sqs-connection</module>
 

@@ -19,12 +19,13 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "Kinesis Firehose",
     description = "Writes data to Amazon Kinesis Firehose",
     icon = "kinesisfirehose.png",
@@ -42,6 +43,12 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 )
 @ConfigGroups(value = FirehoseGroups.class)
 @GenerateResourceBundle
+@HideConfigs(value = {
+    "kinesisConfig.connection.proxyConfig.connectionTimeout",
+    "kinesisConfig.connection.proxyConfig.socketTimeout",
+    "kinesisConfig.connection.proxyConfig.retryCount",
+    "kinesisConfig.connection.proxyConfig.useProxy",
+})
 public class FirehoseDTarget extends DTarget {
 
   @ConfigDefBean(groups = {"KINESIS", "DATA_FORMAT"})

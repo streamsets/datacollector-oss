@@ -103,7 +103,7 @@ public class KinesisTestUtil {
 
     when(KinesisUtil.checkStreamExists(
         any(ClientConfiguration.class),
-        any(KinesisConfigBean.class),
+        any(AwsKinesisStreamConnection.class),
         any(String.class),
         any(List.class),
         any(Stage.Context.class)

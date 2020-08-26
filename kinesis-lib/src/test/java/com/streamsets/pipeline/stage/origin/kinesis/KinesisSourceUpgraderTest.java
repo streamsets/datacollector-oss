@@ -13,13 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.aws;
+package com.streamsets.pipeline.stage.origin.kinesis;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class AWSCredentialModeChooserValues extends BaseEnumChooserValues<AWSCredentialMode> {
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisCommonUpgraderTest;
 
-  public AWSCredentialModeChooserValues() {
-    super(AWSCredentialMode.class);
+public class KinesisSourceUpgraderTest extends KinesisCommonUpgraderTest {
+
+  @Override
+  protected String getYamlResourceName() {
+    return "KinesisDSource.yaml";
+  }
+
+  @Override
+  protected int getConnectionIntroductionUpgradeVersion() {
+    return 9;
+  }
+
+  @Override
+  protected String getPrefix() {
+    return "kinesisConfig.";
   }
 }

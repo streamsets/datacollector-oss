@@ -21,11 +21,12 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.stage.lib.kinesis.KinesisConfigBean;
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisFirehoseConfigBean;
+import com.streamsets.pipeline.stage.lib.kinesis.KinesisStreamConfigBean;
 
 import java.util.Map;
 
-public class KinesisProducerConfigBean extends KinesisConfigBean {
+public class KinesisProducerConfigBean extends KinesisStreamConfigBean {
 
   @ConfigDefBean(groups = "DATA_FORMAT")
   public DataGeneratorFormatConfig dataFormatConfig;

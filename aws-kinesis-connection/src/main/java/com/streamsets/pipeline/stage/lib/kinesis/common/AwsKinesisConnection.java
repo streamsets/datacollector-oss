@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.lib.kinesis;
+package com.streamsets.pipeline.stage.lib.kinesis.common;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -21,10 +21,11 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
+import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 
-public class KinesisConfigBean {
+public abstract class AwsKinesisConnection {
 
-  @ConfigDefBean(groups = "KINESIS")
+  @ConfigDefBean()
   public AWSConfig awsConfig;
 
   @ConfigDef(
@@ -32,9 +33,8 @@ public class KinesisConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "US_WEST_2",
       label = "Region",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "KINESIS"
+      displayPosition = -98,
+      group = "#0"
   )
   @ValueChooserModel(AwsRegionChooserValues.class)
   public AwsRegion region;
@@ -45,21 +45,14 @@ public class KinesisConfigBean {
       label = "Endpoint",
       description = "",
       defaultValue = "",
-      displayPosition = 15,
+      displayPosition = -95,
       displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "region",
       triggeredByValue = "OTHER",
-      group = "KINESIS"
+      group = "#0"
   )
   public String endpoint;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Stream Name",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "KINESIS"
-  )
-  public String streamName;
+  @ConfigDefBean(groups = "#1")
+  public ProxyConfig proxyConfig;
 }
