@@ -15,17 +15,21 @@
     limitations under the License.
 
 -->
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>StreamSets Aster User Login</title>
+  <title>StreamSets Login</title>
+  <script>
+    // DO a GET to /rest/v1/tlogin using the lstate query parameter sent to this page,
+    // Redirect to login with data of the response
+    fetch('/rest/v1/tlogin' + window.location.search).then((response) => {
+      return response.json();
+    }).then((val) => {
+      window.location = `${val.authorizeUri}?${new URLSearchParams(val.parameters)}`;
+    }).catch((err) => {
+      console.error(err);
+    });
+  </script>
 </head>
-<body>
-<h1>Engine Aster SSO Login</h1>
-<p>
-  DO a GET /rest/v1/tlogin using the <b>lstate</b> query parameter send to this page.
-</p>
-<p>
-  DO a POST using the URL and data of the response.
-</p>
-</body>
+<body></body>
 </html>
