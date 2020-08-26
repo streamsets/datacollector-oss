@@ -159,6 +159,10 @@ upgrades:
     - configStringListRemove:
         name: listConfig
         value: value
+    - setConfigFromStringMap:
+        name: configName                      # name of the config that is going to be set
+        mapName: mapName                      # name of the map that should contain the value to be set
+        key: key                              # key for which the value will be set
 
 
   - toVersion: 2

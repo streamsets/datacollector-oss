@@ -29,6 +29,7 @@ import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.sdk.PushSourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityOptions;
 import com.streamsets.pipeline.stage.origin.multikafka.loader.KafkaConsumerLoader;
 import com.streamsets.pipeline.stage.origin.multikafka.loader.MockKafkaConsumerLoader;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -80,6 +81,7 @@ public class TestMultiKafkaSource {
     conf.dataFormatConfig.textMaxLineLen = 4096;
     conf.kafkaAutoOffsetReset = KafkaAutoOffsetReset.EARLIEST;
     conf.timestampToSearchOffsets = 0;
+    conf.securityConfig.securityOption = KafkaSecurityOptions.PLAINTEXT;
 
     return conf;
   }
@@ -97,8 +99,8 @@ public class TestMultiKafkaSource {
     List<Consumer> consumerList = Collections.singletonList(mockConsumer);
     Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -140,8 +142,8 @@ public class TestMultiKafkaSource {
         .thenReturn(consumerRecords2)
         .thenReturn(emptyRecords);
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -211,8 +213,8 @@ public class TestMultiKafkaSource {
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     conf.topicList = topicNames;
 
@@ -251,8 +253,8 @@ public class TestMultiKafkaSource {
         .when(mockConsumer.poll(Mockito.anyInt()))
         .thenThrow(new IllegalStateException());
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     MockKafkaConsumerLoader.consumers = consumerList.iterator();
     MultiKafkaSource source = new MultiKafkaSource(conf);
@@ -308,8 +310,8 @@ public class TestMultiKafkaSource {
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     conf.topicList = topicNames;
 
@@ -425,8 +427,8 @@ public class TestMultiKafkaSource {
       Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(emptyRecords);
     }
 
-    conf.userKeytab = Mockito.mock(CredentialValue.class);
-    Mockito.when(conf.userKeytab.get()).thenReturn("");
+    conf.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.securityConfig.userKeytab.get()).thenReturn("");
 
     conf.topicList = topicNames;
 

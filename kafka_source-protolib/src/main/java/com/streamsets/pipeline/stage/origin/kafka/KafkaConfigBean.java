@@ -39,6 +39,9 @@ public class KafkaConfigBean {
   @ConfigDefBean(groups = "KAFKA")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
+  @ConfigDefBean(groups = "SECURITY")
+  public KafkaSecurityConfig securityConfig = new KafkaSecurityConfig();
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -261,47 +264,6 @@ public class KafkaConfigBean {
       group = "KAFKA"
   )
   public Map<String, String> kafkaConsumerConfigs = new HashMap<>();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Provide Keytab",
-      description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
-      displayPosition = 125,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "KAFKA"
-  )
-  public boolean provideKeytab;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "",
-      label = "Keytab",
-      description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 encoded keytab from a credential store.",
-      displayPosition = 130,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      dependsOn = "provideKeytab",
-      triggeredByValue = "true",
-      group = "KAFKA",
-      upload = ConfigDef.Upload.BASE64
-  )
-  public CredentialValue userKeytab;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "user/host@REALM",
-      label = "Principal",
-      description = "Kerberos service principal to use for this stage.",
-      displayPosition = 140,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      dependsOn = "provideKeytab",
-      triggeredByValue = "true",
-      group = "KAFKA"
-  )
-  public String userPrincipal;
 
   @ConfigDef(
       required = true,

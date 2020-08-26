@@ -28,7 +28,7 @@ import com.streamsets.pipeline.lib.httpsource.RawHttpConfigs;
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 3,
+  version = 4,
   label = "HTTP to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives data via HTTP and writes every HTTP request payload to Kafka",

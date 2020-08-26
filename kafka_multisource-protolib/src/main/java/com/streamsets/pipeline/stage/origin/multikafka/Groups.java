@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   KAFKA("Connection"),
+  SECURITY("Security"),
   DATA_FORMAT("Data Format"),
   ;
 

@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "Kafka Multitopic Consumer",
     description = "Reads data from multiple topics of a Kafka Broker",
     execution = ExecutionMode.STANDALONE,

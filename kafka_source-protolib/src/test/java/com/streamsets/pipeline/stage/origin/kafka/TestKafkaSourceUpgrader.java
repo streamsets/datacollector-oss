@@ -15,6 +15,8 @@
  */
 package com.streamsets.pipeline.stage.origin.kafka;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
@@ -184,5 +186,46 @@ public class TestKafkaSourceUpgrader {
         "kafkaConfigBean.userPrincipal",
         "user/host@REALM"
     );
+  }
+
+  @Test
+  public void testV11toV12() {
+    Mockito.doReturn(11).when(context).getFromVersion();
+    Mockito.doReturn(12).when(context).getToVersion();
+
+    configs.add(new Config("kafkaConfigBean.kafkaConsumerConfigs", ImmutableList.of(
+        ImmutableMap.of("key", "security.protocol", "value", "SASL_PLAINTEXT"),
+        ImmutableMap.of("key", "sasl.kerberos.service.name", "value", "kafka"),
+        ImmutableMap.of("key", "ssl.truststore.type", "value", "JKS"),
+        ImmutableMap.of("key", "ssl.truststore.location", "value", "/tmp/truststore"),
+        ImmutableMap.of("key", "ssl.truststore.password", "value", "trustpwd"),
+        ImmutableMap.of("key", "ssl.keystore.type", "value", "PKCS12"),
+        ImmutableMap.of("key", "ssl.keystore.location", "value", "/tmp/keystore"),
+        ImmutableMap.of("key", "ssl.keystore.password", "value", "keystpwd"),
+        ImmutableMap.of("key", "ssl.key.password", "value", "keypwd"),
+        ImmutableMap.of("key", "ssl.enabled.protocols", "value", "TlSv1.2, TLSv1.3")
+    )));
+
+    configs.add(new Config("kafkaConfigBean.provideKeytab", true));
+    configs.add(new Config("kafkaConfigBean.userKeytab", "userKeytab"));
+    configs.add(new Config("kafkaConfigBean.userPrincipal", "sdc/sdc@CLUSTER"));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.securityOption", "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.kerberosServiceName", "kafka");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.provideKeytab", true);
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.userKeytab", "userKeytab");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.userPrincipal", "sdc/sdc@CLUSTER");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststoreType", "JKS");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststoreFile", "/tmp/truststore");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststorePassword", "trustpwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystoreType", "PKCS12");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystoreFile", "/tmp/keystore");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystorePassword", "keystpwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keyPassword", "keypwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.enabledProtocols", "TlSv1.2, TLSv1.3");
+
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.kafkaConsumerConfigs", ImmutableList.of());
   }
 }

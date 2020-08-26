@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 5,
+  version = 6,
   label = "SDC RPC to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives records via SDC RPC from a Data Collector pipeline that uses an SDC RPC destination and " +

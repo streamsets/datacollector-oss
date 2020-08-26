@@ -17,4 +17,85 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 4
+    actions:
+      - setConfigFromStringMap:
+          name: conf.securityConfig.securityOption
+          mapName: conf.kafkaProducerConfigs
+          key: security.protocol
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: security.protocol
+      - setConfigFromStringMap:
+          name: conf.securityConfig.kerberosServiceName
+          mapName: conf.kafkaProducerConfigs
+          key: sasl.kerberos.service.name
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: sasl.kerberos.service.name
+      - renameConfig:
+          oldNamePattern: conf.provideKeytab
+          newNamePattern: conf.securityConfig.provideKeytab
+      - renameConfig:
+          oldNamePattern: conf.userKeytab
+          newNamePattern: conf.securityConfig.userKeytab
+      - renameConfig:
+          oldNamePattern: conf.userPrincipal
+          newNamePattern: conf.securityConfig.userPrincipal
+      - setConfigFromStringMap:
+          name: conf.securityConfig.truststoreType
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.truststore.type
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.truststore.type
+      - setConfigFromStringMap:
+          name: conf.securityConfig.truststoreFile
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.truststore.location
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.truststore.location
+      - setConfigFromStringMap:
+          name: conf.securityConfig.truststorePassword
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.truststore.password
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.truststore.password
+      - setConfigFromStringMap:
+          name: conf.securityConfig.keystoreType
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.keystore.type
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.keystore.type
+      - setConfigFromStringMap:
+          name: conf.securityConfig.keystoreFile
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.keystore.location
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.keystore.location
+      - setConfigFromStringMap:
+          name: conf.securityConfig.keystorePassword
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.keystore.password
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.keystore.password
+      - setConfigFromStringMap:
+          name: conf.securityConfig.keyPassword
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.key.password
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.key.password
+      - setConfigFromStringMap:
+          name: conf.securityConfig.enabledProtocols
+          mapName: conf.kafkaProducerConfigs
+          key: ssl.enabled.protocols
+      - configStringMapRemove:
+          name: conf.kafkaProducerConfigs
+          key: ssl.enabled.protocols

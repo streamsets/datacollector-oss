@@ -35,6 +35,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -71,6 +72,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   protected static final String CONSUMER_GROUP = "consumerGroup";
   protected static final String TOPIC = "topic";
   protected static final String BROKER_LIST = "metadataBrokerList";
+  protected static final String KAFKA_CONFIGS = "kafkaConsumerConfigs";
 
 
   public BaseKafkaSource(KafkaConfigBean conf) {
@@ -135,10 +137,21 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext()
     );
 
-    if (conf.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
+    KafkaSecurityUtil.validateAdditionalProperties(
+        conf.securityConfig,
+        conf.kafkaConsumerConfigs,
+        KafkaOriginGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+        issues,
+        getContext()
+    );
+
+    KafkaSecurityUtil.addSecurityConfigs(conf.securityConfig, conf.kafkaConsumerConfigs);
+
+    if (conf.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          conf.userKeytab.get(),
-          conf.userPrincipal,
+          conf.securityConfig.userKeytab.get(),
+          conf.securityConfig.userPrincipal,
           conf.kafkaConsumerConfigs,
           issues,
           getContext()

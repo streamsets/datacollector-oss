@@ -31,6 +31,7 @@ public enum KafkaErrors implements ErrorCode {
   KAFKA_11("Cannot retrieve metadata for topic '{}' from broker '{}': {}"),
   KAFKA_12("Dynamic Kerberos authentication is only supported in versions >= 0.11"),
   KAFKA_13("Unable to store keytab file in disk: {}"),
+  KAFKA_14("Security properties can't be specified in both Security tab and Kafka Configuration field"),
 
   //Kafka source messages
   KAFKA_21("Cannot find a new leader after a Kafka broker failure"),

@@ -194,6 +194,10 @@ upgrades:
   - setConfig:
       name: controlVariable
       value: valueFromOldVariable
+  - setConfigFromStringMap:
+      name: valueFromStringMap
+      mapName: map2
+      key: foo
   - configStringMapPut:
       name: map1
       key: key

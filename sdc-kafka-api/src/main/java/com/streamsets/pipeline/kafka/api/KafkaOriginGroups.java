@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum KafkaOriginGroups implements Label {
   KAFKA("Kafka"),
+  SECURITY("Security"),
   DATA_FORMAT("Data Format"),
   ;
 

@@ -20,10 +20,12 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.config.DataFormat;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
+import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityConfig;
 import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureMode;
 import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureModeChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -35,6 +37,9 @@ import java.util.Map;
 public class MultiKafkaBeanConfig {
   @ConfigDefBean(groups = "KAFKA")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
+
+  @ConfigDefBean(groups = "SECURITY")
+  public KafkaSecurityConfig securityConfig = new KafkaSecurityConfig();
 
   @ConfigDef(
       required = true,
@@ -164,44 +169,6 @@ public class MultiKafkaBeanConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Provide Keytab",
-      description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
-      displayPosition = 105,
-      group = "KAFKA"
-  )
-  public boolean provideKeytab;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "",
-      label = "Keytab",
-      description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 encoded keytab from a credential store.",
-      displayPosition = 110,
-      dependsOn = "provideKeytab",
-      triggeredByValue = "true",
-      group = "KAFKA",
-      upload = ConfigDef.Upload.BASE64
-  )
-  public CredentialValue userKeytab;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "user/host@REALM",
-      label = "Principal",
-      description = "Kerberos service principal to use for this stage.",
-      displayPosition = 120,
-      dependsOn = "provideKeytab",
-      triggeredByValue = "true",
-      group = "KAFKA"
-  )
-  public String userPrincipal;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Key Deserializer",
       description = "Method used to deserialize the Kafka message key. Set to Confluent when the Avro schema ID is embedded in each message.",
@@ -280,6 +247,13 @@ public class MultiKafkaBeanConfig {
 
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
-
+    KafkaSecurityUtil.validateAdditionalProperties(
+        securityConfig,
+        kafkaOptions,
+        KafkaOriginGroups.KAFKA.name(),
+        "conf.kafkaOptions",
+        issues,
+        context
+    );
   }
 }

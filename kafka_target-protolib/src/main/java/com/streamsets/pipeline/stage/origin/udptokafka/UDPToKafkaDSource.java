@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSourceOffsetCommitter
 import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 
 @StageDef(
-  version = 3,
+  version = 4,
   label = "UDP to Kafka",
   execution = ExecutionMode.STANDALONE,
   description = "Receives UDP packages and writes them to Kafka",

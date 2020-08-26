@@ -37,6 +37,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtilFactory;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import com.streamsets.pipeline.lib.kafka.MessageKeyUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
@@ -409,10 +410,12 @@ public class MultiKafkaSource extends BasePushSource {
 
     kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
 
-    if (conf.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
+    KafkaSecurityUtil.addSecurityConfigs(conf.securityConfig, conf.kafkaOptions);
+
+    if (conf.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          conf.userKeytab.get(),
-          conf.userPrincipal,
+          conf.securityConfig.userKeytab.get(),
+          conf.securityConfig.userPrincipal,
           conf.kafkaOptions,
           issues,
           getContext()

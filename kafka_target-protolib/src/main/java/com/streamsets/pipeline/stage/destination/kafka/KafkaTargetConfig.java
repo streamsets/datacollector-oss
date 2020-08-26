@@ -45,7 +45,9 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
+import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
+import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +100,9 @@ public class KafkaTargetConfig {
 
   @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
+
+  @ConfigDefBean(groups = {"SECURITY"})
+  public KafkaSecurityConfig securityConfig = new KafkaSecurityConfig();
 
   @ConfigDef(
       required = true,
@@ -256,47 +261,6 @@ public class KafkaTargetConfig {
   )
   public Map<String, String> kafkaProducerConfigs = new HashMap<>();
 
- @ConfigDef(
-     required = true,
-     type = ConfigDef.Type.BOOLEAN,
-     defaultValue = "false",
-     label = "Provide Keytab",
-     description = "Use a unique Kerberos keytab and principal for this stage to securely connect to Kafka through Kerberos. Overrides the default Kerberos keytab and principal configured for the Data Collector installation.",
-     displayPosition = 65,
-     displayMode = ConfigDef.DisplayMode.ADVANCED,
-     group = "#0"
- )
- public boolean provideKeytab;
-
- @ConfigDef(
-     required = true,
-     type = ConfigDef.Type.CREDENTIAL,
-     defaultValue = "",
-     label = "Keytab",
-     description = "Base64 encoded keytab to use for this stage. Paste the contents of the base64 encoded keytab, or use a credential function to retrieve the base64 keytab from a credential store.",
-     displayPosition = 70,
-     displayMode = ConfigDef.DisplayMode.ADVANCED,
-     dependsOn = "provideKeytab",
-     triggeredByValue = "true",
-     group = "#0",
-     upload = ConfigDef.Upload.BASE64
- )
- public CredentialValue userKeytab;
-
- @ConfigDef(
-     required = true,
-     type = ConfigDef.Type.STRING,
-     defaultValue = "user/host@REALM",
-     label = "Principal",
-     description = "Kerberos service principal to use for this stage.",
-     displayPosition = 80,
-     displayMode = ConfigDef.DisplayMode.ADVANCED,
-     dependsOn = "provideKeytab",
-     triggeredByValue = "true",
-     group = "#0"
- )
- public String userPrincipal;
-
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
@@ -420,10 +384,21 @@ public class KafkaTargetConfig {
         context
     );
 
-    if (provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
+    KafkaSecurityUtil.validateAdditionalProperties(
+        securityConfig,
+        kafkaProducerConfigs,
+        KafkaOriginGroups.KAFKA.name(),
+        KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
+        issues,
+        context
+    );
+
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, kafkaProducerConfigs);
+
+    if (securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          userKeytab.get(),
-          userPrincipal,
+          securityConfig.userKeytab.get(),
+          securityConfig.userPrincipal,
           kafkaProducerConfigs,
           issues,
           context

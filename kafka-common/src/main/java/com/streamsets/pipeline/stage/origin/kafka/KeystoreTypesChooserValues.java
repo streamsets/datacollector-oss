@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,28 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.ipctokafka;
+package com.streamsets.pipeline.stage.origin.kafka;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  KAFKA("Kafka"),
-  SECURITY("Security"),
-  RPC("RPC"),
-  DATA_FORMAT("Data Format"),
-  TLS("TLS"),
-  ;
-
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+public class KeystoreTypesChooserValues extends BaseEnumChooserValues<KeystoreTypes> {
+  public KeystoreTypesChooserValues() {
+    super(KeystoreTypes.class);
   }
 }

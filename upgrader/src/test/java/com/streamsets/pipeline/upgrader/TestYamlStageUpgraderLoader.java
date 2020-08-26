@@ -255,7 +255,8 @@ public class TestYamlStageUpgraderLoader {
         ImmutableList.of("value", "foo")
     ))));
     configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 6, 7));
-    Assert.assertEquals(7, configs.size());
+    Assert.assertEquals(8, configs.size());
+    Assert.assertEquals("bar", find(configs, "valueFromStringMap").getValue());
     Assert.assertEquals(
         ImmutableList.of(ImmutableMap.of("key", "key", "value", "value")),
         find(configs, "map1").getValue()
