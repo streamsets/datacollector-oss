@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 5,
+    version = 6,
     label = "Kudu",
     description = "Writes data to Kudu",
     icon = "kudu.png",

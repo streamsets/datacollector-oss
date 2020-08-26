@@ -97,6 +97,12 @@
     </dependency>
 
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-apache-kudu-connection</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
@@ -119,7 +125,6 @@
       <version>${powermock.version}</version>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
 
   <build>

@@ -18,6 +18,8 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.destination.kudu.KuduConfigBean;
+import com.streamsets.pipeline.stage.destination.kudu.KuduTargetUpgrader;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -49,5 +51,24 @@ public class TestKuduProcessorUpgrader {
     Config addedConf2 = upgradedConfigs.get(1);
     Assert.assertEquals("conf.numWorkers", addedConf2.getName());
     Assert.assertEquals(0, addedConf2.getValue());
+  }
+
+  @Test
+  public void testUpgradeV3ToV4() {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config(KuduLookupConfig.CONF_PREFIX + "kuduMaster", "master"));
+    configs.add(new Config(KuduLookupConfig.CONF_PREFIX + "numWorkers", 10));
+    configs.add(new Config(KuduLookupConfig.CONF_PREFIX + "operationTimeout", 10000));
+    configs.add(new Config(KuduLookupConfig.CONF_PREFIX + "adminOperationTimeout", 10000));
+    KuduProcessorUpgrader upgrader = new KuduProcessorUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 3, 4, configs);
+    Assert.assertEquals(KuduLookupConfig.CONNECTION_PREFIX + "kuduMaster", upgradedConfigs.get(0).getName());
+    Assert.assertEquals("master", upgradedConfigs.get(0).getValue());
+    Assert.assertEquals(KuduLookupConfig.CONNECTION_PREFIX + "numWorkers", upgradedConfigs.get(1).getName());
+    Assert.assertEquals(10, upgradedConfigs.get(1).getValue());
+    Assert.assertEquals(KuduLookupConfig.CONNECTION_PREFIX + "operationTimeout", upgradedConfigs.get(2).getName());
+    Assert.assertEquals(10000, upgradedConfigs.get(2).getValue());
+    Assert.assertEquals(KuduLookupConfig.CONNECTION_PREFIX + "adminOperationTimeout", upgradedConfigs.get(3).getName());
+    Assert.assertEquals(10000, upgradedConfigs.get(3).getValue());
   }
 }

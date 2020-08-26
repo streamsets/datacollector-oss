@@ -45,6 +45,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.KuduAccessor;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;
@@ -107,11 +108,9 @@ public class KuduTarget extends BaseTarget {
   private static final String CONSISTENCY_MODE = "consistencyMode";
   private static final String TABLE_NAME_TEMPLATE = "tableNameTemplate";
   private static final String FIELD_MAPPING_CONFIGS = "fieldMappingConfigs";
-  private static final String OPERATION_TIMEOUT = "operationTimeout";
-  private static final String ADMIN_OPERATION_TIMEOUT = "adminOperationTimeout";
 
-
-  private final String kuduMaster;
+  @VisibleForTesting
+  protected final KuduAccessor accessor;
   private final String tableNameTemplate;
   private final KuduConfigBean configBean;
   private final List<KuduFieldMappingConfig> fieldMappingConfigs;
@@ -134,7 +133,7 @@ public class KuduTarget extends BaseTarget {
 
   public KuduTarget(KuduConfigBean configBean) {
     this.configBean = configBean;
-    this.kuduMaster = Strings.nullToEmpty(configBean.kuduMaster).trim();
+    this.accessor = new KuduAccessor(configBean.connection);
     this.tableNameTemplate = Strings.nullToEmpty(configBean.tableNameTemplate).trim();
     this.fieldMappingConfigs = configBean.fieldMappingConfigs == null
         ? Collections.<KuduFieldMappingConfig>emptyList()
@@ -185,22 +184,10 @@ public class KuduTarget extends BaseTarget {
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
     validateServerSideConfig(issues);
     accessedTables = new HashSet<>();
-
     return issues;
   }
 
   private void validateServerSideConfig(final List<ConfigIssue> issues) {
-    LOG.info("Validating connection to Kudu cluster " + kuduMaster +
-      " and whether table " + tableNameTemplate + " exists and is enabled");
-    if (kuduMaster.isEmpty()) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.KUDU.name(),
-              KuduConfigBean.CONF_PREFIX + TABLE_NAME_TEMPLATE,
-              Errors.KUDU_02
-          )
-      );
-    }
     if (tableNameTemplate.isEmpty()) {
       issues.add(
           getContext().createConfigIssue(
@@ -211,46 +198,13 @@ public class KuduTarget extends BaseTarget {
       );
     }
 
-    if (configBean.operationTimeout < 0) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ADVANCED.name(),
-              KuduConfigBean.CONF_PREFIX + OPERATION_TIMEOUT,
-              Errors.KUDU_02
-          )
-      );
-    }
-
-    if (configBean.adminOperationTimeout < 0) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ADVANCED.name(),
-              KuduConfigBean.CONF_PREFIX + ADMIN_OPERATION_TIMEOUT,
-              Errors.KUDU_02
-          )
-      );
-    }
+    issues.addAll(accessor.verify(getContext()));
 
     if (issues.isEmpty()) {
-      kuduClient = buildKuduClient();
-      kuduSession = openKuduSession(issues);
-    }
-
-    if (issues.isEmpty()) {
-      try {
-        // Check if SDC can reach the Kudu Master
-        kuduClient.getTablesList();
-      } catch (KuduException ex) {
-        issues.add(
-            getContext().createConfigIssue(
-                Groups.KUDU.name(),
-                KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
-                Errors.KUDU_00,
-                ex.toString(),
-                ex
-            )
-        );
-      }
+      kuduClient = accessor.getKuduClient();
+      kuduSession = accessor.newSession();
+      kuduSession.setMutationBufferSpace(configBean.mutationBufferSpace);
+      kuduSession.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
     }
 
     if (tableNameTemplate.contains(EL_PREFIX)) {
@@ -283,8 +237,7 @@ public class KuduTarget extends BaseTarget {
                   Groups.KUDU.name(),
                   KuduConfigBean.CONF_PREFIX + KUDU_MASTER,
                   Errors.KUDU_00,
-                  ex.toString(),
-                  ex
+                  configBean.connection.kuduMaster
               )
           );
         }
@@ -293,39 +246,6 @@ public class KuduTarget extends BaseTarget {
         createKuduRecordConverter(issues, table);
       }
     }
-  }
-
-  @NotNull
-  @VisibleForTesting
-  KuduClient buildKuduClient() {
-    KuduClient.KuduClientBuilder builder = new KuduClient.KuduClientBuilder(kuduMaster)
-      .defaultOperationTimeoutMs(configBean.operationTimeout)
-      .defaultAdminOperationTimeoutMs(configBean.adminOperationTimeout);
-
-    // Caution: if number of worker thread is not configured, Kudu client may start a massive amount of worker threads.
-    // The formula is "2 x available cores"
-    if (configBean.numWorkers > 0) {
-      builder.workerCount(configBean.numWorkers);
-    }
-    return builder.build();
-  }
-
-  private KuduSession openKuduSession(List<ConfigIssue> issues) {
-    KuduSession session = kuduClient.newSession();
-    try {
-      session.setExternalConsistencyMode(ExternalConsistencyMode.valueOf(configBean.consistencyMode.name()));
-    } catch (IllegalArgumentException ex) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.KUDU.name(),
-              KuduConfigBean.CONF_PREFIX + CONSISTENCY_MODE,
-              Errors.KUDU_02
-          )
-      );
-    }
-    session.setMutationBufferSpace(configBean.mutationBufferSpace);
-    session.setFlushMode(SessionConfiguration.FlushMode.MANUAL_FLUSH);
-    return session;
   }
 
   private KuduRecordConverter createKuduRecordConverter(KuduTable table) {
@@ -560,22 +480,7 @@ public class KuduTarget extends BaseTarget {
 
   @Override
   public void destroy() {
-    if (kuduSession != null) {
-      try {
-        kuduSession.close();
-      } catch (Exception ex) {
-        LOG.warn("Error closing Kudu session: {}", ex.toString(), ex);
-      }
-    }
-    if (kuduClient != null) {
-      try {
-        kuduClient.close();
-      } catch (Exception ex) {
-        LOG.warn("Error closing Kudu connection: {}", ex.toString(), ex);
-      }
-    }
-    kuduClient = null;
-    kuduSession = null;
+    accessor.close();
     kuduTables.invalidateAll();
     super.destroy();
   }
@@ -585,7 +490,7 @@ public class KuduTarget extends BaseTarget {
     LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KUDU.name());
     event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, tableName);
-    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, configBean.kuduMaster);
+    event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, configBean.connection.kuduMaster);
     getContext().publishLineageEvent(event);
 
   }

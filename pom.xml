@@ -281,6 +281,7 @@
     <module>pulsar-protolib</module>
     <module>thycotic-credentialstore-lib</module>
     <module>google-cloud-support</module>
+    <module>apache-kudu-connection</module>
   </modules>
 
   <build>

@@ -135,7 +135,7 @@ public class TestKuduTarget {
         .build()
     ));
 
-    PowerMockito.when(target.buildKuduClient()).thenReturn(client);
+    PowerMockito.when(target.accessor.getKuduClient()).thenReturn(client);
 
     final TargetRunner targetRunner = getTargetRunner(target);
 
@@ -480,7 +480,7 @@ public class TestKuduTarget {
 
     public KuduConfigBean build() {
       KuduConfigBean conf = new KuduConfigBean();
-      conf.kuduMaster = kuduMaster;
+      conf.connection.kuduMaster = kuduMaster;
       conf.tableNameTemplate = tableName;
       conf.defaultOperation = KuduOperationType.INSERT;
       conf.fieldMappingConfigs = mapping;

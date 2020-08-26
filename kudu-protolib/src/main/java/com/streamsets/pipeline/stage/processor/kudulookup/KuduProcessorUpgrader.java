@@ -20,6 +20,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
+import com.streamsets.pipeline.stage.destination.kudu.KuduConfigBean;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class KuduProcessorUpgrader implements StageUpgrader {
@@ -37,6 +40,12 @@ public class KuduProcessorUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
+        // fall through
+      case 3:
+        upgradeV3ToV4(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -51,5 +60,30 @@ public class KuduProcessorUpgrader implements StageUpgrader {
   private static void upgradeV2ToV3(List<Config> configs) {
     configs.add(new Config("conf.adminOperationTimeout", 30000));
     configs.add(new Config("conf.numWorkers", 0)); // use default
+  }
+
+  private static void upgradeV3ToV4(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    configs.forEach(config -> {
+      if ((KuduLookupConfig.CONF_PREFIX + "adminOperationTimeout").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduLookupConfig.CONNECTION_PREFIX + "adminOperationTimeout" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduLookupConfig.CONF_PREFIX + "kuduMaster").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduLookupConfig.CONNECTION_PREFIX +  "kuduMaster" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduLookupConfig.CONF_PREFIX + "numWorkers").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduLookupConfig.CONNECTION_PREFIX + "numWorkers" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduLookupConfig.CONF_PREFIX + "operationTimeout").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduLookupConfig.CONNECTION_PREFIX + "operationTimeout" , config.getValue()));
+        configsToRemove.add(config);
+      }
+    });
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

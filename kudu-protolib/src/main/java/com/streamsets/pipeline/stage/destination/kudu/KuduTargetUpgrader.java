@@ -48,6 +48,12 @@ public class KuduTargetUpgrader implements StageUpgrader {
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (toVersion == 5) {
+          break;
+        }
+        // fall through
+      case 5:
+        upgradeV5ToV6(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
@@ -133,5 +139,30 @@ public class KuduTargetUpgrader implements StageUpgrader {
   private void upgradeV4ToV5(List<Config> configs) {
     configs.add(new Config(KuduConfigBean.CONF_PREFIX + "adminOperationTimeout", 30000));
     configs.add(new Config(KuduConfigBean.CONF_PREFIX + "numWorkers", 0)); // use default
+  }
+
+  private void upgradeV5ToV6(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+    configs.forEach(config -> {
+      if ((KuduConfigBean.CONF_PREFIX + "adminOperationTimeout").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduConfigBean.CONNECTION_PREFIX + "adminOperationTimeout" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduConfigBean.CONF_PREFIX + "kuduMaster").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduConfigBean.CONNECTION_PREFIX +  "kuduMaster" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduConfigBean.CONF_PREFIX + "numWorkers").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduConfigBean.CONNECTION_PREFIX + "numWorkers" , config.getValue()));
+        configsToRemove.add(config);
+      }
+      if ((KuduConfigBean.CONF_PREFIX + "operationTimeout").equals(config.getName())) {
+        configsToAdd.add(new Config(KuduConfigBean.CONNECTION_PREFIX + "operationTimeout" , config.getValue()));
+        configsToRemove.add(config);
+      }
+    });
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

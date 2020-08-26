@@ -51,4 +51,23 @@ public class TestKuduTargetUpgrader {
     Assert.assertEquals("kuduConfigBean.numWorkers", addedConf2.getName());
     Assert.assertEquals(0, addedConf2.getValue());
   }
+
+  @Test
+  public void testUpgradeV5ToV6() {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "kuduMaster", "master"));
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "numWorkers", 10));
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "operationTimeout", 10000));
+    configs.add(new Config(KuduConfigBean.CONF_PREFIX + "adminOperationTimeout", 10000));
+    KuduTargetUpgrader upgrader = new KuduTargetUpgrader();
+    List<Config> upgradedConfigs = upgrader.upgrade("lib", "stage", "stageInst", 5, 6, configs);
+    Assert.assertEquals(KuduConfigBean.CONNECTION_PREFIX + "kuduMaster", upgradedConfigs.get(0).getName());
+    Assert.assertEquals("master", upgradedConfigs.get(0).getValue());
+    Assert.assertEquals(KuduConfigBean.CONNECTION_PREFIX + "numWorkers", upgradedConfigs.get(1).getName());
+    Assert.assertEquals(10, upgradedConfigs.get(1).getValue());
+    Assert.assertEquals(KuduConfigBean.CONNECTION_PREFIX + "operationTimeout", upgradedConfigs.get(2).getName());
+    Assert.assertEquals(10000, upgradedConfigs.get(2).getValue());
+    Assert.assertEquals(KuduConfigBean.CONNECTION_PREFIX + "adminOperationTimeout", upgradedConfigs.get(3).getName());
+    Assert.assertEquals(10000, upgradedConfigs.get(3).getValue());
+  }
 }

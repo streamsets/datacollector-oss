@@ -34,6 +34,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
+import com.streamsets.pipeline.stage.lib.kudu.KuduAccessor;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import com.streamsets.pipeline.stage.lib.kudu.KuduUtils;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
@@ -51,20 +52,18 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 public class KuduLookupProcessor extends SingleLaneRecordProcessor {
-  private static final String KUDU_MASTER = "kuduMaster";
   private static final String KUDU_TABLE = "kuduTableTemplate";
   private static final String KEY_MAPPING_CONFIGS = "keyColumnMapping";
   private static final String OUTPUT_MAPPING_CONFIG = "outputColumnMapping";
   private static final String EL_PREFIX = "${";
-  private static final String OPERATION_TIMEOUT = "operationTimeout";
-  private static final String ADMIN_OPERATION_TIMEOUT = "adminOperationTimeout";
 
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupProcessor.class);
   private KuduLookupConfig conf;
   private ErrorRecordHandler errorRecordHandler;
+
+  private final KuduAccessor accessor;
   private AsyncKuduClient kuduClient;
   private AsyncKuduSession kuduSession;
-  private KuduTable kuduTable;
   private KuduLookupLoader store;
 
   private final List<String> keyColumns = new ArrayList<>();
@@ -77,6 +76,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
 
   public KuduLookupProcessor(KuduLookupConfig conf) {
     this.conf = conf;
+    accessor = new KuduAccessor(conf.connection);
   }
 
   @SuppressWarnings("unchecked")
@@ -109,45 +109,12 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
       columnToField.put(columnName, fieldConfig.field);
     }
 
-    if (conf.operationTimeout < 0) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ADVANCED.name(),
-              KuduLookupConfig.CONF_PREFIX + OPERATION_TIMEOUT,
-              Errors.KUDU_02
-          )
-      );
-    }
-
-    if (conf.adminOperationTimeout < 0) {
-      issues.add(
-          getContext().createConfigIssue(
-              Groups.ADVANCED.name(),
-              KuduLookupConfig.CONF_PREFIX + ADMIN_OPERATION_TIMEOUT,
-              Errors.KUDU_02
-          )
-      );
-    }
-
-    AsyncKuduClient.AsyncKuduClientBuilder builder = new AsyncKuduClient.AsyncKuduClientBuilder(conf.kuduMaster)
-      .defaultOperationTimeoutMs(conf.operationTimeout)
-      .defaultAdminOperationTimeoutMs(conf.adminOperationTimeout);
-
-    // Caution: if number of worker thread is not configured, Kudu client may start a massive amount of worker threads.
-    // The formula is "2 x available cores"
-    if (conf.numWorkers > 0) {
-      builder.workerCount(conf.numWorkers);
-    }
-    kuduClient = builder.build();
-
+    issues.addAll(accessor.verify(getContext()));
     if (issues.isEmpty()) {
-      kuduSession = kuduClient.newSession();
+      kuduClient = accessor.getAsyncKuduClient();
+      kuduSession = accessor.newAsyncSession();
     }
 
-    if (issues.isEmpty()) {
-      // Check if SDC can reach the Kudu Master
-      KuduUtils.checkConnection(kuduClient, getContext(), KUDU_MASTER, issues);
-    }
     if (issues.isEmpty()) {
       if (conf.kuduTableTemplate.contains(EL_PREFIX)) {
         ELUtils.validateExpression(conf.kuduTableTemplate,

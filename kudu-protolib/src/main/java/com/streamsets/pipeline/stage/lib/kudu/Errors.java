@@ -20,7 +20,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  KUDU_00("Error connecting to kudu master '{}': {}"),
+  KUDU_00("Cannot connect to Kudu. Please verify the master(s) are running and accessible at '{}'"),
   KUDU_01("Table '{}' does not exist"),
   KUDU_02("Parameter is not valid"),
   KUDU_03("Errors while interacting with Kudu: {}"),

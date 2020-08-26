@@ -33,33 +33,6 @@ import java.nio.ByteBuffer;
 public class KuduUtils {
 
   /**
-   * Check network connection to the kudu master.
-   * @param kuduClient AsyncKuduClient
-   * @param context
-   * @param KUDU_MASTER
-   * @param issues
-   */
-  public static void checkConnection(AsyncKuduClient kuduClient,
-                                     Context context,
-                                     String KUDU_MASTER,
-                                     final List<Stage.ConfigIssue> issues
-  ){
-    try {
-      kuduClient.getTablesList().join();
-    } catch (Exception ex) {
-      issues.add(
-          context.createConfigIssue(
-              Groups.KUDU.name(),
-              KuduLookupConfig.CONF_PREFIX + KUDU_MASTER ,
-              Errors.KUDU_00,
-              ex.toString(),
-              ex
-          )
-      );
-    }
-  }
-
-  /**
    * Convert from Kudu type to SDC Field type
    * @param kuduType
    * @return Field.Type

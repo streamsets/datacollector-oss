@@ -16,6 +16,9 @@
 package com.streamsets.pipeline.stage.destination.kudu;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
@@ -25,6 +28,7 @@ import com.streamsets.pipeline.lib.operation.ChangeLogFormat;
 import com.streamsets.pipeline.lib.operation.ChangeLogFormatChooserValues;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationActionChooserValues;
+import com.streamsets.pipeline.stage.common.kudu.KuduConnection;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 
 import java.util.List;
@@ -32,18 +36,27 @@ import java.util.List;
 public class KuduConfigBean {
 
   public static final String CONF_PREFIX = "kuduConfigBean.";
-
-  // kudu tab
+  public static final String CONNECTION_PREFIX = CONF_PREFIX + "connection.";
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Kudu Masters",
-      description = "Comma-separated list of \"host:port\" pairs of the masters",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "KUDU"
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = KuduConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  public String kuduMaster;
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
+  public KuduConnection connection = new KuduConnection();
 
   @ConfigDef(
       required = true,
@@ -123,44 +136,6 @@ public class KuduConfigBean {
       group = "ADVANCED"
   )
   public int mutationBufferSpace;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "",
-      label = "Maximum Number of Worker Threads",
-      description = "Set the maximum number of worker threads. If not provided or set to 0, " +
-          "the default (2 * the number of available processors) is used.",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int numWorkers;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "10000",
-      label = "Operation Timeout (milliseconds)",
-      description = "Default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
-      displayPosition = 25,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int operationTimeout = 10000;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "30000",
-      label = "Admin Operation Timeout (milliseconds)",
-      description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
-          "A value of 0 disables the timeout.",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int adminOperationTimeout = 30000;
 
   @ConfigDef(
       required = true,

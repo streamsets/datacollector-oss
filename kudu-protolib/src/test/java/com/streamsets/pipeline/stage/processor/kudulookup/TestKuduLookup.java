@@ -113,7 +113,7 @@ public class TestKuduLookup {
   @NotNull
   private KuduLookupProcessor getKuduLookupConfig(String tableName) {
     KuduLookupConfig conf = new KuduLookupConfig();
-    conf.kuduMaster = KUDU_MASTER;
+    conf.connection.kuduMaster = KUDU_MASTER;
     conf.kuduTableTemplate = tableName;
     conf.keyColumnMapping = new ArrayList<>();
     conf.keyColumnMapping.add(new KuduFieldMappingConfig("/key", "key"));

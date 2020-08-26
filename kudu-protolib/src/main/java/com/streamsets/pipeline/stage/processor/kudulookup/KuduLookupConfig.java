@@ -17,12 +17,15 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
+import com.streamsets.pipeline.stage.common.kudu.KuduConnection;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 
@@ -30,18 +33,28 @@ import java.util.List;
 
 public class KuduLookupConfig {
   public static final String CONF_PREFIX = "conf.";
+  public static final String CONNECTION_PREFIX = CONF_PREFIX + "connection.";
 
-  // kudu tab
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Kudu Masters",
-      description = "Comma-separated list of \"host:port\" pairs of the masters",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "KUDU"
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = KuduConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  public String kuduMaster;
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
+  public KuduConnection connection = new KuduConnection();
 
   @ConfigDef(
       required = true,
@@ -129,45 +142,6 @@ public class KuduLookupConfig {
   public MultipleValuesBehavior multipleValuesBehavior = MultipleValuesBehavior.DEFAULT;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "",
-      label = "Maximum Number of Worker Threads",
-      description = "Set the maximum number of threads to perform lookup processing. If not provided or set to 0, " +
-          "the default number (2 * the number of available processors) is used.",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int numWorkers;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "10000",
-      label = "Operation Timeout (milliseconds)",
-      description = "Sets the default timeout used for user operations (using sessions and scanners). A value of 0 disables the timeout.",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int operationTimeout = 10000;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "30000",
-      label = "Admin Operation Timeout (milliseconds)",
-      description = "Default timeout used for admin operations (openTable, getTableSchema, connectionRetry). " +
-          "A value of 0 disables the timeout.",
-      displayPosition = 35,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public int adminOperationTimeout = 30000;
-
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
@@ -194,7 +168,6 @@ public class KuduLookupConfig {
       group = "LOOKUP"
   )
   public int cacheSize = -1;
-
 
   @ConfigDefBean(groups = "LOOKUP")
   public CacheConfig cache = new CacheConfig();
