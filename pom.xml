@@ -628,7 +628,7 @@
         <module>cdh_6_1-lib</module>
         <module>cdh_6_2-lib</module>
         <module>cdh_6_3-lib</module>
-        <module>cdh_7_1-lib</module>
+        <module>cdp_7_1-lib</module>
         <module>cdh_kafka_1_2-lib</module>
         <module>cdh_kafka_1_3-lib</module>
         <module>cdh_kafka_2_0-lib</module>
