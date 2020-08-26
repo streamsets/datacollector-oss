@@ -15,14 +15,27 @@
     limitations under the License.
 
 -->
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-  <title>Engine Aster Registration Callback</title>
+  <title>StreamSets Registration</title>
 </head>
 <body>
-<h1>Engine Aster Registration Callback</h1>
-<p>
-  DO a POST to /rest/v1/tregistration using the query string parameters send to this page.
-</p>
+  <script>
+    // DO a POST to /rest/v1/tregistration using the query string parameters send to this page.
+    const parameters = new URL(window.location).searchParams;
+    const form = document.createElement('form');
+    form.style.visibility = 'hidden'; // no user interaction is necessary
+    form.method = 'POST'; // forms by default use GET query strings
+    form.action = '/rest/v1/tregistration';
+    for (const [key, value] of parameters) {
+      const input = document.createElement('input');
+      input.name = key;
+      input.value = value;
+      form.appendChild(input); // add key/value pair to form
+    }
+    document.body.appendChild(form); // forms cannot be submitted outside of body
+    form.submit(); // send the payload and navigate
+  </script>
 </body>
 </html>

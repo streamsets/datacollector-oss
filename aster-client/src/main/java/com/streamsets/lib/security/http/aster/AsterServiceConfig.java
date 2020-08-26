@@ -24,7 +24,7 @@ public class AsterServiceConfig {
   public static final String ASTER_URL = "aster.url";
   public static final String ASTER_URL_DEFAULT = "https://streamsets.dev:18632"; //TODO: SDC-15627
 
-  private static final String ASTER_OAUTH_AUTHORIZE_PATH = "/api/security/oauth/authorize";
+  private static final String ASTER_OAUTH_AUTHORIZE_PATH = "/login/oauth/access_token/elogin";
   private static final String ASTER_OAUTH_TOKEN_PATH = "/api/security/oauth/token";
 
   public static final String LOCAL_STATE_EXPIRATION_SECS = "aster.userLoginState.expiration.secs";
