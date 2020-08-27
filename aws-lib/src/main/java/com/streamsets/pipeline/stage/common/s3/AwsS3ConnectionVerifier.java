@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.common.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -30,6 +31,7 @@ import com.streamsets.pipeline.stage.origin.s3.Errors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -81,14 +83,40 @@ public class AwsS3ConnectionVerifier extends ConnectionVerifier {
     try {
       s3Client = S3ConnectionCreator.createS3Client(connection, getContext(), "connection", issues, -1, false);
       if (issues.isEmpty()) {
-        // We don't actually care if the bucket exists or not, we're only interested in if this will throw an Exception
-        s3Client.doesBucketExistV2(BUCKET_EXIST_PREFIX + UUID.randomUUID().toString());
+        checkConnection(s3Client);
       }
     } catch (Exception e) {
       LOG.debug(Errors.S3_SPOOLDIR_20.getMessage(), e.getMessage(), e);
       issues.add(getContext().createConfigIssue("S3", "connection", Errors.S3_SPOOLDIR_20, e.toString()));
     }
     return issues;
+  }
+
+  static void checkConnection(AmazonS3 s3Client) throws InterruptedException {
+    String bucket = BUCKET_EXIST_PREFIX + UUID.randomUUID().toString();
+    // Not exactly sure why (might be some weird JVM DNS caching issue?) but occasionally we'll get an
+    // UnknownHostException on this, even though everything is fine.  In that case, let's try it again a few
+    // times with a delay.  Otherwise (or if that still fails), we'll give up and throw it.
+    for (int attempt = 1; attempt <= 5; attempt++) {
+      try {
+        // We don't actually care if the bucket exists, we're only interested in if this will throw an Exception
+        s3Client.doesBucketExistV2(bucket);
+        break;
+      } catch (SdkClientException e) {
+        if (e.getCause() != null && e.getCause() instanceof UnknownHostException) {
+          if (attempt >= 5) {
+            LOG.debug("UnknownHostException connecting to S3 - exceeded {} of 5 attempts, giving up", attempt);
+            throw e;
+          }
+          int sleepTime = 3 * attempt;
+          LOG.debug("UnknownHostException connecting to S3 - attempt {} of 5, will retry in {} seconds",
+              attempt, sleepTime);
+          Thread.sleep(sleepTime * 1000);
+        } else {
+          throw e;
+        }
+      }
+    }
   }
 
   @Override
