@@ -45,13 +45,22 @@ public class ClassloaderInContextCredentialStore<T extends CredentialStore> impl
     return LambdaUtil.withClassLoader(storeClassLoader,() -> store.init(context));
   }
 
+  private static class ClassloaderCredentialValue implements CredentialValue {
+    private final ClassLoader classLoader;
+    private final LambdaUtil.ExceptionSupplier<String> credentialValue;
+    public ClassloaderCredentialValue(ClassLoader classLoader, LambdaUtil.ExceptionSupplier<String> credentialValue) {
+      this.classLoader = classLoader;
+      this.credentialValue = credentialValue;
+    }
+    @Override
+    public String get() throws StageException {
+      return LambdaUtil.withClassLoader(classLoader, StageException.class, credentialValue);
+    }
+  }
+
   @Override
   public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
-    return LambdaUtil.withClassLoader(
-      storeClassLoader,
-      StageException.class,
-      () -> store.get(group, name, credentialStoreOptions)
-    );
+    return new ClassloaderCredentialValue(storeClassLoader, () -> store.get(group, name, credentialStoreOptions).get());
   }
 
   @Override
