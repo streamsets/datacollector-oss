@@ -537,7 +537,8 @@ public class ConfigInjector {
         if (connectionDef != null) {
           // Figure out the ConnectionId that this ConnectionDef is associated with
           String connectionId = getConnectionId(obj, field, context);
-          if (connectionId != null && !connectionId.equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {
+          if (connectionId != null && context.getConnections() != null
+              && !connectionId.equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {
             // We should have populated this earlier
             ConnectionConfiguration cc = context.getConnections().get(connectionId);
             if (cc != null) {
