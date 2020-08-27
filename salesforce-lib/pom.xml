@@ -26,7 +26,6 @@
     <version>3.19.0-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
-  <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-salesforce-lib</artifactId>
   <version>3.19.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Salesforce Library</description>
@@ -214,6 +213,12 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-util-ajax</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-salesforce-connection</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

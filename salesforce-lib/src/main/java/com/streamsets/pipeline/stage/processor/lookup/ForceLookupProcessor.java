@@ -156,8 +156,8 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor implements F
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceLookupProcessor.ForceSessionRenewer());
 
         partnerConnection = new PartnerConnection(partnerConfig);
-        if (conf.mutualAuth.useMutualAuth) {
-          ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+        if (conf.connection.mutualAuth.useMutualAuth) {
+          ForceUtils.setupMutualAuth(partnerConfig, conf.connection.mutualAuth);
         }
         if (conf.useBulkAPI) {
           bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);

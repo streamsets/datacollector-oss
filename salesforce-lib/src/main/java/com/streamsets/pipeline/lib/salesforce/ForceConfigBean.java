@@ -16,11 +16,13 @@
 package com.streamsets.pipeline.lib.salesforce;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-import com.streamsets.pipeline.lib.salesforce.mutualauth.MutualAuthConfigBean;
+import com.streamsets.pipeline.lib.salesforce.connection.SalesforceConnection;
+import com.streamsets.pipeline.lib.salesforce.connection.mutualauth.MutualAuthConfigBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,148 +32,24 @@ public class ForceConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Username",
-      description = "Salesforce username, in the form user@example.com",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "FORCE"
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = SalesforceConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  public CredentialValue username;
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
-      description = "Salesforce password, or an EL to load the password from a resource, for example, ${runtime:loadResource('forcePassword.txt',true)}",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "FORCE"
-  )
-  public CredentialValue password;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "login.salesforce.com",
-      label = "Auth Endpoint",
-      description = "Salesforce SOAP API Authentication Endpoint: login.salesforce.com for production/Developer Edition, test.salesforce.com for sandboxes",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "FORCE"
-  )
-  public String authEndpoint;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "43.0",
-      label = "API Version",
-      description = "Salesforce API Version",
-      displayPosition = 40,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "FORCE"
-  )
-  public String apiVersion;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Proxy",
-      description = "Connect to Salesforce via a proxy server.",
-      defaultValue = "false",
-      displayPosition = 400,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED"
-  )
-  public boolean useProxy = false;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Proxy Hostname",
-      description = "Proxy Server Hostname",
-      defaultValue = "",
-      displayPosition = 410,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
-      dependsOn = "useProxy",
-      triggeredByValue = "true"
-  )
-  public String proxyHostname = "";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      label = "Proxy Port",
-      description = "Proxy Server Port Number",
-      defaultValue = "",
-      displayPosition = 420,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
-      dependsOn = "useProxy",
-      triggeredByValue = "true"
-  )
-  public int proxyPort = 0;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Proxy Requires Credentials",
-      description = "Enable if you need to supply a username/password to connect via the proxy server.",
-      defaultValue = "false",
-      displayPosition = 430,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
-      dependsOn = "useProxy",
-      triggeredByValue = "true"
-  )
-  public boolean useProxyCredentials = false;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Proxy Realm",
-      description = "Authenticaton realm for the proxy server.",
-      displayPosition = 435,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
+  @ConfigDefBean(
       dependencies = {
-          @Dependency(configName = "useProxy", triggeredByValues = "true"),
-          @Dependency(configName = "useProxyCredentials", triggeredByValues = "true")
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
       }
   )
-  public CredentialValue proxyRealm;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Proxy Username",
-      description = "Username for the proxy server.",
-      displayPosition = 440,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
-      dependencies = {
-          @Dependency(configName = "useProxy", triggeredByValues = "true"),
-          @Dependency(configName = "useProxyCredentials", triggeredByValues = "true")
-      }
-  )
-  public CredentialValue proxyUsername;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Proxy Password",
-      description = "Password for the proxy server, or an EL to load the password from a resource, for example, ${runtime:loadResource('proxyPassword.txt',true)}",
-      displayPosition = 450,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ADVANCED",
-      dependencies = {
-          @Dependency(configName = "useProxy", triggeredByValues = "true"),
-          @Dependency(configName = "useProxyCredentials", triggeredByValues = "true")
-      }
-  )
-  public CredentialValue proxyPassword;
+  public SalesforceConnection connection;
 
   @ConfigDef(
       required = true,
@@ -191,14 +69,11 @@ public class ForceConfigBean {
   )
   public boolean showTrace;
 
-  @ConfigDefBean(groups = "ADVANCED")
-  public MutualAuthConfigBean mutualAuth = new MutualAuthConfigBean();
-
   public List<Stage.ConfigIssue> init(Stage.Context context, String prefix) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
 
-    if (mutualAuth.useMutualAuth) {
-      mutualAuth.init(context, prefix + "mutualAuth.", issues);
+    if (connection.mutualAuth.useMutualAuth) {
+      connection.mutualAuth.init(context, prefix + "mutualAuth.", issues);
     }
 
     return issues;

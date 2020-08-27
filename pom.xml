@@ -148,6 +148,7 @@
     <module>aws-kinesis-connection</module>
     <module>jdbc-connection</module>
     <module>aws-sqs-connection</module>
+    <module>salesforce-connection</module>
 
     <module>root-lib</module>
 
@@ -327,7 +328,7 @@
             <exclude>**/.bowerrc</exclude>
 
             <!-- Rat doesn't properly recognize header in some files -->
-            <exclude>salesforce-lib/src/main/java/com/streamsets/pipeline/lib/salesforce/mutualauth/ClientSSLTransport.java</exclude>
+            <exclude>salesforce-connection/src/main/java/com/streamsets/pipeline/lib/salesforce/connection/mutualauth/ClientSSLTransport.java</exclude>
 
             <!-- Files that do not support comments, cannot have Licence header -->
             <exclude>**/META-INF/services/**</exclude>

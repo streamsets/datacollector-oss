@@ -99,8 +99,8 @@ public class ForceStreamConsumer {
         this.bayeuxChannel = null;
         break;
     }
-    String streamingEndpointPrefix = conf.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
-    this.streamingEndpointPath = streamingEndpointPrefix + conf.apiVersion;
+    String streamingEndpointPrefix = conf.connection.apiVersion.equals("36.0") ? "/cometd/replay/" : "/cometd/";
+    this.streamingEndpointPath = streamingEndpointPrefix + conf.connection.apiVersion;
   }
 
   private boolean isReplayIdExpired(String message) {
@@ -229,7 +229,7 @@ public class ForceStreamConsumer {
     httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
     httpClient.setConnectTimeout(CONNECTION_TIMEOUT);
     httpClient.setIdleTimeout(READ_TIMEOUT);
-    if (conf.useProxy) {
+    if (conf.connection.useProxy) {
       ForceUtils.setProxy(httpClient, conf);
     }
     httpClient.start();

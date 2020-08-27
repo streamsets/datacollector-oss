@@ -455,16 +455,16 @@ public class WaveAnalyticsTarget extends BaseTarget {
     try {
       ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer());
       connection = Connector.newConnection(partnerConfig);
-      LOG.info("Successfully authenticated as {}", conf.username);
-      if (conf.mutualAuth.useMutualAuth) {
-        ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+      LOG.info("Successfully authenticated as {}", conf.connection.username);
+      if (conf.connection.mutualAuth.useMutualAuth) {
+        ForceUtils.setupMutualAuth(partnerConfig, conf.connection.mutualAuth);
       }
 
       String soapEndpoint = connection.getConfig().getServiceEndpoint();
       restEndpoint = soapEndpoint.substring(0, soapEndpoint.indexOf("services/Soap/"));
 
       httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
-      if (conf.useProxy) {
+      if (conf.connection.useProxy) {
         ForceUtils.setProxy(httpClient, conf);
       }
       httpClient.start();

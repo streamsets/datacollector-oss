@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Salesforce",
     description = "Reads data from Salesforce",
     icon = "salesforce.png",

@@ -192,11 +192,11 @@ public class ForceTarget extends BaseTarget {
       try {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
         partnerConnection = Connector.newConnection(partnerConfig);
-        if (conf.mutualAuth.useMutualAuth) {
-          ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+        if (conf.connection.mutualAuth.useMutualAuth) {
+          ForceUtils.setupMutualAuth(partnerConfig, conf.connection.mutualAuth);
         }
         bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
-        LOG.info("Successfully authenticated as {}", conf.username);
+        LOG.info("Successfully authenticated as {}", conf.connection.username);
       } catch (ConnectionException | AsyncApiException | StageException | URISyntaxException ce) {
         LOG.error("Can't connect to SalesForce", ce);
         issues.add(getContext().createConfigIssue(Groups.FORCE.name(),

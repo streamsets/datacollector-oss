@@ -27,7 +27,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.streamsets.pipeline.lib.salesforce.mutualauth;
+package com.streamsets.pipeline.lib.salesforce.connection.mutualauth;
 
 import com.sforce.ws.ConnectorConfig;
 import com.sforce.ws.MessageHandler;

@@ -258,13 +258,13 @@ public class ForceSource extends BaseSource implements ForceStage {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
 
         partnerConnection = new PartnerConnection(partnerConfig);
-        if (conf.mutualAuth.useMutualAuth) {
-          ForceUtils.setupMutualAuth(partnerConfig, conf.mutualAuth);
+        if (conf.connection.mutualAuth.useMutualAuth) {
+          ForceUtils.setupMutualAuth(partnerConfig, conf.connection.mutualAuth);
         }
 
         bulkConnection = ForceUtils.getBulkConnection(partnerConfig, conf);
 
-        LOG.info("Successfully authenticated as {}", conf.username);
+        LOG.info("Successfully authenticated as {}", conf.connection.username);
 
         if (conf.queryExistingData) {
           sobjectType = ForceUtils.getSobjectTypeFromQuery(conf.soqlQuery);

@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.salesforce.Errors;
 import com.streamsets.pipeline.lib.salesforce.ForceRepeatQuery;
 import com.streamsets.pipeline.lib.salesforce.ForceSourceConfigBean;
+import com.streamsets.pipeline.lib.salesforce.connection.SalesforceConnection;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.testing.NetworkUtils;
 import org.junit.After;
@@ -290,10 +291,11 @@ public class TestSalesforceSource {
   private ForceSourceConfigBean getForceSourceConfig() {
     ForceSourceConfigBean conf = new ForceSourceConfigBean();
 
-    conf.username = () -> username;
-    conf.password = () -> password;
-    conf.authEndpoint = authEndpoint;
-    conf.apiVersion = apiVersion;
+    conf.connection = new SalesforceConnection();
+    conf.connection.username = () -> username;
+    conf.connection.password = () -> password;
+    conf.connection.authEndpoint = authEndpoint;
+    conf.connection.apiVersion = apiVersion;
     conf.basicConfig.maxBatchSize = maxBatchSize;
 
     conf.queryExistingData = true;

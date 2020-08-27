@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Salesforce",
     description = "Writes data to Salesforce",
     icon = "salesforce.png",

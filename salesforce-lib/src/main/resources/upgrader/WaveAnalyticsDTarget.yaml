@@ -29,3 +29,62 @@ upgrades:
       - setConfig:
           name: conf.mutualAuth.certificateChain
           value: []
+  - toVersion: 4
+    actions:
+      - renameConfig:
+          oldNamePattern: forceConfig.username
+          newNamePattern: forceConfig.connection.username
+      - renameConfig:
+          oldNamePattern: forceConfig.password
+          newNamePattern: forceConfig.connection.password
+      - renameConfig:
+          oldNamePattern: forceConfig.authEndpoint
+          newNamePattern: forceConfig.connection.authEndpoint
+      - renameConfig:
+          oldNamePattern: forceConfig.apiVersion
+          newNamePattern: forceConfig.connection.apiVersion
+      - renameConfig:
+          oldNamePattern: forceConfig.useProxy
+          newNamePattern: forceConfig.connection.useProxy
+      - renameConfig:
+          oldNamePattern: forceConfig.proxyHostname
+          newNamePattern: forceConfig.connection.proxyHostname
+      - renameConfig:
+          oldNamePattern: forceConfig.proxyPort
+          newNamePattern: forceConfig.connection.proxyPort
+      - renameConfig:
+          oldNamePattern: forceConfig.useProxyCredentials
+          newNamePattern: forceConfig.connection.useProxyCredentials
+      - renameConfig:
+          oldNamePattern: forceConfig.proxyRealm
+          newNamePattern: forceConfig.connection.proxyRealm
+      - renameConfig:
+          oldNamePattern: forceConfig.proxyUsername
+          newNamePattern: forceConfig.connection.proxyUsername
+      - renameConfig:
+          oldNamePattern: forceConfig.proxyPassword
+          newNamePattern: forceConfig.connection.proxyPassword
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.useMutualAuth
+          newNamePattern: forceConfig.connection.mutualAuth.useMutualAuth
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.useRemoteKeyStore
+          newNamePattern: forceConfig.connection.mutualAuth.useRemoteKeyStore
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.keyStoreFilePath
+          newNamePattern: forceConfig.connection.mutualAuth.keyStoreFilePath
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.privateKey
+          newNamePattern: forceConfig.connection.mutualAuth.privateKey
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.certificateChain
+          newNamePattern: forceConfig.connection.mutualAuth.certificateChain
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.keyStoreType
+          newNamePattern: forceConfig.connection.mutualAuth.keyStoreType
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.keyStorePassword
+          newNamePattern: forceConfig.connection.mutualAuth.keyStorePassword
+      - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.underlyingConfig
+          newNamePattern: forceConfig.connection.mutualAuth.underlyingConfig

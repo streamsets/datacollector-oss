@@ -84,7 +84,7 @@ public abstract class EventRecordCreator extends ForceRecordCreatorImpl {
 
     try {
       httpClient = new HttpClient(ForceUtils.makeSslContextFactory(conf));
-      if (conf.useProxy) {
+      if (conf.connection.useProxy) {
         ForceUtils.setProxy(httpClient, conf);
       }
       httpClient.start();

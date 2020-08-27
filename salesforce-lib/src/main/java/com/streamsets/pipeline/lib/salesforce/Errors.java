@@ -68,6 +68,7 @@ public enum Errors implements ErrorCode {
   FORCE_44("Can't find Id field for field name: {}"),
   FORCE_45("Can't retrieve record with id: {}"),
   FORCE_46("Can't get schema with Id: {}"),
+  FORCE_47("Failed to log in to Salesforce with provided credentials.")
   ;
   private final String msg;
 
