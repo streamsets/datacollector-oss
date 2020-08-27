@@ -91,7 +91,6 @@
          require guava on at least version 20. Since we mostly use 18 across our project
          we can't upgrade swagger before we upgrade guava -->
     <swagger.version>1.5.13</swagger.version>
-    <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
   <dependencyManagement>
@@ -730,11 +729,6 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-csv</artifactId>
         <version>${commons-csv.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${commons-lang3.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.mail</groupId>

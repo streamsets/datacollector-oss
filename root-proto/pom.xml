@@ -87,6 +87,8 @@
     <gcp-ps.version>1.93.0</gcp-ps.version>
     <gcp-bigquery.version>1.93.0</gcp-bigquery.version>
     <google.cloud.version>4.3.0</google.cloud.version>
+
+    <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
 
   <!-- API dependencies ONLY -->
@@ -318,6 +320,11 @@
         <groupId>io.netty</groupId>
         <artifactId>netty-all</artifactId>
         <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
       </dependency>
 
       <!--

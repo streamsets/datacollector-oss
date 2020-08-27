@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.config.upgrade;
 
 import com.streamsets.pipeline.api.Config;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,6 +63,37 @@ public abstract class UpgraderUtils {
         continue;
       }
       nameMap.put(name, prefix + name);
+    }
+    return moveAllTo(configs, nameMap);
+  }
+
+  /**
+   * Inserts insertStr into each config name, when its prefix matches the afterPrefix argument, and the remaining
+   * portion appears in the suffixes set. The use case is to move properties that are direct children of a config bean
+   * to some new sub-bean.
+   *
+   * @param configs the configs to operate on
+   * @param afterPrefix the prefix of properties to be modified, after which the insertStr will be inserted
+   * @param suffixes the suffixes of properties to be modified, before which the insertStr will be inserted
+   * @param insertStr the string to insert in between the prefix and matching suffix
+   * @return the modified configs
+   */
+  public static int insertAfterPrefix(
+      List<Config> configs,
+      String afterPrefix,
+      Set<String> suffixes,
+      String insertStr
+  ) {
+    Map<String, String> nameMap = new HashMap<>();
+    for (Config config : configs) {
+      final String name = config.getName();
+      if (StringUtils.startsWith(name, afterPrefix)) {
+        final int index = afterPrefix.length();
+        final String remaining = StringUtils.substring(name, index);
+        if (suffixes.contains(remaining)) {
+          nameMap.put(name, afterPrefix + insertStr + remaining);
+        }
+      }
     }
     return moveAllTo(configs, nameMap);
   }

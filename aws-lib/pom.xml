@@ -33,7 +33,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <commons-lang3.version>3.4</commons-lang3.version>
     <commons-math3.version>3.5</commons-math3.version>
     <sqs.version>1.0.4</sqs.version>
     <awssdk.version>1.11.813</awssdk.version>
@@ -117,7 +116,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>${commons-lang3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
