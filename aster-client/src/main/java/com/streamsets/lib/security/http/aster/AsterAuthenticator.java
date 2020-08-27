@@ -15,6 +15,7 @@
  */
 package com.streamsets.lib.security.http.aster;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.lib.security.http.SSOAuthenticationUser;
 import com.streamsets.lib.security.http.SSOPrincipal;
@@ -35,8 +36,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.time.Instant;
 
+/**
+ * Jetty {@link Authenticator} implementation for Aster SSO for engines
+ */
 public class AsterAuthenticator implements Authenticator {
   private static final Logger LOG = LoggerFactory.getLogger(AsterAuthenticator.class);
 
@@ -46,6 +51,9 @@ public class AsterAuthenticator implements Authenticator {
 
   private final AsterService service;
 
+  /**
+   * Constructor.
+   */
   public AsterAuthenticator(AsterService service) {
     this.service = service;
   }
@@ -63,18 +71,26 @@ public class AsterAuthenticator implements Authenticator {
    */
   @Override
   public void setConfiguration(AuthConfiguration authConfiguration) {
-    //NoOp
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public String getAuthMethod() {
     return AUTHENTICATION_METHOD;
   }
 
+  /**
+   * No-Op.
+   */
   @Override
   public void prepareRequest(ServletRequest servletRequest) {
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public boolean secureResponse(
       ServletRequest request, ServletResponse response, boolean mandatory, Authentication.User validatedUser
@@ -82,11 +98,18 @@ public class AsterAuthenticator implements Authenticator {
     return true;
   }
 
+  /**
+   * Returns if the engine is register with Aster already.
+   */
+  @VisibleForTesting
   boolean isEngineRegistered() {
     return service.isEngineRegistered();
   }
 
-  String getBaseUrlForRedirection(HttpServletRequest httpReq) throws ServerAuthException {
+  /**
+   * Returns the engine base URL, {@code <scheme>://<host>:<port>}, from the request to create full URLs for redirect.
+   */
+  String getRequestBaseUrl(HttpServletRequest httpReq) throws ServerAuthException {
     try {
       String baseUrl;
       String url = new URL(httpReq.getRequestURL().toString()).toExternalForm();
@@ -101,6 +124,11 @@ public class AsterAuthenticator implements Authenticator {
     }
   }
 
+  /**
+   * Returns the full redirect URL for the current request.
+   * If it is not a GET request, it returns the the engine base URL.
+   */
+  @VisibleForTesting
   String getUrlForRedirection(HttpServletRequest httpReq) throws ServerAuthException {
     String redirectionUrl;
     if (httpReq.getMethod().equals(HTTP_GET)) {
@@ -108,15 +136,24 @@ public class AsterAuthenticator implements Authenticator {
       queryString = (queryString == null) ? "" : "?" + queryString;
       redirectionUrl = httpReq.getRequestURL().toString() + queryString;
     } else {
-      redirectionUrl = getBaseUrlForRedirection(httpReq);
+      redirectionUrl = getRequestBaseUrl(httpReq);
     }
     return redirectionUrl;
   }
 
+  /**
+   * Adds a query string parameter the given URL, adding {@code ?} or {@code &} depending if there is not a
+   * query string the given URL. The value is URL encoded.
+   */
+  @VisibleForTesting
   String addParameterToQueryString(String redirectUrl, String param, String value) {
-    return redirectUrl + ((redirectUrl.contains("?")) ? "&" : "?") + param + "=" + value;
+    return redirectUrl + ((redirectUrl.contains("?")) ? "&" : "?") + param + "=" + URLEncoder.encode(value);
   }
 
+  /**
+   * Triggers a redirect as response.
+   */
+  @VisibleForTesting
   Authentication redirect(HttpServletRequest httpReq, HttpServletResponse httpRes, String redirectUrl) throws
       ServerAuthException {
     try {
@@ -127,33 +164,55 @@ public class AsterAuthenticator implements Authenticator {
     }
   }
 
-  boolean isEngineRegistrationOrLoginPageWithInvalidState(HttpServletRequest httpReq) {
-    boolean itIsInvalid = false;
+  /**
+   * Returns if the request is for a registration or login page.
+   */
+  @VisibleForTesting
+  boolean isEngineRegistrationOrLoginPage(HttpServletRequest httpReq) {
     String requestUri = httpReq.getRequestURI();
-    if (
-        service.getConfig().getUserLoginPath().equals(requestUri) ||
-        service.getConfig().getEngineRegistrationPath().equals(requestUri)
-    ) {
-      String lState = httpReq.getParameter(AsterService.LSTATE_QS_PARAM);
-      itIsInvalid = lState == null || !service.isValidLocalState(lState);
-    }
-    return itIsInvalid;
+    return service.getConfig().getUserLoginPath().equals(requestUri) ||
+        service.getConfig().getEngineRegistrationPath().equals(requestUri);
   }
 
+  /**
+   * Returns if the request is using a valid local state (still cached).
+   */
+  @VisibleForTesting
+  boolean isValidState(HttpServletRequest httpReq) {
+    String lState = httpReq.getParameter(AsterService.LSTATE_QS_PARAM);
+    return lState != null && service.isValidLocalState(lState);
+  }
+
+  /**
+   * Returns if the request is for handling engine registration.
+   */
+  @VisibleForTesting
   boolean isHandlingEngineRegistration(HttpServletRequest httpReq, HttpServletResponse httpRes) {
     String requestUri = httpReq.getRequestURI();
     return service.getConfig().getRegistrationUrlRestPath().equals(requestUri);
   }
 
+  /**
+   * Returns if the request is for handling user login.
+   */
+  @VisibleForTesting
   boolean isHandlingUserLogin(HttpServletRequest httpReq, HttpServletResponse httpRes) {
     String requestUri = httpReq.getRequestURI();
     return service.getConfig().getUserLoginRestPath().equals(requestUri);
   }
 
-  boolean shouldRetry(HttpServletRequest httpReq) {
+  /**
+   * Returns if the failed request should be retried (to avoid redirection loops).
+   */
+  @VisibleForTesting
+  boolean shouldRetryFailedRequest(HttpServletRequest httpReq) {
     return httpReq.getMethod().equals(HTTP_GET) && !"false".equals(httpReq.getParameter(T_RETRY_QS_PARAM));
   }
 
+  /**
+   * Creates an engine principal using the Aster user information received after a successful Aster SSO login.
+   */
+  @VisibleForTesting
   SSOPrincipal createPrincipal(AsterUser AsterUser) {
     SSOPrincipalJson principal = new SSOPrincipalJson();
     principal.setTokenStr("aster-token"); //we don't need/have a token
@@ -163,21 +222,33 @@ public class AsterAuthenticator implements Authenticator {
     principal.getRoles().addAll(AsterUser.getRoles());
     principal.getGroups().addAll(AsterUser.getGroups());
     int expiresSecs = service.getConfig().getEngineConfig().get("http.session.max.inactive.interval", 86400);
-    principal.setExpires(Instant.now().plusSeconds(expiresSecs).getEpochSecond());
+    principal.setExpires(Instant.now().plusSeconds(expiresSecs).toEpochMilli());
     principal.lock();
     return principal;
   }
 
+  /**
+   * Returns the Jetty {@link Authentication} stored in the HTTP session.
+   */
+  @VisibleForTesting
   Authentication getSessionAuthentication(HttpServletRequest httpReq) {
     HttpSession session = httpReq.getSession(false);
     return (session == null) ? null : (Authentication) session.getAttribute(SessionAuthentication.__J_AUTHENTICATED);
   }
 
+  /**
+   * Creates and stores a Jetty {@link Authentication} in the HTTP session, making the session authenticated.
+   */
+  @VisibleForTesting
   void authenticateSession(HttpServletRequest httpReq, AsterUser user) {
     HttpSession session = httpReq.getSession(true);
     session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, new SSOAuthenticationUser(createPrincipal(user)));
   }
 
+  /**
+   * Terminates the HTTP session, un-authorizing the user.
+   */
+  @VisibleForTesting
   void destroySession(HttpServletRequest httpReq) {
     HttpSession session = httpReq.getSession(false);
     if (session != null) {
@@ -185,11 +256,20 @@ public class AsterAuthenticator implements Authenticator {
     }
   }
 
+  /**
+   * Returns if the current request is a logout request.
+   * @param httpReq
+   * @return
+   */
+  @VisibleForTesting
   boolean isLogoutRequest( HttpServletRequest httpReq) {
     String logoutPath = httpReq.getContextPath() + "/rest/v1/authentication/logout";
     return httpReq.getMethod().equals("POST") && httpReq.getRequestURI().equals(logoutPath);
   }
 
+  /**
+   * {@inheritDoc}
+   */
   @Override
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory) throws
       ServerAuthException {
@@ -222,7 +302,7 @@ public class AsterAuthenticator implements Authenticator {
     Authentication authentication;
 
     try {
-      mandatory |= isEngineRegistrationOrLoginPageWithInvalidState(httpReq);
+      mandatory |= isEngineRegistrationOrLoginPage(httpReq) && !isValidState(httpReq);
       if (!mandatory) {
         authentication = Authentication.NOT_CHECKED;
       } else {
@@ -247,10 +327,10 @@ public class AsterAuthenticator implements Authenticator {
             LOG.trace("User is not authenticated");
             if (isHandlingUserLogin(httpReq, httpRes)) {
               LOG.trace("Handling user login");
-              AsterUser user = service.handleUserLogin(getBaseUrlForRedirection(httpReq), httpReq, httpRes);
-              if (user == null) {
+              AsterUser user = service.handleUserLogin(getRequestBaseUrl(httpReq), httpReq, httpRes);
+              if (user == null) { //GET initiate
                 authentication = Authentication.SEND_SUCCESS;
-              } else {
+              } else { //POST complete
                 authenticateSession(httpReq, user);
                 authentication = redirect(httpReq, httpRes, user.getPreLoginUrl());
               }
@@ -271,10 +351,10 @@ public class AsterAuthenticator implements Authenticator {
           LOG.trace("Engine is not registered");
           if (isHandlingEngineRegistration(httpReq, httpRes)) {
             LOG.trace("Handling engine registration");
-            String redirUrl = service.handleEngineRegistration(getBaseUrlForRedirection(httpReq), httpReq, httpRes);
-            if (redirUrl == null) {
+            String redirUrl = service.handleEngineRegistration(getRequestBaseUrl(httpReq), httpReq, httpRes);
+            if (redirUrl == null) { //GET initiate
               authentication = Authentication.SEND_SUCCESS;
-            } else {
+            } else { //POST complete
               authentication = redirect(httpReq, httpRes, redirUrl);
             }
           } else {
@@ -294,7 +374,7 @@ public class AsterAuthenticator implements Authenticator {
     } catch (AsterException|AsterAuthException ex) {
       LOG.warn("Error during request authentication: {}", ex, ex);
       destroySession(httpReq);
-      if (shouldRetry(httpReq)) {
+      if (shouldRetryFailedRequest(httpReq)) {
         String redirUrl = getUrlForRedirection(httpReq);
         LOG.debug("Retry authentication redirect '{}'", redirUrl);
         authentication = redirect(httpReq, httpRes, addParameterToQueryString(redirUrl, T_RETRY_QS_PARAM, "false"));
