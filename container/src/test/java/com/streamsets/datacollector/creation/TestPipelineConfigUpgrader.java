@@ -40,6 +40,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.streamsets.datacollector.creation.PipelineConfigUpgrader.SDC_OLD_EMR_CONFIG;
+import static com.streamsets.datacollector.creation.PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG;
+
 public class TestPipelineConfigUpgrader {
 
   private StageUpgrader upgrader;
@@ -225,7 +228,7 @@ public class TestPipelineConfigUpgrader {
 
     List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
 
-    Assert.assertEquals("transformerEMRConfig.serviceAccessSecurityGroup", upgrade.get(0).getName());
+    Assert.assertEquals(TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup", upgrade.get(0).getName());
     Assert.assertNull(upgrade.get(0).getValue());
   }
 
@@ -239,7 +242,7 @@ public class TestPipelineConfigUpgrader {
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
     List<Config> upgraded = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
 
-    String regex = to == 10 ? "amazonEMRConfig." : "transformerEMRConfig.";
+    String regex = (to == 10 ? SDC_OLD_EMR_CONFIG : TRANSFORMER_EMR_CONFIG) + ".";
     List<String> emrConfigList = upgraded.stream()
                                    .map(conf -> conf.getName().replaceAll(regex,""))
                                    .collect(Collectors.toList());
@@ -290,9 +293,9 @@ public class TestPipelineConfigUpgrader {
     List<Config> upgraded = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
 
     Assert.assertEquals(2, upgraded.size());
-    Assert.assertEquals("transformerEMRConfig.encryption", upgraded.get(0).getName());
+    Assert.assertEquals(TRANSFORMER_EMR_CONFIG + ".encryption", upgraded.get(0).getName());
     Assert.assertEquals(SseOption.NONE, upgraded.get(0).getValue());
-    Assert.assertEquals("transformerEMRConfig.kmsKeyId", upgraded.get(1).getName());
+    Assert.assertEquals(TRANSFORMER_EMR_CONFIG + ".kmsKeyId", upgraded.get(1).getName());
     Assert.assertNull(upgraded.get(1).getValue());
   }
 
@@ -359,19 +362,83 @@ public class TestPipelineConfigUpgrader {
     static final String ec2SubnetId = "subnet-0bb1c79de3EXAMPLE";
     static final String masterSecurityGroup = "sg-1";
     static final String slaveSecurityGroup = "sg-2";
+    static final String serviceAccessSecurityGroup = "sg-3";
     static final int instanceCount = 2;
     static final AwsInstanceType masterInstanceType = AwsInstanceType.R4_2XLARGE;
     static final String masterInstanceTypeCustom = "x4.16xhuge";
     static final AwsInstanceType slaveInstanceType = AwsInstanceType.C4_8XLARGE;
     static final String slaveInstanceTypeCustom = "x8.32xwow";
+    static final String kmsKeyId = "arn:aws:kms:region:acct-id:key/blah";
+    static final SseOption encryption = SseOption.KMS;
   }
 
   private static void assertEMRConfigToConnectionMoves() {
     // test upgrade of old EMR configs to new connection
     final List<Config> configs = new LinkedList<>();
-    final String oldConfigField = "amazonEMRConfig";
-    final String connectionField = "sdcEmrConnection";
 
+    // add formerly SDC-specific configs that will be moved to the connection
+    addCommonOldEMRConfigs(configs, PipelineConfigUpgrader.SDC_OLD_EMR_CONFIG);
+    // add the SDC-specific, non-connection based property that would have already existed at this point
+    configs.add(new Config(
+        PipelineConfigUpgrader.SDC_OLD_EMR_CONFIG + ".enableEMRDebugging",
+        ExpectedVals.enableEMRDebugging
+    ));
+    // add formerly Transformer-specific configs that will be moved to the connection
+    addCommonOldEMRConfigs(configs, PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG);
+    // add the Transformer-specific, non-connection based properties that would have already existed at this point
+    configs.add(new Config(
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
+        ExpectedVals.serviceAccessSecurityGroup
+    ));
+    configs.add(new Config(
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".kmsKeyId",
+        ExpectedVals.kmsKeyId
+    ));
+    configs.add(new Config(
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".encryption",
+        ExpectedVals.encryption
+    ));
+
+    final UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
+
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 20, 21);
+
+    final List<Config> upgraded = pipelineConfigUpgrader.upgrade(configs, context);
+
+    // SDC-specific, connection fields should have been moved to their new homes
+    assertCommonEMRConfigsMoved(
+        watcher,
+        configs,
+        PipelineConfigUpgrader.SDC_OLD_EMR_CONFIG,
+        PipelineConfigUpgrader.SDC_NEW_EMR_CONNECTION
+    );
+
+    // SDC-specific EMR field that should have been moved to the top level pipeline config
+    watcher.assertAllMoved(
+        configs,
+        PipelineConfigUpgrader.SDC_OLD_EMR_CONFIG + "." + PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
+        PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD
+    );
+
+    // Transformer-specific, connection fields should have been moved to their new homes
+    assertCommonEMRConfigsMoved(
+        watcher,
+        configs,
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG,
+        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION
+    );
+
+    // Transformer-specific, non connection fields should have stayed put
+    UpgraderTestUtils.assertAllExist(
+        upgraded,
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".kmsKeyId",
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".encryption"
+    );
+  }
+
+  private static void addCommonOldEMRConfigs(List<Config> configs, String oldConfigField) {
     configs.add(new Config(oldConfigField + ".userRegion", ExpectedVals.userRegion));
     configs.add(new Config(oldConfigField + ".userRegionCustom", ExpectedVals.userRegionCustom));
     configs.add(new Config(oldConfigField + ".accessKey", ExpectedVals.accessKey));
@@ -383,10 +450,6 @@ public class TestPipelineConfigUpgrader {
     configs.add(new Config(oldConfigField + ".terminateCluster", ExpectedVals.terminateCluster));
     configs.add(new Config(oldConfigField + ".loggingEnabled", ExpectedVals.loggingEnabled));
     configs.add(new Config(oldConfigField + ".s3LogUri", ExpectedVals.s3LogUri));
-    configs.add(new Config(
-        oldConfigField + "." + PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
-        ExpectedVals.enableEMRDebugging
-    ));
     configs.add(new Config(oldConfigField + ".serviceRole", ExpectedVals.serviceRole));
     configs.add(new Config(oldConfigField + ".jobFlowRole", ExpectedVals.jobFlowRole));
     configs.add(new Config(oldConfigField + ".visibleToAllUsers", ExpectedVals.visibleToAllUsers));
@@ -398,45 +461,39 @@ public class TestPipelineConfigUpgrader {
     configs.add(new Config(oldConfigField + ".masterInstanceTypeCustom", ExpectedVals.masterInstanceTypeCustom));
     configs.add(new Config(oldConfigField + ".slaveInstanceType", ExpectedVals.slaveInstanceType));
     configs.add(new Config(oldConfigField + ".slaveInstanceTypeCustom", ExpectedVals.slaveInstanceTypeCustom));
+  }
 
-    final UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
-
-    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
-    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 20, 21);
-
-    final List<Config> upgraded = pipelineConfigUpgrader.upgrade(configs, context);
-
+  private static void assertCommonEMRConfigsMoved(
+      UpgraderTestUtils.UpgradeMoveWatcher watcher,
+      List<Config> configs,
+      String oldConfigField,
+      String newConnectionField
+  ) {
     watcher.assertAllMoved(
-        upgraded,
-        oldConfigField + ".userRegion", connectionField + ".region",
-        oldConfigField + ".userRegionCustom", connectionField + ".customRegion",
-        oldConfigField + ".accessKey", connectionField + ".awsConfig.awsAccessKeyId",
-        oldConfigField + ".secretKey", connectionField + ".awsConfig.awsSecretAccessKey",
-        oldConfigField + ".s3StagingUri", connectionField + ".s3StagingUri",
-        oldConfigField + ".provisionNewCluster", connectionField + ".provisionNewCluster",
-        oldConfigField + ".clusterId", connectionField + ".clusterId",
-        oldConfigField + ".clusterPrefix", connectionField + ".clusterPrefix",
-        oldConfigField + ".terminateCluster", connectionField + ".terminateCluster",
-        oldConfigField + ".loggingEnabled", connectionField + ".loggingEnabled",
-        oldConfigField + ".s3LogUri", connectionField + ".s3LogUri",
-        oldConfigField + ".s3StagingUri", connectionField + ".s3StagingUri",
-        oldConfigField + ".serviceRole", connectionField + ".serviceRole",
-        oldConfigField + ".jobFlowRole", connectionField + ".jobFlowRole",
-        oldConfigField + ".visibleToAllUsers", connectionField + ".visibleToAllUsers",
-        oldConfigField + ".ec2SubnetId", connectionField + ".ec2SubnetId",
-        oldConfigField + ".masterSecurityGroup", connectionField + ".masterSecurityGroup",
-        oldConfigField + ".slaveSecurityGroup", connectionField + ".slaveSecurityGroup",
-        oldConfigField + ".instanceCount", connectionField + ".instanceCount",
-        oldConfigField + ".masterInstanceType", connectionField + ".masterInstanceType",
-        oldConfigField + ".masterInstanceTypeCustom", connectionField + ".masterInstanceTypeCustom",
-        oldConfigField + ".slaveInstanceType", connectionField + ".slaveInstanceType",
-        oldConfigField + ".slaveInstanceTypeCustom", connectionField + ".slaveInstanceTypeCustom"
-    );
-
-    watcher.assertAllMoved(
-        upgraded,
-        oldConfigField + "." + PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
-        PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD
+        configs,
+        oldConfigField + ".userRegion", newConnectionField + ".region",
+        oldConfigField + ".userRegionCustom", newConnectionField + ".customRegion",
+        oldConfigField + ".accessKey", newConnectionField + ".awsConfig.awsAccessKeyId",
+        oldConfigField + ".secretKey", newConnectionField + ".awsConfig.awsSecretAccessKey",
+        oldConfigField + ".s3StagingUri", newConnectionField + ".s3StagingUri",
+        oldConfigField + ".provisionNewCluster", newConnectionField + ".provisionNewCluster",
+        oldConfigField + ".clusterId", newConnectionField + ".clusterId",
+        oldConfigField + ".clusterPrefix", newConnectionField + ".clusterPrefix",
+        oldConfigField + ".terminateCluster", newConnectionField + ".terminateCluster",
+        oldConfigField + ".loggingEnabled", newConnectionField + ".loggingEnabled",
+        oldConfigField + ".s3LogUri", newConnectionField + ".s3LogUri",
+        oldConfigField + ".s3StagingUri", newConnectionField + ".s3StagingUri",
+        oldConfigField + ".serviceRole", newConnectionField + ".serviceRole",
+        oldConfigField + ".jobFlowRole", newConnectionField + ".jobFlowRole",
+        oldConfigField + ".visibleToAllUsers", newConnectionField + ".visibleToAllUsers",
+        oldConfigField + ".ec2SubnetId", newConnectionField + ".ec2SubnetId",
+        oldConfigField + ".masterSecurityGroup", newConnectionField + ".masterSecurityGroup",
+        oldConfigField + ".slaveSecurityGroup", newConnectionField + ".slaveSecurityGroup",
+        oldConfigField + ".instanceCount", newConnectionField + ".instanceCount",
+        oldConfigField + ".masterInstanceType", newConnectionField + ".masterInstanceType",
+        oldConfigField + ".masterInstanceTypeCustom", newConnectionField + ".masterInstanceTypeCustom",
+        oldConfigField + ".slaveInstanceType", newConnectionField + ".slaveInstanceType",
+        oldConfigField + ".slaveInstanceTypeCustom", newConnectionField + ".slaveInstanceTypeCustom"
     );
   }
 

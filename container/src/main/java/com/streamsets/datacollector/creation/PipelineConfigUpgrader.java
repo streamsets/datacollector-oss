@@ -46,6 +46,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
 
   public static final String ENABLE_EMR_DEBUGGING_CONFIG_FIELD = "enableEMRDebugging";
 
+  public static final String SDC_OLD_EMR_CONFIG = "amazonEMRConfig";
+  public static final String SDC_NEW_EMR_CONNECTION = "sdcEmrConnection";
+  // Transformer-specific EMR configuration bean
+  public static final String TRANSFORMER_EMR_CONFIG = "transformerEMRConfig";
+  public static final String TRANSFORMER_NEW_EMR_CONNECTION = "transformerEmrConnection";
+
   @Override
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     final int to = context.getToVersion();
@@ -294,7 +300,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void addAmazonEmrConfigs(List<Config> configs) {
-    String amazonEmrConfigPrefix = "amazonEMRConfig.";
+    String amazonEmrConfigPrefix = SDC_OLD_EMR_CONFIG + ".";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
     configs.add(new Config(amazonEmrConfigPrefix + PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD, true));
     configs.add(new Config("logLevel", "INFO"));
@@ -302,9 +308,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
 
   private final static Set<String> PROPERTIES_TO_CHECK_FOR_CUSTOM =
       ImmutableSet.of(
-          "amazonEMRConfig." + EMRClusterConnection.USER_REGION,
-          "amazonEMRConfig." + EMRClusterConnection.MASTER_INSTANCE_TYPE,
-          "amazonEMRConfig." + EMRClusterConnection.SLAVE_INSTANCE_TYPE
+          SDC_OLD_EMR_CONFIG + "." + EMRClusterConnection.USER_REGION,
+          SDC_OLD_EMR_CONFIG + "." + EMRClusterConnection.MASTER_INSTANCE_TYPE,
+          SDC_OLD_EMR_CONFIG + "." + EMRClusterConnection.SLAVE_INSTANCE_TYPE
       );
 
   private void upgradeV10ToV11(List<Config> configs) {
@@ -372,14 +378,14 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void upgradeV16ToV17(List<Config> configs) {
-    String amazonEmrConfigPrefix = "transformerEMRConfig.";
+    String amazonEmrConfigPrefix = TRANSFORMER_EMR_CONFIG + ".";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
     configs.add(new Config(amazonEmrConfigPrefix + "useIAMRoles", false));
     configs.add(new Config("clusterConfig.callbackUrl", null));
   }
 
   private void upgradeV17ToV18(List<Config> configs) {
-    configs.add(new Config("transformerEMRConfig.serviceAccessSecurityGroup", null));
+    configs.add(new Config(TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup", null));
   }
 
   private void upgradeV18ToV19(List<Config> configs) {
@@ -447,22 +453,24 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV19ToV20(List<Config> configs) {
-    String prefix = "transformerEMRConfig.";
+    String prefix = TRANSFORMER_EMR_CONFIG + ".";
     configs.add(new Config(prefix + "encryption", SseOption.NONE));
     configs.add(new Config(prefix + "kmsKeyId", null));
   }
 
   private void upgradeV20ToV21(List<Config> configs) {
+    // convert the existing AmazonEMRConfig beans (for both SDC and Transformer) to the new connection objects
     final Set<String> emrClusterFields = new HashSet<>();
 
     UpgraderUtils.insertAfterPrefix(configs, "", emrClusterFields, "");
-    moveCommonEMRConfigsToConnection(configs, "amazonEMRConfig", "sdcEmrConnection");
+    moveCommonEMRConfigsToConnection(configs, SDC_OLD_EMR_CONFIG, SDC_NEW_EMR_CONNECTION);
     // this one is moving up to the top level pipeline config
     UpgraderUtils.moveAllTo(
         configs,
-        "amazonEMRConfig." + ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
-        ENABLE_EMR_DEBUGGING_CONFIG_FIELD
-    );
+        SDC_OLD_EMR_CONFIG + "." + ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
+        ENABLE_EMR_DEBUGGING_CONFIG_FIELD);
+    // all but encryption, kmsKeyId, and serviceAccessSecurityGroup are moved to the connection
+    moveCommonEMRConfigsToConnection(configs, TRANSFORMER_EMR_CONFIG, TRANSFORMER_NEW_EMR_CONNECTION);
   }
 
   private static void moveCommonEMRConfigsToConnection(

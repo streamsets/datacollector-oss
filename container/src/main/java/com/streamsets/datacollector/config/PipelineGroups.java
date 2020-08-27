@@ -29,6 +29,7 @@ public enum PipelineGroups implements Label {
   ;
 
   public static final String EMR_GROUP_NAME = "EMR";
+  public static final String CLUSTER_GROUP_NAME = "CLUSTER";
 
   private final String label;
 

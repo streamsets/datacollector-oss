@@ -48,6 +48,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.googlecloud.DataProcCredentialsConfig;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
+import com.streamsets.transformer.config.AmazonEMRConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,8 +62,6 @@ import java.util.Map;
     version = PipelineConfigBean.VERSION,
     label = "Pipeline",
     upgrader = PipelineConfigUpgrader.class,
-    // TODO: rip this out and back into the Java upgrader
-    // merge all the upgrade logic into the v20 method
     upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
 )
@@ -377,7 +376,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = "0",
       min = 0,
       displayPosition = 100,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_YARN_STREAMING"}
@@ -390,7 +389,7 @@ public class PipelineConfigBean implements Stage {
       label = "Worker Memory (MB)",
       defaultValue = "2048",
       displayPosition = 150,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
@@ -405,7 +404,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = "-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -Dlog4j.debug",
       description = "Add properties as needed. Changes to default settings are not recommended.",
       displayPosition = 110,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "EMR_BATCH"}
@@ -419,7 +418,7 @@ public class PipelineConfigBean implements Stage {
       label = "Launcher ENV",
       description = "Sets additional environment variables for the cluster launcher",
       displayPosition = 120,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING"}
@@ -432,7 +431,7 @@ public class PipelineConfigBean implements Stage {
       label = "Mesos Dispatcher URL",
       description = "URL for service which launches Mesos framework",
       displayPosition = 130,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       triggeredByValue = {"CLUSTER_MESOS_STREAMING"}
   )
@@ -445,7 +444,7 @@ public class PipelineConfigBean implements Stage {
       label = "Log Level",
       description = "Log level to use for the launched application",
       displayPosition = 140,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       triggeredByValue = {"EMR_BATCH", "BATCH", "STREAMING"}
@@ -459,7 +458,7 @@ public class PipelineConfigBean implements Stage {
       label = "Checkpoint Configuration Directory",
       description = "An SDC resource directory or symbolic link with HDFS/S3 configuration files core-site.xml and hdfs-site.xml",
       displayPosition = 150,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       triggeredByValue = {"CLUSTER_MESOS_STREAMING"}
   )
@@ -546,7 +545,7 @@ public class PipelineConfigBean implements Stage {
       description = "Additional Spark Configuration to pass to the spark-submit script, the parameters will be passed " +
           "as --conf <key>=<value>",
       displayPosition = 220,
-      group = "CLUSTER",
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       dependsOn = "executionMode",
       triggeredByValue = {"CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "BATCH", "STREAMING"}
   )
@@ -577,9 +576,9 @@ public class PipelineConfigBean implements Stage {
   @ConfigDefBean
   public LivyConfig livyConfig;
 
-  @ConfigDefBean
-  public com.streamsets.transformer.config.AmazonEMRConfig transformerEMRConfig;
-
+  // we have to have two separate connection selections/objects for Data Collector and Transformer here, because
+  // our current framework doesn't allow expressing an OR condition, for the dependencies
+  // the SDC version hinges on executionMode=EMR_BATCH
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CONNECTION,
@@ -604,10 +603,12 @@ public class PipelineConfigBean implements Stage {
   )
   public EMRClusterConnection sdcEmrConnection;
 
+  // this is an SDC-specific config that is not part of the common connection class
+  // because there is only one, keep as a single field rather than having a separate bean class for it
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "TRUE",
+      defaultValue = "true",
       label = "Enable Debugging",
       description = "Enable console debugging in EMR",
       group = "EMR",
@@ -621,6 +622,35 @@ public class PipelineConfigBean implements Stage {
       }
   )
   public boolean enableEMRDebugging;
+
+  // whereas the Transformer version hinges on clusterConfig.clusterType=EMR
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = EMRClusterConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = PipelineGroups.EMR_GROUP_NAME,
+      displayPosition = -600,
+      dependsOn = "clusterConfig.clusterType",
+      triggeredByValue = "EMR"
+  )
+  public String transformerEmrConnectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "transformerEmrConnectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      },
+      groups = PipelineGroups.CLUSTER_GROUP_NAME
+  )
+  public EMRClusterConnection transformerEmrConnection;
+
+  // we also have Transformer-specific configs that aren't part of the common connection class
+  @ConfigDefBean
+  public AmazonEMRConfig transformerEMRConfig;
 
   @ConfigDefBean(dependencies = {
     @Dependency(configName = "clusterConfig.clusterType", triggeredByValues = "DATAPROC")
