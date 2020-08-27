@@ -113,6 +113,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-jexl3</artifactId>
       <version>${jexl.version}</version>

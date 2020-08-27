@@ -181,6 +181,13 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-datacollector-stagesupport</artifactId>
+        <version>${project.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.glassfish.jersey.core</groupId>
         <artifactId>jersey-client</artifactId>
         <version>${jersey.version}</version>

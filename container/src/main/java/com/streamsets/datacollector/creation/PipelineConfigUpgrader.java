@@ -17,7 +17,6 @@ package com.streamsets.datacollector.creation;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.datacollector.config.PipelineState;
 import com.streamsets.pipeline.api.Config;
@@ -26,13 +25,16 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.aws.SseOption;
+import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
+import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -42,67 +44,130 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   public static final String GOOGLE_CLOUD_CONFIG_PREFIX = "googleCloudConfig.";
   public static final String GOOGLE_CLOUD_CREDENTIALS_CONFIG_PREFIX = "googleCloudCredentialsConfig.";
 
+  public static final String ENABLE_EMR_DEBUGGING_CONFIG_FIELD = "enableEMRDebugging";
+
   @Override
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
+    final int to = context.getToVersion();
     switch(context.getFromVersion()) {
       case 0:
         // nothing to do from 0 to 1
       case 1:
         upgradeV1ToV2(configs);
+        if (to == 2) {
+          break;
+        }
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (to == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3ToV4(configs);
+        if (to == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4ToV5(configs);
+        if (to == 5) {
+          break;
+        }
         // fall through
       case 5:
         upgradeV5ToV6(configs);
+        if (to == 6) {
+          break;
+        }
         // fall through
       case 6:
         upgradeV6ToV7(configs);
+        if (to == 7) {
+          break;
+        }
         // fall through
       case 7:
         upgradeV7ToV8(configs);
+        if (to == 8) {
+          break;
+        }
         // fall through
       case 8:
         upgradeV8ToV9(configs);
+        if (to == 9) {
+          break;
+        }
         // fall through
       case 9:
         upgradeV9ToV10(configs);
+        if (to == 10) {
+          break;
+        }
         // fall through
       case 10:
         upgradeV10ToV11(configs);
+        if (to == 11) {
+          break;
+        }
         // fall through
       case 11:
         upgradeV11ToV12(configs);
+        if (to == 12) {
+          break;
+        }
         // fall through
       case 12:
         upgradeV12ToV13(configs);
+        if (to == 13) {
+          break;
+        }
         // fall through
       case 13:
         upgradeV13ToV14(configs);
+        if (to == 14) {
+          break;
+        }
         // fall through
       case 14:
         upgradeV14ToV15(configs);
+        if (to == 15) {
+          break;
+        }
         // fall through
       case 15:
         upgradeV15ToV16(configs);
+        if (to == 16) {
+          break;
+        }
         // fall through
       case 16:
         upgradeV16ToV17(configs);
+        if (to == 17) {
+          break;
+        }
         // fall through
       case 17:
         upgradeV17ToV18(configs);
+        if (to == 18) {
+          break;
+        }
         // fall through
       case 18:
         upgradeV18ToV19(configs);
+        if (to == 19) {
+          break;
+        }
         // fall through
       case 19:
         upgradeV19ToV20(configs);
+        if (to == 20) {
+          break;
+        }
+        // fall through
+      case 20:
+        upgradeV20ToV21(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -231,15 +296,15 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void addAmazonEmrConfigs(List<Config> configs) {
     String amazonEmrConfigPrefix = "amazonEMRConfig.";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ENABLE_EMR_DEBUGGING, true));
+    configs.add(new Config(amazonEmrConfigPrefix + PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD, true));
     configs.add(new Config("logLevel", "INFO"));
   }
 
   private final static Set<String> PROPERTIES_TO_CHECK_FOR_CUSTOM =
       ImmutableSet.of(
-          "amazonEMRConfig." + AmazonEMRConfig.USER_REGION,
-          "amazonEMRConfig." + AmazonEMRConfig.MASTER_INSTANCE_TYPE,
-          "amazonEMRConfig." + AmazonEMRConfig.SLAVE_INSTANCE_TYPE
+          "amazonEMRConfig." + EMRClusterConnection.USER_REGION,
+          "amazonEMRConfig." + EMRClusterConnection.MASTER_INSTANCE_TYPE,
+          "amazonEMRConfig." + EMRClusterConnection.SLAVE_INSTANCE_TYPE
       );
 
   private void upgradeV10ToV11(List<Config> configs) {
@@ -322,31 +387,31 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   }
 
   private void addEmrConfigs(List<Config> configs, String amazonEmrConfigPrefix) {
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.USER_REGION_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_STAGING_URI, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_PREFIX, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.CLUSTER_ID, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.TERMINATE_CLUSTER, false));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.S3_LOG_URI, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SERVICE_ROLE, AmazonEMRConfig.SERVICE_ROLE_DEFAULT));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.USER_REGION, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.USER_REGION_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.S3_STAGING_URI, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.CLUSTER_PREFIX, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.CLUSTER_ID, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.TERMINATE_CLUSTER, false));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.S3_LOG_URI, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.SERVICE_ROLE, EMRClusterConnection.SERVICE_ROLE_DEFAULT));
     configs.add(new Config(
-      amazonEmrConfigPrefix + AmazonEMRConfig.JOB_FLOW_ROLE,
-      AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT
+      amazonEmrConfigPrefix + EMRClusterConnection.JOB_FLOW_ROLE,
+      EMRClusterConnection.JOB_FLOW_ROLE_DEFAULT
     ));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.VISIBLE_TO_ALL_USERS, true));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.LOGGING_ENABLED, true));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.EC2_SUBNET_ID, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_SECURITY_GROUP, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_SECURITY_GROUP, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.INSTANCE_COUNT, 2));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.MASTER_INSTANCE_TYPE_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SLAVE_INSTANCE_TYPE_CUSTOM, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.ACCESS_KEY, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.SECRET_KEY, null));
-    configs.add(new Config(amazonEmrConfigPrefix + AmazonEMRConfig.PROVISION_NEW_CLUSTER, false));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.VISIBLE_TO_ALL_USERS, true));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.LOGGING_ENABLED, true));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.EC2_SUBNET_ID, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.MASTER_SECURITY_GROUP, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.SLAVE_SECURITY_GROUP, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.INSTANCE_COUNT, 2));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.MASTER_INSTANCE_TYPE, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.SLAVE_INSTANCE_TYPE, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.MASTER_INSTANCE_TYPE_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.SLAVE_INSTANCE_TYPE_CUSTOM, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.ACCESS_KEY, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.SECRET_KEY, null));
+    configs.add(new Config(amazonEmrConfigPrefix + EMRClusterConnection.PROVISION_NEW_CLUSTER, false));
   }
 
   private static void addDataprocConfigs(List<Config> configs) {
@@ -387,4 +452,71 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     configs.add(new Config(prefix + "kmsKeyId", null));
   }
 
+  private void upgradeV20ToV21(List<Config> configs) {
+    final Set<String> emrClusterFields = new HashSet<>();
+
+    UpgraderUtils.insertAfterPrefix(configs, "", emrClusterFields, "");
+    moveCommonEMRConfigsToConnection(configs, "amazonEMRConfig", "sdcEmrConnection");
+    // this one is moving up to the top level pipeline config
+    UpgraderUtils.moveAllTo(
+        configs,
+        "amazonEMRConfig." + ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
+        ENABLE_EMR_DEBUGGING_CONFIG_FIELD
+    );
+  }
+
+  private static void moveCommonEMRConfigsToConnection(
+      List<Config> configs,
+      String currentConfigFieldName,
+      String connectionFieldName
+  ) {
+    UpgraderUtils.moveAllTo(
+        configs,
+        currentConfigFieldName + ".userRegion",
+        connectionFieldName + ".region",
+        currentConfigFieldName + ".userRegionCustom",
+        connectionFieldName + ".customRegion",
+        currentConfigFieldName + ".accessKey",
+        connectionFieldName + ".awsConfig.awsAccessKeyId",
+        currentConfigFieldName + ".secretKey",
+        connectionFieldName + ".awsConfig.awsSecretAccessKey",
+        currentConfigFieldName + ".s3StagingUri",
+        connectionFieldName + ".s3StagingUri",
+        currentConfigFieldName + ".provisionNewCluster",
+        connectionFieldName + ".provisionNewCluster",
+        currentConfigFieldName + ".clusterId",
+        connectionFieldName + ".clusterId",
+        currentConfigFieldName + ".clusterPrefix",
+        connectionFieldName + ".clusterPrefix",
+        // terminateCluster is now defaulted to true, but we honor existing value on upgrade here
+        currentConfigFieldName + ".terminateCluster",
+        connectionFieldName + ".terminateCluster",
+        currentConfigFieldName + ".loggingEnabled",
+        connectionFieldName + ".loggingEnabled",
+        currentConfigFieldName + ".s3LogUri",
+        connectionFieldName + ".s3LogUri",
+        currentConfigFieldName + ".serviceRole",
+        connectionFieldName + ".serviceRole",
+        currentConfigFieldName + ".jobFlowRole",
+        connectionFieldName + ".jobFlowRole",
+        currentConfigFieldName + ".visibleToAllUsers",
+        connectionFieldName + ".visibleToAllUsers",
+        currentConfigFieldName + ".ec2SubnetId",
+        connectionFieldName + ".ec2SubnetId",
+        currentConfigFieldName + ".masterSecurityGroup",
+        connectionFieldName + ".masterSecurityGroup",
+        currentConfigFieldName + ".slaveSecurityGroup",
+        connectionFieldName + ".slaveSecurityGroup",
+        currentConfigFieldName + ".instanceCount",
+        connectionFieldName + ".instanceCount",
+        currentConfigFieldName + ".masterInstanceType",
+        connectionFieldName + ".masterInstanceType",
+        currentConfigFieldName + ".masterInstanceTypeCustom",
+        connectionFieldName + ".masterInstanceTypeCustom",
+        currentConfigFieldName + ".slaveInstanceType",
+        connectionFieldName + ".slaveInstanceType",
+        currentConfigFieldName + ".slaveInstanceTypeCustom",
+        connectionFieldName + ".slaveInstanceTypeCustom"
+    );
+  }
 }

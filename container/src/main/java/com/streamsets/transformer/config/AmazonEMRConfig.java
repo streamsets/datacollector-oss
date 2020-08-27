@@ -23,8 +23,8 @@ import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 import com.streamsets.pipeline.lib.aws.SseOption;
 
-import static com.streamsets.datacollector.config.AmazonEMRConfig.JOB_FLOW_ROLE_DEFAULT;
-import static com.streamsets.datacollector.config.AmazonEMRConfig.SERVICE_ROLE_DEFAULT;
+import static com.streamsets.pipeline.stage.common.emr.EMRClusterConnection.JOB_FLOW_ROLE_DEFAULT;
+import static com.streamsets.pipeline.stage.common.emr.EMRClusterConnection.SERVICE_ROLE_DEFAULT;
 
 public class AmazonEMRConfig {
 

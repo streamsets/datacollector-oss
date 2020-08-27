@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.ClusterConfig;
 import com.streamsets.datacollector.config.DatabricksConfig;
 import com.streamsets.datacollector.config.DeliveryGuaranteeChooserValues;
@@ -36,6 +35,7 @@ import com.streamsets.datacollector.config.StatsTargetChooserValues;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -47,6 +47,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.googlecloud.DataProcCredentialsConfig;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
+import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 
 import java.util.Collections;
 import java.util.List;
@@ -60,13 +61,15 @@ import java.util.Map;
     version = PipelineConfigBean.VERSION,
     label = "Pipeline",
     upgrader = PipelineConfigUpgrader.class,
+    // TODO: rip this out and back into the Java upgrader
+    // merge all the upgrade logic into the v20 method
     upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
 )
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 20;
+  public static final int VERSION = 21;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -575,10 +578,49 @@ public class PipelineConfigBean implements Stage {
   public LivyConfig livyConfig;
 
   @ConfigDefBean
-  public AmazonEMRConfig amazonEMRConfig;
-
-  @ConfigDefBean
   public com.streamsets.transformer.config.AmazonEMRConfig transformerEMRConfig;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CONNECTION,
+      connectionType = EMRClusterConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = PipelineGroups.EMR_GROUP_NAME,
+      displayPosition = -500,
+      dependsOn = "executionMode",
+      triggeredByValue = "EMR_BATCH"
+  )
+  public String sdcEmrConnectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "sdcEmrConnectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      },
+      groups = PipelineGroups.EMR_GROUP_NAME
+  )
+  public EMRClusterConnection sdcEmrConnection;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "TRUE",
+      label = "Enable Debugging",
+      description = "Enable console debugging in EMR",
+      group = "EMR",
+      displayPosition = 3310,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      dependencies = {
+          @Dependency(configName = "executionMode", triggeredByValues = "EMR_BATCH"),
+          @Dependency(configName = "sdcEmrConnection.provisionNewCluster", triggeredByValues = "true"),
+          @Dependency(configName = "sdcEmrConnection.loggingEnabled", triggeredByValues = "true"),
+
+      }
+  )
+  public boolean enableEMRDebugging;
 
   @ConfigDefBean(dependencies = {
     @Dependency(configName = "clusterConfig.clusterType", triggeredByValues = "DATAPROC")

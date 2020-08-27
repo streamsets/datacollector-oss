@@ -75,7 +75,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration).getClient(pipelineConfigBean
-        .amazonEMRConfig.convertToProperties());
+        .sdcEmrConnection.convertToProperties());
     Properties emrStateProps = clusterJobClient.getJobStatus(emrJobProps);
     String appId = emrStateProps.getProperty("appId");
     if (appId == null) {
@@ -95,7 +95,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration).getClient(pipelineConfigBean
-        .amazonEMRConfig.convertToProperties());
+        .sdcEmrConnection.convertToProperties());
     Properties emrStateProps = clusterJobClient.getClusterStatus(emrJobProps.getProperty("clusterId"));
     ClusterPipelineStatus clusterPipelineStatus = EmrStatusParser.parseClusterStatus(emrStateProps);
     if (clusterPipelineStatus.equals(ClusterPipelineStatus.RUNNING)) {
@@ -114,10 +114,10 @@ public class EmrClusterProvider extends BaseClusterProvider {
     Utils.checkNotNull(applicationState.getEmrConfig(), "EMR cluster config");
     Properties emrJobProps = applicationState.getEmrConfig();
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration)
-        .getClient(pipelineConfigBean.amazonEMRConfig.convertToProperties());
+        .getClient(pipelineConfigBean.sdcEmrConnection.convertToProperties());
 
     // we only terminate the cluster if we created the cluster
-    if (pipelineConfigBean.amazonEMRConfig.provisionNewCluster && pipelineConfigBean.amazonEMRConfig.terminateCluster) {
+    if (pipelineConfigBean.sdcEmrConnection.provisionNewCluster && pipelineConfigBean.sdcEmrConnection.terminateCluster) {
       clusterJobClient.terminateCluster(emrJobProps.getProperty("clusterId"));
     }
     clusterJobClient.deleteJobFiles(emrJobProps);
@@ -155,7 +155,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
     // dependency on S3 client. So add the property files to the cluster driver jar.
     replaceFileInJar(stagingDriverJar.getAbsolutePath(), sdcPropertiesFile.getAbsolutePath());
 
-    Properties clusterJobProps = pipelineConfigBean.amazonEMRConfig.convertToProperties();
+    Properties clusterJobProps = pipelineConfigBean.sdcEmrConnection.convertToProperties();
     Properties jobProps = new Properties();
 
     jobProps.setProperty("pipelineId", pipelineConfiguration.getPipelineId());
@@ -165,8 +165,8 @@ public class EmrClusterProvider extends BaseClusterProvider {
     ClusterJob.Client clusterJobClient = getClusterJobDelegator(pipelineConfiguration).getClient(clusterJobProps);
 
     String clusterId;
-    if (pipelineConfigBean.amazonEMRConfig.provisionNewCluster) {
-      String clusterName = getEmrClusterName(pipelineConfigBean.amazonEMRConfig.clusterPrefix, getRuntimeInfo().getId(),
+    if (pipelineConfigBean.sdcEmrConnection.provisionNewCluster) {
+      String clusterName = getEmrClusterName(pipelineConfigBean.sdcEmrConnection.clusterPrefix, getRuntimeInfo().getId(),
           pipelineConfiguration.getPipelineId());
       clusterId = clusterJobClient.getActiveCluster(clusterName);
       if (clusterId == null) {
@@ -174,7 +174,7 @@ public class EmrClusterProvider extends BaseClusterProvider {
         LOG.info("Starting EMR cluster, id is {}", clusterId);
       }
     } else {
-      clusterId = pipelineConfigBean.amazonEMRConfig.clusterId;
+      clusterId = pipelineConfigBean.sdcEmrConnection.clusterId;
     }
     jobProps.setProperty("clusterId", clusterId);
     ApplicationState applicationState = new ApplicationState();

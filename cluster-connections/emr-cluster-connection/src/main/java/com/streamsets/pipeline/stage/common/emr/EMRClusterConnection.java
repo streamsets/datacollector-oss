@@ -23,12 +23,15 @@ import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
 import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
+
+import java.util.Properties;
 
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
@@ -132,7 +135,7 @@ public class EMRClusterConnection {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
+      defaultValue = "true",
       label = "Terminate Cluster",
       description = "Terminates the cluster when the pipeline stops",
       group = "#0",
@@ -141,7 +144,7 @@ public class EMRClusterConnection {
       dependsOn = "provisionNewCluster",
       triggeredByValue = "true"
   )
-  public boolean terminateCluster;
+  public boolean terminateCluster = true;
 
   @ConfigDef(
       required = true,
@@ -317,5 +320,80 @@ public class EMRClusterConnection {
       }
   )
   public String slaveInstanceTypeCustom;
+
+  public static final String ACCESS_KEY = "accessKey";
+  public static final String SECRET_KEY = "secretKey";
+  public static final String USER_REGION = "userRegion";
+  public static final String USER_REGION_CUSTOM = "userRegionCustom";
+  public static final String S3_STAGING_URI = "s3StagingUri";
+  public static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
+  public static final String CLUSTER_PREFIX = "clusterPrefix";
+  public static final String CLUSTER_ID = "clusterId";
+  public static final String TERMINATE_CLUSTER = "terminateCluster";
+  public static final String SERVICE_ROLE = "serviceRole";
+  public static final String JOB_FLOW_ROLE = "jobFlowRole";
+  public static final String EC2_SUBNET_ID = "ec2SubnetId";
+  public static final String MASTER_SECURITY_GROUP = "masterSecurityGroup";
+  public static final String SLAVE_SECURITY_GROUP = "slaveSecurityGroup";
+  public static final String INSTANCE_COUNT = "instanceCount";
+  public static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
+  public static final String MASTER_INSTANCE_TYPE_CUSTOM = "masterInstanceTypeCustom";
+  public static final String SLAVE_INSTANCE_TYPE = "slaveInstanceType";
+  public static final String SLAVE_INSTANCE_TYPE_CUSTOM = "slaveInstanceTypeCustom";
+  public static final String S3_LOG_URI = "s3LogUri";
+  public static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
+  public static final String LOGGING_ENABLED = "loggingEnabled";
+
+  public String getUserRegion() {
+    if (region != AwsRegion.OTHER) {
+      return region.getId();
+    } else {
+      return customRegion;
+    }
+  }
+
+  public String getMasterInstanceType() {
+    if (masterInstanceType != null && masterInstanceType!= AwsInstanceType.OTHER) {
+      return masterInstanceType.getId();
+    } else {
+      return masterInstanceTypeCustom;
+    }
+  }
+
+  public String getSlaveInstanceType() {
+    if (slaveInstanceType != null && slaveInstanceType != AwsInstanceType.OTHER) {
+      return slaveInstanceType.getId();
+    } else {
+      return slaveInstanceTypeCustom;
+    }
+  }
+
+  public Properties convertToProperties() throws StageException {
+    Properties props = new Properties();
+    if (awsConfig != null && awsConfig.awsAccessKeyId != null) {
+      props.setProperty(ACCESS_KEY, awsConfig.awsAccessKeyId.get());
+    }
+    if (awsConfig != null && awsConfig.awsSecretAccessKey != null) {
+      props.setProperty(SECRET_KEY, awsConfig.awsSecretAccessKey.get());
+    }
+    props.setProperty(USER_REGION, getUserRegion());
+    props.setProperty(S3_STAGING_URI, s3StagingUri);
+    props.setProperty(PROVISION_NEW_CLUSTER, Boolean.toString(provisionNewCluster));
+    props.setProperty(CLUSTER_PREFIX, clusterPrefix);
+    props.setProperty(CLUSTER_ID, clusterId);
+    props.setProperty(SERVICE_ROLE, serviceRole);
+    props.setProperty(JOB_FLOW_ROLE, jobFlowRole);
+    props.setProperty(EC2_SUBNET_ID, ec2SubnetId);
+    props.setProperty(TERMINATE_CLUSTER, Boolean.toString(terminateCluster));
+    props.setProperty(MASTER_SECURITY_GROUP, masterSecurityGroup);
+    props.setProperty(SLAVE_SECURITY_GROUP, slaveSecurityGroup);
+    props.setProperty(INSTANCE_COUNT, Integer.toString(instanceCount));
+    props.setProperty(MASTER_INSTANCE_TYPE, getMasterInstanceType());
+    props.setProperty(SLAVE_INSTANCE_TYPE, getSlaveInstanceType());
+    props.setProperty(VISIBLE_TO_ALL_USERS, Boolean.toString(visibleToAllUsers));
+    props.setProperty(S3_LOG_URI, s3LogUri);
+    props.setProperty(LOGGING_ENABLED, Boolean.toString(loggingEnabled));
+    return props;
+  }
 
 }

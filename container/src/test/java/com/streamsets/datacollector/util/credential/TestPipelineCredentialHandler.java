@@ -497,7 +497,7 @@ public class TestPipelineCredentialHandler {
   @Test
   public void testDecryptPlainTextCredentials() throws StageException {
     final String PIPELINE_ID = "pipelineId";
-    final String AMAZON_ACCESS_KEY = "__amazonEMRConfig.accessKey";
+    final String AMAZON_ACCESS_KEY = "__sdcEmrConnection.awsConfig.awsAccessKeyId";
     final String SOURCE_PASSWORD = "/si__password1";
     final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si__complexField[0][password1]";
     final List<String> CONFIGS_TO_HANDLE =
@@ -519,9 +519,9 @@ public class TestPipelineCredentialHandler {
     List<Config> pipelineConfigs = ImmutableList.of(
         new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
         new Config("constants", constants),
-        new Config("amazonEMRConfig.accessKey",
+        new Config("sdcEmrConnection.awsConfig.awsAccessKeyId",
             "${credential:get('streamsets','all','" +   CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY + "')}" ),
-        new Config("amazonEMRConfig.secretKey", "secretKey plain text")
+        new Config("sdcEmrConnection.awsConfig.awsSecretAccessKey", "secretKey plain text")
     );
 
     Map<String, Object> complexFieldValue = new HashMap<>();
@@ -580,7 +580,7 @@ public class TestPipelineCredentialHandler {
 
     //Check the config values
     pipelineConf.getConfiguration().forEach(c -> {
-      if (c.getName().equals("amazonEMRConfig.accessKey")) {
+      if (c.getName().equals("sdcEmrConnection.awsConfig.awsAccessKeyId")) {
         Assert.assertEquals("secret", c.getValue());
       }
     });
@@ -605,8 +605,8 @@ public class TestPipelineCredentialHandler {
   @Test
   public void testAutoEncryptingCredentials() {
     final String PIPELINE_ID = "pipelineId";
-    final String AMAZON_ACCESS_KEY = "__amazonEMRConfig.accessKey";
-    final String AMAZON_SECRET_KEY = "__amazonEMRConfig.secretKey";
+    final String AMAZON_ACCESS_KEY = "__sdcEmrConnection.awsConfig.awsAccessKeyId";
+    final String AMAZON_SECRET_KEY = "__sdcEmrConnection.awsConfig.awsSecretAccessKey";
 
     final String SOURCE_PASSWORD = "/si__password1";
     final String SOURCE_COMPLEX_FIELD_PASSWORD = "/si__complexField[0][password1]";
@@ -621,8 +621,8 @@ public class TestPipelineCredentialHandler {
     List<Config> pipelineConfigs = ImmutableList.of(
         new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
         new Config("constants", constants),
-        new Config("amazonEMRConfig.accessKey", "accessKey plain text"),
-        new Config("amazonEMRConfig.secretKey", "secretKey plain text")
+        new Config("sdcEmrConnection.awsConfig.awsAccessKeyId", "accessKey plain text"),
+        new Config("sdcEmrConnection.awsConfig.awsSecretAccessKey", "secretKey plain text")
     );
 
     Map<String, Object> complexFieldValue = new HashMap<>();
@@ -678,10 +678,10 @@ public class TestPipelineCredentialHandler {
 
     //check configs and credential store
     pipelineConf.getConfiguration().forEach(c -> {
-      if (c.getName().equals("amazonEMRConfig.accessKey")) {
+      if (c.getName().equals("sdcEmrConnection.awsConfig.awsAccessKeyId")) {
         Assert.assertEquals("${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY + "')}", c.getValue());
         myManagedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_ACCESS_KEY, "accessKey plain text");
-      } else if (c.getName().equals("amazonEMRConfig.secretKey")) {
+      } else if (c.getName().equals("sdcEmrConnection.awsConfig.awsSecretAccessKey")) {
         Assert.assertEquals("${credential:get('streamsets','all','" + CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_SECRET_KEY + "')}", c.getValue());
         myManagedCredentialStore.get(CredentialStoresTask.DEFAULT_SDC_GROUP, CredentialStoresTask.PIPELINE_CREDENTIAL_PREFIX + PIPELINE_ID + AMAZON_SECRET_KEY, "secretKey plain text");
       }
@@ -732,8 +732,8 @@ public class TestPipelineCredentialHandler {
     List<Config> pipelineConfigs = ImmutableList.of(
         new Config("executionMode", ExecutionMode.CLUSTER_BATCH.name()),
         new Config("constants", constants),
-        new Config("amazonEMRConfig.accessKey", "${credential:get('cs','all','g')}"),
-        new Config("amazonEMRConfig.secretKey", "secretKey plain text")
+        new Config("sdcEmrConnection.awsConfig.awsAccessKeyId", "${credential:get('cs','all','g')}"),
+        new Config("sdcEmrConnection.awsConfig.awsSecretAccessKey", "secretKey plain text")
     );
 
     Map<String, Object> complexFieldValue = new HashMap<>();
@@ -796,8 +796,8 @@ public class TestPipelineCredentialHandler {
     // pipeline configs
     Assert.assertEquals(ExecutionMode.CLUSTER_BATCH, bean.getConfig().executionMode);
     // test pipeline plain credentials
-    Assert.assertEquals("secret", bean.getConfig().amazonEMRConfig.accessKey.get());
-    Assert.assertEquals("", bean.getConfig().amazonEMRConfig.secretKey.get());
+    Assert.assertEquals("secret", bean.getConfig().sdcEmrConnection.awsConfig.awsAccessKeyId.get());
+    Assert.assertEquals("", bean.getConfig().sdcEmrConnection.awsConfig.awsSecretAccessKey.get());
 
     // Origin
     Assert.assertNotNull(bean.getOrigin());

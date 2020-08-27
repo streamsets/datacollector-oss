@@ -32,18 +32,20 @@
 # Rebuild only one stagelib, but not all dependent modules
 #   dev-support/reinstall-sdc-module.sh -noam cdh_spark_2_1_r1-lib
 
-if [[ $# -eq 0 ]]
-then
-    echo >&1 "No module names given as args"
-    exit 10
-fi
-if [[ $0 == '-noam' ]]
 MAVEN_OPT="-am"
+if [[ $1 == '-noam' ]]
 then
     echo "Omitting -am argument to Maven"
     MAVEN_OPT=""
     shift
 fi
+
+if [[ $# -eq 0 ]]
+then
+    echo >&1 "No module names given as args"
+    exit 10
+fi
+
 for module in "$@"
 do
     echo "Deleting module $module"

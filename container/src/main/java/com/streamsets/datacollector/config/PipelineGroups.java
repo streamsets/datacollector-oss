@@ -28,6 +28,8 @@ public enum PipelineGroups implements Label {
   ADVANCED("Advanced"),
   ;
 
+  public static final String EMR_GROUP_NAME = "EMR";
+
   private final String label;
 
   PipelineGroups(String label) {

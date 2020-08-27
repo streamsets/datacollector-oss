@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.cluster;
 
-import com.streamsets.datacollector.config.AmazonEMRConfig;
 import com.streamsets.datacollector.config.LogLevel;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
@@ -25,6 +24,7 @@ import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
+import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,22 +39,22 @@ public class TestEmrClusterProvider {
 
   private PipelineConfigBean getAwsPipelineConfigBean(String clusterId) {
     PipelineConfigBean pipelineConfigBean = new PipelineConfigBean();
-    pipelineConfigBean.amazonEMRConfig = new AmazonEMRConfig();
-    pipelineConfigBean.amazonEMRConfig.provisionNewCluster = false;
-    pipelineConfigBean.amazonEMRConfig.clusterId = clusterId;
-    pipelineConfigBean.amazonEMRConfig.userRegion = AwsRegion.AP_NORTHEAST_1;
-    pipelineConfigBean.amazonEMRConfig.instanceCount = 1;
-    pipelineConfigBean.amazonEMRConfig.masterInstanceType = AwsInstanceType.M4_2XLARGE;
-    pipelineConfigBean.amazonEMRConfig.slaveInstanceType = AwsInstanceType.M4_2XLARGE;
-    pipelineConfigBean.amazonEMRConfig.enableEMRDebugging = true;
-    pipelineConfigBean.amazonEMRConfig.s3StagingUri = "";
-    pipelineConfigBean.amazonEMRConfig.clusterPrefix = "";
-    pipelineConfigBean.amazonEMRConfig.serviceRole = "";
-    pipelineConfigBean.amazonEMRConfig.jobFlowRole = "";
-    pipelineConfigBean.amazonEMRConfig.ec2SubnetId = "";
-    pipelineConfigBean.amazonEMRConfig.masterSecurityGroup = "";
-    pipelineConfigBean.amazonEMRConfig.slaveSecurityGroup = "";
-    pipelineConfigBean.amazonEMRConfig.s3LogUri = "";
+    pipelineConfigBean.sdcEmrConnection = new EMRClusterConnection();
+    pipelineConfigBean.sdcEmrConnection.provisionNewCluster = false;
+    pipelineConfigBean.sdcEmrConnection.clusterId = clusterId;
+    pipelineConfigBean.sdcEmrConnection.region = AwsRegion.AP_NORTHEAST_1;
+    pipelineConfigBean.sdcEmrConnection.instanceCount = 1;
+    pipelineConfigBean.sdcEmrConnection.masterInstanceType = AwsInstanceType.M4_2XLARGE;
+    pipelineConfigBean.sdcEmrConnection.slaveInstanceType = AwsInstanceType.M4_2XLARGE;
+    pipelineConfigBean.enableEMRDebugging = true;
+    pipelineConfigBean.sdcEmrConnection.s3StagingUri = "";
+    pipelineConfigBean.sdcEmrConnection.clusterPrefix = "";
+    pipelineConfigBean.sdcEmrConnection.serviceRole = "";
+    pipelineConfigBean.sdcEmrConnection.jobFlowRole = "";
+    pipelineConfigBean.sdcEmrConnection.ec2SubnetId = "";
+    pipelineConfigBean.sdcEmrConnection.masterSecurityGroup = "";
+    pipelineConfigBean.sdcEmrConnection.slaveSecurityGroup = "";
+    pipelineConfigBean.sdcEmrConnection.s3LogUri = "";
     pipelineConfigBean.logLevel = LogLevel.DEBUG;
     pipelineConfigBean.clusterSlaveJavaOpts = "foo";
     pipelineConfigBean.clusterSlaveMemory = 10;
@@ -153,8 +153,8 @@ public class TestEmrClusterProvider {
     properties.setProperty("clusterId", "111");
     ApplicationState applicationState = new ApplicationState();
     applicationState.setEmrConfig(properties);
-    pipelineConfigBean.amazonEMRConfig.provisionNewCluster = true;
-    pipelineConfigBean.amazonEMRConfig.terminateCluster = true;
+    pipelineConfigBean.sdcEmrConnection.provisionNewCluster = true;
+    pipelineConfigBean.sdcEmrConnection.terminateCluster = true;
     Mockito.doNothing().when(client).terminateCluster(Mockito.eq(properties.getProperty("clusterId")));
     Mockito.doNothing().when(client).deleteJobFiles(Mockito.any());
     emrClusterProvider.cleanUp(applicationState, pipelineConfiguration, pipelineConfigBean);
@@ -182,7 +182,7 @@ public class TestEmrClusterProvider {
     Mockito.doReturn(client).when(clusterJob).getClient(Mockito.any());
 
     Properties properties = new Properties();
-    properties.setProperty("clusterId", pipelineConfigBean.amazonEMRConfig.clusterId);
+    properties.setProperty("clusterId", pipelineConfigBean.sdcEmrConnection.clusterId);
     properties.setProperty("libjars", "resource1,resource2");
     properties.setProperty("archives", "resource1,resource2");
     properties.setProperty("stepId", "stepId");
@@ -225,7 +225,7 @@ public class TestEmrClusterProvider {
     );
     Assert.assertNotNull(applicationState);
     Assert.assertNotNull(applicationState.getEmrConfig());
-    Assert.assertEquals(pipelineConfigBean.amazonEMRConfig.clusterId, applicationState.getEmrConfig().getProperty
+    Assert.assertEquals(pipelineConfigBean.sdcEmrConnection.clusterId, applicationState.getEmrConfig().getProperty
         ("clusterId"));
     Assert.assertEquals("stepId", applicationState.getEmrConfig().getProperty
         ("stepId"));
