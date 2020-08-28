@@ -15,6 +15,9 @@
  */
 package com.streamsets.pipeline.lib.elasticsearch;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.aws.AwsUtil;
@@ -43,8 +46,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -63,11 +69,14 @@ public class ElasticsearchStageDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchStageDelegate.class);
   private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
   private static final String AWS_SERVICE_NAME = "es";
+  private static final JsonParser JSON_PARSER = new JsonParser();
 
   private final Stage.Context context;
   private final ElasticsearchConfig conf;
   private RestClient restClient;
   private Sniffer sniffer;
+  private String version = "not-known";
+  private int majorVersion = -1;
 
   public ElasticsearchStageDelegate(Stage.Context context, ElasticsearchConfig conf) {
     this.context = context;
@@ -155,6 +164,8 @@ public class ElasticsearchStageDelegate {
     RestClientBuilder restClientBuilder = RestClient.builder(hosts);
 
     try {
+      Response response = null;
+
       if (conf.useSecurity) {
         buildSSLContext(issues, restClientBuilder);
 
@@ -181,12 +192,25 @@ public class ElasticsearchStageDelegate {
             break;
         }
 
-        restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser, securityPassword));
+        response = restClient.performRequest("GET", "/", getAuthenticationHeader(securityUser, securityPassword));
       } else {
         restClient = restClientBuilder.build();
-        restClient.performRequest("GET", "/");
+        response = restClient.performRequest("GET", "/");
       }
-    } catch (IOException | StageException e) {
+
+      // Finally validate ES version
+      JsonObject jsonResponse = parseResponse(response);
+      JsonElement version = jsonResponse.get("version");
+      if(version != null && version.isJsonObject() && version.getAsJsonObject().get("number") != null) {
+        this.version = version.getAsJsonObject().get("number").getAsString();
+        this.majorVersion = Integer.parseInt(this.version.split("\\.")[0]);
+
+        LOG.info("ElasticSearch server version {} (major line {})", this.version, this.majorVersion);
+      } else {
+        LOG.error("Unable to determine ElasticSearch version");
+        LOG.debug("Response from server: {}", jsonResponse.toString());
+      }
+    } catch (Exception e) {
       issues.add(
           context.createConfigIssue(
               Groups.ELASTIC_SEARCH.name(),
@@ -228,6 +252,22 @@ public class ElasticsearchStageDelegate {
       Header... headers
   ) throws IOException {
     return restClient.performRequest(method, endpoint, params, entity, headers);
+  }
+
+  public JsonObject parseResponse(Response response) throws IOException {
+    Reader reader = new InputStreamReader(response.getEntity().getContent());
+    return JSON_PARSER.parse(reader).getAsJsonObject();
+  }
+
+  public JsonObject performRequestAndParseAnswer(
+      String method,
+      String endpoint,
+      Map<String, String> params,
+      HttpEntity entity,
+      Header... headers
+  ) throws IOException {
+    Response response = performRequest(method, endpoint, params, entity, headers);
+    return parseResponse(response);
   }
 
   private void addSniffer(HttpHost[] hosts) {
@@ -361,5 +401,13 @@ public class ElasticsearchStageDelegate {
 
   private Stage.Context getContext() {
     return context;
+  }
+
+  public String getVersion() {
+    return version;
+  }
+
+  public int getMajorVersion() {
+    return majorVersion;
   }
 }
