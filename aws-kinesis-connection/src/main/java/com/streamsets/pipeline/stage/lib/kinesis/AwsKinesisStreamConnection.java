@@ -33,9 +33,9 @@ import com.streamsets.pipeline.stage.lib.kinesis.common.AwsKinesisConnection;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 @ConnectionDef(
-    label = "Amazon Kinesis Data Stream",
+    label = "Amazon Kinesis Streams",
     type = AwsKinesisStreamConnection.TYPE,
-    description = "Connects to Amazon Kinesis Stream",
+    description = "Connects to Amazon Kinesis Streams",
     version = 1,
     upgraderDef = "upgrader/AwsKinesisStreamConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR}
