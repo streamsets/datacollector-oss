@@ -1226,7 +1226,8 @@ public class JdbcUtil {
       Map<String, String> columns,
       int numRecords,
       boolean caseSensitive,
-      boolean multiRow
+      boolean multiRow,
+      Record record
   ) throws OnRecordErrorException {
     String query;
     String valuePlaceholder;
@@ -1234,7 +1235,7 @@ public class JdbcUtil {
 
     if(opCode != OperationType.INSERT_CODE && primaryKeys.isEmpty()){
       LOG.error("Primary key columns are missing in records: {}", primaryKeys);
-      throw new OnRecordErrorException(JdbcErrors.JDBC_62, tableName);
+      throw new OnRecordErrorException(record, JdbcErrors.JDBC_62, tableName);
     }
 
     if (!caseSensitive) {
@@ -1278,7 +1279,7 @@ public class JdbcUtil {
         default:
           // Should be checked earlier. Shouldn't reach here
           LOG.error("Unsupported Operation code: {}}", opCode);
-          throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
+          throw new OnRecordErrorException(record, JdbcErrors.JDBC_70, opCode);
       }
     } else {
       switch (opCode) {
@@ -1321,7 +1322,7 @@ public class JdbcUtil {
         default:
           // Should be checked earlier. Shouldn't reach here
           LOG.error("Unsupported Operation code: {}}", opCode);
-          throw new OnRecordErrorException(JdbcErrors.JDBC_70, opCode);
+          throw new OnRecordErrorException(record, JdbcErrors.JDBC_70, opCode);
       }
     }
     return query;

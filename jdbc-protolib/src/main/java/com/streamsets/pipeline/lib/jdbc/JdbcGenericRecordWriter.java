@@ -216,7 +216,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
         if(statement == null) {
           statement = jdbcUtil.getPreparedStatement(
               getGeneratedColumnMappings(),
-              generateQuery(opCode, columnsToParameters),
+              generateQuery(opCode, columnsToParameters, record),
               connection
           );
         }
@@ -374,7 +374,8 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
 
   private String generateQuery(
       int opCode,
-      final Map<String, String> columns
+      final Map<String, String> columns,
+      final Record record
   ) throws OnRecordErrorException {
     List<String> primaryKeyParams = new LinkedList<>();
     for (String key: getPrimaryKeyColumns()) {
@@ -382,7 +383,7 @@ public class JdbcGenericRecordWriter extends JdbcBaseRecordWriter {
     }
 
     final int recordSize = 1;
-    String query = jdbcUtil.generateQuery(opCode, getTableName(), getPrimaryKeyColumns(), primaryKeyParams, columns, recordSize, caseSensitive, false);
+    String query = jdbcUtil.generateQuery(opCode, getTableName(), getPrimaryKeyColumns(), primaryKeyParams, columns, recordSize, caseSensitive, false, record);
     LOG.debug("Generated query:" + query);
     return query;
   }

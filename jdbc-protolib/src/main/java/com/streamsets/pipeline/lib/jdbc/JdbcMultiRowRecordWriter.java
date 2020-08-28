@@ -225,10 +225,13 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
 
     // Neither of the records have schema matching the table, so we will move all records to error stream
     if (columnsToParameters.isEmpty()) {
-      while(!queue.isEmpty()) {
-        Record record = queue.removeFirst();
-        errorRecords.add(new OnRecordErrorException(record, JdbcErrors.JDBC_90, getTableName()));
-      }
+      addRecordErrors(errorRecords, queue, JdbcErrors.JDBC_90);
+      return;
+    }
+
+    if(opCode != OperationType.INSERT_CODE && getPrimaryKeyColumns().isEmpty()){
+      LOG.error("Primary key columns are missing in records: {}", getPrimaryKeyColumns());
+      addRecordErrors(errorRecords, queue, JdbcErrors.JDBC_62);
       return;
     }
 
@@ -303,6 +306,17 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
     }
   }
 
+  private void addRecordErrors(
+      final List<OnRecordErrorException> errorRecords,
+      final LinkedList<Record> queue,
+      final JdbcErrors error
+  ) {
+    while(!queue.isEmpty()) {
+      Record record = queue.removeFirst();
+      errorRecords.add(new OnRecordErrorException(record, error, getTableName()));
+    }
+  }
+
   private void processBatch(
       LinkedList<Record> queue,
       List<OnRecordErrorException> errorRecords,
@@ -358,7 +372,9 @@ public class JdbcMultiRowRecordWriter extends JdbcBaseRecordWriter {
       int numRecords
   ) throws OnRecordErrorException {
 
-    String query = jdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true);
+    // generateQueryForMultiRow can throw an error if the op code is invalid, but processQueue calling generateQueryForMultiRow
+    // is called only if the op code is supported, so any value inlcuding null will not be used for the record (the last) param in this call.
+    String query = jdbcUtil.generateQuery(opCode, getTableName(), primaryKeys, getPrimaryKeyParams(), columns, numRecords, caseSensitive, true, null);
 
     LOG.debug("Generated multi-row operation query: {}", query);
     return query;
