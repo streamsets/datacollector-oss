@@ -50,8 +50,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -78,7 +77,7 @@ public class TestAsterRestClientImpl {
 
     AsterAuthorizationRequest request = rest.createEngineAuthorizationRequest("http://e", "FOO");
     Assert.assertNotNull(request);
-    Assert.assertEquals("http://authorize", request.getAuthorizeUri());
+    Assert.assertEquals("http://aster" + AsterRestClientImpl.ASTER_OAUTH_AUTHORIZE_PATH, request.getAuthorizeUri());
     Assert.assertNotNull(request.getChallengeVerifier());
     Assert.assertEquals("FOO", request.getLocalState());
     Assert.assertNotNull(request.getParameters().getState());
@@ -95,7 +94,7 @@ public class TestAsterRestClientImpl {
 
     request = rest.createUserAuthorizationRequest("http://e", "FOO");
     Assert.assertNotNull(request);
-    Assert.assertEquals("http://authorize", request.getAuthorizeUri());
+    Assert.assertEquals("http://aster" + AsterRestClientImpl.ASTER_OAUTH_AUTHORIZE_PATH, request.getAuthorizeUri());
     Assert.assertNotNull(request.getChallengeVerifier());
     Assert.assertEquals("FOO", request.getLocalState());
     Assert.assertNotNull(request.getParameters().getState());
@@ -118,8 +117,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -140,7 +138,7 @@ public class TestAsterRestClientImpl {
     Mockito.when(responseEntity.getBody()).thenReturn(response);
     Mockito.when(responseEntity.getStatusCode()).thenReturn(HttpStatus.OK);
     Mockito.when(restTemplate.exchange(
-        Mockito.eq(config.getTokenUri()),
+        Mockito.eq(config.getAsterUrl() + AsterRestClientImpl.ASTER_OAUTH_TOKEN_PATH),
         Mockito.eq(HttpMethod.POST),
         Mockito.any(HttpEntity.class),
         Mockito.eq(AsterTokenResponse.class)
@@ -159,8 +157,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -180,8 +177,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -205,8 +201,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -238,8 +233,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -274,8 +268,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -311,8 +304,7 @@ public class TestAsterRestClientImpl {
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
         .setRegistrationCallbackPath("/registrationcallback")
-        .setAuthorizeUri("http://authorize")
-        .setTokenUri("http://token")
+        .setAsterUrl("http://aster")
         .setStateCacheExpirationSecs(60)
         .setAccessTokenMaxExpInSecs(600);
 
@@ -447,7 +439,7 @@ public class TestAsterRestClientImpl {
     Server server = new Server(0);
     ServletContextHandler context = new ServletContextHandler();
     TokenServlet tokenServlet = new TokenServlet();
-    context.addServlet(new ServletHolder(tokenServlet), "/token");
+    context.addServlet(new ServletHolder(tokenServlet), AsterRestClientImpl.ASTER_OAUTH_TOKEN_PATH);
     context.setContextPath("/");
     server.setHandler(context);
     try {
@@ -459,8 +451,7 @@ public class TestAsterRestClientImpl {
           .setSubjectType(AsterRestConfig.SubjectType.DC)
           .setLoginCallbackPath("/logincallback")
           .setRegistrationCallbackPath("/registrationcallback")
-          .setAuthorizeUri(asterUrl + "/authorize")
-          .setTokenUri(asterUrl + "/token")
+          .setAsterUrl(asterUrl)
           .setStateCacheExpirationSecs(60)
           .setAccessTokenMaxExpInSecs(600);
 
@@ -519,9 +510,9 @@ public class TestAsterRestClientImpl {
     Server server = new Server(0);
     ServletContextHandler context = new ServletContextHandler();
     TokenServlet tokenServlet = new TokenServlet();
-    context.addServlet(new ServletHolder(tokenServlet), "/token");
+    context.addServlet(new ServletHolder(tokenServlet), AsterRestClientImpl.ASTER_OAUTH_TOKEN_PATH);
     ApiServlet apiServlet = new ApiServlet();
-    context.addServlet(new ServletHolder(apiServlet), "/api");
+    context.addServlet(new ServletHolder(apiServlet), AsterRestClientImpl.ASTER_OAUTH_AUTHORIZE_PATH);
     context.setContextPath("/");
     server.setHandler(context);
     try {
@@ -533,8 +524,7 @@ public class TestAsterRestClientImpl {
           .setSubjectType(AsterRestConfig.SubjectType.DC)
           .setLoginCallbackPath("/logincallback")
           .setRegistrationCallbackPath("/registrationcallback")
-          .setAuthorizeUri(asterUrl + "/authorize")
-          .setTokenUri(asterUrl + "/token")
+          .setAsterUrl(asterUrl)
           .setStateCacheExpirationSecs(60)
           .setAccessTokenMaxExpInSecs(600);
 
@@ -554,7 +544,7 @@ public class TestAsterRestClientImpl {
       }
 
       AsterRestClient.Response<Void> response = rest.doRestCall(new AsterRestClient.Request<>()
-          .setResourcePath( asterUrl + "/api")
+          .setResourcePath(asterUrl + AsterRestClientImpl.ASTER_OAUTH_AUTHORIZE_PATH)
           .setRequestType(AsterRestClient.RequestType.GET)
       );
 
@@ -573,11 +563,10 @@ public class TestAsterRestClientImpl {
       }
 
       response = rest.doRestCall(new AsterRestClient.Request<>()
-          .setResourcePath( asterUrl + "/api")
+          .setResourcePath(asterUrl + AsterRestClientImpl.ASTER_OAUTH_AUTHORIZE_PATH)
           .setRequestType(AsterRestClient.RequestType.GET)
       );
       Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
-
       Assert.assertTrue(tokenServlet.refreshDone);
 
     } finally {

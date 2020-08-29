@@ -65,6 +65,10 @@ import java.util.concurrent.TimeUnit;
  * to automatically refresh then once a refresh token is available.
  */
 public class AsterRestClientImpl implements AsterRestClient {
+  @VisibleForTesting
+  static final String ASTER_OAUTH_AUTHORIZE_PATH = "/login/oauth/access_token/elogin";
+  @VisibleForTesting
+  static final String ASTER_OAUTH_TOKEN_PATH = "/api/security/oauth/token";
 
   private static class EngineSpringBootAuthentication implements Authentication {
     private final String name;
@@ -164,7 +168,7 @@ public class AsterRestClientImpl implements AsterRestClient {
 
     String challengeVerifier = randomValueStringGenerator.generate();
     AsterAuthorizationRequest request = new AsterAuthorizationRequest();
-    request.setAuthorizeUri(config.getAuthorizeUri());
+    request.setAuthorizeUri(config.getAsterUrl() + ASTER_OAUTH_AUTHORIZE_PATH);
     AsterAuthorizationRequest.Parameters parameters = new AsterAuthorizationRequest.Parameters()
         .setClient_id(config.getClientId())
         .setClient_type(subjectType.name())
@@ -242,7 +246,7 @@ public class AsterRestClientImpl implements AsterRestClient {
     map.add("code", code);
     HttpEntity<MultiValueMap<String, String>> httpRequest = new HttpEntity<>(map, new HttpHeaders());
     ResponseEntity<AsterTokenResponse> httpResponse = restTemplate.exchange(
-        config.getTokenUri(),
+        config.getAsterUrl() + ASTER_OAUTH_TOKEN_PATH,
         HttpMethod.POST,
         httpRequest,
         AsterTokenResponse.class
@@ -251,7 +255,7 @@ public class AsterRestClientImpl implements AsterRestClient {
       tokenServices.removeAccessToken(null, null);
       throw new AsterAuthException(String.format(
           "Token request to '%s' for client_type '%s' failed with status code '%s', response headers '%s'",
-          config.getTokenUri(),
+          config.getAsterUrl() + ASTER_OAUTH_TOKEN_PATH,
           request.getParameters().getClient_type(),
           httpResponse.getStatusCode(),
           httpRequest.getHeaders()
@@ -354,7 +358,7 @@ public class AsterRestClientImpl implements AsterRestClient {
     AuthorizationCodeResourceDetails details = new AuthorizationCodeResourceDetails();
     details.setId("aster");
     details.setClientId(config.getClientId());
-    details.setAccessTokenUri(config.getTokenUri());
+    details.setAccessTokenUri(config.getAsterUrl() + ASTER_OAUTH_TOKEN_PATH);
     details.setScope(Arrays.asList());
     details.setUseCurrentUri(false);
     details.setClientAuthenticationScheme(AuthenticationScheme.form);

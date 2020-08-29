@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
+import com.streamsets.datacollector.util.Configuration;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +72,8 @@ public class AsterServiceImpl implements AsterService {
    * Constructor, sets the created instance as the singleton one.
    */
   public AsterServiceImpl(AsterServiceConfig config, File tokensFile) {
+    Preconditions.checkArgument(AsterServiceProvider.isEnabled(config.getEngineConfig()),
+        "To use Aster, you must configure a valid " + AsterServiceProvider.ASTER_URL);
     this.config = config;
     this.tokensFile = tokensFile;
     randomValueStringGenerator = new RandomValueStringGenerator();
@@ -146,7 +151,7 @@ public class AsterServiceImpl implements AsterService {
    * <p/>
    * On failure, in both GET and POST, it throws a {@link ServerAuthException}
    */
-  public String  handleEngineRegistration(String  engineBasUrl, HttpServletRequest httpReq, HttpServletResponse httpRes) {
+  public String handleEngineRegistration(String  engineBasUrl, HttpServletRequest httpReq, HttpServletResponse httpRes) {
     String redirUrl = null;
     if (HTTP_GET.equals(httpReq.getMethod())) {
       LOG.info("Initiating engine registration");
