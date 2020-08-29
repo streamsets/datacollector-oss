@@ -24,7 +24,9 @@ import com.streamsets.datacollector.util.Configuration;
  */
 public final class AsterServiceProvider {
   @VisibleForTesting
-  static final String ASTER_URL_CONF = "aster.url";
+  public static final String ASTER_URL = "aster.url";
+  // for local testing, use https://streamsets.dev:18632
+  public static final String ASTER_URL_DEFAULT = ""; // TODO: SET to internal (SDC-15601) and then prod (SDC-15602). Also update sdc.properties.
 
   private volatile AsterService service = null;
 
@@ -47,7 +49,7 @@ public final class AsterServiceProvider {
    * @return true if ASTER is enabled else false
    */
   public static boolean isEnabled(Configuration appConf) {
-    return !Strings.isNullOrEmpty(appConf.get(ASTER_URL_CONF, ""));
+    return !Strings.isNullOrEmpty(appConf.get(ASTER_URL, ASTER_URL_DEFAULT));
   }
 
   /**

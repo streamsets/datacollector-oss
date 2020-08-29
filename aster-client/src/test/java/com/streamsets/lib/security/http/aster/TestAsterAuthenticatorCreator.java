@@ -27,7 +27,7 @@ public class TestAsterAuthenticatorCreator {
   public void testCreate() {
     AsterAuthenticatorCreator creator = new AsterAuthenticatorCreator();
     Configuration engineConf = new Configuration();
-    engineConf.set("aster.url", "https://streamsets.dev:18632");
+    engineConf.set(AsterServiceProvider.ASTER_URL, "https://dummy-aster");
     AsterAuthenticatorConfig config = new AsterAuthenticatorConfig(
         "DC",
         "version",

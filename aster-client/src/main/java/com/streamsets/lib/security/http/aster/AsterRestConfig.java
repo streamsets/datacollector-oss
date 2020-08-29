@@ -42,8 +42,7 @@ public class AsterRestConfig {
   private String registrationCallbackPath;
   private String loginCallbackPath;
 
-  private String authorizeUri;
-  private String tokenUri;
+  private String asterUrl;
 
   private int stateCacheExpirationSecs = STATE_CACHE_EXPIRATION_SECS;
 
@@ -59,8 +58,7 @@ public class AsterRestConfig {
     Preconditions.checkNotNull(clientVersion, "clientVersion");
     Preconditions.checkNotNull(registrationCallbackPath, "clientCallbackPath");
     Preconditions.checkNotNull(loginCallbackPath, "loginCallbackPath");
-    Preconditions.checkNotNull(authorizeUri, "authorizeUri");
-    Preconditions.checkNotNull(tokenUri, "tokenUri");
+    Preconditions.checkNotNull(asterUrl, "asterUrl");
     Preconditions.checkState(stateCacheExpirationSecs > 0, "stateCacheExpirationSecs must be greater than zero");
     Preconditions.checkState(accessTokenMaxExpInSecs > 0, "accessTokenMaxExpInSecs must be greater than zero");
     return this;
@@ -142,32 +140,17 @@ public class AsterRestConfig {
   }
 
   /**
-   * Returns the Aster OAuth2 authorization endpoint URI to use.
+   * Returns the Aster base URL to construct endpoints.
    */
-  public String getAuthorizeUri() {
-    return authorizeUri;
+  public String getAsterUrl() {
+    return asterUrl;
   }
 
   /**
-   * Sets the Aster OAuth2 authorization endpoint URI to use.
+   * Sets the Aster base URL to construct endpoints.
    */
-  public AsterRestConfig setAuthorizeUri(String authorizeUri) {
-    this.authorizeUri = authorizeUri;
-    return this;
-  }
-
-  /**
-   * Returns the Aster OAuth2 token endpoint URI to use.
-   */
-  public String getTokenUri() {
-    return tokenUri;
-  }
-
-  /**
-   * Sets the Aster OAuth2 token endpoint URI to use.
-   */
-  public AsterRestConfig setTokenUri(String tokenUri) {
-    this.tokenUri = tokenUri;
+  public AsterRestConfig setAsterUrl(String asterUrl) {
+    this.asterUrl = asterUrl;
     return this;
   }
 

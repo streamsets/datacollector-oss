@@ -28,7 +28,7 @@ public class TestAsterServiceProvider {
     Configuration configuration = new Configuration();
     Assert.assertFalse(AsterServiceProvider.isEnabled(configuration));
 
-    configuration.set(AsterServiceProvider.ASTER_URL_CONF, "https://aster");
+    configuration.set(AsterServiceProvider.ASTER_URL, "https://aster");
     Assert.assertTrue(AsterServiceProvider.isEnabled(configuration));
   }
 

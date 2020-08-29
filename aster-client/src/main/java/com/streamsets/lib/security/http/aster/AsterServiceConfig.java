@@ -21,12 +21,6 @@ import com.streamsets.datacollector.util.Configuration;
  * Aster SSO Service configuration.
  */
 public class AsterServiceConfig implements AsterConfiguration {
-  public static final String ASTER_URL = "aster.url";
-  public static final String ASTER_URL_DEFAULT = "https://streamsets.dev:18632"; //TODO: SDC-15627
-
-  private static final String ASTER_OAUTH_AUTHORIZE_PATH = "/login/oauth/access_token/elogin";
-  private static final String ASTER_OAUTH_TOKEN_PATH = "/api/security/oauth/token";
-
   public static final String LOCAL_STATE_EXPIRATION_SECS = "aster.userLoginState.expiration.secs";
   public static final int LOCAL_STATE_EXPIRATION_SECS_DEFAULT = 5 * 60;
   public static final String ENGINE_ACCESS_TOKEN_MAX_EXPIRATION_SECS = "aster.engineAccessToken.expiration.secs";
@@ -57,7 +51,7 @@ public class AsterServiceConfig implements AsterConfiguration {
   ) {
     this.engineConfig = engineConfig;
 
-    String asterUrl = engineConfig.get(ASTER_URL, ASTER_URL_DEFAULT);
+    String asterUrl = engineConfig.get(AsterServiceProvider.ASTER_URL, AsterServiceProvider.ASTER_URL_DEFAULT);
 
     int stateExp = engineConfig.get(LOCAL_STATE_EXPIRATION_SECS, LOCAL_STATE_EXPIRATION_SECS_DEFAULT);
     int accessTokenMaxExp = engineConfig.get(
@@ -68,8 +62,7 @@ public class AsterServiceConfig implements AsterConfiguration {
     clientConfig = new AsterRestConfig().setClientId(engineId)
         .setSubjectType(engineType)
         .setClientVersion(engineVersion)
-        .setAuthorizeUri(asterUrl + ASTER_OAUTH_AUTHORIZE_PATH)
-        .setTokenUri(asterUrl + ASTER_OAUTH_TOKEN_PATH)
+        .setAsterUrl(asterUrl)
         .setStateCacheExpirationSecs(stateExp)
         .setAccessTokenMaxExpInSecs(accessTokenMaxExp)
         .setRegistrationCallbackPath(REGISTRATION_CALLBACK_PATH)
@@ -84,7 +77,7 @@ public class AsterServiceConfig implements AsterConfiguration {
   }
 
   public String getBaseUrl() {
-    return engineConfig.get(ASTER_URL, ASTER_URL_DEFAULT);
+    return getAsterRestConfig().getAsterUrl();
   }
 
   /**

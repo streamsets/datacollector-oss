@@ -30,21 +30,56 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class TestAsterServiceImpl {
 
   private AsterServiceImpl createService(File file) {
+    Configuration innerConfig = new Configuration();
+    innerConfig.set(AsterServiceProvider.ASTER_URL, "http://dummy-aster-url:1234");
+    return createService(file, innerConfig);
+  }
 
+  private AsterServiceImpl createService(File file, Configuration innerConfig) {
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
         UUID.randomUUID().toString(),
-        new Configuration()
+        innerConfig
     );
 
     AsterServiceImpl asterService = new AsterServiceImpl(config, file);
     AsterServiceProvider.getInstance().set(asterService);
     return asterService;
+  }
+
+  @Test
+  public void testEnabled() {
+    File file = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(file.mkdir());
+    file = new File(file, "store.json");
+
+    AsterServiceImpl service = createService(file);
+    Assert.assertTrue(AsterServiceProvider.isEnabled(service.getConfig().getEngineConfig()));
+  }
+
+  @Test
+  public void testDisabled() {
+    File file = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(file.mkdir());
+    file = new File(file, "store.json");
+
+    Configuration innerConfig = new Configuration();
+    innerConfig.set(AsterServiceProvider.ASTER_URL, "");
+
+    Assert.assertFalse(AsterServiceProvider.isEnabled(innerConfig));
+    try {
+      createService(file, innerConfig);
+      Assert.fail("expected exception");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue("Expected disabled exception but got: " + e.getMessage(),
+          e.getMessage().contains(AsterServiceProvider.ASTER_URL));
+    }
   }
 
   @Test
