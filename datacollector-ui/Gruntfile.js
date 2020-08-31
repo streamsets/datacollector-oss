@@ -604,11 +604,11 @@ module.exports = function(grunt) {
           '<%= common_base_dir %>login.html',
           '<%= common_base_dir %>resetPassword.html',
           '<%= common_base_dir %>disconnected-login.html',
-          '<%= common_base_dir %>tlogin.html',
-          '<%= common_base_dir %>tlogin-callback.html',
-          '<%= common_base_dir %>tregistration.html',
-          '<%= common_base_dir %>tregistration-callback.html',
-          '<%= common_base_dir %>tlogout.html'
+          '<%= common_base_dir %>alogin.html',
+          '<%= common_base_dir %>alogin-callback.html',
+          '<%= common_base_dir %>aregistration.html',
+          '<%= common_base_dir %>aregistration-callback.html',
+          '<%= common_base_dir %>alogout.html'
         ],
         tasks: [ 'index:build', 'login:build' ]
       },
@@ -829,7 +829,7 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogin.html', grunt.config( 'build_dir' ) + '/tlogin.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'alogin.html', grunt.config( 'build_dir' ) + '/alogin.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -839,7 +839,7 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogin-callback.html', grunt.config( 'build_dir' ) + '/tlogin-callback.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'alogin-callback.html', grunt.config( 'build_dir' ) + '/alogin-callback.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -849,7 +849,7 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tregistration.html', grunt.config( 'build_dir' ) + '/tregistration.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'aregistration.html', grunt.config( 'build_dir' ) + '/aregistration.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -859,7 +859,7 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tregistration-callback.html', grunt.config( 'build_dir' ) + '/tregistration-callback.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'aregistration-callback.html', grunt.config( 'build_dir' ) + '/aregistration-callback.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
@@ -869,7 +869,7 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogout.html', grunt.config( 'build_dir' ) + '/tlogout.html', {
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'alogout.html', grunt.config( 'build_dir' ) + '/alogout.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
