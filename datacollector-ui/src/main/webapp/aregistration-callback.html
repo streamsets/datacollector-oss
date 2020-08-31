@@ -22,12 +22,12 @@
 </head>
 <body>
   <script>
-    // DO a POST to /rest/v1/tregistration using the query string parameters send to this page.
+    // DO a POST to /rest/v1/aregistration using the query string parameters send to this page.
     const parameters = new URL(window.location).searchParams;
     const form = document.createElement('form');
     form.style.visibility = 'hidden'; // no user interaction is necessary
     form.method = 'POST'; // forms by default use GET query strings
-    form.action = '/rest/v1/tregistration';
+    form.action = '/rest/v1/aregistration';
     for (const [key, value] of parameters) {
       const input = document.createElement('input');
       input.name = key;

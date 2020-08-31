@@ -47,7 +47,7 @@ public class AsterAuthenticator implements Authenticator {
 
   private static final String AUTHENTICATION_METHOD = "aster-sso";
   private static final String HTTP_GET = "GET";
-  private static final String T_RETRY_QS_PARAM = "t_retry";
+  private static final String A_RETRY_QS_PARAM = "a_retry";
 
   private final AsterService service;
 
@@ -206,7 +206,7 @@ public class AsterAuthenticator implements Authenticator {
    */
   @VisibleForTesting
   boolean shouldRetryFailedRequest(HttpServletRequest httpReq) {
-    return httpReq.getMethod().equals(HTTP_GET) && !"false".equals(httpReq.getParameter(T_RETRY_QS_PARAM));
+    return httpReq.getMethod().equals(HTTP_GET) && !"false".equals(httpReq.getParameter(A_RETRY_QS_PARAM));
   }
 
   /**
@@ -377,7 +377,7 @@ public class AsterAuthenticator implements Authenticator {
       if (shouldRetryFailedRequest(httpReq)) {
         String redirUrl = getUrlForRedirection(httpReq);
         LOG.debug("Retry authentication redirect '{}'", redirUrl);
-        authentication = redirect(httpReq, httpRes, addParameterToQueryString(redirUrl, T_RETRY_QS_PARAM, "false"));
+        authentication = redirect(httpReq, httpRes, addParameterToQueryString(redirUrl, A_RETRY_QS_PARAM, "false"));
       } else {
         LOG.warn("Already retried authentication, giving up");
         if (ex instanceof AsterAuthException) {

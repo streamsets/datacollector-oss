@@ -99,9 +99,9 @@ public class TestAsterAuthenticator {
 
     // isEngineRegistrationOrLoginPage yes
     req = Mockito.mock(HttpServletRequest.class);
-    Mockito.when(req.getRequestURI()).thenReturn("/tlogin.html");
+    Mockito.when(req.getRequestURI()).thenReturn("/alogin.html");
     Assert.assertTrue(authenticator.isEngineRegistrationOrLoginPage(req));
-    Mockito.when(req.getRequestURI()).thenReturn("/tregistration.html");
+    Mockito.when(req.getRequestURI()).thenReturn("/aregistration.html");
     Assert.assertTrue(authenticator.isEngineRegistrationOrLoginPage(req));
 
     // isValidState, no state in request
@@ -126,7 +126,7 @@ public class TestAsterAuthenticator {
 
     // isHandlingEngineRegistration yes
     req = Mockito.mock(HttpServletRequest.class);
-    Mockito.when(req.getRequestURI()).thenReturn("/rest/v1/tregistration");
+    Mockito.when(req.getRequestURI()).thenReturn("/rest/v1/aregistration");
     Assert.assertTrue(authenticator.isHandlingEngineRegistration(req, res));
 
     // iHandlingUserLogin no
@@ -136,7 +136,7 @@ public class TestAsterAuthenticator {
 
     // iHandlingUserLogin yes
     req = Mockito.mock(HttpServletRequest.class);
-    Mockito.when(req.getRequestURI()).thenReturn("/rest/v1/tlogin");
+    Mockito.when(req.getRequestURI()).thenReturn("/rest/v1/alogin");
     Assert.assertTrue(authenticator.isHandlingUserLogin(req, res));
 
     // shouldRetryFailedRequest yes
@@ -147,7 +147,7 @@ public class TestAsterAuthenticator {
     // shouldRetryFailedRequest no
     req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getMethod()).thenReturn("GET");
-    Mockito.when(req.getParameter(Mockito.eq("t_retry"))).thenReturn("false");
+    Mockito.when(req.getParameter(Mockito.eq("a_retry"))).thenReturn("false");
     Assert.assertFalse(authenticator.shouldRetryFailedRequest(req));
 
     // shouldRetryFailedRequest no
@@ -373,7 +373,7 @@ public class TestAsterAuthenticator {
     Assert.assertEquals(Authentication.SEND_SUCCESS, authenticator.validateRequest(req, res, true));
     ArgumentCaptor<String> redirectCaptor = ArgumentCaptor.forClass(String.class);
     Mockito.verify(res, Mockito.times(1)).sendRedirect(redirectCaptor.capture());
-    Assert.assertEquals("/tlogin.html?lstate=redirKey", redirectCaptor.getValue());
+    Assert.assertEquals("/alogin.html?lstate=redirKey", redirectCaptor.getValue());
 
   }
 
@@ -480,7 +480,7 @@ public class TestAsterAuthenticator {
     Mockito.doReturn(redirAuth).when(authenticator).redirect(
         Mockito.eq(req),
         Mockito.eq(res),
-        Mockito.eq("http://foo?t_retry=false")
+        Mockito.eq("http://foo?a_retry=false")
     );
 
     Assert.assertEquals(redirAuth, authenticator.validateRequest(req, res, true));

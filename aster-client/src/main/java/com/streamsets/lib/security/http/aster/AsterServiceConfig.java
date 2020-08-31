@@ -32,12 +32,12 @@ public class AsterServiceConfig {
   public static final String ENGINE_ACCESS_TOKEN_MAX_EXPIRATION_SECS = "aster.engineAccessToken.expiration.secs";
   public static final int ENGINE_ACCESS_TOKEN_MAX_EXPIRATION_SECS_DEFAULT = 24 * 60 * 60;
 
-  private static final String REGISTRATION_PATH = "/tregistration.html";
-  private static final String REGISTRATION_REST_PATH = "/rest/v1/tregistration";
-  private static final String REGISTRATION_CALLBACK_PATH = "/tregistration-callback.html";
-  private static final String USER_LOGIN_PATH = "/tlogin.html";
-  private static final String USER_LOGIN_REST_PATH = "/rest/v1/tlogin";
-  private static final String USER_LOGIN_CALLBACK_PATH = "/tlogin-callback.html";
+  private static final String REGISTRATION_PATH = "/aregistration.html";
+  private static final String REGISTRATION_REST_PATH = "/rest/v1/aregistration";
+  private static final String REGISTRATION_CALLBACK_PATH = "/aregistration-callback.html";
+  private static final String USER_LOGIN_PATH = "/alogin.html";
+  private static final String USER_LOGIN_REST_PATH = "/rest/v1/alogin";
+  private static final String USER_LOGIN_CALLBACK_PATH = "/alogin-callback.html";
 
   private final AsterRestConfig clientConfig;
   private final Configuration engineConfig;

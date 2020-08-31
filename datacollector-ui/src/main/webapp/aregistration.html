@@ -18,11 +18,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <title>StreamSets Login</title>
+  <title>StreamSets Registration</title>
   <script>
-    // DO a GET to /rest/v1/tlogin using the lstate query parameter sent to this page,
+    // DO a GET /rest/v1/aregistration using the lstate query parameter sent to this page
     // Redirect to login with data of the response
-    fetch('/rest/v1/tlogin' + window.location.search).then((response) => {
+    fetch('/rest/v1/aregistration' + window.location.search).then((response) => {
       return response.json();
     }).then((val) => {
       window.location = `${val.authorizeUri}?${new URLSearchParams(val.parameters)}`;
