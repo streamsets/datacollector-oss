@@ -165,6 +165,12 @@
       <outputDirectory>/docs/api</outputDirectory>
     </fileSet>
 
+    <!--aster-client-lib -->
+    <fileSet>
+      <directory>${basedir}/../aster-client/target/dist/</directory>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+
     <!-- common-lib dir -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
