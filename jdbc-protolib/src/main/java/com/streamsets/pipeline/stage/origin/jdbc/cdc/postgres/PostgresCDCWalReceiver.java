@@ -222,6 +222,16 @@ public class PostgresCDCWalReceiver {
         .withSlotOption("include-timestamp", true)
         .withSlotOption("include-lsn", true);
 
+    if (schemasAndTables != null && !schemasAndTables.isEmpty()) {
+      List<String> qualifiedNames = new ArrayList<>();
+      for (SchemaAndTable schemaAndTable : schemasAndTables) {
+        String schemaName = (schemaAndTable.getSchema().equals("%"))?  "*" : schemaAndTable.getSchema();
+        String tableName = (schemaAndTable.getTable().equals("%"))?  "*" : schemaAndTable.getTable();
+        qualifiedNames.add(String.format("%s.%s", schemaName, tableName));
+      }
+      streamBuilder.withSlotOption("add-tables", String.join(",", qualifiedNames));
+    }
+
     LogSequenceNumber streamLsn;
     LogSequenceNumber serverFlushedLsn = LogSequenceNumber.valueOf(confirmedFlushLSN);
     if (newSlot) {

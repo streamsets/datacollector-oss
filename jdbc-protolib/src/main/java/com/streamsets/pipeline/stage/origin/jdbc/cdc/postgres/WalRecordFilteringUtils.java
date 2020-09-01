@@ -32,10 +32,10 @@ import java.util.List;
 public class WalRecordFilteringUtils {
 
   public static PostgresWalRecord filterRecord(PostgresWalRecord postgresWalRecord, PostgresCDCSource postgresCDCSource) {
-
-    if (postgresWalRecord != null) {
-      postgresWalRecord = passesTableFilter(postgresWalRecord, postgresCDCSource);
-    }
+ // Pushed to wal2json
+//    if (postgresWalRecord != null) {
+//      postgresWalRecord = passesTableFilter(postgresWalRecord, postgresCDCSource);
+//    }
 
     if (postgresWalRecord != null) {
       postgresWalRecord = passesStartValueFilter(postgresWalRecord, postgresCDCSource);
