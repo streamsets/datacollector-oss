@@ -607,7 +607,8 @@ module.exports = function(grunt) {
           '<%= common_base_dir %>tlogin.html',
           '<%= common_base_dir %>tlogin-callback.html',
           '<%= common_base_dir %>tregistration.html',
-          '<%= common_base_dir %>tregistration-callback.html'
+          '<%= common_base_dir %>tregistration-callback.html',
+          '<%= common_base_dir %>tlogout.html'
         ],
         tasks: [ 'index:build', 'login:build' ]
       },
@@ -859,6 +860,16 @@ module.exports = function(grunt) {
     });
 
     grunt.file.copy(grunt.config( 'common_base_dir' ) +'tregistration-callback.html', grunt.config( 'build_dir' ) + '/tregistration-callback.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogout.html', grunt.config( 'build_dir' ) + '/tlogout.html', {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
