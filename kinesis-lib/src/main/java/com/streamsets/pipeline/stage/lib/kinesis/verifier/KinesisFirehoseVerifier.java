@@ -61,7 +61,8 @@ import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.REGION_PATTE
 )
 public class KinesisFirehoseVerifier extends ConnectionVerifier {
   private final static Logger LOG = LoggerFactory.getLogger(KinesisFirehoseVerifier.class);
-  private static final String STREAM_EXIST_PREFIX = "streamsets-kinesis-stream-veri-";
+  // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
+  private static final String STREAM_EXIST_PREFIX = "streamsets-kinesis-veri-";
 
   @ConfigDef(
       required = true,

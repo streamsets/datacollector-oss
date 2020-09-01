@@ -57,7 +57,7 @@ import java.util.UUID;
 public class KinesisStreamVerifier extends ConnectionVerifier {
   private final static Logger LOG = LoggerFactory.getLogger(KinesisStreamVerifier.class);
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
-  private static final String STREAM_EXIST_PREFIX = "streamsets-kinesis-stream-veri-";
+  private static final String STREAM_EXIST_PREFIX = "streamsets-kinesis-veri-";
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CONNECTION,
