@@ -603,7 +603,11 @@ module.exports = function(grunt) {
           '<%= base_dir %>index.html',
           '<%= common_base_dir %>login.html',
           '<%= common_base_dir %>resetPassword.html',
-          '<%= common_base_dir %>disconnected-login.html'
+          '<%= common_base_dir %>disconnected-login.html',
+          '<%= common_base_dir %>tlogin.html',
+          '<%= common_base_dir %>tlogin-callback.html',
+          '<%= common_base_dir %>tregistration.html',
+          '<%= common_base_dir %>tregistration-callback.html'
         ],
         tasks: [ 'index:build', 'login:build' ]
       },
@@ -818,6 +822,46 @@ module.exports = function(grunt) {
           data: {
             scripts: jsFiles,
             styles: cssFiles,
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogin.html', grunt.config( 'build_dir' ) + '/tlogin.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tlogin-callback.html', grunt.config( 'build_dir' ) + '/tlogin-callback.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tregistration.html', grunt.config( 'build_dir' ) + '/tregistration.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
+            version: grunt.config( 'pkg.version' )
+          }
+        });
+      }
+    });
+
+    grunt.file.copy(grunt.config( 'common_base_dir' ) +'tregistration-callback.html', grunt.config( 'build_dir' ) + '/tregistration-callback.html', {
+      process: function ( contents, path ) {
+        return grunt.template.process( contents, {
+          data: {
             version: grunt.config( 'pkg.version' )
           }
         });

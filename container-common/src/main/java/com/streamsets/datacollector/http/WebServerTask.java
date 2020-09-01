@@ -40,6 +40,7 @@ import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
+import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http.HttpVersion;
@@ -90,6 +91,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -98,6 +100,7 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,6 +108,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Automatic security configuration based on URL paths:
@@ -444,6 +449,9 @@ public abstract class WebServerTask extends AbstractTask implements Registration
         case "form":
           securityHandler = configureForm(appConf, server, auth);
           break;
+        case "aster":
+          securityHandler = configureAsterSSO(appConf);
+          break;
         default:
           throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
               auth, AUTHENTICATION_MODES));
@@ -564,6 +572,64 @@ public abstract class WebServerTask extends AbstractTask implements Registration
         runtimeInfo.getProductName()
     )));
     return security;
+  }
+
+  URL convertFileToUrl(File file) {
+    try {
+      return file.toURI().toURL();
+    } catch (MalformedURLException ex) {
+      throw new IllegalArgumentException(ex);
+    }
+  }
+
+  // As this plays with classloaders created from dist locations it is not possible to unit test easily.
+  @SuppressWarnings("unchecked")
+  private ConstraintSecurityHandler configureAsterSSO(final Configuration appConf) {
+    LOG.debug("Initializing Aster integration");
+    ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+
+    // creates the configuration bean with the information needed to create the Aster authenticator.
+    AsterAuthenticatorConfig asterConfig = new AsterAuthenticatorConfig(
+        runtimeInfo.getProductName().equals(RuntimeInfo.SDC_PRODUCT) ? "DC" : "TF",
+        buildInfo.getVersion(),
+        getRuntimeInfo().getId(),
+        appConf,
+        getRuntimeInfo().getDataDir()
+    );
+
+    try {
+      // _sdc sets the 'sdc.asterClientLib.dir' system property to the directory containing the aster-client JARs
+      // if not set we fallback to a default location.
+      String dir = System.getProperty("sdc.asterClientLib.dir", getRuntimeInfo().getRuntimeDir() + "/aster-client-lib");
+      File asterClientLibDir = new File(dir);
+
+      // gets JAR URLs from Aster client lib directory
+      List<URL> asterJars = Arrays.stream(asterClientLibDir.listFiles())
+          .map(this::convertFileToUrl)
+          .collect(Collectors.toList());
+
+      // creates a reverse classloader (the same one we use for stagelibraries) with the Aster client JARs
+      // using the container classloader as parent
+      SDCClassLoader asterClassLoader = SDCClassLoader.getAsterClassLoader(
+          asterJars,
+          Thread.currentThread().getContextClassLoader()
+      );
+
+      // Lookup for the AsterAuthenticatorCreator function class in the Aster client classloader.
+      Class<Function<AsterAuthenticatorConfig, Authenticator>> klass =
+          (Class<Function<AsterAuthenticatorConfig, Authenticator>>)
+              asterClassLoader.loadClass("com.streamsets.lib.security.http.aster.AsterAuthenticatorCreator");
+
+      // Instantiate and invoke the AsterAuthenticatorCreator function providing the Aster configuration bean.
+      Function<AsterAuthenticatorConfig, Authenticator> creator = klass.newInstance();
+      Authenticator authenticator = creator.apply(asterConfig);
+
+      // Set the Aster authenticator in the Jetty security constraint handler and return the handler.
+      security.setAuthenticator(injectActivationCheck(authenticator));
+      return security;
+    } catch (Exception ex) {
+      throw new RuntimeException("Could not set up AsterAuthenticator: " + ex, ex);
+    }
   }
 
   protected Authenticator injectActivationCheck(Authenticator authenticator) {

@@ -45,6 +45,7 @@ public class RuntimeModuleUtils {
             throw new RuntimeException(ex.toString(), ex);
           }
           break;
+        case "aster":
         case "none":
           break;
         default:
