@@ -185,6 +185,11 @@ public class AsterAuthenticator implements Authenticator {
     }
   }
 
+  boolean isLogoutRequest( HttpServletRequest httpReq) {
+    String logoutPath = httpReq.getContextPath() + "/rest/v1/authentication/logout";
+    return httpReq.getMethod().equals("POST") && httpReq.getRequestURI().equals(logoutPath);
+  }
+
   @Override
   public Authentication validateRequest(ServletRequest request, ServletResponse response, boolean mandatory) throws
       ServerAuthException {
@@ -229,6 +234,15 @@ public class AsterAuthenticator implements Authenticator {
                 "Authenticated user '{}'",
                 ((SSOAuthenticationUser)authentication).getSSOUserPrincipal().getName()
             );
+            if (isLogoutRequest(httpReq)) {
+              LOG.trace(
+                  "Logout user '{}'",
+                  ((SSOAuthenticationUser)authentication).getSSOUserPrincipal().getName()
+              );
+              destroySession(httpReq);
+              httpRes.sendRedirect("/tlogout.html");
+              authentication = Authentication.SEND_SUCCESS;
+            }
           } else {
             LOG.trace("User is not authenticated");
             if (isHandlingUserLogin(httpReq, httpRes)) {
