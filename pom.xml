@@ -150,6 +150,7 @@
     <module>jdbc-connection</module>
     <module>aws-sqs-connection</module>
     <module>salesforce-connection</module>
+    <module>kafka-connection</module>
 
     <!-- cluster connections -->
     <module>cluster-connections/emr-cluster-connection</module>

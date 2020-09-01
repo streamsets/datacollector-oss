@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kafka;
+package com.streamsets.pipeline.lib.kafka.connection;
 
 import com.streamsets.pipeline.api.Label;
 

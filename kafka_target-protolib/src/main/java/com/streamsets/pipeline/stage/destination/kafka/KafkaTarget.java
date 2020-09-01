@@ -313,8 +313,8 @@ public class KafkaTarget extends BaseTarget {
       LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_WRITTEN);
       event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
       event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
-      if (conf.metadataBrokerList != null) {
-        event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.metadataBrokerList);
+      if (conf.connectionConfig.connection.metadataBrokerList != null) {
+        event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.connectionConfig.connection.metadataBrokerList);
       } else { // MapR doesn't have metadata broker list
         event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, "MapR Streams Origin");
       }

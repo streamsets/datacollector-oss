@@ -40,7 +40,7 @@ public class KafkaTargetUtil {
       DataFormat dataFormat,
       DataGeneratorFormatConfig dataGeneratorFormatConfig
   ) {
-    kafkaConfig.metadataBrokerList = metadataBrokerList;
+    kafkaConfig.connectionConfig.connection.metadataBrokerList = metadataBrokerList;
     kafkaConfig.topic = topic;
     kafkaConfig.partition = partition;
     if (kafkaProducerConfigs != null) {

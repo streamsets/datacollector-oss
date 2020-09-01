@@ -13,23 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kafka;
 
+package com.streamsets.pipeline.lib.kafka.connection;
+
+import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
-public enum KeystoreTypes implements Label {
-  JKS("JKS"),
-  PKCS12("PKCS12")
+@GenerateResourceBundle
+public enum KafkaConnectionGroups implements Label {
+  KAFKA("Kafka"),
+  SECURITY("Security"),
   ;
 
   private final String label;
 
-  KeystoreTypes(String label) {
+  KafkaConnectionGroups(String label) {
     this.label = label;
   }
 
   @Override
   public String getLabel() {
-    return label;
+    return this.label;
   }
 }

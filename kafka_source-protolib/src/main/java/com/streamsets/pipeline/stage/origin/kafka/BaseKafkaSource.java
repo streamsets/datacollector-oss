@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
+import static com.streamsets.pipeline.Utils.KAFKA_CONNECTION_CONFIG_BEAN_PREFIX;
 import static com.streamsets.pipeline.Utils.KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX;
 
 public abstract class BaseKafkaSource extends BaseSource implements OffsetCommitter {
@@ -131,14 +132,14 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     // Validate broker config
     List<HostAndPort> kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(
         issues,
-        conf.metadataBrokerList,
+        conf.connectionConfig.connection.metadataBrokerList,
         KafkaOriginGroups.KAFKA.name(),
-        KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
+        KAFKA_CONNECTION_CONFIG_BEAN_PREFIX + BROKER_LIST,
         getContext()
     );
 
     KafkaSecurityUtil.validateAdditionalProperties(
-        conf.securityConfig,
+        conf.connectionConfig.connection.securityConfig,
         conf.kafkaConsumerConfigs,
         KafkaOriginGroups.KAFKA.name(),
         KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
@@ -146,12 +147,12 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         getContext()
     );
 
-    KafkaSecurityUtil.addSecurityConfigs(conf.securityConfig, conf.kafkaConsumerConfigs);
+    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaConsumerConfigs);
 
-    if (conf.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
+    if (conf.connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          conf.securityConfig.userKeytab.get(),
-          conf.securityConfig.userPrincipal,
+          conf.connectionConfig.connection.securityConfig.userKeytab.get(),
+          conf.connectionConfig.connection.securityConfig.userPrincipal,
           conf.kafkaConsumerConfigs,
           issues,
           getContext()
@@ -160,7 +161,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
     try {
       int partitionCount = kafkaValidationUtil.getPartitionCount(
-          conf.metadataBrokerList,
+          conf.connectionConfig.connection.metadataBrokerList,
           conf.topic,
           new HashMap<String, Object>(conf.kafkaConsumerConfigs),
           3,
@@ -224,7 +225,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
       ConsumerFactorySettings settings = new ConsumerFactorySettings(
           conf.zookeeperConnect,
-          conf.metadataBrokerList,
+          conf.connectionConfig.connection.metadataBrokerList,
           conf.topic,
           conf.maxWaitTime,
           getContext(),
@@ -247,7 +248,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     if (originParallelism == 0) {
       //origin parallelism is not yet calculated
       originParallelism = kafkaValidationUtil.getPartitionCount(
-          conf.metadataBrokerList,
+          conf.connectionConfig.connection.metadataBrokerList,
           conf.topic,
           new HashMap<String, Object>(conf.kafkaConsumerConfigs),
           3,

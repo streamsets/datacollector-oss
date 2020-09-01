@@ -52,14 +52,14 @@ upgrades:
   - toVersion: 12
     actions:
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.securityOption
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.securityOption
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: security.protocol
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: security.protocol
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.kerberosServiceName
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.kerberosServiceName
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: sasl.kerberos.service.name
       - configStringMapRemove:
@@ -67,66 +67,69 @@ upgrades:
           key: sasl.kerberos.service.name
       - renameConfig:
           oldNamePattern: kafkaConfigBean.provideKeytab
-          newNamePattern: kafkaConfigBean.securityConfig.provideKeytab
+          newNamePattern: kafkaConfigBean.connectionConfig.connection.securityConfig.provideKeytab
       - renameConfig:
           oldNamePattern: kafkaConfigBean.userKeytab
-          newNamePattern: kafkaConfigBean.securityConfig.userKeytab
+          newNamePattern: kafkaConfigBean.connectionConfig.connection.securityConfig.userKeytab
       - renameConfig:
           oldNamePattern: kafkaConfigBean.userPrincipal
-          newNamePattern: kafkaConfigBean.securityConfig.userPrincipal
+          newNamePattern: kafkaConfigBean.connectionConfig.connection.securityConfig.userPrincipal
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.truststoreType
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.truststoreType
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.type
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.type
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.truststoreFile
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.truststoreFile
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.location
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.location
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.truststorePassword
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.truststorePassword
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.password
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.truststore.password
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.keystoreType
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.keystoreType
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.type
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.type
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.keystoreFile
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.keystoreFile
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.location
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.location
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.keystorePassword
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.keystorePassword
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.password
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.keystore.password
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.keyPassword
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.keyPassword
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.key.password
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.key.password
       - setConfigFromStringMap:
-          name: kafkaConfigBean.securityConfig.enabledProtocols
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.enabledProtocols
           mapName: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.enabled.protocols
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: ssl.enabled.protocols
+      - renameConfig:
+          oldNamePattern: kafkaConfigBean.metadataBrokerList
+          newNamePattern: kafkaConfigBean.connectionConfig.connection.metadataBrokerList

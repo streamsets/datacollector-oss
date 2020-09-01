@@ -36,12 +36,12 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
 
   public SdcKafkaProducerPooledObjectFactory(KafkaTargetConfig kafkaTargetConfig, DataFormat dataFormat) {
     LOG.debug("Kafka producer config: brokers '{}' configs '{}'",
-        kafkaTargetConfig.metadataBrokerList,
+        kafkaTargetConfig.connectionConfig.connection.metadataBrokerList,
         kafkaTargetConfig.kafkaProducerConfigs
     );
     settings = new ProducerFactorySettings(kafkaTargetConfig.kafkaProducerConfigs == null
         ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>(kafkaTargetConfig.kafkaProducerConfigs),
-        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.metadataBrokerList, dataFormat, false
+        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.connectionConfig.connection.metadataBrokerList, dataFormat, false
     );
   }
 

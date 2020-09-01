@@ -24,8 +24,8 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
+import com.streamsets.pipeline.lib.kafka.connection.KafkaConnectionConfigBean;
 import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
-import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityConfig;
 import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureMode;
 import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureModeChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
@@ -38,8 +38,8 @@ public class MultiKafkaBeanConfig {
   @ConfigDefBean(groups = "KAFKA")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
-  @ConfigDefBean(groups = "SECURITY")
-  public KafkaSecurityConfig securityConfig = new KafkaSecurityConfig();
+  @ConfigDefBean()
+  public KafkaConnectionConfigBean connectionConfig = new KafkaConnectionConfigBean();
 
   @ConfigDef(
       required = true,
@@ -51,17 +51,6 @@ public class MultiKafkaBeanConfig {
   )
   @ValueChooserModel(DataFormatChooserValues.class)
   public DataFormat dataFormat;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "localhost:9092",
-      label = "Broker URI",
-      description = "Comma-separated list of Kafka brokers. Use format <HOST>:<PORT>",
-      displayPosition = 10,
-      group = "KAFKA"
-  )
-  public String brokerURI = "localhost:9092";
 
   @ConfigDef(
       required = true,
@@ -248,7 +237,7 @@ public class MultiKafkaBeanConfig {
 
   public void init(Stage.Context context, List<Stage.ConfigIssue> issues) {
     KafkaSecurityUtil.validateAdditionalProperties(
-        securityConfig,
+        connectionConfig.connection.securityConfig,
         kafkaOptions,
         KafkaOriginGroups.KAFKA.name(),
         "conf.kafkaOptions",

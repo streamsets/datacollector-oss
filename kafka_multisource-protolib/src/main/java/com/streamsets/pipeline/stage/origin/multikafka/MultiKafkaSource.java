@@ -410,12 +410,12 @@ public class MultiKafkaSource extends BasePushSource {
 
     kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
 
-    KafkaSecurityUtil.addSecurityConfigs(conf.securityConfig, conf.kafkaOptions);
+    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaOptions);
 
-    if (conf.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
+    if (conf.connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          conf.securityConfig.userKeytab.get(),
-          conf.securityConfig.userPrincipal,
+          conf.connectionConfig.connection.securityConfig.userKeytab.get(),
+          conf.connectionConfig.connection.securityConfig.userPrincipal,
           conf.kafkaOptions,
           issues,
           getContext()
@@ -436,7 +436,7 @@ public class MultiKafkaSource extends BasePushSource {
       LineageEvent event = getContext().createLineageEvent(LineageEventType.ENTITY_READ);
       event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.KAFKA.name());
       event.setSpecificAttribute(LineageSpecificAttribute.ENTITY_NAME, topic);
-      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.brokerURI);
+      event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.connectionConfig.connection.metadataBrokerList);
       getContext().publishLineageEvent(event);
     }
     return issues;
@@ -504,7 +504,7 @@ public class MultiKafkaSource extends BasePushSource {
     Properties props = new Properties();
     props.putAll(conf.kafkaOptions);
 
-    props.setProperty("bootstrap.servers", conf.brokerURI);
+    props.setProperty("bootstrap.servers", conf.connectionConfig.connection.metadataBrokerList);
     props.setProperty("group.id", conf.consumerGroup);
     props.setProperty("max.poll.records", String.valueOf(batchSize));
     props.setProperty(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, conf.keyDeserializer.getKeyClass());

@@ -16,8 +16,8 @@
 package com.streamsets.pipeline.lib.kafka;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityConfig;
-import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityOptions;
+import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityConfig;
+import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +44,8 @@ public class KafkaSecurityUtil {
     configMap.put(SECURITY_PROTOCOL, securityConfig.securityOption.getProtocol());
 
     // SSL Options
-    if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
+    if (securityConfig.securityOption.isOneOf(
+        KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
         KafkaSecurityOptions.SASL_SSL)) {
       configMap.put(ENABLED_PROTOCOLS, securityConfig.enabledProtocols);
 

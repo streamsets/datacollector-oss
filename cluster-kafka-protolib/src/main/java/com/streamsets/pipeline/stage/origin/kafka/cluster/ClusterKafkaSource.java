@@ -151,10 +151,11 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
       ));
 
       // MapR Streams Origin doesn't have broker list and zookeeper connect
-      if (conf.metadataBrokerList != null) {
+      if (conf.connectionConfig.connection.metadataBrokerList != null) {
         configBeanPrefixedMap.put(
             KAFKA_CONFIG_BEAN_PREFIX + BROKER_LIST,
-            conf.metadataBrokerList);
+            conf.connectionConfig.connection.metadataBrokerList
+        );
       }
       if (conf.zookeeperConnect != null) {
         configBeanPrefixedMap.put(

@@ -23,7 +23,6 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
@@ -42,12 +41,12 @@ import com.streamsets.pipeline.lib.el.AvroEL;
 import com.streamsets.pipeline.lib.el.Base64EL;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
+import com.streamsets.pipeline.lib.kafka.connection.KafkaConnectionConfigBean;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.datacollector.security.kafka.KafkaKerberosUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
-import com.streamsets.pipeline.stage.origin.kafka.KafkaSecurityConfig;
 import org.apache.avro.generic.GenericRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +74,7 @@ public class KafkaTargetConfig {
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  public static final String KAFKA_CONNECTION_CONFIG_BEAN_PREFIX = "conf.connectionConfig.connection.";
 
   @ConfigDef(
       required = true,
@@ -101,21 +101,8 @@ public class KafkaTargetConfig {
   @ConfigDefBean(groups = {"DATA_FORMAT"})
   public DataGeneratorFormatConfig dataGeneratorFormatConfig = new DataGeneratorFormatConfig();
 
-  @ConfigDefBean(groups = {"SECURITY"})
-  public KafkaSecurityConfig securityConfig = new KafkaSecurityConfig();
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "localhost:9092",
-      label = "Broker URI",
-      description = "Comma-separated list of URIs for brokers that write to the topic.  Use the format " +
-        "<HOST>:<PORT>. To ensure a connection, enter as many as possible.",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  public String metadataBrokerList;
+  @ConfigDefBean()
+  public KafkaConnectionConfigBean connectionConfig = new KafkaConnectionConfigBean();
 
   @ConfigDef(
       required = true,
@@ -378,14 +365,14 @@ public class KafkaTargetConfig {
     //metadata broker list should be one or more <host>:<port> separated by a comma
     kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(
         issues,
-        metadataBrokerList,
+        connectionConfig.connection.metadataBrokerList,
         KafkaDestinationGroups.KAFKA.name(),
-        KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+         KAFKA_CONNECTION_CONFIG_BEAN_PREFIX + "metadataBrokerList",
         context
     );
 
     KafkaSecurityUtil.validateAdditionalProperties(
-        securityConfig,
+        connectionConfig.connection.securityConfig,
         kafkaProducerConfigs,
         KafkaOriginGroups.KAFKA.name(),
         KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
@@ -393,12 +380,12 @@ public class KafkaTargetConfig {
         context
     );
 
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, kafkaProducerConfigs);
+    KafkaSecurityUtil.addSecurityConfigs(connectionConfig.connection.securityConfig, kafkaProducerConfigs);
 
-    if (securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
+    if (connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
-          securityConfig.userKeytab.get(),
-          securityConfig.userPrincipal,
+          connectionConfig.connection.securityConfig.userKeytab.get(),
+          connectionConfig.connection.securityConfig.userPrincipal,
           kafkaProducerConfigs,
           issues,
           context
@@ -464,7 +451,7 @@ public class KafkaTargetConfig {
       ProducerFactorySettings settings = new ProducerFactorySettings(
           new HashMap<String, Object>(kafkaProducerConfigs),
           partitionStrategy,
-          metadataBrokerList,
+          connectionConfig.connection.metadataBrokerList,
           dataFormat,
           sendResponse
       );
@@ -588,7 +575,7 @@ public class KafkaTargetConfig {
         KafkaDestinationGroups.KAFKA.name(),
         KAFKA_CONFIG_BEAN_PREFIX + "topic",
         kafkaBrokers,
-        metadataBrokerList,
+        connectionConfig.connection.metadataBrokerList,
         topic,
         new HashMap<String, Object>(kafkaProducerConfigs),
         issues,
@@ -597,7 +584,7 @@ public class KafkaTargetConfig {
     if(valid) {
       try {
         int partitionCount = kafkaValidationUtil.getPartitionCount(
-            metadataBrokerList,
+            connectionConfig.connection.metadataBrokerList,
             topic,
             new HashMap<String, Object>(kafkaProducerConfigs),
             messageSendMaxRetries,
@@ -614,7 +601,7 @@ public class KafkaTargetConfig {
                 "topic",
                 KafkaErrors.KAFKA_11,
                 topic,
-                metadataBrokerList,
+                connectionConfig.connection.metadataBrokerList,
                 e.toString(),
                 e
             )
@@ -835,9 +822,9 @@ public class KafkaTargetConfig {
           //Never seen this topic name before
           try {
             Map<String, Object> kafkaConfigs = new HashMap<>(kafkaProducerConfigs);
-            kafkaValidationUtil.createTopicIfNotExists(result, kafkaConfigs, metadataBrokerList);
+            kafkaValidationUtil.createTopicIfNotExists(result, kafkaConfigs, connectionConfig.connection.metadataBrokerList);
             int partitionCount = kafkaValidationUtil.getPartitionCount(
-                metadataBrokerList,
+                connectionConfig.connection.metadataBrokerList,
                 result,
                 kafkaConfigs,
                 messageSendMaxRetries,

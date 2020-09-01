@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.kafka;
+package com.streamsets.pipeline.lib.kafka.connection;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
-
-import java.util.List;
 
 public class KafkaSecurityConfig {
 
@@ -211,7 +209,7 @@ public class KafkaSecurityConfig {
       type = ConfigDef.Type.STRING,
       label = "Enabled Protocols",
       description = "Comma separated list of protocols enabled for SSL connections",
-      defaultValue = "TLSv1.2, TLSv1.1, TLSv1",
+      defaultValue = "TLSv1.2",
       displayPosition = 70,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {

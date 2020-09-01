@@ -41,6 +41,7 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaValidationUtil08.class);
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
+  public static final String KAFKA_CONNECTION_CONFIG_BEAN_PREFIX = "kafkaConfigBean.connectionConfig.connection.";
   private static final String METADATA_READER_CLIENT = "metadataReaderClient";
   private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
@@ -147,7 +148,7 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
         issues.add(
             context.createConfigIssue(
                 groupName,
-                KAFKA_CONFIG_BEAN_PREFIX + "metadataBrokerList",
+                 KAFKA_CONNECTION_CONFIG_BEAN_PREFIX + "metadataBrokerList",
                 KafkaErrors.KAFKA_67,
                 metadataBrokerList
             )

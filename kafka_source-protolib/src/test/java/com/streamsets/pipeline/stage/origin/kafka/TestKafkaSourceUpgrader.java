@@ -210,21 +210,24 @@ public class TestKafkaSourceUpgrader {
     configs.add(new Config("kafkaConfigBean.userKeytab", "userKeytab"));
     configs.add(new Config("kafkaConfigBean.userPrincipal", "sdc/sdc@CLUSTER"));
 
+    configs.add(new Config("kafkaConfigBean.metadataBrokerList", "localhost:9092"));
+
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.securityOption", "SASL_PLAINTEXT");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.kerberosServiceName", "kafka");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.provideKeytab", true);
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.userKeytab", "userKeytab");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.userPrincipal", "sdc/sdc@CLUSTER");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststoreType", "JKS");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststoreFile", "/tmp/truststore");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.truststorePassword", "trustpwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystoreType", "PKCS12");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystoreFile", "/tmp/keystore");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keystorePassword", "keystpwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.keyPassword", "keypwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.securityConfig.enabledProtocols", "TlSv1.2, TLSv1.3");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.securityOption", "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.kerberosServiceName", "kafka");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.provideKeytab", true);
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.userKeytab", "userKeytab");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.userPrincipal", "sdc/sdc@CLUSTER");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.truststoreType", "JKS");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.truststoreFile", "/tmp/truststore");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.truststorePassword", "trustpwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.keystoreType", "PKCS12");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.keystoreFile", "/tmp/keystore");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.keystorePassword", "keystpwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.keyPassword", "keypwd");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.securityConfig.enabledProtocols", "TlSv1.2, TLSv1.3");
+    UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.connectionConfig.connection.metadataBrokerList", "localhost:9092");
 
     UpgraderTestUtils.assertExists(configs, "kafkaConfigBean.kafkaConsumerConfigs", ImmutableList.of());
   }

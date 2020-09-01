@@ -36,6 +36,7 @@ public class Utils {
   public static final String CLUSTER_HDFS_CONFIG_BEAN_PREFIX = "clusterHDFSConfigBean.";
   public static final String CLUSTER_HDFS_DATA_FORMAT_CONFIG_PREFIX = CLUSTER_HDFS_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
+  public static final String KAFKA_CONNECTION_CONFIG_BEAN_PREFIX = "kafkaConfigBean.connectionConfig.connection.";
   public static final String KAFKA_DATA_FORMAT_CONFIG_BEAN_PREFIX = KAFKA_CONFIG_BEAN_PREFIX + "dataFormatConfig.";
   public static final String MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX = "maprstreamsSourceConfigBean.";
   public static final String MAPR_STREAMS_DATA_FORMAT_CONFIG_BEAN_PREFIX = MAPR_STREAMS_SOURCE_CONFIG_BEAN_PREFIX +
