@@ -387,6 +387,13 @@ public class SDCClassLoader extends BlackListURLClassLoader {
 
   }
 
+  public static SDCClassLoader getAsterClassLoader(List<URL> asterJars, ClassLoader containerClassLoader) {
+    return new ContainerClassLoader("aster-client-lib", "Aster Client", asterJars, containerClassLoader,
+        null, new SystemPackage(SYSTEM_API_CHILDREN_CLASSES),
+        ApplicationPackage.get(containerClassLoader.getParent()), false, true, false);
+
+  }
+
   public static SDCClassLoader getStageClassLoader(String type, String name, List<URL> libURLs, ClassLoader apiCL) {
     return getStageClassLoader(type, name, libURLs, apiCL, false);
   }

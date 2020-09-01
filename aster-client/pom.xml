@@ -102,6 +102,16 @@
       <artifactId>streamsets-datacollector-common</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-sso</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-container-common</artifactId>
+      <scope>provided</scope>
+    </dependency>
 
     <dependency>
       <groupId>log4j</groupId>

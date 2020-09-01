@@ -24,6 +24,9 @@ grant codebase "file://${sdc.rootLib.dir}/*" {
 grant codebase "file://${sdc.apiLib.dir}/*" {
   permission java.security.AllPermission;
 };
+grant codebase "file://${sdc.asterClientLib.dir}/*" {
+  permission java.security.AllPermission;
+};
 grant codebase "file://${sdc.containerLib.dir}/*" {
   permission java.security.AllPermission;
 };

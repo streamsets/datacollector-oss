@@ -65,11 +65,20 @@
       <artifactId>streamsets-datacollector-cli</artifactId>
       <scope>compile</scope>
     </dependency>
+
+    <!-- we want this dep to make sure it is build before this module, we don't want any of its artifacts -->
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-aster-client</artifactId>
       <scope>compile</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>*</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
+
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-container-common</artifactId>

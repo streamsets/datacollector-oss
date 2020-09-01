@@ -143,7 +143,7 @@ fi
 ROOT_LIB_DIR=${ROOT_LIB_DIR:=${SDC_DIST}/root-lib}
 API_LIB_DIR=${API_LIB_DIR:=${SDC_DIST}/api-lib}
 API_CLASSPATH=${API_CLASSPATH:="${API_LIB_DIR}/"'*.jar'}
-
+ASTER_CLIENT_LIB_DIR=${ASTER_CLIENT_LIB_DIR:=${SDC_DIST}/aster-client-lib}
 CONTAINER_LIB_DIR=${CONTAINER_LIB_DIR:=${SDC_DIST}/container-lib}
 CONTAINER_CLASSPATH=${CONTAINER_CLASSPATH:="${SDC_CONF}:${CONTAINER_LIB_DIR}/"'*.jar'}
 
@@ -161,6 +161,7 @@ SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} 
     -Dsdc.rootLib.dir=${ROOT_LIB_DIR} \
     -Dsdc.bootstrapLib.dir=${BOOTSTRAP_LIB_DIR} \
     -Dsdc.apiLib.dir=${API_LIB_DIR} \
+    -Dsdc.asterClientLib.dir=${ASTER_CLIENT_LIB_DIR} \
     -Dsdc.containerLib.dir=${CONTAINER_LIB_DIR} \
     -Dsdc.libsCommon.dir=${LIBS_COMMON_LIB_DIR} \
     -Dsdc.userLibs.dir=${USER_LIBRARIES_DIR}"
