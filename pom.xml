@@ -129,6 +129,7 @@
     <module>bootstrap</module>
     <module>utils</module>
     <module>sso</module>
+    <module>aster-client</module>
     <module>common</module>
     <module>upgrader</module>
     <module>container-common</module>

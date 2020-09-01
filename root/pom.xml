@@ -91,6 +91,10 @@
          require guava on at least version 20. Since we mostly use 18 across our project
          we can't upgrade swagger before we upgrade guava -->
     <swagger.version>1.5.13</swagger.version>
+    <commons-lang3.version>3.4</commons-lang3.version>
+
+    <spring-security-oauth2.version>2.4.1.RELEASE</spring-security-oauth2.version>
+    <nimbus-jose-jwt.version>8.18</nimbus-jose-jwt.version>
   </properties>
 
   <dependencyManagement>
@@ -107,6 +111,11 @@
       <dependency>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-sso</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.streamsets</groupId>
+        <artifactId>streamsets-aster-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -809,6 +818,20 @@
         <artifactId>aws-java-sdk-s3</artifactId>
         <version>${aws.sdk.version}</version>
       </dependency>
+
+      <dependency>
+        <groupId>org.springframework.security.oauth</groupId>
+        <artifactId>spring-security-oauth2</artifactId>
+        <version>${spring-security-oauth2.version}</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.nimbusds</groupId>
+        <artifactId>nimbus-jose-jwt</artifactId>
+        <version>${nimbus-jose-jwt.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
