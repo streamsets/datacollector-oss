@@ -52,10 +52,10 @@ public class KuduConnection {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "",
-      min = 1,
+      defaultValue = "0",
+      min = 0,
       label = "Maximum Number of Worker Threads",
-      description = "Set the maximum number of worker threads. If not provided or set to 0, " +
+      description = "Set the maximum number of worker threads. If set to 0, " +
           "the default (2 * the number of available processors) is used.",
       displayPosition = 20,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
