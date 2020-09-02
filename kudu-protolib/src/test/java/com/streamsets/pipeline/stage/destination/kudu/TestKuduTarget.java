@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
+import com.streamsets.pipeline.stage.lib.kudu.KuduAccessor;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
 import junit.framework.Assert;
 import org.apache.kudu.ColumnSchema;
@@ -78,9 +79,8 @@ public class TestKuduTarget {
     // Create a dummy kuduSession
     PowerMockito.replace(
         MemberMatcher.method(
-            KuduTarget.class,
-            "openKuduSession",
-            List.class
+            KuduAccessor.class,
+            "newSession"
         )
     ).with(new InvocationHandler() {
       @Override
@@ -135,7 +135,12 @@ public class TestKuduTarget {
         .build()
     ));
 
-    PowerMockito.when(target.accessor.getKuduClient()).thenReturn(client);
+    KuduAccessor accessor = PowerMockito.mock(KuduAccessor.class);
+    target.accessor = accessor;
+    KuduSession session = PowerMockito.mock(KuduSession.class);
+
+    PowerMockito.when(accessor.getKuduClient()).thenReturn(client);
+    PowerMockito.when(accessor.newSession()).thenReturn(session);
 
     final TargetRunner targetRunner = getTargetRunner(target);
 

@@ -110,7 +110,7 @@ public class KuduTarget extends BaseTarget {
   private static final String FIELD_MAPPING_CONFIGS = "fieldMappingConfigs";
 
   @VisibleForTesting
-  protected final KuduAccessor accessor;
+  protected KuduAccessor accessor;
   private final String tableNameTemplate;
   private final KuduConfigBean configBean;
   private final List<KuduFieldMappingConfig> fieldMappingConfigs;
