@@ -482,7 +482,7 @@ public class PipelineConfigBean implements Stage {
       required = false,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "0",
-      label = "Max runners",
+      label = "Max Runners",
       description = "Maximum number of runners that should be created for this pipeline. Use 0 to not impose limit.",
       min = 0,
       displayPosition = 190,
@@ -491,21 +491,6 @@ public class PipelineConfigBean implements Stage {
       triggeredByValue =  {"STANDALONE", "CLUSTER_BATCH", "CLUSTER_YARN_STREAMING", "CLUSTER_MESOS_STREAMING"}
   )
   public int maxRunners = 0;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Create Failure Snapshot",
-      description = "When selected and the pipeline execution fails with unrecoverable exception, SDC will attempt to create" +
-          "partial snapshot with records that have not been processed yet.",
-      dependencies = @Dependency(
-          configName = "executionMode", triggeredByValues = "STANDALONE"
-      ),
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      displayPosition = 200
-  )
-  public boolean shouldCreateFailureSnapshot;
 
   @ConfigDef(
       required = true,
@@ -518,9 +503,23 @@ public class PipelineConfigBean implements Stage {
           configName = "executionMode", triggeredByValues = "STANDALONE"
       ),
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      displayPosition = 210
+      displayPosition = 200
   )
   public long runnerIdleTIme = 60;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Create Failure Snapshot",
+      description = "Attempts to create a partial snapshot with unprocessed records if the pipeline fails",
+      dependencies = @Dependency(
+          configName = "executionMode", triggeredByValues = "STANDALONE"
+      ),
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      displayPosition = 205
+  )
+  public boolean shouldCreateFailureSnapshot;
 
   @ConfigDef(
       required = false,
