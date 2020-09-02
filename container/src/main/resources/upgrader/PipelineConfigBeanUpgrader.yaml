@@ -16,9 +16,4 @@
 
 upgraderVersion: 1
 
-upgrades:
-  - toVersion: 20
-    actions:
-      - renameConfig:
-          oldNamePattern: ^conf.credentials.(.*$)
-          newNamePattern: conf.credentials.connection.(0)
+upgrades: []

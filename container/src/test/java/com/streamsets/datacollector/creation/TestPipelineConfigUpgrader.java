@@ -229,43 +229,6 @@ public class TestPipelineConfigUpgrader {
     doTestDataprocConfigs(18, 19);
   }
 
-  @Test
-  public void testPipelineConfigUpgradeV19ToV20() throws StageException {
-    Mockito.doReturn(19).when(context).getFromVersion();
-    Mockito.doReturn(20).when(context).getToVersion();
-
-    String prefix = "conf.credentials.";
-    String newPrefix = "conf.credentials.connection.";
-
-    String projectId = "projectId";
-    String projectIdValue = "someProjectId";
-    String credentialsProvider = "credentialsProvider";
-    CredentialsProviderType credentialsProviderValue = CredentialsProviderType.JSON;
-    String path = "path";
-    String pathValue = "path";
-    String credentialsFileContent = "credentialsFileContent";
-    String credentialsFileContentValue = "This is the content of the credentials file";
-
-    configs.add(new Config(prefix + projectId, projectIdValue));
-    configs.add(new Config(prefix + path, pathValue));
-    configs.add(new Config(prefix + credentialsFileContent, credentialsFileContentValue));
-    configs.add(new Config(prefix + credentialsProvider, credentialsProviderValue));
-
-
-    configs = upgrader.upgrade(configs, context);
-    Assert.assertEquals(newPrefix + projectId, configs.get(0).getName());
-    Assert.assertEquals(projectIdValue, configs.get(0).getValue());
-
-    Assert.assertEquals(newPrefix + path, configs.get(1).getName());
-    Assert.assertEquals(pathValue, configs.get(1).getValue());
-
-    Assert.assertEquals(newPrefix + credentialsFileContent, configs.get(2).getName());
-    Assert.assertEquals(credentialsFileContentValue, configs.get(2).getValue());
-
-    Assert.assertEquals(newPrefix + credentialsProvider, configs.get(3).getName());
-    Assert.assertEquals(credentialsProviderValue, configs.get(3).getValue());
-  }
-
   private void doTestEMRConfigs(int from, int to) {
     PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
     TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", from, to);
