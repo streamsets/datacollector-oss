@@ -30,14 +30,13 @@ import org.mockito.Mockito;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.net.URL;
 import java.util.UUID;
 
 public class TestAsterAuthenticator {
 
   @Test
   public void testBasicMethods() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -232,7 +231,7 @@ public class TestAsterAuthenticator {
 
   @Test
   public void testValidateRequestCors() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -257,7 +256,7 @@ public class TestAsterAuthenticator {
 
   @Test
   public void testValidateRequestNotMandatory() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -284,7 +283,7 @@ public class TestAsterAuthenticator {
 
   @Test
   public void testValidateRequestRegisteredEngine() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -379,7 +378,7 @@ public class TestAsterAuthenticator {
 
   @Test
   public void testValidateRequestNotRegisteredEngine() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -419,7 +418,7 @@ public class TestAsterAuthenticator {
 
   @Test
   public void testValidateExceptions() throws Exception {
-    AsterService service = Mockito.mock(AsterService.class);
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",

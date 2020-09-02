@@ -64,7 +64,7 @@ import java.util.concurrent.TimeUnit;
  * Provides functionality to enable OAUth2 code grant to obtain OAuth2 tokens, as well as the logic
  * to automatically refresh then once a refresh token is available.
  */
-public class AsterRest {
+public class AsterRestClientImpl implements AsterRestClient {
 
   private static class EngineSpringBootAuthentication implements Authentication {
     private final String name;
@@ -118,7 +118,7 @@ public class AsterRest {
   /**
    * Constructor.
    */
-  public AsterRest(AsterRestConfig config, File tokensFile) {
+  public AsterRestClientImpl(AsterRestConfig config, File tokensFile) {
     Preconditions.checkNotNull(config, "config");
     Preconditions.checkNotNull(tokensFile, "tokensFile");
     this.config = config.assertValid();
@@ -136,9 +136,7 @@ public class AsterRest {
     return config;
   }
 
-  /**
-   * Returns if the client has Aster tokens already or not.
-   */
+  @Override
   public boolean hasTokens() {
     return tokenServices.hasTokens();
   }
@@ -386,27 +384,25 @@ public class AsterRest {
     return oAuth2RestTemplate;
   }
 
-  /**
-   * Functional interface that receives a {@link RestTemplate}, used by {@link #doRestCall(RestCall)}.
-   */
-  @FunctionalInterface
-  public interface RestCall<T> {
-    T call(RestTemplate restTemplate);
-  }
-
-  /**
-   * Dispatcher (Command pattern) that invokes the given {@link RestCall} providing a {@link RestTemplate}
-   * configured with Aster access and refresh tokens.
-   */
-  public <T> T doRestCall(RestCall<T> oauth2restCall) {
-    Preconditions.checkNotNull(oauth2restCall, "oauth2restCall");
-    Preconditions.checkState(hasTokens(), "There are no ASTER tokens");
-
+  @Override
+  @SuppressWarnings("unchecked")
+  public <I, O> Response<O> doRestCall(Request<I> request) {
     try {
       // we need to set the SB SecurityContext to an Authentication with the client ID as Principal ID
       // as we are not using SpringBoot in the engine for anything else, this is fine.
       SecurityContextHolder.getContext().setAuthentication(authentication);
-      return oauth2restCall.call(createOAuth2RestTemplate());
+      HttpEntity httpEntity = new HttpEntity<>(request.getPayload());
+      Class<?> requestPayloadCls = (request.getPayloadClass() != null) ? request.getPayloadClass() : Void.class;
+      RestTemplate restTemplate = createOAuth2RestTemplate();
+      ResponseEntity responseEntity = restTemplate.exchange(
+          request.getResourcePath(),
+          HttpMethod.valueOf(request.getRequestType().name()),
+          httpEntity,
+          requestPayloadCls
+      );
+      return (Response<O>) new Response<>().setBody(responseEntity.getBody())
+          .setHeaders(responseEntity.getHeaders().toSingleValueMap())
+          .setStatusCode(responseEntity.getStatusCodeValue());
     } finally {
       SecurityContextHolder.getContext().setAuthentication(null);
     }
