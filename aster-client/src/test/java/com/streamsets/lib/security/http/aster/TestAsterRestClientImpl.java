@@ -41,7 +41,7 @@ import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
 
-public class TestAsterRest {
+public class TestAsterRestClientImpl {
 
   @Test
   public void testClient() throws IOException {
@@ -59,7 +59,7 @@ public class TestAsterRest {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
 
     // hasTokens()
     Assert.assertFalse(rest.hasTokens());
@@ -127,7 +127,7 @@ public class TestAsterRest {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
     rest = Mockito.spy(rest);
 
     RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
@@ -168,7 +168,7 @@ public class TestAsterRest {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
 
     Assert.assertEquals("org", rest.getTokenOrg(TOKEN_WITH_ORG));
   }
@@ -193,7 +193,7 @@ public class TestAsterRest {
       new ObjectMapper().writeValue(os, response);
     }
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
 
     Assert.assertEquals("org", rest.getEngineOrg());
   }
@@ -219,7 +219,7 @@ public class TestAsterRest {
       new ObjectMapper().writeValue(os, response);
     }
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
     rest = Mockito.spy(rest);
 
     AsterAuthorizationRequest request = new AsterAuthorizationRequest();
@@ -252,7 +252,7 @@ public class TestAsterRest {
       new ObjectMapper().writeValue(os, response);
     }
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
     rest = Mockito.spy(rest);
 
     response = new AsterTokenResponse().setAccess_token(TOKEN_WITH_OTHER_ORG);
@@ -288,7 +288,7 @@ public class TestAsterRest {
       new ObjectMapper().writeValue(os, response);
     }
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
     rest = Mockito.spy(rest);
 
     response = new AsterTokenResponse().setAccess_token(USER_TOKEN_WITH_ORG);
@@ -325,7 +325,7 @@ public class TestAsterRest {
       new ObjectMapper().writeValue(os, response);
     }
 
-    AsterRest rest = new AsterRest(config, file);
+    AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
     rest = Mockito.spy(rest);
 
     response = new AsterTokenResponse().setAccess_token(USER_TOKEN_WITH_ORG);
@@ -468,7 +468,7 @@ public class TestAsterRest {
       Assert.assertTrue(file.mkdir());
       file = new File(file, "store.json");
 
-      AsterRest rest = new AsterRest(config, file);
+      AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
 
       // clean engine registration
       AsterAuthorizationRequest request = rest.createEngineAuthorizationRequest("http://e", "localState");
@@ -542,7 +542,7 @@ public class TestAsterRest {
       Assert.assertTrue(file.mkdir());
       file = new File(file, "store.json");
 
-      AsterRest rest = new AsterRest(config, file);
+      AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
 
       // with valid access token
       try (OutputStream os = new FileOutputStream(file)) {
@@ -553,16 +553,12 @@ public class TestAsterRest {
         );
       }
 
-      rest.doRestCall(rt -> {
-        ResponseEntity<Void> response = rt.exchange(
-            asterUrl + "/api",
-            HttpMethod.GET,
-            new HttpEntity<>(null),
-            Void.class
-        );
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        return null;
-      });
+      AsterRestClient.Response<Void> response = rest.doRestCall(new AsterRestClient.Request<>()
+          .setResourcePath( asterUrl + "/api")
+          .setRequestType(AsterRestClient.RequestType.GET)
+      );
+
+      Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
 
       Assert.assertFalse(tokenServlet.refreshDone);
 
@@ -576,16 +572,11 @@ public class TestAsterRest {
         );
       }
 
-      rest.doRestCall(rt -> {
-        ResponseEntity<Void> response = rt.exchange(
-            asterUrl + "/api",
-            HttpMethod.GET,
-            new HttpEntity<>(null),
-            Void.class
-        );
-        Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
-        return null;
-      });
+      response = rest.doRestCall(new AsterRestClient.Request<>()
+          .setResourcePath( asterUrl + "/api")
+          .setRequestType(AsterRestClient.RequestType.GET)
+      );
+      Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
 
       Assert.assertTrue(tokenServlet.refreshDone);
 

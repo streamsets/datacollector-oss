@@ -42,7 +42,8 @@ public class AsterAuthenticatorCreator implements Function<AsterAuthenticatorCon
           asterAuthenticatorConfig.getEngineConf()
       );
       File tokensFile = new File(asterAuthenticatorConfig.getDataDir(), "aster-token.json");
-      AsterService service = new AsterService(serviceConfig, tokensFile);
+      AsterServiceImpl service = new AsterServiceImpl(serviceConfig, tokensFile);
+      AsterServiceProvider.getInstance().set(service);
       return new AsterAuthenticator(service);
     });
   }

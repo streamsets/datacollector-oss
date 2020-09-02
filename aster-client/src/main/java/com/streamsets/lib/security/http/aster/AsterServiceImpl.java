@@ -18,7 +18,6 @@ package com.streamsets.lib.security.http.aster;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import org.eclipse.jetty.security.ServerAuthException;
@@ -29,17 +28,18 @@ import org.springframework.security.oauth2.common.util.RandomValueStringGenerato
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The {@link AsterService} encapsulates the interaction with Aster to register the engine
+ * The {@link AsterServiceImpl} encapsulates the interaction with Aster to register the engine
  * and to login users to the engine.
  * <p/>
  * It also provides access, via a singleton, to an Aster REST client configured with credentials
  * to interact with Aster.
  */
-public class AsterService {
-  private static final Logger LOG = LoggerFactory.getLogger(AsterService.class);
+public class AsterServiceImpl implements AsterService {
+  private static final Logger LOG = LoggerFactory.getLogger(AsterServiceImpl.class);
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().configure(
       SerializationFeature.INDENT_OUTPUT,
@@ -57,26 +57,18 @@ public class AsterService {
   public static final String APPLICATION_JSON_MIME_TYPE = "application/json";
 
 
-  private static AsterService service;
-
-  /**
-   * Returns the singleton instance (the only one it should have been instantiated).
-   */
-  public static AsterService get() {
-    Preconditions.checkState(service != null, "AsterService not initialized");
-    return service;
-  }
+  private static AsterServiceImpl service;
 
   private final AsterServiceConfig config;
   private final File tokensFile;
-  private volatile AsterRest asterRest;
+  private volatile AsterRestClientImpl asterRest;
   private final RandomValueStringGenerator randomValueStringGenerator;
   private final Cache<String, String> callbackUrlCache;
 
   /**
    * Constructor, sets the created instance as the singleton one.
    */
-  public AsterService(AsterServiceConfig config, File tokensFile) {
+  public AsterServiceImpl(AsterServiceConfig config, File tokensFile) {
     this.config = config;
     this.tokensFile = tokensFile;
     randomValueStringGenerator = new RandomValueStringGenerator();
@@ -90,17 +82,22 @@ public class AsterService {
   /**
    * Returns the Aster REST client of the service.
    */
-  public synchronized AsterRest getRestClient() {
+  public synchronized AsterRestClientImpl getRestClient() {
     // we lazy initialize the AsterRest client to make sure the engine base URL is already resolved to its correct value
     if (asterRest == null) {
-      asterRest = new AsterRest(config.getAsterRestConfig(), tokensFile);
+      asterRest = new AsterRestClientImpl(config.getAsterRestConfig(), tokensFile);
     }
     return asterRest;
+  }
+
+  @Override
+  public synchronized void registerHooks(Collection<AsterServiceHook> hooks) {
   }
 
   /**
    * Returns the service configuration.
    */
+  @Override
   public AsterServiceConfig getConfig() {
     return config;
   }

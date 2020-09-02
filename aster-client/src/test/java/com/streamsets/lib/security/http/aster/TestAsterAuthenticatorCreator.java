@@ -41,7 +41,7 @@ public class TestAsterAuthenticatorCreator {
     Assert.assertTrue(authenticator instanceof ClassLoaderInContextAuthenticator);
     ClassLoaderInContextAuthenticator clAuthenticator = (ClassLoaderInContextAuthenticator) authenticator;
     Assert.assertTrue(clAuthenticator.getDelegateAuthenticator() instanceof AsterAuthenticator);
-    AsterService service = ((AsterAuthenticator)clAuthenticator.getDelegateAuthenticator()).getService();
+    AsterServiceImpl service = ((AsterAuthenticator)clAuthenticator.getDelegateAuthenticator()).getService();
     Assert.assertEquals(AsterRestConfig.SubjectType.DC, service.getConfig().getAsterRestConfig().getSubjectType());
     Assert.assertEquals("id", service.getConfig().getAsterRestConfig().getClientId());
     Assert.assertEquals("version", service.getConfig().getAsterRestConfig().getClientVersion());

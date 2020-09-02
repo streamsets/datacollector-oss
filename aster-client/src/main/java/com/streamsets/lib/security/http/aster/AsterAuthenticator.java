@@ -49,19 +49,19 @@ public class AsterAuthenticator implements Authenticator {
   private static final String HTTP_GET = "GET";
   private static final String A_RETRY_QS_PARAM = "a_retry";
 
-  private final AsterService service;
+  private final AsterServiceImpl service;
 
   /**
    * Constructor.
    */
-  public AsterAuthenticator(AsterService service) {
+  public AsterAuthenticator(AsterServiceImpl service) {
     this.service = service;
   }
 
   /**
    * Returns the Aster service.
    */
-  protected AsterService getService() {
+  protected AsterServiceImpl getService() {
     return service;
   }
 
@@ -179,7 +179,7 @@ public class AsterAuthenticator implements Authenticator {
    */
   @VisibleForTesting
   boolean isValidState(HttpServletRequest httpReq) {
-    String lState = httpReq.getParameter(AsterService.LSTATE_QS_PARAM);
+    String lState = httpReq.getParameter(AsterServiceImpl.LSTATE_QS_PARAM);
     return lState != null && service.isValidLocalState(lState);
   }
 
@@ -341,7 +341,7 @@ public class AsterAuthenticator implements Authenticator {
               authentication = redirect(httpReq,
                   httpRes,
                   addParameterToQueryString(service.getConfig().getUserLoginPath(),
-                      AsterService.LSTATE_QS_PARAM,
+                      AsterServiceImpl.LSTATE_QS_PARAM,
                       redirUrlKey
                   )
               );
@@ -364,7 +364,7 @@ public class AsterAuthenticator implements Authenticator {
             authentication = redirect(httpReq,
                 httpRes,
                 addParameterToQueryString(service.getConfig().getEngineRegistrationPath(),
-                    AsterService.LSTATE_QS_PARAM,
+                    AsterServiceImpl.LSTATE_QS_PARAM,
                     redirUrlKey
                 )
             );

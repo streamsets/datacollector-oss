@@ -31,9 +31,10 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.UUID;
 
-public class TestAsterService {
+public class TestAsterServiceImpl {
 
-  private AsterService createService(File file) {
+  private AsterServiceImpl createService(File file) {
+
     AsterServiceConfig config = new AsterServiceConfig(
         AsterRestConfig.SubjectType.DC,
         "1",
@@ -41,7 +42,9 @@ public class TestAsterService {
         new Configuration()
     );
 
-    return new AsterService(config, file);
+    AsterServiceImpl asterService = new AsterServiceImpl(config, file);
+    AsterServiceProvider.getInstance().set(asterService);
+    return asterService;
   }
 
   @Test
@@ -50,16 +53,16 @@ public class TestAsterService {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterService service = createService(file);
+    AsterServiceImpl service = createService(file);
 
     // singleton
-    Assert.assertEquals(service, AsterService.get());
+    Assert.assertEquals(service, AsterServiceProvider.getInstance().getService());
 
     // config
     Assert.assertNotNull(service.getConfig());
 
     // rest client
-    AsterRest asterRest = service.getRestClient();
+    AsterRestClientImpl asterRest = service.getRestClient();
     Assert.assertNotNull(asterRest);
     Assert.assertEquals(service.getConfig().getAsterRestConfig(), asterRest.getConfig());
 
@@ -85,14 +88,14 @@ public class TestAsterService {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterService service = createService(file);
+    AsterServiceImpl service = createService(file);
     service = Mockito.spy(service);
 
     // initiate registration
 
     AsterAuthorizationRequest asterRequest = new AsterAuthorizationRequest().setParameters(new AsterAuthorizationRequest.Parameters());
 
-    AsterRest asterRest = Mockito.mock(AsterRest.class);
+    AsterRestClientImpl asterRest = Mockito.mock(AsterRestClientImpl.class);
     Mockito.when(asterRest.createEngineAuthorizationRequest(Mockito.eq("http://e"), Mockito.eq("http://original"))).thenReturn(asterRequest);
     Mockito.when(service.getRestClient()).thenReturn(asterRest);
 
@@ -136,14 +139,14 @@ public class TestAsterService {
     Assert.assertTrue(file.mkdir());
     file = new File(file, "store.json");
 
-    AsterService service = createService(file);
+    AsterServiceImpl service = createService(file);
     service = Mockito.spy(service);
 
     // initiate user login
 
     AsterAuthorizationRequest asterRequest = new AsterAuthorizationRequest().setParameters(new AsterAuthorizationRequest.Parameters());
 
-    AsterRest asterRest = Mockito.mock(AsterRest.class);
+    AsterRestClientImpl asterRest = Mockito.mock(AsterRestClientImpl.class);
     Mockito.when(asterRest.createUserAuthorizationRequest(Mockito.eq("http://e"), Mockito.eq("http://original"))).thenReturn(asterRequest);
     Mockito.when(service.getRestClient()).thenReturn(asterRest);
 

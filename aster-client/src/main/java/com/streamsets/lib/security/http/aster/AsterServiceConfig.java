@@ -20,7 +20,7 @@ import com.streamsets.datacollector.util.Configuration;
 /**
  * Aster SSO Service configuration.
  */
-public class AsterServiceConfig {
+public class AsterServiceConfig implements AsterConfiguration {
   public static final String ASTER_URL = "aster.url";
   public static final String ASTER_URL_DEFAULT = "https://streamsets.dev:18632"; //TODO: SDC-15627
 
@@ -81,6 +81,10 @@ public class AsterServiceConfig {
    */
   public Configuration getEngineConfig() {
     return engineConfig;
+  }
+
+  public String getBaseUrl() {
+    return engineConfig.get(ASTER_URL, ASTER_URL_DEFAULT);
   }
 
   /**
