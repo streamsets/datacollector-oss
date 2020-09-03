@@ -35,9 +35,9 @@ import static com.streamsets.pipeline.api.ConnectionDef.Constants.CONNECTION_SEL
 
 @StageDef(
     version = 1,
-    label = "Apache Kudu Connection Verifier",
-    description = "Verifies connections for Apache Kudu",
-    upgraderDef = "upgrader/ApacheKuduConnectionVerifier.yaml",
+    label = "Kudu Connection Verifier",
+    description = "Verifies connections for Kudu",
+    upgraderDef = "upgrader/KuduConnectionVerifier.yaml",
     onlineHelpRefUrl = ""
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)

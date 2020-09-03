@@ -25,9 +25,9 @@ import com.streamsets.pipeline.api.InterfaceStability;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 @ConnectionDef(
-    label = "Apache Kudu",
+    label = "Kudu",
     type = KuduConnection.TYPE,
-    description = "Connects to Apache Kudu",
+    description = "Connects to Kudu",
     version = 1,
     upgraderDef = "upgrader/KuduConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
