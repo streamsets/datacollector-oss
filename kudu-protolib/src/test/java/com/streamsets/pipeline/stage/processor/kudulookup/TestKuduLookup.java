@@ -99,7 +99,7 @@ public class TestKuduLookup {
       List<Stage.ConfigIssue> issues = runner.runValidateConfigs();
       Assert.assertEquals(1, issues.size());
       Stage.ConfigIssue issue = issues.get(0);
-      assertThat(issue.toString(), Matchers.containsIgnoringCase(KuduException.class.getSimpleName()));
+      assertThat(issue.toString(), Matchers.containsIgnoringCase("KUDU_00"));
     } catch (StageException e) {
       Assert.fail("should not throw StageException");
     }
