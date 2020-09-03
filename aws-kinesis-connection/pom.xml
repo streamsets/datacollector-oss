@@ -41,7 +41,7 @@
 
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-aws-s3-connection</artifactId>
+      <artifactId>streamsets-datacollector-aws-shared</artifactId>
     </dependency>
 
     <!-- Test Dependencies -->

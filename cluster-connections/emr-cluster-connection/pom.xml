@@ -40,8 +40,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-aws-s3-connection</artifactId>
-      <version>${project.version}</version>
+      <artifactId>streamsets-datacollector-aws-shared</artifactId>
     </dependency>
   </dependencies>
 

@@ -26,7 +26,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.common.kudu.KuduConnection;
 import com.streamsets.pipeline.stage.common.kudu.KuduConnectionGroups;
-import com.streamsets.pipeline.stage.common.s3.AwsS3Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

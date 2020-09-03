@@ -151,6 +151,7 @@
     <module>aws-sqs-connection</module>
     <module>salesforce-connection</module>
     <module>kafka-connection</module>
+    <module>aws-shared</module>
 
     <!-- cluster connections -->
     <module>cluster-connections/emr-cluster-connection</module>
