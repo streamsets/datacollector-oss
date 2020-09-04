@@ -29,6 +29,7 @@ import com.github.shyiko.mysql.binlog.GtidSet;
 import com.github.shyiko.mysql.binlog.network.SSLMode;
 import com.github.shyiko.mysql.binlog.network.ServerException;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -45,6 +46,11 @@ import org.slf4j.LoggerFactory;
 
 public abstract class MysqlSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MysqlSource.class);
+
+  /**
+   * Known MySQL Drivers, we load them explicitly.
+   */
+  List<String> MYSQL_DRIVERS  = ImmutableList.of("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver");
 
   private static final String CONFIG_PREFIX = "config.";
   private BinaryLogConsumer consumer;
@@ -135,6 +141,16 @@ public abstract class MysqlSource extends BaseSource {
 
     if (ignoreFilter != null && includeFilter != null) {
       eventFilter = includeFilter.and(ignoreFilter);
+    }
+
+    for(String driverName : MYSQL_DRIVERS) {
+      try {
+        LOG.info("Loading driver: {}", driverName);
+        Class.forName(driverName);
+        LOG.info("Loaded driver: {}", driverName);
+      } catch (ClassNotFoundException e) {
+        LOG.error("Can't load driver: {}", driverName, e);
+      }
     }
 
     // connect to mysql
