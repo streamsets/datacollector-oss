@@ -30,7 +30,7 @@ import java.util.Iterator;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Delay",
     description = "Allows you to delay any records passing through it by a given number of milliseconds",
     icon="delay.png",
@@ -61,12 +61,22 @@ public class DelayProcessor extends SingleLaneRecordProcessor {
   )
   public int delay;
 
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Skip Delay on Empty Batch",
+      description = "Skips the configured delay for empty batches",
+      displayMode = ConfigDef.DisplayMode.BASIC
+  )
+  public boolean skipDelayOnEmptyBatch;
+
   @Override
   public void process(Batch batch, SingleLaneBatchMaker batchMaker) throws StageException {
-    if (delay > 0) {
+    Iterator<Record> records = batch.getRecords();
+    if (delay > 0 && (records.hasNext() || !skipDelayOnEmptyBatch)) {
       ThreadUtil.sleep(delay);
     }
-    Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       process(records.next(), batchMaker);
     }

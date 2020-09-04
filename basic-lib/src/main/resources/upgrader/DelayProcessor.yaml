@@ -17,4 +17,9 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: skipDelayOnEmptyBatch
+          value: false
