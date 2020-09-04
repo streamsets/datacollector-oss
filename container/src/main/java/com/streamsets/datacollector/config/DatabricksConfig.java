@@ -44,6 +44,7 @@ public class DatabricksConfig {
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Credential Type",
+      defaultValue = "TOKEN",
       description = "Type of credential to use to connect to Databricks",
       displayPosition = 106,
       group = "CLUSTER",
@@ -55,7 +56,7 @@ public class DatabricksConfig {
       }
   )
   @ValueChooserModel(CredentialTypeChooserValues.class)
-  public CredentialType credentialType;
+  public CredentialType credentialType = CredentialType.TOKEN;
 
   @ConfigDef(
       required = true,
