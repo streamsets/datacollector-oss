@@ -25,6 +25,7 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.pipeline.api.gateway.GatewayInfo;
 import com.streamsets.pipeline.api.impl.Utils;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HEAD;
@@ -54,56 +55,62 @@ public abstract class GatewayBaseResource {
   @GET
   public Response handleGetRequests(
       @PathParam("subResources") String subResources,
+      @Context HttpServletRequest request,
       @Context UriInfo uriInfo,
       @Context HttpHeaders httpheaders
   ) throws PipelineException {
-    return proxyRequest(subResources, uriInfo, HttpMethod.GET, httpheaders, null);
+    return proxyRequest(subResources, request, uriInfo, HttpMethod.GET, httpheaders, null);
   }
 
   @Path("/{subResources: .*}")
   @POST
   public Response handlePostRequests(
       @PathParam("subResources") String subResources,
+      @Context HttpServletRequest request,
       @Context UriInfo uriInfo,
       @Context HttpHeaders httpheaders,
       InputStream inputStream
   ) throws PipelineException {
-    return proxyRequest(subResources, uriInfo, HttpMethod.POST, httpheaders, inputStream);
+    return proxyRequest(subResources, request, uriInfo, HttpMethod.POST, httpheaders, inputStream);
   }
 
   @Path("/{subResources: .*}")
   @PUT
   public Response handlePutRequests(
       @PathParam("subResources") String subResources,
+      @Context HttpServletRequest request,
       @Context UriInfo uriInfo,
       @Context HttpHeaders httpheaders,
       InputStream inputStream
   ) throws PipelineException {
-    return proxyRequest(subResources, uriInfo, HttpMethod.PUT, httpheaders, inputStream);
+    return proxyRequest(subResources, request, uriInfo, HttpMethod.PUT, httpheaders, inputStream);
   }
 
   @Path("/{subResources: .*}")
   @DELETE
   public Response handleDeleteRequests(
       @PathParam("subResources") String subResources,
+      @Context HttpServletRequest request,
       @Context UriInfo uriInfo,
       @Context HttpHeaders httpheaders
   ) throws PipelineException {
-    return proxyRequest(subResources, uriInfo, HttpMethod.DELETE, httpheaders,null);
+    return proxyRequest(subResources, request, uriInfo, HttpMethod.DELETE, httpheaders,null);
   }
 
   @Path("/{subResources: .*}")
   @HEAD
   public Response handleHeadRequests(
       @PathParam("subResources") String subResources,
+      @Context HttpServletRequest request,
       @Context UriInfo uriInfo,
       @Context HttpHeaders httpheaders
   ) throws PipelineException {
-    return proxyRequest(subResources, uriInfo, HttpMethod.HEAD, httpheaders,null);
+    return proxyRequest(subResources, request, uriInfo, HttpMethod.HEAD, httpheaders,null);
   }
 
   private Response proxyRequest(
       String subResources,
+      HttpServletRequest httpServletRequest,
       UriInfo uriInfo,
       HttpMethod httpMethod,
       HttpHeaders httpheaders,
@@ -119,12 +126,15 @@ public abstract class GatewayBaseResource {
 
     validateRequest(gatewayInfo);
 
-    String resourceUrl = gatewayInfo.getServiceUrl() + getBaseUrlPath() + uriInfo.getPath();
+    String resourceUrl = gatewayInfo.getServiceUrl() +
+        getBaseUrlPath() +
+        uriInfo.getPath();
+
+    if (httpServletRequest.getQueryString() != null) {
+      resourceUrl += "?" + httpServletRequest.getQueryString();
+    }
 
     WebTarget target = ClientBuilder.newClient().target(resourceUrl);
-
-    // update query parameters
-    uriInfo.getQueryParameters().forEach((k, l) -> l.forEach(v -> target.queryParam(k, v)));
 
     Invocation.Builder request = target.request();
 
