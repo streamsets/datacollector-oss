@@ -44,7 +44,6 @@ import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
-import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.PaginationMode;
 import com.streamsets.pipeline.stage.origin.http.ResponseAction;
@@ -61,17 +60,14 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketTimeoutException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -99,8 +95,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private static final String STOP_CONFIG_NAME = "stopCondition";
   private static final String START_AT = "startAt";
 
-  private static final Set<PaginationMode> LINK_PAGINATION = ImmutableSet.of(
-      PaginationMode.LINK_HEADER,
+  private static final Set<PaginationMode> LINK_PAGINATION = ImmutableSet.of(PaginationMode.LINK_HEADER,
       PaginationMode.LINK_FIELD
   );
 
@@ -181,8 +176,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     httpClientCommon.init(issues, getContext());
 
-    conf.dataFormatConfig.init(
-        getContext(),
+    conf.dataFormatConfig.init(getContext(),
         conf.dataFormat,
         Groups.HTTP.name(),
         HttpClientCommon.DATA_FORMAT_CONFIG_PREFIX,
@@ -201,8 +195,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     next = null;
     haveMorePages = false;
 
-    HttpStageUtil.validateStatusActionConfigs(
-        issues,
+    HttpStageUtil.validateStatusActionConfigs(issues,
         getContext(),
         conf.responseStatusActionConfigs,
         statusToActionConfigs,
@@ -222,7 +215,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   @Override
   public void destroy() {
     httpClientCommon.destroy();
-    if(parserFactory!=null) {
+    if (parserFactory != null) {
       parserFactory.destroy();
     }
     super.destroy();
@@ -239,15 +232,13 @@ public class HttpProcessor extends SingleLaneProcessor {
   }
 
 
-
-
   /**
    * Sets the startAt EL variable in scope for the resource and request body.
    * If the source offset is null (origin was reset) then the initial value
    * from the user provided configuration is used.
    */
   private void initPageOffset() {
-    switch (conf.pagination.mode){
+    switch (conf.pagination.mode) {
       case LINK_HEADER:
       case LINK_FIELD:
       case BY_OFFSET:
@@ -277,10 +268,10 @@ public class HttpProcessor extends SingleLaneProcessor {
   private Future<Response> makeRequest(WebTarget target, Record record) throws StageException {
     MultivaluedMap<String, Object> resolvedHeaders = httpClientCommon.resolveHeaders(conf.headers, record);
     String contentType = HttpStageUtil.getContentTypeWithDefault(resolvedHeaders, conf.defaultRequestContentType);
-    final AsyncInvoker asyncInvoker = target.request()
-        .property(OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN, httpClientCommon.getAuthToken())
-        .headers(resolvedHeaders)
-        .async();
+    final AsyncInvoker asyncInvoker = target.request().property(
+        OAuth1ClientSupport.OAUTH_PROPERTY_ACCESS_TOKEN,
+        httpClientCommon.getAuthToken()
+    ).headers(resolvedHeaders).async();
 
     HttpMethod method = httpClientCommon.getHttpMethod(conf.httpMethod, conf.methodExpression, record);
     Future<Response> futureResp = null;
@@ -288,53 +279,53 @@ public class HttpProcessor extends SingleLaneProcessor {
     long startTime = System.currentTimeMillis();
 
 
-      try {
-        rateLimiter.acquire();
-        if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
-          RecordEL.setRecordInContext(bodyVars, record);
-          final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
-          resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, requestBody, contentType, method, target));
-          futureResp = asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType));
+    try {
+      rateLimiter.acquire();
+      if (conf.requestBody != null && !conf.requestBody.isEmpty() && method != HttpMethod.GET) {
+        RecordEL.setRecordInContext(bodyVars, record);
+        final String requestBody = bodyEval.eval(bodyVars, conf.requestBody, String.class);
+        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, requestBody, contentType, method, target));
+        futureResp = asyncInvoker.method(method.getLabel(), Entity.entity(requestBody, contentType));
 
-        } else {
-          resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, null, null, method, target));
-          futureResp = asyncInvoker.method(method.getLabel());
-        }
-        LOG.debug("Retrieved response in {} ms", System.currentTimeMillis() - startTime);
-        lastRequestTimedOut = false;
-      } catch (Exception e) {
-        LOG.debug("Request failed after {} ms", System.currentTimeMillis() - startTime);
-        final Throwable cause = e.getCause();
-        if (cause != null && (cause instanceof TimeoutException || cause instanceof SocketTimeoutException)) {
-          LOG.warn(
-              "{} attempting to read response in HttpClientSource: {}",
-              cause.getClass().getSimpleName(),
-              e.getMessage(),
-              e
-          );
+      } else {
+        resolvedRecords.put(record, new HeadersAndBody(resolvedHeaders, null, null, method, target));
+        futureResp = asyncInvoker.method(method.getLabel());
+      }
+      LOG.debug("Retrieved response in {} ms", System.currentTimeMillis() - startTime);
+      lastRequestTimedOut = false;
+    } catch (Exception e) {
+      LOG.debug("Request failed after {} ms", System.currentTimeMillis() - startTime);
+      final Throwable cause = e.getCause();
+      if (cause != null && (cause instanceof TimeoutException || cause instanceof SocketTimeoutException)) {
+        LOG.warn("{} attempting to read response in HttpClientSource: {}",
+            cause.getClass().getSimpleName(),
+            e.getMessage(),
+            e
+        );
 
-          lastRequestTimedOut = true;
+        lastRequestTimedOut = true;
 
-        } else if (cause != null && cause instanceof InterruptedException) {
-          LOG.error(
-              String.format(
-                  "InterruptedException attempting to make request in HttpClientSource; stopping: %s",
-                  e.getMessage()
-              ),
-              e);
+      } else if (cause != null && cause instanceof InterruptedException) {
+        LOG.error(String.format("InterruptedException attempting to make request in HttpClientSource; stopping: %s",
+            e.getMessage()
+            ),
+            e
+        );
 
-        } else {
-          LOG.error(
-              String.format(
-                  "ProcessingException attempting to make request in HttpClientSource: %s",
-                  e.getMessage()
-              ),
-              e);
-          Throwable reportEx = cause != null ? cause : e;
-          final StageException stageException = new StageException(Errors.HTTP_32, getResponseStatus(), reportEx.toString(), reportEx);
-          LOG.error(stageException.getMessage());
-          throw stageException;
-        }
+      } else {
+        LOG.error(String.format("ProcessingException attempting to make request in HttpClientSource: %s",
+            e.getMessage()
+        ), e);
+        Throwable reportEx = cause != null ? cause : e;
+        final StageException stageException = new StageException(
+            Errors.HTTP_32,
+            getResponseStatus(),
+            reportEx.toString(),
+            reportEx
+        );
+        LOG.error(stageException.getMessage());
+        throw stageException;
+      }
 
 
     }
@@ -371,7 +362,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       String resolvedUrl = resolveInitialUrl(record);
       WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
 
-      LOG.debug("Resolved HTTP Client URL: '{}'",resolvedUrl);
+      LOG.debug("Resolved HTTP Client URL: '{}'", resolvedUrl);
 
       // If the request (headers or body) contain a known sensitive EL and we're not using https then fail the request.
       if (httpClientCommon.requestContainsSensitiveInfo(conf.headers, conf.requestBody) &&
@@ -385,9 +376,9 @@ public class HttpProcessor extends SingleLaneProcessor {
 
       Record currentRecord = null;
 
-      do{
+      do {
 
-        recordsResponse=new ArrayList<>();
+        recordsResponse = new ArrayList<>();
 
         Future<Response> future = makeRequest(target, record);
 
@@ -404,42 +395,42 @@ public class HttpProcessor extends SingleLaneProcessor {
             throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(response), e.toString());
           } catch (TimeoutException e) {
             LOG.error("HTTP request future timed out", e.toString(), e);
-            throw new OnRecordErrorException(record , Errors.HTTP_03, getResponseStatus(response), e.toString());
+            throw new OnRecordErrorException(record, Errors.HTTP_03, getResponseStatus(response), e.toString());
           }
 
-          if (conf.pagination.mode != PaginationMode.NONE  && !appliedRetryAction) {
+          if (conf.pagination.mode != PaginationMode.NONE && !appliedRetryAction) {
             Record recordResp = recordsResponse.get(0);
             String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
             List listResponse = (List) recordResp.get(resultFieldPath).getValue();
             numRecordsLastRequest = listResponse.size();
-            if(currentRecord == null) {
+            if (currentRecord == null) {
               currentRecord = recordResp;
             } else {
-              ((List) currentRecord.get(resultFieldPath).getValue()).addAll(
-                  listResponse
-              );
+              ((List) currentRecord.get(resultFieldPath).getValue()).addAll(listResponse);
             }
-            if(conf.pagination.mode == PaginationMode.BY_PAGE){
+            if (conf.pagination.mode == PaginationMode.BY_PAGE) {
               countPages++;
-            }else{
+            } else {
               countPages = countPages + numRecordsLastRequest;
             }
-            String s = resolveNextPageUrl(countPages+"");
-            if(s==null){
+            String s = resolveNextPageUrl(countPages + "");
+            if (s == null) {
               close = true;
-            }else {
+            } else {
               target = httpClientCommon.getClient().target(s);
             }
             // Pause between paging requests so we don't get rate limited.
             uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
-          }else{
-            if(recordsResponse.size()>0)currentRecord = recordsResponse.get(0);
+          } else {
+            if (!recordsResponse.isEmpty()) {
+              currentRecord = recordsResponse.get(0);
+            }
           }
         } catch (OnRecordErrorException e) {
           close = true;
           errorRecordHandler.onError(e);
         }
-      }while (shouldMakeAnotherRequest(start, uninterrupted, close, recordsToResponseState.get(record)));
+      } while (shouldMakeAnotherRequest(start, uninterrupted, close, recordsToResponseState.get(record)));
 
       if (recordsResponse != null && response != null) {
         addToBatchRecords = processRecord(currentRecord, record, response);
@@ -456,19 +447,21 @@ public class HttpProcessor extends SingleLaneProcessor {
   }
 
   private boolean shouldMakeAnotherRequest(
-      long start,
-      boolean uninterrupted,
-      boolean close,
-      ResponseState responseState) {
+      long start, boolean uninterrupted, boolean close, ResponseState responseState
+  ) {
     boolean waitTimeNotExp = !waitTimeExpired(start);
-    boolean thereIsNextLink =
-        (((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER))
-            && haveMorePages);
-    boolean isLink = !(conf.pagination.mode == PaginationMode.BY_PAGE || conf.pagination.mode == PaginationMode.BY_OFFSET ||
-        conf.pagination.mode == PaginationMode.NONE);
+    boolean thereIsNextLink = (
+        ((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER)) &&
+            haveMorePages
+    );
+    boolean isLink = !(
+        conf.pagination.mode == PaginationMode.BY_PAGE ||
+            conf.pagination.mode == PaginationMode.BY_OFFSET ||
+            conf.pagination.mode == PaginationMode.NONE
+    );
 
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
-    boolean numRetriesExceed = action != null && (responseState.retryCount>action.getMaxNumRetries());
+    boolean numRetriesExceed = action != null && (responseState.retryCount > action.getMaxNumRetries());
     return waitTimeNotExp &&
         uninterrupted &&
         !lastRequestTimedOut &&
@@ -517,6 +510,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    *
    * @param sourceOffset current source offset
    * @return next URL to fetch
+   *
    * @throws ELEvalException if the resource expression cannot be evaluated
    */
   @VisibleForTesting
@@ -537,10 +531,11 @@ public class HttpProcessor extends SingleLaneProcessor {
   }
 
 
-  private List<Record> processRecord(Record currentRecord, Record inRec, Response response) throws OnRecordErrorException {
+  private List<Record> processRecord(Record currentRecord, Record inRec, Response response)
+      throws OnRecordErrorException {
     List<Record> recordsProcessed = new ArrayList<>();
 
-    if(currentRecord==null){
+    if (currentRecord == null) {
       return recordsProcessed;
     }
 
@@ -587,8 +582,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             }
             break;
           default:
-            throw new OnRecordErrorException(
-                inRec,
+            throw new OnRecordErrorException(inRec,
                 Errors.HTTP_61,
                 getResponseStatus(response),
                 conf.outputField,
@@ -600,7 +594,7 @@ public class HttpProcessor extends SingleLaneProcessor {
         List<Field> currentRecordList;
         if (currentRecordValue instanceof List) {
           currentRecordList = (List<Field>) currentRecordValue;
-        }else{
+        } else {
           currentRecordList = Arrays.asList(currentRecord.get());
         }
 
@@ -610,11 +604,10 @@ public class HttpProcessor extends SingleLaneProcessor {
             case SEND_TO_ERROR:
               LOG.error(Errors.HTTP_68.getMessage(), getResponseStatus(response));
               Record cloneRecord = getContext().cloneRecord(inRec);
-              errorRecordHandler.onError(new OnRecordErrorException(
-                cloneRecord,
-                Errors.HTTP_68,
-                getResponseStatus(response))
-              );
+              errorRecordHandler.onError(new OnRecordErrorException(cloneRecord,
+                  Errors.HTTP_68,
+                  getResponseStatus(response)
+              ));
               break;
             case PASS_RECORD_ON:
               Record recToAddToBatch = getContext().cloneRecord(inRec);
@@ -676,7 +669,13 @@ public class HttpProcessor extends SingleLaneProcessor {
         );
       }
     } else {
-      throw new OnRecordErrorException(inRec, Errors.HTTP_65, getResponseStatus(response), conf.outputField, inRec.getHeader().getSourceId());
+      throw new OnRecordErrorException(
+          inRec,
+          Errors.HTTP_65,
+          getResponseStatus(response),
+          conf.outputField,
+          inRec.getHeader().getSourceId()
+      );
     }
 
     return recordsProcessed;
@@ -685,11 +684,10 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private void reprocessIfRequired(SingleLaneBatchMaker batchMaker) throws StageException {
     Map<Record, Future<Response>> responses = new HashMap<>(resolvedRecords.size());
-    for(Map.Entry<Record, HeadersAndBody> entry : resolvedRecords.entrySet()) {
+    for (Map.Entry<Record, HeadersAndBody> entry : resolvedRecords.entrySet()) {
       HeadersAndBody hb = entry.getValue();
       Future<Response> responseFuture;
-      final AsyncInvoker asyncInvoker = hb.target.request()
-          .headers(hb.resolvedHeaders).async();
+      final AsyncInvoker asyncInvoker = hb.target.request().headers(hb.resolvedHeaders).async();
       if (hb.requestBody != null) {
         responseFuture = asyncInvoker.method(hb.method.getLabel(), Entity.entity(hb.requestBody, hb.contentType));
       } else {
@@ -703,7 +701,13 @@ public class HttpProcessor extends SingleLaneProcessor {
         List<Record> recordsToAddBatch = new ArrayList<>();
         List<Record> output = new ArrayList<>();
         processResponse(
-            entry.getKey(), entry.getValue(), conf.maxRequestCompletionSecs, true, output, System.currentTimeMillis());
+            entry.getKey(),
+            entry.getValue(),
+            conf.maxRequestCompletionSecs,
+            true,
+            output,
+            System.currentTimeMillis()
+        );
         Response response = null;
         try {
           response = responses.get(entry.getKey()).get(conf.maxRequestCompletionSecs, TimeUnit.SECONDS);
@@ -712,11 +716,11 @@ public class HttpProcessor extends SingleLaneProcessor {
           throw new OnRecordErrorException(entry.getKey(), Errors.HTTP_03, getResponseStatus(), e.toString());
         } catch (TimeoutException e) {
           LOG.error("HTTP request future timed out", e.toString(), e);
-          throw new OnRecordErrorException(entry.getKey() , Errors.HTTP_03, getResponseStatus(), e.toString());
+          throw new OnRecordErrorException(entry.getKey(), Errors.HTTP_03, getResponseStatus(), e.toString());
         }
         if (output != null && response != null) {
           recordsToAddBatch = processRecord(output.get(0), entry.getKey(), response);
-          for (Record record: recordsToAddBatch) {
+          for (Record record : recordsToAddBatch) {
             batchMaker.addRecord(record);
           }
         }
@@ -735,6 +739,7 @@ public class HttpProcessor extends SingleLaneProcessor {
    * @param responseFuture the async HTTP request future
    * @param maxRequestCompletionSecs maximum time to wait for request completion (start to finish)
    * @return parsed record from the request
+   *
    * @throws StageException if the request fails, times out, or cannot be parsed
    */
   private boolean processResponse(
@@ -770,20 +775,19 @@ public class HttpProcessor extends SingleLaneProcessor {
         return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
-        if (action==null) {
+        if (action == null) {
           if (conf.propagateAllHttpResponses) {
-            Map<String,Field> mapFields = new HashMap<>();
+            Map<String, Field> mapFields = new HashMap<>();
             String responseBodyString = extractResponseBodyStr(response);
-            mapFields.put(conf.errorResponseField,Field.create(responseBodyString));
+            mapFields.put(conf.errorResponseField, Field.create(responseBodyString));
             Record r = getContext().createRecord("");
             r.set(Field.create(mapFields));
-            createResponseHeaders(r,response);
-            r.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d",getResponse().getStatus()));
+            createResponseHeaders(r, response);
+            r.getHeader().setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d", getResponse().getStatus()));
             records.add(r);
             return false;
           } else {
-            throw new OnRecordErrorException(
-                record,
+            throw new OnRecordErrorException(record,
                 Errors.HTTP_01,
                 response.getStatus(),
                 response.getStatusInfo().getReasonPhrase() + " " + responseBody
@@ -797,8 +801,7 @@ public class HttpProcessor extends SingleLaneProcessor {
           final AtomicLong backoffExp = new AtomicLong(responseState.backoffIntervalExponential);
           final AtomicLong backoffLin = new AtomicLong(responseState.backoffIntervalLinear);
           String responseBodyString = extractResponseBodyStr(response);
-          HttpStageUtil.applyResponseAction(
-              action,
+          HttpStageUtil.applyResponseAction(action,
               statusChanged,
               input -> new StageException(Errors.HTTP_14, responseStatus, responseBodyString),
               retryCountObj,
@@ -811,17 +814,16 @@ public class HttpProcessor extends SingleLaneProcessor {
           responseState.backoffIntervalExponential = backoffExp.get();
           responseState.backoffIntervalLinear = backoffLin.get();
           responseState.lastRequestTimedOut = true;
-          appliedRetryAction =
-              action.getAction() == ResponseAction.RETRY_EXPONENTIAL_BACKOFF
-                  || action.getAction() == ResponseAction.RETRY_LINEAR_BACKOFF
-                  || action.getAction() == ResponseAction.RETRY_IMMEDIATELY;
+          appliedRetryAction = action.getAction() == ResponseAction.RETRY_EXPONENTIAL_BACKOFF ||
+              action.getAction() == ResponseAction.RETRY_LINEAR_BACKOFF ||
+              action.getAction() == ResponseAction.RETRY_IMMEDIATELY;
         }
       }
       resolvedRecords.remove(record);
       boolean close = false;
 
-      if (action!=null) {
-        if(waitTimeExpired(start)) {
+      if (action != null) {
+        if (waitTimeExpired(start)) {
           close = true;
           errorRecordHandler.onError(Errors.HTTP_67, getResponseStatus());
         }
@@ -850,8 +852,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       final AtomicInteger retryCountObj = new AtomicInteger(responseState.retryCount);
       final AtomicLong backoffExp = new AtomicLong(responseState.backoffIntervalExponential);
       final AtomicLong backoffLin = new AtomicLong(responseState.backoffIntervalLinear);
-      HttpStageUtil.applyResponseAction(
-          actionConf,
+      HttpStageUtil.applyResponseAction(actionConf,
           firstTimeout,
           input -> new StageException(Errors.HTTP_18),
           retryCountObj,
@@ -874,7 +875,6 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
   }
 
-
   private String extractResponseBodyStr(Response response) {
     String bodyStr = "";
     if (response != null) {
@@ -894,9 +894,11 @@ public class HttpProcessor extends SingleLaneProcessor {
    *
    * @param response HTTP response
    * @return an SDC record resulting from the response text
+   *
    * @throws StageException if the response could not be parsed
    */
-  private boolean parseResponse(Record inRecord, InputStream response, List<Record> parsedRecords) throws StageException {
+  private boolean parseResponse(Record inRecord, InputStream response, List<Record> parsedRecords)
+      throws StageException {
     boolean close = false;
     if (conf.httpMethod == HttpMethod.HEAD) {
       // Head will have no body so can't be parsed.   Return an empty record.
@@ -914,15 +916,16 @@ public class HttpProcessor extends SingleLaneProcessor {
           RecordEL.setRecordInContext(stopVars, record);
           haveMorePages = !stopEval.eval(stopVars, conf.pagination.stopCondition, Boolean.class);
           if (haveMorePages) {
-            final String nextPageURLPrefix =
-                StringUtils.isNotBlank(conf.pagination.nextPageURLPrefix) ? conf.pagination.nextPageURLPrefix : "";
-            if(!record.has(conf.pagination.nextPageFieldPath)){
+            final String nextPageURLPrefix = StringUtils.isNotBlank(conf.pagination.nextPageURLPrefix)
+                                             ? conf.pagination.nextPageURLPrefix
+                                             : "";
+            if (!record.has(conf.pagination.nextPageFieldPath)) {
               throw new StageException(HTTP_66, getResponseStatus(), conf.pagination.nextPageFieldPath);
             }
             final String nextPageFieldValue = record.get(conf.pagination.nextPageFieldPath).getValueAsString();
-            final String nextPageURL =
-                nextPageFieldValue.startsWith(nextPageURLPrefix) ?
-                    nextPageFieldValue : nextPageURLPrefix.concat(nextPageFieldValue);
+            final String nextPageURL = nextPageFieldValue.startsWith(nextPageURLPrefix)
+                                       ? nextPageFieldValue
+                                       : nextPageURLPrefix.concat(nextPageFieldValue);
             next = Link.fromUri(nextPageURL).build();
           } else {
             next = null;
@@ -937,22 +940,24 @@ public class HttpProcessor extends SingleLaneProcessor {
           }
         }
 
-        while(record!=null){
-          if(conf.dataFormat == DataFormat.TEXT) {
+        while (record != null) {
+          if (conf.dataFormat == DataFormat.TEXT) {
             // Output is placed in a field "/text" so we remove it here.
             Record rec = getContext().cloneRecord(inRecord);
             rec.set(record.get("/text"));
             parsedRecords.add(rec);
-          }else if(conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML){
-            if(record.get().getValue() instanceof List) {
-              if(parsePaginatedRecord(parsedRecords, record))
+          } else if (conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML) {
+            if (record.get().getValue() instanceof List) {
+              if (parsePaginatedRecord(parsedRecords, record)) {
                 close = true;
-            }else{
+              }
+            } else {
               //JSON Object
-              if(parsePaginatedRecord(parsedRecords, record))
+              if (parsePaginatedRecord(parsedRecords, record)) {
                 close = true;
+              }
             }
-          }else{
+          } else {
             parsedRecords.add(record);
           }
           record = parser.parse();
@@ -968,15 +973,15 @@ public class HttpProcessor extends SingleLaneProcessor {
 
   private boolean parsePaginatedRecord(List<Record> records, Record record) {
     boolean close = false;
-    if(conf.pagination.mode != PaginationMode.NONE){
+    if (conf.pagination.mode != PaginationMode.NONE) {
       List<Field> value = (List<Field>) record.get(conf.pagination.resultFieldPath).getValue();
       close = value.isEmpty();
     }
-    if (conf.pagination.mode != PaginationMode.NONE && !conf.pagination.keepAllFields){
+    if (conf.pagination.mode != PaginationMode.NONE && !conf.pagination.keepAllFields) {
       Record recordPag = getContext().createRecord("");
       recordPag.set(record.get(conf.pagination.resultFieldPath));
       records.add(recordPag);
-    }else {
+    } else {
       records.add(record);
     }
     return close;
@@ -995,7 +1000,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     }
 
     Record.Header header = record.getHeader();
-    header.setAttribute(REQUEST_STATUS_CONFIG_NAME,String.format("%d",response.getStatus()));
+    header.setAttribute(REQUEST_STATUS_CONFIG_NAME, String.format("%d", response.getStatus()));
 
     if (conf.headerOutputLocation == HeaderOutputLocation.FIELD) {
       return createResponseHeaderField(record, response);
@@ -1052,17 +1057,17 @@ public class HttpProcessor extends SingleLaneProcessor {
     this.response = response;
   }
 
-  String getResponseStatus(){
-    if(getResponse() == null){
+  String getResponseStatus() {
+    if (getResponse() == null) {
       return "NULL";
     }
-    return String.format("%d",getResponse().getStatus());
+    return String.valueOf(getResponse().getStatus());
   }
 
-  String getResponseStatus(Response response){
-    if(response == null){
+  String getResponseStatus(Response response) {
+    if (response == null) {
       return "NULL";
     }
-    return String.format("%d",getResponse().getStatus());
+    return String.valueOf(getResponse().getStatus());
   }
 }
