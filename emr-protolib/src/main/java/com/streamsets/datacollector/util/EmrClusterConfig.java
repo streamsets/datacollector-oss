@@ -15,30 +15,15 @@
  */
 package com.streamsets.datacollector.util;
 
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Properties;
 
-public class EmrClusterConfig {
-  static final String ACCESS_KEY = "accessKey";
-  private static final String SECRET_KEY = "secretKey";
-  private static final String USER_REGION = "userRegion";
-  private static final String S3_STAGING_URI = "s3StagingUri";
-  private static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
-  private static final String CLUSTER_PREFIX = "clusterPrefix";
-  private static final String SERVICE_ROLE = "serviceRole";
-  private static final String JOB_FLOW_ROLE = "jobFlowRole";
-  private static final String EC2_SUBNET_ID = "ec2SubnetId";
-  private static final String MASTER_SECURITY_GROUP = "masterSecurityGroup";
-  private static final String SLAVE_SECURITY_GROUP = "slaveSecurityGroup";
-  private static final String INSTANCE_COUNT = "instanceCount";
-  private static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
-  private static final String SLAVE_INSTANCE_TYPE = "slaveInstanceType";
-  private static final String ENABLE_EMR_DEBUGGING = "enableEMRDebugging";
-  private static final String S3_LOG_URI = "s3LogUri";
-  private static final String CLUSTER_ID = "clusterId";
-  private static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
-  private static final String TERMINATE_CLUSTER = "terminateCluster";
-  private static final String LOGGING_ENABLED = "loggingEnabled";
+import static com.streamsets.pipeline.stage.common.emr.EMRClusterConnection.*;
 
+public class EmrClusterConfig {
+  private static final String ENABLE_EMR_DEBUGGING = "enableEMRDebugging";
 
   Properties props;
 
@@ -124,6 +109,15 @@ public class EmrClusterConfig {
 
   public String getS3LogUri() {
     return props.getProperty(S3_LOG_URI);
+  }
+
+  public AWSCredentialMode getAwsCredentialMode() {
+    final String credentialModeStr = props.getProperty(AWS_CREDENTIAL_MODE);
+    if (StringUtils.isNotBlank(credentialModeStr)) {
+      return AWSCredentialMode.valueOf(credentialModeStr);
+    } else {
+      return null;
+    }
   }
 
 }

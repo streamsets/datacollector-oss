@@ -40,6 +40,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnectionGroups;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -92,15 +93,8 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
   @Override
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
-    AWSCredentialsProvider credentialsProvider;
-    if (connection.awsConfig.credentialMode == AWSCredentialMode.WITH_IAM_ROLES) {
-      credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
-    } else {
-      credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(
-          connection.awsConfig.awsAccessKeyId.get(),
-          connection.awsConfig.awsSecretAccessKey.get()
-      ));
-    }
+    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig);
+
     final String region = connection.region == AwsRegion.OTHER ? connection.customRegion : connection.region.getId();
 
     Exception unhandledValidationException = null;

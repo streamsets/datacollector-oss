@@ -34,15 +34,30 @@ public class AWSUtil {
   private AWSUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+    final String accessKeyId = config.awsAccessKeyId != null ? config.awsAccessKeyId.get() : null;
+    final String secretAccessKey = config.awsSecretAccessKey != null ? config.awsSecretAccessKey.get() : null;
+    return getCredentialsProvider(config.credentialMode, accessKeyId, secretAccessKey);
+  }
+
+  public static AWSCredentialsProvider getCredentialsProvider(
+      AWSCredentialMode credentialMode,
+      String accessKeyId,
+      String secretAccessKey
+  ) throws StageException {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
-    if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
-      if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
-        credentialsProvider = new AWSStaticCredentialsProvider(
-            new BasicAWSCredentials(config.awsAccessKeyId.get(), config.awsSecretAccessKey.get())
-        );
+    if (credentialMode != null) {
+      switch (credentialMode) {
+        case WITH_CREDENTIALS:
+          if (!StringUtils.isEmpty(accessKeyId) && !StringUtils.isEmpty(secretAccessKey)) {
+            credentialsProvider = new AWSStaticCredentialsProvider(
+                new BasicAWSCredentials(accessKeyId, secretAccessKey)
+            );
+          }
+          break;
+        case WITH_ANONYMOUS_CREDENTIALS:
+          credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
+          break;
       }
-    } else if (config.credentialMode == AWSCredentialMode.WITH_ANONYMOUS_CREDENTIALS) {
-      credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
     }
     return credentialsProvider;
   }

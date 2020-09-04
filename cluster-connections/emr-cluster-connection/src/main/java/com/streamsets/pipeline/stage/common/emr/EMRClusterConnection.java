@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
 import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 
@@ -321,6 +322,7 @@ public class EMRClusterConnection {
   )
   public String slaveInstanceTypeCustom;
 
+  public static final String AWS_CREDENTIAL_MODE = "awsCredentialMode";
   public static final String ACCESS_KEY = "accessKey";
   public static final String SECRET_KEY = "secretKey";
   public static final String USER_REGION = "userRegion";
@@ -393,6 +395,12 @@ public class EMRClusterConnection {
     props.setProperty(VISIBLE_TO_ALL_USERS, Boolean.toString(visibleToAllUsers));
     props.setProperty(S3_LOG_URI, s3LogUri);
     props.setProperty(LOGGING_ENABLED, Boolean.toString(loggingEnabled));
+    if (awsConfig != null && awsConfig.credentialMode != null) {
+      props.setProperty(
+          AWS_CREDENTIAL_MODE,
+          awsConfig.credentialMode.name()
+      );
+    }
     return props;
   }
 

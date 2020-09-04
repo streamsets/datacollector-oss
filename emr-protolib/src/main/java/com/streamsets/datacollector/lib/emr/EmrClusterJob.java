@@ -15,8 +15,10 @@
  */
 package com.streamsets.datacollector.lib.emr;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
@@ -47,6 +49,9 @@ import com.streamsets.pipeline.api.delegate.BaseStageLibraryDelegate;
 import com.streamsets.pipeline.api.delegate.StageLibraryDelegateDef;
 import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
+import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationReport;
 import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;
@@ -91,11 +96,14 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
     @VisibleForTesting
     AmazonElasticMapReduce getEmrClient(EmrClusterConfig emrClusterConfig) {
       if (emrClient==null) {
-        emrClient = AmazonElasticMapReduceClientBuilder.standard().withCredentials(
-            new AWSStaticCredentialsProvider(new BasicAWSCredentials(
-                emrClusterConfig.getAccessKey(),
-                emrClusterConfig.getSecretKey()
-            ))).withRegion(Regions.fromName(emrClusterConfig.getUserRegion())).build();
+        final AWSCredentialMode credentialMode = emrClusterConfig.getAwsCredentialMode();
+        AWSCredentialsProvider credentialProvider = AWSUtil.getCredentialsProvider(
+            credentialMode,
+            emrClusterConfig.getAccessKey(),
+            emrClusterConfig.getSecretKey()
+        );
+        emrClient = AmazonElasticMapReduceClientBuilder.standard().withCredentials(credentialProvider)
+            .withRegion(Regions.fromName(emrClusterConfig.getUserRegion())).build();
       }
       return emrClient;
     }

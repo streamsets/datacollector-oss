@@ -17,6 +17,8 @@ package com.streamsets.pipeline.stage.lib.aws;
 
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,6 +64,8 @@ public class TestAWSUtil {
     awsConfig.credentialMode = AWSCredentialMode.WITH_ANONYMOUS_CREDENTIALS;
 
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
+    Assert.assertTrue(AWSStaticCredentialsProvider.class.equals(credentialsProvider.getClass()));
+    Assert.assertTrue(AnonymousAWSCredentials.class.equals(credentialsProvider.getCredentials().getClass()));
     Assert.assertNull(credentialsProvider.getCredentials().getAWSAccessKeyId());
     Assert.assertNull(credentialsProvider.getCredentials().getAWSSecretKey());
   }
