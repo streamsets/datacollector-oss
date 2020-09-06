@@ -16,7 +16,6 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
 upgrades:
   - toVersion: 3
     actions:
@@ -32,59 +31,59 @@ upgrades:
   - toVersion: 4
     actions:
       - renameConfig:
-          oldNamePattern: forceConfig.username
-          newNamePattern: forceConfig.connection.username
+          oldNamePattern: conf.username
+          newNamePattern: conf.connection.username
       - renameConfig:
-          oldNamePattern: forceConfig.password
-          newNamePattern: forceConfig.connection.password
+          oldNamePattern: conf.password
+          newNamePattern: conf.connection.password
       - renameConfig:
-          oldNamePattern: forceConfig.authEndpoint
-          newNamePattern: forceConfig.connection.authEndpoint
+          oldNamePattern: conf.authEndpoint
+          newNamePattern: conf.connection.authEndpoint
       - renameConfig:
-          oldNamePattern: forceConfig.apiVersion
-          newNamePattern: forceConfig.connection.apiVersion
+          oldNamePattern: conf.apiVersion
+          newNamePattern: conf.connection.apiVersion
       - renameConfig:
-          oldNamePattern: forceConfig.useProxy
-          newNamePattern: forceConfig.connection.useProxy
+          oldNamePattern: conf.useProxy
+          newNamePattern: conf.connection.useProxy
       - renameConfig:
-          oldNamePattern: forceConfig.proxyHostname
-          newNamePattern: forceConfig.connection.proxyHostname
+          oldNamePattern: conf.proxyHostname
+          newNamePattern: conf.connection.proxyHostname
       - renameConfig:
-          oldNamePattern: forceConfig.proxyPort
-          newNamePattern: forceConfig.connection.proxyPort
+          oldNamePattern: conf.proxyPort
+          newNamePattern: conf.connection.proxyPort
       - renameConfig:
-          oldNamePattern: forceConfig.useProxyCredentials
-          newNamePattern: forceConfig.connection.useProxyCredentials
+          oldNamePattern: conf.useProxyCredentials
+          newNamePattern: conf.connection.useProxyCredentials
       - renameConfig:
-          oldNamePattern: forceConfig.proxyRealm
-          newNamePattern: forceConfig.connection.proxyRealm
+          oldNamePattern: conf.proxyRealm
+          newNamePattern: conf.connection.proxyRealm
       - renameConfig:
-          oldNamePattern: forceConfig.proxyUsername
-          newNamePattern: forceConfig.connection.proxyUsername
+          oldNamePattern: conf.proxyUsername
+          newNamePattern: conf.connection.proxyUsername
       - renameConfig:
-          oldNamePattern: forceConfig.proxyPassword
-          newNamePattern: forceConfig.connection.proxyPassword
+          oldNamePattern: conf.proxyPassword
+          newNamePattern: conf.connection.proxyPassword
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.useMutualAuth
-          newNamePattern: forceConfig.connection.mutualAuth.useMutualAuth
+          oldNamePattern: conf.mutualAuth.useMutualAuth
+          newNamePattern: conf.connection.mutualAuth.useMutualAuth
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.useRemoteKeyStore
-          newNamePattern: forceConfig.connection.mutualAuth.useRemoteKeyStore
+          oldNamePattern: conf.mutualAuth.useRemoteKeyStore
+          newNamePattern: conf.connection.mutualAuth.useRemoteKeyStore
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.keyStoreFilePath
-          newNamePattern: forceConfig.connection.mutualAuth.keyStoreFilePath
+          oldNamePattern: conf.mutualAuth.keyStoreFilePath
+          newNamePattern: conf.connection.mutualAuth.keyStoreFilePath
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.privateKey
-          newNamePattern: forceConfig.connection.mutualAuth.privateKey
+          oldNamePattern: conf.mutualAuth.privateKey
+          newNamePattern: conf.connection.mutualAuth.privateKey
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.certificateChain
-          newNamePattern: forceConfig.connection.mutualAuth.certificateChain
+          oldNamePattern: conf.mutualAuth.certificateChain
+          newNamePattern: conf.connection.mutualAuth.certificateChain
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.keyStoreType
-          newNamePattern: forceConfig.connection.mutualAuth.keyStoreType
+          oldNamePattern: conf.mutualAuth.keyStoreType
+          newNamePattern: conf.connection.mutualAuth.keyStoreType
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.keyStorePassword
-          newNamePattern: forceConfig.connection.mutualAuth.keyStorePassword
+          oldNamePattern: conf.mutualAuth.keyStorePassword
+          newNamePattern: conf.connection.mutualAuth.keyStorePassword
       - renameConfig:
-          oldNamePattern: forceConfig.mutualAuth.underlyingConfig
-          newNamePattern: forceConfig.connection.mutualAuth.underlyingConfig
+          oldNamePattern: conf.mutualAuth.underlyingConfig
+          newNamePattern: conf.connection.mutualAuth.underlyingConfig
