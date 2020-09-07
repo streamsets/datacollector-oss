@@ -937,7 +937,7 @@ public class LogMinerSession {
 
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
-      if (rs.next()) {
+      while (rs.next()) {
         RedoLog log = new RedoLog(
             rs.getString(1),
             rs.getBigDecimal(2),
@@ -951,11 +951,13 @@ public class LogMinerSession {
             rs.getBoolean(10)
         );
         result.add(log);
-      } else {
-        throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before SCN {}", start));
       }
     } catch (SQLException e) {
       throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    if (result.isEmpty())  {
+      throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before SCN {}", start));
     }
 
     return result;
