@@ -288,6 +288,7 @@
     <module>thycotic-credentialstore-lib</module>
     <module>google-cloud-support</module>
     <module>apache-kudu-connection</module>
+    <module>azure-connection</module>
   </modules>
 
   <build>
