@@ -108,7 +108,9 @@ final class DefaultFsHelper implements FsHelper {
   }
 
   @Override
-  public Path renameAndGetPath(FileSystem fs, Path tempPath) throws IOException, StageException {
+  public Path renameAndGetPath(FileSystem fs, Path inPath) throws IOException, StageException {
+    Path tempPath = Path.getPathWithoutSchemeAndAuthority(inPath);
+
     Path finalPath =  new Path(tempPath.getParent(), (StringUtils.isEmpty(uniquePrefix) ? "" : (uniquePrefix + "_") ) + UUID.randomUUID().toString() + recordWriterManager.getExtension());
     if (!fs.rename(tempPath, finalPath)) {
       throw new IOException(Utils.format("Could not rename '{}' to '{}'", tempPath, finalPath));
