@@ -26,12 +26,12 @@ import com.streamsets.pipeline.api.base.configurablestage.DExecutor;
 import com.streamsets.pipeline.stage.destination.hdfs.metadataexecutor.HdfsActionsConfig;
 
 @StageDef(
-  version = 1,
+  version = 2,
   label = "ADLS Gen2 File Metadata",
   description = "Changes ADLS Gen2 file metadata, such as renaming files or changing permissions",
   icon = "data-lake-metadata-executor-gen2.png",
   privateClassLoader = true,
-  upgraderDef = "upgrader/DataLakeGen2MetadataDExecutor.yaml",
+  upgrader = DataLakeGen2MetadataUpgrader.class,
   onlineHelpRefUrl ="index.html?contextID=task_uwz_m45_rhb",
   producesEvents = true
 )

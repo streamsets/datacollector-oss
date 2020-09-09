@@ -17,15 +17,18 @@
 package com.streamsets.pipeline.stage.metadata.gen2;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.AzureUtils;
-import com.streamsets.pipeline.stage.conf.AuthMethodGen2;
-import com.streamsets.pipeline.stage.conf.AuthMethodGen2ChooserValues;
 import com.streamsets.pipeline.stage.conf.DataLakeConnectionProtocol;
+import com.streamsets.pipeline.stage.conf.connection.ADLSGen2Connection;
+import com.streamsets.pipeline.stage.conf.connection.ADLSGen2Properties;
 import com.streamsets.pipeline.stage.destination.datalake.Errors;
 import com.streamsets.pipeline.stage.destination.datalake.Groups;
 import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
@@ -47,116 +50,29 @@ public class DataLakeGen2MetadataConfig {
   private static final String ADLS_CONFIG_ACCOUNT_FQDN = ADLS_CONFIG_BEAN_PREFIX + "accountFQDN";
   private static final String ADLS_CONFIG_STORAGE_CONTAINER = ADLS_CONFIG_BEAN_PREFIX + "storageContainer";
   private static final String ADLS_CONFIG_CLIENT_ID = ADLS_CONFIG_BEAN_PREFIX + "clientId";
-  private static final String ADLS_CONFIG_ACCOUNT_KEY = ADLS_CONFIG_BEAN_PREFIX + "accountKey";
-
-  private static final String ADLS_CONFIG_AUTH_TYPE_KEY = "fs.azure.account.auth.type";
-  private static final String ADLS_CONFIG_AUTH_TYPE_DEFAULT_VALUE = "OAuth";
-
-  private static final String ADLS_CONFIG_OAUTH_PROVIDER_TYPE_KEY = "fs.azure.account.oauth.provider.type";
   private static final String ADLS_CONFIG_OAUTH_CLIENT_CREDS_TOKEN_PROVIDER_VALUE = "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider";
-
-  private static final String ADLS_CONFIG_AUTH_ENDPOINT_KEY = "fs.azure.account.oauth2.client.endpoint";
-  private static final String ADLS_CONFIG_CLIENT_ID_KEY = "fs.azure.account.oauth2.client.id";
-  private static final String ADLS_CONFIG_CLIENT_SECRET_KEY = "fs.azure.account.oauth2.client.secret";
-
-  private static final String ABFS_CONFIG_ACCOUNT_PREFIX = "fs.azure.account.key.";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "example.dfs.core.windows.net",
-      label = "Account FQDN",
-      description = "The fully qualified domain name of the Data Lake Storage account",
-      displayPosition = 10,
-      group = "DATALAKE"
-  )
-  public CredentialValue accountFQDN;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "example-blob-container",
-      label = "Storage Container / File System",
-      description = "Name of the storage container or file system in the storage account",
-      displayPosition = 20,
-      group = "DATALAKE"
-  )
-  public CredentialValue storageContainer;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "OAUTH",
-      label = "Authentication Method",
-      description = "Method used to authenticate connections to Azure",
-      displayPosition = 30,
-      group = "DATALAKE"
+      connectionType = ADLSGen2Connection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = -500
   )
-  @ValueChooserModel(AuthMethodGen2ChooserValues.class)
-  public AuthMethodGen2 authMethod;
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "",
-      label = "Application ID",
-      description = "Azure application ID",
-      displayPosition = 40,
-      group = "DATALAKE",
-      dependsOn = "authMethod",
-      triggeredByValue = "OAUTH"
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
   )
-  public CredentialValue clientId;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "https://login.microsoftonline.com/example-example",
-      label = "Auth Token Endpoint",
-      description = "Azure auth token endpoint",
-      displayPosition = 50,
-      group = "DATALAKE",
-      dependsOn = "authMethod",
-      triggeredByValue = "OAUTH"
-  )
-  public CredentialValue authTokenEndpoint;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "",
-      label = "Application Key",
-      description = "Azure application key",
-      displayPosition = 60,
-      group = "DATALAKE",
-      dependsOn = "authMethod",
-      triggeredByValue = "OAUTH"
-  )
-  public CredentialValue clientKey;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      defaultValue = "",
-      label = "Account Shared Key",
-      description = "Azure storage account shared key",
-      displayPosition = 70,
-      group = "DATALAKE",
-      dependsOn = "authMethod",
-      triggeredByValue = "SHARED_KEY"
-  )
-  public CredentialValue accountKey;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Secure Connection",
-      defaultValue = "false",
-      description = "Enable a secure connection using abfss",
-      displayPosition = 75,
-      group = "DATALAKE"
-  )
-  public boolean secureConnection;
+  public ADLSGen2Connection connection;
 
   @ConfigDef(
       required = false,
@@ -188,7 +104,7 @@ public class DataLakeGen2MetadataConfig {
   }
 
   private String buildAbfsUri(String container, String accountFQDN) {
-    String abfsProtocol = secureConnection ?
+    String abfsProtocol = this.connection.secureConnection ?
         DataLakeConnectionProtocol.ABFS_PROTOCOL_SECURE.getProtocol() :
         DataLakeConnectionProtocol.ABFS_PROTOCOL.getProtocol();
     return abfsProtocol + container + "@" + accountFQDN;
@@ -196,37 +112,91 @@ public class DataLakeGen2MetadataConfig {
 
   public String getAbfsUri(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     String storageContainerString = resolveCredentialValue(context,
-        this.storageContainer,
+        this.connection.storageContainer,
         ADLS_CONFIG_STORAGE_CONTAINER,
         issues
     );
-    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
+    String accountFQDNString = resolveCredentialValue(context, this.connection.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
     return buildAbfsUri(storageContainerString, accountFQDNString);
   }
 
   public Map<String, String> getHdfsConfigBeans(final Stage.Context context, List<Stage.ConfigIssue> issues) {
     Map<String, String> hdfsConfigs = new HashMap<>();
-    String accountFQDNString = resolveCredentialValue(context, this.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
 
-    switch (this.authMethod) {
-      case OAUTH:
-        String clientKeyString = resolveCredentialValue(context, this.clientKey, ADLS_CONFIG_CLIENT_SECRET_KEY, issues);
-        hdfsConfigs.put(ADLS_CONFIG_AUTH_TYPE_KEY, ADLS_CONFIG_AUTH_TYPE_DEFAULT_VALUE);
-        hdfsConfigs.put(ADLS_CONFIG_OAUTH_PROVIDER_TYPE_KEY, ADLS_CONFIG_OAUTH_CLIENT_CREDS_TOKEN_PROVIDER_VALUE);
-        hdfsConfigs.put(ADLS_CONFIG_AUTH_ENDPOINT_KEY,
-            resolveCredentialValue(context, this.authTokenEndpoint, ADLS_CONFIG_AUTH_ENDPOINT_KEY, issues)
-        );
-        hdfsConfigs.put(ADLS_CONFIG_CLIENT_ID_KEY,
-            resolveCredentialValue(context, this.clientId, ADLS_CONFIG_CLIENT_ID, issues)
-        );
-        hdfsConfigs.put(ADLS_CONFIG_CLIENT_SECRET_KEY, clientKeyString
+    String accountFQDNString = resolveCredentialValue(context, this.connection.accountFQDN, ADLS_CONFIG_ACCOUNT_FQDN, issues);
+    String tenantIdString = resolveCredentialValue(context,
+        this.connection.tenantId,
+        "Tenant ID",
+        issues
+    );
 
+    switch (this.connection.authMethod) {
+      case CLIENT:
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_PROPERTY_NAME,
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_DEFAULT_VALUE
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_TOKEN_PROVIDER_TYPE_PROPERTY_NAME,
+            ADLS_CONFIG_OAUTH_CLIENT_CREDS_TOKEN_PROVIDER_VALUE
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ENDPOINT,
+            ADLSGen2Properties.AUTH_TOKEN_URL.format(tenantIdString)
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ID,
+            resolveCredentialValue(
+                context,
+                this.connection.clientId,
+                ADLS_CONFIG_CLIENT_ID,
+                issues
+            )
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_SECRET,
+            resolveCredentialValue(
+                context,
+                this.connection.clientKey,
+                ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_SECRET,
+                issues
+            )
         );
         break;
+
+      case MSI:
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_PROPERTY_NAME,
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_DEFAULT_VALUE
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_TOKEN_PROVIDER_TYPE_PROPERTY_NAME,
+            this.connection.authMethod.getOAuthTypeClass()
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_MSI_TENANT,
+            tenantIdString
+        );
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ID,
+            resolveCredentialValue(
+                context,
+                this.connection.clientId,
+                ADLS_CONFIG_CLIENT_ID,
+                issues
+            )
+        );
+        break;
+
       case SHARED_KEY:
-        String propertyName = ABFS_CONFIG_ACCOUNT_PREFIX + accountFQDNString;
-        hdfsConfigs.put(propertyName,
-            resolveCredentialValue(context, this.accountKey, ADLS_CONFIG_ACCOUNT_KEY, issues)
+        hdfsConfigs.put(
+            ADLSGen2Properties.FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME.format(accountFQDNString),
+            resolveCredentialValue(
+                context,
+                this.connection.accountKey,
+                ADLSGen2Properties.FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME.format(accountFQDNString),
+                issues
+            )
         );
         break;
     }

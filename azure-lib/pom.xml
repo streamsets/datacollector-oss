@@ -192,6 +192,14 @@
         </exclusion>
       </exclusions>
     </dependency>
+
+    <!-- Connection definition -->
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-azure-connection</artifactId>
+      <version>${project.version}</version>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
 
   <build>

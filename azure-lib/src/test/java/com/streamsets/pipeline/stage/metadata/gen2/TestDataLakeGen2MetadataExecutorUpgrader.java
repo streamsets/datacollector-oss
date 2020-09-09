@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.datalake.gen2;
+package com.streamsets.pipeline.stage.metadata.gen2;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
@@ -28,7 +28,7 @@ import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestDataLakeGen2SourceUpgrader {
+public class TestDataLakeGen2MetadataExecutorUpgrader {
 
   private StageUpgrader upgrader;
   private List<Config> configs;
@@ -36,34 +36,22 @@ public class TestDataLakeGen2SourceUpgrader {
 
   @Before
   public void setUp() {
-    upgrader = new SelectorStageUpgrader("stage", new DataLakeGen2SourceUpgrader(), null);
+    upgrader = new SelectorStageUpgrader("stage", new DataLakeGen2MetadataUpgrader(), null);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
 
   @Test
-  public void testV1toV2() throws StageException {
+  public void testV1toV2withAuthUrl() throws StageException {
     Mockito.doReturn(1).when(context).getFromVersion();
     Mockito.doReturn(2).when(context).getToVersion();
-
-    String dataFormatPrefix = "conf.dataFormatConfig.";
-    configs.add(new Config(dataFormatPrefix + "preserveRootElement", true));
-    configs = upgrader.upgrade(configs, context);
-
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "preserveRootElement", false);
-  }
-
-  @Test
-  public void testV2toV3withAuthUrl() throws StageException {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
 
     // Test assuming auth token endpoint is set.
     String authUrl = "https://login.microsoftonline.com/example/oauth2/token";
 
     configs.add(new Config("dataLakeConfig.accountFQDN", "v1"));
     configs.add(new Config("dataLakeConfig.storageContainer", "v2"));
-    configs.add(new Config("dataLakeConfig.authMethod", "v3"));
+    configs.add(new Config("dataLakeConfig.authMethod", "OAUTH"));
     configs.add(new Config("dataLakeConfig.clientId", "v4"));
     configs.add(new Config("dataLakeConfig.clientKey", "v5"));
     configs.add(new Config("dataLakeConfig.accountKey", "v6"));
@@ -74,7 +62,7 @@ public class TestDataLakeGen2SourceUpgrader {
 
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.accountFQDN", "v1");
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.storageContainer", "v2");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.authMethod", "SHARED_KEY");
+    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.authMethod", "CLIENT");
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.clientId", "v4");
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.clientKey", "v5");
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.accountKey", "v6");
@@ -86,9 +74,9 @@ public class TestDataLakeGen2SourceUpgrader {
   }
 
   @Test
-  public void testV2toV3withNoAuthURL() throws StageException {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
+  public void testV1toV2withNoAuthUrl() throws StageException {
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
 
     // Test assuming auth token endpoint is set to old default value.
     String defaultAuthUrl = "https://login.microsoftonline.com/example-example";
@@ -99,4 +87,5 @@ public class TestDataLakeGen2SourceUpgrader {
     UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.tenantId", "");
     UpgraderTestUtils.assertNoneExist(configs, "dataLakeConfig.authTokenEndpoint");
   }
+
 }

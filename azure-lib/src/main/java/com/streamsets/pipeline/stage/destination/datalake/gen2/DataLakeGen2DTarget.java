@@ -25,12 +25,12 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Azure Data Lake Storage Gen2",
     description = "Writes data to Azure Data Lake Storage Gen2",
     icon = "data-lake-store-gen2.png",
     producesEvents = true,
-    upgraderDef = "upgrader/DataLakeGen2DTarget.yaml",
+    upgrader = DataLakeGen2TargetUpgrader.class,
     onlineHelpRefUrl ="index.html?contextID=task_vk2_j45_rhb"
 )
 @ConfigGroups(DataLakeGen2TargetGroups.class)

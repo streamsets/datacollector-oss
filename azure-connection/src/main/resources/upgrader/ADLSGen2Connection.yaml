@@ -1,5 +1,6 @@
+
 #
-# Copyright 2019 StreamSets Inc.
+# Copyright 2020 StreamSets Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,9 +17,5 @@
 
 upgraderVersion: 1
 
-upgrades:
-  - toVersion: 2
-    actions:
-      - setConfig:
-          name: conf.dataFormatConfig.preserveRootElement
-          value: false
+# No upgrade rules defined
+upgrades: []

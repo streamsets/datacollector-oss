@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.lib;
 
+import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.Stage;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -27,11 +28,15 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.TimeZone;
 
 public class AzureUtils {
@@ -159,6 +164,74 @@ public class AzureUtils {
     sharedKeySignatureBuilder.setCanonicalizedResource(canonicalizedResource);
     SharedKeySignatureCalculator sharedKeySignature = sharedKeySignatureBuilder.build();
     return sharedKeySignature.getSignature(accountKey);
+  }
+
+  /**
+   * Helper function for updating configs to support connections. Used across
+   * multiple upgraders in different stages.
+   *
+   */
+  public static List<Config> updateConfigsForConnections(List<Config> configs) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "dataLakeConfig.accountFQDN":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.accountFQDN", config.getValue()));
+          break;
+        case "dataLakeConfig.storageContainer":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.storageContainer", config.getValue()));
+          break;
+        case "dataLakeConfig.authMethod":
+          // The Auth method has been moved to a new enum so we also need to convert the value.
+          // Note that the MSI config is new with the updated enum so it will not arise when upgrading.
+          String targetConfig = config.getValue().equals("OAUTH") ? "CLIENT" : "SHARED_KEY";
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.authMethod", targetConfig));
+          break;
+        case "dataLakeConfig.clientId":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.clientId", config.getValue()));
+          break;
+        case "dataLakeConfig.clientKey":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.clientKey", config.getValue()));
+          break;
+        case "dataLakeConfig.accountKey":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.accountKey",config.getValue()));
+          break;
+        case "dataLakeConfig.secureConnection":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("dataLakeConfig.connection.secureConnection", config.getValue()));
+          break;
+        // In the case where auth token endpoint is specified, we strip the tenant ID and remove the endpoint config.
+        // If the auth token endpoint is not set, take the default value for tenant ID (no upgrade needed).
+        case "dataLakeConfig.authTokenEndpoint":
+          String tenantId = "";
+          configsToRemove.add(config);
+          try {
+            URI msftUrl = new URI(config.getValue().toString());
+            String path = msftUrl.getPath();
+            if (path.contains("/oauth2/token")) {
+              tenantId = path.split("/oauth2/token")[0].substring(1);
+            }
+            configsToAdd.add(new Config("dataLakeConfig.connection.tenantId", tenantId));
+          } catch (URISyntaxException e) {
+            configsToAdd.add(new Config("dataLakeConfig.connection.tenantId", ""));
+          }
+          break;
+        default:
+          break;
+      }
+    }
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
+    return configs;
   }
 
 }
