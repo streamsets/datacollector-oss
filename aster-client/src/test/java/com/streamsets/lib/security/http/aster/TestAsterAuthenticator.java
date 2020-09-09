@@ -90,6 +90,7 @@ public class TestAsterAuthenticator {
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
     authenticator.redirect(null, res, "url");
     Mockito.verify(res, Mockito.times(1)).sendRedirect(Mockito.eq("url"));
+    Mockito.verify(res, Mockito.times(1)).setHeader(Mockito.eq("Cache-Control"), Mockito.eq("no-store"));
 
     // isEngineRegistrationOrLoginPage no
     req = Mockito.mock(HttpServletRequest.class);

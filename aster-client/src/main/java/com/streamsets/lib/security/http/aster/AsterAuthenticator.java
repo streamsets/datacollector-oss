@@ -158,6 +158,7 @@ public class AsterAuthenticator implements Authenticator {
   Authentication redirect(HttpServletRequest httpReq, HttpServletResponse httpRes, String redirectUrl) throws
       ServerAuthException {
     try {
+      httpRes.setHeader("Cache-Control", "no-store");
       httpRes.sendRedirect(redirectUrl);
       return Authentication.SEND_SUCCESS;
     } catch (IOException ex) {
