@@ -40,7 +40,9 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -138,7 +140,8 @@ public class LogMinerSession {
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
+      + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND "
+      + "       FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                        DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
@@ -865,9 +868,18 @@ public class LogMinerSession {
       throw new StageException(JdbcErrors.JDBC_603, "no online redo log found.");
     }
 
-    boolean missingCurrentLog = true;
-    boolean needsCurrentLog = true;
     boolean missingArchivedLog = false;
+    List<BigDecimal> threads = onlineLogs.stream()
+                                         .map(log -> log.getThread())
+                                         .distinct()
+                                         .collect(Collectors.toList());
+    Map<BigDecimal, Boolean> missingCurrentLog = new HashMap<>();
+    Map<BigDecimal, Boolean> needsCurrentLog = new HashMap<>();
+
+    for (BigDecimal threadNo: threads) {
+      missingCurrentLog.put(threadNo, true);
+      needsCurrentLog.put(threadNo, true);
+    }
 
     for (RedoLog log : onlineLogs) {
       boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 &&
@@ -895,19 +907,22 @@ public class LogMinerSession {
         LOG.trace("Find logs ({}, {}): {}, discarded", start, end, log);
       }
       if (log.getStatus().equals(LOG_STATUS_CURRENT)) {
-        missingCurrentLog = false;
+        missingCurrentLog.put(log.getThread(), false);
       }
       if (log.getNextTime() != null && log.getNextTime().compareTo(end) >= 0) {
-        needsCurrentLog = false;  // Time range of interest is before the current redo log range.
+        needsCurrentLog.put(log.getThread(), false);  // Time range of interest is before the current redo log range.
       }
     }
 
-    if (needsCurrentLog && missingCurrentLog) {
+    boolean currentLogFailure =
+        threads.stream().anyMatch(threadNo -> needsCurrentLog.get(threadNo) && missingCurrentLog.get(threadNo));
+
+    if (currentLogFailure) {
       LOG.warn("Find logs ({}, {}): detected transient state - current log needed but rotation still in progress.",
           start, end);
     }
 
-    boolean statusOK = !(needsCurrentLog && missingCurrentLog) && !missingArchivedLog;
+    boolean statusOK = !currentLogFailure && !missingArchivedLog;
     if (statusOK) {
       dest.addAll(selectedLogs);
     }
@@ -964,9 +979,18 @@ public class LogMinerSession {
       throw new StageException(JdbcErrors.JDBC_603, "no online redo log found.");
     }
 
-    boolean missingCurrentLog = true;
-    boolean needsCurrentLog = true;
     boolean missingArchivedLog = false;
+    List<BigDecimal> threads = onlineLogs.stream()
+                                         .map(log -> log.getThread())
+                                         .distinct()
+                                         .collect(Collectors.toList());
+    Map<BigDecimal, Boolean> missingCurrentLog = new HashMap<>();
+    Map<BigDecimal, Boolean> needsCurrentLog = new HashMap<>();
+
+    for (BigDecimal threadNo: threads) {
+      missingCurrentLog.put(threadNo, true);
+      needsCurrentLog.put(threadNo, true);
+    }
 
     for (RedoLog log : onlineLogs) {
       boolean leftCondition = log.getFirstChange().compareTo(scn) <= 0;
@@ -987,17 +1011,20 @@ public class LogMinerSession {
         LOG.trace("Find logs ({}): {}, discarded", scn, log);
       }
       if (log.getStatus().equals(LOG_STATUS_CURRENT)) {
-        missingCurrentLog = false;
+        missingCurrentLog.put(log.getThread(), false);
       } else if (log.getNextChange().compareTo(scn) > 0) {
-        needsCurrentLog = false;  // Time range of interest is before the current redo log range.
+        needsCurrentLog.put(log.getThread(), false);  // Time range of interest is before the current redo log range.
       }
     }
 
-    if (needsCurrentLog && missingCurrentLog) {
+    boolean currentLogFailure =
+        threads.stream().anyMatch(threadNo -> needsCurrentLog.get(threadNo) && missingCurrentLog.get(threadNo));
+
+    if (currentLogFailure) {
       LOG.warn("Find logs ({}): detected transient state - current log needed but rotation still in progress.", scn);
     }
 
-    boolean statusOK = !(needsCurrentLog && missingCurrentLog) && !missingArchivedLog;
+    boolean statusOK = !currentLogFailure && !missingArchivedLog;
     if (statusOK) {
       dest.addAll(selectedLogs);
     }
