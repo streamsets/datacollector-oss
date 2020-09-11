@@ -701,7 +701,6 @@ public class JdbcUtil {
             BigDecimal value = rs.getBigDecimal(columnIndex);
             return Field.create(Field.Type.DECIMAL, rs.wasNull() ? null : value);
           }
-          LOG.error("Got type {}, columnTypeName={}, catalogName={}", md.getColumnType(columnIndex), md.getColumnTypeName(columnIndex), md.getCatalogName(columnIndex));
         }
 
         // All types as of JDBC 2.0 are here:
