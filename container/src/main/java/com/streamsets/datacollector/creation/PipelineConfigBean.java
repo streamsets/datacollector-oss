@@ -40,6 +40,7 @@ import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.Stage;
@@ -64,6 +65,9 @@ import java.util.Map;
     upgrader = PipelineConfigUpgrader.class,
     upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
+)
+@HideConfigs(
+    {"sdcEmrConnectionSelection"}
 )
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
@@ -575,9 +579,8 @@ public class PipelineConfigBean implements Stage {
   @ConfigDefBean
   public LivyConfig livyConfig;
 
-  // we have to have two separate connection selections/objects for Data Collector and Transformer here, because
-  // our current framework doesn't allow expressing an OR condition, for the dependencies
-  // the SDC version hinges on executionMode=EMR_BATCH
+  // this is a dummy field, and hidden because EMR cluster selection is not implemented in SDC (see hidden configs)
+  // but for the connection field (below) to work properly, it must be defined
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CONNECTION,
@@ -591,6 +594,9 @@ public class PipelineConfigBean implements Stage {
   )
   public String sdcEmrConnectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
+  // we have to have two separate connection objects for Data Collector and Transformer here, because
+  // our current framework doesn't allow expressing an OR condition, for the dependencies
+  // the SDC version hinges on executionMode=EMR_BATCH
   @ConfigDefBean(
       dependencies = {
           @Dependency(
@@ -610,7 +616,7 @@ public class PipelineConfigBean implements Stage {
       defaultValue = "true",
       label = "Enable Debugging",
       description = "Enable console debugging in EMR",
-      group = "EMR",
+      group = PipelineGroups.EMR_GROUP_NAME,
       displayPosition = 3310,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
@@ -623,6 +629,7 @@ public class PipelineConfigBean implements Stage {
   public boolean enableEMRDebugging;
 
   // whereas the Transformer version hinges on clusterConfig.clusterType=EMR
+  // and only Transformer supports using EMR connection selection (see SDC-15722), so this selection field is visible
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.CONNECTION,

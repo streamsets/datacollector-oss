@@ -15,6 +15,7 @@
  */
 package com.streamsets.transformer.config;
 
+import com.streamsets.datacollector.config.PipelineGroups;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -29,6 +30,8 @@ import static com.streamsets.pipeline.stage.common.emr.EMRClusterConnection.SERV
 /**
  * This will contain all the Transformer-specific, non-connection fields (i.e. those not found in
  * {@link com.streamsets.pipeline.stage.common.emr.EMRClusterConnection}).
+ *
+ * ALL config fields need to be made dependent on Transformer+EMR (see existing configs for an example)
  */
 public class AmazonEMRConfig {
 
@@ -37,7 +40,7 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Service Access Security Group",
       description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
-      group = "EMR",
+      group = PipelineGroups.EMR_GROUP_NAME,
       displayPosition = 315,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
@@ -54,7 +57,9 @@ public class AmazonEMRConfig {
     defaultValue = "NONE",
     displayPosition = 370,
     displayMode = ConfigDef.DisplayMode.ADVANCED,
-    group = "EMR"
+    group = PipelineGroups.EMR_GROUP_NAME,
+    dependsOn = "^clusterConfig.clusterType",
+    triggeredByValue = "EMR"
   )
   @ValueChooserModel(SseOptionChooserValues.class)
   public SseOption encryption;
@@ -69,7 +74,7 @@ public class AmazonEMRConfig {
     dependsOn = "encryption",
     triggeredByValue = "KMS",
     displayMode = ConfigDef.DisplayMode.ADVANCED,
-    group = "EMR"
+    group = PipelineGroups.EMR_GROUP_NAME
   )
   public CredentialValue kmsKeyId;
 }
