@@ -1,4 +1,4 @@
-<div class="home-empty-container" ng-class="{'show': loaded}" ng-show="totalPipelinesCount == 0">
+<div class="home-empty-container" ng-class="{'show': loaded}" ng-show="(common.isDPMEnabled || common.activationInfo.info.expiration !== 0) && totalPipelinesCount == 0">
   <div class="error-alert-div">
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
     <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>

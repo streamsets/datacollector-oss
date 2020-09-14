@@ -1,0 +1,158 @@
+<div class="home-empty-container home-no-activation" ng-class="{'show': loaded}" ng-show="common.activationInfo.info.expiration === 0">
+  <div class="top-rectangle"></div>
+  <div class="home-empty-container-detail">
+    <div class="empty-detail-header">
+      <div class="pull-left empty-detail-logo">
+        <img src="assets/logo.png"  alt="StreamSets"/>
+        <span>Data Collector</span>
+      </div>
+      <div class="pull-right empty-detail-toolbar">
+        <a
+          ng-if="common.isDPMEnabled"
+          target="_blank"
+          class="btn btn-primary"
+          ng-disabled="!isAuthorized([userRoles.admin, userRoles.creator]) || common.isSlaveNode"
+          ng-href="{{common.dpmBaseURL}}">
+          <span class="fa fa-cloud"></span>
+          <span>Control Hub</span>
+        </a>
+
+        <div class="settings-btn pull-right">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;"
+             tooltip-placement="bottom"
+             tooltip="{{'global.menu.admin.main' | translate}}"
+             tooltip-trigger="mouseenter"
+             tooltip-popup-delay="500">
+            <i class="fa fa-cogs fa-lg"></i>
+          </a>
+          <ul class="dropdown-menu">
+
+            <li ng-if="isAuthorized([userRoles.admin]) && common.remoteServerInfo.registrationStatus">
+              <a href="javascript:;" ng-click="common.onDisableDPMClick()">
+                <i class="fa fa-file-text"></i>
+                <span translate="global.menu.admin.disableDPM">Disable Control Hub</span>
+              </a>
+            </li>
+
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isSlaveNode">
+              <a href="javascript:;" ng-click="common.shutdownCollector()">
+                <i class="fa fa-stop"></i>
+                <span translate="global.menu.admin.shutdown">Shutdown</span>
+              </a>
+            </li>
+
+            <li ng-if="common.userName && isAuthorized([userRoles.admin]) && !common.isSlaveNode">
+              <a href="javascript:;" ng-click="common.restartCollector()">
+                <i class="glyphicon glyphicon-refresh"></i>
+                <span translate="global.menu.admin.restart">Restart</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li>
+              <a href="javascript:;" ng-click="common.showAbout()">
+                <span class="fa fa-info-circle"></span>
+                <span translate="global.menu.help.about">About</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li role="presentation" class="dropdown-header" translate="global.menu.account.loggedInUser">Logged In User</li>
+
+            <li class="disabled">
+              <a href="">
+                <span>{{common.userName}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="dropdown-header" translate="global.menu.account.assignedRoles">Assigned Roles</li>
+
+            <li class="disabled">
+              <a href="">
+                <span>{{common.userRoles}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="dropdown-header"
+                ng-if="common.userGroups && common.userGroups.length"
+                translate="global.menu.account.assignedGroups">Assigned Groups</li>
+
+            <li class="disabled" ng-if="common.userGroups && common.userGroups.length">
+              <a href="">
+                <span>{{common.userGroups}}</span>
+              </a>
+            </li>
+
+            <li role="presentation" class="divider"></li>
+
+            <li ng-if="common.authenticationType === 'form' || common.isDPMEnabled">
+              <a href="javascript:;" ng-click="common.logout()">
+                <span class="glyphicon glyphicon-log-out"></span>
+                <span translate="global.menu.account.logout">Logout</span>
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="error-alert-div">
+      <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorModal.tpl.html'"></ng-include>
+      <ng-include ng-if="common.errors" src="'app/home/alerts/error/errorAlert.tpl.html'"></ng-include>
+    </div>
+
+    <div class="bottom-container">
+      <div class="top-welcome">To get started with StreamSets Data Collector, select an option below.</div>
+      <div class="center-container">
+        <ng-include src="'activateControlHubTemplate'"></ng-include>
+        <ng-include src="'activationCodeTemplate'"></ng-include>
+        <div class="existing-activation">
+          <div>Need to register?</div>
+          <button class="btn btn-default" ng-click="common.showRegistrationModal()">Register with StreamSets</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<script type="text/ng-template" id="activationCodeTemplate">
+  <div class="help-panel activation-panel border-left">
+    <div class="help-panel-container">
+      <div class="help-panel-title">Activation Code</div>
+      <div class="activation-panel-sub-title">Use an activation code</div>
+      <div class="activation-panel-body">
+
+        <div class="btn-div">
+          <button class="btn btn-primary"
+                  ng-click="common.showRegistrationModal(true)">
+            <span>Enter a code</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/ng-template" id="activateControlHubTemplate">
+  <div class="help-panel activation-panel">
+    <div class="help-panel-container">
+      <div class="help-panel-title">Control Hub Customers</div>
+      <div class="activation-panel-sub-title">Connect to your existing Control Hub organization</div>
+      <div class="activation-panel-body">
+        <div class="btn-div">
+          <button class="btn btn-primary"
+                  ng-click="common.onEnableDPMClick()">
+            <span>Connect</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>

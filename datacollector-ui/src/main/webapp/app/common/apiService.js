@@ -288,6 +288,9 @@ angular.module('dataCollectorApp.common')
         });
       },
 
+      getAsterRegistrationInfo: function() {
+        return $http.get(apiBase + '/aregistration');
+      },
     };
 
     api.pipelineAgent = {

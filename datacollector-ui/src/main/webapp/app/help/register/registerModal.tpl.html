@@ -1,6 +1,6 @@
 <form class="register-modal-form" role="form" name="form" ng-submit="sendRegistration()">
   <div class="modal-header">
-    <button type="button" class="close" ng-click="cancel()" ng-if="activationInfo.info.valid">
+    <button type="button" class="close" ng-click="cancel()" ng-if="activationInfo.info.valid || registerWithAccountUrl">
       <span aria-hidden="true">&times;</span>
       <span class="sr-only">Close</span>
     </button>
@@ -18,12 +18,8 @@
       <div ng-if="registerWithAccountUrl">
         <div class="modal-body">
           <p>
-            Before use, you must activate your copy of StreamSets Data Collector (SDC).
-            Log into StreamSets Account Management to activate.
+            Redirecting to register...
           </p>
-        </div>
-        <div class="modal-footer">
-          <a class="btn btn-primary" href="{{registerWithAccountUrl}}" role="button">Activate</a>
         </div>
       </div>
       <div ng-if="!registerWithAccountUrl">
@@ -379,7 +375,7 @@
         </div> -->
       </div>
       <div class="modal-footer">
-        <button type="reset" class="btn btn-default" ng-click="goToRegistration()" ng-hide="operationDone || operationInProgress">
+        <button type="reset" class="btn btn-default" ng-click="goToRegistration()" ng-hide="operationDone || operationInProgress || registerWithAccountUrl">
           Back
         </button>
         <button type="submit" class="btn btn-primary"
