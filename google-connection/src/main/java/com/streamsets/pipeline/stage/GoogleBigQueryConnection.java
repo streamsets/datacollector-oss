@@ -24,9 +24,9 @@ import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.stage.common.AbstractGoogleConnection;
 import com.streamsets.pipeline.stage.common.GoogleConnectionGroups;
 
-@ConnectionDef(label = "Google Big Query",
+@ConnectionDef(label = "Google BigQuery",
     type = GoogleBigQueryConnection.TYPE,
-    description = "Connects to Google Big Query",
+    description = "Connects to Google BigQuery",
     version = 1,
     upgraderDef = "upgrader/GoogleBigQueryConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER})

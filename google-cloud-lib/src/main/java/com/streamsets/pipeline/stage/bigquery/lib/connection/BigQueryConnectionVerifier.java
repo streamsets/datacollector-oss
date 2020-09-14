@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Optional;
 
 @StageDef(version = 1,
-    label = "Google Big Query Connection Verifier",
-    description = "Verifies connections for Google Big Query",
+    label = "Google BigQuery Connection Verifier",
+    description = "Verifies connections for Google BigQuery",
     upgraderDef = "upgrader/BigQueryConnectionVerifier.yaml",
     onlineHelpRefUrl = "")
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
