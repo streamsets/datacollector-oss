@@ -1337,7 +1337,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getStageAssetIcons: function() {
-        return $http.get('/assets/stage/stageIcons.json');
+        return $http.get('assets/stage/stageIcons.json');
       }
     };
 
