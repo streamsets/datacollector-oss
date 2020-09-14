@@ -28,7 +28,7 @@ angular
           }
         },
         data: {
-          authorizedRoles: ['admin', 'creator', 'manager', 'guest']
+          authorizedRoles: ['admin', 'creator', 'manager', 'guest', 'admin-activation']
         }
       });
   }])

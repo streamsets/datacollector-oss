@@ -21,8 +21,8 @@ angular
   .module('dataCollectorApp')
   .controller('RegisterModalInstanceController', function (
       $scope, $rootScope, $modalInstance, $location, $interval, $q,
-      api, activationInfo, configuration, authService, activationTracking,
-      $httpParamSerializer
+      api, activationInfo, configuration, authService, showKeyEntry,
+      activationTracking, $httpParamSerializer
     ) {
 
     var activationUpdateInterval;
@@ -79,8 +79,10 @@ angular
       return $location.search().activationKey;
     }
 
-    function getInitialActivationStep(activationInfo) {
-      if (getActivationKeyFromURL()) {
+    function getInitialActivationStep(activationInfo, showKeyEntry) {
+      if (showKeyEntry) {
+        return 2;
+      } else if (getActivationKeyFromURL()) {
         return 2;
       } else if (activationInfo.info &&
         activationInfo.info.valid &&
@@ -106,8 +108,8 @@ angular
       operationDone: false,
       operationInProgress: false,
       activationInfo: activationInfo,
-      showEmailSent: !getActivationKeyFromURL() && activationInfo.info && activationInfo.info.expiration === 0,
-      activationStep: getInitialActivationStep(activationInfo),
+      showEmailSent: !getActivationKeyFromURL() && !showKeyEntry && activationInfo.info && activationInfo.info.expiration === 0,
+      activationStep: getInitialActivationStep(activationInfo, showKeyEntry),
       activationData: {
         activationText: '',
         firstName: '',
@@ -210,6 +212,16 @@ angular
       $scope.activationData.activationText = decodeURI(getActivationKeyFromURL());
     }
 
+    if ($scope.activationStep === 1) {
+      api.admin.getAsterRegistrationInfo().then(function(response) {
+        console.log(response);
+        if (response && response.data && response.data.parameters) {
+          var val = response.data;
+          window.location = val.authorizeUri + '?' + new URLSearchParams(val.parameters);
+        }
+      });
+    }
+
     $q.all([api.admin.getSdcId(), api.admin.getBuildInfo()]).then( function(results) {
       var sdcId = results[0].data.id;
       $scope.activationData.sdcId = sdcId;
@@ -218,15 +230,7 @@ angular
         $scope.activationData.sdcVersion = productVersion;
         var accountUrl = configuration.getAccountRegistrationURL();
         if (accountUrl) {
-          $scope.registerWithAccountUrl =
-          accountUrl +
-          '?' +
-          $httpParamSerializer({
-            productType: 'DATA_COLLECTOR',
-            productVersion: productVersion,
-            productId: sdcId,
-            productUrl: window.location.href
-          });
+          $scope.registerWithAccountUrl = accountUrl;
         }
       }
       if (getActivationKeyFromURL()) {
@@ -236,7 +240,7 @@ angular
 
     // Check if the user was valid due to limited number of stage libraries
     previouslyValid = activationInfo.info.valid;
-    if (getInitialActivationStep(activationInfo) === 1) {
+    if (getInitialActivationStep(activationInfo, showKeyEntry) === 1) {
       activationUpdateInterval = $interval(function() {
         if ($scope.activationStep === 2 && $scope.showEmailSent) {
           api.activation.getActivation().then(function(res) {

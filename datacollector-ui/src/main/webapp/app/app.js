@@ -363,7 +363,8 @@ angular.module('dataCollectorApp')
       /**
        * Opens the registration modal
        */
-      showRegistrationModal: function() {
+      showRegistrationModal: function(showKeyEntry) {
+        showKeyEntry = showKeyEntry || false;
         $modal.open({
           templateUrl: 'app/help/register/registerModal.tpl.html',
           controller: 'RegisterModalInstanceController',
@@ -372,6 +373,9 @@ angular.module('dataCollectorApp')
           resolve: {
             activationInfo: function () {
               return $rootScope.common.activationInfo;
+            },
+            showKeyEntry: function() {
+              return showKeyEntry;
             }
           }
         });
@@ -647,7 +651,9 @@ angular.module('dataCollectorApp')
                 if (!activationInfo.info.valid || $location.search().activationKey) {
                   // When activation is not valid, roles other than adminActivation are not returned
                   if ($rootScope.isAdmin || authService.isAuthorized(userRoles.adminActivation)) {
-                    $rootScope.common.showRegistrationModal();
+                    if ($location.search().activationKey) {
+                      $rootScope.common.showRegistrationModal(true);
+                    }
                   } else {
                     $rootScope.common.showRegistrationPermissionErrorModal();
                   }

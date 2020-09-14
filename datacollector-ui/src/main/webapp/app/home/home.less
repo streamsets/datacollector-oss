@@ -96,6 +96,169 @@
 
 }
 
+.home-empty-container.home-no-activation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  background-color: white;
+  z-index: 1040;
+
+  .top-rectangle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 30%;
+    transform: rotate(-180deg);
+    background-image: linear-gradient(to bottom, rgba(125, 211, 237, 0.2), rgba(71, 168, 215, 0.85));
+    // background-color: #375587;
+  }
+
+  .top-welcome {
+    margin-left: 50px;
+    margin-bottom: 15px;
+  }
+
+  .home-empty-container-detail {
+    min-width: 1200px;
+    position: absolute;
+    top: 60px;
+    left: 60px;
+    right: 60px;
+    bottom: 60px;
+    border-radius: 5px;
+    box-shadow: 0 0 0 1px rgba(9, 30, 66, 0.08);
+    background-color: white;
+
+    .empty-detail-header {
+      .empty-detail-logo {
+        padding-left: 40px;
+
+        img {
+          height: 100px;
+        }
+
+        span {
+          color: #2b95d6;
+          position: relative;
+          left: -185px;
+          top: 50px;
+          font-size: 34px;
+        }
+      }
+
+      .empty-detail-toolbar {
+        padding: 20px 40px 0 0;
+
+        .dpm-icon {
+          i {
+            color: @streamsets-color;
+            font-size: 2em;
+          }
+
+          &.disconnected-mode {
+            i {
+              color: @brand-danger;
+            }
+          }
+
+          span {
+            position: absolute;
+            font-size: 10px;
+            color: white;
+            top: 18px;
+            left: 19px;
+          }
+
+        }
+
+        .settings-btn {
+          padding-left: 44px;
+          padding-top: 5px;
+          position: relative;
+        }
+      }
+    }
+
+    .bottom-container {
+      position: absolute;
+      top: 30%;
+      bottom: 0;
+      width: 100%;
+      background-color: #FFF;
+      border: none;
+
+      .center-container {
+        width: 1200px;
+        text-align: center;
+        margin: 0 auto;
+
+        .help-panel.activation-panel {
+          height: 170px;
+        }
+
+        .help-panel {
+          height: 330px;
+          width: 500px;
+          float: left;
+          margin-right: 0;
+          margin-left: 50px;
+          position: relative;
+          background: #FFFFFF;
+          border: inherit;
+          box-shadow: inherit;
+          border-radius: inherit;
+          transition: none;
+          top: 0;
+          &.border-left {
+            border-left: 1px rgba(9,30,66,0.08) solid;
+          }
+        }
+      }
+
+      .quick-start-icon {
+        width: 78px;
+        height: 78px;
+        object-fit: contain;
+      }
+
+      .existing-activation {
+        clear: both;
+        padding-top: 40px;
+
+        div {
+          font-size: 16px;
+          margin-bottom: 5px;
+        }
+      }
+
+    }
+
+
+  }
+
+  .help-panel:hover {
+    transform: none;
+  }
+
+  .help-panel .help-panel-container {
+    .help-panel-title {
+      font-size: 21px;
+      color: #137cbd;
+    }
+    .activation-panel-sub-title {
+      font-size: 16px;
+      color: #394b597a;
+    }
+    .activation-panel-body .btn-div {
+      margin: 10px 0;
+    }
+  }
+}
+
 .home-page {
   .panel-heading {
     height: 45px;

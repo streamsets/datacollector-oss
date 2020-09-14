@@ -41,7 +41,7 @@ angular.module('dataCollectorApp.common')
     var PIPELINE_ACCESS_CONTROL_ENABLED = 'pipeline.access.control.enabled';
     var UI_DEFAULT_CONFIGURATION_VIEW = 'ui.default.configuration.view';
     var UI_REGISTRATION_URL = 'ui.registration.url';
-    var UI_ACCOUNT_REGISTRATION_URL = 'ui.account.registration.url';
+    var UI_ACCOUNT_REGISTRATION_URL = 'aster.url';
 
     this.initializeDefer = undefined;
     this.config = undefined;
