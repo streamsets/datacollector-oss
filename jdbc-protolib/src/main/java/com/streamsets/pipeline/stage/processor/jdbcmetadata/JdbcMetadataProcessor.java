@@ -15,9 +15,11 @@
  */
 package com.streamsets.pipeline.stage.processor.jdbcmetadata;
 
+import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -188,7 +190,12 @@ public class JdbcMetadataProcessor extends RecordProcessor {
       LinkedHashMap<String, JdbcTypeInfo> tableStructure = null;
       try {
         tableStructure = tableCache.get(Pair.of(schema, tableName));
-      } catch (ExecutionException e) {
+      } catch (ExecutionException|UncheckedExecutionException e) {
+        // Unwrap the underlying StageException if that is the exception
+        if(e.getCause() != null && e.getCause() instanceof StageException) {
+          StageException cause = (StageException) e.getCause();
+          throw new JdbcStageCheckedException(cause.getErrorCode(), cause.getParams());
+        }
         throw new JdbcStageCheckedException(JdbcErrors.JDBC_203, e.getMessage(), e);
       }
 

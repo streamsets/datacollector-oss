@@ -114,6 +114,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_88("'{}' is not a valid decimal number"),
   JDBC_89("Error while processing batch of records together: {}"),
   JDBC_90("Record doesn't have any columns for table '{}'"),
+  JDBC_91("Unsupported type for column '{}': {} (jdbc type id {})"),
 
   JDBC_100("Could not enable partitioning for table {}: {}"),
   JDBC_101("Invalid partition size for table {}: {}"),

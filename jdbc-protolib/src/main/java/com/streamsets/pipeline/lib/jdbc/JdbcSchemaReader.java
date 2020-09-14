@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.schemawriter.JdbcSchemaWriter;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcType;
 import com.streamsets.pipeline.lib.jdbc.typesupport.JdbcTypeInfo;
@@ -33,6 +34,8 @@ public class JdbcSchemaReader {
   @VisibleForTesting
   public static final int DATA_TYPE = 5;
   @VisibleForTesting
+  public static final int TYPE_STRING = 6;
+  @VisibleForTesting
   public static final int COLUMN_SIZE = 7;
   @VisibleForTesting
   public static final int DECIMAL_DIGITS = 9;
@@ -47,8 +50,7 @@ public class JdbcSchemaReader {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
   }
 
-  public LinkedHashMap<String,JdbcTypeInfo> getTableSchema(String schema, String tableName) throws
-      SQLException {
+  public LinkedHashMap<String,JdbcTypeInfo> getTableSchema(String schema, String tableName) throws SQLException, StageException {
     LinkedHashMap<String, JdbcTypeInfo> columns = new LinkedHashMap<>();
 
     try (Connection connection = dataSource.getConnection()) {
@@ -60,6 +62,14 @@ public class JdbcSchemaReader {
         ResultSet metaDataColumns = jdbcUtil.getColumnMetadata(connection, schema, tableName);
         while (metaDataColumns.next()) {
           JdbcType jdbcType = JdbcType.valueOf(metaDataColumns.getInt(DATA_TYPE));
+          if(jdbcType == null) {
+            throw new StageException(
+                JdbcErrors.JDBC_91,
+                metaDataColumns.getString(COLUMN_NAME),
+                metaDataColumns.getString(TYPE_STRING),
+                metaDataColumns.getInt(DATA_TYPE)
+            );
+          }
           columns.put(metaDataColumns.getString(COLUMN_NAME),
               jdbcType.getSupport().createTypeInfo(jdbcType, schemaWriter,
                   metaDataColumns.getInt(COLUMN_SIZE),
