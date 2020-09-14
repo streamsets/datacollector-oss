@@ -80,6 +80,7 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
       Label remoteGroup,
       Label credGroup
   ) {
+    LOG.info("Starting connection to remote server");
     options = new FileSystemOptions();
     this.remoteURI = remoteURI;
     if (remoteConfig.strictHostChecking) {
@@ -103,8 +104,6 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
           // This shouldn't happen, but just in case, we'll log it
           LOG.error("Unexpected Exception", e);
         }
-        break;
-      case NONE:
         break;
       default:
         break;
@@ -171,6 +170,7 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
           context,
           credGroup
       );
+
       switch (remoteConfig.ftpsTrustStoreProvider) {
         case FILE:
         case REMOTE_TRUSTSTORE:
@@ -228,6 +228,7 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
           break;
       }
     }
+
     configBuilder.setPassiveMode(options, true);
     configBuilder.setUserDirIsRoot(options, remoteConfig.userDirIsRoot);
 
@@ -244,7 +245,7 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
 
     // Only actually try to connect and authenticate if there were no issues
     if (issues.isEmpty()) {
-      LOG.info("Connecting to {}", remoteURI.toString());
+      LOG.info("Connecting to {}", remoteURI);
       try {
         remoteDir = VFS.getManager().resolveFile(remoteURI.toString(), options);
         remoteDir.refresh();
@@ -267,12 +268,13 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
   }
 
   @Override
-  public void verifyAndReconnect() throws StageException {
+  public void verifyAndReconnect() {
     boolean done = false;
     int retryCounter = 0;
     boolean reconnect = false;
     while (!done && retryCounter < MAX_RETRIES) {
       try {
+        LOG.info("Trying to reconnect to remote server");
         if (reconnect) {
           remoteDir = VFS.getManager().resolveFile(remoteURI.toString(), options);
           reconnect = false;
@@ -283,6 +285,8 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
         remoteDir.getChildren();
         remoteDir.refresh();
         done = true;
+
+        LOG.info("Reconnected successfully to remote server");
       } catch (FileSystemException fse) {
         // Refresh can fail due to session is down, a timeout, etc; so try getting a new connection
         if (retryCounter < MAX_RETRIES - 1) {

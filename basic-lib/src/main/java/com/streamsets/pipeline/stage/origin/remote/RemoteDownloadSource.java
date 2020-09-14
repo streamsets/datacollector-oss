@@ -532,7 +532,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     }
   }
 
-  private Optional<RemoteFile> getNextFile() throws IOException, StageException {
+  private Optional<RemoteFile> getNextFile() throws IOException {
     if (fileQueue.isEmpty() || fileDelayer.isDelayed()) {
       fileDelayer.setDelayed(false);
       queueFiles();
@@ -544,7 +544,8 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     return nextFile;
   }
 
-  private void queueFiles() throws IOException, StageException {
+  private void queueFiles() throws IOException {
+    LOG.info("Start queuing files...");
     delegate.queueFiles(this, fileQueue, fileFilter);
   }
 
