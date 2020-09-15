@@ -21,8 +21,10 @@ import com.aerospike.client.Bin;
 import com.aerospike.client.Key;
 import com.aerospike.client.policy.QueryPolicy;
 import com.aerospike.client.policy.WritePolicy;
-import com.streamsets.pipeline.api.*;
-import com.streamsets.pipeline.lib.operation.OperationType;
+import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.OnRecordError;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
@@ -38,7 +40,9 @@ import static org.junit.Assert.*;
 public class AerospikeTargetIT {
   private static final int AEROSPIKE_PORT = 3000;
 
-  private static final GenericContainer aerospikeServer = new GenericContainer("aerospike/aerospike-server:3.15.0.2").withExposedPorts(AEROSPIKE_PORT);
+  private static final GenericContainer aerospikeServer =
+      new GenericContainer("aerospike/aerospike-server:3.15.0.2")
+          .withExposedPorts(AEROSPIKE_PORT);
   private static AerospikeClient client;
 
 

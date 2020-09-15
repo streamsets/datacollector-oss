@@ -16,7 +16,14 @@
 package com.streamsets.pipeline.destination.aerospike;
 
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.ListBeanModel;
+import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;

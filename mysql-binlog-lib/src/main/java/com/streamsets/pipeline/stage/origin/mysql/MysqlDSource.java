@@ -15,7 +15,11 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import com.streamsets.pipeline.api.*;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ExecutionMode;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.StageDef;
 
 @StageDef(
     version = 2,
