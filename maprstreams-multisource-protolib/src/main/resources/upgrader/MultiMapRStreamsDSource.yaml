@@ -124,3 +124,6 @@ upgrades:
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: ssl.enabled.protocols
+      - renameConfig:
+          oldNamePattern: conf.brokerURI
+          newNamePattern: conf.connectionConfig.connection.metadataBrokerList

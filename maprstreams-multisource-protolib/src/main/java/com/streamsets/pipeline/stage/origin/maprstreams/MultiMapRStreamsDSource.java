@@ -41,7 +41,7 @@ import com.streamsets.pipeline.stage.origin.multikafka.MultiKafkaRawSourcePrevie
 )
 @RawSource(rawSourcePreviewer = MultiKafkaRawSourcePreviewer.class,  mimeType = "*/*")
 @HideConfigs({
-  "conf.brokerURI",
+  "conf.connectionConfig.connection.metadataBrokerList",
   "conf.kafkaAutoOffsetReset"
 })
 @GenerateResourceBundle
