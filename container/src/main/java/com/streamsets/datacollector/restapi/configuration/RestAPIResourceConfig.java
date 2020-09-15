@@ -76,7 +76,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
     register(new PaginationInfoInjectorBinder());
 
     register(RolesAnnotationFilter.class);
-    register(CsrfProtectionFilter.class);
+    register(CustomCsrfProtectionFilter.class);
     register(MultiPartFeature.class);
 
     //Hooking up Swagger-Core
