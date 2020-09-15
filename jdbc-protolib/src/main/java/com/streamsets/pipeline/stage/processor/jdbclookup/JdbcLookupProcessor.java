@@ -358,8 +358,9 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
             batchMaker.addRecord(record);
             break;
           case SPLIT_INTO_MULTIPLE_RECORDS:
+            int i = 0;
             for(Map<String, Field> lookupItem : values) {
-              Record newRecord = getContext().cloneRecord(record);
+              Record newRecord = getContext().cloneRecord(record, String.valueOf(i++));
               setFieldsInRecord(newRecord, lookupItem);
               batchMaker.addRecord(newRecord);
             }
