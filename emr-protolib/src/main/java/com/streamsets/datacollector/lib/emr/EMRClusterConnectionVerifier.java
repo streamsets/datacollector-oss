@@ -27,6 +27,7 @@ import com.amazonaws.services.elasticmapreduce.model.DescribeClusterRequest;
 import com.amazonaws.services.elasticmapreduce.model.DescribeClusterResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -144,6 +145,10 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
         "Staging URI"
     );
 
+    if (!issues.isEmpty()) {
+      return issues;
+    }
+
     if (connection.provisionNewCluster) {
       if (connection.loggingEnabled) {
         validateS3URI(
@@ -251,6 +256,30 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
           configName,
           s3Uri
       ));
+    } catch (AmazonS3Exception e) {
+      // these codes doesn't seem to exist as a constant in AWS SDK classes (they are usually called ErrorCode
+      // in various packages), but do replace our constants it they are found somewhere else
+      if ("InvalidAccessKeyId".equals(e.getErrorCode())) {
+        issues.add(getContext().createConfigIssue(
+            EMRClusterConnectionGroups.EMR.name(),
+            "connection.awsConfig.awsAccessKeyId",
+            EMRErrors.EMR_0515
+        ));
+      } else if ("SignatureDoesNotMatch".equals(e.getErrorCode())) {
+        issues.add(getContext().createConfigIssue(
+            EMRClusterConnectionGroups.EMR.name(),
+            "connection.awsConfig.awsAccessKeyId",
+            EMRErrors.EMR_0520
+        ));
+      } else {
+        LOG.error(String.format("Unrecognized error attempting to validate S3 URI: %s", s3Uri), e);
+        issues.add(getContext().createConfigIssue(
+            EMRClusterConnectionGroups.EMR.name(),
+            configPath,
+            EMRErrors.EMR_0550,
+            e.getMessage()
+        ));
+      }
     }
   }
 

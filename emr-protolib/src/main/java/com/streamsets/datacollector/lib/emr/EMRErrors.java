@@ -22,13 +22,14 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 public enum EMRErrors implements ErrorCode {
   EMR_0100("Invalid EMR configuration: {}"),
   EMR_0500("Invalid region specified: {}"),
-  EMR_0510("Invalid access key and secret"),
+  EMR_0510("Invalid access key id/secret"),
+  EMR_0515("Invalid access key id"),
+  EMR_0520("Invalid access key id/secret (signature does not match)"),
+  EMR_0550("Error attempting to validate S3 URI: {}"),
   EMR_1100("Invalid {}: {}"),
   EMR_1110("{} bucket does not exist: {}"),
   EMR_1200("Cluster ID not found: {}"),
   EMR_1250("Invalid Cluster ID: {}"),
-  EMR_2000("EC2 Subnet ID not found: {}"),
-  EMR_3000("{} does not exist: {}"),
   ;
   private final String msg;
 
