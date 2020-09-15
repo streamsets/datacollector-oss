@@ -23,7 +23,6 @@ package com.streamsets.pipeline.stage.processor.crypto;
 import com.amazonaws.encryptionsdk.CryptoAlgorithm;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Record;
@@ -56,7 +55,7 @@ public class TestFieldEncryptProcessor {
   @BeforeClass
   public static void setUpClass() {
     Arrays.fill(RAW_KEY, (byte) 0);
-    key = new ClearCredentialValue(Base64.getEncoder().encodeToString(RAW_KEY));
+    key = () -> Base64.getEncoder().encodeToString(RAW_KEY);
     aad = Maps.newHashMap(ImmutableMap.of("abc", "def"));
   }
 
