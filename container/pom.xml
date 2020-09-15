@@ -519,7 +519,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
         <configuration>
           <!-- flagging the PipelineAnnotationsProcessor to skip processing -->
           <compilerArgument>-Astreamsets.datacollector.annotationsprocessor.skip</compilerArgument>

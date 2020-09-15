@@ -46,8 +46,6 @@
   </licenses>
 
   <properties>
-    <!-- required JDK version -->
-    <javaVersion>1.8</javaVersion>
 
     <!-- Testcases output redirection -->
     <maven.test.redirectTestOutputToFile>true</maven.test.redirectTestOutputToFile>
