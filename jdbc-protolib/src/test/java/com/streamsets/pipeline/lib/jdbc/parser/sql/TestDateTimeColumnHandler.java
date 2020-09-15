@@ -21,26 +21,38 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.sql.Types;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
+import java.util.Date;
 
 
 public class TestDateTimeColumnHandler {
   private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   @Test
-  public void testOracleDate() throws StageException {
-    DateTimeColumnHandler handler = new DateTimeColumnHandler(ZoneId.of("GMT"), false);
+  public void testOracleDate() throws StageException, ParseException {
+    String testDateStringBase    = "10-04-2018 02:15:10";
+    String testDateStringTimeZone = "GMT";
+    String testDateString = testDateStringBase + " " + testDateStringTimeZone;
+    String testDateStringPattern = "dd-MM-yyyy HH:mm:ss z"; // z is for timezone
+
+    String testColumnValue = "TO_DATE('" + testDateStringBase + "', 'DD-MM-YYYY HH24:MI:SS')";
+    String expectedOutputPattern = "EEE LLL dd HH:mm:ss zzz yyyy";
+
+    DateTimeColumnHandler handler = new DateTimeColumnHandler(ZoneId.of(testDateStringTimeZone), false);
 
     // A TIME data type in Oracle is indeed a timestamp. The difference with respect to Oracle TIMESTAMP is that
     // TIME does not store fractional seconds.
     Field field = handler.getDateTimeStampField(
         "dt",
-        "TO_DATE('10-04-2018 02:15:10', 'DD-MM-YYYY HH24:MI:SS')",
+        testColumnValue,
         Types.TIMESTAMP
     );
     Assert.assertEquals(Field.Type.DATETIME, field.getType());
-    Assert.assertEquals("Tue Apr 10 02:15:10 UTC 2018", field.getValueAsDatetime().toString());
+    Date date = new SimpleDateFormat(testDateStringPattern).parse(testDateString);
+    String dateStr = new SimpleDateFormat(expectedOutputPattern).format(date);
+    Assert.assertEquals(dateStr, field.getValueAsDatetime().toString());
   }
 
   @Test
