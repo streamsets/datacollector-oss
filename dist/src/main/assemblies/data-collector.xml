@@ -714,6 +714,8 @@
       <unpack>false</unpack>
       <scope>compile</scope>
       <includes>
+        <include>javax.xml.bind:jaxb-api</include>
+        <include>javax.activation:javax.activation-api</include>
         <include>org.xerial.snappy:snappy-java</include>
       </includes>
     </dependencySet>
