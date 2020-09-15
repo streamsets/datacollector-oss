@@ -199,7 +199,7 @@
               <quiet>true</quiet>
               <verbose>false</verbose>
               <charset>UTF-8</charset>
-
+              <detectJavaApiLink>false</detectJavaApiLink>
               <groups>
                 <group>
                   <title>Pipeline SDK</title>
@@ -215,6 +215,9 @@
             <goals>
               <goal>jar</goal>
             </goals>
+            <configuration>
+              <detectJavaApiLink>false</detectJavaApiLink>
+            </configuration>
           </execution>
         </executions>
       </plugin>
