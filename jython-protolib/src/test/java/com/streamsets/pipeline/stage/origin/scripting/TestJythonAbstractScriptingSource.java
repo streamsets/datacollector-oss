@@ -16,7 +16,7 @@
 
 package com.streamsets.pipeline.stage.origin.scripting;
 
-import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.origin.jython.JythonSource;
 import com.streamsets.pipeline.stage.origin.scripting.config.ScriptSourceConfigBean;
@@ -39,7 +39,7 @@ public class TestJythonAbstractScriptingSource {
     );
 
     // initialize the source; this creates the engine
-    source.init(Mockito.mock(Stage.Info.class), Mockito.mock(StageContext.class));
+    source.init(Mockito.mock(Stage.Info.class), Mockito.mock(PushSource.Context.class));
 
     // swap out the engine with a spied version
     source.engine = JythonStageTestUtil.spyScriptEngine(source.engine);

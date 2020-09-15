@@ -16,7 +16,7 @@
 
 package com.streamsets.pipeline.stage.processor.scripting;
 
-import com.streamsets.datacollector.runner.StageContext;
+import com.streamsets.pipeline.api.Processor;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.stage.processor.jython.JythonProcessor;
 import com.streamsets.pipeline.stage.scripting.testutils.JythonStageTestUtil;
@@ -38,7 +38,7 @@ public class TestJythonAbstractScriptingProcessor {
     );
 
     // initialize the processor; this creates the engine
-    processor.init(Mockito.mock(Stage.Info.class), Mockito.mock(StageContext.class));
+    processor.init(Mockito.mock(Stage.Info.class), Mockito.mock(Processor.Context.class));
 
     // swap out the engine with a spied version
     processor.engine = JythonStageTestUtil.spyScriptEngine(processor.engine);
