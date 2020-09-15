@@ -335,6 +335,10 @@
           <groupId>com.github.stephenc.findbugs</groupId>
           <artifactId>findbugs-annotations</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>jdk.tools</groupId>
+          <artifactId>jdk.tools</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
 
@@ -356,6 +360,12 @@
       <artifactId>hbase-testing-util</artifactId>
       <version>${hbase.version}</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>jdk.tools</groupId>
+          <artifactId>jdk.tools</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

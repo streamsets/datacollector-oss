@@ -498,6 +498,10 @@
                     <groupId>com.github.stephenc.findbugs</groupId>
                     <artifactId>findbugs-annotations</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>jdk.tools</groupId>
+                    <artifactId>jdk.tools</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -510,6 +514,10 @@
                 <exclusion>
                     <groupId>javax.servlet</groupId>
                     <artifactId>servlet-api</artifactId>
+                </exclusion>
+                <exclusion>
+                  <groupId>jdk.tools</groupId>
+                  <artifactId>jdk.tools</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
