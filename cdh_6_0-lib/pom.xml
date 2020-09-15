@@ -59,7 +59,7 @@
         <!-- metrics version determined by spark-core_2.11 dependency -->
         <metrics.version>3.1.2</metrics.version>
 
-        <scala.version>2.11.8</scala.version>
+        <scala.version>2.11.12</scala.version>
         <zkclient.version>0.8</zkclient.version>
     </properties>
 

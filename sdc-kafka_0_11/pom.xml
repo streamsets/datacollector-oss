@@ -36,7 +36,7 @@
   <properties>
     <kafka.version>0.11.0.0</kafka.version>
     <tec.version>0.7</tec.version>
-    <scala.version>2.11.8</scala.version>
+    <scala.version>2.11.12</scala.version>
     <zookeeper.version>3.4.5</zookeeper.version>
     <guava.version>18.0</guava.version>
     <commons.version>3.4</commons.version>
