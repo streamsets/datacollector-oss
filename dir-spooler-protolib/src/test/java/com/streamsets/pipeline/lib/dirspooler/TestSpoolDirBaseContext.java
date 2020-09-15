@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.lib.event.EventCreator;
 import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,6 +47,18 @@ public class TestSpoolDirBaseContext {
     eventBuilderMock = Mockito.mock(EventCreator.EventBuilder.class);
 
     spoolDirBaseContext = new SpoolDirBaseContext(contextMock, NUM_THREADS);
+  }
+
+  @After
+  public void tearDown() {
+    if (NoMoreDataEvent.EVENT_CREATOR == eventCreatorMock) {
+      Whitebox.setInternalState(NoMoreDataEvent.class, new EventCreator.Builder(NoMoreDataEvent.NO_MORE_DATA_TAG,
+          NoMoreDataEvent.VERSION
+      ).withOptionalField(NoMoreDataEvent.RECORD_COUNT)
+          .withOptionalField(NoMoreDataEvent.ERROR_COUNT)
+          .withOptionalField(NoMoreDataEvent.FILE_COUNT)
+          .build());
+    }
   }
 
   @Test
