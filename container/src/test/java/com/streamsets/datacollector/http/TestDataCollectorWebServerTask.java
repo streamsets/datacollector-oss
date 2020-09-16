@@ -56,7 +56,8 @@ public class TestDataCollectorWebServerTask {
         new NopActivation(),
         Collections.<ContextConfigurator>emptySet(),
         Collections.<WebAppProvider>emptySet(),
-        new FileUserGroupManager(usersManager)
+        new FileUserGroupManager(usersManager),
+        null
     );
     Map<String, String> expectedAttrs = ImmutableMap.<String, String>builder().put(
         SSOConstants.SERVICE_BASE_URL_ATTR,

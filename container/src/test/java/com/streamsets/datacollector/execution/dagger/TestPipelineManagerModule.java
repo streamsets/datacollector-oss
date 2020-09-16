@@ -72,7 +72,7 @@ public class TestPipelineManagerModule {
   @Test
   public void testStandalonePipelineManagerModule() throws PipelineException {
     //Start SDC and get an instance of PipelineTask
-    ObjectGraph objectGraph = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    ObjectGraph objectGraph = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     Assert.assertTrue(taskWrapper.getTask() instanceof PipelineTask);
     Assert.assertNotNull(objectGraph.get(Configuration.class));
@@ -120,7 +120,7 @@ public class TestPipelineManagerModule {
 
   @Test
   public void testSlavePipelineManagerModule() throws PipelineException {
-    ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.class);
+    ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.createForTest(AsterModuleForTest.class));
     ((SlaveRuntimeInfo)objectGraph.get(RuntimeInfo.class)).setId("id");
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     taskWrapper.init();

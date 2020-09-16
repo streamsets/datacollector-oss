@@ -48,8 +48,8 @@ public class Main {
   private final Callable<Boolean> taskStopCondition;
 
   @VisibleForTesting
-  protected Main(Class moduleClass, Callable<Boolean> taskStopCondition) {
-    this(ObjectGraph.create(moduleClass), null, taskStopCondition);
+  protected Main(Object module, Callable<Boolean> taskStopCondition) {
+    this(ObjectGraph.create(module), null, taskStopCondition);
   }
 
   @VisibleForTesting

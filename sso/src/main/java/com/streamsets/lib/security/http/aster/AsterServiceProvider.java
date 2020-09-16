@@ -28,19 +28,7 @@ public final class AsterServiceProvider {
   // for local testing, use https://streamsets.dev:18632
   public static final String ASTER_URL_DEFAULT = ""; // TODO: SET to internal (SDC-15601) and then prod (SDC-15602). Also update sdc.properties.
 
-  private volatile AsterService service = null;
-
-  private static final AsterServiceProvider INSTANCE = new AsterServiceProvider();
-
   private AsterServiceProvider() {
-  }
-
-  /**
-   * Get Aster Service Provider Singleton Instance
-   * @return Aster Service provider
-   */
-  public static AsterServiceProvider getInstance() {
-    return INSTANCE;
   }
 
   /**
@@ -50,22 +38,6 @@ public final class AsterServiceProvider {
    */
   public static boolean isEnabled(Configuration appConf) {
     return !Strings.isNullOrEmpty(appConf.get(ASTER_URL, ASTER_URL_DEFAULT));
-  }
-
-  /**
-   * Registered Aster Service
-   * @return Aster Service
-   */
-  public AsterService getService() {
-    return service;
-  }
-
-  /**
-   * Set the Aster Service to be provided by this provider
-   * @param service aster service
-   */
-  public void set(AsterService service) {
-    this.service = service;
   }
 
 }

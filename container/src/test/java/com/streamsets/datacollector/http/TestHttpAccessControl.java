@@ -17,6 +17,7 @@ package com.streamsets.datacollector.http;
 
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.execution.dagger.AsterModuleForTest;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
@@ -149,7 +150,7 @@ public class TestHttpAccessControl {
       PosixFilePermission.OWNER_READ,
       PosixFilePermission.OWNER_WRITE));
 
-    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
 
     runtimeInfo = dagger.get(RuntimeInfo.class);
     runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR,

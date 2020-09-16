@@ -54,8 +54,8 @@ public class AsterAuthenticator implements Authenticator {
   /**
    * Constructor.
    */
-  public AsterAuthenticator(AsterServiceImpl service) {
-    this.service = service;
+  public AsterAuthenticator(AsterService service) {
+    this.service = (AsterServiceImpl) service;
   }
 
   /**

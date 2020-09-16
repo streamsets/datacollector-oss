@@ -132,7 +132,8 @@ public class TestWebServerTaskHttpHttps {
         new NopActivation(),
         configurators,
         webAppProviders,
-        new FileUserGroupManager(usersManager)
+        new FileUserGroupManager(usersManager),
+        null
     );
   }
 

@@ -16,11 +16,13 @@
 package com.streamsets.datacollector.main;
 
 import com.streamsets.datacollector.activation.ActivationOverrideModule;
+import com.streamsets.datacollector.aster.AsterModule;
 import com.streamsets.datacollector.aster.EntitlementSyncModule;
 import com.streamsets.datacollector.event.handler.dagger.EventHandlerModule;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.manager.slave.SlavePipelineManager;
 import com.streamsets.datacollector.execution.manager.slave.dagger.SlavePipelineManagerModule;
+import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.http.WebServerModule;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.task.Task;
@@ -32,13 +34,33 @@ import dagger.Provides;
 
 import javax.inject.Singleton;
 
-@Module(injects = { TaskWrapper.class, LogConfigurator.class, RuntimeInfo.class, BuildInfo.class, Configuration.class,
-    PipelineStoreTask.class }, library = true, complete = false)
+@Module(
+    injects = {
+      TaskWrapper.class,
+      LogConfigurator.class,
+      RuntimeInfo.class,
+      BuildInfo.class,
+      Configuration.class,
+      PipelineStoreTask.class,
+      AsterContext.class
+    },
+    library = true,
+    complete = false
+)
 public class MainSlavePipelineManagerModule { //Need better name
 
   private final ObjectGraph objectGraph;
 
+  // We cannot use the original AsterModule for testing as it does classloader tricks.
+  public static MainSlavePipelineManagerModule createForTest(Object asterModule) {
+    return new MainSlavePipelineManagerModule(asterModule);
+  }
+
   public MainSlavePipelineManagerModule() {
+    this(AsterModule.class);
+  }
+
+  private MainSlavePipelineManagerModule(Object asterModule) {
     ObjectGraph objectGraph = ObjectGraph.create(SlavePipelineManagerModule.class);
     Manager m = new SlavePipelineManager(objectGraph);
     // We add ActivationOverrideModule first to the list to ensure that we load the singleton Activation from the shared
@@ -48,7 +70,9 @@ public class MainSlavePipelineManagerModule { //Need better name
             new WebServerModule(m),
             EventHandlerModule.class,
             EntitlementSyncModule.class,
-            SlavePipelineTaskModule.class);
+            SlavePipelineTaskModule.class,
+            asterModule
+    );
   }
 
   @Provides @Singleton

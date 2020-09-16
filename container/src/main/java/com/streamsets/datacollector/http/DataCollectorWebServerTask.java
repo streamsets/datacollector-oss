@@ -40,9 +40,10 @@ public class DataCollectorWebServerTask extends WebServerTask {
       Activation activation,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders,
-      UserGroupManager userGroupManager
+      UserGroupManager userGroupManager,
+      AsterContext asterContext
   ) {
-    super(buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders);
+    super(buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders, asterContext);
     this.buildInfo = buildInfo;
     this.conf = conf;
     this.userGroupManager = userGroupManager;

@@ -53,9 +53,10 @@ public class SlaveWebServerTask extends DataCollectorWebServerTask {
       Activation activation,
       Set<ContextConfigurator> contextConfigurators,
       Set<WebAppProvider> webAppProviders,
-      UserGroupManager userGroupManager
+      UserGroupManager userGroupManager,
+      AsterContext asterContext
   ) {
-    super(buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders, userGroupManager);
+    super(buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders, userGroupManager, asterContext);
     this.conf = conf;
   }
 

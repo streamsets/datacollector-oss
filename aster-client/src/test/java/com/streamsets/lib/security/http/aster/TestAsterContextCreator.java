@@ -15,31 +15,52 @@
  */
 package com.streamsets.lib.security.http.aster;
 
-import com.streamsets.datacollector.http.AsterAuthenticatorConfig;
+import com.streamsets.datacollector.http.AsterConfig;
+import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.util.Configuration;
-import org.eclipse.jetty.security.Authenticator;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class TestAsterAuthenticatorCreator {
+public class TestAsterContextCreator {
 
   @Test
-  public void testCreate() {
-    AsterAuthenticatorCreator creator = new AsterAuthenticatorCreator();
+  public void testCreateDisabled() {
+    AsterContextCreator creator = new AsterContextCreator();
     Configuration engineConf = new Configuration();
-    engineConf.set(AsterServiceProvider.ASTER_URL, "https://dummy-aster");
-    AsterAuthenticatorConfig config = new AsterAuthenticatorConfig(
+    engineConf.set(AsterServiceProvider.ASTER_URL, "");
+    AsterConfig config = new AsterConfig(
         "DC",
         "version",
         "id",
         engineConf,
         "/tmp"
     );
-    Authenticator authenticator = creator.apply(config);
+    AsterContext context = creator.apply(config);
 
-    Assert.assertNotNull(authenticator);
-    Assert.assertTrue(authenticator instanceof ClassLoaderInContextAuthenticator);
-    ClassLoaderInContextAuthenticator clAuthenticator = (ClassLoaderInContextAuthenticator) authenticator;
+    Assert.assertNotNull(context);
+    Assert.assertFalse(context.isEnabled());
+  }
+
+  @Test
+  public void testCreateEnabled() {
+    AsterContextCreator creator = new AsterContextCreator();
+    Configuration engineConf = new Configuration();
+    engineConf.set(AsterServiceProvider.ASTER_URL, "https://dummy-aster");
+    AsterConfig config = new AsterConfig(
+        "DC",
+        "version",
+        "id",
+        engineConf,
+        "/tmp"
+    );
+    AsterContext context = creator.apply(config);
+
+    Assert.assertNotNull(context);
+    Assert.assertTrue(context.isEnabled());
+    Assert.assertNotNull(context.getService());
+    Assert.assertNotNull(context.getAuthenticator());
+    Assert.assertTrue(context.getAuthenticator() instanceof ClassLoaderInContextAuthenticator);
+    ClassLoaderInContextAuthenticator clAuthenticator = (ClassLoaderInContextAuthenticator) context.getAuthenticator();
     Assert.assertTrue(clAuthenticator.getDelegateAuthenticator() instanceof AsterAuthenticator);
     AsterServiceImpl service = ((AsterAuthenticator)clAuthenticator.getDelegateAuthenticator()).getService();
     Assert.assertEquals(AsterRestConfig.SubjectType.DC, service.getConfig().getAsterRestConfig().getSubjectType());

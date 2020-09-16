@@ -15,6 +15,8 @@
  */
 package com.streamsets.datacollector.main;
 
+import com.streamsets.datacollector.aster.AsterModule;
+import com.streamsets.datacollector.execution.dagger.AsterModuleForTest;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.DataCollectorMain;
 import com.streamsets.datacollector.main.LogConfigurator;
@@ -107,7 +109,10 @@ public class TestMain {
   }
   @Test
   public void testMainClassGetRuntime() {
-    DataCollectorMain main = new DataCollectorMain();
+    DataCollectorMain main = new DataCollectorMain(
+        MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class),
+        null
+    );
     Assert.assertEquals(Runtime.getRuntime(), main.getRuntime());
   }
 

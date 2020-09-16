@@ -84,7 +84,7 @@ public class TestUtil {
         break;
     }
 
-    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
 
     Task server = dagger.get(TaskWrapper.class);
     server.init();
