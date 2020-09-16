@@ -15,8 +15,6 @@
  */
 package com.streamsets.service.parser;
 
-import com.google.common.collect.ImmutableMap;
-import com.streamsets.datacollector.record.RecordImpl;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Field;
@@ -216,12 +214,7 @@ public class TestLogParserServiceImpl {
 
       @Override
       public Object answer(InvocationOnMock invocation) throws Throwable {
-        return new RecordImpl(
-            "dummyStage",
-            (String) invocation.getArguments()[0],
-            null,
-            null
-        );
+        return RecordCreator.create("dummyStage", (String) invocation.getArguments()[0]);
       }
     });
 
