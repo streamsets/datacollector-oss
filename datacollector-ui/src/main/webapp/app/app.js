@@ -632,43 +632,45 @@ angular.module('dataCollectorApp')
           var activationResult = sbaResults[2];
           var sdcIdResult = sbaResults[3];
 
+          var activationInfo;
+          if (activationResult && activationResult.data) {
+            activationInfo = $rootScope.common.activationInfo = activationResult.data;
+          }
+
           // Tracking initialization
-          tracking.initializeUser(sdcIdResult.data.id, $rootScope.common.userName);
+          tracking.initializeUser(sdcIdResult.data.id, $rootScope.common.userName, activationInfo);
 
           // Modal (or notification) for activation
-          if (activationResult && activationResult.data) {
-            var activationInfo = $rootScope.common.activationInfo = activationResult.data;
-            if (activationInfo.enabled) {
-              var difDays = authService.daysUntilProductExpiration(
-                activationInfo.info.expiration
-              );
-              if (difDays < 0) {
-                // if it is still valid, it is because only core stages are in use
-                if (!activationInfo.info.valid || $location.search().activationKey) {
-                  // When activation is not valid, roles other than adminActivation are not returned
-                  if ($rootScope.isAdmin || authService.isAuthorized(userRoles.adminActivation)) {
-                    $rootScope.common.showRegistrationModal();
-                  } else {
-                    $rootScope.common.showRegistrationPermissionErrorModal();
-                  }
-                  if (!activationInfo.info.valid) {
-                    $rootScope.common.infoList = [{
-                      message: 'Activation key expired, you need to get a new one from StreamSets'
-                    }];
-                    tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRED, {});
-                  }
+          if (activationInfo && activationInfo.enabled) {
+            var difDays = authService.daysUntilProductExpiration(
+              activationInfo.info.expiration
+            );
+            if (difDays < 0) {
+              // if it is still valid, it is because only core stages are in use
+              if (!activationInfo.info.valid || $location.search().activationKey) {
+                // When activation is not valid, roles other than adminActivation are not returned
+                if ($rootScope.isAdmin || authService.isAuthorized(userRoles.adminActivation)) {
+                  $rootScope.common.showRegistrationModal();
+                } else {
+                  $rootScope.common.showRegistrationPermissionErrorModal();
                 }
-              } else if (difDays < 30) {
-                $rootScope.common.infoList = [{
-                  message: 'Activation key expires in ' + difDays + '  days'
-                }];
-                tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRING_SOON, {'Days': difDays});
-              } else if (!activationInfo.info.valid) {
-                $rootScope.common.infoList = [{
-                  message: 'Activation key is not valid'
-                }];
-                tracking.mixpanel.track(trackingEvent.ACTIVATION_INVALID, {});
+                if (!activationInfo.info.valid) {
+                  $rootScope.common.infoList = [{
+                    message: 'Activation key expired, you need to get a new one from StreamSets'
+                  }];
+                  tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRED, {});
+                }
               }
+            } else if (difDays < 30) {
+              $rootScope.common.infoList = [{
+                message: 'Activation key expires in ' + difDays + '  days'
+              }];
+              tracking.mixpanel.track(trackingEvent.ACTIVATION_EXPIRING_SOON, {'Days': difDays});
+            } else if (!activationInfo.info.valid) {
+              $rootScope.common.infoList = [{
+                message: 'Activation key is not valid'
+              }];
+              tracking.mixpanel.track(trackingEvent.ACTIVATION_INVALID, {});
             }
           }
 
