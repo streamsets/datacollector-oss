@@ -31,9 +31,9 @@ public class Matcher implements MatchResult {
     private java.util.regex.Matcher matcher;
     private Pattern parentPattern;
 
-    Matcher(Pattern parentPattern, java.util.regex.MatchResult matcher) {
+    Matcher(Pattern parentPattern, java.util.regex.Matcher matcher) {
         this.parentPattern = parentPattern;
-        this.matcher = (java.util.regex.Matcher) matcher;
+        this.matcher = matcher;
     }
 
     Matcher(Pattern parentPattern, CharSequence input) {
@@ -121,7 +121,7 @@ public class Matcher implements MatchResult {
      * @return a NamedMatchResult with the state of this matcher
      */
     public MatchResult toMatchResult() {
-        return new Matcher(this.parentPattern, matcher.toMatchResult());
+        return new Matcher(this.parentPattern, matcher);
     }
 
     /**
