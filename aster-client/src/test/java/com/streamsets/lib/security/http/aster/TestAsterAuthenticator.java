@@ -309,20 +309,6 @@ public class TestAsterAuthenticator {
 
     Assert.assertEquals(authentication, authenticator.validateRequest(req, res, true));
 
-    // authenticated session a logout request
-    req = Mockito.mock(HttpServletRequest.class);
-    res = Mockito.mock(HttpServletResponse.class);
-    principal = Mockito.mock(SSOPrincipal.class);
-    Mockito.when(principal.getName()).thenReturn("foo@foo");
-    authentication = Mockito.mock(SSOAuthenticationUser.class);
-    Mockito.when(authentication.getSSOUserPrincipal()).thenReturn(principal);
-    Mockito.doReturn(authentication).when(authenticator).getSessionAuthentication(Mockito.eq(req));
-    Mockito.doReturn(true).when(authenticator).isLogoutRequest(Mockito.eq(req));
-
-    Assert.assertEquals(Authentication.SEND_SUCCESS, authenticator.validateRequest(req, res, true));
-    Mockito.verify(authenticator, Mockito.times(1)).destroySession(Mockito.eq(req));
-    Mockito.verify(res, Mockito.times(1)).sendRedirect(Mockito.eq("/tlogout.html"));
-
     // not an authenticated session handling user login true GET initiate
     req = Mockito.mock(HttpServletRequest.class);
     res = Mockito.mock(HttpServletResponse.class);
@@ -484,6 +470,42 @@ public class TestAsterAuthenticator {
     );
 
     Assert.assertEquals(redirAuth, authenticator.validateRequest(req, res, true));
+  }
+
+  @Test
+  public void testLogout() throws Exception {
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
+    AsterServiceConfig config = new AsterServiceConfig(
+        AsterRestConfig.SubjectType.DC,
+        "1",
+        UUID.randomUUID().toString(),
+        new Configuration()
+    );
+    Mockito.when(service.getConfig()).thenReturn(config);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    authenticator = Mockito.spy(authenticator);
+
+    Mockito.doReturn(true).when(authenticator).isEngineRegistered();
+
+    // handling registration initiate
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    Mockito.when(req.getRequestURI()).thenReturn("/rest/v1/logout");
+    Mockito.when(req.getMethod()).thenReturn("POST");
+    HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+
+    req = Mockito.mock(HttpServletRequest.class);
+    res = Mockito.mock(HttpServletResponse.class);
+
+    Mockito.doReturn(true).when(authenticator).isHandlingEngineRegistration(Mockito.eq(req), Mockito.eq(res));
+    Mockito.doReturn(true).when(authenticator).isLogoutRequest(Mockito.eq(req));
+    SSOAuthenticationUser authentication = Mockito.mock(SSOAuthenticationUser.class);
+    Mockito.when(authentication.getSSOUserPrincipal()).thenReturn(Mockito.mock(SSOPrincipal.class));
+    Mockito.doReturn(authentication).when(authenticator).getSessionAuthentication(Mockito.eq(req));
+
+    Assert.assertEquals(Authentication.SEND_SUCCESS, authenticator.validateRequest(req, res, true));
+    Mockito.verify(authenticator, Mockito.times(1)).destroySession(Mockito.eq(req));
+    Mockito.verify(service, Mockito.times(1)).handleLogout(Mockito.eq(req), Mockito.eq(res));
   }
 
 }

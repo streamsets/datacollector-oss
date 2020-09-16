@@ -607,8 +607,7 @@ module.exports = function(grunt) {
           '<%= common_base_dir %>alogin.html',
           '<%= common_base_dir %>alogin-callback.html',
           '<%= common_base_dir %>aregistration.html',
-          '<%= common_base_dir %>aregistration-callback.html',
-          '<%= common_base_dir %>alogout.html'
+          '<%= common_base_dir %>aregistration-callback.html'
         ],
         tasks: [ 'index:build', 'login:build' ]
       },
@@ -869,15 +868,6 @@ module.exports = function(grunt) {
       }
     });
 
-    grunt.file.copy(grunt.config( 'common_base_dir' ) +'alogout.html', grunt.config( 'build_dir' ) + '/alogout.html', {
-      process: function ( contents, path ) {
-        return grunt.template.process( contents, {
-          data: {
-            version: grunt.config( 'pkg.version' )
-          }
-        });
-      }
-    });
   });
 
 

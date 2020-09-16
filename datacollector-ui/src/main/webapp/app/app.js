@@ -311,8 +311,13 @@ angular.module('dataCollectorApp')
        */
       logout: function() {
         api.admin.logout($rootScope.common.authenticationType, $rootScope.common.isDPMEnabled)
-          .then(function() {
-            location.reload();
+          .then(function(resp) {
+            if (resp.data && resp.data.redirect_uri) {
+              // log out of Aster as well
+              window.location = resp.data.redirect_uri;
+            } else {
+              location.reload();
+            }
           });
       },
 
