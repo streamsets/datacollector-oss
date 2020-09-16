@@ -28,6 +28,9 @@ import com.streamsets.pipeline.lib.aws.SseOption;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
+import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +48,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   public static final String GOOGLE_CLOUD_CREDENTIALS_CONFIG_PREFIX = "googleCloudCredentialsConfig.";
 
   public static final String ENABLE_EMR_DEBUGGING_CONFIG_FIELD = "enableEMRDebugging";
+  public static final String USE_IAM_ROLES_CONFIG_FIELD = "useIAMRoles";
 
   public static final String SDC_OLD_EMR_CONFIG = "amazonEMRConfig";
   public static final String SDC_NEW_EMR_CONNECTION = "sdcEmrConnection";
@@ -380,7 +384,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void upgradeV16ToV17(List<Config> configs) {
     String amazonEmrConfigPrefix = TRANSFORMER_EMR_CONFIG + ".";
     addEmrConfigs(configs, amazonEmrConfigPrefix);
-    configs.add(new Config(amazonEmrConfigPrefix + "useIAMRoles", false));
+    configs.add(new Config(amazonEmrConfigPrefix + USE_IAM_ROLES_CONFIG_FIELD, false));
     configs.add(new Config("clusterConfig.callbackUrl", null));
   }
 
@@ -462,21 +466,57 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     // convert the existing AmazonEMRConfig beans (for both SDC and Transformer) to the new connection objects
     final Set<String> emrClusterFields = new HashSet<>();
 
+    // SDC EMR configs
     UpgraderUtils.insertAfterPrefix(configs, "", emrClusterFields, "");
-    moveCommonEMRConfigsToConnection(configs, SDC_OLD_EMR_CONFIG, SDC_NEW_EMR_CONNECTION);
+    moveCommonEMRConfigsToConnection(
+        configs,
+        SDC_OLD_EMR_CONFIG,
+        SDC_NEW_EMR_CONNECTION,
+        // SDC only supported key authentication prior to this version (SDC-15508)
+        AWSCredentialMode.WITH_CREDENTIALS
+    );
     // this one is moving up to the top level pipeline config
     UpgraderUtils.moveAllTo(
         configs,
         SDC_OLD_EMR_CONFIG + "." + ENABLE_EMR_DEBUGGING_CONFIG_FIELD,
-        ENABLE_EMR_DEBUGGING_CONFIG_FIELD);
+        ENABLE_EMR_DEBUGGING_CONFIG_FIELD
+    );
+
+    // Transformer EMR configs
+    // the useIAMRoles config needs translation
+    final Config useIAMRolesConfig = UpgraderUtils.getAndRemoveConfigWithName(
+        configs,
+        TRANSFORMER_EMR_CONFIG + "." + USE_IAM_ROLES_CONFIG_FIELD
+    );
+
+    boolean useIAMRoles = false;
+    final Object useIAMRolesObj = useIAMRolesConfig.getValue();
+    if (useIAMRolesObj instanceof String) {
+      final String useIAMRolesStr = (String) useIAMRolesObj;
+      if (StringUtils.isNotBlank(useIAMRolesStr)) {
+        useIAMRoles = Boolean.parseBoolean(useIAMRolesStr);
+      }
+    } else { //assume Boolean type
+      useIAMRoles = BooleanUtils.isTrue((Boolean) useIAMRolesObj);
+    }
+    AWSCredentialMode transformerCredentialMode = AWSCredentialMode.WITH_CREDENTIALS;
+    if (useIAMRoles) {
+      transformerCredentialMode = AWSCredentialMode.WITH_IAM_ROLES;
+    }
     // all but encryption, kmsKeyId, and serviceAccessSecurityGroup are moved to the connection
-    moveCommonEMRConfigsToConnection(configs, TRANSFORMER_EMR_CONFIG, TRANSFORMER_NEW_EMR_CONNECTION);
+    moveCommonEMRConfigsToConnection(
+        configs,
+        TRANSFORMER_EMR_CONFIG,
+        TRANSFORMER_NEW_EMR_CONNECTION,
+        transformerCredentialMode
+    );
   }
 
   private static void moveCommonEMRConfigsToConnection(
       List<Config> configs,
       String currentConfigFieldName,
-      String connectionFieldName
+      String connectionFieldName,
+      AWSCredentialMode authenticationMode
   ) {
     UpgraderUtils.moveAllTo(
         configs,
@@ -526,5 +566,9 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         currentConfigFieldName + ".slaveInstanceTypeCustom",
         connectionFieldName + ".slaveInstanceTypeCustom"
     );
+    configs.add(new Config(
+        connectionFieldName + ".awsConfig.credentialMode",
+        authenticationMode
+    ));
   }
 }

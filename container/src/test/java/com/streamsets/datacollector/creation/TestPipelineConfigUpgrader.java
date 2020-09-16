@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
+import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
@@ -363,6 +364,7 @@ public class TestPipelineConfigUpgrader {
     static final String masterSecurityGroup = "sg-1";
     static final String slaveSecurityGroup = "sg-2";
     static final String serviceAccessSecurityGroup = "sg-3";
+    static final boolean useIAMRoles = true;
     static final int instanceCount = 2;
     static final AwsInstanceType masterInstanceType = AwsInstanceType.R4_2XLARGE;
     static final String masterInstanceTypeCustom = "x4.16xhuge";
@@ -398,6 +400,10 @@ public class TestPipelineConfigUpgrader {
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".encryption",
         ExpectedVals.encryption
     ));
+    configs.add(new Config(
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".useIAMRoles",
+        ExpectedVals.useIAMRoles
+    ));
 
     final UpgraderTestUtils.UpgradeMoveWatcher watcher = UpgraderTestUtils.snapshot(configs);
 
@@ -421,6 +427,13 @@ public class TestPipelineConfigUpgrader {
         PipelineConfigUpgrader.ENABLE_EMR_DEBUGGING_CONFIG_FIELD
     );
 
+    // the credentialMode should have been initialized with a default now
+    UpgraderTestUtils.assertExists(
+        upgraded,
+        PipelineConfigUpgrader.SDC_NEW_EMR_CONNECTION + ".awsConfig.credentialMode",
+        AWSCredentialMode.WITH_CREDENTIALS
+    );
+
     // Transformer-specific, connection fields should have been moved to their new homes
     assertCommonEMRConfigsMoved(
         watcher,
@@ -435,6 +448,17 @@ public class TestPipelineConfigUpgrader {
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".kmsKeyId",
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".encryption"
+    );
+    // the useIAMRoles boolean should have morphed into an instance of AWSCredentialMode
+    UpgraderTestUtils.assertExists(
+        upgraded,
+        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION + ".awsConfig.credentialMode",
+        AWSCredentialMode.WITH_IAM_ROLES
+    );
+    // but the old config should no longer exist
+    UpgraderTestUtils.assertNoneExist(
+        upgraded,
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + "." + PipelineConfigUpgrader.USE_IAM_ROLES_CONFIG_FIELD
     );
   }
 
