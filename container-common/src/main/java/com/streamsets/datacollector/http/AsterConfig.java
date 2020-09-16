@@ -23,7 +23,7 @@ import com.streamsets.datacollector.util.Configuration;
  * As the Aster authenticator is created in another classloader this bean simplifies
  * passing its configuration.
  */
-public class AsterAuthenticatorConfig {
+public class AsterConfig {
   private final String engineType;
   private final String engineVersion;
   private final String engineId;
@@ -33,7 +33,7 @@ public class AsterAuthenticatorConfig {
   /**
    * Constructor.
    */
-  public AsterAuthenticatorConfig(
+  public AsterConfig(
       String engineType,
       String engineVersion,
       String engineId,

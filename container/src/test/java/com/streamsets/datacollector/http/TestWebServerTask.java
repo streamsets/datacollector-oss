@@ -91,7 +91,8 @@ public class TestWebServerTask {
         conf,
         new NopActivation(),
         configurators,
-        webAppProviders
+        webAppProviders,
+        null
     ) {
       @Override
       protected String getAppAuthToken(Configuration appConfiguration) {

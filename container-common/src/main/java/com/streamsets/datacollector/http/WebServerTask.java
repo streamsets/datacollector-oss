@@ -30,6 +30,7 @@ import com.streamsets.lib.security.RegistrationResponseJson;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.lib.security.http.DisconnectedSSOService;
 import com.streamsets.lib.security.http.FailoverSSOService;
+import com.streamsets.lib.security.http.LimitedMethodServer;
 import com.streamsets.lib.security.http.ProxySSOService;
 import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
@@ -37,9 +38,7 @@ import com.streamsets.lib.security.http.SSOAuthenticator;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOService;
 import com.streamsets.lib.security.http.SSOUtils;
-import com.streamsets.pipeline.SDCClassLoader;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.lib.security.http.LimitedMethodServer;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.http2.HTTP2Cipher;
@@ -98,7 +97,6 @@ import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -106,8 +104,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Automatic security configuration based on URL paths:
@@ -194,6 +190,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
   private Server redirector;
   private SessionHandler sessionHandler;
   Map<String, Set<String>> roleMapping;
+  AsterContext asterContext;
 
   public WebServerTask(
       BuildInfo buildInfo,
@@ -201,9 +198,10 @@ public abstract class WebServerTask extends AbstractTask implements Registration
       Configuration conf,
       Activation activation,
       Set<ContextConfigurator> contextConfigurators,
-      Set<WebAppProvider> webAppProviders
+      Set<WebAppProvider> webAppProviders,
+      AsterContext asterContext
   ) {
-    this("webserver", buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders);
+    this("webserver", buildInfo, runtimeInfo, conf, activation, contextConfigurators, webAppProviders, asterContext);
   }
 
   public WebServerTask(
@@ -213,7 +211,8 @@ public abstract class WebServerTask extends AbstractTask implements Registration
       Configuration conf,
       Activation activation,
       Set<ContextConfigurator> contextConfigurators,
-      Set<WebAppProvider> webAppProviders
+      Set<WebAppProvider> webAppProviders,
+      AsterContext asterContext
   ) {
     super("webServer");
     this.serverName = serverName;
@@ -223,6 +222,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     this.activation = activation;
     this.webAppProviders = webAppProviders;
     this.contextConfigurators = contextConfigurators;
+    this.asterContext = asterContext;
   }
 
   protected RuntimeInfo getRuntimeInfo() {
@@ -570,50 +570,14 @@ public abstract class WebServerTask extends AbstractTask implements Registration
   // As this plays with classloaders created from dist locations it is not possible to unit test easily.
   @SuppressWarnings("unchecked")
   private ConstraintSecurityHandler configureAsterSSO(final Configuration appConf) {
-    LOG.debug("Initializing Aster integration");
-    ConstraintSecurityHandler security = new ConstraintSecurityHandler();
-
-    // creates the configuration bean with the information needed to create the Aster authenticator.
-    AsterAuthenticatorConfig asterConfig = new AsterAuthenticatorConfig(
-        runtimeInfo.getProductName().equals(RuntimeInfo.SDC_PRODUCT) ? "DC" : "TF",
-        buildInfo.getVersion(),
-        getRuntimeInfo().getId(),
-        appConf,
-        getRuntimeInfo().getDataDir()
-    );
-
-    try {
-      // _sdc sets the 'sdc.asterClientLib.dir' system property to the directory containing the aster-client JARs
-      // if not set we fallback to a default location.
-      String dir = System.getProperty("sdc.asterClientLib.dir", getRuntimeInfo().getRuntimeDir() + "/aster-client-lib");
-      File asterClientLibDir = new File(dir);
-
-      // gets JAR URLs from Aster client lib directory
-      List<URL> asterJars = Arrays.stream(asterClientLibDir.listFiles())
-          .map(this::convertFileToUrl)
-          .collect(Collectors.toList());
-
-      // creates a reverse classloader (the same one we use for stagelibraries) with the Aster client JARs
-      // using the container classloader as parent
-      SDCClassLoader asterClassLoader = SDCClassLoader.getAsterClassLoader(
-          asterJars,
-          Thread.currentThread().getContextClassLoader()
-      );
-
-      // Lookup for the AsterAuthenticatorCreator function class in the Aster client classloader.
-      Class<Function<AsterAuthenticatorConfig, Authenticator>> klass =
-          (Class<Function<AsterAuthenticatorConfig, Authenticator>>)
-              asterClassLoader.loadClass("com.streamsets.lib.security.http.aster.AsterAuthenticatorCreator");
-
-      // Instantiate and invoke the AsterAuthenticatorCreator function providing the Aster configuration bean.
-      Function<AsterAuthenticatorConfig, Authenticator> creator = klass.newInstance();
-      Authenticator authenticator = creator.apply(asterConfig);
-
+    LOG.debug("Configure Aster integration");
+    if (asterContext.isEnabled()) {
+      ConstraintSecurityHandler security = new ConstraintSecurityHandler();
       // Set the Aster authenticator in the Jetty security constraint handler and return the handler.
-      security.setAuthenticator(injectActivationCheck(authenticator));
+      security.setAuthenticator(injectActivationCheck(asterContext.getAuthenticator()));
       return security;
-    } catch (Exception ex) {
-      throw new RuntimeException("Could not set up AsterAuthenticator: " + ex, ex);
+    } else {
+      throw new RuntimeException("Aster not enabled");
     }
   }
 

@@ -18,6 +18,7 @@ package com.streamsets.datacollector.aster;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
@@ -46,25 +47,29 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
   private final Configuration appConfig;
+  private final AsterContext asterContext;
 
   @Inject
   public EntitlementSyncTaskImpl(
       Activation activation,
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
-      Configuration appConfig) {
+      Configuration appConfig,
+      AsterContext asterContext
+      ) {
     super("EntitlementSyncTask");
     this.activation = activation;
     this.runtimeInfo = runtimeInfo;
     this.buildInfo = buildInfo;
     this.appConfig = appConfig;
+    this.asterContext = asterContext;
   }
 
   @Override
   protected void initTask() {
     super.initTask();
-    if (AsterServiceProvider.isEnabled(appConfig) && AsterServiceProvider.getInstance().getService() != null) {
-      AsterServiceProvider.getInstance().getService().registerHooks(Collections.singletonList(this));
+    if (asterContext.isEnabled()) {
+      asterContext.getService().registerHooks(Collections.singletonList(this));
     } else {
       LOG.debug("Aster is not enabled, skipping registration of EntitlementSync hook");
     }
@@ -138,7 +143,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
 
   @VisibleForTesting
   AsterService getAsterService() {
-    return AsterServiceProvider.getInstance().getService();
+    return asterContext.getService();
   }
 
   private Map<String, Object> getEntitlementArguments() {

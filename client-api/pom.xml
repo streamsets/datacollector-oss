@@ -34,6 +34,11 @@
 
   <dependencies>
     <dependency>
+      <groupId>com.squareup.dagger</groupId>
+      <artifactId>dagger-compiler</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
     </dependency>

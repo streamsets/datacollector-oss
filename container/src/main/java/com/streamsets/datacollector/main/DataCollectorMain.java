@@ -28,8 +28,8 @@ public class DataCollectorMain extends Main {
     super(MainStandalonePipelineManagerModule.class, null);
   }
 
-  public DataCollectorMain(Class moduleClass, Callable<Boolean> taskStopCondition) {
-    super(moduleClass, taskStopCondition);
+  public DataCollectorMain(Object module, Callable<Boolean> taskStopCondition) {
+    super(module, taskStopCondition);
   }
 
   public static void setContext(

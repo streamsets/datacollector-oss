@@ -51,39 +51,9 @@ public class TestAsterServiceImpl {
     );
 
     AsterServiceImpl asterService = new AsterServiceImpl(config, file);
-    AsterServiceProvider.getInstance().set(asterService);
     hook = Mockito.mock(AsterServiceHook.class);
     asterService.registerHooks(Collections.singletonList(hook));
     return asterService;
-  }
-
-  @Test
-  public void testEnabled() {
-    File file = new File("target", UUID.randomUUID().toString());
-    Assert.assertTrue(file.mkdir());
-    file = new File(file, "store.json");
-
-    AsterServiceImpl service = createService(file);
-    Assert.assertTrue(AsterServiceProvider.isEnabled(service.getConfig().getEngineConfig()));
-  }
-
-  @Test
-  public void testDisabled() {
-    File file = new File("target", UUID.randomUUID().toString());
-    Assert.assertTrue(file.mkdir());
-    file = new File(file, "store.json");
-
-    Configuration innerConfig = new Configuration();
-    innerConfig.set(AsterServiceProvider.ASTER_URL, "");
-
-    Assert.assertFalse(AsterServiceProvider.isEnabled(innerConfig));
-    try {
-      createService(file, innerConfig);
-      Assert.fail("expected exception");
-    } catch (IllegalArgumentException e) {
-      Assert.assertTrue("Expected disabled exception but got: " + e.getMessage(),
-          e.getMessage().contains(AsterServiceProvider.ASTER_URL));
-    }
   }
 
   @Test
@@ -93,9 +63,6 @@ public class TestAsterServiceImpl {
     file = new File(file, "store.json");
 
     AsterServiceImpl service = createService(file);
-
-    // singleton
-    Assert.assertEquals(service, AsterServiceProvider.getInstance().getService());
 
     // config
     Assert.assertNotNull(service.getConfig());

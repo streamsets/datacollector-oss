@@ -17,6 +17,7 @@ package com.streamsets.datacollector.aster;
 
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.activation.Activation;
+import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
@@ -25,10 +26,13 @@ import com.streamsets.lib.security.http.aster.AsterRestClient;
 import com.streamsets.lib.security.http.aster.AsterService;
 import com.streamsets.lib.security.http.aster.AsterServiceProvider;
 import org.apache.http.HttpStatus;
+import org.eclipse.jetty.security.Authenticator;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+
+import org.mockito.Mockito;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -75,10 +79,7 @@ public class TestEntitlementSyncTaskImpl {
     appConfig = new Configuration();
     appConfig.set(AsterServiceProvider.ASTER_URL, ASTER_URL);
 
-    task = spy(new EntitlementSyncTaskImpl(activation, runtimeInfo, buildInfo, appConfig));
-
     asterService = mock(AsterService.class);
-    doReturn(asterService).when(task).getAsterService();
 
     asterRestClient = mock(AsterRestClient.class);
     when(asterService.getRestClient()).thenReturn(asterRestClient);
@@ -86,6 +87,12 @@ public class TestEntitlementSyncTaskImpl {
     asterConfiguration = mock(AsterConfiguration.class);
     when(asterConfiguration.getBaseUrl()).thenReturn(ASTER_URL);
     when(asterService.getConfig()).thenReturn(asterConfiguration);
+    AsterContext asterContext = Mockito.mock(AsterContext.class);
+    Mockito.when(asterContext.isEnabled()).thenReturn(true);
+    Mockito.when(asterContext.getService()).thenReturn(asterService);
+    task = spy(new EntitlementSyncTaskImpl(activation, runtimeInfo, buildInfo, appConfig, asterContext));
+
+    doReturn(asterService).when(task).getAsterService();
 
     response = mock(AsterRestClient.Response.class);
     // fails by default, test can set to successful

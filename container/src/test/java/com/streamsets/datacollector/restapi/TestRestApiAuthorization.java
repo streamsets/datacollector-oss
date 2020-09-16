@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.execution.dagger.AsterModuleForTest;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
@@ -106,7 +107,7 @@ public class TestRestApiAuthorization {
                  writer);
     writer.close();
     Files.setPosixFilePermissions(realmFile.toPath(), WebServerTask.OWNER_PERMISSIONS);
-    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.class);
+    ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
     RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
     runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
     server = dagger.get(TaskWrapper.class);
