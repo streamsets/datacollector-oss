@@ -64,6 +64,14 @@ export SDC_JAVA_OPTS="-Xmx1024m -Xms1024m -server -XX:-OmitStackTraceInFastThrow
 # by default, use CMS garbage collector
 export SDC_JAVA8_OPTS=${SDC_JAVA8_OPTS:-"-XX:+UseConcMarkSweepGC -XX:+UseParNewGC -Djdk.nio.maxCachedBufferSize=262144"}
 
+# Java 11 (JDK 11) specific options
+# Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release
+export SDC_JAVA11_OPTS=${SDC_JAVA11_OPTS:-"-Djdk.nio.maxCachedBufferSize=262144"}
+
+# Java 14 (JDK 14) specific options
+# Option UseConcMarkSweepGC; support was removed in 14.0
+export SDC_JAVA14_OPTS=${SDC_JAVA14_OPTS:-"-Djdk.nio.maxCachedBufferSize=262144"}
+
 # Enables/disables the JVM security manager
 #
 export SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:-true}
