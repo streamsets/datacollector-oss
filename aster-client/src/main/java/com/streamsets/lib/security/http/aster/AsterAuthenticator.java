@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -348,51 +349,107 @@ public class AsterAuthenticator implements Authenticator {
             }
           }
         } else {
-          LOG.trace("Engine is not registered");
-          if (isHandlingEngineRegistration(httpReq, httpRes)) {
-            LOG.trace("Handling engine registration");
-            String redirUrl = service.handleEngineRegistration(getRequestBaseUrl(httpReq), httpReq, httpRes);
-            if (redirUrl == null) { //GET initiate
-              authentication = Authentication.SEND_SUCCESS;
-            } else { //POST complete
-              authentication = redirect(httpReq, httpRes, redirUrl);
-            }
-          } else {
-            LOG.trace("Triggering engine registration");
-            destroySession(httpReq);
-            String redirUrlKey = service.storeRedirUrl(getUrlForRedirection(httpReq));
-            authentication = redirect(httpReq,
-                httpRes,
-                addParameterToQueryString(service.getConfig().getEngineRegistrationPath(),
-                    AsterServiceImpl.LSTATE_QS_PARAM,
-                    redirUrlKey
-                )
-            );
-          }
+          authentication = handleRegistration(httpReq, httpRes, true);
         }
       }
     } catch (AsterException|AsterAuthException ex) {
-      LOG.warn("Error during request authentication: {}", ex, ex);
-      destroySession(httpReq);
-      if (shouldRetryFailedRequest(httpReq)) {
-        String redirUrl = getUrlForRedirection(httpReq);
-        LOG.debug("Retry authentication redirect '{}'", redirUrl);
-        authentication = redirect(httpReq, httpRes, addParameterToQueryString(redirUrl, A_RETRY_QS_PARAM, "false"));
-      } else {
-        LOG.warn("Already retried authentication, giving up");
-        if (ex instanceof AsterAuthException) {
-          httpRes.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "engine-aster-sso");
-          httpRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-          authentication = Authentication.SEND_FAILURE;
-        } else {
-          httpRes.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-          authentication = Authentication.SEND_FAILURE;
-        }
-      }
+      authentication = handleAsterExceptions(httpReq, httpRes, ex);
     } catch (Exception ex) {
-      LOG.error("Error during request authentication: {}", ex, ex);
-      httpRes.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-      authentication = Authentication.SEND_FAILURE;
+      authentication = handleOtherExceptions(httpRes, ex);
+    }
+    return authentication;
+  }
+
+  private Authentication handleAsterExceptions(HttpServletRequest httpReq, HttpServletResponse httpRes, Exception ex)
+      throws ServerAuthException {
+    Authentication authentication;
+    LOG.warn("Error during request authentication: {}", ex, ex);
+    destroySession(httpReq);
+    if (shouldRetryFailedRequest(httpReq)) {
+      String redirUrl = getUrlForRedirection(httpReq);
+      LOG.debug("Retry authentication redirect '{}'", redirUrl);
+      authentication = redirect(httpReq, httpRes, addParameterToQueryString(redirUrl, A_RETRY_QS_PARAM, "false"));
+    } else {
+      LOG.warn("Already retried authentication, giving up");
+      if (ex instanceof AsterAuthException) {
+        httpRes.setHeader(HttpHeader.WWW_AUTHENTICATE.asString(), "engine-aster-sso");
+        httpRes.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        authentication = Authentication.SEND_FAILURE;
+      } else {
+        httpRes.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        authentication = Authentication.SEND_FAILURE;
+      }
+    }
+    return authentication;
+  }
+
+  private Authentication handleOtherExceptions(HttpServletResponse httpRes, Exception ex) {
+    LOG.error("Error during request authentication: {}", ex, ex);
+    httpRes.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    return Authentication.SEND_FAILURE;
+  }
+
+  /**
+   * Handles REST engine registration.
+   */
+  public void handleRegistration(ServletRequest request, ServletResponse response) {
+    try {
+      // simulate the original registration
+      HttpServletRequest httpReq = (HttpServletRequest) request;
+      String redirUrlKey = service.storeRedirUrl(getRequestBaseUrl(httpReq));
+      httpReq = new HttpServletRequestWrapper(httpReq) {
+        @Override
+        public String getParameter(String name) {
+          if (name.equals(AsterServiceImpl.LSTATE_QS_PARAM)) {
+            return redirUrlKey;
+          } else {
+            return super.getParameter(name);
+          }
+        }
+      };
+
+      handleRegistration(httpReq, response, false);
+    } catch (ServerAuthException ex0) {
+      LOG.warn("Error while handling registration: {}", ex0, ex0);
+      HttpServletResponse httpRes = (HttpServletResponse) response;
+      try {
+        httpRes.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      } catch (IOException ex1) {
+        LOG.warn("Error while trying to report an error handling registration: {}", ex1, ex1);
+      }
+    }
+  }
+
+  private Authentication handleRegistration(
+      ServletRequest request,
+      ServletResponse response,
+      boolean destroySession
+  ) throws ServerAuthException {
+    LOG.trace("Engine is not registered");
+    Authentication authentication;
+    HttpServletRequest httpReq = (HttpServletRequest) request;
+    HttpServletResponse httpRes = (HttpServletResponse) response;
+    if (isHandlingEngineRegistration(httpReq, httpRes)) {
+      LOG.trace("Handling engine registration");
+      String redirUrl = service.handleEngineRegistration(getRequestBaseUrl(httpReq), httpReq, httpRes);
+      if (redirUrl == null) { //GET initiate
+        authentication = Authentication.SEND_SUCCESS;
+      } else { //POST complete
+        authentication = redirect(httpReq, httpRes, redirUrl);
+      }
+    } else {
+      LOG.trace("Triggering engine registration");
+      if (destroySession) {
+        destroySession(httpReq);
+      }
+      String redirUrlKey = service.storeRedirUrl(getUrlForRedirection(httpReq));
+      authentication = redirect(httpReq,
+          httpRes,
+          addParameterToQueryString(service.getConfig().getEngineRegistrationPath(),
+              AsterServiceImpl.LSTATE_QS_PARAM,
+              redirUrlKey
+          )
+      );
     }
     return authentication;
   }

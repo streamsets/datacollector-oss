@@ -22,6 +22,8 @@ import dagger.Provides;
 import org.eclipse.jetty.security.Authenticator;
 
 import javax.inject.Singleton;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 @Module(injects = {AsterContext.class}, library = true, complete = false)
 public class AsterModuleForTest {
@@ -38,6 +40,10 @@ public class AsterModuleForTest {
       @Override
       public AsterService getService() {
         return null;
+      }
+
+      @Override
+      public void handleRegistration(ServletRequest req, ServletResponse res) {
       }
 
       @Override
