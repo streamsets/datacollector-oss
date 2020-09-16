@@ -27,9 +27,9 @@ import javax.servlet.ServletResponse;
  * given authenticator as context classloader for each invocation (and restoring the original classloader afterwards.
  */
 public class ClassLoaderInContextAuthenticator implements Authenticator {
-  private final Authenticator authenticator;
+  private final AsterAuthenticator authenticator;
 
-  public ClassLoaderInContextAuthenticator(Authenticator authenticator) {
+  public ClassLoaderInContextAuthenticator(AsterAuthenticator authenticator) {
     this.authenticator = authenticator;
   }
 
@@ -70,6 +70,16 @@ public class ClassLoaderInContextAuthenticator implements Authenticator {
     return ClassLoaderUtils.withOwnClassLoader(
         authenticator.getClass().getClassLoader(),
         () -> authenticator.validateRequest(request, response, mandatory)
+    );
+  }
+
+  void handleRegistration(ServletRequest request, ServletResponse response) {
+    ClassLoaderUtils.withOwnClassLoader(
+        authenticator.getClass().getClassLoader(),
+        () -> {
+          authenticator.handleRegistration(request, response);
+          return null;
+        }
     );
   }
 

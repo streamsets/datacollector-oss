@@ -33,6 +33,7 @@ import com.streamsets.datacollector.publicrestapi.PublicRestAPI;
 import com.streamsets.datacollector.restapi.RestAPI;
 import com.streamsets.datacollector.restapi.configuration.AclStoreInjector;
 import com.streamsets.datacollector.restapi.configuration.ActivationInjector;
+import com.streamsets.datacollector.restapi.configuration.AsterContextInjector;
 import com.streamsets.datacollector.restapi.configuration.BlobStoreTaskInjector;
 import com.streamsets.datacollector.restapi.configuration.BuildInfoInjector;
 import com.streamsets.datacollector.restapi.configuration.ConfigurationInjector;
@@ -407,6 +408,16 @@ public class WebServerModule {
       @Override
       public void init(ServletContextHandler context) {
         context.setAttribute(ActivationInjector.ACTIVATION, activation);
+      }
+    };
+  }
+
+  @Provides(type = Type.SET)
+  ContextConfigurator provideAsterContext(final AsterContext asterContext) {
+    return new ContextConfigurator() {
+      @Override
+      public void init(ServletContextHandler context) {
+        context.setAttribute(AsterContextInjector.ASTER_CONTEXT, asterContext);
       }
     };
   }

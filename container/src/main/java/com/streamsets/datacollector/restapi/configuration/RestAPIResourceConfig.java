@@ -21,6 +21,7 @@ import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.execution.Manager;
+import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.http.RolesAnnotationFilter;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -69,6 +70,7 @@ public class RestAPIResourceConfig extends ResourceConfig {
         bindFactory(UserGroupManagerInjector.class).to(UserGroupManager.class);
         bindFactory(UsersManagerInjector.class).to(UsersManager.class);
         bindFactory(ActivationInjector.class).to(Activation.class);
+        bindFactory(AsterContextInjector.class).to(AsterContext.class);
       }
     });
     register(new PaginationInfoInjectorBinder());

@@ -18,11 +18,16 @@ package com.streamsets.datacollector.http;
 import com.streamsets.lib.security.http.aster.AsterService;
 import org.eclipse.jetty.security.Authenticator;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+
 public interface AsterContext {
 
   boolean isEnabled();
 
   AsterService getService();
+
+  void handleRegistration(ServletRequest req, ServletResponse res);
 
   Authenticator getAuthenticator();
 

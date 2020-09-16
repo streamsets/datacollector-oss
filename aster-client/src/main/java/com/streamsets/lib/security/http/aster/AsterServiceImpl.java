@@ -124,6 +124,7 @@ public class AsterServiceImpl implements AsterService {
   /**
    * Returns if the engine is registered with Aster and with good standing tokens.
    */
+  @Override
   public boolean isEngineRegistered() {
     return getRestClient().hasTokens();
   }

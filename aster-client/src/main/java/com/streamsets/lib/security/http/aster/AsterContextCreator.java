@@ -19,7 +19,13 @@ import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.http.AsterConfig;
 import com.streamsets.datacollector.http.AsterContext;
 import org.eclipse.jetty.security.Authenticator;
+import org.eclipse.jetty.security.ServerAuthException;
+import org.eclipse.jetty.server.Authentication;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.function.Function;
 
@@ -54,6 +60,10 @@ public class AsterContextCreator implements Function<AsterConfig, AsterContext> 
     } else {
       service = null;
     }
+
+    ClassLoaderInContextAuthenticator authenticator =
+        new ClassLoaderInContextAuthenticator(new AsterAuthenticator(service));
+
     return new AsterContext() {
       @Override
       public boolean isEnabled() {
@@ -67,9 +77,15 @@ public class AsterContextCreator implements Function<AsterConfig, AsterContext> 
       }
 
       @Override
+      public void handleRegistration(ServletRequest req, ServletResponse res)  {
+        Preconditions.checkState(service != null, "Aster service not available");
+        authenticator.handleRegistration(req, res);
+      }
+
+      @Override
       public Authenticator getAuthenticator() {
         Preconditions.checkState(service != null, "Aster service not available");
-        return new ClassLoaderInContextAuthenticator(new AsterAuthenticator(service));
+        return authenticator;
       }
     };
   }

@@ -21,6 +21,12 @@ import java.util.Collection;
  *  Aster SSO Service Interface provided for integration
  */
 public interface AsterService {
+
+  /**
+   * Returns if the engine is registered with Aster and with good standing tokens.
+   */
+  boolean isEngineRegistered();
+
   /**
    *  Get Rest Client for interacting with the SSOService
    * @return Rest client
