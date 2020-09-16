@@ -194,4 +194,27 @@ public class TestAsterServiceImpl {
     Mockito.verifyNoMoreInteractions(hook);
   }
 
+  @Test
+  public void testHandleLogout() throws Exception {
+    File file = new File("target", UUID.randomUUID().toString());
+    Assert.assertTrue(file.mkdir());
+    file = new File(file, "store.json");
+
+    AsterServiceImpl service = createService(file);
+
+    CharArrayWriter writer = new CharArrayWriter();
+    PrintWriter printWriter = new PrintWriter(writer);
+    HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+    Mockito.when(res.getWriter()).thenReturn(printWriter);
+
+    service.handleLogout(null, res);
+
+    Mockito.verify(res, Mockito.times(1)).setStatus(Mockito.eq(HttpServletResponse.SC_OK));
+    Mockito.verify(res, Mockito.times(1)).setContentType(Mockito.eq(AsterServiceImpl.APPLICATION_JSON_MIME_TYPE));
+    printWriter.close();
+    AsterLogoutRequest logoutRequest = new ObjectMapper().readValue(writer.toString(), AsterLogoutRequest.class);
+    Assert.assertNotNull(logoutRequest);
+    Assert.assertEquals("http://dummy-aster-url:1234/logout", logoutRequest.getRedirect_uri());
+  }
+
 }

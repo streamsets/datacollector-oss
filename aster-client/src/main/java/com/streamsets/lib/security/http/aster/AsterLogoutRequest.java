@@ -13,10 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.streamsets.lib.security.http.aster;
 
 /**
- * Controller for when user is not admin, so cannot show Register Modal Dialog
+ * Bean that contains the URI to trigger a logout.
  */
-angular
-  .module('dataCollectorApp')
-  .controller('RegisterPermissionErrorModalController', function () {});
+public class AsterLogoutRequest {
+  private String redirect_uri;
+
+  public String getRedirect_uri() {
+    return redirect_uri;
+  }
+
+  public AsterLogoutRequest setRedirect_uri(String redirect_uri) {
+    this.redirect_uri = redirect_uri;
+    return this;
+  }
+}

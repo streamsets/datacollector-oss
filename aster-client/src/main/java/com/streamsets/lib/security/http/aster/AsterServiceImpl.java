@@ -290,6 +290,22 @@ public class AsterServiceImpl implements AsterService {
     return asterUser;
   }
 
+  public void handleLogout(HttpServletRequest httpReq, HttpServletResponse httpRes) {
+    try {
+      AsterLogoutRequest logoutRequest = new AsterLogoutRequest().setRedirect_uri(
+          service.getConfig().getAsterRestConfig().getAsterUrl() + "/logout"
+      );
+      httpRes.setStatus(HttpServletResponse.SC_OK);
+      httpRes.setContentType(APPLICATION_JSON_MIME_TYPE);
+      OBJECT_MAPPER.writeValue(httpRes.getWriter(), logoutRequest);
+    } catch (AsterException | AsterAuthException ex) {
+      throw ex;
+    } catch (Exception ex) {
+      throw new AsterException(String.format("Could not complete user logout request: %s", ex), ex);
+    }
+
+  }
+
   /**
    * Returns if a key matches a cached local state.
    */

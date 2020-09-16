@@ -321,7 +321,7 @@ public class AsterAuthenticator implements Authenticator {
                   ((SSOAuthenticationUser)authentication).getSSOUserPrincipal().getName()
               );
               destroySession(httpReq);
-              httpRes.sendRedirect("/tlogout.html");
+              service.handleLogout(httpReq, httpRes);
               authentication = Authentication.SEND_SUCCESS;
             }
           } else {
