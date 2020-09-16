@@ -81,6 +81,13 @@ angular.module('dataCollectorApp.common')
       }
     };
 
+    /**
+     * This replaces the mixpanel "register" for properties where the
+     * same user could have two engines open in different tabs
+     * and have different properties
+     */
+    var localRegistry = {};
+
     // Fullstory
     tracking.FS.setUserVars = function() {
       if(typeof FS !== 'undefined') {
@@ -147,9 +154,11 @@ angular.module('dataCollectorApp.common')
         return null;
       }
     };
-    tracking.mixpanel.track = function() {
+    tracking.mixpanel.track = function(track_event, properties) {
       if(typeof mixpanel === 'object') {
-        return mixpanel.track.apply(mixpanel, arguments);
+        properties = properties || {};
+        properties = Object.assign(properties, localRegistry);
+        return mixpanel.track(track_event, properties);
       } else {
         return null;
       }
@@ -158,25 +167,43 @@ angular.module('dataCollectorApp.common')
     /**
      * Set up user identity in all tracking services
      * @param {string} sdcId
-     * @param {string} userName
+     * @param {string} userName will be an email if using Aster, otherwise probably 'admin'
+     * @param {string} activationInfo only available if activation enabled
      */
-    tracking.initializeUser = function(sdcId, userName) {
-      var USER_ID = sdcId + userName;
-      tracking.mixpanel.identify(USER_ID);
+    tracking.initializeUser = function(sdcId, userName, activationInfo) {
+      var orgId;
+      if (activationInfo && activationInfo.info && activationInfo.info.userInfo) {
+        var userInfo = activationInfo.info.userInfo;
+        if (userInfo.startsWith && userInfo.startsWith('aster|')) {
+          orgId = userInfo.split('|')[1];
+        }
+      }
+      var userId;
+      if (orgId) {
+        // Matches Aster user tracking id format
+        userId = userName + '::' + orgId;
+      } else {
+        userId = sdcId + userName;
+      }
+      tracking.mixpanel.identify(userId);
       tracking.mixpanel.people.set({
         userName: userName,
-        UserID: USER_ID,
+        UserID: userId,
         sdcId: sdcId,
         productName: 'Data Collector',
       });
-      tracking.mixpanel.register({
-        userName: userName,
-        sdcId: sdcId,
-        productName: 'Data Collector',
-      });
+      if (orgId) {
+        // This is needed in case users activate with Aster but use form login
+        tracking.mixpanel.people.set({
+          organizationId: orgId
+        });
+      }
+      localRegistry.userName = userName;
+      localRegistry.sdcId = sdcId;
+      localRegistry.productName = 'Data Collector';
       tracking.FS.setUserVars({
         userName: userName,
-        UserID: USER_ID,
+        UserID: userId,
         sdcId: sdcId,
       });
     };
@@ -186,7 +213,7 @@ angular.module('dataCollectorApp.common')
      */
     tracking.trackExtraUserInfo = function(buildResult, statsResult) {
       if (buildResult && buildResult.data) {
-        tracking.mixpanel.register({ 'sdcVersion': buildResult.data.version });
+        localRegistry.sdcVersion = buildResult.data.version;
         tracking.FS.setUserVars({ 'sdcVersion': buildResult.data.version });
         tracking.mixpanel.people.set({ 'sdcVersion': buildResult.data.version });
         $timeout(function () {
@@ -200,7 +227,7 @@ angular.module('dataCollectorApp.common')
         var stats = statsResult.data.stats;
         if (stats.activeStats.extraInfo) {
           if (stats.activeStats.extraInfo.cloudProvider) {
-            tracking.mixpanel.register({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
+            localRegistry.cloudProvider = stats.activeStats.extraInfo.cloudProvider;
             tracking.FS.setUserVars({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
             tracking.mixpanel.people.set({ 'cloudProvider': stats.activeStats.extraInfo.cloudProvider });
             $timeout(function () {
@@ -211,7 +238,7 @@ angular.module('dataCollectorApp.common')
             }, 1000);
           }
           if (stats.activeStats.extraInfo.distributionChannel) {
-            tracking.mixpanel.register({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
+            localRegistry.distributionChannel = stats.activeStats.extraInfo.distributionChannel;
             tracking.FS.setUserVars({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
             tracking.mixpanel.people.set({ 'distributionChannel': stats.activeStats.extraInfo.distributionChannel });
             $timeout(function () {
