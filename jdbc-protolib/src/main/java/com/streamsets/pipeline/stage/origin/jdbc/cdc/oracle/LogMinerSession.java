@@ -163,7 +163,8 @@ public class LogMinerSession {
   // Query retrieving the current redo log files registered in the current LogMiner session.
   private static final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
 
-  private static final String LOG_STATUS_CURRENT = "CURRENT";
+  @VisibleForTesting
+  static final String LOG_STATUS_CURRENT = "CURRENT";
 
   private final Connection connection;
   private final int databaseVersion;
@@ -828,8 +829,7 @@ public class LogMinerSession {
    * @throws StageException Database error.
    */
   private boolean findLogs(LocalDateTime start, LocalDateTime end, List<RedoLog> dest) {
-    List<RedoLog> onlineLogs = new ArrayList<>();
-    List<RedoLog> selectedLogs = new ArrayList<>();
+    List<RedoLog> src = new ArrayList<>();
 
     String query = SELECT_REDO_LOGS_QUERY
         .replace(SELECT_REDO_LOGS_ARG_FIRST, dateTimeToString(start))
@@ -852,16 +852,70 @@ public class LogMinerSession {
             rs.getBoolean(11),
             rs.getBoolean(12)
         );
-        if (log.isOnlineLog()) {
-          onlineLogs.add(log);  // Online logs require further processing.
-        } else {
-          selectedLogs.add(log);  // All the returned archived logs are required.
-          LOG.trace("Find logs ({}, {}): {}, selected", start, end, log);
-        }
+        src.add(log);
       }
     }
     catch (SQLException e) {
       throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    return selectLogs(start, end, src, dest);
+  }
+
+  /**
+   * Returns the list of redo logs covering a given SCN point in database.
+   *
+   * @param scn The SCN point in database.
+   * @param dest List where the redo logs will be added (append operation). Added logs has FIRST_CHANGE# <= scn,
+   *     NEXT_CHANGE > scn.
+   * @return True if {@code dest} list was updated, false when it was not possible due to some required redo logs being
+   *    in a transient state (i.e. current online log is required but log rotation is in progress, or archiving process
+   *    for a relevant log is in progress).
+   * @throws StageException Database error.
+   */
+  private boolean findLogs(BigDecimal scn, List<RedoLog> dest) {
+    List<RedoLog> src = new ArrayList<>();
+    String query = SELECT_REDO_LOGS_FOR_SCN_QUERY.replace(SELECT_REDO_LOGS_FOR_SCN_ARG, scn.toPlainString());
+
+    try (PreparedStatement statement = connection.prepareCall(query)) {
+      ResultSet rs = statement.executeQuery();
+      while (rs.next()) {
+        RedoLog log = new RedoLog(
+            rs.getString(1),
+            rs.getBigDecimal(2),
+            rs.getBigDecimal(3),
+            rs.getTimestamp(4),
+            rs.getTimestamp(5),
+            rs.getBigDecimal(6),
+            rs.getBigDecimal(7),
+            rs.getBoolean(8),
+            rs.getBoolean(9),
+            rs.getString(10),
+            rs.getBoolean(11),
+            rs.getBoolean(12)
+        );
+        src.add(log);
+      }
+    }
+    catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    return selectLogs(scn, src, dest);
+  }
+
+  @VisibleForTesting
+  boolean selectLogs(LocalDateTime start, LocalDateTime end, List<RedoLog> src, List<RedoLog> dest) {
+    List<RedoLog> onlineLogs = new ArrayList<>();
+    List<RedoLog> selectedLogs = new ArrayList<>();
+
+    for (RedoLog log : src) {
+      if (log.isOnlineLog()) {
+        onlineLogs.add(log);  // Online logs require further processing.
+      } else {
+        selectedLogs.add(log);  // All the returned archived logs are required.
+        LOG.trace("Find logs ({}, {}): {}, selected", start, end, log);
+      }
     }
 
     if (onlineLogs.isEmpty()) {
@@ -869,10 +923,7 @@ public class LogMinerSession {
     }
 
     boolean missingArchivedLog = false;
-    List<BigDecimal> threads = onlineLogs.stream()
-                                         .map(log -> log.getThread())
-                                         .distinct()
-                                         .collect(Collectors.toList());
+    List<BigDecimal> threads = getThreadsFromRedoLogs(onlineLogs);
     Map<BigDecimal, Boolean> missingCurrentLog = new HashMap<>();
     Map<BigDecimal, Boolean> needsCurrentLog = new HashMap<>();
 
@@ -930,49 +981,18 @@ public class LogMinerSession {
     return statusOK;
   }
 
-  /**
-   * Returns the list of redo logs covering a given SCN point in database.
-   *
-   * @param scn The SCN point in database.
-   * @param dest List where the redo logs will be added (append operation). Added logs has FIRST_CHANGE# <= scn,
-   *     NEXT_CHANGE > scn.
-   * @return True if {@code dest} list was updated, false when it was not possible due to some required redo logs being
-   *    in a transient state (i.e. current online log is required but log rotation is in progress, or archiving process
-   *    for a relevant log is in progress).
-   * @throws StageException Database error.
-   */
-  private boolean findLogs(BigDecimal scn, List<RedoLog> dest) {
+  @VisibleForTesting
+  boolean selectLogs(BigDecimal scn, List<RedoLog> src, List<RedoLog> dest) {
     List<RedoLog> onlineLogs = new ArrayList<>();
     List<RedoLog> selectedLogs = new ArrayList<>();
-    String query = SELECT_REDO_LOGS_FOR_SCN_QUERY.replace(SELECT_REDO_LOGS_FOR_SCN_ARG, scn.toPlainString());
 
-    try (PreparedStatement statement = connection.prepareCall(query)) {
-      ResultSet rs = statement.executeQuery();
-      while (rs.next()) {
-        RedoLog log = new RedoLog(
-            rs.getString(1),
-            rs.getBigDecimal(2),
-            rs.getBigDecimal(3),
-            rs.getTimestamp(4),
-            rs.getTimestamp(5),
-            rs.getBigDecimal(6),
-            rs.getBigDecimal(7),
-            rs.getBoolean(8),
-            rs.getBoolean(9),
-            rs.getString(10),
-            rs.getBoolean(11),
-            rs.getBoolean(12)
-        );
-        if (log.isOnlineLog()) {
-          onlineLogs.add(log);  // Online logs require further processing.
-        } else {
-          selectedLogs.add(log);  // All the returned archived logs are required.
-          LOG.trace("Find logs ({}): {}, selected", scn, log);
-        }
+    for (RedoLog log : src) {
+      if (log.isOnlineLog()) {
+        onlineLogs.add(log);  // Online logs require further processing.
+      } else {
+        selectedLogs.add(log);  // All the returned archived logs are required.
+        LOG.trace("Find logs ({}): {}, selected", scn, log);
       }
-    }
-    catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_603, e);
     }
 
     if (onlineLogs.isEmpty()) {
@@ -980,10 +1000,7 @@ public class LogMinerSession {
     }
 
     boolean missingArchivedLog = false;
-    List<BigDecimal> threads = onlineLogs.stream()
-                                         .map(log -> log.getThread())
-                                         .distinct()
-                                         .collect(Collectors.toList());
+    List<BigDecimal> threads = getThreadsFromRedoLogs(onlineLogs);
     Map<BigDecimal, Boolean> missingCurrentLog = new HashMap<>();
     Map<BigDecimal, Boolean> needsCurrentLog = new HashMap<>();
 
@@ -1030,6 +1047,13 @@ public class LogMinerSession {
     }
 
     return statusOK;
+  }
+
+  private List<BigDecimal> getThreadsFromRedoLogs(List<RedoLog> logs) {
+    return logs.stream()
+               .map(log -> log.getThread())
+               .distinct()
+               .collect(Collectors.toList());
   }
 
   private String dateTimeToString(LocalDateTime dt) {
