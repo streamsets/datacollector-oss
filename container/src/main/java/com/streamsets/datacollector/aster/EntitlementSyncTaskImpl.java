@@ -112,7 +112,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
               getEntitlementArguments()
           );
 
-      if (response.getStatusCode() != HttpStatus.SC_OK) {
+      if (response.getStatusCode() != HttpStatus.SC_CREATED) {
         LOG.warn("Unable to refresh entitlement from {}, response code {}",
             aster.getConfig().getBaseUrl() + ACTIVATION_ENDPOINT_PATH,
             response.getStatusCode()
