@@ -106,7 +106,7 @@ public class TestEntitlementSyncTaskImpl {
   }
 
   private void configureSuccessfulResponse(String activationCode) {
-    responseStatus = HttpStatus.SC_OK;
+    responseStatus = HttpStatus.SC_CREATED;
     Object responseBody = ImmutableMap.of(
         EntitlementSyncTaskImpl.DATA, ImmutableMap.of(
             EntitlementSyncTaskImpl.ACTIVATION_CODE, activationCode
