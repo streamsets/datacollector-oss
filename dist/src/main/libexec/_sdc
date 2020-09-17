@@ -247,6 +247,15 @@ then
   then
     SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Xlog:gc:${SDC_LOG}/gc.log:time,uptime"
   fi
+elif [[ "$JAVA_VERSION" = '15' ]];
+then
+  echo "Java 15 detected; adding \$SDC_JAVA15_OPTS of \"${SDC_JAVA15_OPTS}\" to \$SDC_JAVA_OPTS"
+  SDC_JAVA_OPTS="${SDC_JAVA_OPTS} ${SDC_JAVA15_OPTS}"
+
+  if [ "${SDC_GC_LOGGING}" = "true" ]
+  then
+    SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Xlog:gc:${SDC_LOG}/gc.log:time,uptime"
+  fi
 else
   echo "WARN: could not determine Java environment version: \"${JAVA_VERSION}\" ; expected 1.8, 11 or 14, which are the supported versions" >&2
 fi

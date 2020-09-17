@@ -72,6 +72,9 @@ export SDC_JAVA11_OPTS=${SDC_JAVA11_OPTS:-"-Djdk.nio.maxCachedBufferSize=262144"
 # Option UseConcMarkSweepGC; support was removed in 14.0
 export SDC_JAVA14_OPTS=${SDC_JAVA14_OPTS:-"-Djdk.nio.maxCachedBufferSize=262144"}
 
+# Java 15 (JDK 15) specific options
+export SDC_JAVA15_OPTS=${SDC_JAVA15_OPTS:-"-Djdk.nio.maxCachedBufferSize=262144"}
+
 # Enables/disables the JVM security manager
 #
 export SDC_SECURITY_MANAGER_ENABLED=${SDC_SECURITY_MANAGER_ENABLED:-true}

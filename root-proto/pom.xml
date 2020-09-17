@@ -363,7 +363,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>2.6</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -374,9 +374,6 @@
               <requireMavenVersion>
                 <version>[3.2.1,)</version>
               </requireMavenVersion>
-              <requireJavaVersion>
-                <version>${javaVersion}</version>
-              </requireJavaVersion>
             </rules>
           </configuration>
         </plugin>
@@ -531,7 +528,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.1</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
