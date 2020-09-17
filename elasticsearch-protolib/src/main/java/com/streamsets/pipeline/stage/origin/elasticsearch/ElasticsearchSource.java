@@ -69,6 +69,7 @@ public class ElasticsearchSource extends BasePushSource {
   private static final Joiner URL_JOINER = Joiner.on("/").skipNulls();
   private static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES).create();
   private static final JsonParser JSON_PARSER = new JsonParser();
+  private static final String OFFSET_PLACEHOLDER = "\\$\\{offset}";
 
   private final ElasticsearchSourceConfig conf;
   private final Map<String, String> params = new HashMap<>();
@@ -105,6 +106,10 @@ public class ElasticsearchSource extends BasePushSource {
     delegate = new ElasticsearchStageDelegate(getContext(), conf);
 
     issues = delegate.init("conf", issues);
+
+    delegate.validateQuery(
+        "conf", conf.index, conf.query, conf.isIncrementalMode, OFFSET_PLACEHOLDER, conf.initialOffset, issues
+    );
 
     return issues;
   }
@@ -197,7 +202,6 @@ public class ElasticsearchSource extends BasePushSource {
   }
 
   public class ElasticsearchTask implements Runnable {
-    private static final String OFFSET_PLACEHOLDER = "\\$\\{offset}";
     private static final String SCROLL_ID = "_scroll_id";
     private static final String HITS = "hits";
     private static final String SOURCE_FIELD = "/_source/";

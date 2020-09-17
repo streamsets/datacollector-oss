@@ -62,6 +62,9 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_38("Can't resolve password: {}"),
   ELASTICSEARCH_39("Invalid user name or password"),
   ELASTICSEARCH_40("User name and password cannot be null"),
+  ELASTICSEARCH_41("Invalid query: {}"),
+  ELASTICSEARCH_42("Could not parse JSON: {}"),
+  ELASTICSEARCH_43("Could not get response body"),
 
   ;
   private final String msg;
