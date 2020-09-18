@@ -130,7 +130,7 @@ public class AsterRestClientImpl implements AsterRestClient {
 
     randomValueStringGenerator = new RandomValueStringGenerator();
     requestsCache = CacheBuilder.newBuilder().expireAfterWrite(config.getStateCacheExpirationSecs(), TimeUnit.SECONDS).build();
-    tokenServices = new EngineClientTokenServices(tokensFile);
+    tokenServices = new EngineClientTokenServices(config.getClientId(), tokensFile);
   }
 
   /**

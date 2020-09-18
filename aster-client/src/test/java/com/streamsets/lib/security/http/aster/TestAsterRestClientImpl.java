@@ -45,7 +45,7 @@ public class TestAsterRestClientImpl {
 
   @Test
   public void testClient() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -82,7 +82,7 @@ public class TestAsterRestClientImpl {
     Assert.assertEquals("FOO", request.getLocalState());
     Assert.assertNotNull(request.getParameters().getState());
     Assert.assertEquals("DPLANE", request.getParameters().getScope());
-    Assert.assertEquals("id", request.getParameters().getClient_id());
+    Assert.assertEquals("123", request.getParameters().getClient_id());
     Assert.assertEquals(AsterRestConfig.SubjectType.DC.name(), request.getParameters().getClient_type());
     Assert.assertEquals("version", request.getParameters().getClient_version());
     Assert.assertEquals(rest.computeChallenge(request.getChallengeVerifier()), request.getParameters().getCode_challenge());
@@ -99,7 +99,7 @@ public class TestAsterRestClientImpl {
     Assert.assertEquals("FOO", request.getLocalState());
     Assert.assertNotNull(request.getParameters().getState());
     Assert.assertEquals("DPLANE", request.getParameters().getScope());
-    Assert.assertEquals("id", request.getParameters().getClient_id());
+    Assert.assertEquals("123", request.getParameters().getClient_id());
     Assert.assertEquals(AsterRestConfig.SubjectType.USER.name(), request.getParameters().getClient_type());
     Assert.assertEquals("version", request.getParameters().getClient_version());
     Assert.assertEquals(rest.computeChallenge(request.getChallengeVerifier()), request.getParameters().getCode_challenge());
@@ -112,7 +112,7 @@ public class TestAsterRestClientImpl {
 
   @Test
   public void testRestTemplateRequestToken() {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -148,11 +148,12 @@ public class TestAsterRestClientImpl {
   }
 
   // used jwt.io to generate it
-  private static final String TOKEN_WITH_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0X28iOiJvcmcifQ.RXFWZSZMrtMunxQK3JybspCemyFILM5XQzArEhJfynl9IHWRz12B9WYw2r-h9DZAHuzJhNqoIEHy71mIB3pLeKjQNd0GZ416Q-Jg1VdRq6Fx1wVPd7c0-dRuGvDQk3Kl8HS4m0U0EN7q99MG1DvXTSU-9Gzv1UFx97t5oILY5c7YWc8DSUz5H5RRlNCzwdTtO-GZVoRcb0wsw6hIDtzLc2B8jgQS_u1jZiyqWg2rO1buPfR3zGgbx6TFqh4ODtq5zB3tb15JF-GY5flHC2YDoOHAKSprR_8s3_QgOyiIPF3eUjqoH99rRkU7KnvDwWO4xzoWPLTg1gCzo9-RPF6LRw";
+  private static final String TOKEN_WITH_ORG =
+      "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJ0X28iOiJvcmcifQ.j9EvVI7sOkms3Pnx4zAx_aZALwDdYSIyxH4l4FnDKaV8JzJBQv3xt2vTAUuI85GDvjBTRG3MfoGFXBteebPJu9rDQ60C2jSmiIHFByEmEFQTJThdr1H8GLeHc8DJ7z5xS3-cLYKXs-h_cNAXYqhmGyr5iQk8zgmTp_PEoVFEZFuHzSAP4jn3LTrUbh60aMP7cooeKQckSLLbJUNtneolZRlTNcdiFQVFGd153LIbcw67xmwAiDPmyj_Pi-fwn7KDDpd5VZUjrAiwkGQdGCMpQMSJNkcbj1dEY-iHafi1Cb0dZIJXZ5pMo6hUWvzHeGWzo5ObxyYkGt-dFlnY9sDvng";
 
   @Test
   public void testGetTokenOrg() {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -172,7 +173,7 @@ public class TestAsterRestClientImpl {
 
   @Test
   public void testGetEngineOrg() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -196,7 +197,7 @@ public class TestAsterRestClientImpl {
 
   @Test
   public void testRegisterEngineOK() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -224,11 +225,12 @@ public class TestAsterRestClientImpl {
   }
 
   // used jwt.io to generate it
-  private static final String TOKEN_WITH_OTHER_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0X28iOiJvdGhlci1vcmcifQ.PSxd24OwKzoQ9iJiW6h98tPaVjepRjOC757VTjeWWid_DnUvn0O-qP472pf0YRP0xqs_X2Qclud1xQoiplMdW0bW3sH8D6d9E7paVqjf_AiEgWZBByXgM_Y_ZJozQ-rx1nZKkOzl3hgUyZdpv_dkCfHXEl97Hhl6VZD0p8B4AMPRxghBGxZOaHfTuxJJhTa2VMAPM_umWHuPAUEr9F9Mi6-C9LFP1Cwq5rC5KF57PSNk4DxGSXNFDzfm4RCWqzkmPaJCACSnbu6CYg63nrnM00HB5FPJlvmvpWNp-KdXFzp5Z86Y9JfG5iwhDB7ghuKfy0P-XBw7aUDnMFREX8Qk0Q";
+  private static final String TOKEN_WITH_OTHER_ORG =
+      "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJ0X28iOiJvdGhlcl9vcmcifQ.LzhY6ELyQHwU2UvR5zIdCTZlYnDu1tGL4tBmwW-Z0z4ck9Lg4H2n4uQ9_pJpThYAvi7VmPRtokT8jo9Yo2AQqBopmIHy4b_QNFBQ8jQ1Uy4tkSGKxz2zdDQFXdtO24olvT94-Ssa41uauuvZZ_-mWxsN3SPUqrLdewQSvPB6HeuoTxnMZOh9dHHi-_mMc2MwbRKjJYR_-vM5vOFdMFfzIc-f_09NzZYgzhljFdymeJ2nWO1jbSI--zgIm9xlC4bmuPuA7igY1toSVqwONIwc1LOt8b7c3ga6hjQZW0ja8JaKROHmqEy1H9F6EZG3jTZ_EZKCE5VFRgpIuo-__bTqAQ";
 
   @Test(expected = AsterAuthException.class)
   public void testRegisterEngineFail() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -258,12 +260,12 @@ public class TestAsterRestClientImpl {
   }
 
   // used jwt.io to generate them
-  private static final String USER_TOKEN_WITH_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0X3R5cGUiOiJVU0VSIiwidF9lbWFpbCI6ImZvb0Bmb28iLCJ0X28iOiJvcmciLCJ0X2Vfcm9sZXMiOlsiZW5naW5lOmFkbWluIl0sInRfZV9ncm91cHMiOlsiYWxsIl19.bO7yUWgZ21CtNns9GtpVb30Hhdad9C56cI2Vq1pGH3TcheLcVciSBt_6QnSCtnDdDTFkRdxk8wO3VZBYPKARUvu4qMLpwnJ8-ejNptA81NcD7RWo2z0HQpRLdGegfch2S8EawLYPotY_4hGYx5xv1oNouXALeYVVicpPEyVcalNI_ay6ACRtsKVlYks73AvZQ34A6IoVxj43_KvrrPxXgG3tgjLAX8OkYKKwV0N_41eUELAyoimW0gYOxB5bhJJgTAWNQb_KNTBdDgNv6LRunqNowUEC3be3YLvn3kW9T2uWhv4_BAPrxhgT4JPfKrBN1Buky2mvboyWG6rKCBB32Q";
-  private static final String USER_TOKEN_WITH_OTHER_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0X3R5cGUiOiJVU0VSIiwidF9lbWFpbCI6ImZvb0Bmb28iLCJ0X28iOiJvdGhlci1vcmciLCJ0X2Vfcm9sZXMiOlsiZW5naW5lOmFkbWluIl0sInRfZV9ncm91cHMiOlsiYWxsIl19.MUUbGAtC6CjmGxo1GcnSIXXY4rTMe7ffP4zlWJ-R71S7FDfh8j_ToxGk1geZJC14Ymd6hBWqcZtddAv3X2rdPAV1QI3fWK9Ma9biCGUf8t49FbgxiWPdYhaacCt8NO33wjfPZ4xQl33lcvC5iONorgLGbMQyRaMd57WzCpvR5-r2jO-ShKVcrJvaTiFY__C_NIdGI3jhF4G5403AN5QU8vA8r5OQe1aP8_VWDsvqx7NUfWiH55lyXczbC3iCsLX2SlzFDnRxtruB2PWzgzGPhR9ESHIl-otvepYHt3wyPo95C9LXbR09ORvit5AQA3vJKx9xtwaryojVczEtjQye1A";
+  private static final String USER_TOKEN_WITH_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJ0X3R5cGUiOiJVU0VSIiwidF9lbWFpbCI6ImZvb0Bmb28iLCJ0X28iOiJvcmciLCJ0X2Vfcm9sZXMiOlsiZW5naW5lOmFkbWluIl0sInRfZV9ncm91cHMiOlsiYWxsIl19.ZAVQlbqGHcnEcIZT0St2kAOtuz2Ajm7aYLbry1eh2Qox_k7IJQCn5BDKlUvw0CreOwlJdjBTtAaSunvEM-GqAP7fO8ZueIHjovQPZ8IGAKWLkFN4OJwNBy1qZzrtuaclfS9dL_GE7cfav2f2VwUqy2zDUvSdE95JJaEGvqINcjG4j9UiwJnNucmhyac5hzW_sSQD4Ds9jIItN1RULvaC0ZhdJT-2KumDUurKmoAcppkkSSo2GHgA-WnAsxG04QWQQHXqEja9co-wW6aPw4MHXUKquQcw5zqxZ5TT-tQ1A_98YNKSC_wRqNVzQ70H0eMGBheOW0OP9i9fSG9uKAtenA";
+  private static final String USER_TOKEN_WITH_OTHER_ORG = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjMiLCJ0X3R5cGUiOiJVU0VSIiwidF9lbWFpbCI6ImZvb0Bmb28iLCJ0X28iOiJvdGhlcl9vcmciLCJ0X2Vfcm9sZXMiOlsiZW5naW5lOmFkbWluIl0sInRfZV9ncm91cHMiOlsiYWxsIl19.L3CpGwdTy2W2GVIA3rz754wa0wuyEY38ExmxIsBi9pF7swqAq34iMg0syZptKQ1BRa1vnXACpeA5od9GwUenUheoJcHpkSoioqkMuSZzuho1NXZjF3rC50D9aapcGltxkiDgFTuXmcvuhFDsdAd03V6jx-LYjiEndinI-XlxMiahBE2ptYE8ZUri5LGzx9JSk2OzsYFMGfLJa3W3sPjPuEPrStnkvCboCDLtrHx0F9QWoSi_bvErd7LRY9JRMS7hctRwWhs_Ikio5_aX80vteLtXMqXv7XewgysgfFHW2ht_EK6s_y-H7iBtXPUUtzFlYujNc0TSTwr9hMSDEtYeBg";
 
   @Test
   public void testGetUserInfoOk() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -299,7 +301,7 @@ public class TestAsterRestClientImpl {
 
   @Test(expected = AsterAuthException.class)
   public void testGetUserInfoFail() throws IOException {
-    AsterRestConfig config = new AsterRestConfig().setClientId("id")
+    AsterRestConfig config = new AsterRestConfig().setClientId("123")
         .setClientVersion("version")
         .setSubjectType(AsterRestConfig.SubjectType.DC)
         .setLoginCallbackPath("/logincallback")
@@ -352,7 +354,7 @@ public class TestAsterRestClientImpl {
           resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           return;
         }
-        if (!req.getParameter("client_id").equals("engineId")) {
+        if (!req.getParameter("client_id").equals("123")) {
           resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           return;
         }
@@ -400,7 +402,7 @@ public class TestAsterRestClientImpl {
           resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           return;
         }
-        if (!req.getParameter("client_id").equals("engineId")) {
+        if (!req.getParameter("client_id").equals("123")) {
           resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
           return;
         }
@@ -446,7 +448,7 @@ public class TestAsterRestClientImpl {
       server.start();
       String asterUrl = "http://localhost:" + server.getURI().getPort();
 
-      AsterRestConfig config = new AsterRestConfig().setClientId("engineId")
+      AsterRestConfig config = new AsterRestConfig().setClientId("123")
           .setClientVersion("version")
           .setSubjectType(AsterRestConfig.SubjectType.DC)
           .setLoginCallbackPath("/logincallback")
@@ -519,7 +521,7 @@ public class TestAsterRestClientImpl {
       server.start();
       String asterUrl = "http://localhost:" + server.getURI().getPort();
 
-      AsterRestConfig config = new AsterRestConfig().setClientId("engineId")
+      AsterRestConfig config = new AsterRestConfig().setClientId("123")
           .setClientVersion("version")
           .setSubjectType(AsterRestConfig.SubjectType.DC)
           .setLoginCallbackPath("/logincallback")

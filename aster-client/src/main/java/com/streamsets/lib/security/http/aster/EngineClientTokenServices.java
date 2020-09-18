@@ -18,6 +18,8 @@ package com.streamsets.lib.security.http.aster;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
+import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
 import com.streamsets.datacollector.io.DataStore;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.resource.OAuth2ProtectedResourceDetails;
@@ -30,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 
@@ -45,13 +48,41 @@ public class EngineClientTokenServices implements ClientTokenServices {
       false
   );
 
+  private final String clientId;
   private final DataStore dataStore;
+
+  private String getSubject(AsterTokenResponse response) {
+    String subject;
+    try {
+      JWTClaimsSet claims = SignedJWT.parse(response.getAccess_token()).getJWTClaimsSet();
+      subject = claims.getSubject();
+      if (subject == null) {
+        throw new AsterException("AccessToken does not have a subject");
+      }
+    } catch (ParseException ex){
+      throw new AsterException(String.format("Could not parse AccessToken, error: %s", ex), ex);
+    }
+    return subject;
+  }
+
+  private void assertSubjectIsEngineId(AsterTokenResponse response) {
+    String sub = getSubject(response);
+    if (!clientId.equals(sub)) {
+      throw new AsterException(String.format(
+          "Engine ID '%s' does not match client ID '%s' in access token. Delete the '%s' file and restart.",
+          clientId,
+          sub,
+          dataStore.getFile().getAbsolutePath()
+      ));
+    }
+  }
 
   /**
    * Constructor. It takes the file to use to store the access and refresh tokens.
    */
-  public EngineClientTokenServices(File file) {
-    dataStore = new DataStore(file);
+  public EngineClientTokenServices(String clientId, File file) {
+    this.clientId = Preconditions.checkNotNull(clientId, "clientId");
+    dataStore = new DataStore(Preconditions.checkNotNull(file, "file"));
   }
 
   /**
@@ -73,6 +104,7 @@ public class EngineClientTokenServices implements ClientTokenServices {
    */
   public void saveRegistrationToken(AsterTokenResponse registrationResponse) {
     Preconditions.checkNotNull(registrationResponse, "registrationResponse");
+    assertSubjectIsEngineId(registrationResponse);
     long expiresOn = Instant.now().plusSeconds(registrationResponse.getExpires_in()).getEpochSecond();
     registrationResponse.setExpires_on(expiresOn);
     try (OutputStream os = dataStore.getOutputStream()) {
@@ -95,6 +127,7 @@ public class EngineClientTokenServices implements ClientTokenServices {
   public OAuth2AccessToken getAccessToken(OAuth2ProtectedResourceDetails resource, Authentication authentication) {
     try (InputStream is = dataStore.getInputStream()) {
       AsterTokenResponse response = OBJECT_MAPPER.readValue(is, AsterTokenResponse.class);
+      assertSubjectIsEngineId(response);
       DefaultOAuth2AccessToken accessToken = new DefaultOAuth2AccessToken(response.getAccess_token());
       accessToken.setExpiration(Date.from(Instant.ofEpochSecond(response.getExpires_on())));
       DefaultOAuth2RefreshToken refreshToken = new DefaultOAuth2RefreshToken(response.getRefresh_token());
@@ -123,6 +156,7 @@ public class EngineClientTokenServices implements ClientTokenServices {
         .setExpires_in(accessToken.getExpiresIn())
         .setExpires_on(Instant.now().plusSeconds(accessToken.getExpiresIn()).getEpochSecond())
         .setRefresh_token(accessToken.getRefreshToken().getValue());
+    assertSubjectIsEngineId(response);
     saveRegistrationToken(response);
   }
 
