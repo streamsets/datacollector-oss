@@ -16,11 +16,14 @@
 
 package com.streamsets.pipeline.stage.origin.kinesis;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -83,9 +86,9 @@ public class TestKinesisSourceUpgrader {
     Mockito.doReturn(9).when(context).getFromVersion();
     Mockito.doReturn(10).when(context).getToVersion();
 
-    Map<String, String> property = new HashMap<>();
+    configs.add(new Config("kinesisConfig.kinesisConsumerConfigs", new HashMap<String, String>().put("", "")));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "kinesisConfig.kinesisConsumerConfigs", property);
+    UpgraderTestUtils.assertExists(configs, "kinesisConfig.kinesisConsumerConfigs");
   }
 }

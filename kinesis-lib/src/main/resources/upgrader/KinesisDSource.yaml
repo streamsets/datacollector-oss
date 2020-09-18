@@ -38,6 +38,7 @@ upgrades:
           newNamePattern: kinesisConfig.connection.proxyConfig.(0)
   - toVersion: 10
     actions:
-        - setConfig:
-            name: kinesisConfig.kinesisConsumerConfigs
-            value: {}
+      - configStringMapPut:
+          name: kinesisConfig.kinesisConsumerConfigs
+          key: ""
+          value: ""
