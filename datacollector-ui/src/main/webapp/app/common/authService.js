@@ -162,6 +162,9 @@ angular.module('dataCollectorApp.common')
      */
     this.daysUntilProductExpiration = function(expirationTime) {
       var currentTime = new Date().getTime();
-      return Math.floor(( expirationTime - currentTime ) / 86400000);
+      if (expirationTime === -1) {
+        return Infinity;
+      }
+      return Math.floor(( expirationTime - (currentTime - $rootScope.common.serverTimeDifference) ) / 86400000);
     };
   });
