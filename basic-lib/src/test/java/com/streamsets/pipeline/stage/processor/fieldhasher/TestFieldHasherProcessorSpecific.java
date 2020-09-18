@@ -27,6 +27,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -36,6 +37,9 @@ import java.util.Map;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(TestFieldHasherProcessorSpecific.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public class TestFieldHasherProcessorSpecific {
 
   final String DATA1 = "one";

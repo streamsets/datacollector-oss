@@ -55,6 +55,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -73,6 +74,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @PrepareForTest({
     Pipeline.class,
     BadRecordsHandler.class
+})
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
 })
 public class TestErrorRecord {
   private static final String SOURCE_INSTANCE_NAME = "s";

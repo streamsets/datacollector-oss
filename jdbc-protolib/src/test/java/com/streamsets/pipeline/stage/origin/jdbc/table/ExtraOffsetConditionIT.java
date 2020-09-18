@@ -51,7 +51,11 @@ import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(value = Parameterized.class)
-@PowerMockIgnore(value = {"javax.security.*", "javax.management.*"})
+@PowerMockIgnore({
+    "javax.security.*",
+    "javax.management.*",
+    "jdk.internal.reflect.*"
+})
 @PrepareForTest(value = {
     TableJdbcSource.class,
     TableJdbcRunnable.class

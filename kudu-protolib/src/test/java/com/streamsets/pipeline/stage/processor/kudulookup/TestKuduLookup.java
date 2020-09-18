@@ -52,7 +52,10 @@ import static org.junit.Assert.assertThat;
     KuduTable.class,
     AsyncKuduSession.class,
     })
-@PowerMockIgnore({ "javax.net.ssl.*" })
+@PowerMockIgnore({
+    "javax.net.ssl.*",
+    "jdk.internal.reflect.*"
+})
 public class TestKuduLookup {
 
   private static final String KUDU_MASTER = "localhost:7051";

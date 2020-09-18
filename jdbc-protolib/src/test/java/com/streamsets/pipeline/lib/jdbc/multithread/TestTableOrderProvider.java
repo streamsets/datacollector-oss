@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.api.support.membermodification.MemberMatcher;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.modules.junit4.PowerMockRunnerDelegate;
@@ -57,6 +58,9 @@ import java.util.Map;
     Connection.class,
     JdbcUtil.class,
     TestTableOrderProvider.class
+})
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
 })
 public class TestTableOrderProvider {
   private static final Logger LOG = LoggerFactory.getLogger(TestTableOrderProvider.class);

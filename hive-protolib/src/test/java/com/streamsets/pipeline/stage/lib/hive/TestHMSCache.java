@@ -51,7 +51,10 @@ import java.util.Map;
     PartitionInfoCacheSupport.PartitionInfoCacheLoader.class,
     AvroSchemaInfoCacheSupport.AvroSchemaInfoCacheLoader.class
 })
-@PowerMockIgnore("javax.security.*")
+@PowerMockIgnore({
+    "javax.security.*",
+    "jdk.internal.reflect.*"
+})
 public class TestHMSCache {
   private static final String HMS_CACHE_LOADER_LOAD_METHOD = "load";
   private static final String qualifiedTableName = "default.sample";

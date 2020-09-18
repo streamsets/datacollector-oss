@@ -71,7 +71,11 @@ import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({RecordWriterManager.class, RecordWriter.class})
-@PowerMockIgnore({"javax.*", "org.*"})
+@PowerMockIgnore({
+    "javax.*",
+    "org.*",
+    "jdk.internal.reflect.*"
+})
 public class TestHDFSTargetWholeFile {
   private String testDir;
   private URI uri;

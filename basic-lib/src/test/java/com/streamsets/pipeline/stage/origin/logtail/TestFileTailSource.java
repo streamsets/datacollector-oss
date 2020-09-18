@@ -66,7 +66,10 @@ import java.util.Map;
 import java.util.UUID;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({
+    "javax.management.*",
+    "jdk.internal.reflect.*"
+})
 @PrepareForTest({FileTailSource.class, GlobFileContextProvider.class})
 public class TestFileTailSource {
   private final static int SCAN_INTERVAL = 0; //using zero forces synchronous file discovery

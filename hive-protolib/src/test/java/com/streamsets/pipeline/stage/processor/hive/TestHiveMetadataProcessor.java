@@ -66,7 +66,10 @@ import java.util.Map;
 import java.util.TimeZone;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.security.*")
+@PowerMockIgnore({
+    "javax.security.*",
+    "jdk.internal.reflect.*"
+})
 @PrepareForTest({
     HiveConfigBean.class,
     HiveMetadataProcessor.class,

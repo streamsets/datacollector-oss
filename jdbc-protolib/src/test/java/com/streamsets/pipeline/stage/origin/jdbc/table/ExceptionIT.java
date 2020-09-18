@@ -59,7 +59,11 @@ import java.util.stream.IntStream;
     TableJdbcSource.class,
     TableJdbcRunnable.class
 })
-@PowerMockIgnore(value = {"javax.security.*", "javax.management.*"})
+@PowerMockIgnore({
+    "javax.security.*",
+    "javax.management.*",
+    "jdk.internal.reflect.*"
+})
 public final class ExceptionIT extends BaseTableJdbcSourceIT {
   private static final String EXCEPTION_TABLE = "EXCEPTION_TABLE";
   private static final String EXCEPTION_OFFSET_COLUMN = "EXCEPTION_OFFSET";

@@ -18,32 +18,20 @@ package com.streamsets.datacollector.restapi;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
-import com.streamsets.datacollector.event.dto.PipelineStartEvent;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.MockPreviewer;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollectorResult;
-import com.streamsets.datacollector.event.handler.remote.TestRemoteDataCollector;
 import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.execution.Manager;
-import com.streamsets.datacollector.execution.PreviewOutput;
-import com.streamsets.datacollector.execution.PreviewStatus;
-import com.streamsets.datacollector.execution.Previewer;
-import com.streamsets.datacollector.execution.RawPreview;
-import com.streamsets.datacollector.execution.preview.common.PreviewOutputImpl;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
-import com.streamsets.datacollector.runner.MockStages;
-import com.streamsets.datacollector.runner.StageOutput;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.datacollector.util.PipelineException;
-import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.RestClient;
 import com.streamsets.lib.security.http.SSOPrincipal;
-import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -52,7 +40,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
@@ -64,15 +51,11 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.function.Function;
 
 
 @RunWith(PowerMockRunner.class)
@@ -83,7 +66,9 @@ import java.util.function.Function;
     "com.sun.crypto.*",
     "javax.crypto.*",
     "javax.security.*",
-    "javax.management.*"})
+    "javax.management.*",
+    "jdk.internal.reflect.*"
+})
 public class TestPreviewResource extends JerseyTest {
 
   private static Logger LOG = LoggerFactory.getLogger(TestPipelineStoreResource.class);

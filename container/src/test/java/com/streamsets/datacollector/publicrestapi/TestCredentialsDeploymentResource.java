@@ -41,9 +41,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockSettings;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -67,6 +66,9 @@ import java.util.Properties;
 import static com.streamsets.datacollector.publicrestapi.CredentialsDeploymentResource.DPM_AGENT_PUBLIC_KEY;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WebServerAgentCondition.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public class TestCredentialsDeploymentResource extends JerseyTest{
 
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();

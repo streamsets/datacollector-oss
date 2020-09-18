@@ -65,7 +65,10 @@ import java.util.List;
     KuduSession.class,
     Operation.class
     })
-@PowerMockIgnore({ "javax.net.ssl.*" })
+@PowerMockIgnore({
+    "javax.net.ssl.*",
+    "jdk.internal.reflect.*"
+})
 public class TestKuduTarget {
 
   private static final String KUDU_MASTER = "localhost:7051";

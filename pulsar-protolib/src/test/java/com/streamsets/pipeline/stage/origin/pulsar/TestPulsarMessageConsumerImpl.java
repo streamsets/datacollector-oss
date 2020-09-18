@@ -39,6 +39,7 @@ import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -47,6 +48,9 @@ import java.util.regex.Pattern;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PulsarClient.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public class TestPulsarMessageConsumerImpl {
 
   private Source.Context contextMock;

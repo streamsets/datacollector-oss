@@ -31,7 +31,10 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.List;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore("javax.management.*")
+@PowerMockIgnore({
+    "javax.management.*",
+    "jdk.internal.reflect.*"
+})
 @PrepareForTest({HttpProcessor.class, JerseyClientUtil.class})
 public class TestHttpProcessor extends AbstractHttpStageTest {
 

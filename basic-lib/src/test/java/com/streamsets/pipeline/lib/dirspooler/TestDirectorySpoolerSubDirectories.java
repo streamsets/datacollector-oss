@@ -26,6 +26,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -55,6 +56,9 @@ import static com.streamsets.pipeline.lib.dirspooler.PathMatcherMode.GLOB;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(DirectorySpooler.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public class TestDirectorySpoolerSubDirectories {
   private File spoolDir;
   private File archiveDir;

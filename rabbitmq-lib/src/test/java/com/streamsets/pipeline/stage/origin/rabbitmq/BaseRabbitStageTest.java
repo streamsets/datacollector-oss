@@ -24,6 +24,7 @@ import com.streamsets.pipeline.sdk.StageRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public abstract class BaseRabbitStageTest {
   private static final Logger LOG = LoggerFactory.getLogger(BaseRabbitStageTest.class);
 

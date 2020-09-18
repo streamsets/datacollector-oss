@@ -20,8 +20,6 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
-import com.streamsets.pipeline.lib.pulsar.config.PulsarErrors;
 import com.streamsets.pipeline.stage.Utils.TestUtilsPulsar;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 import com.streamsets.pipeline.support.service.ServiceErrors;
@@ -36,11 +34,15 @@ import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(ServicesUtil.class)
+@PowerMockIgnore({
+    "jdk.internal.reflect.*"
+})
 public class TestPulsarMessageConverterImpl {
 
   private Source.Context contextMock;

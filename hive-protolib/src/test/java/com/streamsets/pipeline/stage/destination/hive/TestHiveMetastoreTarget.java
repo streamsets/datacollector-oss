@@ -75,7 +75,10 @@ import java.util.Map;
     PartitionInfoCacheSupport.PartitionInfoCacheLoader.class,
     HiveQueryExecutor.class
 })
-@PowerMockIgnore("javax.security.*")
+@PowerMockIgnore({
+    "javax.security.*",
+    "jdk.internal.reflect.*"
+})
 public class TestHiveMetastoreTarget {
   private static final Logger LOG = LoggerFactory.getLogger(TestHiveMetastoreTarget.class);
 
