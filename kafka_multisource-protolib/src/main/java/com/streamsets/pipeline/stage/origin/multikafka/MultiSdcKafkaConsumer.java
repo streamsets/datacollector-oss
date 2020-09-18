@@ -29,19 +29,13 @@ import java.util.Map;
  */
 public interface MultiSdcKafkaConsumer<K, V> {
 
-  public void subscribe(List<String> topics);
+  void subscribe(List<String> topics);
 
-  public ConsumerRecords<K, V> poll(long timeout);
+  ConsumerRecords<K, V> poll(long timeout);
 
-  public void unsubscribe();
+  void unsubscribe();
 
-  public void close();
+  void close();
 
-  public void commitSync(Map<TopicPartition, OffsetAndMetadata> offsets);
-
-  public List<TopicPartition> getTopicPartitions(String topic);
-
-  public long getOffset(TopicPartition topicPartition);
-
-  public Long getCommittedOffset(TopicPartition topicPartition);
+  void commitSync(Map<TopicPartition, OffsetAndMetadata> offsetsMap);
 }

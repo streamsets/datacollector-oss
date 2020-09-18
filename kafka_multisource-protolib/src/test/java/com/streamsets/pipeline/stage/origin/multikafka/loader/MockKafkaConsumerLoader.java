@@ -21,15 +21,13 @@ import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.common.PartitionInfo;
+import org.apache.kafka.clients.consumer.OffsetAndMetadata;
 import org.apache.kafka.common.TopicPartition;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Test provider for the KafkaConsumerLoader that is expect test to set iterators of pre-created Kafka consumers
@@ -94,24 +92,6 @@ public class MockKafkaConsumerLoader extends KafkaConsumerLoader {
     }
 
     @Override
-    public void commitSync(Map offsets) { delegate.commitSync(offsets); }
-
-    @Override
-    public List<TopicPartition> getTopicPartitions(String topic) {
-      return ((Set<PartitionInfo>) delegate.assignment())
-          .stream()
-          .map(partitionInfo -> new TopicPartition(topic, partitionInfo.partition()))
-          .collect(Collectors.toList());
-    }
-
-    @Override
-    public long getOffset(TopicPartition topicPartition) {
-      return delegate.position(topicPartition);
-    }
-
-    @Override
-    public Long getCommittedOffset(TopicPartition topicPartition) {
-      return delegate.committed(topicPartition) == null ? null : delegate.committed(topicPartition).offset();
-    }
+    public void commitSync(Map offsetsMap) { delegate.commitSync(offsetsMap); }
   }
 }

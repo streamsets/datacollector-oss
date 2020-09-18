@@ -19,7 +19,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.stage.origin.multikafka.MultiSdcKafkaConsumer;
@@ -50,7 +49,7 @@ public abstract class KafkaConsumerLoader {
   @VisibleForTesting
   public static boolean isTest = false;
 
-  private static ServiceLoader<KafkaConsumerLoader> kafkaConsumerLoader = ServiceLoader.load(KafkaConsumerLoader.class);
+  private static ServiceLoader<KafkaConsumerLoader> kafkaConsumerServiceLoader = ServiceLoader.load(KafkaConsumerLoader.class);
 
   private static final Map<String, String[]> loaderHierarchy = ImmutableMap.of(
       "com.streamsets.pipeline.stage.origin.multikafka.v0_10.loader.Kafka0_10ConsumerLoader",
@@ -74,7 +73,7 @@ public abstract class KafkaConsumerLoader {
     int count = 0;
 
     Set<String> loaderClasses = new HashSet<>();
-    for (KafkaConsumerLoader loader : kafkaConsumerLoader) {
+    for (KafkaConsumerLoader loader : kafkaConsumerServiceLoader) {
       String loaderName = loader.getClass().getName();
 
       if (TEST_DELEGATE_NAME.equals(loaderName)) {
@@ -110,17 +109,17 @@ public abstract class KafkaConsumerLoader {
       KafkaAutoOffsetReset kafkaAutoOffsetReset,
       long timestampToSearchOffsets,
       List<String> topicsList
-  ) throws StageException;
+  );
 
-  protected abstract MultiSdcKafkaConsumer createConsumerInternal(Properties properties);
+  protected abstract MultiSdcKafkaConsumer<String, byte[]> createConsumerInternal(Properties properties);
 
-  public static MultiSdcKafkaConsumer createConsumer(
+  public static MultiSdcKafkaConsumer<String, byte[]> createConsumer(
       Properties properties,
       Stage.Context context,
       KafkaAutoOffsetReset kafkaAutoOffsetReset,
       long timestampToSearchOffsets,
       List<String> topics
-  ) throws StageException {
+  ) {
     if (isTest) {
       Preconditions.checkNotNull(testDelegate);
       testDelegate.validateConsumerConfiguration(properties,
