@@ -525,4 +525,17 @@ public class TestPipelineConfigUpgrader {
   public void testPipelineConfigUpgradeV20ToV21() throws StageException {
     assertEMRConfigToConnectionMoves();
   }
+
+  @Test
+  public void testPipelineConfigUpgradeV21ToV22() throws StageException {
+    PipelineConfigUpgrader pipelineConfigUpgrader = new PipelineConfigUpgrader();
+    TestUpgraderContext context = new TestUpgraderContext("x", "y", "z", 21, 22);
+
+    List<Config> upgrade = pipelineConfigUpgrader.upgrade(new ArrayList<>(), context);
+
+    Assert.assertEquals("sdcEmrConnection.stepConcurrency", upgrade.get(0).getName());
+    Assert.assertEquals(1, upgrade.get(0).getValue());
+    Assert.assertEquals("transformerEmrConnection.stepConcurrency", upgrade.get(1).getName());
+    Assert.assertEquals(1, upgrade.get(1).getValue());
+  }
 }

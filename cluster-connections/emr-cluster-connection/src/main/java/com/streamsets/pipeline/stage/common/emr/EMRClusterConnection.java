@@ -40,7 +40,7 @@ import java.util.Properties;
     label = "Amazon EMR Cluster Manager",
     type = EMRClusterConnection.TYPE,
     description = "Connects to Amazon EMR",
-    version = 1,
+    version = 2,
     upgraderDef = "upgrader/EMRClusterConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )
@@ -272,6 +272,21 @@ public class EMRClusterConnection {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1",
+      label = "Step Concurrency",
+      description = "Number of EMR steps this cluster can run concurrently",
+      group = "#0",
+      min = 1,
+      displayPosition = 5000,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      dependsOn = "provisionNewCluster",
+      triggeredByValue = "true"
+  )
+  public int stepConcurrency = 1;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "Master Instance Type",
       group = "#0",
@@ -345,6 +360,7 @@ public class EMRClusterConnection {
   public static final String S3_LOG_URI = "s3LogUri";
   public static final String VISIBLE_TO_ALL_USERS = "visibleToAllUsers";
   public static final String LOGGING_ENABLED = "loggingEnabled";
+  public static final String STEP_CONCURRENCY = "stepConcurrency";
 
   public String getUserRegion() {
     if (region != AwsRegion.OTHER) {
@@ -395,6 +411,7 @@ public class EMRClusterConnection {
     props.setProperty(VISIBLE_TO_ALL_USERS, Boolean.toString(visibleToAllUsers));
     props.setProperty(S3_LOG_URI, s3LogUri);
     props.setProperty(LOGGING_ENABLED, Boolean.toString(loggingEnabled));
+    props.setProperty(STEP_CONCURRENCY, String.valueOf(stepConcurrency));
     if (awsConfig != null && awsConfig.credentialMode != null) {
       props.setProperty(
           AWS_CREDENTIAL_MODE,

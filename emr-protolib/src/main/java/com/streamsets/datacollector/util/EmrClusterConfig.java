@@ -111,6 +111,15 @@ public class EmrClusterConfig {
     return props.getProperty(S3_LOG_URI);
   }
 
+  public int getStepConcurrency() {
+    String steps = props.getProperty(STEP_CONCURRENCY);
+    if (steps != null) {
+      return Integer.parseInt(steps);
+    } else {
+      return 1;
+    }
+  }
+
   public AWSCredentialMode getAwsCredentialMode() {
     final String credentialModeStr = props.getProperty(AWS_CREDENTIAL_MODE);
     if (StringUtils.isNotBlank(credentialModeStr)) {

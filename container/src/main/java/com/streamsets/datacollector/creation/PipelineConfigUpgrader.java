@@ -178,6 +178,12 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 20:
         upgradeV20ToV21(configs);
+        if (to == 21) {
+          break;
+        }
+        // fall through
+      case 21:
+        upgradeV21ToV22(configs);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
@@ -510,6 +516,11 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         TRANSFORMER_NEW_EMR_CONNECTION,
         transformerCredentialMode
     );
+  }
+
+  private void upgradeV21ToV22(List<Config> configs) {
+    configs.add(new Config("sdcEmrConnection.stepConcurrency", 1));
+    configs.add(new Config("transformerEmrConnection.stepConcurrency", 1));
   }
 
   private static void moveCommonEMRConfigsToConnection(
