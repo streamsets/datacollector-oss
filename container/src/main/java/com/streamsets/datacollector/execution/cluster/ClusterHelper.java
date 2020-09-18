@@ -77,12 +77,13 @@ public class ClusterHelper {
     this.systemProcessFactory = systemProcessFactory;
     this.clusterProvider = clusterProvider;
     this.tempDir = tempDir;
-    if (containerCL == null) {
+    // JDK 11 issue - https://issues.streamsets.com/browse/SDC-15791
+    if (containerCL == null && getClass().getClassLoader() instanceof URLClassLoader) {
       this.containerCL = (URLClassLoader) getClass().getClassLoader();
     } else {
       this.containerCL = containerCL;
     }
-    if (apiCL == null) {
+    if (apiCL == null && getClass().getClassLoader() instanceof URLClassLoader) {
       this.apiCL = (URLClassLoader) this.containerCL.getParent();
     } else {
       this.apiCL = apiCL;

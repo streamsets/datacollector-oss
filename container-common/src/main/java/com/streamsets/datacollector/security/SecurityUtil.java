@@ -112,7 +112,7 @@ public class SecurityUtil {
   }
 
   // Up to Java10 the versions were in the format 1.X; starting from version 10 only the decimal number is used
-  private static int getJavaVersion() {
+  static int getJavaVersion() {
     String version = System.getProperty("java.version");
     if(version.startsWith("1.")) {
       version = version.substring(2, 3);

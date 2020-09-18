@@ -28,13 +28,17 @@ public class TestSecurityUtil {
   @Test
   public void testdoAs() throws Exception {
     PrivilegedExceptionAction<Void> exAction = () -> {
-      Assert.assertTrue(AccessController.getContext().getDomainCombiner() instanceof SecurityUtil.CustomCombiner);
+      if (SecurityUtil.getJavaVersion() <= 9) {
+        Assert.assertTrue(AccessController.getContext().getDomainCombiner() instanceof SecurityUtil.CustomCombiner);
+      }
       return null;
     };
     SecurityUtil.doAs(new Subject(), exAction);
 
     PrivilegedAction<Void> action = () -> {
-      Assert.assertTrue(AccessController.getContext().getDomainCombiner() instanceof SecurityUtil.CustomCombiner);
+      if (SecurityUtil.getJavaVersion() <= 9) {
+        Assert.assertTrue(AccessController.getContext().getDomainCombiner() instanceof SecurityUtil.CustomCombiner);
+      }
       return null;
     };
     SecurityUtil.doAs(new Subject(), action);

@@ -45,7 +45,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class TestWorkbookParser {
   WorkbookParserSettings settingsNoHeader;
@@ -56,7 +55,7 @@ public class TestWorkbookParser {
   public final ExpectedException exception = ExpectedException.none();
 
   private InputStream getFile(String path) {
-    return ClassLoader.class.getResourceAsStream(path);
+    return TestWorkbookParser.class.getResourceAsStream(path);
   }
 
   private Workbook createWorkbook(String filePath) throws IOException, InvalidFormatException {
