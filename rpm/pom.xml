@@ -250,6 +250,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/samplePipelines</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/samplePipelines</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>${sdc.dir}/cli-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
@@ -527,6 +538,17 @@
                       <excludes>
                         <exclude>bootstrap-libs</exclude>
                       </excludes>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/samplePipelines</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/samplePipelines</location>
                     </source>
                   </sources>
                 </mapping>
