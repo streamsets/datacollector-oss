@@ -27,6 +27,7 @@ public enum Errors implements ErrorCode {
   WAVE_03("Exception getting dataflow json: {}"),
   WAVE_04("Exception patching dataflow json: {}"),
   WAVE_05("Exception putting dataflow json: {}"),
+  WAVE_06("Could not create dataset"),
   ;
   private final String msg;
 

@@ -83,7 +83,6 @@ public class WaveAnalyticsTarget extends BaseTarget {
 
   private PartnerConnection connection;
   private String restEndpoint;
-  private String datasetID = null;
   private int partNumber = 1;
   private String datasetName = null;
   private HttpClient httpClient;
@@ -109,11 +108,12 @@ public class WaveAnalyticsTarget extends BaseTarget {
     }
   }
 
-  private void openDataset() throws ConnectionException, StageException {
+  private String openDataset() throws ConnectionException, StageException {
     datasetName = conf.edgemartAliasPrefix;
     if (conf.appendTimestamp) {
       datasetName += "_" + System.currentTimeMillis();
     }
+    String datasetID = null;
 
     SObject sobj = new SObject();
     sobj.setType("InsightsExternalData");
@@ -138,9 +138,10 @@ public class WaveAnalyticsTarget extends BaseTarget {
         }
       }
     }
+    return datasetID;
   }
 
-  private void writeToDataset(Batch batch) throws StageException {
+  private void writeToDataset(Batch batch, String datasetID) throws StageException {
     StringWriter writer = new StringWriter();
     DataGenerator gen;
     CsvHeader csvHeader = conf.metadataJson.isEmpty() ? CsvHeader.WITH_HEADER : CsvHeader.NO_HEADER;
@@ -373,7 +374,7 @@ public class WaveAnalyticsTarget extends BaseTarget {
     return mapper.writeValueAsString(map);
   }
 
-  private void commitDataset() throws StageException, ConnectionException, IOException {
+  private void commitDataset(String datasetID) throws StageException, ConnectionException, IOException {
     // Instruct Wave to start processing the data
     SObject sobj = new SObject();
     sobj.setType("InsightsExternalData");
@@ -486,7 +487,6 @@ public class WaveAnalyticsTarget extends BaseTarget {
    */
   @Override
   public void destroy() {
-    datasetID = null;
     if (httpClient != null) {
       try {
         httpClient.stop();
@@ -504,19 +504,21 @@ public class WaveAnalyticsTarget extends BaseTarget {
   @Override
   public void write(Batch batch) throws StageException {
     if (batch.getRecords().hasNext()) {
-      if (datasetID == null) {
-        LOG.info("Opening dataset");
-        try {
-          openDataset();
-        } catch (ConnectionException ce) {
-          throw new StageException(Errors.WAVE_01, ce);
+      LOG.info("Opening dataset");
+      String datasetID;
+      try {
+        datasetID = openDataset();
+        if (datasetID == null) {
+          throw new StageException(Errors.WAVE_06);
         }
+      } catch (ConnectionException ce) {
+        throw new StageException(Errors.WAVE_01, ce);
       }
 
       LOG.info("Writing batch to dataset");
-      writeToDataset(batch);
+      writeToDataset(batch, datasetID);
       try {
-        commitDataset();
+        commitDataset(datasetID);
       } catch (ConnectionException | IOException e) {
         throw new StageException(Errors.WAVE_01, e);
       }
