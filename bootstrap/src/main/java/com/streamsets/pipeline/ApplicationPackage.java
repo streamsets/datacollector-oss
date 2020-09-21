@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -133,50 +134,78 @@ public class ApplicationPackage {
    */
   private static SortedSet<String> findApplicationPackageNames(ClassLoader cl) {
     SortedSet<String> packages = new TreeSet<>();
-    while (cl != null) {
-      if (cl instanceof URLClassLoader) {
-        for (URL url : ((URLClassLoader)cl).getURLs()) {
-          String path = url.getPath();
-          if (!path.startsWith(JAVA_HOME) && !path.startsWith(MACOS_JAVA_EXTENSIONS_DIR) &&
-            path.endsWith(JAR_FILE_SUFFIX)) {
-            try {
-              try (ZipInputStream zip = new ZipInputStream(url.openStream())) {
-                for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
-                  if (!entry.isDirectory() && entry.getName().endsWith(CLASS_FILE_SUFFIX)) {
-                    // This ZipEntry represents a class. Now, what class does it represent?
-                    String className = entry.getName().replace('/', '.'); // including ".class"
-                    className = className.substring(0, className.length() - CLASS_FILE_SUFFIX.length());
-                    if (className.contains(".") && !className.startsWith(STREAMSETS_PACKAGE)) {
-                      // must end with a . as we don't want o.a.h matching o.a.ha
-                      packages.add(className.substring(0, className.lastIndexOf('.')) + ".");
-                    }
-                  }
+    if (cl instanceof URLClassLoader) {
+      // JDK 8 Case
+      while (cl != null) {
+        if (cl instanceof URLClassLoader) {
+          for (URL url : ((URLClassLoader)cl).getURLs()) {
+            String path = url.getPath();
+            if (!path.startsWith(JAVA_HOME) && !path.startsWith(MACOS_JAVA_EXTENSIONS_DIR) &&
+                path.endsWith(JAR_FILE_SUFFIX)) {
+              try {
+                try (ZipInputStream zip = new ZipInputStream(url.openStream())) {
+                  filterPackageNames(packages, zip);
                 }
-              }
-            } catch (IOException unlikely) {
-              // since these are local URL we will likely only
-              // hit this if there is a corrupt jar in the classpath
-              // which we will ignore
-              if (SDCClassLoader.isDebug()) {
-                System.err.println("Error opening '" + url + "' : " + unlikely);
-                unlikely.printStackTrace();
+              } catch (IOException unlikely) {
+                // since these are local URL we will likely only
+                // hit this if there is a corrupt jar in the classpath
+                // which we will ignore
+                if (SDCClassLoader.isDebug()) {
+                  System.err.println("Error opening '" + url + "' : " + unlikely);
+                  unlikely.printStackTrace();
+                }
               }
             }
           }
         }
+        cl = cl.getParent();
       }
-      cl = cl.getParent();
+    } else {
+      // JDK 9+ case
+      // Java 9 and the module system improved the platform’s class loading strategy, which is implemented in a
+      // new type and in Java 11 the application class loader is of that type.
+      // https://blog.codefx.org/java/java-11-migration-guide/#Casting-To-URL-Class-Loader
+      String pathSeparator = System.getProperty("path.separator");
+      String[] classPathEntries = System.getProperty("java.class.path").split(pathSeparator);
+
+      for (String path: classPathEntries) {
+        if (!path.startsWith(JAVA_HOME) && !path.startsWith(MACOS_JAVA_EXTENSIONS_DIR) &&
+            path.endsWith(JAR_FILE_SUFFIX)) {
+          try {
+            try (ZipInputStream zip = new ZipInputStream(new FileInputStream(path))) {
+              filterPackageNames(packages, zip);
+            }
+          } catch (IOException unlikely) {
+            // since these are local URL we will likely only
+            // hit this if there is a corrupt jar in the classpath
+            // which we will ignore
+            if (SDCClassLoader.isDebug()) {
+              System.err.println("Error opening '" + path + "' : " + unlikely);
+              unlikely.printStackTrace();
+            }
+          }
+        }
+      }
     }
+
     SystemPackage systemPackage = new SystemPackage(SDCClassLoader.SYSTEM_API_CHILDREN_CLASSES);
-    Iterator<String> iterator = packages.iterator();
-    while (iterator.hasNext()) {
-      String packageName = iterator.next();
-      if (systemPackage.isSystem(packageName)) {
-        iterator.remove();
-      }
-    }
+    packages.removeIf(systemPackage::isSystem);
     removeLogicalDuplicates(packages);
     return packages;
+  }
+
+  private static void filterPackageNames(SortedSet<String> packages, ZipInputStream zip) throws IOException {
+    for (ZipEntry entry = zip.getNextEntry(); entry != null; entry = zip.getNextEntry()) {
+      if (!entry.isDirectory() && entry.getName().endsWith(CLASS_FILE_SUFFIX)) {
+        // This ZipEntry represents a class. Now, what class does it represent?
+        String className = entry.getName().replace('/', '.'); // including ".class"
+        className = className.substring(0, className.length() - CLASS_FILE_SUFFIX.length());
+        if (className.contains(".") && !className.startsWith(STREAMSETS_PACKAGE)) {
+          // must end with a . as we don't want o.a.h matching o.a.ha
+          packages.add(className.substring(0, className.lastIndexOf('.')) + ".");
+        }
+      }
+    }
   }
 
   /**
