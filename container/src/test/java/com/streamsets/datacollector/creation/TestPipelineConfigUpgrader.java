@@ -387,11 +387,12 @@ public class TestPipelineConfigUpgrader {
     ));
     // add formerly Transformer-specific configs that will be moved to the connection
     addCommonOldEMRConfigs(configs, PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG);
-    // add the Transformer-specific, non-connection based properties that would have already existed at this point
+    // serviceAccessSecurityGroup is a special case; it was Transformer-only, but is moving to the connection anyway
     configs.add(new Config(
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
         ExpectedVals.serviceAccessSecurityGroup
     ));
+    // add the other Transformer-specific, non-connection based properties that would have already existed at this point
     configs.add(new Config(
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".kmsKeyId",
         ExpectedVals.kmsKeyId
@@ -441,11 +442,15 @@ public class TestPipelineConfigUpgrader {
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG,
         PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION
     );
+    // the special case of serviceAccessSecurityGroup; should have been moved to the connection
+    UpgraderTestUtils.assertAllExist(
+        upgraded,
+        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION + ".serviceAccessSecurityGroup"
+    );
 
     // Transformer-specific, non connection fields should have stayed put
     UpgraderTestUtils.assertAllExist(
         upgraded,
-        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".kmsKeyId",
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".encryption"
     );

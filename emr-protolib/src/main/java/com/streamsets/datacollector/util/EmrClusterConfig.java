@@ -91,6 +91,10 @@ public class EmrClusterConfig {
     return props.getProperty(SLAVE_SECURITY_GROUP);
   }
 
+  public String getServiceAccessSecurityGroup() {
+    return props.getProperty(SERVICE_ACCESS_SECURITY_GROUP);
+  }
+
   public int getInstanceCount() {
     return Integer.parseInt(props.getProperty(INSTANCE_COUNT));
   }

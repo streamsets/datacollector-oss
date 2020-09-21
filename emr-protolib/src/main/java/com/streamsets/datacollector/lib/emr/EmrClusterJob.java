@@ -51,6 +51,7 @@ import com.streamsets.pipeline.api.delegate.exported.ClusterJob;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationReport;
@@ -125,6 +126,21 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
 
     @Override
     public String createCluster(String clusterName) {
+      JobFlowInstancesConfig jobFlowInstancesConfig =
+          new JobFlowInstancesConfig().withEc2SubnetId(emrClusterConfig.getEc2SubnetId())
+          .withEmrManagedMasterSecurityGroup(emrClusterConfig.getMasterSecurityGroup())
+          .withEmrManagedSlaveSecurityGroup(emrClusterConfig.getSlaveSecurityGroup())
+          .withInstanceCount(emrClusterConfig.getInstanceCount())
+          .withKeepJobFlowAliveWhenNoSteps(true)
+          .withMasterInstanceType(emrClusterConfig.getMasterInstanceType())
+          .withSlaveInstanceType(emrClusterConfig.getSlaveInstanceType());
+
+      if (StringUtils.isNotBlank(emrClusterConfig.getServiceAccessSecurityGroup())) {
+        jobFlowInstancesConfig = jobFlowInstancesConfig.withServiceAccessSecurityGroup(
+            emrClusterConfig.getServiceAccessSecurityGroup()
+        );
+      }
+
       RunJobFlowRequest request = new RunJobFlowRequest()
           .withName(clusterName)
           .withReleaseLabel(EmrInfo.getVersion())
@@ -132,14 +148,7 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
           .withJobFlowRole(emrClusterConfig.getJobFlowRole())
           .withVisibleToAllUsers(emrClusterConfig.isVisibleToAllUsers())
           .withStepConcurrencyLevel(emrClusterConfig.getStepConcurrency())
-          .withInstances(new JobFlowInstancesConfig()
-              .withEc2SubnetId(emrClusterConfig.getEc2SubnetId())
-              .withEmrManagedMasterSecurityGroup(emrClusterConfig.getMasterSecurityGroup())
-              .withEmrManagedSlaveSecurityGroup(emrClusterConfig.getSlaveSecurityGroup())
-              .withInstanceCount(emrClusterConfig.getInstanceCount())
-              .withKeepJobFlowAliveWhenNoSteps(true)
-              .withMasterInstanceType(emrClusterConfig.getMasterInstanceType())
-              .withSlaveInstanceType(emrClusterConfig.getSlaveInstanceType()));
+          .withInstances(jobFlowInstancesConfig);
 
       if (emrClusterConfig.isLoggingEnabled()) {
         request.withLogUri(emrClusterConfig.getS3LogUri());

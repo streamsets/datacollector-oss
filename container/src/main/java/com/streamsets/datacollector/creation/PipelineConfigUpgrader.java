@@ -509,7 +509,7 @@ public class PipelineConfigUpgrader implements StageUpgrader {
     if (useIAMRoles) {
       transformerCredentialMode = AWSCredentialMode.WITH_IAM_ROLES;
     }
-    // all but encryption, kmsKeyId, and serviceAccessSecurityGroup are moved to the connection
+    // all but encryption and kmsKeyId are moved to the connection
     moveCommonEMRConfigsToConnection(
         configs,
         TRANSFORMER_EMR_CONFIG,
@@ -566,6 +566,8 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         connectionFieldName + ".masterSecurityGroup",
         currentConfigFieldName + ".slaveSecurityGroup",
         connectionFieldName + ".slaveSecurityGroup",
+        currentConfigFieldName + ".serviceAccessSecurityGroup",
+        connectionFieldName + ".serviceAccessSecurityGroup",
         currentConfigFieldName + ".instanceCount",
         connectionFieldName + ".instanceCount",
         currentConfigFieldName + ".masterInstanceType",

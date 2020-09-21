@@ -36,21 +36,6 @@ import static com.streamsets.pipeline.stage.common.emr.EMRClusterConnection.SERV
 public class AmazonEMRConfig {
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      label = "Service Access Security Group",
-      description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
-      group = PipelineGroups.CLUSTER_GROUP_NAME,
-      // position after slaveSecurityGroup in EMRClusterConnection
-      displayPosition = 4800,
-      dependencies = {
-          @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
-          @Dependency(configName = "^transformerEmrConnection.provisionNewCluster", triggeredByValues = "true")
-      }
-  )
-  public String serviceAccessSecurityGroup;
-
-  @ConfigDef(
     required = true,
     type = ConfigDef.Type.MODEL,
     label = "Enable Server-Side Encryption",
