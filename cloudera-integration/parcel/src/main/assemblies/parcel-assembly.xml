@@ -43,6 +43,7 @@
         <include>cli-lib/**</include>
         <include>container-lib/**</include>
         <include>root-lib/**</include>
+        <include>samplePipelines/**</include>
         <include>sdc-static-web/**</include>
         <include>streamsets-libs/**</include>
         <include>user-libs/**</include>
