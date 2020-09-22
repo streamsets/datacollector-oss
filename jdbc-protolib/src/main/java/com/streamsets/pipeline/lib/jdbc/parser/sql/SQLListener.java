@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import org.antlr.v4.runtime.tree.ParseTree;
 import plsql.plsqlBaseListener;
 import plsql.plsqlParser;
@@ -48,11 +50,18 @@ public class SQLListener extends plsqlBaseListener {
   @Override
   public void enterUpdate_set_clause(plsqlParser.Update_set_clauseContext ctx) {
     for(plsqlParser.Column_based_update_set_clauseContext x : ctx.column_based_update_set_clause()) {
-      columns.put(formatName(x.column_name(0).getText().trim()), formatValue(x.expression().getText().trim()));
+      String key;
+      String identifier = x.column_name(0).getText().trim();
+      try {
+        key = formatName(identifier);
+      } catch (UnparseableSQLException e) {
+        throw new StageException(JdbcErrors.JDBC_93, "UPDATE SET CLAUSE", identifier);
+      }
+      columns.put(key, formatValue(x.expression().getText().trim()));
     }
   }
 
-  private void extractTableAndSchema(String tableSchema) {
+  private void extractTableAndSchema(String tableSchema) throws UnparseableSQLException {
     Matcher m = tableSchemaPattern.matcher(tableSchema);
     if (m.matches()) {
       schema = m.group(1);
@@ -66,7 +75,11 @@ public class SQLListener extends plsqlBaseListener {
   public void enterUpdate_statement(plsqlParser.Update_statementContext ctx) {
     if (table == null) {
       String tableSchema = ctx.general_table_ref().getText();
-      extractTableAndSchema(tableSchema);
+      try {
+        extractTableAndSchema(tableSchema);
+      } catch (UnparseableSQLException e) {
+        throw new StageException(JdbcErrors.JDBC_93, "UPDATE", tableSchema);
+      }
     }
   }
 
@@ -74,7 +87,11 @@ public class SQLListener extends plsqlBaseListener {
   public void enterDelete_statement(plsqlParser.Delete_statementContext ctx) {
     if (table == null) {
       String tableSchema = ctx.general_table_ref().getText();
-      extractTableAndSchema(tableSchema);
+      try {
+        extractTableAndSchema(tableSchema);
+      } catch (UnparseableSQLException e) {
+        throw new StageException(JdbcErrors.JDBC_93, "DELETE", tableSchema);
+      }
     }
   }
 
@@ -82,7 +99,11 @@ public class SQLListener extends plsqlBaseListener {
   public void enterInsert_into_clause(plsqlParser.Insert_into_clauseContext ctx) {
     if (table == null) {
       String tableSchema = ctx.general_table_ref().getText();
-      extractTableAndSchema(tableSchema);
+      try {
+        extractTableAndSchema(tableSchema);
+      } catch (UnparseableSQLException e) {
+        throw new StageException(JdbcErrors.JDBC_93, "INSERT", tableSchema);
+      }
     }
 
     this.columnNames = ctx.column_name();
@@ -92,7 +113,14 @@ public class SQLListener extends plsqlBaseListener {
   public void enterValues_clause(plsqlParser.Values_clauseContext ctx) {
     List<plsqlParser.ExpressionContext> expressions = ctx.expression_list().expression();
     for (int i = 0; i < expressions.size(); i++) {
-      columns.put(formatName(columnNames.get(i).getText().trim()), formatValue(expressions.get(i).getText().trim()));
+      String key;
+      String identifier = columnNames.get(i).getText().trim();
+      try {
+        key = formatName(identifier);
+      } catch (UnparseableSQLException e) {
+        throw new StageException(JdbcErrors.JDBC_93, "VALUES CLAUSE",identifier);
+      }
+      columns.put(key, formatValue(expressions.get(i).getText().trim()));
     }
   }
 
@@ -121,7 +149,12 @@ public class SQLListener extends plsqlBaseListener {
         if (level1 != null) {
           ParseTree keyNode = level1.getChild(0);
           if (keyNode != null) {
-            key = formatName(keyNode.getText());
+            try {
+              key = formatName(keyNode.getText());
+            } catch (UnparseableSQLException e) {
+              // It should never fall in here as we control the keyNode is not null
+              key = null;
+            }
           }
           ParseTree valNode = level1.getChild(2);
           if (valNode != null) {
@@ -142,7 +175,7 @@ public class SQLListener extends plsqlBaseListener {
   /**
    * Format column names based on whether they are case-sensitive
    */
-  private String formatName(String columnName) {
+  private String formatName(String columnName) throws UnparseableSQLException {
     String returnValue = format(columnName);
     if (caseSensitive) {
       return returnValue;
@@ -158,13 +191,23 @@ public class SQLListener extends plsqlBaseListener {
     if (value == null || NULL_STRING.equalsIgnoreCase(value)) {
       return null;
     }
-    String returnValue = format(value);
+    String returnValue;
+    try {
+      returnValue = format(value);
+    } catch (UnparseableSQLException e) {
+      // It will never fall in here as we control the value is not null.
+      returnValue = null;
+    }
     return returnValue.replaceAll("''", "'");
   }
 
   @VisibleForTesting
-  public String format(String columnName) {
+  public String format(String columnName) throws UnparseableSQLException{
     int stripCount;
+
+    if (columnName == null) {
+      throw new UnparseableSQLException(String.format(JdbcErrors.JDBC_92.getMessage()));
+    }
 
     if (columnName.startsWith("\"\'")) {
       stripCount = 2;

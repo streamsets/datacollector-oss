@@ -259,7 +259,7 @@ public class TestSQLListener {
   }
 
   @Test
-  public void testFormat() {
+  public void testFormat() throws UnparseableSQLException {
     SQLListener listener = new SQLListener();
 
     Assert.assertEquals("Mithrandir", listener.format("Mithrandir"));
