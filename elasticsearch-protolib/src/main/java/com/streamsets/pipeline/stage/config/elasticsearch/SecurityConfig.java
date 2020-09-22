@@ -24,7 +24,7 @@ import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 
 public class SecurityConfig {
 
-  public static final String CONF_PREFIX = "conf.securityConfig.";
+  public static final String NAME = "securityConfig";
 
   @ConfigDef(
       required = true,

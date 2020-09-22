@@ -65,6 +65,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.TimeZone;
 
 public class ElasticsearchTarget extends BaseTarget {
@@ -142,7 +143,7 @@ public class ElasticsearchTarget extends BaseTarget {
           Groups.ELASTIC_SEARCH.name(),
           "timeDriverEval",
           Errors.ELASTICSEARCH_18,
-          ex.toString(),
+          ex.getMessage(),
           ex
       ));
     }
@@ -227,7 +228,9 @@ public class ElasticsearchTarget extends BaseTarget {
           Groups.ELASTIC_SEARCH.name(),
           "rawAdditionalProperties",
           Errors.ELASTICSEARCH_34,
-          e.getMessage()
+          additionalProperties,
+          Optional.ofNullable(e.getMessage()).orElse("no details provided"),
+          e
       ));
     }
 
@@ -354,7 +357,7 @@ public class ElasticsearchTarget extends BaseTarget {
         errorRecordHandler.onError(new OnRecordErrorException(record,
             Errors.ELASTICSEARCH_15,
             record.getHeader().getSourceId(),
-            ex.toString(),
+            Optional.ofNullable(ex.getMessage()).orElse("no details provided"),
             ex
         ));
       }
@@ -393,13 +396,18 @@ public class ElasticsearchTarget extends BaseTarget {
               break;
             case STOP_PIPELINE:
               errorItems = extractErrorItems(json);
-              throw new StageException(Errors.ELASTICSEARCH_17, errorItems.size(), "One or more operations failed");
+              throw new StageException(Errors.ELASTICSEARCH_17, errorItems.size(), "one or more operations failed");
             default:
               throw new IllegalStateException(Utils.format("Unknown OnError value '{}'", getContext().getOnErrorRecord()));
           }
         }
       } catch (IOException ex) {
-        errorRecordHandler.onError( records, new StageException(Errors.ELASTICSEARCH_17, records.size(), ex.toString(), ex));
+        errorRecordHandler.onError(records, new StageException(
+            Errors.ELASTICSEARCH_17,
+            records.size(),
+            Optional.ofNullable(ex.getMessage()).orElse("no details provided"),
+            ex
+        ));
       }
     }
   }

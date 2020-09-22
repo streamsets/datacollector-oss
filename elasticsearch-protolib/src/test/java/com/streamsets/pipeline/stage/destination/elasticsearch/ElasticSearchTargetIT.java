@@ -128,7 +128,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
     issues = runner.runValidateConfigs();
     Assert.assertEquals(1, issues.size());
-    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_09.name()));
+    Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_43.name()));
 
     conf.httpUris = Arrays.asList("localhost:9200");
     conf.timeDriver = "${time:now()}";

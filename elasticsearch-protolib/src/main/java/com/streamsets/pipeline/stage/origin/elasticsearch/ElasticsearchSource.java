@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -164,7 +165,11 @@ public class ElasticsearchSource extends BasePushSource {
     } catch (ExecutionException e) {
       Throwable cause = Throwables.getRootCause(e);
       Throwables.propagateIfInstanceOf(cause, StageException.class);
-      throw new StageException(Errors.ELASTICSEARCH_22, cause.toString(), cause);
+      throw new StageException(
+          Errors.ELASTICSEARCH_22,
+          Optional.ofNullable(cause.getMessage()).orElse("no details provided"),
+          cause
+      );
     } finally {
       // Terminate executor that will also clear up threads that were created
       LOG.info("Shutting down executor service");
@@ -230,8 +235,12 @@ public class ElasticsearchSource extends BasePushSource {
             produceBatch(batchMaker);
             break;
           } catch (IOException e) {
-            LOG.error(Errors.ELASTICSEARCH_22.getMessage(), e.toString(), e);
-            throw Throwables.propagate(new StageException(Errors.ELASTICSEARCH_22, e.toString(), e));
+            LOG.error(Errors.ELASTICSEARCH_22.getMessage(), e);
+            throw Throwables.propagate(new StageException(
+                Errors.ELASTICSEARCH_22,
+                Optional.ofNullable(e.getMessage()).orElse("no details provided"),
+                e
+            ));
           } catch (StageException e) {
             if (e.getErrorCode() == Errors.ELASTICSEARCH_23 && conf.deleteCursor) {
               // Since we've chosen to clean up cursors automatically, we will simply
