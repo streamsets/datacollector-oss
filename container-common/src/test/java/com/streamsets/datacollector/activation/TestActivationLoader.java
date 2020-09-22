@@ -67,9 +67,8 @@ public class TestActivationLoader {
     }
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Activation activation = new ActivationLoader(runtimeInfo).getActivation();
-    Assert.assertTrue(activation instanceof WhitelistActivation);
-    DummyActivation dummyActivation = ((WhitelistActivation) activation).getActivation();
-    Assert.assertEquals(runtimeInfo, dummyActivation.getRuntimeInfo());
+    Assert.assertNotNull(activation);
+    Assert.assertEquals(runtimeInfo, ((DummyActivation)activation).getRuntimeInfo());
   }
 
   @Test(expected = RuntimeException.class)

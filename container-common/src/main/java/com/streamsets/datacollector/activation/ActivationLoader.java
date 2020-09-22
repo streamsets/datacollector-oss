@@ -50,7 +50,7 @@ public class ActivationLoader {
       activation = new NopActivation();
       LOG.debug("No activation service available, using {}", activation.getClass().getName());
     } else if (list.size() == 1) {
-      activation = new WhitelistActivation(list.get(0));
+      activation = list.get(0);
       LOG.debug("Found activation service {}", activation.getClass().getName());
     } else {
       List<String> names = Lists.transform(list, element -> element.getClass().getName());
