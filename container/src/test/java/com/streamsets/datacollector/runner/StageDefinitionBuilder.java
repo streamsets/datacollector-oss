@@ -53,6 +53,7 @@ public class StageDefinitionBuilder {
   boolean errorStage = false;
   boolean preconditions = true;
   boolean onRecordError = true;
+  boolean connectionVerifierStage = false;
   List<ConfigDefinition> configDefinitions = Collections.emptyList();
   RawSourceDefinition rawSourceDefinition = null;
   String icon = "";
@@ -198,6 +199,7 @@ public class StageDefinitionBuilder {
       errorStage,
       preconditions,
       onRecordError,
+      connectionVerifierStage,
       configDefinitions,
       rawSourceDefinition,
       icon,

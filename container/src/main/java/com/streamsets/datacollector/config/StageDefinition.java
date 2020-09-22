@@ -59,6 +59,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   private final boolean pipelineLifecycleStage;
   private final boolean preconditions;
   private final boolean onRecordError;
+  private final boolean connectionVerifierStage;
   private final RawSourceDefinition rawSourceDefinition;
   private final List<ConfigDefinition> configDefinitions;
   private final Map<String, ConfigDefinition> configDefinitionsMap;
@@ -104,6 +105,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean errorStage,
       boolean preconditions,
       boolean onRecordError,
+      boolean connectionVerifierStage,
       List<ConfigDefinition> configDefinitions,
       RawSourceDefinition rawSourceDefinition,
       String icon,
@@ -146,6 +148,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.errorStage = errorStage;
     this.preconditions = preconditions;
     this.onRecordError = onRecordError;
+    this.connectionVerifierStage = connectionVerifierStage;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
     this.onlineHelpRefUrl = onlineHelpRefUrl;
@@ -210,6 +213,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     errorStage = def.errorStage;
     preconditions = def.preconditions;
     onRecordError = def.onRecordError;
+    connectionVerifierStage = def.connectionVerifierStage;
     configDefinitions = def.configDefinitions;
     rawSourceDefinition = def.rawSourceDefinition;
     configDefinitionsMap = def.configDefinitionsMap;
@@ -253,6 +257,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
       boolean errorStage,
       boolean preconditions,
       boolean onRecordError,
+      boolean connectionVerifierStage,
       List<ConfigDefinition> configDefinitions,
       RawSourceDefinition rawSourceDefinition,
       String icon,
@@ -295,6 +300,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
     this.errorStage = errorStage;
     this.preconditions = preconditions;
     this.onRecordError = onRecordError;
+    this.connectionVerifierStage = connectionVerifierStage;
     this.configDefinitions = configDefinitions;
     this.rawSourceDefinition = rawSourceDefinition;
     configDefinitionsMap = new HashMap<>();
@@ -408,6 +414,8 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
   public boolean hasOnRecordError() {
     return onRecordError;
   }
+
+  public boolean isConnectionVerifierStage() { return connectionVerifierStage; }
 
   public boolean isStatsAggregatorStage() {
     return statsAggregatorStage;
@@ -610,6 +618,7 @@ public class StageDefinition implements PrivateClassLoaderDefinition {
         isErrorStage(),
         hasPreconditions(),
         hasOnRecordError(),
+        isConnectionVerifierStage(),
         configDefs,
         rawSourceDef,
         getIcon(),

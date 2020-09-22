@@ -31,6 +31,7 @@ public class StageInfoJson {
   private int version;
   private boolean errorStage;
   private boolean statsAggregatorStage;
+  private boolean connectionVerifierStage;
   private boolean beta;
   private String icon;
   private String onlineHelpRefUrl;
@@ -46,6 +47,7 @@ public class StageInfoJson {
     version = stageDefinition.getVersion();
     errorStage = stageDefinition.isErrorStage();
     statsAggregatorStage = stageDefinition.isStatsAggregatorStage();
+    connectionVerifierStage = stageDefinition.isConnectionVerifierStage();
     beta = stageDefinition.isBeta();
     icon = stageDefinition.getIcon();
     tags = stageDefinition.getTags();
@@ -137,6 +139,14 @@ public class StageInfoJson {
 
   public void setTags(List<String> tags) {
     this.tags = tags;
+  }
+
+  public boolean isConnectionVerifierStage() {
+    return connectionVerifierStage;
+  }
+
+  public void setConnectionVerifierStage(boolean connectionVerifierStage) {
+    this.connectionVerifierStage = connectionVerifierStage;
   }
 }
 

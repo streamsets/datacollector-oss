@@ -416,7 +416,7 @@ angular
         var destinationList = [];
         var others = [];
         angular.forEach(stageDefList, function (stageInfo) {
-          if (!stageInfo.errorStage && !stageInfo.statsAggregatorStage) {
+          if (!stageInfo.errorStage && !stageInfo.statsAggregatorStage && !stageInfo.connectionVerifierStage) {
             if (stageInfo.type === 'SOURCE') {
               originList.push(stageInfo);
             } else if (stageInfo.type === 'PROCESSOR') {

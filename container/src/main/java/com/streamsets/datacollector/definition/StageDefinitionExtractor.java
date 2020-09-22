@@ -214,6 +214,9 @@ public abstract class StageDefinitionExtractor {
         boolean preconditions = !errorStage && type != StageType.SOURCE &&
             ((hideConfigs == null) || !hideConfigs.preconditions());
         boolean onRecordError = !errorStage && ((hideConfigs == null) || !hideConfigs.onErrorRecord());
+        HideStage hideStageDef = klass.getAnnotation(HideStage.class);
+        boolean connectionVerifierStage = hideStageDef != null &&
+            Arrays.stream(hideStageDef.value()).anyMatch(h -> h == HideStage.Type.CONNECTION_VERIFIER);
         List<ConfigDefinition> configDefinitions = extractConfigDefinitions(libraryDef, klass, hideConfigs, new ArrayList<>(), contextMsg);
         RawSourceDefinition rawSourceDefinition = RawSourceDefinitionExtractor.get().extract(klass, contextMsg);
         ConfigGroupDefinition configGroupDefinition = ConfigGroupExtractor.get().extract(klass, contextMsg);
@@ -234,7 +237,6 @@ public abstract class StageDefinitionExtractor {
         List<ServiceDependencyDefinition> services = extractServiceDependencies(sDef);
 
         // Should the stage be hidden from canvas? If so, where else should it be displayed?
-        HideStage hideStageDef = klass.getAnnotation(HideStage.class);
         List<HideStage.Type> hideStage = new ArrayList<>();
         if(hideStageDef != null) {
           hideStage.addAll(Arrays.asList(hideStageDef.value()));
@@ -319,6 +321,7 @@ public abstract class StageDefinitionExtractor {
             errorStage,
             preconditions,
             onRecordError,
+            connectionVerifierStage,
             configDefinitions,
             rawSourceDefinition,
             icon,

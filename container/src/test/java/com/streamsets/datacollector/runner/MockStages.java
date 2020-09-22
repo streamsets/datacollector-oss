@@ -1125,6 +1125,7 @@ public class MockStages {
               oldDef.isErrorStage(),
               oldDef.hasPreconditions(),
               oldDef.hasOnRecordError(),
+              oldDef.isConnectionVerifierStage(),
               oldDef.getConfigDefinitions(),
               oldDef.getRawSourceDefinition(),
               oldDef.getIcon(),
