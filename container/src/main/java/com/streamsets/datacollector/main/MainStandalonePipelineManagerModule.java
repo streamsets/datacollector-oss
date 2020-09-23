@@ -32,7 +32,6 @@ import com.streamsets.datacollector.util.Configuration;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-import sun.management.resources.agent;
 
 import javax.inject.Singleton;
 
