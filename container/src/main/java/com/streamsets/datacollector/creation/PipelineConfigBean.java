@@ -587,7 +587,7 @@ public class PipelineConfigBean implements Stage {
       connectionType = EMRClusterConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
-      group = PipelineGroups.EMR_GROUP_NAME,
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       displayPosition = -500,
       dependsOn = "executionMode",
       triggeredByValue = "EMR_BATCH"
@@ -636,7 +636,7 @@ public class PipelineConfigBean implements Stage {
       connectionType = EMRClusterConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
-      group = PipelineGroups.EMR_GROUP_NAME,
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
       displayPosition = -600,
       dependsOn = "clusterConfig.clusterType",
       triggeredByValue = "EMR"

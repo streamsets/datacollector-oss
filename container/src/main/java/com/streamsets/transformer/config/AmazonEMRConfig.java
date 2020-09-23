@@ -40,8 +40,9 @@ public class AmazonEMRConfig {
       type = ConfigDef.Type.STRING,
       label = "Service Access Security Group",
       description = "ID of the security group for the Amazon EMR service to access clusters in VPC private subnets",
-      group = PipelineGroups.EMR_GROUP_NAME,
-      displayPosition = 315,
+      group = PipelineGroups.CLUSTER_GROUP_NAME,
+      // position after slaveSecurityGroup in EMRClusterConnection
+      displayPosition = 4800,
       dependencies = {
           @Dependency(configName = "^clusterConfig.clusterType", triggeredByValues = "EMR"),
           @Dependency(configName = "^transformerEmrConnection.provisionNewCluster", triggeredByValues = "true")
@@ -55,9 +56,9 @@ public class AmazonEMRConfig {
     label = "Enable Server-Side Encryption",
     description = "Server-Side Encryption",
     defaultValue = "NONE",
-    displayPosition = 370,
+    displayPosition = 50100,
     displayMode = ConfigDef.DisplayMode.ADVANCED,
-    group = PipelineGroups.EMR_GROUP_NAME,
+    group = PipelineGroups.CLUSTER_GROUP_NAME,
     dependsOn = "^clusterConfig.clusterType",
     triggeredByValue = "EMR"
   )
@@ -70,11 +71,11 @@ public class AmazonEMRConfig {
     label = "AWS KMS Key ARN",
     description = "AWS KMS master encryption key that was used for the object. " +
                     "The KMS key you specify in the policy must use the \"arn:aws:kms:region:acct-id:key/key-id\" format.",
-    displayPosition = 380,
+    displayPosition = 50200,
     dependsOn = "encryption",
     triggeredByValue = "KMS",
     displayMode = ConfigDef.DisplayMode.ADVANCED,
-    group = PipelineGroups.EMR_GROUP_NAME
+    group = PipelineGroups.CLUSTER_GROUP_NAME
   )
   public CredentialValue kmsKeyId;
 }

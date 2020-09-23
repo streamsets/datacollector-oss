@@ -70,7 +70,8 @@ public class EMRClusterConnection {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
-      label = "AWS User Region (Custom)",
+      label = "Endpoint",
+      description = "Custom endpoint",
       group = "#0",
       dependsOn = "region",
       triggeredByValue = "OTHER",
