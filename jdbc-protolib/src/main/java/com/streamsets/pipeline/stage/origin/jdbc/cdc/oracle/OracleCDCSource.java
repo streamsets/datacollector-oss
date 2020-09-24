@@ -1495,7 +1495,7 @@ public class OracleCDCSource extends BaseSource {
     if (databaseVersion == -1) {
       return issues;
     }
-    continuousMine = (databaseVersion < 19);
+    continuousMine = (databaseVersion < 19) && !configBean.disableContinuousMine;
 
     try {
       logMinerSession = new LogMinerSession.Builder(connection, databaseVersion)

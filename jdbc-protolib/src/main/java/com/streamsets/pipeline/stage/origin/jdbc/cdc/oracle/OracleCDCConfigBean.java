@@ -279,6 +279,17 @@ public class OracleCDCConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Disable Continuous Mine",
+      description = "Disables the Continuous Mine option for supported Oracle versions (earlier than 19c) ",
+      displayPosition = 40,
+      group = "ADVANCED",
+      defaultValue = "false"
+  )
+  public boolean disableContinuousMine;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.MODEL,
       label = "DB Time Zone",
       description = "Time Zone that the DB is operating in",
