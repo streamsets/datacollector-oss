@@ -26,6 +26,7 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +35,15 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public abstract class HikariPoolConfigBean {
   private static final Logger LOG = LoggerFactory.getLogger(HikariPoolConfigBean.class);
@@ -245,12 +249,11 @@ public abstract class HikariPoolConfigBean {
 
   public List<Stage.ConfigIssue> validateConfigs(Stage.Context context, List<Stage.ConfigIssue> issues) {
     ensureJdbcDrivers(context);
-
-    // Finally we dump registered drivers to logs
     LOG.info("Currently Registered JDBC drivers:");
     Collections.list(DriverManager.getDrivers()).forEach(driver -> {
-      LOG.info("Driver class {} (version {}.{})", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion());
+      LOG.info("Driver class {} (version {}.{}) from {}", driver.getClass().getName(), driver.getMajorVersion(), driver.getMinorVersion(), getClassJarLocation(driver.getClass()));
     });
+    detectConflictingJDbcDrivers();
 
     // Validation for NUMBER fields is currently disabled due to allowing ELs so we do our own here.
     if (maximumPoolSize < MAX_POOL_SIZE_MIN) {
@@ -337,10 +340,54 @@ public abstract class HikariPoolConfigBean {
   }
 
   /**
+   * Detect and log if two different drivers will match the same (configured) JDBC URL.
+   *
+   * This basically means that we have two conflicting JDBC drivers on the classpath and JVM will use the first one
+   * based on it's ordering (which is pretty much random, albeit we're trying to make it a bit predictable).
+   */
+  protected void detectConflictingJDbcDrivers() {
+    Map<String, Set<Driver>> matchingDrivers = new HashMap<>();
+
+    // Run the JDBC URL by all registered drivers
+    Enumeration<Driver> drivers = DriverManager.getDrivers();
+    while(drivers.hasMoreElements()) {
+      Driver driver = drivers.nextElement();
+
+      try {
+        if (driver.acceptsURL(getConnectionString())) {
+          matchingDrivers.computeIfAbsent(getClassJarLocation(driver.getClass()), (x) -> new HashSet<>()).add(driver);
+        }
+      } catch (SQLException e) {
+        LOG.debug("Ignored exception while validating if there are conflicting drivers on the classpath", e);
+      }
+    }
+
+    // And log if more then one accepts the JDBC URL
+    if(matchingDrivers.size() > 1) {
+      if(StringUtils.isEmpty(driverClassName)) {
+        LOG.error("Multiple JDBC Drivers matches JDBC URL, JVM will pick one in non-deterministic way. Configure 'JDBC Driver Class Name' to force JVM to select the intended driver.");
+      } else {
+        LOG.error("Multiple JDBC Drivers matches JDBC URL, stage configured to explicitly use {}", driverClassName);
+      }
+      for(Map.Entry<String, Set<Driver>> entry : matchingDrivers.entrySet()) {
+        List<String> driverClassNames = entry.getValue().stream().map(driver -> driver.getClass().getName()).collect(Collectors.toList());
+        LOG.error("JDBC Driver jar that accepts URL: {} (driver class(es): {})", entry.getKey(), String.join(", ", driverClassNames));
+      }
+    }
+  }
+
+  /**
+   * Return location of the jar file that contains given class.
+   */
+  private String getClassJarLocation(Class klass) {
+    return klass.getProtectionDomain().getCodeSource().getLocation().toString();
+  }
+
+  /**
    * Java services facility that JDBC uses for auto-loading drivers doesn't entirely work properly with multiple
    * class loaders. To ease on the user experience, we attempt to remediate the situation in various ways.
    */
-  private void ensureJdbcDrivers(Stage.Context context) {
+  protected void ensureJdbcDrivers(Stage.Context context) {
     // Currently loaded drivers
     Set<String> loadedDrivers = new HashSet<>();
     Collections.list(DriverManager.getDrivers()).forEach(driver -> loadedDrivers.add(driver.getClass().getName()));
@@ -351,7 +398,7 @@ public abstract class HikariPoolConfigBean {
     LOG.debug("Exploring Service Loader for available JDBC drivers");
     for (Driver driver : ServiceLoader.load(Driver.class)) {
       if(loadedDrivers.contains(driver.getClass().getName())) {
-        LOG.debug("Driver {} already loaded", driver.getClass().getName());
+        LOG.debug("Driver {} already loaded from {}", driver.getClass().getName(), getClassJarLocation(driver.getClass()));
       } else {
         LOG.debug("Driver {} wasn't registered, registering now", driver.getClass().getName());
         try {
