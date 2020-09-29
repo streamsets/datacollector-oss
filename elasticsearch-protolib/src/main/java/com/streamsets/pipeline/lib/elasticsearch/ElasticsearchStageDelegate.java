@@ -125,32 +125,31 @@ public class ElasticsearchStageDelegate {
     }
 
     String securityUser = null;
-    try {
-      securityUser = conf.securityConfig.securityUser.get();
-    } catch (StageException e) {
-       issues.add(context.createConfigIssue(
-           Groups.SECURITY.name(),
-           prefix + "." + SecurityConfig.NAME + ".securityUser",
-           Errors.ELASTICSEARCH_32,
-           e.getMessage(),
-           e
-      ));
-    }
-
     String securityPassword = null;
-    try {
-      securityPassword = conf.securityConfig.securityPassword.get();
-    } catch (StageException e) {
-      issues.add(context.createConfigIssue(
-          Groups.SECURITY.name(),
-          prefix + "." + SecurityConfig.NAME + ".securityPassword",
-          Errors.ELASTICSEARCH_38,
-          e.getMessage(),
-          e
-      ));
-    }
 
     if (conf.useSecurity && SecurityMode.BASIC.equals(conf.securityConfig.securityMode)) {
+      try {
+        securityUser = conf.securityConfig.securityUser.get();
+      } catch (StageException e) {
+         issues.add(context.createConfigIssue(
+             Groups.SECURITY.name(),
+             prefix + "." + SecurityConfig.NAME + ".securityUser",
+             Errors.ELASTICSEARCH_32,
+             e.getMessage(),
+             e
+        ));
+      }
+      try {
+        securityPassword = conf.securityConfig.securityPassword.get();
+      } catch (StageException e) {
+        issues.add(context.createConfigIssue(
+            Groups.SECURITY.name(),
+            prefix + "." + SecurityConfig.NAME + ".securityPassword",
+            Errors.ELASTICSEARCH_38,
+            e.getMessage(),
+            e
+        ));
+      }
       if (securityUser == null || securityPassword == null) {
         issues.add(
             context.createConfigIssue(
