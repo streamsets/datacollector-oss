@@ -862,6 +862,7 @@ module.exports = function(grunt) {
       process: function ( contents, path ) {
         return grunt.template.process( contents, {
           data: {
+            styles: cssFiles,
             version: grunt.config( 'pkg.version' )
           }
         });

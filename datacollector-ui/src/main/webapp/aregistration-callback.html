@@ -19,8 +19,30 @@
 <html lang="en">
 <head>
   <title>StreamSets Registration</title>
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- compiled CSS --><% styles.forEach( function ( file ) { %>
+  <link rel="stylesheet" type="text/css" href="<%= file %>" /><% }); %>
 </head>
 <body>
+  <div class="container login-container">
+    <div class="row">
+      <div id="loginErrorMessageDivId"
+           class="col-xs-6 col-xs-offset-3 col-sm-5 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4 alert alert-danger"
+           role="alert">Log In Failed.</div>
+    </div>
+    <div class="row">
+      <div
+        class="col-xs-6 col-xs-offset-3 col-sm-5 col-sm-offset-4 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4 form-login">
+        <div class="img_container">
+          <img class="aster-registration" src="assets/logo.png" />
+          <p>Linking your Data Collector...</p>
+          <i class="fa fa-spinner fa-spin fa-2x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
   <script>
     // DO a POST to /rest/v1/aregistration using the query string parameters send to this page.
     const parameters = new URL(window.location).searchParams;
