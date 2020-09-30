@@ -89,6 +89,7 @@ public class MutualAuthConfigBean {
       description = "Private key used in the keystore",
       label = "Private Key",
       displayPosition = 520,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
@@ -103,6 +104,7 @@ public class MutualAuthConfigBean {
       description = "Certificate chain used in the keystore",
       label = "Certificate Chain",
       displayPosition = 530,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
           @Dependency(configName = "useMutualAuth", triggeredByValues = "true"),
