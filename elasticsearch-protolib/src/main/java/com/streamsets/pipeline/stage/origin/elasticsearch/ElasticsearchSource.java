@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.elasticsearch;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Charsets;
 import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
@@ -32,6 +33,7 @@ import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.elasticsearch.ElasticsearchStageDelegate;
+import com.streamsets.pipeline.lib.elasticsearch.PathEscape;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.lib.parser.DataParserFactoryBuilder;
@@ -51,11 +53,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
@@ -77,6 +82,8 @@ public class ElasticsearchSource extends BasePushSource {
   private DataParserFactory parserFactory;
   private ElasticsearchStageDelegate delegate;
   private int batchSize;
+  private String index;
+  private String mapping;
 
   public ElasticsearchSource(ElasticsearchSourceConfig conf) {
     this.conf = conf;
@@ -108,11 +115,51 @@ public class ElasticsearchSource extends BasePushSource {
 
     issues = delegate.init("conf", issues);
 
+    PathEscape pathEscape = loadPathEscape();
+    index = escapePath(pathEscape, conf.index, "conf", "index", issues);
+    mapping = escapePath(pathEscape, conf.mapping, "conf", "mapping", issues);
+
     delegate.validateQuery(
-        "conf", conf.index, conf.query, conf.isIncrementalMode, OFFSET_PLACEHOLDER, conf.initialOffset, issues
+        "conf", index, conf.query, conf.isIncrementalMode, OFFSET_PLACEHOLDER, conf.initialOffset, issues
     );
 
     return issues;
+  }
+
+  @VisibleForTesting
+  PathEscape loadPathEscape() {
+    ServiceLoader<PathEscape> loader = ServiceLoader.load(PathEscape.class);
+    Iterator<PathEscape> it = loader.iterator();
+    if (!it.hasNext()) {
+      throw new StageException(Errors.ELASTICSEARCH_51);
+    }
+    PathEscape pathEscape = it.next();
+    if (it.hasNext()) {
+      throw new StageException(Errors.ELASTICSEARCH_52);
+    }
+    return pathEscape;
+  }
+
+  private String escapePath(
+      final PathEscape pathEscape,
+      final String path,
+      final String prefix,
+      final String conf,
+      final List<ConfigIssue> issues
+  ) {
+    String result = path;
+    try {
+      result = pathEscape.escape(path);
+    } catch (final URISyntaxException ex) {
+      issues.add(getContext().createConfigIssue(
+          Groups.ELASTIC_SEARCH.name(),
+          prefix + "." + conf,
+          Errors.ELASTICSEARCH_50,
+          path,
+          ex.getMessage()
+      ));
+    }
+    return result;
   }
 
   @Override
@@ -360,7 +407,12 @@ public class ElasticsearchSource extends BasePushSource {
       LOG.debug("Request Body: '{}'", requestBodyJson);
       HttpEntity entity = new StringEntity(requestBodyJson, ContentType.APPLICATION_JSON);
 
-      final String endpoint = URL_JOINER.join("", conf.index, conf.mapping, "_search");
+      final String endpoint = URL_JOINER.join(
+          "",
+          index != null && index.trim().isEmpty() ? null : index,
+          mapping != null && mapping.trim().isEmpty() ? null : mapping,
+          "_search"
+      );
       LOG.debug("Built endpoint path: '{}'", endpoint);
 
       Response response = delegate.performRequest(

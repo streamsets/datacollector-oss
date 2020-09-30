@@ -71,8 +71,10 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_47("Unable to authenticate for REST request [{}]"),
   ELASTICSEARCH_48("User is not authorized to send REST request [{}]"),
   ELASTICSEARCH_49("Unexpected JSON response [{}]"),
+  ELASTICSEARCH_50("Invalid path [{}] ({})"),
+  ELASTICSEARCH_51("No PathEscape implementation found"),
+  ELASTICSEARCH_52("There should be only one implementation of PathEscape");
 
-  ;
   private final String msg;
 
   Errors(String msg) {

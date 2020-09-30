@@ -199,6 +199,13 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <excludes>
+            <exclude>
+              META-INF/services/com.streamsets.pipeline.lib.elasticsearch.PathEscape
+            </exclude>
+          </excludes>
+        </configuration>
       </plugin>
     </plugins>
   </build>
