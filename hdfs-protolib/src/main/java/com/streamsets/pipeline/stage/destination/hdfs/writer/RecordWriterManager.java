@@ -236,7 +236,13 @@ public class RecordWriterManager {
     if (newRecordDate != null) {
       return preventOverflow(newRecordDate.getTime() + cutOffMillis) - now.getTime();
     } else {
-      return recordDate.getTime() + cutOffMillis - now.getTime();
+      long timeToLiveMillis;
+      if (idleTimeoutSeconds != -1) {
+        timeToLiveMillis = idleTimeoutSeconds * 1000;
+      } else {
+        timeToLiveMillis = Long.MAX_VALUE;
+      }
+      return recordDate.getTime() + timeToLiveMillis - now.getTime();
     }
   }
 
