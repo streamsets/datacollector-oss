@@ -192,7 +192,7 @@ public abstract class MysqlSource extends BaseSource {
 
   @Override
   public void destroy() {
-    if (client != null && client.isConnected()) {
+    if (client != null) {
       try {
         client.disconnect();
       } catch (IOException e) {
