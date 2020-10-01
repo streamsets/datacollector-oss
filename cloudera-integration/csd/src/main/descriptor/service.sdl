@@ -386,7 +386,8 @@
             "form",
             "none",
             "basic",
-            "digest"
+            "digest",
+            "aster"
           ],
           "default": "form"
         },

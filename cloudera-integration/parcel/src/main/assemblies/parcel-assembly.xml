@@ -47,6 +47,7 @@
         <include>sdc-static-web/**</include>
         <include>streamsets-libs/**</include>
         <include>user-libs/**</include>
+        <include>aster-client-lib/**</include>
       </includes>
     </fileSet>
 
