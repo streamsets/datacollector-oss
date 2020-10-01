@@ -40,6 +40,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class JmsMessageConverterImpl implements JmsMessageConverter {
+  private static final String HEADER_PREFIX = "jms.header.";
 
   private DataFormatParserService parserService;
   private MessageConfig messageConfig;
@@ -99,12 +100,28 @@ public class JmsMessageConverterImpl implements JmsMessageConverter {
     if (payload != null) {
       try {
         for (Record record : ServicesUtil.parseAll(context, context, messageConfig.produceSingleRecordPerMessage, messageId, payload)) {
+          Record.Header header = record.getHeader();
+          // Serialize properties as they are
           Enumeration propertyNames = message.getPropertyNames();
           while (propertyNames.hasMoreElements()) {
             String name = String.valueOf(propertyNames.nextElement());
             String value = message.getStringProperty(name);
-            record.getHeader().setAttribute(name, value == null ? "" : value);
+            header.setAttribute(name, value == null ? "" : value);
           }
+          // Serialize standard headers separately
+          String jmsMessageId = message.getJMSMessageID();
+          header.setAttribute(HEADER_PREFIX + "messageId", jmsMessageId == null ? "" : jmsMessageId);
+          header.setAttribute(HEADER_PREFIX + "timestamp", Long.toString(message.getJMSTimestamp()));
+          String jmsCorrelationId = message.getJMSCorrelationID();
+          header.setAttribute(HEADER_PREFIX + "correlationId", jmsCorrelationId == null ? "" : jmsCorrelationId);
+          header.setAttribute(HEADER_PREFIX + "deliveryMode", Integer.toString(message.getJMSDeliveryMode()));
+          header.setAttribute(HEADER_PREFIX + "redelivered", Boolean.toString(message.getJMSRedelivered()));
+          header.setAttribute(HEADER_PREFIX + "type", Boolean.toString(message.getJMSRedelivered()));
+          header.setAttribute(HEADER_PREFIX + "expiration", Long.toString(message.getJMSExpiration()));
+          header.setAttribute(HEADER_PREFIX + "priority", Integer.toString(message.getJMSPriority()));
+
+
+          // Add the record to the batch
           batchMaker.addRecord(record);
           count++;
         }
