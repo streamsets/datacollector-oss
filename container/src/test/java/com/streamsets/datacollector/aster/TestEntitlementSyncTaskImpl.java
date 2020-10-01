@@ -33,6 +33,10 @@ import org.junit.Test;
 import java.util.Map;
 
 import org.mockito.Mockito;
+import org.powermock.reflect.Whitebox;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -182,10 +186,31 @@ public class TestEntitlementSyncTaskImpl {
   }
 
   @Test
-  public void testSkipNoEntitlementUrl() {
+  public void testSkipNoEntitlementWhenAsterDisabled() {
     enableAndConfigureActivation(false);
     appConfig.set(AsterServiceProvider.ASTER_URL, "");
     when(task.getAsterService()).thenReturn(null);
+    Whitebox.setInternalState(task, "asterContext", new AsterContext() {
+      @Override
+      public boolean isEnabled() {
+        return AsterServiceProvider.isEnabled(appConfig);
+      }
+
+      @Override
+      public AsterService getService() {
+        return null;
+      }
+
+      @Override
+      public void handleRegistration(ServletRequest req, ServletResponse res) {
+
+      }
+
+      @Override
+      public Authenticator getAuthenticator() {
+        return null;
+      }
+    });
     task.syncEntitlement();
     Activation.Info aInfo = activation.getInfo();
     verify(aInfo).isValid();

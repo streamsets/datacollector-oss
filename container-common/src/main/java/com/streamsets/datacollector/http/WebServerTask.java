@@ -450,7 +450,16 @@ public abstract class WebServerTask extends AbstractTask implements Registration
           securityHandler = configureForm(appConf, server, auth);
           break;
         case "aster":
-          securityHandler = configureAsterSSO(appConf);
+          if (runtimeInfo.isEmbedded() && !runtimeInfo.getProductName().equals(RuntimeInfo.SDC_PRODUCT)) {
+            //For transformer product and if it is the driver (i.e runtimeInfo.isEmbedded() == true), then we disable ASTER
+            LOG.trace("Aster configured but disabled because - this is an embedded instance");
+            conf.set(WebServerTask.AUTHENTICATION_KEY, "form");
+            // fallback to form
+            securityHandler = configureForm(appConf, server, "form");
+          } else {
+            // Aster should be configured even if it is an embedded SDC
+            securityHandler = configureAsterSSO(appConf);
+          }
           break;
         default:
           throw new RuntimeException(Utils.format("Invalid authentication mode '{}', must be one of '{}'",
@@ -584,7 +593,8 @@ public abstract class WebServerTask extends AbstractTask implements Registration
 
   // As this plays with classloaders created from dist locations it is not possible to unit test easily.
   @SuppressWarnings("unchecked")
-  private ConstraintSecurityHandler configureAsterSSO(final Configuration appConf) {
+  @VisibleForTesting
+  ConstraintSecurityHandler configureAsterSSO(final Configuration appConf) {
     LOG.debug("Configure Aster integration");
     if (asterContext.isEnabled()) {
       ConstraintSecurityHandler security = new ConstraintSecurityHandler();
@@ -628,7 +638,8 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     return security;
   }
 
-  private ConstraintSecurityHandler configureForm(Configuration conf, Server server, String mode) {
+  @VisibleForTesting
+  ConstraintSecurityHandler configureForm(Configuration conf, Server server, String mode) {
     ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
 
     LoginService loginService = getLoginService(conf, mode);

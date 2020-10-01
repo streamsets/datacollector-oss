@@ -99,7 +99,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
       LOG.debug("Activation already valid, skipping EntitlementSync");
       return false;
     }
-    if (!AsterServiceProvider.isEnabled(appConfig)) {
+    if (!asterContext.isEnabled()) {
       LOG.debug("Aster is disabled, skipping EntitlementSync");
       return false;
     }

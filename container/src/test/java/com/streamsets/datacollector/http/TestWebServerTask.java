@@ -24,7 +24,6 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.pipeline.BootstrapMain;
 import org.awaitility.Duration;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -46,12 +45,12 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 
 import static org.awaitility.Awaitility.await;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.Matchers.empty;
 
 public class TestWebServerTask {
 
@@ -265,6 +264,40 @@ public class TestWebServerTask {
     final List<Object> attr = runtimeInfo.getAttribute(WebServerTask.SSO_SERVICES_ATTR);
     assertThat(attr, notNullValue());
     assertThat(attr, empty());
+  }
+
+  @Test
+  public void testAsterSSODisabledIfEmbeddedAndNotSDC() throws Exception {
+    RuntimeInfo runtimeInfo =
+        new StandaloneRuntimeInfo(
+            "not sdc",
+            RuntimeModule.SDC_PROPERTY_PREFIX,
+            new MetricRegistry(),
+            Collections.emptyList()
+        ) {
+          @Override
+          public String getConfigDir() {
+            return new File("target").getAbsolutePath();
+          }
+        };
+    runtimeInfo.setAttribute(RuntimeInfo.EMBEDDED_FLAG, true);
+
+    Assert.assertTrue(runtimeInfo.isEmbedded());
+
+    Configuration conf = new Configuration();
+    conf.set(WebServerTask.AUTHENTICATION_KEY, "aster");
+
+    WebServerTask webServerTask = Mockito.spy(createWebServerTask(runtimeInfo, conf, Collections.emptySet()));
+    Mockito.doAnswer(invocation -> null).
+        when(webServerTask).configureForm(Mockito.any(Configuration.class), Mockito.any(Server.class), Mockito.anyString());
+    try {
+      webServerTask.initTask();
+      Mockito.verify(webServerTask, Mockito.never()).configureAsterSSO(Mockito.any());
+      Mockito.verify(webServerTask).configureForm(Mockito.any(Configuration.class), Mockito.any(Server.class), Mockito.anyString());
+
+    } finally {
+      webServerTask.stopTask();
+    }
   }
 
   @Test
