@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.18.1</version>
+    <version>3.18.1-0025</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-cloudera-integration</artifactId>
-  <version>3.18.1</version>
+  <version>3.18.1-0025</version>
   <description>StreamSets Parcel and CSD</description>
   <name>StreamSets Parcel and CSD for Cloudera Manager</name>
   <packaging>pom</packaging>
