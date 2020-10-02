@@ -28,7 +28,6 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.instrument.Instrumentation;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -105,6 +104,9 @@ public class BootstrapCluster {
     }
     System.setProperty("sdc.transient-env", "true");
     System.setProperty("sdc.static-web.dir", (new File(libraryRoot, "sdc-static-web")).getAbsolutePath());
+    //Set asterClientLib.dir
+    System.setProperty("sdc.asterClientLib.dir", (new File(libraryRoot, "aster-client-lib")).getAbsolutePath());
+
     System.setProperty("sdc.conf.dir", etcRoot);
     System.setProperty("sdc.resources.dir", resourcesRoot);
     File sdcProperties = new File(etcRoot, "sdc.properties");

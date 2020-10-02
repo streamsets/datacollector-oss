@@ -57,6 +57,7 @@ public abstract class RuntimeInfo {
   public static final String LOG_DIR = ".log.dir";
   public static final String RESOURCES_DIR = ".resources.dir";
   public static final String LIBEXEC_DIR = ".libexec.dir";
+  public static final String ASTER_CLIENT_LIB_DIR = ".asterClientLib.dir";
   public static final String STATIC_WEB_DIR = ".static-web.dir";
   public static final String TRANSIENT_ENVIRONMENT_SUFFIX = ".transient-env";
   public static final String UNDEF = "UNDEF";
@@ -178,6 +179,12 @@ public abstract class RuntimeInfo {
 
   public String getDataDir() {
     return System.getProperty(propertyPrefix + DATA_DIR, getRuntimeDir() + "/var");
+  }
+
+  // _sdc sets the 'sdc.asterClientLib.dir' system property to the directory containing the aster-client JARs
+  // if not set we fallback to a default location.
+  public String getAsterClientDir() {
+    return System.getProperty(propertyPrefix + ASTER_CLIENT_LIB_DIR,  getRuntimeDir() + "/aster-client-lib");
   }
 
   public String getSamplePipelinesDir() {

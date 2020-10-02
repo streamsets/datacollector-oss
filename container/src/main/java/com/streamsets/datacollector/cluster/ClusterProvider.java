@@ -62,6 +62,7 @@ public interface ClusterProvider {
       File bootstrapDir,
       URLClassLoader apiCL,
       URLClassLoader containerCL,
+      URLClassLoader asterClientCL,
       long timeToWaitForFailure,
       RuleDefinitions ruleDefinitions,
       Acl acl,

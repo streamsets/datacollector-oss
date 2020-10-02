@@ -134,8 +134,7 @@ public class ShellClusterProvider extends BaseClusterProvider {
       ApplicationState applicationState,
       PipelineConfiguration pipelineConfiguration,
       PipelineConfigBean pipelineConfigBean
-  )
-      throws TimeoutException, IOException {
+  ) throws TimeoutException, IOException {
     String appId = applicationState.getAppId();
     Map<String, String> environment = new HashMap<>();
     environment.put(CLUSTER_TYPE, CLUSTER_TYPE_YARN);

@@ -176,7 +176,7 @@ public class TestClusterRunner {
         false
     );
 
-    clusterHelper = new ClusterHelper(new MockSystemProcessFactory(), clusterProvider, tempDir, emptyCL, emptyCL, null);
+    clusterHelper = new ClusterHelper(runtimeInfo, new MockSystemProcessFactory(), clusterProvider, tempDir, emptyCL, emptyCL, emptyCL, null);
 
     setExecModeAndRetries(ExecutionMode.CLUSTER_BATCH);
     aclStoreTask = new FileAclStoreTask(runtimeInfo, pipelineStoreTask, new LockCache<String>(),

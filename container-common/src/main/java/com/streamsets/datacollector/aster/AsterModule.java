@@ -41,13 +41,6 @@ import java.util.stream.Collectors;
 public class AsterModule {
   private static final Logger LOG = LoggerFactory.getLogger(AsterModule.class);
 
-  private URL convertFileToUrl(File file) {
-    try {
-      return file.toURI().toURL();
-    } catch (MalformedURLException ex) {
-      throw new IllegalArgumentException(ex);
-    }
-  }
 
   @Provides
   @Singleton
@@ -65,17 +58,10 @@ public class AsterModule {
     );
 
     try {
-      // _sdc sets the 'sdc.asterClientLib.dir' system property to the directory containing the aster-client JARs
-      // if not set we fallback to a default location.
-      String dir = System.getProperty("sdc.asterClientLib.dir", runtimeInfo.getRuntimeDir() + "/aster-client-lib");
-      File asterClientLibDir = new File(dir);
-
       // gets JAR URLs from Aster client lib directory
-      List<URL> asterJars = Arrays.stream(asterClientLibDir.listFiles())
-          .map(this::convertFileToUrl)
-          .collect(Collectors.toList());
+      List<URL> asterJars = AsterUtil.getAsterJars(runtimeInfo);
 
-      // creates a reverse classloader (the same one we use for stagelibraries) with the Aster client JARs
+      // creates a reverse classloader (the same one we use for stage libraries) with the Aster client JARs
       // using the container classloader as parent
       SDCClassLoader asterClassLoader = SDCClassLoader.getAsterClassLoader(
           asterJars,

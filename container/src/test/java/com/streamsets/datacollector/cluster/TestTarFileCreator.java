@@ -96,10 +96,13 @@ public class TestTarFileCreator {
   public void testCreateLibsTarGz() throws Exception {
     File apiLibDir = new File(tempDir, "api-lib");
     File containerLibDir = new File(tempDir, "container-lib");
+    File asterClientLibDir = new File(tempDir, "aster-client-lib");
     File streamsetsLibsDir = new File(tempDir, "streamsets-libs");
     File userLibsDir = new File(tempDir, "user-libs");
     URLClassLoader apiCl = new URLClassLoader(new URL[]{createJar(apiLibDir).toURI().toURL()});
     URLClassLoader containerCL = new URLClassLoader(new URL[]{createJar(containerLibDir).toURI().toURL()});
+    URLClassLoader asterClientCL = new URLClassLoader(new URL[]{createJar(asterClientLibDir).toURI().toURL()});
+
     Map<String, List<URL>> streamsetsLibsCl = new LinkedHashMap<>();
     Map<String, List<URL>> userLibsCL = new LinkedHashMap<>();
     streamsetsLibsCl.put("abc123", ImmutableList.copyOf(new URLClassLoader(new URL[]{createJar(new File(streamsetsLibsDir, "abc123"))
@@ -112,12 +115,21 @@ public class TestTarFileCreator {
     Assert.assertTrue(staticWebDir.mkdir());
     createJar(new File(staticWebDir, "subdir"));
       File tarFile = new File(tempDir, "libs.tar.gz");
-    TarFileCreator.createLibsTarGz(ImmutableList.copyOf(apiCl.getURLs()), ImmutableList.copyOf(containerCL.getURLs()),
-      streamsetsLibsCl, userLibsCL, staticWebDir, tarFile);
+    TarFileCreator.createLibsTarGz(ImmutableList.copyOf(
+        apiCl.getURLs()),
+        ImmutableList.copyOf(containerCL.getURLs()),
+        ImmutableList.copyOf(asterClientCL.getURLs()),
+        streamsetsLibsCl,
+        userLibsCL,
+        staticWebDir,
+        tarFile
+    );
     TarInputStream tis = new TarInputStream(new GZIPInputStream(new FileInputStream(tarFile)));
     readDir("api-lib/", tis);
     readJar(tis);
     readDir("container-lib/", tis);
+    readJar(tis);
+    readDir("aster-client-lib/", tis);
     readJar(tis);
     readDir("streamsets-libs/", tis);
     readDir("streamsets-libs/abc123/", tis);

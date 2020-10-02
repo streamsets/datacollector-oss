@@ -36,11 +36,15 @@ public class TarFileCreator {
 
   private TarFileCreator() {}
 
-  public static void createLibsTarGz(List<URL> apiCl, List<URL> containerCL,
-                                         Map<String, List<URL>> streamsetsLibsCl,
-                                         Map<String, List<URL>> userLibsCL,
-                                         File staticWebDir,
-                                         File outputFile) throws IOException {
+  public static void createLibsTarGz(
+      List<URL> apiCl,
+      List<URL> containerCL,
+      List<URL> asterClientCL,
+      Map<String, List<URL>> streamsetsLibsCl,
+      Map<String, List<URL>> userLibsCL,
+      File staticWebDir,
+      File outputFile
+  ) throws IOException {
     long now = System.currentTimeMillis() / 1000L;
     FileOutputStream dest = new FileOutputStream(outputFile);
     TarOutputStream out = new TarOutputStream(new BufferedOutputStream(new GZIPOutputStream(dest), 65536));
@@ -48,9 +52,15 @@ public class TarFileCreator {
     String prefix = ClusterModeConstants.API_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     addClasspath(prefix, out, apiCl);
+
     prefix = ClusterModeConstants.CONTAINER_LIB;
     out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
     addClasspath(prefix, out, containerCL);
+
+    prefix = ClusterModeConstants.ASTER_CLIENT_LIB;
+    out.putNextEntry(new TarEntry(TarHeader.createHeader(prefix, 0L, now, true)));
+    addClasspath(prefix, out, asterClientCL);
+
     addLibrary(ClusterModeConstants.STREAMSETS_LIBS, now, out, streamsetsLibsCl);
     addLibrary(ClusterModeConstants.USER_LIBS, now, out, userLibsCL);
     tarFolder(null, staticWebDir.getAbsolutePath(), out);

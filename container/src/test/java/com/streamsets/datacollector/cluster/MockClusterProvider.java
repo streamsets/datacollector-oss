@@ -90,6 +90,7 @@ public class MockClusterProvider implements ClusterProvider {
       File bootstrapDir,
       URLClassLoader apiCL,
       URLClassLoader containerCL,
+      URLClassLoader asterClientCL,
       long timeout,
       RuleDefinitions ruleDefinitions,
       Acl acl,

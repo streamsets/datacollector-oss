@@ -18,6 +18,8 @@ package com.streamsets.datacollector.cluster;
 public class ClusterModeConstants {
   public static final String API_LIB = "api-lib";
   public static final String CONTAINER_LIB = "container-lib";
+  public static final String ASTER_CLIENT_LIB = "aster-client-lib";
+
   public static final String STREAMSETS_LIBS = "streamsets-libs";
   public static final String USER_LIBS = "user-libs";
   public static final String SDC_USER_LIBS = "sdc-user-libs";

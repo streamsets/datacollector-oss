@@ -253,6 +253,27 @@ public class TestRuntimeInfo {
   }
 
   @Test
+  public void testRuntimeInfoAsterClientDir() {
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR, "w");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.CONFIG_DIR, "x");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.LOG_DIR, "y");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.RESOURCES_DIR, "r");
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR,
+        new File("target", UUID.randomUUID().toString()).getAbsolutePath());
+    String asterDir = new File("target", UUID.randomUUID().toString()).getAbsolutePath();
+    System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.ASTER_CLIENT_LIB_DIR, asterDir);
+    List<? extends ClassLoader> customCLs = Arrays.asList(new URLClassLoader(new URL[0], null));
+    RuntimeInfo info = new StandaloneRuntimeInfo(
+        RuntimeInfo.SDC_PRODUCT,
+        RuntimeModule.SDC_PROPERTY_PREFIX,
+        new MetricRegistry(),
+        customCLs
+    );
+    info.init();
+    Assert.assertEquals(asterDir, info.getAsterClientDir());
+  }
+
+  @Test
   public void testApiGatewayMethods() throws Exception {
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(
         RuntimeInfo.SDC_PRODUCT,
