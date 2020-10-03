@@ -15,10 +15,13 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.api.client.util.Lists;
+import com.google.common.base.Splitter;
 import com.streamsets.datacollector.bundles.BundleType;
 import com.streamsets.datacollector.bundles.SupportBundleManager;
 import com.streamsets.datacollector.bundles.SupportBundle;
 import com.streamsets.datacollector.cli.sch.SchAdmin;
+import com.streamsets.datacollector.inspector.HealthInspectorManager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
@@ -325,6 +328,36 @@ public class AdminResource {
     map.put("resourcesDir", runtimeInfo.getResourcesDir());
     map.put("libsExtraDir", runtimeInfo.getLibsExtraDir());
     return Response.ok(map).build();
+  }
+
+  @GET
+  @Path("/health/inspectors")
+  @ApiOperation(value = "Get list of available health inspectors", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response getHealthInspector() throws IOException {
+    HealthInspectorManager healthInspector = new HealthInspectorManager(
+        config,
+        runtimeInfo
+    );
+    return Response.ok(healthInspector.availableInspectors()).build();
+  }
+
+  @GET
+  @Path("/health/run")
+  @ApiOperation(value = "Inspects health of the Data Collector instance.", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @Produces(MediaType.APPLICATION_JSON)
+  @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
+  public Response getHealthInspector(
+      @QueryParam("inspectors") @DefaultValue("") String inspectors
+  ) throws IOException {
+    HealthInspectorManager healthInspector = new HealthInspectorManager(
+        config,
+        runtimeInfo
+    );
+    return Response.ok(
+        healthInspector.inspectHealth(Lists.newArrayList(Splitter.on(" , ").trimResults().omitEmptyStrings().split(inspectors)))
+    ).build();
   }
 
   @GET
