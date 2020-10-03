@@ -20,6 +20,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.http.WebServerTask;
 import com.streamsets.datacollector.metrics.MetricsModule;
+import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.security.usermgnt.UsersManager;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -59,9 +60,7 @@ public class RuntimeModule {
   public static final String PIPELINE_EXECUTION_MODE_KEY = "pipeline.execution.mode";
   private static List<ClassLoader> stageLibraryClassLoaders = Collections.emptyList();//ImmutableList.of(RuntimeModule.class.getClassLoader());
 
-  private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
   private static final String STAGE_CONFIG_PREFIX = "stage.conf_";
-  private static final int DEFAULT_MAX_RUNNERS = 50;
 
   public static synchronized void setStageLibraryClassLoaders(List<? extends ClassLoader> classLoaders) {
     stageLibraryClassLoaders = ImmutableList.copyOf(classLoaders);
@@ -106,8 +105,8 @@ public class RuntimeModule {
     RuntimeInfo.loadOrReloadConfigs(runtimeInfo, conf);
 
     // remapping max runner config so it is available to stages
-    int maxRunners = conf.get(MAX_RUNNERS_CONFIG_KEY, DEFAULT_MAX_RUNNERS);
-    conf.set(STAGE_CONFIG_PREFIX + MAX_RUNNERS_CONFIG_KEY, maxRunners);
+    int maxRunners = conf.get(Pipeline.MAX_RUNNERS_CONFIG_KEY, Pipeline.MAX_RUNNERS_DEFAULT);
+    conf.set(STAGE_CONFIG_PREFIX + Pipeline.MAX_RUNNERS_CONFIG_KEY, maxRunners);
 
     return conf;
   }

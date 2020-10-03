@@ -110,10 +110,10 @@ import java.util.Map;
 @RequiresCredentialsDeployed
 public class PreviewResource {
   private static final Logger LOG = LoggerFactory.getLogger(PreviewResource.class);
-  private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
-  private static final int MAX_BATCH_SIZE_DEFAULT = 1000;
-  private static final String MAX_BATCHES_KEY = "preview.maxBatches";
-  private static final int MAX_BATCHES_DEFAULT = 10;
+  public static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
+  public static final int MAX_BATCH_SIZE_DEFAULT = 1000;
+  public static final String MAX_BATCHES_KEY = "preview.maxBatches";
+  public static final int MAX_BATCHES_DEFAULT = 10;
 
   //TODO: look into avoiding duplicating constants with DPM (com.streamsets.apps.common.Roles and ClassificationRoles)
   private static final List<String> DYNAMIC_PREVIEW_ALLOWED_ROLES_CLASSIFICATION = Arrays.asList(

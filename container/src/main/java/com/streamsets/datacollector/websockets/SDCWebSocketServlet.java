@@ -50,8 +50,8 @@ public class SDCWebSocketServlet extends WebSocketServlet implements WebSocketCr
   private BlockingQueue<WebSocketMessage> queue;
   private ScheduledExecutorService executorService;
 
-  private static final String MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_KEY = "max.webSockets.concurrent.requests";
-  private static final int MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_DEFAULT = 50;
+  public static final String MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_KEY = "max.webSockets.concurrent.requests";
+  public static final int MAX_WEB_SOCKETS_CONCURRENT_REQUESTS_DEFAULT = 50;
   protected static volatile int webSocketClients;
 
   public SDCWebSocketServlet(Configuration configuration, RuntimeInfo runtimeInfo,

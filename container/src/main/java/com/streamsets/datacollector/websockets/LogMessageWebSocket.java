@@ -39,8 +39,8 @@ import java.util.Map;
 public class LogMessageWebSocket extends WebSocketAdapter {
   public static final String TYPE = "log";
   private final static Logger LOG = LoggerFactory.getLogger(LogMessageWebSocket.class);
-  private static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
-  private static final int MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT = 5;
+  public static final String MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY = "max.logtail.concurrent.requests";
+  public static final int MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT = 5;
 
   private static volatile int logTailClients;
   private final Configuration config;

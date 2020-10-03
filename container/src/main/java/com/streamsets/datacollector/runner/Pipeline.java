@@ -79,8 +79,8 @@ public class Pipeline {
   private static final Logger LOG = LoggerFactory.getLogger(Pipeline.class);
   private static final String EXECUTION_MODE_CONFIG_KEY = "executionMode";
   private static final String DELIVERY_GUARANTEE_CONFIG_KEY = "deliveryGuarantee";
-  private static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
-  private static final int MAX_RUNNERS_DEFAULT = 50;
+  public static final String MAX_RUNNERS_CONFIG_KEY = "pipeline.max.runners.count";
+  public static final int MAX_RUNNERS_DEFAULT = 50;
   private static final String FRAMEWORK_NAME = "Framework";
 
   private final StageLibraryTask stageLib;

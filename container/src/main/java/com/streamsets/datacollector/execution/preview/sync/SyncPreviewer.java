@@ -38,6 +38,7 @@ import com.streamsets.datacollector.execution.runner.common.PipelineStopReason;
 import com.streamsets.datacollector.lineage.LineagePublisherTask;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.restapi.PreviewResource;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
 import com.streamsets.datacollector.runner.SourceOffsetTracker;
 import com.streamsets.datacollector.runner.StageOutput;
@@ -79,10 +80,6 @@ import java.util.function.Function;
 public class SyncPreviewer implements Previewer {
   private static final Logger LOG = LoggerFactory.getLogger(SyncPreviewer.class);
 
-  private static final String MAX_BATCH_SIZE_KEY = "preview.maxBatchSize";
-  private static final int MAX_BATCH_SIZE_DEFAULT = 10;
-  private static final String MAX_BATCHES_KEY = "preview.maxBatches";
-  private static final int MAX_BATCHES_DEFAULT = 10;
   private static final String MAX_SOURCE_PREVIEW_SIZE_KEY = "preview.maxSourcePreviewSize";
   private static final int MAX_SOURCE_PREVIEW_SIZE_DEFAULT = 4*1024;
 
@@ -367,9 +364,9 @@ public class SyncPreviewer implements Previewer {
       boolean skipLifecycleEvents,
       boolean testOrigin
   ) throws PipelineException {
-    int maxBatchSize = configuration.get(MAX_BATCH_SIZE_KEY, MAX_BATCH_SIZE_DEFAULT);
+    int maxBatchSize = configuration.get(PreviewResource.MAX_BATCH_SIZE_KEY, PreviewResource.MAX_BATCH_SIZE_DEFAULT);
     batchSize = Math.min(maxBatchSize, batchSize);
-    int maxBatches = configuration.get(MAX_BATCHES_KEY, MAX_BATCHES_DEFAULT);
+    int maxBatches = configuration.get(PreviewResource.MAX_BATCHES_KEY, PreviewResource.MAX_BATCHES_DEFAULT);
     PipelineConfiguration pipelineConf = pipelineStore.load(name, rev);
     PipelineEL.setConstantsInContext(
         pipelineConf,
