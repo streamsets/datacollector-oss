@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2020 StreamSets Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<assembly>
+  <id>sdc-common</id>
+  <formats>
+    <format>tar</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+
+    <!-- LICENSE, NOTICE, README, etc -->
+    <fileSet>
+      <directory>${basedir}/..</directory>
+      <outputDirectory>/streamsets-datacollector-${project.version}</outputDirectory>
+      <includes>
+        <include>NOTICE.txt</include>
+        <include>README.txt</include>
+        <include>LICENSE.txt</include>
+        <include>BUILDING.txt</include>
+      </includes>
+      <fileMode>0555</fileMode>
+    </fileSet>
+
+    <!-- SDC -->
+    <fileSet>
+      <directory>${basedir}/../dist/target/streamsets-datacollector-${project.version}</directory>
+      <outputDirectory>/</outputDirectory>
+      <excludes>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-aerospike*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-apache-kudu*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdh*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-cdp*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-elasticsearch_5*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-emr*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-hdp*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-influxdb*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-mapr*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-kinetica*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-omniture*/**</exclude>
+        <exclude>streamsets-datacollector-${project.version}/streamsets-libs/streamsets-datacollector-stats*/**</exclude>
+      </excludes>
+    </fileSet>
+
+  </fileSets>
+
+</assembly>

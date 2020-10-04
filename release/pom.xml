@@ -144,6 +144,23 @@
               </descriptors>
             </configuration>
           </execution>
+          <execution>
+            <id>sdc-common</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <appendAssemblyId>false</appendAssemblyId>
+              <attach>false</attach>
+              <tarLongFileMode>gnu</tarLongFileMode>
+              <finalName>streamsets-datacollector-common-${project.version}</finalName>
+              <descriptors>
+                <descriptor>src/main/assemblies/data-collector-sdc-common.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
       <plugin>
@@ -195,6 +212,9 @@
                   run gzip streamsets-datacollector-core-${project.version}.tar
                   run mv streamsets-datacollector-core-${project.version}.tar.gz streamsets-datacollector-core-${project.version}.tgz
                   sha1sum streamsets-datacollector-core-${project.version}.tgz > streamsets-datacollector-core-${project.version}.tgz.sha1
+                  run gzip streamsets-datacollector-common-${project.version}.tar
+                  run mv streamsets-datacollector-common-${project.version}.tar.gz streamsets-datacollector-common-${project.version}.tgz
+                  sha1sum streamsets-datacollector-common-${project.version}.tgz > streamsets-datacollector-common-${project.version}.tgz.sha1
                   echo
                   echo "StreamSets Data Collector tars available at:  ${targetDir}/"
                   echo
