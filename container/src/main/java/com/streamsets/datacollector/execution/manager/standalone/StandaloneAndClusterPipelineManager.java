@@ -71,7 +71,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -98,8 +97,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   @Inject PipelineStoreTask pipelineStore;
   @Inject PipelineStateStore pipelineStateStore;
   @Inject StageLibraryTask stageLibrary;
-  @Inject @Named("previewExecutor") SafeScheduledExecutorService previewExecutor;
-  @Inject @Named("runnerExecutor") SafeScheduledExecutorService runnerExecutor;
   @Inject @Named("managerExecutor") SafeScheduledExecutorService managerExecutor;
   @Inject RunnerProvider runnerProvider;
   @Inject PreviewerProvider previewerProvider;
@@ -118,6 +115,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
   private final long runnerExpiryInterval;
   private final long runnerExpiryInitialDelay;
   private ScheduledFuture<?> runnerExpiryFuture;
+  private ScheduledFuture<?> previewCleanerFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
   private final KafkaKerberosUtil kafkaKerberosUtil;
@@ -279,7 +277,7 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     );
 
     // Create a background thread to cleanup the previewerCache because guava doesn't always want to do it on its own
-    Executors.newSingleThreadScheduledExecutor().scheduleWithFixedDelay(() -> {
+    previewCleanerFuture = managerExecutor.scheduleWithFixedDelay(() -> {
       LOG.debug("Triggering previewer cache cleanup");
       previewerCache.cleanUp();
     }, 5, 5, TimeUnit.MINUTES);
@@ -432,6 +430,12 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     }
     if(runnerExpiryFuture != null) {
       runnerExpiryFuture.cancel(true);
+    }
+    if (previewCleanerFuture != null) {
+      previewCleanerFuture.cancel(true);
+    }
+    if (managerExecutor != null) {
+      managerExecutor.shutdown();
     }
     if (RuntimeInfo.SDC_PRODUCT.equals(runtimeInfo.getProductName())) {
       /**

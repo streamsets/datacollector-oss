@@ -574,8 +574,7 @@ public class Pipeline {
     private final InterceptorCreatorContextBuilder interceptorCreatorContextBuilder;
     private final StatsCollector statsCollector;
     private Observer observer;
-    private final ResourceControlledScheduledExecutor scheduledExecutor =
-        new ResourceControlledScheduledExecutor(0.01f); // consume 1% of a cpu calculating stage memory consumption
+    private final ResourceControlledScheduledExecutor scheduledExecutor = null;
     private final Map<String, ConnectionConfiguration> connections;
     private List<Issue> errors;
 
