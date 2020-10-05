@@ -41,6 +41,7 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -492,10 +493,10 @@ public class ConfigInjector {
           ok = false;
           context.createIssue(CreationError.CREATION_001, field.getType().getSimpleName(), ex.toString());
         }
-      // if field is ConfigDef with CONNECTION type, we need to do extra processing
+      // if field is ConfigDef with a non-empty connection type, we need to do extra processing
       } else if (field.getAnnotation(ConfigDef.class) != null
-              && field.getAnnotation(ConfigDef.class).type() == ConfigDef.Type.CONNECTION) {
-        // if the value of this CONNECTION config is anything other than 'MANUAL' we assume it's a connection ID
+              && StringUtils.isNotEmpty(field.getAnnotation(ConfigDef.class).connectionType())) {
+        // if the value of this connectionType config is anything other than 'MANUAL' we assume it's a connection ID
         Object configValue = context.getConfigValue(configName);
         if (context.getUser() != null && context.getConnections() != null && configValue != null
             && !((String) configValue).equalsIgnoreCase(ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)) {

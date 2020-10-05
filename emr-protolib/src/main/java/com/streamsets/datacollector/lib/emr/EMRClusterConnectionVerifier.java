@@ -38,6 +38,7 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnectionGroups;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
@@ -71,11 +72,12 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = EMRClusterConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

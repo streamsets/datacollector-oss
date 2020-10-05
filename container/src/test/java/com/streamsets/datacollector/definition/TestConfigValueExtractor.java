@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
 
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.MultiValueChooserModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
@@ -194,30 +195,53 @@ public class TestConfigValueExtractor {
     public int runtimeInteger;
 
     @ConfigDef(
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       required = true,
       label = "L",
       defaultValue = "stringValue",
       connectionType = "FOO"
     )
+    @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
     public String connection;
 
     @ConfigDef(
-      type = ConfigDef.Type.CONNECTION,
-      required = true,
-      label = "L",
-      defaultValue = "stringValue"
-    )
-    public String connectionWithoutType;
-
-    @ConfigDef(
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       required = true,
       label = "L",
       defaultValue = "5",
       connectionType = "FOO"
     )
+    @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
     public int connectionWithWrongDatatype;
+
+    @ConfigDef(
+        type = ConfigDef.Type.STRING,
+        required = true,
+        label = "L",
+        defaultValue = "5",
+        connectionType = "FOO"
+    )
+    @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+    public String connectionWithWrongType;
+
+    @ConfigDef(
+        type = ConfigDef.Type.MODEL,
+        required = true,
+        label = "L",
+        defaultValue = "5",
+        connectionType = "FOO"
+    )
+    public String connectionWithoutChooser;
+
+    @ConfigDef(
+        type = ConfigDef.Type.MODEL,
+        required = true,
+        label = "L",
+        defaultValue = "5",
+        connectionType = "FOO"
+    )
+    @ValueChooserModel(FooEnumValueChooser.class)
+    public String connectionWithWrongChooser;
   }
 
   @Test
@@ -300,11 +324,11 @@ public class TestConfigValueExtractor {
     configDef = field.getAnnotation(ConfigDef.class);
     Assert.assertEquals("stringValue", ConfigValueExtractor.get().extract(field, configDef, "x"));
 
-    field = Configs.class.getField("connectionWithoutType");
+    field = Configs.class.getField("connectionWithWrongType");
     configDef = field.getAnnotation(ConfigDef.class);
     try {
       ConfigValueExtractor.get().extract(field, configDef, "x");
-      Assert.fail("Should have failed due to missing connectionType");
+      Assert.fail("Should have failed due to wrong type");
     } catch (IllegalArgumentException e) {
       Assert.assertTrue(e.getMessage().contains("DEF_016"));
     }
@@ -315,7 +339,25 @@ public class TestConfigValueExtractor {
       ConfigValueExtractor.get().extract(field, configDef, "x");
       Assert.fail("Should have failed due to wrong datatype");
     } catch (IllegalArgumentException e) {
-      Assert.assertTrue(e.getMessage().contains("DEF_011"));
+      Assert.assertTrue(e.getMessage().contains("DEF_017"));
+    }
+
+    field = Configs.class.getField("connectionWithoutChooser");
+    configDef = field.getAnnotation(ConfigDef.class);
+    try {
+      ConfigValueExtractor.get().extract(field, configDef, "x");
+      Assert.fail("Should have failed due to missing chooser");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().contains("DEF_018"));
+    }
+
+    field = Configs.class.getField("connectionWithWrongChooser");
+    configDef = field.getAnnotation(ConfigDef.class);
+    try {
+      ConfigValueExtractor.get().extract(field, configDef, "x");
+      Assert.fail("Should have failed due to wrong chooser");
+    } catch (IllegalArgumentException e) {
+      Assert.assertTrue(e.getMessage().contains("DEF_018"));
     }
   }
 }

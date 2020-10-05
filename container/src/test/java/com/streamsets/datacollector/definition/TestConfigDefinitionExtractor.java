@@ -1043,7 +1043,7 @@ public class TestConfigDefinitionExtractor {
     @ConfigDef(
       label = "L",
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.STRING,
       connectionType = "FOO"
     )
     public String connectionSelection;

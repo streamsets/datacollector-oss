@@ -18,12 +18,14 @@ package com.streamsets.pipeline.stage.lib.kudu;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionVerifier;
 import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.common.kudu.KuduConnection;
 import com.streamsets.pipeline.stage.common.kudu.KuduConnectionGroups;
 import org.slf4j.Logger;
@@ -53,11 +55,12 @@ public class KuduConnectionVerifier extends ConnectionVerifier {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = KuduConnection.TYPE,
       defaultValue = CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

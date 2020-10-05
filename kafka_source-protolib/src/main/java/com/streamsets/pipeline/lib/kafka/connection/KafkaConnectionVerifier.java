@@ -25,6 +25,7 @@ import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import org.apache.kafka.clients.admin.AdminClient;
@@ -60,11 +61,12 @@ public class KafkaConnectionVerifier extends ConnectionVerifier {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = KafkaConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

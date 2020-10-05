@@ -39,13 +39,14 @@ public class KuduConfigBean {
   public static final String CONNECTION_PREFIX = CONF_PREFIX + "connection.";
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = KuduConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
       group = "#0",
       displayPosition = -500
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

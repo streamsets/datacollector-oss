@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.destination.kinesis.Groups;
 import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
@@ -63,11 +64,12 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = AwsKinesisFirehoseConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

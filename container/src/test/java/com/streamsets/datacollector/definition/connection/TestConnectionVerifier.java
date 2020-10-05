@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.ConnectionVerifier;
 import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +37,12 @@ public class TestConnectionVerifier extends ConnectionVerifier {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = TestConnectionDef.TestConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

@@ -31,6 +31,7 @@ import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
 import com.streamsets.pipeline.stage.GooglePubSubConnection;
@@ -62,10 +63,11 @@ public class PubSubConnectionVerifier extends ConnectionVerifier {
   private static final Logger LOG = LoggerFactory.getLogger(PubSubConnectionVerifier.class);
 
   @ConfigDef(required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = GooglePubSubConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection")
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(dependencies = {

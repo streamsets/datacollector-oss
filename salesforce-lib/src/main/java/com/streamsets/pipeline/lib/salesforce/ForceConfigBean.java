@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.salesforce.connection.SalesforceConnection;
 import com.streamsets.pipeline.lib.salesforce.connection.mutualauth.MutualAuthConfigBean;
@@ -32,13 +33,14 @@ public class ForceConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = SalesforceConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
       group = "#0",
       displayPosition = -500
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

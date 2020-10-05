@@ -316,11 +316,12 @@ public class TestPipelineBeanCreator {
 
     @ConfigDef(
         label = "L",
-        type = ConfigDef.Type.CONNECTION,
+        type = ConfigDef.Type.MODEL,
         connectionType = "MYCONN",
         defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
         required = false
     )
+    @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
     public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
     @ConfigDefBean(

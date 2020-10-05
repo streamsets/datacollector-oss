@@ -22,9 +22,12 @@ import com.streamsets.datacollector.credential.ClearCredentialValue;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.util.ElUtil;
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -85,14 +88,6 @@ public abstract class ConfigValueExtractor {
               wrapper.getMethod("valueOf", String.class).invoke(null, valueStr);
             } catch (Exception ex) {
               errors.add(new ErrorMessage(DefinitionError.DEF_013, contextMsg, valueStr));
-            }
-            break;
-          case CONNECTION:
-            if (field.getAnnotation(ConfigDef.class).connectionType().isEmpty()) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_016, contextMsg));
-            }
-            if (!String.class.isAssignableFrom(field.getType())) {
-              errors.add(new ErrorMessage(DefinitionError.DEF_011, contextMsg, field.getType()));
             }
             break;
           case STRING:
@@ -174,6 +169,19 @@ public abstract class ConfigValueExtractor {
             }
             break;
         }
+        // If connectionType is not empty, then it must be a Map field with the proper chooser and be a Java string
+        if (StringUtils.isNotEmpty(field.getAnnotation(ConfigDef.class).connectionType())) {
+          if (type != ConfigDef.Type.MODEL) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_016, contextMsg, field.getType()));
+          }
+          if (!String.class.isAssignableFrom(field.getType())) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_017, contextMsg, field.getType()));
+          }
+          ValueChooserModel chooser = field.getAnnotation(ValueChooserModel.class);
+          if (chooser == null || !chooser.value().equals(ConnectionDef.Constants.ConnectionChooserValues.class)) {
+            errors.add(new ErrorMessage(DefinitionError.DEF_018, contextMsg, field.getType()));
+          }
+        }
       }
     }
     return errors;
@@ -205,9 +213,6 @@ public abstract class ConfigValueExtractor {
                 break;
               case NUMBER:
                 value = extractAsNumber(field, valueStr);
-                break;
-              case CONNECTION:
-                value = valueStr;
                 break;
               case STRING:
               case MODEL:

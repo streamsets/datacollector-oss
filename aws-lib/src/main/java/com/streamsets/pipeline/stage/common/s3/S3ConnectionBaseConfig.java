@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
 import com.streamsets.pipeline.stage.origin.s3.Groups;
@@ -41,13 +42,14 @@ public abstract class S3ConnectionBaseConfig {
 
   @ConfigDef(
     required = true,
-    type = ConfigDef.Type.CONNECTION,
+    type = ConfigDef.Type.MODEL,
     connectionType = AwsS3Connection.TYPE,
     defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
     label = "Connection",
     group = "#0",
     displayPosition = -500
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(

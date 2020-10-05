@@ -583,7 +583,7 @@ public class PipelineConfigBean implements Stage {
   // but for the connection field (below) to work properly, it must be defined
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = EMRClusterConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
@@ -592,6 +592,7 @@ public class PipelineConfigBean implements Stage {
       dependsOn = "executionMode",
       triggeredByValue = "EMR_BATCH"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String sdcEmrConnectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   // we have to have two separate connection objects for Data Collector and Transformer here, because
@@ -632,7 +633,7 @@ public class PipelineConfigBean implements Stage {
   // and only Transformer supports using EMR connection selection (see SDC-15722), so this selection field is visible
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.CONNECTION,
+      type = ConfigDef.Type.MODEL,
       connectionType = EMRClusterConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
@@ -641,6 +642,7 @@ public class PipelineConfigBean implements Stage {
       dependsOn = "clusterConfig.clusterType",
       triggeredByValue = "EMR"
   )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String transformerEmrConnectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(
