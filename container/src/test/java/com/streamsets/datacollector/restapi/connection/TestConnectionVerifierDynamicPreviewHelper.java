@@ -32,9 +32,12 @@ import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionPreviewJson
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -181,6 +184,32 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     Assert.assertEquals(pipelineId, deleteEvent.getName());
     Assert.assertEquals("admin", deleteEvent.getUser());
     Assert.assertEquals("0", deleteEvent.getRev());
+  }
+
+  @Rule
+  public ExpectedException testGetVerifierDynamicPreviewPipelineVerifierIsNullRule = ExpectedException.none();
+
+  @Test
+  public void getVerifierDynamicPreviewPipelineVerifierIsNull() throws IOException {
+    testGetVerifierDynamicPreviewPipelineVerifierIsNullRule.expect(StageException.class);
+    testGetVerifierDynamicPreviewPipelineVerifierIsNullRule.expectMessage("Error executing dynamic preview: could not " +
+        "find verifier definition");
+
+    ArrayList<ConfigConfigurationJson> config = new ArrayList<>();
+    config.add(new ConfigConfigurationJson("awsConfig.credentialMode", "WITH_CREDENTIALS"));
+    config.add(new ConfigConfigurationJson("awsConfig.awsAccessKeyId", "test-key"));
+    config.add(new ConfigConfigurationJson("awsConfig.awsSecretAccessKey", "test-secret"));
+
+    ConnectionDefinitionPreviewJson connectionWithNoVerifier = new ConnectionDefinitionPreviewJson(
+        "1",
+        "STREAMSETS_AWS_S3",
+        config,
+        null,
+        "streamsets-datacollector-aws-lib"
+    );
+    connection.setConnectionId(UUID.randomUUID().toString());
+
+    verifierPreviewHelper.getVerifierDynamicPreviewPipeline(connectionWithNoVerifier);
   }
 
   @Test

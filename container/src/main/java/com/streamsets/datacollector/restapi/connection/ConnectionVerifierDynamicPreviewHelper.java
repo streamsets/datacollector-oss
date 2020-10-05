@@ -27,6 +27,7 @@ import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
@@ -36,6 +37,7 @@ import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -71,6 +73,9 @@ public class ConnectionVerifierDynamicPreviewHelper {
     PipelineConfigurationJson pipelineTemplateConfig = pipelineTemplate.getPipelineConfig();
 
     // build verifier stage and replace the raw data origin with it
+    if(connection.getVerifierDefinition() == null) {
+      throw new StageException(PreviewError.PREVIEW_0106);
+    }
     List<ConfigConfigurationJson> verifierConfig = new ArrayList<>();
     verifierConfig.add(new ConfigConfigurationJson(
         connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName(),
