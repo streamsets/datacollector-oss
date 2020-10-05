@@ -31,7 +31,9 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
     icon = "httpclient.png",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.EDGE},
     resetOffset = true,
-    recordsByRef = true,
+    // Must avoid using the records by reference otherwise we will fall into ESC-999 when using the "KeepAllFields"
+    // config and cloning the original record got by the parser.
+    recordsByRef = false,
     upgrader = HttpClientSourceUpgrader.class,
     upgraderDef = "upgrader/HttpClientDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_akl_rkz_5r"
