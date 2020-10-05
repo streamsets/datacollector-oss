@@ -35,8 +35,6 @@ import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisConnectionGroups;
 import com.streamsets.pipeline.stage.lib.kinesis.AwsKinesisFirehoseConnection;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +58,6 @@ import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.REGION_PATTE
     connectionSelectionFieldName = "connectionSelection"
 )
 public class KinesisFirehoseVerifier extends ConnectionVerifier {
-  private final static Logger LOG = LoggerFactory.getLogger(KinesisFirehoseVerifier.class);
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String STREAM_EXIST_PREFIX = "streamsets-kinesis-veri-";
 
@@ -87,17 +84,16 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(AWSKinesisUtil
-          .getCredentialsProvider(connection.awsConfig));
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
+          AWSKinesisUtil.getCredentialsProvider(connection.awsConfig));
 
       if (connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(connection.endpoint);
         if (matcher.find()) {
-          builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint.substring(matcher.start(),
-              matcher.end()
-          ), matcher.group(1)));
+          builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint, null));
         } else {
-          issues.add(getContext().createConfigIssue(com.streamsets.pipeline.stage.destination.kinesis.Groups.KINESIS.name(),
+          issues.add(getContext().createConfigIssue(
+              com.streamsets.pipeline.stage.destination.kinesis.Groups.KINESIS.name(),
               "connection",
               Errors.KINESIS_19
           ));

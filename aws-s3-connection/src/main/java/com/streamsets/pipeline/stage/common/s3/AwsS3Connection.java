@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
     label = "Amazon S3",
     type = AwsS3Connection.TYPE,
     description = "Connects to Amazon S3",
-    version = 1,
+    version = 2,
     upgraderDef = "upgrader/AwsS3Connection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )

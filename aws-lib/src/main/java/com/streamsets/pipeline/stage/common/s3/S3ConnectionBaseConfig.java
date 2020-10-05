@@ -37,7 +37,7 @@ import java.util.List;
 public abstract class S3ConnectionBaseConfig {
 
   public static final String AWS_CONFIG_PREFIX = "connection.awsConfig.";
-  private final static Logger LOG = LoggerFactory.getLogger(S3ConnectionBaseConfig.class);
+  private static final Logger LOG = LoggerFactory.getLogger(S3ConnectionBaseConfig.class);
 
   @ConfigDef(
     required = true,
@@ -60,38 +60,34 @@ public abstract class S3ConnectionBaseConfig {
   )
   public AwsS3Connection connection;
 
-  @ConfigDef(
-    required = false,
-    type = ConfigDef.Type.STRING,
-    label = "Common Prefix",
-    description = "",
-    displayPosition = 30,
-    group = "#0"
-  )
+  @ConfigDef(displayMode = ConfigDef.DisplayMode.BASIC,
+      required = false,
+      type = ConfigDef.Type.STRING,
+      label = "Common Prefix",
+      description = "",
+      displayPosition = 30,
+      group = "#0")
   public String commonPrefix;
 
-  @ConfigDef(
-    required = true,
-    type = ConfigDef.Type.STRING,
-    label = "Delimiter",
-    description = "",
-    defaultValue = "/",
-    displayPosition = 40,
-    displayMode = ConfigDef.DisplayMode.ADVANCED,
-    group = "#0"
-  )
+  @ConfigDef(required = true,
+      type = ConfigDef.Type.STRING,
+      label = "Delimiter",
+      description = "",
+      defaultValue = "/",
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0")
   public String delimiter;
 
-  @ConfigDef(
-      required = false,
+  @ConfigDef(required = false,
       type = ConfigDef.Type.BOOLEAN,
       label = "Use Path Style Address Model",
       defaultValue = "false",
-      description = "If checked data is accessed using https://<s3_server>/<bucket>/<path>.  If unchecked, data is accessed using Virtual Model style of https://<bucket>.<s3_server>/<path>",
+      description = "If checked data is accessed using https://<s3_server>/<bucket>/<path>.  If unchecked, data is " +
+          "accessed using Virtual Model style of https://<bucket>.<s3_server>/<path>",
       displayPosition = 50,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0"
-  )
+      group = "#0")
   public boolean usePathAddressModel = false;
 
   private AmazonS3 s3Client;
@@ -100,8 +96,7 @@ public abstract class S3ConnectionBaseConfig {
     return s3Client;
   }
 
-  /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3)
-   */
+  /* Max Error retries >=0 are set in ClientConfig for S3Client, < 0 will use default (3) */
   public void init(
       Stage.Context context,
       String configPrefix,

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.s3;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -179,10 +180,15 @@ public class S3ConfigBean {
 
   private void validateBucket(Stage.Context context, List<Stage.ConfigIssue> issues, AmazonS3 s3Client,
                               String bucket, String groupName, String configName) {
-    if(bucket == null || bucket.isEmpty()) {
-      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_11));
-    } else if (!s3Client.doesBucketExist(bucket)) {
-      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_12, bucket));
+    try {
+      if (bucket == null || bucket.isEmpty()) {
+        issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_11));
+      } else if (!s3Client.doesBucketExistV2(bucket)) {
+        issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_12, bucket));
+      }
+    } catch (SdkClientException e) {
+      issues.add(context.createConfigIssue(groupName, configName,
+          com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_20, e));
     }
   }
 
@@ -190,7 +196,7 @@ public class S3ConfigBean {
                                             String groupName, String configName, List<Stage.ConfigIssue> issues) {
     //should be non null, non-empty and different from source prefix
     if (postProcessPrefix == null || postProcessPrefix.isEmpty()) {
-      issues.add(context.createConfigIssue(groupName, configName, com.streamsets.pipeline.stage.origin.s3.Errors.S3_SPOOLDIR_13));
+      issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_13));
     } else if((postProcessBucket + s3Config.delimiter + postProcessPrefix)
       .equals(s3Config.bucket + s3Config.delimiter + s3Config.commonPrefix)) {
       issues.add(context.createConfigIssue(groupName, configName, Errors.S3_SPOOLDIR_14,

@@ -51,7 +51,7 @@ import java.util.UUID;
     connectionSelectionFieldName = "connectionSelection"
 )
 public class AwsS3ConnectionVerifier extends ConnectionVerifier {
-  private final static Logger LOG = LoggerFactory.getLogger(AwsS3ConnectionVerifier.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AwsS3ConnectionVerifier.class);
 
   // Important: if changing this, its length + the UUID (36) cannot be longer than 63 characters!
   private static final String BUCKET_EXIST_PREFIX = "streamsets-s3-conn-veri-";

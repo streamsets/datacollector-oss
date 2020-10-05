@@ -19,7 +19,6 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -34,8 +33,6 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.common.s3.AwsS3Connection;
-import com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier;
 import com.streamsets.pipeline.stage.common.sqs.AwsSqsConnection;
 import com.streamsets.pipeline.stage.common.sqs.AwsSqsConnectionGroups;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
@@ -62,7 +59,7 @@ import java.util.List;
 )
 public class AwsSqsConnectionVerifier extends ConnectionVerifier {
 
-  private final static Logger LOG = LoggerFactory.getLogger(AwsSqsConnectionVerifier.class);
+  private static final Logger LOG = LoggerFactory.getLogger(AwsSqsConnectionVerifier.class);
   
   private static final String SQS_CONNECTION_CONFIG_PREFIX = "connection";
 
@@ -130,7 +127,6 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
           builder.withRegion(connection.region.getId());
         }
 
-
         try {
           AmazonSQS validationClient = builder.build();
           // We don't actually care if there are queues or not, we're only interested in if this will throw an Exception
@@ -144,7 +140,6 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
               e
           ));
         }
-
       }
     }
 

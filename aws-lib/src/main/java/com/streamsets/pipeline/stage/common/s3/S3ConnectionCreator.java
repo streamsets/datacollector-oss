@@ -21,17 +21,21 @@ import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.origin.s3.Errors;
 import com.streamsets.pipeline.stage.origin.s3.Groups;
 
 import java.util.List;
 
-public abstract class S3ConnectionCreator {
+public class S3ConnectionCreator {
+
+  private S3ConnectionCreator() {
+    //Private empty constructor
+  }
 
   public static void destroyS3Client(AmazonS3 s3Client) {
-    if(s3Client != null) {
+    if (s3Client != null) {
       s3Client.shutdown();
     }
   }
@@ -53,7 +57,8 @@ public abstract class S3ConnectionCreator {
       String configPrefix,
       List<Stage.ConfigIssue> issues,
       int maxErrorRetries,
-      boolean usePathAddressModel) {
+      boolean usePathAddressModel
+  ) {
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig);
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(connection.proxyConfig);
 
@@ -61,12 +66,11 @@ public abstract class S3ConnectionCreator {
       clientConfig.setMaxErrorRetry(maxErrorRetries);
     }
 
-    AmazonS3ClientBuilder builder = AmazonS3ClientBuilder
-        .standard()
-        .withCredentials(credentials)
-        .withClientConfiguration(clientConfig)
-        .withChunkedEncodingDisabled(connection.awsConfig.disableChunkedEncoding)
-        .withPathStyleAccessEnabled(usePathAddressModel);
+    AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard()
+                                                         .withCredentials(credentials)
+                                                         .withClientConfiguration(clientConfig)
+                                                         .withChunkedEncodingDisabled(connection.awsConfig.disableChunkedEncoding)
+                                                         .withPathStyleAccessEnabled(usePathAddressModel);
 
     if (connection.useRegion) {
       if (connection.region == AwsRegion.OTHER) {

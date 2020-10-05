@@ -18,12 +18,11 @@ package com.streamsets.pipeline.stage.origin.kinesis;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cloudwatch.AmazonCloudWatch;
-import com.amazonaws.services.cloudwatch.AmazonCloudWatchClient;
+import com.amazonaws.services.cloudwatch.AmazonCloudWatchClientBuilder;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
 import com.amazonaws.services.dynamodbv2.document.DynamoDB;
 import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
@@ -53,19 +52,20 @@ import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BasePushSource;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
 import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
+import com.streamsets.pipeline.stage.lib.kinesis.AdditionalClientConfiguration;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
-import com.streamsets.pipeline.stage.lib.kinesis.AdditionalClientConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -108,7 +108,6 @@ public class KinesisSource extends BasePushSource {
   private IMetricsFactory metricsFactory = null;
   private Worker worker;
   private AtomicBoolean resetOffsetAttempted;
-  private Map<String, String> kinesisConsumerValidConfigurations;
 
   public KinesisSource(KinesisConsumerConfigBean conf) {
     this.conf = conf;
@@ -129,7 +128,7 @@ public class KinesisSource extends BasePushSource {
       return issues;
     }
 
-    kinesisConsumerValidConfigurations = conf.kinesisConsumerConfigs;
+    Map<String, String> kinesisConsumerValidConfigurations = conf.kinesisConsumerConfigs;
     for (Map.Entry<String, String> property : conf.kinesisConsumerConfigs.entrySet()) {
       if (!AdditionalClientConfiguration.propertyExists(property.getKey())) {
         issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
@@ -163,8 +162,11 @@ public class KinesisSource extends BasePushSource {
     }
 
     if (kinesisConsumerValidConfigurations != null) {
-      clientConfiguration = AWSKinesisUtil.addAdditionalClientConfiguration(clientConfiguration,
-          kinesisConsumerValidConfigurations, issues, getContext());
+      AWSKinesisUtil.addAdditionalClientConfiguration(clientConfiguration,
+          kinesisConsumerValidConfigurations,
+          issues,
+          getContext()
+      );
 
       if (clientConfigurationCredentialsCorrect) {
         try {
@@ -200,49 +202,64 @@ public class KinesisSource extends BasePushSource {
       parserFactory = conf.dataFormatConfig.getParserFactory();
     }
 
-    try {
-      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig);
-    } catch (StageException ex) {
-      LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
-      issues.add(getContext().createConfigIssue(
-          Groups.KINESIS.name(),
-          KINESIS_CONFIG_BEAN_CONNECTION + ".awsConfig.awsAccessKeyId",
-          Errors.KINESIS_12,
-          ex.toString()
-      ));
-    }
-
-    // KCL currently requires a mutable client
-    dynamoDBClient = new AmazonDynamoDBClient(credentials, clientConfiguration);
-    cloudWatchClient = new AmazonCloudWatchClient(credentials, clientConfiguration);
-    Region region = null;
-    if (conf.connection.region == AwsRegion.OTHER) {
-      Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
-      if (matcher.find()) {
-        region = Region.getRegion(Regions.valueOf(matcher.group(1).toUpperCase().replaceAll("-", "_")));
-      } else {
-        issues.add(getContext().createConfigIssue(
-            com.streamsets.pipeline.stage.destination.kinesis.Groups.KINESIS.name(),
-            KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
-            Errors.KINESIS_19
-        ));
-      }
-    } else {
-      region = Region.getRegion(Regions.valueOf(conf.connection.region.name()));
-    }
-    if (region != null) {
-      dynamoDBClient.setRegion(region);
-      cloudWatchClient.setRegion(region);
-    }
+    issues.addAll(buildDynamoAndCloudWatchClients());
 
     resetOffsetAttempted = new AtomicBoolean(false);
 
     kclConfig = new KinesisClientLibConfiguration(conf.applicationName, conf.streamName, credentials, getWorkerId());
     if (kinesisConsumerValidConfigurations != null) {
-      kclConfig = KinesisUtil.addAdditionalKinesisClientConfiguration(kclConfig, kinesisConsumerValidConfigurations,
-          issues, getContext());
+      KinesisUtil.addAdditionalKinesisClientConfiguration(kclConfig,
+          kinesisConsumerValidConfigurations,
+          issues,
+          getContext()
+      );
     }
 
+    return issues;
+  }
+
+  private List<ConfigIssue> buildDynamoAndCloudWatchClients() {
+    List<ConfigIssue> issues = new ArrayList<>();
+    try {
+      // KCL currently requires a mutable client
+      AmazonDynamoDBClientBuilder dynamoBuilder = AmazonDynamoDBClientBuilder.standard().withClientConfiguration(
+          clientConfiguration);
+
+      AmazonCloudWatchClientBuilder cloudWatchBuilder = AmazonCloudWatchClientBuilder.standard()
+                                                                                     .withClientConfiguration(
+                                                                                         clientConfiguration);
+
+      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig);
+
+
+      if (conf.connection.region == AwsRegion.OTHER) {
+        Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
+        if (matcher.find()) {
+          Regions region = Regions.valueOf(matcher.group(1).toUpperCase().replace("-", "_"));
+          dynamoBuilder.withRegion(region).withCredentials(credentials);
+          cloudWatchBuilder.withRegion(region).withCredentials(credentials);
+        } else {
+          issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
+              KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
+              Errors.KINESIS_19
+          ));
+        }
+      } else {
+        Regions region = Regions.valueOf(conf.connection.region.name());
+        dynamoBuilder.withRegion(region).withCredentials(credentials);
+        cloudWatchBuilder.withRegion(region).withCredentials(credentials);
+      }
+
+      dynamoDBClient = dynamoBuilder.build();
+      cloudWatchClient = cloudWatchBuilder.build();
+    } catch (StageException ex) {
+      LOG.error(Utils.format(Errors.KINESIS_12.getMessage(), ex.toString()), ex);
+      issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
+          KINESIS_CONFIG_BEAN_CONNECTION + ".awsConfig.awsAccessKeyId",
+          Errors.KINESIS_12,
+          ex.toString()
+      ));
+    }
     return issues;
   }
 
@@ -310,7 +327,7 @@ public class KinesisSource extends BasePushSource {
 
   private void previewProcess(
       int maxBatchSize, BatchMaker batchMaker
-  ) throws IOException, StageException {
+  ) throws IOException {
     String shardId = KinesisUtil.getLastShardId(clientConfiguration, conf, conf.streamName);
 
     GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
@@ -389,7 +406,7 @@ public class KinesisSource extends BasePushSource {
   }
 
   @Override
-  public void produce(Map<String, String> lastOffsets, int maxBatchSize) throws StageException {
+  public void produce(Map<String, String> lastOffsets, int maxBatchSize) {
     if (getContext().isPreview()) {
       try {
         BatchContext previewBatchContext = getContext().startBatch();
@@ -442,7 +459,7 @@ public class KinesisSource extends BasePushSource {
     }
   }
 
-  private void createLeaseTableIfNotExists() throws StageException {
+  private void createLeaseTableIfNotExists() {
     // Lease table doesn't need creation
     if (leaseTableExists()) {
       return;
@@ -513,7 +530,7 @@ public class KinesisSource extends BasePushSource {
     return tableStatus == TableStatus.ACTIVE;
   }
 
-  private void resetOffsets(Map<String, String> lastOffsets) throws StageException {
+  private void resetOffsets(Map<String, String> lastOffsets) {
     if (lastOffsets.isEmpty() && !resetOffsetAttempted.getAndSet(true)) {
       DynamoDB dynamoDB = new DynamoDB(dynamoDBClient);
       Table offsetTable = dynamoDB.getTable(conf.applicationName);

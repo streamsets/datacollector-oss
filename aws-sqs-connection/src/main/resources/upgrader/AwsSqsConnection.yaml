@@ -16,5 +16,18 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: awsConfig.isAssumeRole
+          value: false
+      - setConfig:
+          name: awsConfig.roleARN
+          value: "arn:aws:iam::<account-id>:role/role-name"
+      - setConfig:
+          name: awsConfig.roleSessionName
+          value: ""
+      - setConfig:
+          name: awsConfig.sessionDuration
+          value: 3600

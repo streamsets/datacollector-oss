@@ -31,7 +31,6 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
@@ -41,6 +40,7 @@ import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.destination.lib.ResponseType;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.ExpressionPartitioner;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
@@ -134,9 +134,9 @@ public class KinesisTarget extends BaseTarget {
       );
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
       try {
-        KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration
-            .fromProperties(additionalConfigs)
-            .setCredentialsProvider(AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig));
+        KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration.fromProperties(additionalConfigs)
+                                                                                  .setCredentialsProvider(AWSKinesisUtil
+                                                                                      .getCredentialsProvider(conf.connection.awsConfig));
 
         if (conf.connection.region == AwsRegion.OTHER) {
           Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);

@@ -20,10 +20,10 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.amazonaws.retry.RetryMode;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.kinesis.AdditionalClientConfiguration;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil.KINESIS_CONFIG_BEAN;
 
@@ -45,7 +46,7 @@ public class AWSKinesisUtil {
 
   private AWSKinesisUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
       if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
@@ -53,11 +54,16 @@ public class AWSKinesisUtil {
             config.awsSecretAccessKey.get()
         ));
       }
+    } else if (config.credentialMode == AWSCredentialMode.WITH_IAM_ROLES && config.isAssumeRole) {
+      credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(
+          config.roleARN.get(),
+          config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
+      ).withRoleSessionDurationSeconds(config.sessionDuration).build();
     }
     return credentialsProvider;
   }
 
-  public static ClientConfiguration getClientConfiguration(ProxyConfig config) throws StageException {
+  public static ClientConfiguration getClientConfiguration(ProxyConfig config) {
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     clientConfig.setConnectionTimeout(config.connectionTimeout * MILLIS);
@@ -65,20 +71,19 @@ public class AWSKinesisUtil {
     clientConfig.withMaxErrorRetry(config.retryCount);
 
     // Optional proxy settings
-    if (config.useProxy) {
-      if (config.proxyHost != null && !config.proxyHost.isEmpty()) {
-        clientConfig.setProxyHost(config.proxyHost);
-        clientConfig.setProxyPort(config.proxyPort);
+    if (config.useProxy && config.proxyHost != null && !config.proxyHost.isEmpty()) {
+      clientConfig.setProxyHost(config.proxyHost);
+      clientConfig.setProxyPort(config.proxyPort);
 
-        if (config.proxyUser != null && !config.proxyUser.get().isEmpty()) {
-          clientConfig.setProxyUsername(config.proxyUser.get());
-        }
+      if (config.proxyUser != null && !config.proxyUser.get().isEmpty()) {
+        clientConfig.setProxyUsername(config.proxyUser.get());
+      }
 
-        if (config.proxyPassword != null) {
-          clientConfig.setProxyPassword(config.proxyPassword.get());
-        }
+      if (config.proxyPassword != null) {
+        clientConfig.setProxyPassword(config.proxyPassword.get());
       }
     }
+
     return clientConfig;
   }
 
@@ -106,7 +111,7 @@ public class AWSKinesisUtil {
     configs.addAll(configsToAdd);
   }
 
-  public static ClientConfiguration addAdditionalClientConfiguration(
+  public static void addAdditionalClientConfiguration(
       ClientConfiguration conf, Map<String, String> additionalConfiguration, List<Stage.ConfigIssue> issues,
       Stage.Context context) {
     for (Map.Entry<String, String> property : additionalConfiguration.entrySet()) {
@@ -159,6 +164,5 @@ public class AWSKinesisUtil {
         ));
       }
     }
-    return conf;
   }
 }

@@ -21,37 +21,58 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.streamsets.pipeline.api.Config;
-import com.streamsets.pipeline.api.StageException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class AWSUtil {
   private static final String WILDCARD_PATTERN = ".*[\\*\\?].*";
   private static final int MILLIS = 1000;
+
   private AWSUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) throws StageException {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
+    AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     final String accessKeyId = config.awsAccessKeyId != null ? config.awsAccessKeyId.get() : null;
     final String secretAccessKey = config.awsSecretAccessKey != null ? config.awsSecretAccessKey.get() : null;
-    return getCredentialsProvider(config.credentialMode, accessKeyId, secretAccessKey);
+
+    switch (config.credentialMode) {
+      case WITH_CREDENTIALS:
+        if (!StringUtils.isEmpty(accessKeyId) && !StringUtils.isEmpty(secretAccessKey)) {
+          credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey));
+        }
+        break;
+      case WITH_IAM_ROLES:
+        if (config.isAssumeRole) {
+          credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(
+              config.roleARN.get(),
+              config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
+          ).withRoleSessionDurationSeconds(config.sessionDuration).build();
+        }
+        break;
+      case WITH_ANONYMOUS_CREDENTIALS:
+        credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
+        break;
+    }
+
+    return credentialsProvider;
   }
 
   public static AWSCredentialsProvider getCredentialsProvider(
-      AWSCredentialMode credentialMode,
-      String accessKeyId,
-      String secretAccessKey
-  ) throws StageException {
+      AWSCredentialMode credentialMode, String accessKeyId, String secretAccessKey
+  ) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     if (credentialMode != null) {
       switch (credentialMode) {
         case WITH_CREDENTIALS:
           if (!StringUtils.isEmpty(accessKeyId) && !StringUtils.isEmpty(secretAccessKey)) {
-            credentialsProvider = new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(accessKeyId, secretAccessKey)
-            );
+            credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId,
+                secretAccessKey
+            ));
           }
           break;
         case WITH_ANONYMOUS_CREDENTIALS:
@@ -62,7 +83,7 @@ public class AWSUtil {
     return credentialsProvider;
   }
 
-  public static ClientConfiguration getClientConfiguration(ProxyConfig config) throws StageException {
+  public static ClientConfiguration getClientConfiguration(ProxyConfig config) {
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     clientConfig.setConnectionTimeout(config.connectionTimeout * MILLIS);
@@ -70,26 +91,24 @@ public class AWSUtil {
     clientConfig.withMaxErrorRetry(config.retryCount);
 
     // Optional proxy settings
-    if (config.useProxy) {
-      if (config.proxyHost != null && !config.proxyHost.isEmpty()) {
-        clientConfig.setProxyHost(config.proxyHost);
-        clientConfig.setProxyPort(config.proxyPort);
+    if (config.useProxy && config.proxyHost != null && !config.proxyHost.isEmpty()) {
+      clientConfig.setProxyHost(config.proxyHost);
+      clientConfig.setProxyPort(config.proxyPort);
 
-        if (config.proxyUser != null && !config.proxyUser.get().isEmpty()) {
-          clientConfig.setProxyUsername(config.proxyUser.get());
-        }
+      if (config.proxyUser != null && !config.proxyUser.get().isEmpty()) {
+        clientConfig.setProxyUsername(config.proxyUser.get());
+      }
 
-        if (config.proxyPassword != null && !config.proxyPassword.get().isEmpty()) {
-          clientConfig.setProxyPassword(config.proxyPassword.get());
-        }
+      if (config.proxyPassword != null && !config.proxyPassword.get().isEmpty()) {
+        clientConfig.setProxyPassword(config.proxyPassword.get());
+      }
 
-        if (config.proxyDomain != null && !config.proxyDomain.isEmpty()) {
-          clientConfig.setProxyDomain(config.proxyDomain);
-        }
+      if (config.proxyDomain != null && !config.proxyDomain.isEmpty()) {
+        clientConfig.setProxyDomain(config.proxyDomain);
+      }
 
-        if (config.proxyWorkstation != null && !config.proxyWorkstation.isEmpty()) {
-          clientConfig.setProxyWorkstation(config.proxyWorkstation);
-        }
+      if (config.proxyWorkstation != null && !config.proxyWorkstation.isEmpty()) {
+        clientConfig.setProxyWorkstation(config.proxyWorkstation);
       }
     }
     return clientConfig;

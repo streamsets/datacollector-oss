@@ -118,7 +118,7 @@ public class S3Accessor implements Closeable {
   private TransferManager transferManager;
   private EncryptionMetadataBuilder encryptionMetadataBuilder;
 
-  public void init() throws StageException {
+  public void init() {
     credentialsProvider = createCredentialsProvider();
     s3Client = createS3Client();
     if (transferManagerConfigs != null) {
@@ -138,6 +138,7 @@ public class S3Accessor implements Closeable {
   boolean hasTransferManager() {
     return transferManager != null;
   }
+
   public TransferManager getTransferManager() {
     Utils.checkState(hasTransferManager(), "transferManager not available");
     return transferManager;
@@ -148,8 +149,7 @@ public class S3Accessor implements Closeable {
   }
 
   public interface Uploader {
-
-    Upload upload(String bucket, String key, InputStream is) throws StageException;
+    Upload upload(String bucket, String key, InputStream is);
   }
 
   public Uploader getUploader() {
@@ -180,7 +180,7 @@ public class S3Accessor implements Closeable {
   }
 
   //visible for testing
-  AWSCredentialsProvider createCredentialsProvider() throws StageException {
+  AWSCredentialsProvider createCredentialsProvider() {
     AWSCredentialsProvider awsCredentialsProvider = null;
     CredentialValue accessKey = credentialConfigs.getAccessKey();
     CredentialValue secretKey = credentialConfigs.getSecretKey();
@@ -203,7 +203,7 @@ public class S3Accessor implements Closeable {
   }
 
   //visible for testing
-  ClientConfiguration createClientConfiguration() throws StageException {
+  ClientConfiguration createClientConfiguration() {
     ClientConfiguration clientConfig = new ClientConfiguration();
 
     clientConfig.setConnectionTimeout(connectionConfigs.getConnectionTimeoutMillis());
@@ -227,7 +227,7 @@ public class S3Accessor implements Closeable {
   }
 
   //visible for testing
-  AmazonS3Client createS3Client() throws StageException {
+  AmazonS3Client createS3Client() {
 
     AmazonS3ClientBuilder builder = createAmazonS3ClientBuilder().withClientConfiguration(createClientConfiguration())
                                                                  .withChunkedEncodingDisabled(connectionConfigs
@@ -269,7 +269,7 @@ public class S3Accessor implements Closeable {
   }
 
   //visible for testing
-  TransferManager createTransferManager(AmazonS3 s3Client) throws StageException {
+  TransferManager createTransferManager(AmazonS3 s3Client) {
     return createTransferManagerBuilder().withS3Client(s3Client)
                                          .withExecutorFactory(
                                              createExecutorFactory(transferManagerConfigs.getThreads())
@@ -283,7 +283,7 @@ public class S3Accessor implements Closeable {
 
   public interface EncryptionMetadataBuilder {
 
-    ObjectMetadata build() throws StageException;
+    ObjectMetadata build();
   }
 
   public EncryptionMetadataBuilder createEncryptionMetadataBuilder() {

@@ -96,10 +96,8 @@ public class KinesisUtil {
   }
 
   public static long getShardCount(
-    ClientConfiguration awsClientConfig,
-    AwsKinesisStreamConnection conn,
-    String streamName
-  ) throws StageException {
+      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection conn, String streamName
+  ) {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conn);
 
     try {
@@ -134,15 +132,13 @@ public class KinesisUtil {
     }
   }
 
-  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisStreamConfigBean conf) throws
-      StageException {
+  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisStreamConfigBean conf) {
     return getKinesisClient(awsClientConfig, conf.connection);
   }
 
   private static AmazonKinesis getKinesisClient(
-      ClientConfiguration awsClientConfig,
-      AwsKinesisStreamConnection connection
-  ) throws StageException {
+      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection connection
+  ) {
     AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder.standard().withClientConfiguration(checkNotNull(
         awsClientConfig)).withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig));
 
@@ -167,7 +163,7 @@ public class KinesisUtil {
       ClientConfiguration awsClientConfig,
       KinesisStreamConfigBean conf,
       String streamName
-  ) throws StageException {
+  ) {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
 
     String lastShardId = null;
@@ -197,7 +193,7 @@ public class KinesisUtil {
       KinesisStreamConfigBean conf,
       int maxBatchSize,
       GetShardIteratorRequest getShardIteratorRequest
-  ) throws StageException {
+  ) {
     AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
 
     GetShardIteratorResult getShardIteratorResult = kinesisClient.getShardIterator(getShardIteratorRequest);
@@ -232,7 +228,7 @@ public class KinesisUtil {
     ).getSubSequenceNumber();
   }
 
-  public static KinesisClientLibConfiguration addAdditionalKinesisClientConfiguration(
+  public static void addAdditionalKinesisClientConfiguration(
       KinesisClientLibConfiguration conf, Map<String, String> additionalConfiguration, List<Stage.ConfigIssue> issues,
       Stage.Context context
   ) {
@@ -298,7 +294,5 @@ public class KinesisUtil {
         ));
       }
     }
-    return conf;
   }
-
 }

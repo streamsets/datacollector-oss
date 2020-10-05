@@ -31,12 +31,12 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseTarget;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.lib.aws.AWSKinesisUtil;
+import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.kinesis.Errors;
 import com.streamsets.pipeline.stage.lib.kinesis.KinesisUtil;
 import org.slf4j.Logger;
@@ -89,17 +89,17 @@ public class FirehoseTarget extends BaseTarget {
 
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder
-        .standard()
-        .withCredentials(AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig));
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
+          AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig));
 
       if (conf.connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(conf.connection.endpoint);
         if (matcher.find()) {
-          builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint.substring(
+          AwsClientBuilder.EndpointConfiguration endpoint = new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint.substring(
               matcher.start(),
               matcher.end()
-          ), matcher.group(1)));
+          ), matcher.group(1));
+          builder.withEndpointConfiguration(endpoint);
         } else {
           issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
               KinesisUtil.KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
@@ -109,6 +109,7 @@ public class FirehoseTarget extends BaseTarget {
       } else {
         builder.withRegion(conf.connection.region.getId());
       }
+
       firehoseClient = builder.build();
       DescribeDeliveryStreamResult describeResult =
           firehoseClient.describeDeliveryStream(new DescribeDeliveryStreamRequest()
