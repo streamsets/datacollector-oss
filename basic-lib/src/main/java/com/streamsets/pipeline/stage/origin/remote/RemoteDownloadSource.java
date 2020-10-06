@@ -540,6 +540,15 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     Optional<RemoteFile> nextFile = Optional.empty();
     if (!fileQueue.isEmpty() && fileDelayer.isFileReady(fileQueue.first())) {
       nextFile = Optional.ofNullable(fileQueue.pollFirst());
+    } else {
+      // Backoff so that we don't query Remote server many times per second when no files are available
+      try {
+        LOG.debug("No new files available, waiting {} ms.", conf.basic.maxWaitTime);
+        Thread.sleep(conf.basic.maxWaitTime);
+      } catch(InterruptedException ex) {
+        LOG.debug("Interrupted while waiting for new files: {}", ex.getMessage());
+      }
+
     }
     return nextFile;
   }
