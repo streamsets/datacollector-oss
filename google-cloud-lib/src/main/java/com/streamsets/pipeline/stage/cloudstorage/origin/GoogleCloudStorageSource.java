@@ -165,6 +165,13 @@ public class GoogleCloudStorageSource extends BaseSource {
             noMoreDataErrorCount = 0;
             noMoreDataFileCount = 0;
           }
+          // Backoff so that we don't query GCS many times per second when no files are available
+          try {
+            LOG.debug("No new files available, waiting {} ms.", gcsOriginConfig.basicConfig.maxWaitTime);
+            Thread.sleep(gcsOriginConfig.basicConfig.maxWaitTime);
+          } catch (InterruptedException ex) {
+            LOG.debug("Interrupted while waiting for new files: {}", ex.getMessage());
+          }
           return lastSourceOffset;
         }
       } while (!isBlobEligible(blob, minTimestamp, blobGeneratedId, fileOffset));
