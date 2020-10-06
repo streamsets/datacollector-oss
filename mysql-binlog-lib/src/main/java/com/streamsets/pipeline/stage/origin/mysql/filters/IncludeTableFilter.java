@@ -34,8 +34,8 @@ public class IncludeTableFilter implements Filter {
     }
     String db = dbAndTable.substring(0, i);
     String table = dbAndTable.substring(i + 1, dbAndTable.length());
-    tableName = Pattern.compile(table.trim().toLowerCase().replaceAll("%", ".*"));
-    dbName = Pattern.compile(db.trim().toLowerCase().replaceAll("%", ".*"));
+    tableName = Pattern.compile(table.trim().toLowerCase().replaceAll("%", ".*").replace("$", "\\$"));
+    dbName = Pattern.compile(db.trim().toLowerCase().replaceAll("%", ".*").replace("$", "\\$"));
   }
 
   @Override
