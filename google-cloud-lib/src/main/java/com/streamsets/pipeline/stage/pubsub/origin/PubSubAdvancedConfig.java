@@ -37,7 +37,7 @@ public class PubSubAdvancedConfig {
       type = ConfigDef.Type.NUMBER,
       label = "Subscriber Thread Pool Size",
       description = "Size of the thread pool per Subscriber.",
-      defaultValue = "${5 * 10 * runtime:availableProcessors()}",
+      defaultValue = "1",
       min = 1,
       displayPosition = 20,
       displayMode = ConfigDef.DisplayMode.ADVANCED,

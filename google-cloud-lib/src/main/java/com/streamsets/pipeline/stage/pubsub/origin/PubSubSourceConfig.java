@@ -59,7 +59,7 @@ public class PubSubSourceConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
-      defaultValue = "${runtime:availableProcessors()}",
+      defaultValue = "1",
       label = "Num Pipeline Runners",
       description = "Maximum number of pipeline runners. Sets the parallelism of the pipeline.",
       displayPosition = 80,
