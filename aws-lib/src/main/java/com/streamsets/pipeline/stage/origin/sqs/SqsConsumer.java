@@ -92,7 +92,7 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
     try {
-      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig);
+      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig, getContext());
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "awsConfig",

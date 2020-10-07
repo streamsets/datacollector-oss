@@ -229,7 +229,7 @@ public class KinesisSource extends BasePushSource {
                                                                                      .withClientConfiguration(
                                                                                          clientConfiguration);
 
-      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig);
+      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig, getContext());
 
 
       if (conf.connection.region == AwsRegion.OTHER) {
@@ -328,7 +328,7 @@ public class KinesisSource extends BasePushSource {
   private void previewProcess(
       int maxBatchSize, BatchMaker batchMaker
   ) throws IOException {
-    String shardId = KinesisUtil.getLastShardId(clientConfiguration, conf, conf.streamName);
+    String shardId = KinesisUtil.getLastShardId(clientConfiguration, conf, conf.streamName, getContext());
 
     GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
     getShardIteratorRequest.setStreamName(conf.streamName);
@@ -347,7 +347,8 @@ public class KinesisSource extends BasePushSource {
         clientConfiguration,
         conf,
         Math.min(conf.maxBatchSize, maxBatchSize),
-        getShardIteratorRequest
+        getShardIteratorRequest,
+        getContext()
     );
 
     int batchSize = results.size() > maxBatchSize ? maxBatchSize : results.size();

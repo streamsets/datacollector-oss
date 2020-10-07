@@ -85,7 +85,7 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
     List<ConfigIssue> issues = new ArrayList<>();
     try {
       AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
-          AWSKinesisUtil.getCredentialsProvider(connection.awsConfig));
+          AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, getContext()));
 
       if (connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(connection.endpoint);

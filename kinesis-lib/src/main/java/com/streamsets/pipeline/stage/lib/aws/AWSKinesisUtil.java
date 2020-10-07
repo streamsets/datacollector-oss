@@ -22,6 +22,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
 import com.amazonaws.retry.RetryMode;
+import com.amazonaws.services.securitytoken.model.Tag;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -33,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +48,7 @@ public class AWSKinesisUtil {
 
   private AWSKinesisUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config) {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
       if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
@@ -55,10 +57,12 @@ public class AWSKinesisUtil {
         ));
       }
     } else if (config.credentialMode == AWSCredentialMode.WITH_IAM_ROLES && config.isAssumeRole) {
-      credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(
-          config.roleARN.get(),
+      credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(config.roleARN.get(),
           config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
-      ).withRoleSessionDurationSeconds(config.sessionDuration).build();
+      ).withRoleSessionDurationSeconds(config.sessionDuration)
+       .withSessionTags(Collections.singletonList(new Tag().withKey("user")
+                                                           .withValue(context.getUserContext().getUser())))
+       .build();
     }
     return credentialsProvider;
   }
@@ -112,8 +116,11 @@ public class AWSKinesisUtil {
   }
 
   public static void addAdditionalClientConfiguration(
-      ClientConfiguration conf, Map<String, String> additionalConfiguration, List<Stage.ConfigIssue> issues,
-      Stage.Context context) {
+      ClientConfiguration conf,
+      Map<String, String> additionalConfiguration,
+      List<Stage.ConfigIssue> issues,
+      Stage.Context context
+  ) {
     for (Map.Entry<String, String> property : additionalConfiguration.entrySet()) {
       try {
         switch (AdditionalClientConfiguration.getName(property.getKey())) {

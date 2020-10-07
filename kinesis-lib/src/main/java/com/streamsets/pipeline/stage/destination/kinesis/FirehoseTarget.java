@@ -90,7 +90,7 @@ public class FirehoseTarget extends BaseTarget {
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
     try {
       AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
-          AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig));
+          AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig, getContext()));
 
       if (conf.connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(conf.connection.endpoint);

@@ -59,7 +59,7 @@ public class S3ConnectionCreator {
       int maxErrorRetries,
       boolean usePathAddressModel
   ) {
-    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig);
+    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, context);
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(connection.proxyConfig);
 
     if (maxErrorRetries >= 0) {

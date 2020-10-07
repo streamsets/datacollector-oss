@@ -83,7 +83,7 @@ public class KinesisUtil {
     long numShards = 0;
 
     try {
-      numShards = getShardCount(awsClientConfig, kinesisConnection, streamName);
+      numShards = getShardCount(awsClientConfig, kinesisConnection, streamName, context);
     } catch (AmazonClientException|StageException e) {
       LOG.error(Errors.KINESIS_01.getMessage(), e.toString(), e);
       issues.add(context.createConfigIssue(Groups.KINESIS.name(),
@@ -96,9 +96,9 @@ public class KinesisUtil {
   }
 
   public static long getShardCount(
-      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection conn, String streamName
+      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection conn, String streamName, Stage.Context context
   ) {
-    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conn);
+    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conn, context);
 
     try {
       long numShards = 0;
@@ -132,15 +132,15 @@ public class KinesisUtil {
     }
   }
 
-  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisStreamConfigBean conf) {
-    return getKinesisClient(awsClientConfig, conf.connection);
+  private static AmazonKinesis getKinesisClient(ClientConfiguration awsClientConfig, KinesisStreamConfigBean conf, Stage.Context context) {
+    return getKinesisClient(awsClientConfig, conf.connection, context);
   }
 
   private static AmazonKinesis getKinesisClient(
-      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection connection
+      ClientConfiguration awsClientConfig, AwsKinesisStreamConnection connection, Stage.Context context
   ) {
     AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder.standard().withClientConfiguration(checkNotNull(
-        awsClientConfig)).withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig));
+        awsClientConfig)).withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, context));
 
     if (AwsRegion.OTHER == connection.region) {
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint, null));
@@ -162,9 +162,10 @@ public class KinesisUtil {
   public static String getLastShardId(
       ClientConfiguration awsClientConfig,
       KinesisStreamConfigBean conf,
-      String streamName
+      String streamName,
+      Stage.Context context
   ) {
-    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
+    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf, context);
 
     String lastShardId = null;
     try {
@@ -192,9 +193,10 @@ public class KinesisUtil {
       ClientConfiguration awsClientConfig,
       KinesisStreamConfigBean conf,
       int maxBatchSize,
-      GetShardIteratorRequest getShardIteratorRequest
+      GetShardIteratorRequest getShardIteratorRequest,
+      Stage.Context context
   ) {
-    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf);
+    AmazonKinesis kinesisClient = getKinesisClient(awsClientConfig, conf, context);
 
     GetShardIteratorResult getShardIteratorResult = kinesisClient.getShardIterator(getShardIteratorRequest);
     String shardIterator = getShardIteratorResult.getShardIterator();

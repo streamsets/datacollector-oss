@@ -136,7 +136,10 @@ public class KinesisTarget extends BaseTarget {
       try {
         KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration.fromProperties(additionalConfigs)
                                                                                   .setCredentialsProvider(AWSKinesisUtil
-                                                                                      .getCredentialsProvider(conf.connection.awsConfig));
+                                                                                      .getCredentialsProvider(
+                                                                                          conf.connection.awsConfig,
+                                                                                          getContext()
+                                                                                      ));
 
         if (conf.connection.region == AwsRegion.OTHER) {
           Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);

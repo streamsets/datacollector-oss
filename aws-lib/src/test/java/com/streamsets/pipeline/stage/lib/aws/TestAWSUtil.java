@@ -20,8 +20,10 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.streamsets.pipeline.api.Stage;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class TestAWSUtil {
 
@@ -32,7 +34,9 @@ public class TestAWSUtil {
     awsConfig.awsAccessKeyId = () -> "abc";
     awsConfig.awsSecretAccessKey = () -> "xyz";
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
+        Mockito.mock(Stage.Context.class)
+    );
     Assert.assertEquals("abc", credentialsProvider.getCredentials().getAWSAccessKeyId());
     Assert.assertEquals("xyz", credentialsProvider.getCredentials().getAWSSecretKey());
   }
@@ -45,7 +49,10 @@ public class TestAWSUtil {
     awsConfig.awsAccessKeyId = () -> "";
     awsConfig.awsSecretAccessKey = () -> "";
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
+        awsConfig,
+        Mockito.mock(Stage.Context.class)
+    );
     Assert.assertEquals(DefaultAWSCredentialsProviderChain.getInstance(), credentialsProvider);
   }
 
@@ -54,7 +61,10 @@ public class TestAWSUtil {
     AWSConfig awsConfig = new AWSConfig();
     awsConfig.credentialMode = AWSCredentialMode.WITH_IAM_ROLES;
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
+        awsConfig,
+        Mockito.mock(Stage.Context.class)
+    );
     Assert.assertEquals(DefaultAWSCredentialsProviderChain.getInstance(), credentialsProvider);
   }
 
@@ -63,7 +73,10 @@ public class TestAWSUtil {
     AWSConfig awsConfig = new AWSConfig();
     awsConfig.credentialMode = AWSCredentialMode.WITH_ANONYMOUS_CREDENTIALS;
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig);
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
+        awsConfig,
+        Mockito.mock(Stage.Context.class)
+    );
     Assert.assertTrue(AWSStaticCredentialsProvider.class.equals(credentialsProvider.getClass()));
     Assert.assertTrue(AnonymousAWSCredentials.class.equals(credentialsProvider.getCredentials().getClass()));
     Assert.assertNull(credentialsProvider.getCredentials().getAWSAccessKeyId());

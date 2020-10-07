@@ -94,7 +94,7 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
   @Override
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
-    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig);
+    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext());
 
     final String region = connection.region == AwsRegion.OTHER ? connection.customRegion : connection.region.getId();
 

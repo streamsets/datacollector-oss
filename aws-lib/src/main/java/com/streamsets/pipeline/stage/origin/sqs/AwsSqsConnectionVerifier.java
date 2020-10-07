@@ -107,7 +107,7 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
       }
 
       try {
-        credentials = AWSUtil.getCredentialsProvider(connection.awsConfig);
+        credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext());
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(Groups.SQS.name(),
             SQS_CONNECTION_CONFIG_PREFIX + "awsConfig",

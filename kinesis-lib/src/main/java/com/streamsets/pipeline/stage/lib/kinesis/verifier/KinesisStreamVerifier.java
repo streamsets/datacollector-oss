@@ -84,7 +84,8 @@ public class KinesisStreamVerifier extends ConnectionVerifier {
       KinesisUtil.getShardCount(
           AWSKinesisUtil.getClientConfiguration(connection.proxyConfig),
           connection,
-          STREAM_EXIST_PREFIX + UUID.randomUUID().toString()
+          STREAM_EXIST_PREFIX + UUID.randomUUID().toString(),
+          getContext()
       );
     } catch (ResourceNotFoundException ex) {
       // expected as stream shouldn't exist
