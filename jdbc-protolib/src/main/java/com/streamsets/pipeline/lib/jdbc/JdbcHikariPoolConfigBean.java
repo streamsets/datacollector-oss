@@ -37,6 +37,7 @@ public class JdbcHikariPoolConfigBean extends HikariPoolConfigBean {
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
   @ConfigDefBean(
+      groups = {"JDBC", "CREDENTIALS"},
       dependencies = {
           @Dependency(
               configName = "connectionSelection",
