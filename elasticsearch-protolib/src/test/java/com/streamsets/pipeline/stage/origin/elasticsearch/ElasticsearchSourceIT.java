@@ -323,18 +323,73 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
       final Map<String, String> offsets = new HashMap<>();
       final List<Record> records = new ArrayList<>(5);
       AtomicInteger batchCount = new AtomicInteger(0);
+      AtomicInteger lastBatchRecordCount = new AtomicInteger(-1);
       runner.runProduce(offsets, 5, output -> {
         offsets.put("0", output.getNewOffset());
-        records.addAll(output.getRecords().get("lane"));
-        if (batchCount.incrementAndGet() == 22) {
+        List<Record> list = output.getRecords().get("lane");
+        records.addAll(list);
+        if (batchCount.incrementAndGet() == 21) {
           // No new records, but we should have made a request.
-          // 21st batch would have finished the first query.
-          assertEquals(0, output.getRecords().get("lane").size());
+          // 20th batch would have finished the first query.
+          lastBatchRecordCount.set(list.size());
           runner.setStop();
         }
       });
       runner.waitOnProduce();
+      assertEquals(0, lastBatchRecordCount.get());
+      assertEquals(21, batchCount.get());
+      assertEquals(100, records.size());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testIncrementalModeWithQueryInterval() throws Exception {
+    ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
+    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+
+    conf.index = "twitter";
+    conf.mapping = "tweet";
+    conf.query =
+        "{\"sort\":[{\"timestamp\":{\"order\":\"asc\"}}],\"query\":{\"range\":{\"timestamp\":{\"gt\":${offset}}}}}";
+    conf.isIncrementalMode = true;
+    conf.offsetField = "timestamp";
+    conf.initialOffset = "now-1d/d";
+    conf.queryInterval = 5;
+
+    ElasticsearchSource source = new ElasticsearchSource(conf);
+    PushSourceRunner runner = new PushSourceRunner.Builder(ElasticsearchDSource.class, source)
+        .addOutputLane("lane")
+        .build();
+
+    runner.runInit();
+
+    try {
+      final Map<String, String> offsets = new HashMap<>();
+      final List<Record> records = new ArrayList<>(5);
+      AtomicInteger batchCount = new AtomicInteger(0);
+      AtomicInteger lastBatchRecordCount = new AtomicInteger(-1);
+      runner.runProduce(offsets, 5, output -> {
+        offsets.put("0", output.getNewOffset());
+        List<Record> list = output.getRecords().get("lane");
+        records.addAll(list);
+        if (batchCount.incrementAndGet() == 22) {
+          lastBatchRecordCount.set(list.size());
+          runner.setStop();
+        }
+      });
+
+      await().atLeast(5, SECONDS).atMost(6, SECONDS).until(() -> {
+        try {
+          runner.waitOnProduce();
+        } catch (final Exception ex) {
+          throw new RuntimeException(ex);
+        }
+      });
+
       assertEquals(22, batchCount.get());
+      assertEquals(0, lastBatchRecordCount.get());
       assertEquals(100, records.size());
     } finally {
       runner.runDestroy();

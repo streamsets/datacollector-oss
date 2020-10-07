@@ -316,11 +316,12 @@ public class ElasticsearchSource extends BasePushSource {
         }
 
         // Wait for next incremental mode interval
-        while (System.currentTimeMillis() < nextIncrementalExecution) {
+        while (System.currentTimeMillis() < nextIncrementalExecution && !getContext().isStopped()) {
           if (!ThreadUtil.sleep(100)) {
-            break;
-          } else {
+            // Some other thread interrupted this thread when we were in the sleep, but sleep resets the interrupt flag.
+            // So we will set the interrupt flag here ourselves.
             Thread.currentThread().interrupt();
+            break;
           }
         }
       }
