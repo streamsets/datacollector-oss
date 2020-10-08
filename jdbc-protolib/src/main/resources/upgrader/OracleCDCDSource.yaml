@@ -21,3 +21,10 @@ upgrades:
     actions:
       - removeConfigs:
           namePattern: oracleCDCConfigBean.durationDictExtract
+  - toVersion: 13
+    actions:
+      - configStringListRemove:
+          name: oracleCDCConfigBean.baseConfigBean.changeTypes
+          value: SELECT_FOR_UPDATE
+          lookForName: oracleCDCConfigBean.parseQuery
+          ifValueMatches: True

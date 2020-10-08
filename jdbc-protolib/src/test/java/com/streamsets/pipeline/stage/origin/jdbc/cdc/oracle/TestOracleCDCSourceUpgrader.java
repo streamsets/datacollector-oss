@@ -26,7 +26,10 @@ import org.mockito.Mockito;
 import java.net.URL;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestOracleCDCSourceUpgrader {
   @Test
@@ -163,5 +166,46 @@ public class TestOracleCDCSourceUpgrader {
     Assert.assertEquals(1, configs.size());
     Assert.assertEquals("oracleCDCConfigBean.logminerWindow", configs.get(0).getName());
     Assert.assertEquals("${2 * HOURS}", configs.get(0).getValue());
+  }
+
+
+  @Test
+  public void upgradeV12TOV13() throws Exception {
+    List<Config> configs = new ArrayList<>();
+    configs.add(new Config("oracleCDCConfigBean.baseConfigBean.changeTypes", Arrays.asList("INSERT","SELECT_FOR_UPDATE")));
+    configs.add(new Config("oracleCDCConfigBean.parseQuery", true));
+
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/OracleCDCDSource.yaml");
+    StageUpgrader upgrader = new SelectorStageUpgrader(
+      "stage",
+      new OracleCDCSourceUpgrader(),
+      yamlResource
+    );
+
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(12).when(context).getFromVersion();
+    Mockito.doReturn(13).when(context).getToVersion();
+    configs = upgrader.upgrade(configs, context);
+
+    Map<String, Object> configsMap = getConfigsAsMap(configs);
+    Assert.assertFalse(((List<String>)configsMap.get("oracleCDCConfigBean.baseConfigBean.changeTypes")).contains("SELECT_FOR_UPDATE"));
+
+    configs = new ArrayList<>();
+    configs.add(new Config("oracleCDCConfigBean.baseConfigBean.changeTypes", Arrays.asList("INSERT","SELECT_FOR_UPDATE")));
+    configs.add(new Config("oracleCDCConfigBean.parseQuery", false));
+
+    configs = upgrader.upgrade(configs, context);
+
+    configsMap = getConfigsAsMap(configs);
+    Assert.assertTrue(((List<String>)configsMap.get("oracleCDCConfigBean.baseConfigBean.changeTypes")).contains("SELECT_FOR_UPDATE"));
+
+  }
+
+  private static Map<String, Object> getConfigsAsMap(List<Config> configs) {
+    HashMap<String, Object> map = new HashMap<>();
+    for (Config c : configs) {
+      map.put(c.getName(), c.getValue());
+    }
+    return map;
   }
 }

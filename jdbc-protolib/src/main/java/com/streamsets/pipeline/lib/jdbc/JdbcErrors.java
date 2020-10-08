@@ -118,6 +118,8 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_92("SQL identifier is null"),
   JDBC_93("Error parsing {} statement. Table and schema not following the pattern '\"schema\".\"table\"' :" +
     " '{}' and table name can't be read"),
+  JDBC_94("SQL Query parsing not supported for 'SELECT FOR UPDATE' statements. " +
+    "Please remove 'SELECT FOR UPDATE' or disable the 'Parse SQL Query' config."),
 
   JDBC_100("Could not enable partitioning for table {}: {}"),
   JDBC_101("Invalid partition size for table {}: {}"),

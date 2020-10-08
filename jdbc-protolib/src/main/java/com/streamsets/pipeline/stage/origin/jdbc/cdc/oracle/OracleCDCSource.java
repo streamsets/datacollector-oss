@@ -44,6 +44,7 @@ import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import com.zaxxer.hikari.HikariDataSource;
@@ -118,6 +119,7 @@ import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_84;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_85;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_86;
 import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_87;
+import static com.streamsets.pipeline.lib.jdbc.JdbcErrors.JDBC_94;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.COMMIT_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DDL_CODE;
 import static com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode.DELETE_CODE;
@@ -138,6 +140,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String DRIVER_CLASSNAME = HIKARI_CONFIG_PREFIX + "driverClassName";
   private static final String USERNAME = HIKARI_CONFIG_PREFIX + "username";
   private static final String CONNECTION_STR = HIKARI_CONFIG_PREFIX + "connectionString";
+  public static final String CHANGE_TYPES = "oracleCDCConfigBean.baseConfigBean.changeTypes";
   private static final String CURRENT_SCN = "SELECT CURRENT_SCN FROM GV$DATABASE";
   // At the time of executing this statement, either the cachedSCN is 0
   // (which means we are executing for the first time), or it is no longer valid, so select
@@ -188,6 +191,7 @@ public class OracleCDCSource extends BaseSource {
   public static final String ROLLBACK = "rollback";
   public static final String SKIP = "skip";
   public static final String ONE = "1";
+
   private DateTimeColumnHandler dateTimeColumnHandler;
 
 
@@ -1486,6 +1490,11 @@ public class OracleCDCSource extends BaseSource {
         issues.add(getContext().createConfigIssue(Groups.JDBC.name(), CONNECTION_STR, JDBC_00, e.toString()));
         return issues;
       }
+    }
+
+    if (configBean.parseQuery && configBean.baseConfigBean.changeTypes.contains(ChangeTypeValues.SELECT_FOR_UPDATE)) {
+      issues.add(getContext().createConfigIssue(CDC.name(), CHANGE_TYPES, JDBC_94));
+      return issues;
     }
 
     recordQueue = new LinkedBlockingQueue<>(2 * configBean.baseConfigBean.maxBatchSize);
