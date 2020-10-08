@@ -79,6 +79,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 import static com.streamsets.pipeline.lib.http.Errors.HTTP_66;
 
@@ -423,7 +424,8 @@ public class HttpProcessor extends SingleLaneProcessor {
             uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
           } else {
             if (!recordsResponse.isEmpty()) {
-              currentRecord = recordsResponse.get(0);
+              currentRecord = getContext().cloneRecord(recordsResponse.get(0));
+              currentRecord.set(Field.create(recordsResponse.stream().map(Record::get).collect(Collectors.toList())));
             }
           }
         } catch (OnRecordErrorException e) {
