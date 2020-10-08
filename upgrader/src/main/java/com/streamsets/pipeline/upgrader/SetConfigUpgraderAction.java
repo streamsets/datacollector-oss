@@ -23,8 +23,6 @@ import java.util.regex.Pattern;
 
 public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgraderAction, T> {
 
-  public static final String MATCHES_ALL = ".*";
-
   private String lookForName;
   private Object ifValueMatches = MATCHES_ALL;
   private Object value;
@@ -110,32 +108,4 @@ public class SetConfigUpgraderAction<T> extends UpgraderAction<SetConfigUpgrader
     }
   }
 
-  /**
-   * Check if a configuration exists and has a given value.  If the configuration value is null, it'll match against
-   * empty string.
-   *
-   * @param name    Name of the configuration to look for.
-   * @param value   Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
-   * @param adapter Adapter used to find the configuration.
-   * @return true if {@code name} exists and equals {@code value}, false otherwise.
-   */
-  private boolean existsConfigWithValue(String name, Object value, ConfigsAdapter adapter) {
-    ConfigsAdapter.Pair config = adapter.find(name);
-    if (config != null) {
-      if (MATCHES_ALL.equals(value)) {
-        return true;
-      } else {
-        boolean matches;
-        Object configValue = config.getValue() != null ? config.getValue() : "";
-        if ((configValue instanceof String)) {
-          Pattern pattern = Pattern.compile(value.toString());
-          matches = pattern.matcher(configValue.toString()).matches();
-        } else {
-          matches = configValue.equals(value);
-        }
-        return matches;
-      }
-    }
-    return false;
-  }
 }

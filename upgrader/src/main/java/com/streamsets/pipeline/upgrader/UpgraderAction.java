@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -46,6 +47,8 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
   }
 
   private static Method CONFIG_VALUE_FUNCTION = null;
+
+  protected static final String MATCHES_ALL = ".*";
 
   static {
     try {
@@ -276,6 +279,36 @@ public abstract class UpgraderAction<U extends UpgraderAction, T> {
   public U setName(String name) {
     this.name = name;
     return (U) this;
+  }
+
+  /**
+   * Check if a configuration exists and has a given value.  If the configuration value is null, it'll match against
+   * empty string.
+   *
+   * @param name    Name of the configuration to look for.
+   * @param value   Expected value for the configuration. Use {@value MATCHES_ALL} to accept any value.
+   * @param adapter Adapter used to find the configuration.
+   * @return true if {@code name} exists and equals {@code value}, false otherwise.
+   */
+  protected boolean existsConfigWithValue(String name, Object value, ConfigsAdapter adapter) {
+    boolean exists = false;
+    ConfigsAdapter.Pair config = adapter.find(name);
+    if (config != null) {
+      if (MATCHES_ALL.equals(value)) {
+        exists = true;
+      } else {
+        boolean matches;
+        Object configValue = config.getValue() != null ? config.getValue() : "";
+        if ((configValue instanceof String)) {
+          Pattern pattern = Pattern.compile(value.toString());
+          matches = pattern.matcher(configValue.toString()).matches();
+        } else {
+          matches = configValue.equals(value);
+        }
+        exists = matches;
+      }
+    }
+    return exists;
   }
 
 }

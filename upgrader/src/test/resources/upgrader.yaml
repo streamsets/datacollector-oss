@@ -127,39 +127,61 @@ upgrades:
             elseNewValue: $$$$_ELSE_VALUE     # optional, no default
             tokenForOldValue: $$$             # optional, default $$
         - configStringMapPut:
+            lookForName: queryName
+            ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
             name: mapConfig
             key: key
             value: value
         - configStringMapRemove:
+            lookForName: queryName
+            ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
             name: mapConfig
             key: key                          # optional, key or value must be set
         - configStringMapRemove:
+            lookForName: queryName
+            ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
             name: mapConfig
             value: value                      # optional, key or value must be set
         - configStringListAdd:
+            lookForName: queryName
+            ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
             name: listConfig
             value: value
         - configStringListRemove:
+            lookForName: queryName
+            ifValueMatches: queryValue        # comparison value for the configuration to look for (can be a Java regex)
             name: listConfig
             value: value
 
     - configStringMapPut:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: mapConfig
         key: key
         value: value
     - configStringMapRemove:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: mapConfig
         key: key                              # optional, key or value must be set
     - configStringMapRemove:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: mapConfig
         value: value                          # optional, key or value must be set
     - configStringListAdd:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: listConfig
         value: value
     - configStringListRemove:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: listConfig
         value: value
     - setConfigFromStringMap:
+        lookForName: queryName
+        ifValueMatches: queryValue            # comparison value for the configuration to look for (can be a Java regex)
         name: configName                      # name of the config that is going to be set
         mapName: mapName                      # name of the map that should contain the value to be set
         key: key                              # key for which the value will be set

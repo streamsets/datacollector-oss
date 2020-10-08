@@ -26,6 +26,8 @@ import java.util.function.Function;
 
 public class StringMapConfigRemoveUpgraderAction<T> extends UpgraderAction<StringMapConfigRemoveUpgraderAction, T> {
 
+  private String lookForName;
+  private Object ifValueMatches = MATCHES_ALL;
   private String key;
   private Object value;
 
@@ -51,6 +53,27 @@ public class StringMapConfigRemoveUpgraderAction<T> extends UpgraderAction<Strin
     return this;
   }
 
+  public String getLookForName() {
+    return lookForName;
+  }
+
+  public StringMapConfigRemoveUpgraderAction setLookForName(String lookForName) {
+    this.lookForName = lookForName;
+    return this;
+  }
+
+  public Object getIfValueMatches() {
+    return ifValueMatches;
+  }
+
+  public StringMapConfigRemoveUpgraderAction setIfValueMatches(Object ifValueMatches) {
+    if (ifValueMatches != null) {
+      this.ifValueMatches = ifValueMatches;
+    }
+    return this;
+  }
+
+
   @Override
   public void upgrade(
       StageUpgrader.Context context,
@@ -61,7 +84,11 @@ public class StringMapConfigRemoveUpgraderAction<T> extends UpgraderAction<Strin
     Utils.checkArgument(getKey() != null || getValue() != null, "key and value cannot be both NULL");
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair pair = configsAdapter.find(getName());
-    if (pair != null) {
+    boolean configFound = true;
+    if (getLookForName()!=null) {
+      configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
+    }
+    if (pair != null && configFound) {
       List<Map> entries = (List<Map>) pair.getValue();
       entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
       Iterator<Map> iterator = entries.iterator();

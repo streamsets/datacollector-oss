@@ -25,6 +25,8 @@ import java.util.function.Function;
 
 public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringListConfigAddUpgraderAction, T> {
 
+  private String lookForName;
+  private Object ifValueMatches = MATCHES_ALL;
   private String value;
 
   public StringListConfigAddUpgraderAction(Function<T, ConfigsAdapter> wrapper) {
@@ -40,6 +42,26 @@ public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringL
     return this;
   }
 
+  public String getLookForName() {
+    return lookForName;
+  }
+
+  public StringListConfigAddUpgraderAction setLookForName(String lookForName) {
+    this.lookForName = lookForName;
+    return this;
+  }
+
+  public Object getIfValueMatches() {
+    return ifValueMatches;
+  }
+
+  public StringListConfigAddUpgraderAction setIfValueMatches(Object ifValueMatches) {
+    if (ifValueMatches != null) {
+      this.ifValueMatches = ifValueMatches;
+    }
+    return this;
+  }
+
   @Override
   public void upgrade(
       StageUpgrader.Context context,
@@ -50,10 +72,17 @@ public class StringListConfigAddUpgraderAction<T> extends UpgraderAction<StringL
     Utils.checkNotNull(getValue(), "value");
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair pair = configsAdapter.find(getName());
-    List<String> entries = (pair == null) ? new ArrayList<>() : (List<String>) pair.getValue();
-    entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
-    entries.add(resolveValueIfEL(originalConfigs, value).toString());
-    configsAdapter.set(getName(), entries);
+
+    boolean configFound = true;
+    if (getLookForName()!=null) {
+      configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
+    }
+    if (configFound) {
+      List<String> entries = (pair == null) ? new ArrayList<>() : (List<String>) pair.getValue();
+      entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
+      entries.add(resolveValueIfEL(originalConfigs, value).toString());
+      configsAdapter.set(getName(), entries);
+    }
   }
 
 }

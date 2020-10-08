@@ -214,6 +214,82 @@ upgrades:
   - configStringListRemove:
       name: list2
       value: value
+  - configStringListRemove:
+      lookForName: inventedName
+      name: listLookUp1
+      value: example0
+  - configStringListRemove:
+      lookForName: listLookUp1
+      name: listLookUp2
+      value: example0
+  - configStringListRemove:
+      lookForName: checkedFlag
+      ifValueMatches: true
+      name: listLookUp3
+      value: example1
+  - configStringListRemove:
+      lookForName: checkedFlag
+      ifValueMatches: false
+      name: listLookUp4
+      value: example1
+  - configStringListAdd:
+      lookForName: inventedName
+      name: listLookUp5
+      value: example3
+  - configStringListAdd:
+      lookForName: listLookUp1
+      name: listLookUp6
+      value: example33
+  - configStringListAdd:
+      lookForName: checkedFlag
+      ifValueMatches: true
+      name: listLookUp7
+      value: example3
+  - configStringListAdd:
+      lookForName: checkedFlag
+      ifValueMatches: false
+      name: listLookUp8
+      value: example3
+  - configStringMapPut:
+      lookForName: inventedName
+      name: mapLookUp1
+      key: key
+      value: value
+  - configStringMapPut:
+      lookForName: listLookUp1
+      name: mapLookUp2
+      key: key
+      value: value
+  - configStringMapPut:
+      lookForName: checkedFlag
+      ifValueMatches: true
+      name: mapLookUp3
+      key: key
+      value: value
+  - configStringMapPut:
+      lookForName: checkedFlag
+      ifValueMatches: false
+      name: mapLookUp4
+      key: key
+      value: value
+  - configStringMapRemove:
+      lookForName: inventedName
+      name: mapLookUp5
+      key: ex0
+  - configStringMapRemove:
+      lookForName: listLookUp1
+      name: mapLookUp6
+      key: ex0
+  - configStringMapRemove:
+      lookForName: checkedFlag
+      ifValueMatches: true
+      name: mapLookUp7
+      key: ex0
+  - configStringMapRemove:
+      lookForName: checkedFlag
+      ifValueMatches: false
+      name: mapLookUp8
+      key: ex0
   - iterateListConfig:
       name: listConfig
       actions:
@@ -233,6 +309,30 @@ upgrades:
       - configStringListRemove:
           name: list2
           value: value
+  - iterateListConfig:
+      name: listConfigLookUp
+      actions:
+        - configStringMapPut:
+            lookForName: checkedFlag
+            ifValueMatches: true
+            name: mapLookUpInList1
+            key: exValKey
+            value: valueExKey
+        - configStringMapRemove:
+            lookForName: checkedFlag
+            ifValueMatches: true
+            name: mapLookUpInList2
+            key: key2
+        - configStringListAdd:
+            lookForName: checkedFlag
+            ifValueMatches: true
+            name: listLookUpInList1
+            value: exampleFoo
+        - configStringListRemove:
+            lookForName: checkedFlag
+            ifValueMatches: true
+            name: listLookUpInList2
+            value: example3
 
 - toVersion: 8
   actions:

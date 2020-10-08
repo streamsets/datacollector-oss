@@ -24,6 +24,9 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class StringListConfigRemoveUpgraderAction<T> extends UpgraderAction<StringListConfigRemoveUpgraderAction, T> {
+
+  private String lookForName;
+  private Object ifValueMatches = MATCHES_ALL;
   private String value;
 
   public StringListConfigRemoveUpgraderAction(Function<T, ConfigsAdapter> wrapper) {
@@ -39,6 +42,26 @@ public class StringListConfigRemoveUpgraderAction<T> extends UpgraderAction<Stri
     return this;
   }
 
+  public String getLookForName() {
+    return lookForName;
+  }
+
+  public StringListConfigRemoveUpgraderAction setLookForName(String lookForName) {
+    this.lookForName = lookForName;
+    return this;
+  }
+
+  public Object getIfValueMatches() {
+    return ifValueMatches;
+  }
+
+  public StringListConfigRemoveUpgraderAction setIfValueMatches(Object ifValueMatches) {
+    if (ifValueMatches != null) {
+      this.ifValueMatches = ifValueMatches;
+    }
+    return this;
+  }
+
   @Override
   public void upgrade(
       StageUpgrader.Context context,
@@ -49,7 +72,12 @@ public class StringListConfigRemoveUpgraderAction<T> extends UpgraderAction<Stri
     Utils.checkNotNull(getValue(), "value");
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair pair = configsAdapter.find(getName());
-    if (pair != null) {
+
+    boolean configFound = true;
+    if (getLookForName()!=null) {
+      configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
+    }
+    if (pair != null && configFound) {
       List<String> entries = (List<String>) pair.getValue();
       entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
       entries.remove(getValue());

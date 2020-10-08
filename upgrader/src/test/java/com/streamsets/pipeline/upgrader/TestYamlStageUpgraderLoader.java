@@ -225,6 +225,7 @@ public class TestYamlStageUpgraderLoader {
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
+    configs.add(new Config("checkedFlag", true));
     configs.add(new Config("map1", null));
     configs.add(new Config(
         "map2",
@@ -236,6 +237,15 @@ public class TestYamlStageUpgraderLoader {
     ));
     configs.add(new Config("list1", null));
     configs.add(new Config("list2", ImmutableList.of("value", "foo")));
+
+    for (int i = 1; i <= 8; i++) {
+      configs.add(new Config("listLookUp"+i, ImmutableList.of("example0", "example1", "example2")));
+      configs.add(new Config(
+        "mapLookUp"+i,
+        ImmutableList.of(ImmutableMap.of("key", "ex0", "value", "foo0"), ImmutableMap.of("key", "ex1", "value", "foo1"))
+      ));
+    }
+
     configs.add(new Config("listConfig", ImmutableList.of(ImmutableMap.of(
         "map1",
         ImmutableList.of(),
@@ -254,8 +264,22 @@ public class TestYamlStageUpgraderLoader {
         "list2",
         ImmutableList.of("value", "foo")
     ))));
+
+    configs.add(new Config("listConfigLookUp", ImmutableList.of(ImmutableMap.of(
+      "checkedFlag",
+      true,
+      "listLookUpInList1",
+      ImmutableList.of("example0", "example1", "example2"),
+      "listLookUpInList2",
+      ImmutableList.of("example3", "example4", "example5"),
+      "mapLookUpInList1",
+      ImmutableList.of(ImmutableMap.of("key", "ex0", "value", "foo0"), ImmutableMap.of("key", "ex1", "value", "foo1")),
+      "mapLookUpInList2",
+      ImmutableList.of(ImmutableMap.of("key", "key2", "value", "val2"), ImmutableMap.of("key", "ex2", "value", "foo2"))
+    ))));
+
     configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 6, 7));
-    Assert.assertEquals(8, configs.size());
+    Assert.assertEquals(26, configs.size());
     Assert.assertEquals("bar", find(configs, "valueFromStringMap").getValue());
     Assert.assertEquals(
         ImmutableList.of(ImmutableMap.of("key", "key", "value", "value")),
@@ -286,6 +310,66 @@ public class TestYamlStageUpgraderLoader {
 
     Assert.assertEquals(ImmutableList.of("valueFromOldVariable"), find(configs, "list3").getValue());
 
+    // Check the lookUp lists and maps to test lookForName feature
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2"), find(configs,"listLookUp1").getValue());
+    Assert.assertEquals(ImmutableList.of("example1","example2"), find(configs,"listLookUp2").getValue());
+    Assert.assertEquals(ImmutableList.of("example0","example2"), find(configs,"listLookUp3").getValue());
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2"), find(configs,"listLookUp4").getValue());
+
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2"), find(configs,"listLookUp5").getValue());
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2","example33"), find(configs,"listLookUp6").getValue());
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2","example3"), find(configs,"listLookUp7").getValue());
+    Assert.assertEquals(ImmutableList.of("example0","example1","example2"), find(configs,"listLookUp8").getValue());
+
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp1").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1"),
+      ImmutableMap.of("key", "key", "value", "value")
+    ), find(configs,"mapLookUp2").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1"),
+      ImmutableMap.of("key", "key", "value", "value")
+    ), find(configs,"mapLookUp3").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp4").getValue());
+
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp5").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp6").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp7").getValue());
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1")
+    ), find(configs,"mapLookUp8").getValue());
+
+    // Test lookForName on iterator
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex0", "value", "foo0"),
+      ImmutableMap.of("key", "ex1", "value", "foo1"),
+      ImmutableMap.of("key", "exValKey", "value", "valueExKey")
+    ), ((Map) ((List)find(configs, "listConfigLookUp").getValue()).get(0)).get("mapLookUpInList1"));
+    Assert.assertEquals(ImmutableList.of(
+      ImmutableMap.of("key", "ex2", "value", "foo2")
+    ), ((Map) ((List)find(configs, "listConfigLookUp").getValue()).get(0)).get("mapLookUpInList2"));
+    Assert.assertEquals(
+      ImmutableList.of("example0", "example1", "example2", "exampleFoo"),
+      ((Map) ((List)find(configs, "listConfigLookUp").getValue()).get(0)).get("listLookUpInList1"));
+    Assert.assertEquals(
+      ImmutableList.of("example4", "example5"),
+      ((Map) ((List)find(configs, "listConfigLookUp").getValue()).get(0)).get("listLookUpInList2"));
   }
 
   public class Service1 {

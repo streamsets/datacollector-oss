@@ -26,6 +26,8 @@ import java.util.function.Function;
 
 public class StringMapConfigPutUpgraderAction<T> extends UpgraderAction<StringListConfigAddUpgraderAction, T> {
 
+  private String lookForName;
+  private Object ifValueMatches = MATCHES_ALL;
   private String key;
   private Object value;
 
@@ -51,6 +53,26 @@ public class StringMapConfigPutUpgraderAction<T> extends UpgraderAction<StringLi
     return this;
   }
 
+  public String getLookForName() {
+    return lookForName;
+  }
+
+  public StringMapConfigPutUpgraderAction setLookForName(String lookForName) {
+    this.lookForName = lookForName;
+    return this;
+  }
+
+  public Object getIfValueMatches() {
+    return ifValueMatches;
+  }
+
+  public StringMapConfigPutUpgraderAction setIfValueMatches(Object ifValueMatches) {
+    if (ifValueMatches != null) {
+      this.ifValueMatches = ifValueMatches;
+    }
+    return this;
+  }
+
   @Override
   public void upgrade(
       StageUpgrader.Context context,
@@ -62,7 +84,11 @@ public class StringMapConfigPutUpgraderAction<T> extends UpgraderAction<StringLi
     Utils.checkNotNull(getValue(), "value");
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair pair = configsAdapter.find(getName());
-    if (pair != null) {
+    boolean configFound = true;
+    if(getLookForName()!=null) {
+      configFound = existsConfigWithValue(getLookForName(), getIfValueMatches(), configsAdapter);
+    }
+    if (pair != null && configFound) {
       List<Map> entries = (List<Map>) pair.getValue();
       entries = (entries == null) ? new ArrayList<>() : new ArrayList<>(entries);
       int entryIdx = findInListMap(entries);

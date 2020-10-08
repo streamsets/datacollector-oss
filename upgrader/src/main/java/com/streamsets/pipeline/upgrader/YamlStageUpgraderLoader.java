@@ -187,6 +187,8 @@ public class YamlStageUpgraderLoader {
     action.setName((String) map.get("name"));
     action.setKey((String) map.get("key"));
     action.setValue(map.get("value"));
+    action.setLookForName((String) map.get("lookForName"));
+    action.setIfValueMatches(map.get("ifValueMatches"));
     return action;
   }
 
@@ -199,6 +201,8 @@ public class YamlStageUpgraderLoader {
     action.setName((String) map.get("name"));
     action.setKey((String) map.get("key"));
     action.setValue(map.get("value"));
+    action.setLookForName((String) map.get("lookForName"));
+    action.setIfValueMatches(map.get("ifValueMatches"));
     return action;
   }
 
@@ -210,6 +214,8 @@ public class YamlStageUpgraderLoader {
     StringListConfigAddUpgraderAction action = new StringListConfigAddUpgraderAction<>(wrapper);
     action.setName((String) map.get("name"));
     action.setValue((String) map.get("value"));
+    action.setLookForName((String) map.get("lookForName"));
+    action.setIfValueMatches(map.get("ifValueMatches"));
     return action;
   }
 
@@ -221,6 +227,8 @@ public class YamlStageUpgraderLoader {
     StringListConfigRemoveUpgraderAction action = new StringListConfigRemoveUpgraderAction<>(wrapper);
     action.setName((String) map.get("name"));
     action.setValue((String) map.get("value"));
+    action.setLookForName((String) map.get("lookForName"));
+    action.setIfValueMatches(map.get("ifValueMatches"));
     return action;
   }
 
