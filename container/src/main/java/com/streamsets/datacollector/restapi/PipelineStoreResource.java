@@ -206,6 +206,8 @@ public class PipelineStoreResource {
 
   private static final Logger LOG = LoggerFactory.getLogger(PipelineStoreResource.class);
 
+  private static final String CONNECTIONS_METADATA_JSON_FILE = "connections_metadata.json";
+
   private final RuntimeInfo runtimeInfo;
   private final BuildInfo buildInfo;
   private final Configuration configuration;
@@ -607,7 +609,8 @@ public class PipelineStoreResource {
       ZipEntry entry;
       while ((entry = zipInputStream.getNextEntry()) != null) {
         if (!entry.getName().startsWith("__MACOSX") && !entry.getName().startsWith(".") &&
-            entry.getName().endsWith(".json") && !entry.isDirectory()) {
+            entry.getName().endsWith(".json") && !entry.isDirectory()
+            && !entry.getName().equals(CONNECTIONS_METADATA_JSON_FILE)) {   // ignore connections metadata file
           try {
             String pipelineEnvelopeString = IOUtils.toString(zipInputStream);
             PipelineEnvelopeJson envelope = objectMapper.readValue(pipelineEnvelopeString, PipelineEnvelopeJson.class);

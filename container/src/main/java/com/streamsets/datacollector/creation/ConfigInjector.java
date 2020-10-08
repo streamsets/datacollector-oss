@@ -484,7 +484,8 @@ public class ConfigInjector {
       if (field.getAnnotation(ConfigDefBean.class) != null) {
         try {
           Object bean = field.getType().newInstance();
-          if (createConfigBeans(bean, configName + ".", context)) {
+          ok &= createConfigBeans(bean, configName + ".", context);
+          if (ok) {
             field.set(obj, bean);
           }
         } catch (InstantiationException | IllegalAccessException ex) {

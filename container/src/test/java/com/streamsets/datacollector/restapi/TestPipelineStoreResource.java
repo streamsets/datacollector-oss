@@ -66,7 +66,9 @@ import com.streamsets.lib.security.acl.dto.SubjectType;
 import com.streamsets.pipeline.api.ExecutionMode;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.file.StreamDataBodyPart;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Assert;
@@ -83,6 +85,8 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.net.URI;
 import java.security.Principal;
 import java.util.ArrayList;
@@ -93,6 +97,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class TestPipelineStoreResource extends JerseyTest {
 
@@ -1132,6 +1138,31 @@ public class TestPipelineStoreResource extends JerseyTest {
         Mockito.any(),
         Mockito.eq(true)
     );
+  }
+
+  @Test
+  public void testImportPipelinesIgnoreConnectionsMetadataFile() throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ZipOutputStream zipOutputStream = Mockito.spy(new ZipOutputStream(baos));
+    zipOutputStream.putNextEntry(new ZipEntry("connections_metadata.json"));
+    zipOutputStream.write("some connections json that won't be read".getBytes());
+    zipOutputStream.closeEntry();
+    zipOutputStream.close();
+
+    StreamDataBodyPart bodyPart = new StreamDataBodyPart("file", new ByteArrayInputStream(baos.toByteArray()));
+    FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+    final FormDataMultiPart multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(bodyPart);
+
+    Response response = target("/v1/pipelines/import")
+        .register(MultiPartFeature.class)
+        .request()
+        .post(Entity.entity(multipart, multipart.getMediaType()));
+
+    MultiStatusResponseJson<String> multiStatusResponse = response.readEntity(MultiStatusResponseJson.class);
+    Assert.assertEquals(207, response.getStatusInfo().getStatusCode());
+
+    List<String> errorMessages = multiStatusResponse.getErrorMessages();
+    Assert.assertEquals(0, errorMessages.size());
   }
 
   @Test
