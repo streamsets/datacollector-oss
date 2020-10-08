@@ -64,7 +64,7 @@ public class ElUtil {
           klass = (Class<?>) genericType;
         }
         if (configDefinition.getType() == ConfigDef.Type.CREDENTIAL) {
-          value = elEvaluator.evaluate(new ELVariables(constants), (String) value, Object.class);
+          value = elEvaluator.eval(new ELVariables(constants), (String) value, Object.class);
           if (value == null || value instanceof String) {
             value = new ClearCredentialValue((String)value);
           } else if (!(value instanceof CredentialValue)) {
@@ -76,7 +76,7 @@ public class ElUtil {
             );
           }
         } else {
-          value = elEvaluator.evaluate(new ELVariables(constants), (String) value, klass);
+          value = elEvaluator.eval(new ELVariables(constants), (String) value, klass);
         }
       }
     }
