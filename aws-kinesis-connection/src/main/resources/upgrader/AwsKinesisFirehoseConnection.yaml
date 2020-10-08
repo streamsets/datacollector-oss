@@ -23,6 +23,9 @@ upgrades:
           name: awsConfig.isAssumeRole
           value: false
       - setConfig:
+          name: awsConfig.setSessionTags
+          value: true
+      - setConfig:
           name: awsConfig.roleARN
           value: "arn:aws:iam::<account-id>:role/role-name"
       - setConfig:

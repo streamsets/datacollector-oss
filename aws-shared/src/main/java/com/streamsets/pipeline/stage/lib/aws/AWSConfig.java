@@ -106,6 +106,18 @@ public class AWSConfig {
       triggeredByValue = "true")
   public int sessionDuration;
 
+  @ConfigDef(displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Set Session Tags",
+      description = "Specify session tags to enable easy session tracking in AWS",
+      defaultValue = "true",
+      displayPosition = -100,
+      group = "#0",
+      dependsOn = "isAssumeRole",
+      triggeredByValue = "true")
+  public boolean setSessionTags;
+
   /**
    * FakeS3 used for testing does not support chunked encoding
    * so it is exposed as a flag here, as the user should not

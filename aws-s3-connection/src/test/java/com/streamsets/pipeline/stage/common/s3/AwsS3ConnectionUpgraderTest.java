@@ -52,6 +52,7 @@ public class AwsS3ConnectionUpgraderTest {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, configPrefix + "isAssumeRole", false);
+    UpgraderTestUtils.assertExists(configs, configPrefix + "setSessionTags", true);
     UpgraderTestUtils.assertExists(configs, configPrefix + "roleARN", "arn:aws:iam::<account-id>:role/role-name");
     UpgraderTestUtils.assertExists(configs, configPrefix + "roleSessionName", "");
     UpgraderTestUtils.assertExists(configs, configPrefix + "sessionDuration", 3600);

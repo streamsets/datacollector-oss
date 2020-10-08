@@ -46,6 +46,8 @@ public class AWSKinesisUtil {
 
   private static final int MILLIS = 1000;
 
+  private static final String USER_PRINCIPAL = "streamsets:principal";
+
   private AWSKinesisUtil() {}
 
   public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context) {
@@ -57,12 +59,17 @@ public class AWSKinesisUtil {
         ));
       }
     } else if (config.credentialMode == AWSCredentialMode.WITH_IAM_ROLES && config.isAssumeRole) {
-      credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(config.roleARN.get(),
+      STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
+          config.roleARN.get(),
           config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
-      ).withRoleSessionDurationSeconds(config.sessionDuration)
-       .withSessionTags(Collections.singletonList(new Tag().withKey("user")
-                                                           .withValue(context.getUserContext().getUser())))
-       .build();
+      ).withRoleSessionDurationSeconds(config.sessionDuration);
+
+      if (config.setSessionTags) {
+        builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
+                                                                   .withValue(context.getUserContext().getUser())));
+      }
+
+      credentialsProvider = builder.build();
     }
     return credentialsProvider;
   }

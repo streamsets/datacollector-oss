@@ -34,6 +34,7 @@ import java.util.UUID;
 
 public class AWSUtil {
   private static final String WILDCARD_PATTERN = ".*[\\*\\?].*";
+  private static final String USER_PRINCIPAL = "streamsets:principal";
   private static final int MILLIS = 1000;
 
   private AWSUtil() {}
@@ -51,12 +52,17 @@ public class AWSUtil {
         break;
       case WITH_IAM_ROLES:
         if (config.isAssumeRole) {
-          credentialsProvider = new STSAssumeRoleSessionCredentialsProvider.Builder(config.roleARN.get(),
+          STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
+              config.roleARN.get(),
               config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
-          ).withRoleSessionDurationSeconds(config.sessionDuration)
-           .withSessionTags(Collections.singletonList(new Tag().withKey("user")
-                                                               .withValue(context.getUserContext().getUser())))
-           .build();
+          ).withRoleSessionDurationSeconds(config.sessionDuration);
+
+          if (config.setSessionTags) {
+            builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
+                                                                       .withValue(context.getUserContext().getUser())));
+          }
+
+          credentialsProvider = builder.build();
         }
         break;
       case WITH_ANONYMOUS_CREDENTIALS:
