@@ -23,6 +23,7 @@ import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
+import com.streamsets.datacollector.restapi.configuration.JsonConfigurator;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -46,6 +47,7 @@ public class TestStageLibraryResource extends JerseyTest {
   protected Application configure() {
     return new ResourceConfig() {
       {
+        register(JsonConfigurator.class);
         register(new StageLibraryResourceConfig());
         register(StageLibraryResource.class);
         register(MultiPartFeature.class);

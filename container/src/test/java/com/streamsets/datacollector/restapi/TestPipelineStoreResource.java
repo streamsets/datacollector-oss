@@ -44,6 +44,7 @@ import com.streamsets.datacollector.restapi.bean.RuleDefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ThresholdTypeJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.restapi.configuration.JsonConfigurator;
 import com.streamsets.datacollector.runner.MockStages;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
@@ -524,6 +525,7 @@ public class TestPipelineStoreResource extends JerseyTest {
   protected Application configure() {
     return new ResourceConfig() {
       {
+        register(JsonConfigurator.class);
         register(new PipelineStoreResourceConfig());
         register(PipelineStoreResource.class);
         register(MultiPartFeature.class);

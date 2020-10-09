@@ -15,7 +15,6 @@
  */
 package com.streamsets.datacollector.creation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConfigDefinition;
@@ -61,7 +60,6 @@ import java.util.stream.Collectors;
  */
 public class ConfigInjector {
   private static final Logger LOG = LoggerFactory.getLogger(PipelineBeanCreator.class);
-  private static final ObjectMapper mapper = new ObjectMapper();
 
   private static ConnectionRetriever connectionRetriever;
 
