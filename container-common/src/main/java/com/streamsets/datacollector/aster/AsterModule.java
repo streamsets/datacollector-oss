@@ -34,6 +34,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -69,12 +70,12 @@ public class AsterModule {
       );
 
       // Lookup for the AsterContextCreator function class in the Aster client classloader.
-      Class<Function<AsterConfig, AsterContext>> klass = (Class<Function<AsterConfig, AsterContext>>)
+      Class<BiFunction<RuntimeInfo, AsterConfig, AsterContext>> klass = (Class<BiFunction<RuntimeInfo, AsterConfig, AsterContext>>)
               asterClassLoader.loadClass("com.streamsets.lib.security.http.aster.AsterContextCreator");
 
       // Instantiate and invoke the AsterContextCreator function providing the Aster configuration bean.
-      Function<AsterConfig, AsterContext> creator = klass.newInstance();
-      return creator.apply(asterConfig);
+      BiFunction<RuntimeInfo, AsterConfig, AsterContext> creator = klass.newInstance();
+      return creator.apply(runtimeInfo, asterConfig);
     } catch (Exception ex) {
       throw new RuntimeException("Could not create AsterContext: " + ex, ex);
     }

@@ -16,6 +16,7 @@
 package com.streamsets.lib.security.http.aster;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.lib.security.http.SSOAuthenticationUser;
 import com.streamsets.lib.security.http.SSOPrincipal;
@@ -26,6 +27,7 @@ import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.security.authentication.SessionAuthentication;
 import org.eclipse.jetty.server.Authentication;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +41,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 /**
  * Jetty {@link Authenticator} implementation for Aster SSO for engines
@@ -46,17 +51,23 @@ import java.time.Instant;
 public class AsterAuthenticator implements Authenticator {
   private static final Logger LOG = LoggerFactory.getLogger(AsterAuthenticator.class);
 
+  public final static String AUTH_TOKEN = "auth_token";
+  public final static String AUTH_USER = "auth_user";
+  private final static String TOKEN_AUTHENTICATION_USER_NAME = "admin";
+
   private static final String AUTHENTICATION_METHOD = "aster-sso";
   private static final String HTTP_GET = "GET";
   private static final String A_RETRY_QS_PARAM = "a_retry";
 
   private final AsterServiceImpl service;
+  private final RuntimeInfo runtimeInfo;
 
   /**
    * Constructor.
    */
-  public AsterAuthenticator(AsterService service) {
+  public AsterAuthenticator(AsterService service, RuntimeInfo runtimeInfo) {
     this.service = (AsterServiceImpl) service;
+    this.runtimeInfo = runtimeInfo;
   }
 
   /**
@@ -215,14 +226,29 @@ public class AsterAuthenticator implements Authenticator {
    * Creates an engine principal using the Aster user information received after a successful Aster SSO login.
    */
   @VisibleForTesting
-  SSOPrincipal createPrincipal(AsterUser AsterUser) {
+  SSOPrincipal createPrincipal(AsterUser asterUser) {
     SSOPrincipalJson principal = new SSOPrincipalJson();
     principal.setTokenStr("aster-token"); //we don't need/have a token
-    principal.setPrincipalId(AsterUser.getName());
-    principal.setOrganizationId(AsterUser.getOrg());
-    principal.setEmail(AsterUser.getName());
-    principal.getRoles().addAll(AsterUser.getRoles());
-    principal.getGroups().addAll(AsterUser.getGroups());
+    principal.setPrincipalId(asterUser.getName());
+    principal.setOrganizationId(asterUser.getOrg());
+    principal.setEmail(asterUser.getName());
+    principal.getRoles().addAll(asterUser.getRoles());
+    principal.getGroups().addAll(asterUser.getGroups());
+    int expiresSecs = service.getConfig().getEngineConfig().get("http.session.max.inactive.interval", 86400);
+    principal.setExpires(Instant.now().plusSeconds(expiresSecs).toEpochMilli());
+    principal.lock();
+    return principal;
+  }
+
+  SSOPrincipal createPrincipalForSlave(String authUser, String authToken) {
+    SSOPrincipalJson principal = new SSOPrincipalJson();
+    principal.setPrincipalId(authUser);
+    principal.setTokenStr("aster-token"); //we don't need/have a token
+    principal.getGroups().add("all");
+    String[] roles = runtimeInfo.getRolesFromAuthenticationToken(authToken);
+    //roles will not be null, as we will at least have the user role
+    principal.getRoles().addAll(Arrays.stream(roles).collect(Collectors.toList()));
+    LOG.trace("User {} has Roles  : {}", authUser, String.join(",", principal.getRoles()));
     int expiresSecs = service.getConfig().getEngineConfig().get("http.session.max.inactive.interval", 86400);
     principal.setExpires(Instant.now().plusSeconds(expiresSecs).toEpochMilli());
     principal.lock();
@@ -245,6 +271,11 @@ public class AsterAuthenticator implements Authenticator {
   void authenticateSession(HttpServletRequest httpReq, AsterUser user) {
     HttpSession session = httpReq.getSession(true);
     session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, new SSOAuthenticationUser(createPrincipal(user)));
+  }
+
+  void authenticateSlaveSession(HttpServletRequest httpReq, String authUser, String authToken) {
+    HttpSession session = httpReq.getSession(true);
+    session.setAttribute(SessionAuthentication.__J_AUTHENTICATED, new SSOAuthenticationUser(createPrincipalForSlave(authUser, authToken)));
   }
 
   /**
@@ -308,55 +339,84 @@ public class AsterAuthenticator implements Authenticator {
       if (!mandatory) {
         authentication = Authentication.NOT_CHECKED;
       } else {
-        if (isEngineRegistered()) {
-          LOG.trace("Engine is registered");
-          authentication = getSessionAuthentication(httpReq);
-          if (authentication != null) {
-            LOG.trace(
-                "Authenticated user '{}'",
-                ((SSOAuthenticationUser)authentication).getSSOUserPrincipal().getName()
-            );
-            if (isLogoutRequest(httpReq)) {
-              LOG.trace(
-                  "Logout user '{}'",
-                  ((SSOAuthenticationUser)authentication).getSSOUserPrincipal().getName()
+        // cluster slaves won't do engine registration
+        if (runtimeInfo.isClusterSlave()) {
+          authentication = handleAuthForClusterSlave(httpReq);
+        } else {
+          if (isEngineRegistered()) {
+            LOG.trace("Engine is registered");
+            authentication = getSessionAuthentication(httpReq);
+            if (authentication != null) {
+              LOG.trace("Authenticated user '{}'",
+                  ((SSOAuthenticationUser) authentication).getSSOUserPrincipal().getName()
               );
-              destroySession(httpReq);
-              service.handleLogout(httpReq, httpRes);
-              authentication = Authentication.SEND_SUCCESS;
-            }
-          } else {
-            LOG.trace("User is not authenticated");
-            if (isHandlingUserLogin(httpReq, httpRes)) {
-              LOG.trace("Handling user login");
-              AsterUser user = service.handleUserLogin(getRequestBaseUrl(httpReq), httpReq, httpRes);
-              if (user == null) { //GET initiate
+              if (isLogoutRequest(httpReq)) {
+                LOG.trace("Logout user '{}'", ((SSOAuthenticationUser) authentication).getSSOUserPrincipal().getName());
+                destroySession(httpReq);
+                service.handleLogout(httpReq, httpRes);
                 authentication = Authentication.SEND_SUCCESS;
-              } else { //POST complete
-                authenticateSession(httpReq, user);
-                authentication = redirect(httpReq, httpRes, user.getPreLoginUrl());
               }
             } else {
-              LOG.trace("Triggering user login");
-              destroySession(httpReq);
-              String redirUrlKey = service.storeRedirUrl(getUrlForRedirection(httpReq));
-              authentication = redirect(httpReq,
-                  httpRes,
-                  addParameterToQueryString(service.getConfig().getUserLoginPath(),
-                      AsterServiceImpl.LSTATE_QS_PARAM,
-                      redirUrlKey
-                  )
-              );
+              LOG.trace("User is not authenticated");
+              if (isHandlingUserLogin(httpReq, httpRes)) {
+                LOG.trace("Handling user login");
+                AsterUser user = service.handleUserLogin(getRequestBaseUrl(httpReq), httpReq, httpRes);
+                if (user == null) { //GET initiate
+                  authentication = Authentication.SEND_SUCCESS;
+                } else { //POST complete
+                  authenticateSession(httpReq, user);
+                  authentication = redirect(httpReq, httpRes, user.getPreLoginUrl());
+                }
+              } else {
+                LOG.trace("Triggering user login");
+                destroySession(httpReq);
+                String redirUrlKey = service.storeRedirUrl(getUrlForRedirection(httpReq));
+                authentication = redirect(httpReq,
+                    httpRes,
+                    addParameterToQueryString(service.getConfig().getUserLoginPath(),
+                        AsterServiceImpl.LSTATE_QS_PARAM,
+                        redirUrlKey
+                    )
+                );
+              }
             }
+          } else {
+            authentication = handleRegistration(httpReq, httpRes, true);
           }
-        } else {
-          authentication = handleRegistration(httpReq, httpRes, true);
         }
       }
     } catch (AsterException|AsterAuthException ex) {
       authentication = handleAsterExceptions(httpReq, httpRes, ex);
     } catch (Exception ex) {
       authentication = handleOtherExceptions(httpRes, ex);
+    }
+    return authentication;
+  }
+
+  @VisibleForTesting
+  Authentication handleAuthForClusterSlave(HttpServletRequest httpReq) {
+    Authentication authentication = getSessionAuthentication(httpReq);
+    if (authentication != null) {
+      LOG.trace("Authenticated user '{}'",
+          ((SSOAuthenticationUser) authentication).getSSOUserPrincipal().getName()
+      );
+    } else {
+      String authToken = httpReq.getHeader(AUTH_TOKEN);
+      String authUser = httpReq.getHeader(AUTH_USER);
+
+      if (authToken == null) {
+        authToken = httpReq.getParameter(AUTH_TOKEN);
+        authUser = httpReq.getParameter(AUTH_USER);
+      }
+      if (authUser != null && authToken != null) {
+        if (!runtimeInfo.isValidAuthenticationToken(authToken)) {
+          LOG.warn("Not a valid auth token");
+        } else {
+          authenticateSlaveSession(httpReq, authUser, authToken);
+          authentication = getSessionAuthentication(httpReq);
+          LOG.trace("Authentication Cached for Cluster Slave for {}", authUser);
+        }
+      }
     }
     return authentication;
   }

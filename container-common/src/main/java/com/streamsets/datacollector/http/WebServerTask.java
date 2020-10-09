@@ -450,14 +450,15 @@ public abstract class WebServerTask extends AbstractTask implements Registration
           securityHandler = configureForm(appConf, server, auth);
           break;
         case "aster":
-          if (runtimeInfo.isEmbedded() && !runtimeInfo.getProductName().equals(RuntimeInfo.SDC_PRODUCT)) {
-            //For transformer product and if it is the driver (i.e runtimeInfo.isEmbedded() == true), then we disable ASTER
+          if (runtimeInfo.isEmbedded()) {
+            // For Transformer  if it is the driver (i.e runtimeInfo.isEmbedded() == true)
+            // then we disable ASTER (embedded attributed only used by TF)
             LOG.trace("Aster configured but disabled because - this is an embedded instance");
             conf.set(WebServerTask.AUTHENTICATION_KEY, "form");
             // fallback to form
             securityHandler = configureForm(appConf, server, "form");
           } else {
-            // Aster should be configured even if it is an embedded SDC
+            // Aster should be configured
             securityHandler = configureAsterSSO(appConf);
           }
           break;
@@ -599,7 +600,15 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     if (asterContext.isEnabled()) {
       ConstraintSecurityHandler security = new ConstraintSecurityHandler();
       // Set the Aster authenticator in the Jetty security constraint handler and return the handler.
-      security.setAuthenticator(injectActivationCheck(asterContext.getAuthenticator()));
+      Authenticator authenticator = asterContext.getAuthenticator();
+      if (runtimeInfo.isClusterSlave()) {
+        // Bypass activation check, anyway slaves can't be started without a valid activation
+        // on the gateway SDC
+        security.setAuthenticator(authenticator);
+      } else {
+        // Inject activation check mainly for non slave SDC
+        security.setAuthenticator(injectActivationCheck(authenticator));
+      }
       return security;
     } else {
       throw new RuntimeException("Aster not enabled");

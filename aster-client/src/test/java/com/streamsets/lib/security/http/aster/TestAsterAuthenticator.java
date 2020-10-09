@@ -16,6 +16,8 @@
 package com.streamsets.lib.security.http.aster;
 
 import com.google.common.collect.ImmutableSet;
+import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.main.SlaveRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.CORSConstants;
 import com.streamsets.lib.security.http.SSOAuthenticationUser;
@@ -26,10 +28,15 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class TestAsterAuthenticator {
@@ -44,7 +51,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
 
     // getRequestBaseUrl no URL path
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -240,7 +248,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
@@ -265,7 +274,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
     authenticator = Mockito.spy(authenticator);
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
@@ -292,7 +302,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
     authenticator = Mockito.spy(authenticator);
 
     Mockito.doReturn(true).when(authenticator).isEngineRegistered();
@@ -373,7 +384,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
     authenticator = Mockito.spy(authenticator);
 
     Mockito.doReturn(false).when(authenticator).isEngineRegistered();
@@ -413,7 +425,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
     authenticator = Mockito.spy(authenticator);
 
     // first authenticator method call within try/catch block. AsterException
@@ -482,7 +495,8 @@ public class TestAsterAuthenticator {
         new Configuration()
     );
     Mockito.when(service.getConfig()).thenReturn(config);
-    AsterAuthenticator authenticator = new AsterAuthenticator(service);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterAuthenticator authenticator = new AsterAuthenticator(service, runtimeInfo);
     authenticator = Mockito.spy(authenticator);
 
     Mockito.doReturn(true).when(authenticator).isEngineRegistered();
@@ -508,4 +522,70 @@ public class TestAsterAuthenticator {
     Mockito.verify(service, Mockito.times(1)).handleLogout(Mockito.eq(req), Mockito.eq(res));
   }
 
+  @Test
+  public void testClusterSlave() throws Exception {
+    AsterServiceImpl service = Mockito.mock(AsterServiceImpl.class);
+    AsterServiceConfig config = new AsterServiceConfig(
+        AsterRestConfig.SubjectType.DC,
+        "1",
+        UUID.randomUUID().toString(),
+        new Configuration()
+    );
+    Mockito.when(service.getConfig()).thenReturn(config);
+    RuntimeInfo runtimeInfo = Mockito.mock(SlaveRuntimeInfo.class);
+    Mockito.when(runtimeInfo.isClusterSlave()).thenReturn(true);
+    AsterAuthenticator authenticator = Mockito.spy(new AsterAuthenticator(service, runtimeInfo));
+
+    HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
+    HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+
+    // Make sure cluster slave auth mechanism is called.
+    Assert.assertNull(authenticator.validateRequest(req, res, true));
+    Mockito.verify(authenticator).handleAuthForClusterSlave(Mockito.eq(req));
+
+
+    String validMockToken = "valid|admin";
+    String inValidMockToken = "invalid|admin";
+
+    Mockito.when(runtimeInfo.getAuthenticationTokens()).thenReturn(Collections.singletonMap("admin", validMockToken));
+    Mockito.when(runtimeInfo.isValidAuthenticationToken(Mockito.eq(validMockToken))).thenReturn(true);
+
+    // Now invalid auth token
+    Mockito.when(req.getParameter(Mockito.eq("auth_token"))).thenReturn(inValidMockToken);
+    Mockito.when(req.getParameter(Mockito.eq("auth_user"))).thenReturn("admin");
+    Assert.assertNull(authenticator.validateRequest(req, res, true));
+
+    Map<String, Object> sessionMap = new HashMap<>();
+
+    HttpSession httpSession = Mockito.mock(HttpSession.class);
+    Mockito.when(req.getSession(Mockito.anyBoolean())).thenReturn(httpSession);
+    Mockito.doAnswer(invocation -> {
+      Object[] args = invocation.getArguments();
+      sessionMap.put((String)args[0], args[1]);
+      return null;
+    }).when(httpSession).setAttribute(Mockito.anyString(), Mockito.anyString());
+
+    Mockito.doAnswer(invocation -> {
+      Object[] args = invocation.getArguments();
+      return sessionMap.get(args[0].toString());
+    }).when(httpSession).getAttribute(Mockito.anyString());
+
+    Mockito.when(runtimeInfo.getRolesFromAuthenticationToken(Mockito.eq(validMockToken))).thenReturn(new String[]{"user", "admin"});
+
+    //Now with valid token
+    Mockito.when(req.getParameter(Mockito.eq("auth_token"))).thenReturn(validMockToken);
+    Mockito.when(req.getParameter(Mockito.eq("auth_user"))).thenReturn("admin");
+    Authentication auth = authenticator.validateRequest(req, res, true);
+    Assert.assertNotNull(auth);
+
+    Assert.assertTrue(auth instanceof SSOAuthenticationUser);
+    SSOAuthenticationUser user = (SSOAuthenticationUser)auth;
+    Assert.assertNotNull(user.getSSOUserPrincipal());
+    Assert.assertEquals("admin", user.getSSOUserPrincipal().getName());
+    Assert.assertEquals(2, user.getSSOUserPrincipal().getRoles().size());
+    Assert.assertEquals(ImmutableSet.of("user", "admin"), user.getSSOUserPrincipal().getRoles());
+
+
+  }
 }

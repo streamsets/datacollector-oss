@@ -61,11 +61,16 @@ if [[ $DEBUG = "true" ]]; then
 fi
 
 function update_users {
-  IFS=';' read -r -a array <<< "$CONFIGURED_USERS"
-  for element in "${array[@]}"; do
-    echo "$element" >> "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
-  done
-  chmod 600 "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
+   IFS=';' read -r -a array <<< "$CONFIGURED_USERS"
+  # If the auth type is aster, we don't do anything
+  if [[ "$FILE_AUTH_TYPE" == "aster" ]]; then
+    log "Skip update_users for aster"
+  else
+    for element in "${array[@]}"; do
+      echo "$element" >> "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
+    done
+    chmod 600 "$CONF_DIR"/"$FILE_AUTH_TYPE"-realm.properties
+  fi
 }
 
 function generate_ldap_configs {
@@ -290,7 +295,7 @@ case $CMD in
     ;;
 
   sch_disable)
-    sch_disable 
+    sch_disable
     exit 0
     ;;
 esac

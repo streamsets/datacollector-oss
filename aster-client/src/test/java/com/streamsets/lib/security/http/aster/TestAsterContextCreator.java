@@ -17,9 +17,11 @@ package com.streamsets.lib.security.http.aster;
 
 import com.streamsets.datacollector.http.AsterConfig;
 import com.streamsets.datacollector.http.AsterContext;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 public class TestAsterContextCreator {
 
@@ -35,7 +37,8 @@ public class TestAsterContextCreator {
         engineConf,
         "/tmp"
     );
-    AsterContext context = creator.apply(config);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterContext context = creator.apply(runtimeInfo, config);
 
     Assert.assertNotNull(context);
     Assert.assertFalse(context.isEnabled());
@@ -53,7 +56,8 @@ public class TestAsterContextCreator {
         engineConf,
         "/tmp"
     );
-    AsterContext context = creator.apply(config);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    AsterContext context = creator.apply(runtimeInfo, config);
 
     Assert.assertNotNull(context);
     Assert.assertTrue(context.isEnabled());

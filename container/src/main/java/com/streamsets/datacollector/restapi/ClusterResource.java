@@ -21,6 +21,7 @@ import com.streamsets.datacollector.callback.CallbackObjectType;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.Runner;
 import com.streamsets.datacollector.util.AuthzRole;
+import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
 
 import javax.annotation.security.DenyAll;
@@ -47,11 +48,13 @@ public class ClusterResource {
 
   private final Manager manager;
   private final String user;
+  private final Configuration configuration;
 
   @Inject
-  public ClusterResource(Manager pipelineStateManager, Principal user) {
+  public ClusterResource(Manager pipelineStateManager, Principal user, Configuration configuration) {
     this.manager = pipelineStateManager;
     this.user = user.getName();
+    this.configuration = configuration;
   }
 
   @GET
@@ -78,7 +81,7 @@ public class ClusterResource {
       List<String> authTokens = new ArrayList<>();
       Principal principal = context.getUserPrincipal();
 
-      if(principal != null) {
+      if(principal != null ) {
         user = principal.getName();
         if (context.isUserInRole(AuthzRole.GUEST) || context.isUserInRole(AuthzRole.GUEST_REMOTE)) {
           authTokens.add(slaveCallbackInfo.getGuestToken());

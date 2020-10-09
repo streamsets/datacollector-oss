@@ -18,15 +18,13 @@ package com.streamsets.lib.security.http.aster;
 import com.google.common.base.Preconditions;
 import com.streamsets.datacollector.http.AsterConfig;
 import com.streamsets.datacollector.http.AsterContext;
+import com.streamsets.datacollector.main.RuntimeInfo;
 import org.eclipse.jetty.security.Authenticator;
-import org.eclipse.jetty.security.ServerAuthException;
-import org.eclipse.jetty.server.Authentication;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -39,13 +37,13 @@ import java.util.function.Function;
  * The Aster authenticator stores the token credentials in a {@code aster-token.json} file within the specified
  * data directory.
  */
-public class AsterContextCreator implements Function<AsterConfig, AsterContext> {
+public class AsterContextCreator implements BiFunction<RuntimeInfo, AsterConfig, AsterContext> {
 
   /**
    * Creates an Aster {@link Authenticator} wrapped with a {@link ClassLoaderInContextAuthenticator}.
    */
   @Override
-  public AsterContext apply(AsterConfig asterConfig) {
+  public AsterContext apply(RuntimeInfo runtimeInfo, AsterConfig asterConfig) {
     AsterService service;
     String asterUrl = asterConfig.getEngineConf().get(AsterServiceProvider.ASTER_URL, AsterServiceProvider.ASTER_URL_DEFAULT);
     if (!asterUrl.isEmpty()) {
@@ -62,7 +60,7 @@ public class AsterContextCreator implements Function<AsterConfig, AsterContext> 
     }
 
     ClassLoaderInContextAuthenticator authenticator =
-        new ClassLoaderInContextAuthenticator(new AsterAuthenticator(service));
+        new ClassLoaderInContextAuthenticator(new AsterAuthenticator(service, runtimeInfo));
 
     return new AsterContext() {
       @Override
