@@ -29,7 +29,7 @@ import com.streamsets.pipeline.stage.lib.kinesis.common.AwsKinesisConnection;
     label = "Amazon Kinesis Firehose",
     type = AwsKinesisFirehoseConnection.TYPE,
     description = "Connects to Amazon Kinesis Firehose",
-    version = 1,
+    version = 2,
     upgraderDef = "upgrader/AwsKinesisFirehoseConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR}
 )

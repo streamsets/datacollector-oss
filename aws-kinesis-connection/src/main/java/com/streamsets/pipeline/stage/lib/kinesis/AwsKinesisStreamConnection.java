@@ -16,18 +16,11 @@
 
 package com.streamsets.pipeline.stage.lib.kinesis;
 
-import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
-import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
-import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
-import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
 import com.streamsets.pipeline.stage.lib.kinesis.common.AwsKinesisConnection;
 
 @InterfaceAudience.LimitedPrivate
@@ -36,7 +29,7 @@ import com.streamsets.pipeline.stage.lib.kinesis.common.AwsKinesisConnection;
     label = "Amazon Kinesis Streams",
     type = AwsKinesisStreamConnection.TYPE,
     description = "Connects to Amazon Kinesis Streams",
-    version = 1,
+    version = 2,
     upgraderDef = "upgrader/AwsKinesisStreamConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR}
 )
