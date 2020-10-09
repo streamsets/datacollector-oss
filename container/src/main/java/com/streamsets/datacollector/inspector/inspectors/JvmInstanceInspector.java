@@ -22,13 +22,17 @@ import org.apache.commons.io.FileUtils;
 
 import java.lang.management.ManagementFactory;
 
-public class SdcServerInstanceInspector implements HealthInspector {
+public class JvmInstanceInspector implements HealthInspector {
 
   private static final long GB = 1024*1024*1024;
+  private static final String GC1_YOUNG = "G1 Young Generation";
+  private static final String GC1_OLD = "G1 Old Generation";
+  private static final String CMS_PARNEW = "ParNew";
+  private static final String CMS_CMS = "ConcurrentMarkSweep";
 
   @Override
   public String getName() {
-    return "Data Collector Process";
+    return "Java Virtual Machine (JVM) Process";
   }
 
   @Override
@@ -71,6 +75,37 @@ public class SdcServerInstanceInspector implements HealthInspector {
     builder.addEntry("System Memory Utilization", HealthInspectorEntry.Severity.smallerIsBetter(systemMemoryUtilization, 80, 90))
         .withValue(systemMemoryUtilization + " %")
         .withDescription("How much percent of OS memory can the JVM allocate.");
+
+
+    for(java.lang.management.GarbageCollectorMXBean gcBean: ManagementFactory.getGarbageCollectorMXBeans()) {
+      if(gcBean instanceof com.sun.management.GarbageCollectorMXBean) {
+        // Casting to internal stuff
+        com.sun.management.GarbageCollectorMXBean internal = (com.sun.management.GarbageCollectorMXBean)gcBean;
+        com.sun.management.GcInfo gcInfo = internal.getLastGcInfo();
+
+        // Now the different cases that we are explicitly testing
+        if(GC1_YOUNG.equals(gcBean.getName())) {
+          builder.addEntry("Garbage Collection: Young Gen", gcInfo == null ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.smallerIsBetter(gcInfo.getDuration(), 100, 300))
+              .withValue(gcInfo == null ? null : gcInfo.getDuration() + "ms")
+              .withDescription("Number of millisecond spent in the last GC pause for GC1 Yong Generation");
+        }
+        if(GC1_OLD.equals(gcBean.getName())) {
+          builder.addEntry("Garbage Collection: Old Gen", gcInfo == null ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.smallerIsBetter(gcInfo.getDuration(), 1000, 3000))
+              .withValue(gcInfo == null ? null : gcInfo.getDuration() + "ms")
+              .withDescription("Number of millisecond spent in the last GC pause for GC1 Old Generation");
+        }
+        if(CMS_PARNEW.equals(gcBean.getName())) {
+          builder.addEntry("Garbage Collection: ParNew", gcInfo == null ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.smallerIsBetter(gcInfo.getDuration(), 100, 300))
+              .withValue(gcInfo == null ? null : gcInfo.getDuration() + "ms")
+              .withDescription("Number of millisecond spent in the last GC pause for ParNew");
+        }
+        if(CMS_CMS.equals(gcBean.getName())) {
+          builder.addEntry("Garbage Collection: CMS", gcInfo == null ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.smallerIsBetter(gcInfo.getDuration(), 20_000, 60_000))
+              .withValue(gcInfo == null ? null : gcInfo.getDuration() + "ms")
+              .withDescription("Number of millisecond spent in the last GC pause for Concurrent Mark & Sweep Phase");
+        }
+      }
+    }
 
 
     return builder.build();

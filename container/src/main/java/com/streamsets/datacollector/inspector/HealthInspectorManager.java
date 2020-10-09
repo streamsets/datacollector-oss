@@ -19,7 +19,7 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.inspector.inspectors.ConfigurationInspector;
 import com.streamsets.datacollector.inspector.inspectors.MachineInspector;
 import com.streamsets.datacollector.inspector.inspectors.NetworkInspector;
-import com.streamsets.datacollector.inspector.inspectors.SdcServerInstanceInspector;
+import com.streamsets.datacollector.inspector.inspectors.JvmInstanceInspector;
 import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
 import com.streamsets.datacollector.inspector.model.HealthInspectorReport;
 import com.streamsets.datacollector.inspector.model.HealthInspectorsInfo;
@@ -40,7 +40,7 @@ public class HealthInspectorManager implements HealthInspector.Context {
    */
   private static final List<HealthInspector> INSPECTORS = ImmutableList.of(
       new ConfigurationInspector(),
-      new SdcServerInstanceInspector(),
+      new JvmInstanceInspector(),
       new MachineInspector(),
       new NetworkInspector()
   );
