@@ -226,7 +226,13 @@ public enum MysqlType {
   public static MysqlType of(String name) {
     // at least now we are not interested in precision - cut it off
     String typeName = name;
+    // MySQL 5 returns type like: 'int(10) unsigned'
+    // MySQL 8 returns type like: 'int unsigned'
     int i = typeName.indexOf('(');
+    if (i > -1) {
+      typeName = typeName.substring(0, i);
+    }
+    i = typeName.indexOf(' ');
     if (i > -1) {
       typeName = typeName.substring(0, i);
     }

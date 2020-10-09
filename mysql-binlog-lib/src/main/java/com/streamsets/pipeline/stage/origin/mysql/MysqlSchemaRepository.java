@@ -81,10 +81,14 @@ public class MysqlSchemaRepository {
         stmt.setString(2, databaseAndTable.getTable());
         List<Column> columns = new ArrayList<>();
         try(ResultSet rs = stmt.executeQuery()) {
+          LOG.info("Loading schema for `{}`.`{}`", databaseAndTable.getDatabase(), databaseAndTable.getTable());
           while (rs.next()) {
             String name = rs.getString(1);
             String type = rs.getString(2);
-            columns.add(new Column(name, MysqlType.of(type)));
+            MysqlType mysqlType = MysqlType.of(type);
+
+            LOG.info("\tColumn `{}` of type '{}' mapped to {}", name, type, mysqlType.name());
+            columns.add(new Column(name, mysqlType));
           }
         }
         if (columns.isEmpty()) {
