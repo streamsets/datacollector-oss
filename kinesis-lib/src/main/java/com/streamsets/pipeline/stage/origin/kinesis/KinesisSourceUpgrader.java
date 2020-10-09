@@ -99,7 +99,8 @@ public class KinesisSourceUpgrader extends KinesisBaseUpgrader {
   }
 
   private List<Config> upgradeV6toV7(List<Config> configs) {
-    configs.add(new Config(Joiner.on(".").join(KINESIS_CONFIG_BEAN, LEASE_TABLE_BEAN, "tags"), Collections.emptyMap()));
+    configs.add(new Config(Joiner.on(".").join(KINESIS_CONFIG_BEAN, LEASE_TABLE_BEAN, "tags"), Collections.emptyList()));
+    configs.add(new Config(KINESIS_CONFIG_BEAN + ".dataFormatConfig.preserveRootElement", false));
     return configs;
   }
 

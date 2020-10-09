@@ -16,11 +16,6 @@
 upgraderVersion: 1
 
 upgrades:
-  - toVersion: 7
-    actions:
-      - setConfig:
-          name: kinesisConfig.dataFormatConfig.preserveRootElement
-          value: false
   - toVersion: 9
     actions:
       # Added STREAMSETS_AWS_KINESIS_STREAM Connection type and need to move a few configs around
