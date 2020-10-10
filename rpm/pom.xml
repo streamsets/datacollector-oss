@@ -181,6 +181,17 @@
                   </sources>
                 </mapping>
                 <mapping>
+                  <directory>${sdc.dir}/aster-client-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/aster-client-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
                   <directory>${sdc.dir}/libs-common-lib</directory>
                   <filemode>755</filemode>
                   <username>root</username>
@@ -469,6 +480,17 @@
                   <sources>
                     <source>
                       <location>${sdc.distroot}/container-lib</location>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>${sdc.dir}/aster-client-lib</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>${sdc.distroot}/aster-client-lib</location>
                     </source>
                   </sources>
                 </mapping>
