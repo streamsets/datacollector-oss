@@ -21,84 +21,84 @@ upgrades:
   - toVersion: 4
     actions:
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.securityOption
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.securityOption
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: security.protocol
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: security.protocol
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.kerberosServiceName
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.kerberosServiceName
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: sasl.kerberos.service.name
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: sasl.kerberos.service.name
       - renameConfig:
-          oldNamePattern: conf.provideKeytab
-          newNamePattern: conf.connectionConfig.connection.securityConfig.provideKeytab
+          oldNamePattern: kafkaTargetConfig.provideKeytab
+          newNamePattern: kafkaTargetConfig.connectionConfig.connection.securityConfig.provideKeytab
       - renameConfig:
-          oldNamePattern: conf.userKeytab
-          newNamePattern: conf.connectionConfig.connection.securityConfig.userKeytab
+          oldNamePattern: kafkaTargetConfig.userKeytab
+          newNamePattern: kafkaTargetConfig.connectionConfig.connection.securityConfig.userKeytab
       - renameConfig:
-          oldNamePattern: conf.userPrincipal
-          newNamePattern: conf.connectionConfig.connection.securityConfig.userPrincipal
+          oldNamePattern: kafkaTargetConfig.userPrincipal
+          newNamePattern: kafkaTargetConfig.connectionConfig.connection.securityConfig.userPrincipal
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.truststoreType
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.truststoreType
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.type
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.type
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.truststoreFile
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.truststoreFile
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.location
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.location
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.truststorePassword
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.truststorePassword
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.password
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.truststore.password
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.keystoreType
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.keystoreType
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.type
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.type
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.keystoreFile
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.keystoreFile
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.location
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.location
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.keystorePassword
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.keystorePassword
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.password
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.keystore.password
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.keyPassword
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.keyPassword
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.key.password
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.key.password
       - setConfigFromStringMap:
-          name: conf.connectionConfig.connection.securityConfig.enabledProtocols
-          mapName: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.connectionConfig.connection.securityConfig.enabledProtocols
+          mapName: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.enabled.protocols
       - configStringMapRemove:
-          name: conf.kafkaProducerConfigs
+          name: kafkaTargetConfig.kafkaProducerConfigs
           key: ssl.enabled.protocols
       - renameConfig:
-          oldNamePattern: conf.metadataBrokerList
-          newNamePattern: conf.connectionConfig.connection.metadataBrokerList
+          oldNamePattern: kafkaTargetConfig.metadataBrokerList
+          newNamePattern: kafkaTargetConfig.connectionConfig.connection.metadataBrokerList
