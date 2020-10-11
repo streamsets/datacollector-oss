@@ -75,6 +75,10 @@ public abstract class BuildInfo {
     return info.getProperty("source.md5.checksum", "?");
   }
 
+  public String getScalaBinaryVersion() {
+    return info.getProperty("scala.binary.version", "?");
+  }
+
   public void log(Logger log) {
     log.info("Build info:");
     log.info("  Version        : {}", getVersion());
@@ -82,6 +86,10 @@ public abstract class BuildInfo {
     log.info("  Built by       : {}", getBuiltBy());
     log.info("  Repo SHA       : {}", getBuiltRepoSha());
     log.info("  Source MD5     : {}", getSourceMd5Checksum());
+    if (!getScalaBinaryVersion().equals("?")) {
+      // For Transformer
+      log.info("  Scala Binary Version     : {}", getScalaBinaryVersion());
+    }
   }
 
 }
