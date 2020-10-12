@@ -20,6 +20,7 @@ import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.aster.AsterConfiguration;
 import com.streamsets.lib.security.http.aster.AsterRestClient;
@@ -65,6 +66,7 @@ public class TestEntitlementSyncTaskImpl {
   private AsterRestClient asterRestClient;
   private AsterRestClient.Response response;
   private AsterConfiguration asterConfiguration;
+  private StatsCollector statsCollector;
   private int responseStatus;
 
   @Before
@@ -94,7 +96,8 @@ public class TestEntitlementSyncTaskImpl {
     AsterContext asterContext = Mockito.mock(AsterContext.class);
     Mockito.when(asterContext.isEnabled()).thenReturn(true);
     Mockito.when(asterContext.getService()).thenReturn(asterService);
-    task = spy(new EntitlementSyncTaskImpl(activation, runtimeInfo, buildInfo, appConfig, asterContext));
+    statsCollector = mock(StatsCollector.class);
+    task = spy(new EntitlementSyncTaskImpl(activation, runtimeInfo, buildInfo, appConfig, asterContext, statsCollector));
 
     doReturn(asterService).when(task).getAsterService();
 
@@ -145,6 +148,7 @@ public class TestEntitlementSyncTaskImpl {
           "version", 2
     )));
     verify(activation).setActivationKey(activationCode);
+    verify(statsCollector).setActive(true);
   }
 
   @Test

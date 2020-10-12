@@ -22,10 +22,10 @@ import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.task.AbstractTask;
+import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.aster.AsterRestClient;
 import com.streamsets.lib.security.http.aster.AsterService;
-import com.streamsets.lib.security.http.aster.AsterServiceProvider;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +48,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
   private final BuildInfo buildInfo;
   private final Configuration appConfig;
   private final AsterContext asterContext;
+  private final StatsCollector statsCollector;
 
   @Inject
   public EntitlementSyncTaskImpl(
@@ -55,7 +56,8 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
       RuntimeInfo runtimeInfo,
       BuildInfo buildInfo,
       Configuration appConfig,
-      AsterContext asterContext
+      AsterContext asterContext,
+      StatsCollector statsCollector
       ) {
     super("EntitlementSyncTask");
     this.activation = activation;
@@ -63,6 +65,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
     this.buildInfo = buildInfo;
     this.appConfig = appConfig;
     this.asterContext = asterContext;
+    this.statsCollector = statsCollector;
   }
 
   @Override
@@ -130,6 +133,9 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
       if (entitlement != null) {
         LOG.info("Updating entitlement from {}", asterUrl + ACTIVATION_ENDPOINT_PATH);
         activation.setActivationKey(entitlement);
+        if (!statsCollector.isOpted()) {
+          statsCollector.setActive(true);
+        }
         return true;
       } else {
         LOG.warn("No valid entitlement returned from {}", asterUrl + ACTIVATION_ENDPOINT_PATH);

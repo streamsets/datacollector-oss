@@ -84,7 +84,7 @@ public class TestActivationResource {
   }
 
   @Test
-  public void testActivationResourceStatsCollectorOptBasedOnLicenseType() throws Exception {
+  public void testActivationResourceStatsCollectorOptTrial() throws Exception {
     Activation activation = Mockito.mock(Activation.class);
     StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
     Mockito.when(statsCollector.isOpted()).thenReturn(false);
@@ -99,7 +99,25 @@ public class TestActivationResource {
     Response response = resource.updateActivation("");
     Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     Mockito.verify(activation).setActivationKey(Mockito.anyString());
-    Mockito.verify(statsCollector).setActive(Mockito.anyBoolean());
+    Mockito.verify(statsCollector).setActive(true);
   }
 
+  @Test
+  public void testActivationResourceStatsCollectorOptRegistration() throws Exception {
+    Activation activation = Mockito.mock(Activation.class);
+    StatsCollector statsCollector = Mockito.mock(StatsCollector.class);
+    Mockito.when(statsCollector.isOpted()).thenReturn(false);
+
+    Activation.Info mockInfo = Mockito.mock(Activation.Info.class);
+    Mockito.when(mockInfo.getAdditionalInfo()).thenReturn(ImmutableMap.of(ActivationResource.LICENSE_TYPE, "REGISTRATION"));
+
+    ActivationResource resource = new ActivationResource(activation, statsCollector);
+    Mockito.when(activation.isEnabled()).thenReturn(true);
+
+    Mockito.when(activation.getInfo()).thenReturn(mockInfo);
+    Response response = resource.updateActivation("");
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    Mockito.verify(activation).setActivationKey(Mockito.anyString());
+    Mockito.verify(statsCollector).setActive(true);
+  }
 }

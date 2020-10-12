@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.restapi;
 
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.AuthzRole;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Path("/v1/activation")
 @Api(value = "activation")
@@ -46,6 +48,7 @@ import java.util.Optional;
 public class ActivationResource {
 
   static final String LICENSE_TYPE = "licenseType";
+  static final Set<String> AUTO_OPT_IN_TYPES = ImmutableSet.of("TRIAL", "REGISTRATION");
 
   private final Activation activation;
   private final StatsCollector statsCollector;
@@ -74,7 +77,8 @@ public class ActivationResource {
       activation.setActivationKey(activationKey);
       Map<String, Object> additionalInfo = Optional.ofNullable(activation.getInfo())
           .map(Activation.Info::getAdditionalInfo).orElse(Collections.emptyMap());
-      boolean canOptIn = !additionalInfo.containsKey(LICENSE_TYPE) || additionalInfo.get(LICENSE_TYPE).equals("TRIAL");
+      Object licenseType = additionalInfo.get(LICENSE_TYPE);
+      boolean canOptIn = licenseType == null || AUTO_OPT_IN_TYPES.contains(licenseType);
       if (!statsCollector.isOpted() && canOptIn) {
         statsCollector.setActive(true);
       }
