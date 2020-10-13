@@ -411,6 +411,7 @@ public class OracleCDCSource extends BaseSource {
   private void startGeneratorThread(String lastSourceOffset) throws StageException {
     Offset offset = null;
     LocalDateTime startTimestamp;
+    LocalDateTime endTimestamp;
     boolean logMinerStarted = false;
     try {
       if (!StringUtils.isEmpty(lastSourceOffset)) {
@@ -427,7 +428,8 @@ public class OracleCDCSource extends BaseSource {
           startTimestamp = logMinerSession.getLocalDateTimeForSCN(new BigDecimal(offset.scn), GET_TIME_FOR_SCN_MAX_ATTEMPS);
         }
         offset.timestamp = startTimestamp;
-        logMinerStarted = startLogMiner(startTimestamp);
+        endTimestamp = getEndTimeForStartTime(startTimestamp);
+        logMinerStarted = startLogMiner(startTimestamp, endTimestamp);
       } else { // reset the start date only if it not set.
         if (configBean.startValue != StartValues.SCN) {
           LocalDateTime startDate;
@@ -436,12 +438,14 @@ public class OracleCDCSource extends BaseSource {
           } else {
             startDate = nowAtDBTz();
           }
-          logMinerStarted = startLogMiner(startDate);
+          endTimestamp = getEndTimeForStartTime(startDate);
+          logMinerStarted = startLogMiner(startDate, endTimestamp);
           offset = new Offset(offsetVersion, startDate, ZERO, 0,"");
         } else {
           BigDecimal startCommitSCN = new BigDecimal(configBean.startSCN);
           final LocalDateTime start = logMinerSession.getLocalDateTimeForSCN(startCommitSCN, GET_TIME_FOR_SCN_MAX_ATTEMPS);
-          logMinerStarted = startLogMiner(start);
+          endTimestamp = getEndTimeForStartTime(start);
+          logMinerStarted = startLogMiner(start, endTimestamp);
           offset = new Offset(offsetVersion, start, startCommitSCN.toPlainString(), 0, "");
         }
       }
@@ -454,7 +458,7 @@ public class OracleCDCSource extends BaseSource {
     final boolean started = logMinerStarted;
     generationExecutor.submit(() -> {
       try {
-        generateRecords(os, started);
+        generateRecords(os, endTimestamp, started);
       } catch (Throwable ex) {
         LOG.error("Error while producing records", ex);
         generationStarted = false;
@@ -462,16 +466,9 @@ public class OracleCDCSource extends BaseSource {
     });
   }
 
-  private boolean startLogMiner(LocalDateTime startDate) throws StageException {
-    boolean success = false;
-    if (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) {
-      success = logMinerSession.preloadDictionary(startDate);
-      if (success) {
-        LocalDateTime endDate = getEndTimeForStartTime(startDate);
-        success = logMinerSession.start(startDate, endDate);
-      }
-    }
-    return success;
+  private boolean startLogMiner(LocalDateTime startDate, LocalDateTime endDate) throws StageException {
+    boolean preloadDictionary = (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS);
+    return startLogMiner(startDate, endDate, preloadDictionary);
   }
 
   private boolean startLogMiner(LocalDateTime start, LocalDateTime end, boolean preloadDictionary) {
@@ -518,7 +515,7 @@ public class OracleCDCSource extends BaseSource {
     return localDateTimeToEpoch(nowAtDBTz()) - localDateTimeToEpoch(lastEndTime);
   }
 
-  private void generateRecords(Offset startingOffset, boolean logMinerStarted) {
+  private void generateRecords(Offset startingOffset, LocalDateTime endTime, boolean logMinerStarted) {
     // When this is called the first time, Logminer was started either from SCN or from a start date, so we just keep
     // track of the start date etc.
     LOG.info("Attempting to generate records");
@@ -529,7 +526,7 @@ public class OracleCDCSource extends BaseSource {
     int sequenceNumber = startingOffset.sequence;
     LocalDateTime startTime = adjustStartTime(startingOffset.timestamp);
     String lastTxnId = startingOffset.txnId;
-    LocalDateTime endTime = getEndTimeForStartTime(startTime);
+    endTime = logMinerStarted ? endTime : getEndTimeForStartTime(startTime);
     boolean sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
 
     while (!getContext().isStopped()) {
