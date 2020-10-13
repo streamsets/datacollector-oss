@@ -33,7 +33,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <awssdk.version>1.11.813</awssdk.version>
     <awssdk.caching.secrets.client.version>1.0.0</awssdk.caching.secrets.client.version>
     <guava.version>18.0</guava.version>
   </properties>

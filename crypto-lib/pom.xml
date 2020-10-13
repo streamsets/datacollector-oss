@@ -31,7 +31,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <aws.sdk.version>1.11.365</aws.sdk.version>
     <guava.version>25.1-jre</guava.version>
   </properties>
 
@@ -130,7 +129,7 @@
       <dependency>
         <groupId>com.amazonaws</groupId>
         <artifactId>aws-java-sdk-bom</artifactId>
-        <version>${aws.sdk.version}</version>
+        <version>${awssdk.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

@@ -35,7 +35,6 @@
   <properties>
     <commons-math3.version>3.5</commons-math3.version>
     <sqs.version>1.0.4</sqs.version>
-    <awssdk.version>1.11.872</awssdk.version>
     <json.version>20180813</json.version>
   </properties>
 
