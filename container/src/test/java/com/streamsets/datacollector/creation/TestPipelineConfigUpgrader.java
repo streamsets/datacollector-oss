@@ -352,6 +352,7 @@ public class TestPipelineConfigUpgrader {
     static final String s3StagingUri = "s3://my-bucket/staging-dir";
     static final boolean provisionNewCluster = false;
     static final String clusterId = "j-26ICQZBZQBEFV";
+    static final String emrVersion = "5.13.0";
     static final String clusterPrefix = "j-26ICQZBZQBEFV";
     static final boolean terminateCluster = false;
     static final boolean loggingEnabled = true;
@@ -387,10 +388,14 @@ public class TestPipelineConfigUpgrader {
     ));
     // add formerly Transformer-specific configs that will be moved to the connection
     addCommonOldEMRConfigs(configs, PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG);
-    // serviceAccessSecurityGroup is a special case; it was Transformer-only, but is moving to the connection anyway
+    // serviceAccessSecurityGroup and emrVersion are special cases: Transformer-only, but moving to connection anyway
     configs.add(new Config(
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".serviceAccessSecurityGroup",
         ExpectedVals.serviceAccessSecurityGroup
+    ));
+    configs.add(new Config(
+        PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG + ".emrVersion",
+        ExpectedVals.emrVersion
     ));
     // add the other Transformer-specific, non-connection based properties that would have already existed at this point
     configs.add(new Config(
@@ -442,10 +447,11 @@ public class TestPipelineConfigUpgrader {
         PipelineConfigUpgrader.TRANSFORMER_EMR_CONFIG,
         PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION
     );
-    // the special case of serviceAccessSecurityGroup; should have been moved to the connection
+    // the special cases of serviceAccessSecurityGroup and emrVersion; should have been moved to the connection
     UpgraderTestUtils.assertAllExist(
         upgraded,
-        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION + ".serviceAccessSecurityGroup"
+        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION + ".serviceAccessSecurityGroup",
+        PipelineConfigUpgrader.TRANSFORMER_NEW_EMR_CONNECTION + ".emrVersion"
     );
 
     // Transformer-specific, non connection fields should have stayed put

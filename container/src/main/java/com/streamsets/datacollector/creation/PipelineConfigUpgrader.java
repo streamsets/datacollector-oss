@@ -495,6 +495,13 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         TRANSFORMER_EMR_CONFIG + "." + USE_IAM_ROLES_CONFIG_FIELD
     );
 
+    // for emrVersion, only the legacy Transformer bean class had it, so move it separately
+    UpgraderUtils.moveAllTo(
+        configs,
+        TRANSFORMER_EMR_CONFIG + ".emrVersion",
+        TRANSFORMER_NEW_EMR_CONNECTION + ".emrVersion"
+    );
+
     boolean useIAMRoles = false;
     final Object useIAMRolesObj = useIAMRolesConfig.getValue();
     if (useIAMRolesObj instanceof String) {
