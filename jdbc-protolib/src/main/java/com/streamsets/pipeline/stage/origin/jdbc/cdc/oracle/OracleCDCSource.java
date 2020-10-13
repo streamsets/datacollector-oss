@@ -711,8 +711,10 @@ public class OracleCDCSource extends BaseSource {
         }
       }
       try {
-        sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
         logMinerStarted = startLogMiner(startTime, endTime, continuousMine || error);
+        endTime = logMinerSession.getEndTime();  // This might have been moved forward by LogMinerSession#start. Update
+                                                 // to avoid the next window overlap with the current one.
+        sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
         if (!logMinerStarted) {
           // This can happen when 'endTime' is momentarily ahead of the current redo log, which in turn can happen when
           // a log rotation is in progress. In that case, sleep for a while and try again.

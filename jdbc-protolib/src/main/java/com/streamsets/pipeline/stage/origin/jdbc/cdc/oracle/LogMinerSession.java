@@ -102,6 +102,9 @@ public class LogMinerSession {
   private static final String REMOVE_LOGFILE_CMD = "BEGIN DBMS_LOGMNR.REMOVE_LOGFILE(?); END;";
 
   // Template to retrieve the list of redo log files given a time range [first, next) of interest.
+  // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
+  // are replaced by the CURRENT_TIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
+  // handling.
   private static final String SELECT_REDO_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
@@ -111,28 +114,35 @@ public class LogMinerSession {
       + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
       + " UNION "
-      + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, STATUS, 'YES' AS ONLINE_LOG, ARCHIVED "
-      + " FROM V$LOG, "
+      + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
+      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN CURRENT_TIMESTAMP AT TIME ZONE DBTIMEZONE ELSE A.NEXT_TIME END) NEXT_TIME, "
+      + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
+      + " FROM V$LOG A, V$DATABASE B, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
-      + "      FROM V$LOGFILE) VLOGFILE "
-      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO";
+      + "      FROM V$LOGFILE) C "
+      + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_ARG_FIRST = ":first";
   private static final String SELECT_REDO_LOGS_ARG_NEXT = ":next";
 
   // Template to retrieve the list of redo log files whose SCN range (first, next) covers a given SCN of interest.
+  // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
+  // are replaced by the CURRENT_TIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
+  // handling.
   private static final String SELECT_REDO_LOGS_FOR_SCN_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
       + " UNION "
-      + " SELECT VLOGFILE.MEMBER, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
-      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, STATUS, 'YES' AS ONLINE_LOG, ARCHIVED "
-      + " FROM V$LOG, "
+      + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
+      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN CURRENT_TIMESTAMP AT TIME ZONE DBTIMEZONE ELSE A.NEXT_TIME END) NEXT_TIME, "
+      + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
+      + " FROM V$LOG A, V$DATABASE B, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
-      + "      FROM V$LOGFILE) VLOGFILE "
-      + " WHERE V$LOG.GROUP# = VLOGFILE.GROUP# AND V$LOG.MEMBERS = VLOGFILE.ROWNO";
+      + "      FROM V$LOGFILE) C "
+      + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_FOR_SCN_ARG = ":scn";
 
   // Templates to retrieve the redo logs containing the LogMiner dictionary valid for transactions with SCN >= :scn.
@@ -177,6 +187,8 @@ public class LogMinerSession {
   private final List<RedoLog> currentLogList;
   private final PreparedStatement queryContentStatement;
   private boolean activeSession;
+  private LocalDateTime startTime;
+  private LocalDateTime endTime;
 
   /**
    * LogMinerSession builder. It allows configuring optional parameters for the LogMiner session. Actual LogMiner
@@ -413,6 +425,8 @@ public class LogMinerSession {
   public boolean start(LocalDateTime start, LocalDateTime end) {
     Preconditions.checkNotNull(start);
     Preconditions.checkNotNull(end);
+    this.startTime = start;
+    this.endTime = end;
     String sessionStart = Utils.format(START_TIME_ARG, start.format(dateTimeFormatter));
     String sessionEnd = Utils.format(END_TIME_ARG, end.format(dateTimeFormatter));
     LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
@@ -423,13 +437,15 @@ public class LogMinerSession {
       }
 
       if (dictionaryFromRedoLogs) {
-        // When DICT_FROM_REDO_LOGS option is enabled, avoiding to use Timestamps to define the mining window and
-        // using SCNs instead. Otherwise an "ORA-01291: missing logfile" is raised when the mining window reaches the
-        // current online log.
-        BigDecimal firstSCN = currentLogList.stream().map(RedoLog::getFirstChange).min(BigDecimal::compareTo).get();
-        BigDecimal lastSCN = currentLogList.stream().map(RedoLog::getNextChange).max(BigDecimal::compareTo).get();
+        // - When DICT_FROM_REDO_LOGS option is enabled, the mining window must be expanded backwards to cover the
+        //   closest dictionary written in the redo logs: (start, end) becomes (dictionaryBegin, end).
+        // - Also, we cannot use timestamps to define the mining window; we must use SCNs instead. Otherwise an
+        //   "ORA-01291: missing logfile" is raised when the mining window reaches the current online log.
+        BigDecimal firstSCN = adjustMiningWindowLowerLimit();
+        BigDecimal lastSCN = adjustMiningWindowUpperLimit();
         sessionStart = Utils.format(START_SCN_ARG, firstSCN.toPlainString());
         sessionEnd = Utils.format(END_SCN_ARG, lastSCN.toPlainString());
+        LOG.info("Mining window upper limit readjusted: {} -> {}.", end, this.endTime);
       }
     }
 
@@ -442,6 +458,7 @@ public class LogMinerSession {
         printCurrentLogs();
       }
       activeSession = false;
+      LOG.error(JdbcErrors.JDBC_52.getMessage(), e);
       throw new StageException(JdbcErrors.JDBC_52, e);
     }
 
@@ -667,6 +684,14 @@ public class LogMinerSession {
     return result;
   }
 
+  public LocalDateTime getStartTime() {
+    return this.startTime;
+  }
+
+  public LocalDateTime getEndTime() {
+    return this.endTime;
+  }
+
   /**
    * Update the V$LOGMNR_LOGS list to cover a given range. The method handles the addition of extra redo logs
    * containing the dictionary (when DICTIONARY_FROM_REDO_LOGS is configured) and any other redo logs required
@@ -686,12 +711,23 @@ public class LogMinerSession {
     List<RedoLog> newLogList = new ArrayList<>();
 
     if (dictionaryFromRedoLogs) {
-      newLogList.addAll(findDictionary(start));
+      List<RedoLog> dictionary = findDictionary(start);
+
       if (ddlDictTracking) {
-        // When DDL_DICT_TRACKING option is active, we additionally need all the redo log files existing after the
-        // dictionary and until the beginning of the mining window. This allows LogMiner to complete the dictionary
+        // When DDL_DICT_TRACKING option is active, we need to readjust the mining window limits to cover all the redo
+        // log files touching the time interval (dictionaryBegin, end). This allows LogMiner to complete the dictionary
         // with any DDL transaction registered in these logs.
-        start = newLogList.get(newLogList.size() - 1).getNextTime();
+        start = dictionary.get(0).getFirstTime();  // findDictionary always returns an ordered, non-empty list
+
+        // Update upper limit if the dictionary end is after it (this could happen for an Oracle RAC database).
+        LocalDateTime dictEnd = dictionary.get(dictionary.size() - 1).getNextTime();
+        if (end.isBefore(dictEnd)) {
+          end = dictEnd;
+        }
+
+      } else {
+        // Just add the redo logs containing the dictionary. The start/end limits must remain unchanged.
+        newLogList.addAll(dictionary);
       }
     }
 
@@ -933,12 +969,9 @@ public class LogMinerSession {
     }
 
     for (RedoLog log : onlineLogs) {
-      boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 &&
-          (log.getNextTime() == null || log.getNextTime().compareTo(start) > 0);  // nextTime is null for the current online log.
-      boolean overlapRight = log.getFirstTime().compareTo(end) < 0 &&
-          (log.getNextTime() == null || log.getNextTime().compareTo(end) >= 0);
-      boolean inclusion = log.getFirstTime().compareTo(start) > 0 &&
-          (log.getNextTime() != null && log.getNextTime().compareTo(end) < 0);
+      boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 && log.getNextTime().compareTo(start) > 0;
+      boolean overlapRight = log.getFirstTime().compareTo(end) < 0 && log.getNextTime().compareTo(end) >= 0;
+      boolean inclusion = log.getFirstTime().compareTo(start) > 0 && log.getNextTime().compareTo(end) <= 0;
 
       if (overlapLeft || overlapRight || inclusion) {
         if (!log.isArchived()) {
@@ -1011,7 +1044,7 @@ public class LogMinerSession {
 
     for (RedoLog log : onlineLogs) {
       boolean leftCondition = log.getFirstChange().compareTo(scn) <= 0;
-      boolean rightCondition = log.getNextChange() == null || log.getNextChange().compareTo(scn) > 0;
+      boolean rightCondition = log.getNextChange().compareTo(scn) > 0;
 
       if (leftCondition && rightCondition) {
         if (!log.isArchived()) {
@@ -1047,6 +1080,62 @@ public class LogMinerSession {
     }
 
     return statusOK;
+  }
+
+  /**
+   * Determines the lower bound for the upcoming mining window, when CONTINOUS_MINE option is disabled and dictionary
+   * source is DICT_FROM_REDO_LOG. Updates {@link LogMinerSession#startTime} accordingly.
+   *
+   * @return The SCN lower bound.
+   */
+  private BigDecimal adjustMiningWindowLowerLimit() {
+    // The lower limit should point to the dictionary beginning. Note that for a single instance database
+    // this is the lowest FIRST_CHANGE# in `currentLogList`, but this might not be the case in an Oracle RAC database,
+    // as `currentLogList` can contain an older redo log from other thread. Hence we need to explicitly look for
+    // the DICTIONARY_BEGIN.
+    RedoLog log = currentLogList.stream()
+                                .filter(RedoLog::isDictionaryBegin)
+                                .min(Comparator.comparing(RedoLog::getFirstChange))
+                                .get();
+    this.startTime = log.getFirstTime();
+    return log.getFirstChange();
+  }
+
+  /**
+   * Determines the upper bound for the upcoming mining window, when CONTINOUS_MINE option is disabled and dictionary
+   * source is DICT_FROM_REDO_LOG. Updates {@link LogMinerSession#endTime} accordingly.
+   *
+   * @return The SCN upper bound.
+   */
+  private BigDecimal adjustMiningWindowUpperLimit() {
+    // At this point `currentLogList` contains, for each redo thread, the subset of its redo logs covering the interval
+    // (dictionary_begin, endTime). Consequently there is one redo log per thread covering the endTime timestamp. We
+    // can use as a valid SCN upper limit the lowest NEXT_CHANGE# from those redo logs. That ensures:
+    // 1) endTime <= upperLimit; which is required to cover the mining window (dictionary_begin, endTime).
+    // 2) upperLimit <= NEXT_CHANGE# for all the redo logs covering endTime; otherwise, an "ORA-01291: missing log
+    //    file error" will be raised because the final mining window (dictionary_begin, upperLimit) must be covered for
+    //    each thread with the redologs in `currentLogList`.
+    //
+    // NOTE: we avoid to use TIMESTAMP_TO_SCN(endTime) as the upper limit, as the TIMESTAMP_TO_SCN oracle function
+    // depends on undo retention policies to work fine. See the official documentation for more details.
+
+    List<BigDecimal> threads = getThreadsFromRedoLogs(this.currentLogList);
+    RedoLog selected = null;
+
+    // Find the lowest upper bound.
+    for (BigDecimal threadNo : threads) {
+      RedoLog candidate = this.currentLogList.stream()
+                                             .filter(log -> log.getThread().equals(threadNo))
+                                             .max(Comparator.comparing(RedoLog::getNextChange))
+                                             .get();
+
+      if (selected == null || selected.getNextChange().compareTo(candidate.getNextChange()) > 0) {
+        selected = candidate;
+      }
+    }
+
+    this.endTime = selected.getNextTime();
+    return selected.getNextChange();
   }
 
   private List<BigDecimal> getThreadsFromRedoLogs(List<RedoLog> logs) {

@@ -108,7 +108,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102:
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15)
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15)
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> onlineLogs = createLogs(3, 1, 100, 50000,
         startOnline, true, seq -> seq == 102 ? "CURRENT" : "INACTIVE", seq -> seq != 102);
@@ -147,7 +147,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102:
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15)
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15)
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> onlineLogs = createLogs(3, 1, 100, 50000,
         startOnline, true, seq -> seq == 102 ? "CURRENT" : "INACTIVE", seq -> seq != 102);
@@ -185,7 +185,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102. No archived logs in 'src'.
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15)
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15)
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> src = createLogs(3, 1, 100, 50000,
         startOnline, true, seq -> seq == 102 ? "CURRENT" : "ACTIVE", seq -> false);
@@ -242,7 +242,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102:
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15) --> ARCHIVED
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15) --> ARCHIVED
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> onlineLogs = createLogs(3, 1, 100, 50000,
         startOnline, true, seq -> seq == 102 ? "CURRENT" : "INACTIVE", seq -> seq != 102);
@@ -280,7 +280,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102 in thread 1:
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15)
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15)
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline1 = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> onlineLogs1 = createLogs(3, 1, 100, 50000,
         startOnline1, true, seq -> seq == 102 ? "CURRENT" : "INACTIVE", seq -> seq != 102);
@@ -288,7 +288,7 @@ public class TestLogMinerSession {
     // Create 5 online logs, sequences 11-15 in thread 2, none of them has been archived yet:
     // - online_11.log, seq: 2/11, init: 49100 (09:20:00 22/02/15), end: 50100 (10:20:00 22/02/15)
     // - ...
-    // - online_12.log, seq: 2/15, init: 53100 (13:20:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_12.log, seq: 2/15, init: 53100 (13:20:00 22/02/15), end: 54100 (14:20:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline2 = LocalDateTime.of(2015, Month.FEBRUARY, 22, 9, 20, 00);
     List<RedoLog> onlineLogs2 =  createLogs(5, 2, 11, 49100,
         startOnline2, true, seq -> seq == 15 ? "CURRENT" : "ACTIVE", seq -> false);
@@ -339,7 +339,7 @@ public class TestLogMinerSession {
     // Create 3 online logs, sequences 100-102 in thread 1:
     // - online_100.log, seq: 1/100, init: 50000 (10:15:00 22/02/15), end: 51000 (11:15:00 22/02/15)
     // - online_101.log, seq: 1/101, init: 51000 (11:15:00 22/02/15), end: 52000 (12:15:00 22/02/15)
-    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_102.log, seq: 1/102, init: 52000 (12:15:00 22/02/15), end: 53000 (13:15:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline1 = LocalDateTime.of(2015, Month.FEBRUARY, 22, 10, 15, 00);
     List<RedoLog> onlineLogs1 = createLogs(3, 1, 100, 50000,
         startOnline1, true, seq -> seq == 102 ? "CURRENT" : "INACTIVE", seq -> seq != 102);
@@ -347,7 +347,7 @@ public class TestLogMinerSession {
     // Create 5 online logs, sequences 11-15 in thread 2:
     // - online_11.log, seq: 2/11, init: 49100 (09:20:00 22/02/15), end: 50100 (10:20:00 22/02/15)
     // - ...
-    // - online_12.log, seq: 2/15, init: 53100 (13:20:00 22/02/15), end: maxSCN (null) --> CURRENT ONLINE LOG
+    // - online_12.log, seq: 2/15, init: 53100 (13:20:00 22/02/15), end: 54100 (14:20:00 22/02/15) --> CURRENT ONLINE LOG
     LocalDateTime startOnline2 = LocalDateTime.of(2015, Month.FEBRUARY, 22, 9, 20, 00);
     List<RedoLog> onlineLogs2 =  createLogs(5, 2, 11, 49100,
         startOnline2, true, seq -> seq == 15 ? "CURRENT" : "INACTIVE", seq -> seq != 15);
@@ -407,11 +407,9 @@ public class TestLogMinerSession {
       String path = Utils.format("{}_{}.log", prefix, sequence);
       String status = statusSetter.apply(sequence);
       LocalDateTime firstTime = initialDatetime.plusMinutes(i * timeInterval);
-      LocalDateTime endTime = status.equals(LogMinerSession.LOG_STATUS_CURRENT) ?
-                              null : firstTime.plusMinutes(timeInterval);
+      LocalDateTime endTime = firstTime.plusMinutes(timeInterval);
       BigDecimal firstChange = BigDecimal.valueOf(i * scnInterval + initialSCN);
-      BigDecimal nextChange = status.equals(LogMinerSession.LOG_STATUS_CURRENT) ?
-                              maxSCN : BigDecimal.valueOf((i + 1) * scnInterval + initialSCN);
+      BigDecimal nextChange = BigDecimal.valueOf((i + 1) * scnInterval + initialSCN);
       RedoLog log = new RedoLog(path, BigDecimal.valueOf(thread), BigDecimal.valueOf(sequence), firstTime,
           endTime, firstChange, nextChange, false, false, status, online, isArchived.apply(sequence));
       result.add(log);

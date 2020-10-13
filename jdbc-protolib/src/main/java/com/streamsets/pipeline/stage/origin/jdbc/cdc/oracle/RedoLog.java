@@ -55,7 +55,7 @@ public class RedoLog {
     this.thread = Preconditions.checkNotNull(thread);
     this.sequence = Preconditions.checkNotNull(sequence);
     this.firstTime = Preconditions.checkNotNull(firstTime);
-    this.nextTime = nextTime;
+    this.nextTime = Preconditions.checkNotNull(nextTime);
     this.firstChange = Preconditions.checkNotNull(firstChange);
     this.nextChange = Preconditions.checkNotNull(nextChange);
     this.dictionaryBegin = dictionaryBegin;
