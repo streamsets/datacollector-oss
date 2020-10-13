@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,8 @@
  * limitations under the License.
  */
 /**
- * Main Module
+ * SDC RESTful API module.
  */
 
-angular.module('dataCollectorApp', [
-  'ngRoute',
-  'ngCookies',
-  'tmh.dynamicLocale',
-  'pascalprecht.translate',
-  'templates-app',
-  'templates-common',
-  'dataCollectorApp.common',
-  'dataCollectorApp.home',
-  'commonUI.sdcConfiguration',
-  'commonUI.jvmMetrics',
-  'commonUI.logs',
-  'dataCollectorApp.restapi',
-  'dataCollectorApp.inspectors',
-  'ngStorage',
-  'ngSanitize',
-  'angular-google-analytics',
-  'xeditable',
-  'angular-cron-gen'
-]);
+angular
+  .module('dataCollectorApp.inspectors', []);

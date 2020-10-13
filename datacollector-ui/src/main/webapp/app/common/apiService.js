@@ -1526,7 +1526,18 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      uploadSupportBundle: function(generators) {return $http.get(apiBase + '/system/bundle/upload?generators=' + generators.join(','));}
+      uploadSupportBundle: function(generators) {
+        return $http.get(apiBase + '/system/bundle/upload?generators=' + generators.join(','));
+      },
+
+      /**
+       * Returns results of health inspectors
+       *
+       * @returns {*}
+       */
+      getHealthInspectorsStatus: function() {
+        return $http.get(apiBase + '/system/health/run');
+      }
     };
 
     api.activation = {

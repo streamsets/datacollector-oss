@@ -37,6 +37,7 @@
         "localHelp": "Local Help",
         "hostedHelp": "Hosted Help",
         "restFulAPI": "RESTful API",
+        "inspectors": "Health Inspectors",
         "settings": "Settings",
         "supportBundle": "Support Bundle"
       },
@@ -909,6 +910,9 @@
   },
   "restapi": {
     "title": "Data Collector RESTful API"
+  },
+  "inspectors": {
+    "title": "Data Collector Health Inspector"
   },
   "sdcConfiguration": {
     "configuration": "Configuration",

@@ -1,0 +1,69 @@
+<div class="panel panel-default page-panel sdc-inspectors-page">
+
+  <div show-loading="fetching"></div>
+
+  <div class="panel-heading clearfix">
+    <div class="panel-title size-toolbar">
+      <h3 class="pull-left" translate="inspectors.title">Data Collector Health Inspector</h3>
+    </div>
+    <ul class="list-inline pull-right">
+      <li>
+        <a href="javascript:;" ng-click="expandAll(true);">expand all</a>
+      </li>
+      <li>
+        <a href="javascript:;" ng-click="expandAll(false);">collapse all</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
+    <div class="health-inspector-ui" aria-live="polite" aria-relevant="additions removals">
+      <ul class="list-unstyled endpoints">
+        <li ng-repeat="inspector in inspectors track by $index" class="inspector" ng-class="{active:inspector.open}">
+          <div class="clearfix">
+            <ul class="list-inline pull-left inspector-heading">
+              <li>
+                <h4>
+                  <i ng-if="inspector.severity === 'GREEN'" class="fa fa-check-circle fa-12x"></i>
+                  <i ng-if="inspector.severity === 'RED'" class="fa fa-times-circle fa-12x"></i>
+                  <a href="javascript:;" ng-click="inspector.open=!inspector.open;" ng-bind="inspector.inspectorsInfo.name"></a>
+                </h4>
+              </li>
+            </ul>
+            <ul class="list-inline pull-right inspector-actions">
+              <li>
+                <a href="javascript:;" ng-if="!inspector.open" ng-click="inspector.open=!inspector.open;">open</a>
+                <a href="javascript:;" ng-if="inspector.open" ng-click="inspector.open=!inspector.open;">close</a>
+              </li>
+              <li>
+                <a href="javascript:;" ng-click="expand(inspector);">list checks</a>
+              </li>
+              <li>
+                <a href="javascript:;" ng-click="expand(inspector,true);">expand checks</a>
+              </li>
+            </ul>
+          </div>
+          <ul class="list-unstyled collapse operations" ng-class="{in:inspector.open}">
+            <li ng-repeat="entry in inspector.entries track by $index" class="operation {{entry.severity}}">
+              <div class="heading">
+                <a ng-click="entry.open=!entry.open;" href="javascript:;">
+                  <div class="clearfix">
+                    <span class="name" ng-bind="entry.name"></span>
+                    <span class="description" ng-bind="entry.description"></span>
+                    <span class="value pull-right" ng-bind="entry.value"></span>
+                  </div>
+                </a>
+              </div>
+              <div class="content collapse" ng-class="{in: entry.details && entry.open}">
+                <div ng-if="entry.details">
+                  <pre ng-bind="entry.details"></pre>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>

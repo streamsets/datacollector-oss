@@ -1,0 +1,294 @@
+/*
+ * Copyright 2020 StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+.sdc-inspectors-page {
+  .panel-heading {
+    .settings-dropdown {
+      .btn {
+        padding: 4px @defaultPadding * 0.7 0 0;
+
+        span {
+          padding-top: 0;
+        }
+      }
+    }
+  }
+
+  .panel-body {
+    overflow: auto;
+
+    .alert-info {
+      margin-top: 100px;
+
+      pre {
+        margin-top: @defaultPadding * 2;
+      }
+    }
+  }
+}
+
+
+// borrowed styles from the swagger-ui module
+// operations colors
+@health-inspector-blue-text: #0f6ab4;
+@health-inspector-blue-border: #c3d9ec;
+@health-inspector-blue-hide: #6fa5d2;
+@health-inspector-blue-bg: #e7f0f7;
+
+@health-inspector-green-text: #10a54a;
+@health-inspector-green-border: #c3e8d1;
+@health-inspector-green-hide: #6fc992;
+@health-inspector-green-bg: #ebf7f0;
+
+@health-inspector-red-text: #a41e22;
+@health-inspector-red-border: #e8c6c7;
+@health-inspector-red-hide: #c8787a;
+@health-inspector-red-bg: #f5e8e8;
+
+@headings-line-height:    1.1;
+@line-height-computed:    20px;
+@font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+
+
+.health-check(@severity; @border-color; @hide-color; @bg-color){
+
+  .heading,
+  .content{
+    background-color: @bg-color;
+    border: 1px solid @border-color;
+  }
+
+  .serverity{
+    background-color: @severity;
+  }
+
+  h5,
+  .name{
+    color: @severity;
+  }
+
+}
+
+.health-inspector-ui{
+
+  .api-description{
+    margin-bottom: 20px;
+  }
+
+  .api-version{
+    color: #999;
+  }
+
+  .external-docs{
+    color: #000;
+  }
+
+  .inspector{
+
+    border-bottom: 1px solid #ddd;
+
+    &:last-child{
+      border: 0;
+    }
+
+    &.active,
+    &:hover{
+
+      h4 a{
+        color: #000;
+      }
+
+      .inspector-actions li a{
+        color: #555;
+      }
+    }
+
+    a{
+
+      text-decoration: none;
+      color: #999;
+
+      &:hover{
+        color: #000;
+        text-decoration: underline;
+      }
+    }
+
+    .inpsector-heading span{
+      color: #999;
+
+      i {
+        .error {
+          color: @health-inspector-red-text;
+        }
+
+        .ok {
+          color: @health-inspector-green-text;
+        }
+      }
+    }
+
+    .inspector-actions{
+
+      line-height: @headings-line-height;
+      margin: (@line-height-computed / 2) 0;
+
+      li{
+
+        border-right: 1px solid #ddd;
+
+        &:last-child{
+          border-right: 0;
+        }
+      }
+    }
+
+  }
+
+  .operation{
+
+    margin-bottom: 10px;
+
+    .heading a:hover{
+      text-decoration: none;
+    }
+
+    .serverity{
+      color: #fff;
+      padding: 7px 0 4px;
+      text-align: center;
+      width: 50px;
+      border-radius: 2px;
+      display: inline-block;
+      font-size: .7em;
+    }
+
+    .value{
+      color: #000;
+      padding-left: 10px;
+      padding-right: 10px;
+      display: inline-block;
+    }
+
+    .description{
+      margin: 2px 10px 0 0;
+    }
+
+    .content-type label{
+      margin-right: 5px;
+    }
+
+    .content{
+
+      padding: 10px;
+      border-top: 0 !important;
+
+      h5{
+        font-weight: bold;
+        padding: 15px 0 5px;
+        margin: 0;
+      }
+
+      .table{
+        margin: 0;
+        font: inherit;
+        table-layout: fixed;
+        min-width: 650px;
+      }
+
+      .table-responsive .table{
+        td,
+        th{
+          white-space: initial;
+          word-break: break-word;
+        }
+      }
+
+      thead th{
+        color: #666;
+        padding: 5px;
+        border-bottom: 1px solid #999;
+      }
+
+      pre{
+        background-color: #fcf6db;
+        border: 1px solid #e5e0c6;
+        max-height: 200px;
+        overflow: auto;
+        font-size: .9em;
+        word-wrap: initial;
+      }
+
+      input,
+      textarea{
+        width: 100%;
+      }
+
+      textarea{
+        height: 100px;
+        resize: none;
+        font-family: @font-family-monospace;
+        font-size: .9em;
+      }
+
+      label{
+        font-weight: normal;
+      }
+
+      ul.schema{
+
+        margin: 0;
+
+        li{
+          border-right: 1px solid #ddd;
+          margin: 0 5px 5px 0;
+          padding: 2px 5px 2px 0;
+
+          &:last-child{
+            border-right: 0;
+          }
+
+          a{
+            color: #aaa;
+
+            &.active,
+            &:hover{
+              color: #000;
+            }
+
+          }
+
+        }
+      }
+
+    }
+  }
+
+  .GREEN{
+    .health-check(@health-inspector-green-text, @health-inspector-green-border, @health-inspector-green-hide, @health-inspector-green-bg);
+  }
+
+  .RED{
+    .health-check(@health-inspector-red-text, @health-inspector-red-border, @health-inspector-red-hide, @health-inspector-red-bg);
+  }
+
+
+  .bold,
+  .bold label{
+    font-weight: bold !important;
+  }
+
+}
