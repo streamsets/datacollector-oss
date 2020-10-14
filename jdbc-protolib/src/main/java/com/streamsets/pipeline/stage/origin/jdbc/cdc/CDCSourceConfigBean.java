@@ -47,7 +47,7 @@ public class CDCSourceConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\", \"SELECT_FOR_UPDATE\"]",
+      defaultValue = "[\"INSERT\", \"UPDATE\", \"DELETE\"]",
       label = "Operations",
       description = "Operations to capture as records. All other operations are ignored.",
       displayPosition = 70,
