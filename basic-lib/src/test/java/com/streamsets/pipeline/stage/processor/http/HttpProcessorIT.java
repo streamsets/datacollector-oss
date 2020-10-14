@@ -35,6 +35,7 @@ import com.streamsets.pipeline.lib.http.oauth2.SigningAlgorithms;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.util.http.HttpStageTestUtil;
 import com.streamsets.pipeline.stage.util.http.HttpStageUtil;
 import com.streamsets.testing.SingleForkNoReuseTest;
@@ -671,6 +672,7 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.clientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.CLIENT_CREDENTIALS;
+      conf.missingValuesBehavior = MissingValuesBehavior.SEND_TO_ERROR;
       ProcessorRunner runner = createProcessorRunner(conf);
       try {
         for (int i = 0; i < 3; i++) {
@@ -730,6 +732,7 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.password = () -> PASSWORD;
       conf.client.oauth2.tokenUrl = getBaseUri() + "credentialsToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+      conf.missingValuesBehavior = MissingValuesBehavior.SEND_TO_ERROR;
 
       ProcessorRunner runner = createProcessorRunner(conf);
       try {
@@ -794,6 +797,7 @@ public class HttpProcessorIT extends JerseyTest {
       conf.client.oauth2.resourceOwnerClientId = () -> CLIENT_ID;
       conf.client.oauth2.tokenUrl = getBaseUri() + "resourceToken";
       conf.client.oauth2.credentialsGrantType = OAuth2GrantTypes.RESOURCE_OWNER;
+      conf.missingValuesBehavior = MissingValuesBehavior.SEND_TO_ERROR;
 
       ProcessorRunner runner = createProcessorRunner(conf);
       try {

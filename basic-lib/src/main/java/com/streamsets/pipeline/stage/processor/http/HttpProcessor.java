@@ -423,10 +423,8 @@ public class HttpProcessor extends SingleLaneProcessor {
             // Pause between paging requests so we don't get rate limited.
             uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
           } else {
-            if (!recordsResponse.isEmpty()) {
-              currentRecord = getContext().cloneRecord(recordsResponse.get(0));
-              currentRecord.set(Field.create(recordsResponse.stream().map(Record::get).collect(Collectors.toList())));
-            }
+            currentRecord = getContext().createRecord("");
+            currentRecord.set(Field.create(recordsResponse.stream().map(Record::get).collect(Collectors.toList())));
           }
         } catch (OnRecordErrorException e) {
           close = true;
@@ -950,9 +948,13 @@ public class HttpProcessor extends SingleLaneProcessor {
             parsedRecords.add(rec);
           } else if (conf.dataFormat == DataFormat.JSON || conf.dataFormat == DataFormat.XML) {
             if (record.get().getValue() instanceof List) {
-              if (parsePaginatedRecord(parsedRecords, record)) {
-                close = true;
-              }
+              List<Field> recordList = record.get().getValueAsList();
+              close |= recordList.isEmpty();
+              recordList.forEach(r -> {
+                Record parsedRecord = getContext().createRecord("");
+                parsedRecord.set(r);
+                parsedRecords.add(parsedRecord);
+              });
             } else {
               //JSON Object
               if (parsePaginatedRecord(parsedRecords, record)) {
