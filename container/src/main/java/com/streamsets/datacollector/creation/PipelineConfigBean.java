@@ -66,9 +66,7 @@ import java.util.Map;
     upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
 )
-@HideConfigs(
-    {"sdcEmrConnectionSelection"}
-)
+@HideConfigs({"sdcEmrConnectionSelection", "sdcEmrConnection.awsConfig.isAssumeRole"})
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 

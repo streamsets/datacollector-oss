@@ -102,6 +102,15 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
 
     Exception unhandledValidationException = null;
 
+    if (connection.awsConfig.isAssumeRole) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.awsConfig.isAssumeRole",
+          EMRErrors.EMR_0001,
+          region
+      ));
+    }
+
     try {
       emrClient = AmazonElasticMapReduceClientBuilder.standard()
           .withCredentials(credentialsProvider)

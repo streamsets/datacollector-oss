@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum EMRErrors implements ErrorCode {
+  EMR_0001("Assume Role is not supported on EMR yet"),
   EMR_0100("Invalid EMR configuration: {}"),
   EMR_0500("Invalid region specified: {}"),
   EMR_0510("Invalid access key id/secret"),
