@@ -711,7 +711,8 @@ public class OracleCDCSource extends BaseSource {
         }
       }
       try {
-        logMinerStarted = startLogMiner(startTime, endTime, continuousMine || error);
+        boolean preloadDictionary = (configBean.dictionary == DictionaryValues.DICT_FROM_REDO_LOGS) && (continuousMine || error);
+        logMinerStarted = startLogMiner(startTime, endTime, preloadDictionary);
         endTime = logMinerSession.getEndTime();  // This might have been moved forward by LogMinerSession#start. Update
                                                  // to avoid the next window overlap with the current one.
         sessionWindowInCurrent = inSessionWindowCurrent(startTime, endTime);
