@@ -21,6 +21,7 @@ import com.streamsets.datacollector.creation.PipelineConfigBean;
 import com.streamsets.datacollector.definition.ConfigDefinitionExtractor;
 import com.streamsets.datacollector.definition.ConfigGroupExtractor;
 import com.streamsets.datacollector.definition.StageDefinitionExtractor;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.impl.Utils;
 
@@ -63,8 +64,11 @@ public class PipelineDefinition {
   }
 
   private static List<ConfigDefinition> createPipelineConfigs() {
-    return ConfigDefinitionExtractor.get().extract(PipelineConfigBean.class,
-        StageDefinitionExtractor.getGroups(PipelineConfigBean.class), "Pipeline Definition");
+    final List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(PipelineConfigBean.class,
+        StageDefinitionExtractor.getGroups(PipelineConfigBean.class),
+        "Pipeline Definition"
+    );
+    return PipelineConfigurationUtil.handleHideConfigs(PipelineConfigBean.class, configs);
   }
 
   @VisibleForTesting

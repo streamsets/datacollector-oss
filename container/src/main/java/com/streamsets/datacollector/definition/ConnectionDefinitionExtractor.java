@@ -19,18 +19,23 @@ import com.streamsets.datacollector.config.ConfigDefinition;
 import com.streamsets.datacollector.config.ConfigGroupDefinition;
 import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
+import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.lang3.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Class designed to extract & parse the information of a ConnectionDef annotation
@@ -120,6 +125,11 @@ public abstract class ConnectionDefinitionExtractor {
    */
   private List<ConfigDefinition> extractConfigDefinitions(Class<?> klass) {
     List<String> stageGroups = getGroups(klass);
-    return ConfigDefinitionExtractor.get().extract(klass, stageGroups, "Connection Configuration");
+    final List<ConfigDefinition> configs = ConfigDefinitionExtractor.get().extract(
+        klass,
+        stageGroups,
+        "Connection Configuration"
+    );
+    return PipelineConfigurationUtil.handleHideConfigs(klass, configs);
   }
 }

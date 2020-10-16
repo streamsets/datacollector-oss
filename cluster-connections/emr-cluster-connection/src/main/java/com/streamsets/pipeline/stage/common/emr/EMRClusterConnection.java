@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.StageException;
@@ -28,7 +29,6 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
 import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
-import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 
@@ -45,6 +45,7 @@ import java.util.Properties;
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )
 @ConfigGroups(EMRClusterConnectionGroups.class)
+@HideConfigs({"awsConfig.isAssumeRole"})
 public class EMRClusterConnection {
 
   public static final String TYPE = "STREAMSETS_AWS_EMR_CLUSTER";
