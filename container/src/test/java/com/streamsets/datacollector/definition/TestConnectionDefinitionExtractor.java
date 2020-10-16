@@ -87,6 +87,7 @@ public class TestConnectionDefinitionExtractor {
 
     // Assert connection configurations
     Assert.assertNotNull(def.getConfigDefinitions());
+    // there is a third config ("bufferSize"), but it should have been hidden
     Assert.assertEquals(2, def.getConfigDefinitions().size());
     Assert.assertEquals("host", def.getConfigDefinitions().get(0).getName());
     Assert.assertEquals("Test Connection Host", def.getConfigDefinitions().get(0).getLabel());

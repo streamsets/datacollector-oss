@@ -66,7 +66,11 @@ import java.util.Map;
     upgraderDef = "upgrader/PipelineConfigBeanUpgrader.yaml",
     onlineHelpRefUrl = "not applicable"
 )
-@HideConfigs({"sdcEmrConnectionSelection", "sdcEmrConnection.awsConfig.isAssumeRole"})
+@HideConfigs({
+    // hide the assume role configs until they can be implemented for connection catalog
+    "sdcEmrConnection.awsConfig.isAssumeRole",
+    "transformerEmrConnection.awsConfig.isAssumeRole"
+})
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
@@ -582,7 +586,10 @@ public class PipelineConfigBean implements Stage {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      connectionType = EMRClusterConnection.TYPE,
+      // we need to disallow connection selection for SDC EMR (see SDC-15722), but we also cannot hide this config,
+      // because then the dependent field (sdcEmrConnection, below) will not show up, so the way this is accomplished
+      // is by setting the type to a dummy value, so that the real connections won't be loaded
+      connectionType = "NOT-IMPLEMENTED-SDC-EMR-CONNECTION",
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
       group = PipelineGroups.CLUSTER_GROUP_NAME,

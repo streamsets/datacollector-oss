@@ -45,6 +45,7 @@ import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.credential.PipelineCredentialHandler;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -54,11 +55,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -435,5 +439,31 @@ public class PipelineConfigurationUtil {
         }
       }
     }
+  }
+
+  public static List<ConfigDefinition> handleHideConfigs(Class<?> klass, List<ConfigDefinition> configs) {
+    final HideConfigs hideConfigs = klass.getAnnotation(HideConfigs.class);
+    if (hideConfigs != null) {
+      final Set<String> hideConfigNames = new HashSet<>();
+      if (hideConfigs.value() != null) {
+        hideConfigNames.addAll(Arrays.asList(hideConfigs.value()));
+      }
+      if (!hideConfigNames.isEmpty()) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("Hiding configs from {}: {}", klass.getSimpleName(), hideConfigNames);
+        }
+        final List<ConfigDefinition> filteredConfigs = configs.stream()
+            .filter(c -> !hideConfigNames.remove(c.getName()))
+            .collect(Collectors.toList());
+        if (!hideConfigNames.isEmpty()) {
+          throw new IllegalStateException(String.format(
+              "Config names marked hidden from PipelineConfig, but did not appear: %s",
+              hideConfigNames
+          ));
+        }
+        return filteredConfigs;
+      }
+    }
+    return configs;
   }
 }

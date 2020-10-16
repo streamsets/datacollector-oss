@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.ConnectionEngine;
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
 import com.streamsets.pipeline.api.Label;
@@ -79,6 +80,7 @@ public class TestConnectionDef {
       supportedEngines = { ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER }
   )
   @ConfigGroups(TestConnectionGroups.class)
+  @HideConfigs("bufferSize")
   public class TestConnection {
 
     public static final String TYPE = "TEST_CON_TYPE";
@@ -104,6 +106,16 @@ public class TestConnectionDef {
         group = "G1"
     )
     public int port;
+
+    @ConfigDef(
+        required = false,
+        type = ConfigDef.Type.NUMBER,
+        label = "Buffer Size",
+        description = "This should be hidden (not yet supported)",
+        displayPosition = 100,
+        group = "G3"
+    )
+    public int bufferSize;
 
     public void initConnection() {
       // do something with host and port
