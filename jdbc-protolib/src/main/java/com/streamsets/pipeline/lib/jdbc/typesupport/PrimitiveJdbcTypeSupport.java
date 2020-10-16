@@ -46,7 +46,7 @@ public class PrimitiveJdbcTypeSupport extends JdbcTypeSupport {
   @SuppressWarnings("unchecked")
   public PrimitiveJdbcTypeInfo generateJdbcTypeInfoFromRecordField(Field field, JdbcSchemaWriter schemaWriter, Object... auxillaryArgs)
       throws JdbcStageCheckedException{
-    return new PrimitiveJdbcTypeInfo(JdbcType.getJdbcTypeforFieldType(field.getType()),schemaWriter);
+    return new PrimitiveJdbcTypeInfo(JdbcType.getJdbcTypeForFieldType(field.getType()),schemaWriter);
   }
 
   @Override

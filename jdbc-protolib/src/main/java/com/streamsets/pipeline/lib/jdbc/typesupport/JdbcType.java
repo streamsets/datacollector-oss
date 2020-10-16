@@ -42,7 +42,6 @@ public enum JdbcType {
   VARCHAR(new PrimitiveJdbcTypeSupport())
   ;
   static Map<Integer, JdbcType> sqlToJdbcType = ImmutableMap.<Integer, JdbcType>builder()
-      // TBD - fill this out
       .put(Types.BOOLEAN, BOOLEAN)
       .put(Types.BIT, BOOLEAN)
       .put(Types.CHAR, CHAR)
@@ -51,7 +50,10 @@ public enum JdbcType {
       .put(Types.TIME, TIME)
       .put(Types.INTEGER, INTEGER)
       .put(Types.BIGINT, BIGINT)
+      // PostgreSQL actually returns "REAL" for something that we consider "FLOAT"
       .put(Types.FLOAT, FLOAT)
+      .put(Types.REAL, FLOAT)
+
       .put(Types.DOUBLE, DOUBLE)
       .put(Types.NUMERIC, DECIMAL)
       .put(Types.DECIMAL, DECIMAL)
@@ -74,7 +76,7 @@ public enum JdbcType {
    * @return {@link JdbcType}
    * @throws StageException if it is an unsupported {@link Field.Type} or null
    */
-  public static JdbcType getJdbcTypeforFieldType(Field.Type fieldType) throws JdbcStageCheckedException {
+  public static JdbcType getJdbcTypeForFieldType(Field.Type fieldType) throws JdbcStageCheckedException {
     switch (fieldType) {
       case BOOLEAN: return JdbcType.BOOLEAN;
       case CHAR: return JdbcType.CHAR;
@@ -130,7 +132,7 @@ public enum JdbcType {
         return JdbcType;
       }
     }
-    throw new JdbcStageCheckedException(JdbcErrors.JDBC_301, "Invalid Hive Type Definition: {} " + JdbcTypeString);
+    throw new JdbcStageCheckedException(JdbcErrors.JDBC_301, "Invalid Type Definition: {} " + JdbcTypeString);
   }
 
   public static JdbcType valueOf(int sqlType) {

@@ -70,7 +70,7 @@ public class JdbcMetastoreUtil {
       Field currField = pair.getValue();
 
       // Some types requires special checks or alterations
-      JdbcType jdbcType = JdbcType.getJdbcTypeforFieldType(currField.getType());
+      JdbcType jdbcType = JdbcType.getJdbcTypeForFieldType(currField.getType());
       JdbcTypeInfo jdbcTypeInfo;
       if (jdbcType == JdbcType.DECIMAL) {
         int precision = resolveScaleOrPrecisionExpression("precision", currField, precisionAttribute, fieldPath);
