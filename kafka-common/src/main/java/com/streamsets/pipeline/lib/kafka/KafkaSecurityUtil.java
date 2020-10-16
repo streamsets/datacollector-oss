@@ -41,30 +41,33 @@ public class KafkaSecurityUtil {
   private static final String ENABLED_PROTOCOLS = "ssl.enabled.protocols";
 
   public static void addSecurityConfigs(KafkaSecurityConfig securityConfig, Map<String, String> configMap) {
-    configMap.put(SECURITY_PROTOCOL, securityConfig.securityOption.getProtocol());
 
-    // SSL Options
-    if (securityConfig.securityOption.isOneOf(
-        KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
-        KafkaSecurityOptions.SASL_SSL)) {
-      configMap.put(ENABLED_PROTOCOLS, securityConfig.enabledProtocols);
+    // config property can be null for MapR Streams stages
+    if (securityConfig.securityOption != null) {
+      configMap.put(SECURITY_PROTOCOL, securityConfig.securityOption.getProtocol());
 
-      configMap.put(TRUSTSTORE_LOCATION, securityConfig.truststoreFile);
-      configMap.put(TRUSTSTORE_PASSWORD, securityConfig.truststorePassword.get());
-      configMap.put(TRUSTSTORE_TYPE, securityConfig.truststoreType.getLabel());
+      // SSL Options
+      if (securityConfig.securityOption.isOneOf(
+          KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
+          KafkaSecurityOptions.SASL_SSL)) {
+        configMap.put(ENABLED_PROTOCOLS, securityConfig.enabledProtocols);
 
-      if (securityConfig.securityOption.equals(KafkaSecurityOptions.SSL_AUTH)) {
-        configMap.put(KEYSTORE_LOCATION, securityConfig.keystoreFile);
-        configMap.put(KEYSTORE_PASSWORD, securityConfig.keystorePassword.get());
-        configMap.put(KEY_PASSWORD, securityConfig.keyPassword.get());
-        configMap.put(KEYSTORE_TYPE, securityConfig.keystoreType.getLabel());
+        configMap.put(TRUSTSTORE_LOCATION, securityConfig.truststoreFile);
+        configMap.put(TRUSTSTORE_PASSWORD, securityConfig.truststorePassword.get());
+        configMap.put(TRUSTSTORE_TYPE, securityConfig.truststoreType.getLabel());
+
+        if (securityConfig.securityOption.equals(KafkaSecurityOptions.SSL_AUTH)) {
+          configMap.put(KEYSTORE_LOCATION, securityConfig.keystoreFile);
+          configMap.put(KEYSTORE_PASSWORD, securityConfig.keystorePassword.get());
+          configMap.put(KEY_PASSWORD, securityConfig.keyPassword.get());
+          configMap.put(KEYSTORE_TYPE, securityConfig.keystoreType.getLabel());
+        }
       }
 
-    }
-
-    // Kerberos Options
-    if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
-      configMap.put(KRB_SERVICE_NAME, securityConfig.kerberosServiceName);
+      // Kerberos Options
+      if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
+        configMap.put(KRB_SERVICE_NAME, securityConfig.kerberosServiceName);
+      }
     }
   }
 
@@ -76,25 +79,26 @@ public class KafkaSecurityUtil {
       List<Stage.ConfigIssue> issues,
       Stage.Context context
   ) {
-    List<String> forbiddenProperties = new ArrayList<>();
+    if (securityConfig.securityOption != null) {
+      List<String> forbiddenProperties = new ArrayList<>();
+      forbiddenProperties.add(SECURITY_PROTOCOL);
 
-    forbiddenProperties.add(SECURITY_PROTOCOL);
-
-    if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
-        KafkaSecurityOptions.SASL_SSL)) {
-      forbiddenProperties.addAll(Arrays.asList(TRUSTSTORE_TYPE, TRUSTSTORE_LOCATION, TRUSTSTORE_PASSWORD, ENABLED_PROTOCOLS));
-      if (securityConfig.securityOption.equals(KafkaSecurityOptions.SSL_AUTH)) {
-        forbiddenProperties.addAll(Arrays.asList(KEYSTORE_TYPE, KEYSTORE_LOCATION, KEYSTORE_PASSWORD, KEY_PASSWORD));
+      if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SSL, KafkaSecurityOptions.SSL_AUTH,
+          KafkaSecurityOptions.SASL_SSL)) {
+        forbiddenProperties.addAll(Arrays.asList(TRUSTSTORE_TYPE, TRUSTSTORE_LOCATION, TRUSTSTORE_PASSWORD, ENABLED_PROTOCOLS));
+        if (securityConfig.securityOption.equals(KafkaSecurityOptions.SSL_AUTH)) {
+          forbiddenProperties.addAll(Arrays.asList(KEYSTORE_TYPE, KEYSTORE_LOCATION, KEYSTORE_PASSWORD, KEY_PASSWORD));
+        }
       }
-    }
 
-    // Kerberos Options
-    if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
-      forbiddenProperties.add(KRB_SERVICE_NAME);
-    }
+      // Kerberos Options
+      if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
+        forbiddenProperties.add(KRB_SERVICE_NAME);
+      }
 
-    if (!Collections.disjoint(additionalProperties.keySet(), forbiddenProperties)) {
-      issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_14));
+      if (!Collections.disjoint(additionalProperties.keySet(), forbiddenProperties)) {
+        issues.add(context.createConfigIssue(configGroupName, configName, KafkaErrors.KAFKA_14));
+      }
     }
   }
 }
