@@ -46,7 +46,7 @@ public class AWSKinesisUtil {
 
   private static final int MILLIS = 1000;
 
-  private static final String USER_PRINCIPAL = "streamsets:principal";
+  private static final String USER_PRINCIPAL = "streamsets/principal";
 
   private AWSKinesisUtil() {}
 

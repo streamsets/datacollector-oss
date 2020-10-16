@@ -34,7 +34,7 @@ import java.util.UUID;
 
 public class AWSUtil {
   private static final String WILDCARD_PATTERN = ".*[\\*\\?].*";
-  private static final String USER_PRINCIPAL = "streamsets:principal";
+  private static final String USER_PRINCIPAL = "streamsets/principal";
   private static final int MILLIS = 1000;
 
   private AWSUtil() {}
