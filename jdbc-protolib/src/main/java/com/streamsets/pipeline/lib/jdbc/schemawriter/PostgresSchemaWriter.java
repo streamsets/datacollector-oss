@@ -27,6 +27,7 @@ public class PostgresSchemaWriter extends JdbcAbstractSchemaWriter {
       .put(JdbcType.FLOAT, "real")
       .put(JdbcType.DOUBLE, "double precision")
       .put(JdbcType.DECIMAL, "numeric")
+      .put(JdbcType.SHORT, "smallint")
       .put(JdbcType.INTEGER, "integer")
       .put(JdbcType.CHAR, "character")
       .put(JdbcType.VARCHAR, "character varying")

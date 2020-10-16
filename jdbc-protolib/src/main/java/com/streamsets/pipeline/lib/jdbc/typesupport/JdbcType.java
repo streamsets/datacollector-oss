@@ -33,6 +33,7 @@ public enum JdbcType {
   DATE(new PrimitiveJdbcTypeSupport()),
   TIMESTAMP(new PrimitiveJdbcTypeSupport()),
   TIME(new PrimitiveJdbcTypeSupport()),
+  SHORT(new PrimitiveJdbcTypeSupport()),
   INTEGER(new PrimitiveJdbcTypeSupport()),
   BIGINT(new PrimitiveJdbcTypeSupport()),
   FLOAT(new PrimitiveJdbcTypeSupport()),
@@ -53,7 +54,7 @@ public enum JdbcType {
       // PostgreSQL actually returns "REAL" for something that we consider "FLOAT"
       .put(Types.FLOAT, FLOAT)
       .put(Types.REAL, FLOAT)
-
+      .put(Types.SMALLINT, SHORT)
       .put(Types.DOUBLE, DOUBLE)
       .put(Types.NUMERIC, DECIMAL)
       .put(Types.DECIMAL, DECIMAL)
@@ -83,6 +84,7 @@ public enum JdbcType {
       case DATE: return JdbcType.DATE;
       case DATETIME: return JdbcType.TIMESTAMP;
       case TIME: return JdbcType.TIME;
+      case SHORT: return JdbcType.SHORT;
       case INTEGER: return JdbcType.INTEGER;
       case LONG: return JdbcType.BIGINT;
       case FLOAT: return JdbcType.FLOAT;
@@ -106,6 +108,7 @@ public enum JdbcType {
       case DATE: return Field.Type.DATE;
       case TIME: return Field.Type.TIME;
       case TIMESTAMP: return Field.Type.DATETIME;
+      case SHORT: return Field.Type.SHORT;
       case INTEGER: return Field.Type.INTEGER;
       case BIGINT: return Field.Type.LONG;
       case FLOAT: return Field.Type.FLOAT;
