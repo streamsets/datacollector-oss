@@ -20,9 +20,11 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
 import java.math.BigDecimal;
 import java.sql.Types;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -52,6 +54,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   private final List<JdbcFieldColumnParamMapping> customMappings;
 
   private final String connectionString;
+  private final DatabaseVendor vendor;
   private final DataSource dataSource;
   private final String schema;
   private final String tableName;
@@ -136,6 +139,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
     this.jdbcUtil = UtilsProvider.getJdbcUtil();
 
     this.connectionString = connectionString;
+    this.vendor = DatabaseVendor.forUrl(connectionString);
     this.dataSource = dataSource;
 
 
@@ -637,6 +641,13 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
           case LIST_MAP: // should not be seen as un-mapping handled prior to call
             throw new DataFormatException(fieldType.name());
           case ZONED_DATETIME: //guidance is to use setObject() for this type
+            if(vendor == DatabaseVendor.POSTGRESQL) {
+              // ZonedDateTime isn't directly supported
+              // https://jdbc.postgresql.org/documentation/head/8-date-time.html
+              value = ((ZonedDateTime)value).toOffsetDateTime();
+              statement.setObject(paramIdx, value);
+              continue;
+            }
           default:
             LOG.debug("fieldType: {} handled by default case. Attempting to use setObject()", fieldType);
             statement.setObject(paramIdx, value, getColumnType(column));
@@ -647,7 +658,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
         throw new OnRecordErrorException(record, JdbcErrors.JDBC_05, field.getValue(), fieldType.toString(), column);
       } catch (SQLException e) {
         LOG.error("Query failed due to {}", e.getMessage(), e);
-        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column);
+        throw new OnRecordErrorException(record, JdbcErrors.JDBC_23, field.getValue(), fieldType.toString(), column, getColumnType(column));
       }
       ++paramIdx;
     }

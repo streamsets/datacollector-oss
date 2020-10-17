@@ -42,7 +42,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_20("Could not parse the table name template expression: {}"),
   JDBC_21("Could not evaluate the table name template expression: {}"),
   JDBC_22("The record had no fields that matched the columns in the destination table."),
-  JDBC_23("Can't coerce '{}' of type '{}' to column '{}'"),
+  JDBC_23("Can't coerce '{}' of type '{}' to column '{}' of JDBC type '{}'"),
   JDBC_24("No results from insert"),
   JDBC_25("No column mapping for column '{}'"),
   JDBC_26("Invalid table name template expression '{}': {}"),
