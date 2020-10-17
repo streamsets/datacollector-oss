@@ -51,7 +51,8 @@ public class JdbcMetastoreUtil {
       Record record,
       String precisionAttribute,
       String scaleAttribute,
-      JdbcSchemaWriter schemaWriter
+      JdbcSchemaWriter schemaWriter,
+      boolean lowercaseColumnNames
   ) throws OnRecordErrorException, JdbcStageCheckedException {
     if (!record.get().getType().isOneOf(Field.Type.MAP, Field.Type.LIST_MAP)) {
       throw new OnRecordErrorException(record,
@@ -81,7 +82,7 @@ public class JdbcMetastoreUtil {
         jdbcTypeInfo = jdbcType.getSupport().generateJdbcTypeInfoFromRecordField(currField, schemaWriter);
       }
 
-      columns.put(pair.getKey().toLowerCase(), jdbcTypeInfo);
+      columns.put(lowercaseColumnNames ? pair.getKey().toLowerCase() : pair.getKey(), jdbcTypeInfo);
     }
     return columns;
   }

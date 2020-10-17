@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "PostgreSQL Metadata",
     description = "Create/alter tables in PostgreSQL to match record structure",
     icon = "rdbms.png",

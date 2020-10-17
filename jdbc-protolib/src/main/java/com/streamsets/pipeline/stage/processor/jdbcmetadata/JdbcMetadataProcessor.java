@@ -68,6 +68,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
 
   private final String schemaEL;
   private final String tableNameEL;
+  private final JdbcMetadataConfigBean conf;
   private final HikariPoolConfigBean hikariConfigBean;
   private final DecimalDefaultsConfig decimalDefaultsConfig;
 
@@ -94,6 +95,7 @@ public class JdbcMetadataProcessor extends RecordProcessor {
   }
 
   JdbcMetadataProcessor(JdbcMetadataConfigBean configBean) {
+    this.conf = configBean;
     this.schemaEL = configBean.schemaEL;
     this.tableNameEL = configBean.tableNameEL;
     this.hikariConfigBean = configBean.hikariConfigBean;
@@ -179,7 +181,9 @@ public class JdbcMetadataProcessor extends RecordProcessor {
           record,
           decimalDefaultsConfig.precisionAttribute,
           decimalDefaultsConfig.scaleAttribute,
-          schemaWriter);
+          schemaWriter,
+          conf.lowercaseColumnNames
+      );
 
       if (recordStructure.isEmpty()) {
         batchMaker.addRecord(record);

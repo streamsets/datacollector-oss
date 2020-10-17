@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,9 +32,8 @@ import java.util.List;
 public class TestJdbcMetadataUpgrader {
 
   private StageUpgrader upgrader;
-  private List<Config> configs;
-  private StageUpgrader.Context context;
-  private JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
+  protected List<Config> configs;
+  protected StageUpgrader.Context context;
 
   @Before
   public void setUp() {
@@ -43,6 +41,15 @@ public class TestJdbcMetadataUpgrader {
     upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
-    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
+  }
+
+  @Test
+  public void testUpgradeV1toV2() throws StageException {
+    Mockito.doReturn(1).when(context).getFromVersion();
+    Mockito.doReturn(2).when(context).getToVersion();
+
+    List<Config> upgradedConfigs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(upgradedConfigs, "conf.lowercaseColumnNames", true);
   }
 }

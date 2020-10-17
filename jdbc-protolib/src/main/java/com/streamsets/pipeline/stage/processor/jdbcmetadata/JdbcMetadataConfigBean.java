@@ -54,4 +54,16 @@ public class JdbcMetadataConfigBean {
 
   @ConfigDefBean
   public DecimalDefaultsConfig decimalDefaultsConfig;
+
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Lowercase Column Names",
+      description = "If enabled all column names will be lower cased.",
+      displayPosition = 1000,
+      group = "ADVANCED"
+  )
+  public boolean lowercaseColumnNames;
 }
