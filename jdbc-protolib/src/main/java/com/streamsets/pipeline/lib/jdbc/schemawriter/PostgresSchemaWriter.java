@@ -34,6 +34,7 @@ public class PostgresSchemaWriter extends JdbcAbstractSchemaWriter {
       .put(JdbcType.DATE, "date")
       .put(JdbcType.TIME, "time")
       .put(JdbcType.TIMESTAMP, "timestamp")
+      .put(JdbcType.TIMESTAMP_WITH_TIME_ZONE, "timestamp with time zone")
       .put(JdbcType.BINARY, "bytea")
       .put(JdbcType.BOOLEAN, "boolean")
       .build();

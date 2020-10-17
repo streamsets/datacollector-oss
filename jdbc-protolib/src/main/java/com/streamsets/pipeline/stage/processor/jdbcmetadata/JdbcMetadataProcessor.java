@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.processor.jdbcmetadata;
 
-import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;

@@ -31,6 +31,7 @@ public enum JdbcType {
   BOOLEAN(new PrimitiveJdbcTypeSupport()),
   CHAR(new PrimitiveJdbcTypeSupport()),
   DATE(new PrimitiveJdbcTypeSupport()),
+  TIMESTAMP_WITH_TIME_ZONE(new PrimitiveJdbcTypeSupport()),
   TIMESTAMP(new PrimitiveJdbcTypeSupport()),
   TIME(new PrimitiveJdbcTypeSupport()),
   SHORT(new PrimitiveJdbcTypeSupport()),
@@ -48,6 +49,7 @@ public enum JdbcType {
       .put(Types.CHAR, CHAR)
       .put(Types.DATE, DATE)
       .put(Types.TIMESTAMP, TIMESTAMP)
+      .put(Types.TIMESTAMP_WITH_TIMEZONE, TIMESTAMP_WITH_TIME_ZONE)
       .put(Types.TIME, TIME)
       .put(Types.INTEGER, INTEGER)
       .put(Types.BIGINT, BIGINT)
@@ -83,6 +85,7 @@ public enum JdbcType {
       case CHAR: return JdbcType.CHAR;
       case DATE: return JdbcType.DATE;
       case DATETIME: return JdbcType.TIMESTAMP;
+      case ZONED_DATETIME: return JdbcType.TIMESTAMP_WITH_TIME_ZONE;
       case TIME: return JdbcType.TIME;
       case SHORT: return JdbcType.SHORT;
       case INTEGER: return JdbcType.INTEGER;
@@ -108,6 +111,7 @@ public enum JdbcType {
       case DATE: return Field.Type.DATE;
       case TIME: return Field.Type.TIME;
       case TIMESTAMP: return Field.Type.DATETIME;
+      case TIMESTAMP_WITH_TIME_ZONE: return Field.Type.ZONED_DATETIME;
       case SHORT: return Field.Type.SHORT;
       case INTEGER: return Field.Type.INTEGER;
       case BIGINT: return Field.Type.LONG;
@@ -131,14 +135,18 @@ public enum JdbcType {
 
   public static JdbcType prefixMatch(String JdbcTypeString) throws JdbcStageCheckedException {
     for (JdbcType JdbcType : JdbcType.values()) {
-      if (JdbcTypeString.toUpperCase().startsWith(JdbcType.name().toUpperCase())) {
+      if (JdbcTypeString.toUpperCase().startsWith(JdbcType.name().replace("_", " ").toUpperCase())) {
         return JdbcType;
       }
     }
     throw new JdbcStageCheckedException(JdbcErrors.JDBC_301, "Invalid Type Definition: {} " + JdbcTypeString);
   }
 
-  public static JdbcType valueOf(int sqlType) {
+  public static JdbcType valueOf(String postgreType, int sqlType) {
+    // PostgreSQL returns the same sqlType for timestamp and timestamp with time zone
+    if("timestamptz".equalsIgnoreCase(postgreType)) {
+      return JdbcType.TIMESTAMP_WITH_TIME_ZONE;
+    }
     return sqlToJdbcType.get(sqlType);
   }
 }
