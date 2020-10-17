@@ -73,10 +73,14 @@ public abstract class JdbcAbstractSchemaWriter implements JdbcSchemaWriter {
     StringBuilder sqlString = new StringBuilder(CREATE_TABLE + " ");
     String tableSchema = (schema == null) ? getDefaultSchema() : schema;
     if (tableSchema != null) {
+      sqlString.append('"');
       sqlString.append(tableSchema);
+      sqlString.append('"');
       sqlString.append(".");
     }
+    sqlString.append('"');
     sqlString.append(tableName);
+    sqlString.append('"');
     sqlString.append("(\n");
     boolean first = true;
     for (Map.Entry<String, JdbcTypeInfo> entry : recordStructure.entrySet()) {
@@ -86,7 +90,9 @@ public abstract class JdbcAbstractSchemaWriter implements JdbcSchemaWriter {
         sqlString.append(",\n");
       }
       sqlString
+          .append('"')
           .append(entry.getKey())
+          .append('"')
           .append(" ")
           .append(entry.getValue().toString());
     }
@@ -101,10 +107,14 @@ public abstract class JdbcAbstractSchemaWriter implements JdbcSchemaWriter {
     StringBuilder sqlString = new StringBuilder(ALTER_TABLE + " ");
     String tableSchema = (schema == null) ? getDefaultSchema() : schema;
     if (tableSchema != null) {
+      sqlString.append('"');
       sqlString.append(tableSchema);
+      sqlString.append('"');
       sqlString.append(".");
     }
+    sqlString.append('"');
     sqlString.append(tableName);
+    sqlString.append('"');
     sqlString.append("\n");
     boolean first = true;
     for (Map.Entry<String, JdbcTypeInfo> entry : columnDiff.entrySet()) {
@@ -116,7 +126,9 @@ public abstract class JdbcAbstractSchemaWriter implements JdbcSchemaWriter {
       sqlString
           .append("ADD COLUMN")
           .append(" ")
+          .append('"')
           .append(entry.getKey())
+          .append('"')
           .append(" ")
           .append(entry.getValue().toString());
     }
