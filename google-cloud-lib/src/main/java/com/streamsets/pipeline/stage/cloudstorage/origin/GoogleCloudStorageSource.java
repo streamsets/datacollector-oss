@@ -172,7 +172,7 @@ public class GoogleCloudStorageSource extends BaseSource {
           } catch (InterruptedException ex) {
             LOG.debug("Interrupted while waiting for new files: {}", ex.getMessage());
           }
-          return lastSourceOffset;
+          return lastSourceOffset == null ? "" : lastSourceOffset;
         }
       } while (!isBlobEligible(blob, minTimestamp, blobGeneratedId, fileOffset));
 
