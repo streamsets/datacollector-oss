@@ -110,7 +110,8 @@ public class AWSConfig {
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       label = "Set Session Tags",
-      description = "Specify session tags to enable easy session tracking in AWS",
+      description = "Specify session tags in the IAM policy to require that the currently logged in user who starts " +
+          "the pipeline has access to assume the specified role",
       defaultValue = "true",
       displayPosition = -100,
       group = "#0",
