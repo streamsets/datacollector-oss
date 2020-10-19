@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.lib.aws.ProxyConfig;
     type = AwsSqsConnection.TYPE,
     description = "Connects to Amazon SQS",
     version = 2,
-    upgraderDef = "upgrader/AwsSQSConnection.yaml",
+    upgraderDef = "upgrader/AwsSqsConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR}
 )
 @ConfigGroups(AwsSqsConnectionGroups.class)
