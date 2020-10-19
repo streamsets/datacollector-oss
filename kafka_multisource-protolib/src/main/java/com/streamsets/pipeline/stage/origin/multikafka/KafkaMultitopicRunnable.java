@@ -128,8 +128,7 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
   private void produceRecords() {
     long startTime = System.currentTimeMillis();
     List<Record> records = new ArrayList<>();
-    long pollInterval = Math.max(
-        MIN_CONSUMER_POLLING_INTERVAL_MS,
+    long pollInterval = Math.max(MIN_CONSUMER_POLLING_INTERVAL_MS,
         conf.batchWaitTime - (System.currentTimeMillis() - startTime)
     );
 
@@ -171,10 +170,12 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
         }
       }
 
-      if (!records.isEmpty()) {
+      if (!records.isEmpty()) { // Some errors that are dangling after the batches are full
         records.forEach(batchContext.getBatchMaker()::addRecord);
         commitSyncAndProcess(batchContext);
         messagesProcessed += messages.count();
+      } else if (errorRecordHandler.getErrorRecordCount() > 0) { // All the records are errors, so records is empty
+        commitSyncAndProcess(batchContext);
       }
     }
   }
