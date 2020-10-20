@@ -33,6 +33,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -1157,8 +1158,15 @@ public class LogMinerSession {
     LOG.debug("Listing current logs registered in V$LOGMNR_LOGS:");
     try (PreparedStatement statement = connection.prepareCall(SELECT_LOGMNR_LOGS_QUERY)) {
       ResultSet rs = statement.executeQuery();
+      ResultSetMetaData metaData = rs.getMetaData();
+      int columnCount = metaData.getColumnCount();
+      String logLine;
       while (rs.next()) {
-        LOG.info("V$LOGMNR_LOGS: {}", rs.getString(1));
+        logLine = "V$LOGMNR_LOGS: ";
+        for (int i = 0; i < columnCount; i++) {
+          logLine += metaData.getColumnName(i) + "->" + rs.getString(i) + "; ";
+        }
+        LOG.info(logLine);
       }
     } catch (SQLException e) {
       LOG.error("Failed to query V$LOGMNR_LOGS: {}", e.getMessage());
