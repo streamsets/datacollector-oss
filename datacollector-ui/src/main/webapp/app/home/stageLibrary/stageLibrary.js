@@ -50,7 +50,8 @@ angular
         $scope.filteredStageLibraries = [];
         angular.forEach($scope.stageLibraries, function(stageLibrary) {
           if (libraryFilter(stageLibrary) && !_.contains(stageNameList, stageLibrary.name) &&
-            regex.test(stageLibrary.label) && !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage &&
+            regex.test(stageLibrary.label) &&
+            !stageLibrary.errorStage && !stageLibrary.statsAggregatorStage && !stageLibrary.connectionVerifierStage &&
             stageLibrary.hideStage.length === 0 &&
             stageLibrary.library !== 'streamsets-datacollector-stats-lib' &&
             stageLibrary.name.indexOf('_fragment_') === -1 &&

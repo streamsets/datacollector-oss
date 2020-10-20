@@ -77,6 +77,7 @@ public class StageDefinitionJson   {
   private RawSourceDefinitionJson rawSourceDefinition = null;
   private Boolean errorStage = null;
   private Boolean statsAggregatorStage = null;
+  private Boolean connectionVerifierStage = null;
   private Boolean pipelineLifecycleStage = null;
   private Boolean offsetCommitTrigger = null;
   private Boolean variableOutputStreams = null;
@@ -211,6 +212,17 @@ public class StageDefinitionJson   {
   }
   public void setStatsAggregatorStage(Boolean statsAggregatorStage) {
     this.statsAggregatorStage = statsAggregatorStage;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("connectionVerifierStage")
+  public Boolean getConnectionVerifierStage() {
+    return connectionVerifierStage;
+  }
+  public void setConnectionVerifierStage(Boolean connectionVerifierStage) {
+    this.connectionVerifierStage = connectionVerifierStage;
   }
 
   /**
