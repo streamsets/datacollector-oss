@@ -140,8 +140,6 @@ public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
         }
       }
     }
-
-
   }
 
   /**
@@ -176,8 +174,6 @@ public class Kafka0_10ConsumerLoader extends KafkaConsumerLoader {
     }
 
     @Override
-    public void commitSync(Map offsetsMap) {
-
-    }
+    public void commitSync(Map offsetsMap) { delegate.commitSync(offsetsMap); }
   }
 }

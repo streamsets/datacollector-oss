@@ -162,7 +162,7 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
           LOG.info("Record or time limit reached, restarting batch");
           startTime = System.currentTimeMillis();
           records.forEach(batchContext.getBatchMaker()::addRecord);
-          commitSyncAndProcess(batchContext);
+          commitSyncAndProcess();
           recordsProcessed += records.size();
           records.clear();
           batchContext = getContext().startBatch();
@@ -170,17 +170,21 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
         }
       }
 
+      messagesProcessed += messages.count();
+
       if (!records.isEmpty()) { // Some errors that are dangling after the batches are full
+        LOG.info("Messages exhausted, sending extra records");
         records.forEach(batchContext.getBatchMaker()::addRecord);
-        commitSyncAndProcess(batchContext);
-        messagesProcessed += messages.count();
+        commitSyncAndProcess();
+        recordsProcessed += records.size();
       } else if (errorRecordHandler.getErrorRecordCount() > 0) { // All the records are errors, so records is empty
-        commitSyncAndProcess(batchContext);
+        LOG.info("The batch only contains error records, sending them anyway");
+        commitSyncAndProcess();
       }
     }
   }
 
-  private void commitSyncAndProcess(BatchContext batchContext) {
+  private void commitSyncAndProcess() {
     LOG.info("Committing and processing batch");
     if (!getContext().isPreview() && getContext().getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
       consumer.commitSync(offsetsMap);
@@ -227,14 +231,14 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
         records.add(record);
         record = parser.parse();
       }
-
-      //Add the Kafka offset to be committed
-      offsetsMap.put(new TopicPartition(item.topic(), item.partition()), new OffsetAndMetadata(item.offset() + 1));
     } catch (DataParserException | IOException e) {
       Record record = getContext().createRecord(messageId);
       record.set(Field.create(payload));
       errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_37, messageId, e.toString(), e));
     }
+
+    // Add the Kafka offset to be committed
+    offsetsMap.put(new TopicPartition(topic, partition), new OffsetAndMetadata(offset + 1));
 
     if (conf.produceSingleRecordPerMessage) {
       List<Field> list = new ArrayList<>();
@@ -267,7 +271,7 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
     return context;
   }
 
-  private String getMessageId(String topic, int partition, long offset) {
+  private static String getMessageId(String topic, int partition, long offset) {
     return topic + "::" + partition + "::" + offset;
   }
 }
