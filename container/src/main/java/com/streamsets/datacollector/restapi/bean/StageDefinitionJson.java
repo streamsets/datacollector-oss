@@ -187,4 +187,8 @@ public class StageDefinitionJson {
     return stageDefinition.getYamlUpgrader();
   }
 
+  public boolean isConnectionVerifierStage() {
+    return stageDefinition.isConnectionVerifierStage();
+  }
+
 }
