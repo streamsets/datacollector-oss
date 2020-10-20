@@ -16,9 +16,6 @@
 package com.streamsets.datacollector.lib.emr;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
@@ -52,7 +49,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 import org.apache.hadoop.yarn.api.records.ApplicationReport;
 import org.apache.hadoop.yarn.api.records.FinalApplicationStatus;

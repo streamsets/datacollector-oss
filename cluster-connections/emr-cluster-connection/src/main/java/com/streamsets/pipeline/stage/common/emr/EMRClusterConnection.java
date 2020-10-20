@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.aws.AwsInstanceTypeChooserValues;
 import com.streamsets.pipeline.stage.lib.aws.AWSConfig;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Properties;
 
@@ -366,7 +367,7 @@ public class EMRClusterConnection {
   public static final String EC2_SUBNET_ID = "ec2SubnetId";
   public static final String MASTER_SECURITY_GROUP = "masterSecurityGroup";
   public static final String SLAVE_SECURITY_GROUP = "slaveSecurityGroup";
-  public static final String SERVICE_ACCESS_SECURITY_GROUP = "slaveSecurityGroup";
+  public static final String SERVICE_ACCESS_SECURITY_GROUP = "serviceAccessScurityGroup";
   public static final String INSTANCE_COUNT = "instanceCount";
   public static final String MASTER_INSTANCE_TYPE = "masterInstanceType";
   public static final String MASTER_INSTANCE_TYPE_CUSTOM = "masterInstanceTypeCustom";
@@ -420,7 +421,7 @@ public class EMRClusterConnection {
     props.setProperty(TERMINATE_CLUSTER, Boolean.toString(terminateCluster));
     props.setProperty(MASTER_SECURITY_GROUP, masterSecurityGroup);
     props.setProperty(SLAVE_SECURITY_GROUP, slaveSecurityGroup);
-    if (serviceAccessSecurityGroup != null) {
+    if (StringUtils.isNotBlank(serviceAccessSecurityGroup)) {
       props.setProperty(SERVICE_ACCESS_SECURITY_GROUP, serviceAccessSecurityGroup);
     }
     props.setProperty(INSTANCE_COUNT, Integer.toString(instanceCount));
