@@ -86,8 +86,8 @@ public class SpoolDirSource extends SpoolDirBaseSource {
               try {
                 if (SpoolDirUtil.compareFiles(
                     fs,
-                    fs.getFile(spooler.getSpoolDir(), lastSourceFileName),
-                    fs.getFile(spooler.getSpoolDir(), offset.getFile())
+                    SpoolDirUtil.getFileFromOffsetFile(fs, spooler.getSpoolDir(), lastSourceFileName),
+                    SpoolDirUtil.getFileFromOffsetFile(fs, spooler.getSpoolDir(), offset.getFile())
                 )) {
                   lastSourceFileName = offset.getFile();
                 }

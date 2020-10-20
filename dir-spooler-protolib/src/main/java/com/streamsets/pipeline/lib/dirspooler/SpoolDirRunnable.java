@@ -56,7 +56,6 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
 
-
 public class SpoolDirRunnable implements Runnable {
   public static final String SPOOL_DIR_METRICS = "Spool Directory Metrics for Thread - ";
   public static final String CURRENT_FILE = "Current File";
@@ -211,7 +210,7 @@ public class SpoolDirRunnable implements Runnable {
               pickFileFromSpooler = true;
             } else if (useLastModified) {
               try {
-                WrappedFile fileObject = fs.getFile(spooler.getSpoolDir(), file);
+                WrappedFile fileObject = SpoolDirUtil.getFileFromOffsetFile(fs, spooler.getSpoolDir(), file);
                 if (SpoolDirUtil.compareFiles(fs, nextAvailFile, fileObject)) {
                   pickFileFromSpooler = true;
                 }
@@ -229,7 +228,7 @@ public class SpoolDirRunnable implements Runnable {
               if (conf.processSubdirectories) {
                 // Since you are working from the specified path, all the paths MUST be relative to this base
                 // path that's why we are removing the first '/'
-                file = currentFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
+                file = SpoolDirUtil.getFilenameForOffsetFile(currentFile.toString(), spooler.getSpoolDir());
               }
               if (offsets.containsKey(file)) {
                 offset = offsets.get(file).getOffset();
@@ -347,6 +346,8 @@ public class SpoolDirRunnable implements Runnable {
     if (file != null) {
       Path filePath = Paths.get(file);
       if (!filePath.isAbsolute()) {
+        Utils.checkState(!SpoolDirUtil.isGlobPattern(spooler.getSpoolDir()),
+            "[" + spooler.getSpoolDir() + "] is not supported with filename [" + file + "]");
         return new StringJoiner(FILE_SEPARATOR).add(spooler.getSpoolDir()).add(file).toString();
       } else {
         return file;
@@ -487,7 +488,7 @@ public class SpoolDirRunnable implements Runnable {
     if (!hasToFetch) {
       if (useLastModified) {
         try {
-          if (SpoolDirUtil.compareFiles(fs, fs.getFile(spooler.getSpoolDir(), file), currentFile)) {
+          if (SpoolDirUtil.compareFiles(fs, SpoolDirUtil.getFileFromOffsetFile(fs, spooler.getSpoolDir(), file), currentFile)) {
             hasToFetch = true;
           } else {
             if (!fs.exists(fs.getFile(spooler.getSpoolDir(), file))) {
@@ -525,7 +526,7 @@ public class SpoolDirRunnable implements Runnable {
       return true;
     }
 
-    String fileName = spoolerFile.toString().replaceFirst(spooler.getSpoolDir() + FILE_SEPARATOR, "");
+    String fileName = SpoolDirUtil.getFilenameForOffsetFile(spoolerFile.toString(), spooler.getSpoolDir());
     if (offsets.containsKey(fileName)) {
       offsetInFile = offsets.get(fileName).getOffset();
       if (offsetInFile.equals(MINUS_ONE)) {
@@ -536,12 +537,12 @@ public class SpoolDirRunnable implements Runnable {
       for (String offsetFileName : offsets.keySet()) {
         if (useLastModified) {
           try {
-            if (fs.exists(fs.getFile(spooler.getSpoolDir(), offsetFileName)) &&
-                SpoolDirUtil.compareFiles(
-                    fs,
-                    fs.getFile(spooler.getSpoolDir(), offsetFileName),
-                    spoolerFile
-                )) {
+            WrappedFile fileFromOffsetFile = SpoolDirUtil.getFileFromOffsetFile(
+                fs,
+                spooler.getSpoolDir(),
+                offsetFileName
+            );
+            if (fs.exists(fileFromOffsetFile) && SpoolDirUtil.compareFiles(fs, fileFromOffsetFile, spoolerFile)) {
               LOG.debug("File '{}' is less then offset file {}, ignoring", fileName, offsetFileName);
               return false;
             }

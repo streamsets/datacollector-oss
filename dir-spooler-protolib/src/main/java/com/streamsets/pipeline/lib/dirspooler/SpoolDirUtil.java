@@ -24,10 +24,12 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
+import io.opencensus.internal.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -141,5 +143,62 @@ public class SpoolDirUtil {
   private static char lastCharacterIsAsterisk(String truncatedString) {
     char[] charArray = truncatedString.toCharArray();
     return charArray[charArray.length - 1];
+  }
+
+  /**
+   * Returns a filename to be used by the file field of Offset.
+   * An input filename should be absolute, if the base dir contains a glob pattern,
+   * the input filename will be returned as is, otherwise a path relative to the base dir is returned.
+   * FIXME: This method should always return relative paths. In case of glob patterns it should return a file path
+   * relative to the longest part of the base dir that doesn't contain glob patterns.
+   *
+   * @param absoluteFilename - absolute file name.
+   * @param baseDir - base directory for the resulting relative file path.
+   * @return filename to be used by offset.
+   */
+  public static String getFilenameForOffsetFile(final String absoluteFilename, final String baseDir) {
+    Utils.checkState(Paths.get(absoluteFilename).isAbsolute(),
+        "Full filename is not absolute [" + absoluteFilename + "]");
+
+    if (isGlobPattern(baseDir)) {
+      return absoluteFilename;
+    } else {
+      return absoluteFilename.replaceFirst(baseDir + SpoolDirRunnable.FILE_SEPARATOR, "");
+    }
+  }
+
+  /**
+   * Returns a file whose path is constructed from a relative filename and a base directory to which the filename
+   * is relative.
+   * //FIXME: When the previous method is fixed this method should be reimplemented and return a file considering that:
+   * 1) All filenames are relative
+   * 2) If a base dir has a glob pattern, then the file name is relative to the longest part of the base dir
+   * that doesn't contain glob patterns.
+   *
+   * @param fs - file system of the file.
+   * @param baseDir - base directory of the file
+   * @param filename - path to the file relative to the base dir, can be absolute path if the base dir contains glob patterns.
+   * @return A file on the file system.
+   * @throws IOException - if we cannot construct a file object for a file on a file system.
+   */
+  public static WrappedFile getFileFromOffsetFile(
+      final WrappedFileSystem fs, final String baseDir, final String filename
+  ) throws IOException {
+    if (filename.equals(Offset.NULL_FILE)) {
+      return fs.getFile(Offset.NULL_FILE);
+    }
+
+    if (Paths.get(filename).isAbsolute()) {
+      if (!isGlobPattern(baseDir)) {
+        LOG.warn("Absolute filename [" + filename + "] requires a glob pattern [" + baseDir + "]");
+        return fs.getFile(baseDir, filename);
+      }
+      return fs.getFile(filename);
+    }
+
+    Utils.checkState(!isGlobPattern(baseDir),
+        "Glob pattern [" + baseDir + "] is not supported with filename [" + filename + "]");
+
+    return fs.getFile(baseDir, filename);
   }
 }
