@@ -26,7 +26,6 @@ import com.streamsets.datacollector.runner.Pipeline;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderStageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.websockets.LogMessageWebSocket;
-import com.streamsets.pipeline.api.impl.Utils;
 
 public class ConfigurationInspector implements HealthInspector {
   @Override
@@ -40,85 +39,48 @@ public class ConfigurationInspector implements HealthInspector {
     // Our main configuration
     Configuration configuration = context.getConfiguration();
 
-    createEntry(
-        builder,
-        configuration.get(PreviewResource.MAX_BATCH_SIZE_KEY, PreviewResource.MAX_BATCH_SIZE_DEFAULT),
-        2_000,
-        5_000,
-        "Max Batch Size in Preview",
-        PreviewResource.MAX_BATCH_SIZE_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT),
-        10_000,
-        20_000,
-        "Max Batch Size",
-        Constants.MAX_BATCH_SIZE_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT),
-        101,
-        1000,
-        "Max Error Records Per Stage",
-        Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY, Constants.MAX_PIPELINE_ERRORS_DEFAULT),
-        101,
-        1000,
-        "Max Pipeline Errors",
-        Constants.MAX_PIPELINE_ERRORS_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY, LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT),
-        6,
-        20,
-        "Max SDC Log Tailers",
-        LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY, LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT),
-        6,
-        20,
-        "Max SDC Log Tailers",
-        LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY, ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT),
-        51,
-        150,
-        "Max Private ClassLoaders",
-        ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY
-    );
-    createEntry(
-        builder,
-        ExecutorModule.getRunnerSize(configuration),
-        100,
-        500,
-        "Number of runners",
-        ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY
-    );
-    createEntry(
-        builder,
-        configuration.get(Pipeline.MAX_RUNNERS_CONFIG_KEY, Pipeline.MAX_RUNNERS_DEFAULT),
-        51,
-        100,
-        "Max number of pipeline runners",
-        Pipeline.MAX_RUNNERS_CONFIG_KEY
-    );
+
+    int maxBatchSizeForPreview = configuration.get(PreviewResource.MAX_BATCH_SIZE_KEY, PreviewResource.MAX_BATCH_SIZE_DEFAULT);
+    builder.addEntry("Max Batch Size for Preview", HealthInspectorEntry.Severity.smallerIsBetter(maxBatchSizeForPreview, 2_000, 5_000))
+        .withValue(maxBatchSizeForPreview)
+        .withDescription("Maximal number of records that can be created in a single batch while in preview. Controlled by {} in sdc.properties", PreviewResource.MAX_BATCH_SIZE_KEY);
+
+    int maxBatchSize = configuration.get(Constants.MAX_BATCH_SIZE_KEY, Constants.MAX_BATCH_SIZE_DEFAULT);
+    builder.addEntry("Max Batch Size", HealthInspectorEntry.Severity.smallerIsBetter(maxBatchSize, 50_000, 100_000))
+        .withValue(maxBatchSize)
+        .withDescription("Maximal number of records that origin should create in a single batch while running a pipeline. Controlled by {} in sdc.properties", Constants.MAX_BATCH_SIZE_KEY);
+
+    int maxErrorRecordsPerStage = configuration.get(Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY, Constants.MAX_ERROR_RECORDS_PER_STAGE_DEFAULT);
+    builder.addEntry("Max Error Records Per Stage", HealthInspectorEntry.Severity.smallerIsBetter(maxErrorRecordsPerStage, 101, 1_000))
+        .withValue(maxErrorRecordsPerStage)
+        .withDescription("Maximal number of error records that should be kept in memory while pipeline is running per each stage of each running pipeline. Controlled by {} in sdc.properties", Constants.MAX_ERROR_RECORDS_PER_STAGE_KEY);
+
+    int maxPipelineErrors = configuration.get(Constants.MAX_PIPELINE_ERRORS_KEY, Constants.MAX_PIPELINE_ERRORS_DEFAULT);
+    builder.addEntry("Max Pipeline Errors", HealthInspectorEntry.Severity.smallerIsBetter(maxPipelineErrors, 101, 1_000))
+        .withValue(maxPipelineErrors)
+        .withDescription("Maximal number of errors that should be kept in memory while pipeline is running per running each pipeline. Controlled by {} in sdc.properties", Constants.MAX_PIPELINE_ERRORS_KEY);
+
+    int maxLogTailers = configuration.get(LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY, LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_DEFAULT);
+    builder.addEntry("Max Log Tailers", HealthInspectorEntry.Severity.smallerIsBetter(maxLogTailers, 6, 20))
+        .withValue(maxLogTailers)
+        .withDescription("Maximal number of concurrent sessions that can be tailing logs in Data Collector Logs view. Controlled by {} in sdc.properties", LogMessageWebSocket.MAX_LOGTAIL_CONCURRENT_REQUESTS_KEY);
+
+    int maxPrivateStageLoaders = configuration.get(ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY, ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_DEFAULT);
+    builder.addEntry("Max Private ClassLoader", HealthInspectorEntry.Severity.smallerIsBetter(maxPrivateStageLoaders, 51, 150))
+        .withValue(maxLogTailers)
+        .withDescription("Maximal number of stages that requires separate instance of a classloader that can be running at a time. Controlled by {} in sdc.properties", ClassLoaderStageLibraryTask.MAX_PRIVATE_STAGE_CLASS_LOADERS_KEY);
+
+    int maxRunnerSize = ExecutorModule.getRunnerSize(configuration);
+    builder.addEntry("Max Runner Size", HealthInspectorEntry.Severity.smallerIsBetter(maxRunnerSize, 100, 500))
+        .withValue(maxRunnerSize)
+        .withDescription("Maximal size of thread pool that is responsible for running pipelines. Controlled by {} in sdc.properties", ExecutorConstants.RUNNER_THREAD_POOL_SIZE_KEY);
+
+    int maxPipelineRunnerSize = configuration.get(Pipeline.MAX_RUNNERS_CONFIG_KEY, Pipeline.MAX_RUNNERS_DEFAULT);
+    builder.addEntry("Max Pipeline Runner Size", HealthInspectorEntry.Severity.smallerIsBetter(maxPipelineRunnerSize, 51, 100))
+        .withValue(maxPipelineRunnerSize)
+        .withDescription("Maximal number of Pipeline Runners a single multi threaded pipeline can create. Controlled by {} in sdc.properties", Pipeline.MAX_RUNNERS_CONFIG_KEY);
 
     return builder.build();
   }
 
-  private void createEntry(HealthInspectorResult.Builder builder, long value, long greenToYellow, long yellowToRed, String name, String config) {
-    builder.addEntry(name, HealthInspectorEntry.Severity.smallerIsBetter(value, greenToYellow, yellowToRed))
-        .withValue(value)
-        .withDescription(Utils.format("Configuration option {} in sdc.properties configuration file", config));
-  }
 }

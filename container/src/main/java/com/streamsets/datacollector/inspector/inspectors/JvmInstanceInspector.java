@@ -41,16 +41,16 @@ public class JvmInstanceInspector implements HealthInspector {
 
     // Pure record count
     int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-    builder.addEntry("Number of threads", HealthInspectorEntry.Severity.smallerIsBetter(threadCount, 200, 500))
+    builder.addEntry("Thread count", HealthInspectorEntry.Severity.smallerIsBetter(threadCount, 200, 500))
         .withValue(threadCount)
-        .withDescription("Number of threads running inside Data Collector Java process.");
+        .withDescription("Current count of threads running inside Data Collector Java process.");
 
     // Deadlocked threads
     long []deadlockedThreadIds = ManagementFactory.getThreadMXBean().findDeadlockedThreads();
     long deadlockedThreads = deadlockedThreadIds == null ? 0: deadlockedThreadIds.length;
     builder.addEntry("Deadlocked threads", deadlockedThreads == 0 ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED)
         .withValue(deadlockedThreads)
-        .withDescription("Number of threads that are deadlocked (waiting on a resource they can't get).");
+        .withDescription("Number of threads that are deadlocked (waiting on a resource they can't get) as reported by ManagementFactory.getThreadMXBean().");
 
     // Various memory related information
     Runtime runtime = Runtime.getRuntime();
@@ -63,7 +63,7 @@ public class JvmInstanceInspector implements HealthInspector {
     long memoryUtilization = (long)((double)(maxMemory - freeMemory)/maxMemory*100);
     builder.addEntry("JVM Memory Utilization", HealthInspectorEntry.Severity.smallerIsBetter(memoryUtilization, 80, 90))
         .withValue(memoryUtilization +" %")
-        .withDescription("How much percent of the max memory is currently allocated inside the JVM.");
+        .withDescription("How much percent of memory is allocated and used out of the 'JVM Memory Max'.");
 
     com.sun.management.OperatingSystemMXBean bean = (com.sun.management.OperatingSystemMXBean)ManagementFactory.getOperatingSystemMXBean();
     long maxSystemMemory = bean.getTotalPhysicalMemorySize();

@@ -17,6 +17,7 @@ package com.streamsets.datacollector.inspector.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.streamsets.pipeline.api.impl.Utils;
 
 public class HealthInspectorEntry {
 
@@ -144,8 +145,12 @@ public class HealthInspectorEntry {
       return this;
     }
 
-    public Builder withDescription(String description) {
-      this.description = description;
+    public Builder withDescription(String description, Object ...args) {
+      if(args == null || args.length == 0) {
+        this.description = description;
+      } else {
+        this.description = Utils.format(description, args);
+      }
       return this;
     }
 
