@@ -35,6 +35,9 @@ import com.streamsets.pipeline.stage.destination.hdfs.HadoopConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.streamsets.pipeline.stage.conf.connection.ADLSGen2Properties.AUTH_TOKEN_URL;
+import static com.streamsets.pipeline.stage.conf.connection.ADLSGen2Properties.FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -142,7 +145,7 @@ public class DataLakeGen2MetadataConfig {
         );
         hdfsConfigs.put(
             ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ENDPOINT,
-            ADLSGen2Properties.AUTH_TOKEN_URL.format(tenantIdString)
+            String.format(AUTH_TOKEN_URL, tenantIdString)
         );
         hdfsConfigs.put(
             ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ID,
@@ -190,11 +193,11 @@ public class DataLakeGen2MetadataConfig {
 
       case SHARED_KEY:
         hdfsConfigs.put(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME.format(accountFQDNString),
+            String.format(FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME, accountFQDNString),
             resolveCredentialValue(
                 context,
                 this.connection.accountKey,
-                ADLSGen2Properties.FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME.format(accountFQDNString),
+                String.format(FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME, accountFQDNString),
                 issues
             )
         );
