@@ -21,6 +21,8 @@ import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
 import com.streamsets.datacollector.http.GaugeValue;
+import com.streamsets.datacollector.inspector.HealthInspectorManager;
+import com.streamsets.datacollector.inspector.model.HealthInspectorReport;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Collections;
 import java.util.Set;
 
 @BundleContentGeneratorDef(
@@ -97,6 +100,14 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
 
     // Thread dump
     threadDump(writer);
+
+    // Health Inspector dump
+    HealthInspectorManager healthInspector = new HealthInspectorManager(
+        context.getConfiguration(),
+        context.getRuntimeInfo()
+    );
+    HealthInspectorReport healthReport = healthInspector.inspectHealth(Collections.emptyList());
+    writer.writeJson("health_inspector/report.json", healthReport);
   }
 
   public void threadDump(BundleWriter writer) throws IOException {
