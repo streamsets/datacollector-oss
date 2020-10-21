@@ -15,18 +15,23 @@
  */
 package com.streamsets.datacollector.inspector.inspectors;
 
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.inspector.HealthInspector;
 import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
 import com.streamsets.datacollector.inspector.model.HealthInspectorEntry;
 import com.streamsets.datacollector.main.RuntimeInfo;
+import com.streamsets.datacollector.util.ProcessUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class MachineInspector implements HealthInspector {
 
@@ -57,7 +62,40 @@ public class MachineInspector implements HealthInspector {
         .withValue(FileUtils.byteCountToDisplaySize(unallocated))
         .withDescription(Utils.format("Available space on filesystem hosting $LOG_DIR: {}", runtimeInfo.getLogDir()));
 
+    // File descriptors
+    HealthInspectorEntry.Severity ulimitSeverity = HealthInspectorEntry.Severity.GREEN;
+    String ulimitDetails = null;
+    String ulimitOutput = stdoutForCommand(ImmutableList.of("ulimit", "-n"));
+    int ulimit = -1;
+    try {
+      ulimit = Integer.parseInt(ulimitOutput.trim());
+
+      ulimitSeverity = ulimit >= 32768 ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED;
+    } catch (Throwable e) {
+      ulimitSeverity = HealthInspectorEntry.Severity.RED;
+      ulimitDetails = ExceptionUtils.getStackTrace(e);
+    }
+    builder.addEntry("File Descriptors", ulimitSeverity)
+        .withValue(ulimit != -1 ? ulimit : null)
+        .withDescription("Number of file descriptors a single application can keep open at the same time.")
+        .withDetails(ulimitDetails);
+
     return builder.build();
+  }
+
+  private String stdoutForCommand(List<String> command) {
+    StringBuilder stdoutBuilder = new StringBuilder();
+
+    // Ping
+    boolean success = ProcessUtil.executeCommand(
+        command,
+        5,
+        (out, err) -> {
+          stdoutBuilder.append(com.google.common.io.Files.toString(out.toFile(), Charset.defaultCharset()));
+        }
+    );
+
+    return success ? stdoutBuilder.toString() : null;
   }
 
   public long getUnallocatedSpace(String directory) {
