@@ -27,6 +27,10 @@ import java.util.List;
 
 
 public class NetworkInspector implements HealthInspector {
+
+  private static final String HOST_KEY = "health_inspector.network.host";
+  private static final String HOST_DEFAULT = "www.streamsets.com";
+
   @Override
   public String getName() {
     return "Networking";
@@ -36,8 +40,10 @@ public class NetworkInspector implements HealthInspector {
   public HealthInspectorResult inspectHealth(Context context) {
     HealthInspectorResult.Builder builder = new HealthInspectorResult.Builder(this);
 
-    runCommand(builder, "Ping", "Ping to www.google.com", ImmutableList.of("ping", "-v", "-t", "2", "www.google.com"));
-    runCommand(builder, "Traceroute", "Traceroute to www.google.com", ImmutableList.of("traceroute", "-w", "1", "-q", "1", "-v", "www.google.com"));
+    String host = context.getConfiguration().get(HOST_KEY, HOST_DEFAULT);
+
+    runCommand(builder, "Ping", "Ping to " + host, ImmutableList.of("ping", "-v", "-t", "2", host));
+    runCommand(builder, "Traceroute", "Traceroute to " + host, ImmutableList.of("traceroute", "-w", "1", "-q", "1", "-v", host));
 
     return builder.build();
   }
