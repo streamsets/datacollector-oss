@@ -78,6 +78,17 @@ public class MachineInspector implements HealthInspector {
         .withDescription("Number of file descriptors a single application can keep open at the same time.")
         .withDetails(ulimitDetails);
 
+    // Number of processes running by sdc user
+    String sdcUser = System.getProperty("user.name");
+    ProcessUtil.Output userProcessesOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("ps", "-u", sdcUser, "-U", sdcUser), 5);
+    int userProcesses = -1;
+    if(userProcessesOutput.success && userProcessesOutput.stdout != null) {
+      userProcesses = userProcessesOutput.stdout.split("\n").length;
+    }
+    builder.addEntry("SDC User Processes", userProcesses == -1 ? HealthInspectorEntry.Severity.RED : HealthInspectorEntry.Severity.smallerIsBetter(userProcesses, 5, 10))
+        .withValue(userProcesses == -1 ? null : userProcesses)
+        .withDescription("Number of processes that are started by the user that started this JVM instance ({}).", sdcUser)
+        .withDetails(userProcessesOutput);
     return builder.build();
   }
 
