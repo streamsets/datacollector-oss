@@ -55,6 +55,6 @@ public class NetworkInspector implements HealthInspector {
     ProcessUtil.Output output = ProcessUtil.executeCommandAndLoadOutput(command, 5);
     builder.addEntry(name, output.success ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED)
         .withDescription(description)
-        .withDetails("stdout:\n" + output.stdout + "\n\nstderr:\n" + output.stderr);
+        .withDetails(output);
   }
 }

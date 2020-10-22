@@ -15,7 +15,7 @@
  */
 package com.streamsets.datacollector.inspector.inspectors;
 
-import com.google.common.io.Files;
+import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.inspector.HealthInspector;
 import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
 import com.streamsets.datacollector.inspector.model.HealthInspectorEntry;
@@ -23,8 +23,6 @@ import com.streamsets.datacollector.util.ProcessUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.lang.management.ManagementFactory;
-import java.nio.charset.Charset;
-import java.util.List;
 
 public class JvmInstanceInspector implements HealthInspector {
 
@@ -80,7 +78,7 @@ public class JvmInstanceInspector implements HealthInspector {
         .withValue(systemMemoryUtilization + " %")
         .withDescription("How much percent of OS memory can the JVM allocate.");
 
-
+    // GC Stats
     for(java.lang.management.GarbageCollectorMXBean gcBean: ManagementFactory.getGarbageCollectorMXBeans()) {
       if(gcBean instanceof com.sun.management.GarbageCollectorMXBean) {
         // Casting to internal stuff
@@ -111,8 +109,35 @@ public class JvmInstanceInspector implements HealthInspector {
       }
     }
 
+    // Get our own PID
+    String pid = getPid();
+
+    // Number of child processes
+    ProcessUtil.Output childProcessesOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("pstree", pid), 5);
+    int subProcesses = -1;
+    if(childProcessesOutput.success && childProcessesOutput.stdout != null) {
+      subProcesses = childProcessesOutput.stdout.split("\n").length;
+      subProcesses--; // Removing line for our own process
+    }
+    builder.addEntry("Child Processes", subProcesses == -1 ? HealthInspectorEntry.Severity.RED : HealthInspectorEntry.Severity.smallerIsBetter(subProcesses, 5, 10))
+        .withValue(subProcesses == -1 ? null : subProcesses)
+        .withDescription("Number of child processes created by this instance of Data Collector")
+        .withDetails(childProcessesOutput);
+
 
     return builder.build();
+  }
+
+  /**
+   * Return PID of our process in JDK 8 compatible manner.
+   */
+  private static String getPid() {
+    String name = ManagementFactory.getRuntimeMXBean().getName();
+    if(name != null && name.contains("@")) {
+      name = name.substring(0, name.indexOf('@'));
+    }
+
+    return name;
   }
 
 }
