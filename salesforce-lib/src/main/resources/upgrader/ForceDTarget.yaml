@@ -86,5 +86,8 @@ upgrades:
           oldNamePattern: forceConfig.mutualAuth.keyStorePassword
           newNamePattern: forceConfig.connection.mutualAuth.keyStorePassword
       - renameConfig:
+          oldNamePattern: forceConfig.mutualAuth.keyStoreAlgorithm
+          newNamePattern: forceConfig.connection.mutualAuth.keyStoreAlgorithm
+      - renameConfig:
           oldNamePattern: forceConfig.mutualAuth.underlyingConfig
           newNamePattern: forceConfig.connection.mutualAuth.underlyingConfig
