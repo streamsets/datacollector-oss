@@ -85,5 +85,8 @@ upgrades:
           oldNamePattern: conf.mutualAuth.keyStorePassword
           newNamePattern: conf.connection.mutualAuth.keyStorePassword
       - renameConfig:
+          oldNamePattern: conf.mutualAuth.keyStoreAlgorithm
+          newNamePattern: conf.connection.mutualAuth.keyStoreAlgorithm
+      - renameConfig:
           oldNamePattern: conf.mutualAuth.underlyingConfig
           newNamePattern: conf.connection.mutualAuth.underlyingConfig
