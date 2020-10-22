@@ -18,6 +18,7 @@ package com.streamsets.datacollector.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -29,6 +30,20 @@ import java.util.concurrent.TimeUnit;
 public class ProcessUtil {
   private static final Logger LOG = LoggerFactory.getLogger(ProcessUtil.class);
 
+  /**
+   * Wrapper class for returning multiple pieces of information while running external commands.
+   */
+  public static class Output {
+    public final boolean success;
+    public final String stdout;
+    public final String stderr;
+
+    public Output(boolean success, String stdout, String stderr) {
+      this.success = success;
+      this.stdout = stdout;
+      this.stderr = stderr;
+    }
+  }
 
   /**
    * Functional interface to process output of the process.
@@ -64,11 +79,38 @@ public class ProcessUtil {
       Files.delete(outputFile);
       Files.delete(errorFile);
 
-      return finished ? process.exitValue() == 0 : false;
+      return finished && process.exitValue() == 0;
     } catch (Throwable ex) {
       LOG.error("Can't run command: {}", commandLine, ex);
     }
 
     return false;
+  }
+
+  /**
+   * A helper variant of executeCommand() that assumes that output of the command is small and will load the whole
+   * output into a memory (String) and return structure containing success / stdout / stderr.
+   */
+  public static Output executeCommandAndLoadOutput(
+      List<String> commandLine,
+      long timeout
+  ) {
+    StringBuilder stdoutBuilder = new StringBuilder();
+    StringBuilder stderrBuilder = new StringBuilder();
+
+    boolean success = ProcessUtil.executeCommand(
+        commandLine,
+        timeout,
+        (out, err) -> {
+          stdoutBuilder.append(com.google.common.io.Files.toString(out.toFile(), Charset.defaultCharset()));
+          stderrBuilder.append(com.google.common.io.Files.toString(err.toFile(), Charset.defaultCharset()));
+        }
+    );
+
+    return new Output(
+        success,
+        stdoutBuilder.toString(),
+        stderrBuilder.toString()
+    );
   }
 }

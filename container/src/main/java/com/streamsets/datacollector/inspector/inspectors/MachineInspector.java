@@ -26,12 +26,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 
 public class MachineInspector implements HealthInspector {
 
@@ -65,10 +63,10 @@ public class MachineInspector implements HealthInspector {
     // File descriptors
     HealthInspectorEntry.Severity ulimitSeverity = HealthInspectorEntry.Severity.GREEN;
     String ulimitDetails = null;
-    String ulimitOutput = stdoutForCommand(ImmutableList.of("ulimit", "-n"));
+    ProcessUtil.Output ulimitOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("ulimit", "-n"), 5);
     int ulimit = -1;
     try {
-      ulimit = Integer.parseInt(ulimitOutput.trim());
+      ulimit = Integer.parseInt(ulimitOutput.stdout.trim());
 
       ulimitSeverity = ulimit >= 32768 ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED;
     } catch (Throwable e) {
@@ -81,21 +79,6 @@ public class MachineInspector implements HealthInspector {
         .withDetails(ulimitDetails);
 
     return builder.build();
-  }
-
-  private String stdoutForCommand(List<String> command) {
-    StringBuilder stdoutBuilder = new StringBuilder();
-
-    // Ping
-    boolean success = ProcessUtil.executeCommand(
-        command,
-        5,
-        (out, err) -> {
-          stdoutBuilder.append(com.google.common.io.Files.toString(out.toFile(), Charset.defaultCharset()));
-        }
-    );
-
-    return success ? stdoutBuilder.toString() : null;
   }
 
   public long getUnallocatedSpace(String directory) {

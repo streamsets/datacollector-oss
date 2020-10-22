@@ -16,13 +16,11 @@
 package com.streamsets.datacollector.inspector.inspectors;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.io.Files;
 import com.streamsets.datacollector.inspector.HealthInspector;
 import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
 import com.streamsets.datacollector.inspector.model.HealthInspectorEntry;
 import com.streamsets.datacollector.util.ProcessUtil;
 
-import java.nio.charset.Charset;
 import java.util.List;
 
 
@@ -54,20 +52,9 @@ public class NetworkInspector implements HealthInspector {
       String description,
       List<String> command
   ) {
-    StringBuilder stdoutBuilder = new StringBuilder();
-    StringBuilder stderrBuilder = new StringBuilder();
-
-    // Ping
-    boolean success = ProcessUtil.executeCommand(
-        command,
-        5,
-        (out, err) -> {
-          stdoutBuilder.append(Files.toString(out.toFile(), Charset.defaultCharset()));
-          stderrBuilder.append(Files.toString(err.toFile(), Charset.defaultCharset()));
-        }
-    );
-    builder.addEntry(name, success ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED)
+    ProcessUtil.Output output = ProcessUtil.executeCommandAndLoadOutput(command, 5);
+    builder.addEntry(name, output.success ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED)
         .withDescription(description)
-        .withDetails("stdout:\n" + stdoutBuilder.toString() + "\n\nstderr:\n" + stderrBuilder);
+        .withDetails("stdout:\n" + output.stdout + "\n\nstderr:\n" + output.stderr);
   }
 }

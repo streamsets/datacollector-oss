@@ -15,12 +15,16 @@
  */
 package com.streamsets.datacollector.inspector.inspectors;
 
+import com.google.common.io.Files;
 import com.streamsets.datacollector.inspector.HealthInspector;
 import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
 import com.streamsets.datacollector.inspector.model.HealthInspectorEntry;
+import com.streamsets.datacollector.util.ProcessUtil;
 import org.apache.commons.io.FileUtils;
 
 import java.lang.management.ManagementFactory;
+import java.nio.charset.Charset;
+import java.util.List;
 
 public class JvmInstanceInspector implements HealthInspector {
 
