@@ -65,7 +65,8 @@ public class ForceDSourceUpgraderTest {
     configs.add(new Config("forceConfig.mutualAuth.certificateChain", "v16"));
     configs.add(new Config("forceConfig.mutualAuth.keyStoreType", "v17"));
     configs.add(new Config("forceConfig.mutualAuth.keyStorePassword", "v18"));
-    configs.add(new Config("forceConfig.mutualAuth.underlyingConfig", "v19"));
+    configs.add(new Config("forceConfig.mutualAuth.keyStoreAlgorithm", "v19"));
+    configs.add(new Config("forceConfig.mutualAuth.underlyingConfig", "v20"));
 
     configs = upgrader.upgrade(configs, context);
 
@@ -87,8 +88,9 @@ public class ForceDSourceUpgraderTest {
     UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.certificateChain", "v16");
     UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.keyStoreType", "v17");
     UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.keyStorePassword", "v18");
-    UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.underlyingConfig", "v19");
+    UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.keyStoreAlgorithm", "v19");
+    UpgraderTestUtils.assertExists(configs, "forceConfig.connection.mutualAuth.underlyingConfig", "v20");
 
-    Assert.assertEquals(19, configs.size());
+    Assert.assertEquals(20, configs.size());
   }
 }
