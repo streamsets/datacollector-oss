@@ -28,6 +28,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.Authentication;
@@ -398,6 +399,12 @@ public class AsterRestClientImpl implements AsterRestClient {
       HttpEntity httpEntity = new HttpEntity<>(request.getPayload());
       Class<?> requestPayloadCls = (request.getPayloadClass() != null) ? request.getPayloadClass() : Void.class;
       RestTemplate restTemplate = createOAuth2RestTemplate();
+      if (request.getTimeout() >= 0) {
+        SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+        requestFactory.setConnectTimeout(request.getTimeout());
+        requestFactory.setReadTimeout(request.getTimeout());
+        restTemplate.setRequestFactory(requestFactory);
+      }
       ResponseEntity responseEntity = restTemplate.exchange(
           request.getResourcePath(),
           HttpMethod.valueOf(request.getRequestType().name()),

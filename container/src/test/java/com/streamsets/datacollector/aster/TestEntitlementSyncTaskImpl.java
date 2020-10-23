@@ -31,7 +31,10 @@ import org.eclipse.jetty.security.Authenticator;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.SocketTimeoutException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.mockito.Mockito;
 import org.powermock.reflect.Whitebox;
@@ -39,14 +42,18 @@ import org.powermock.reflect.Whitebox;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -56,6 +63,7 @@ public class TestEntitlementSyncTaskImpl {
   private static final String BASE_URL = "http://localhost:18630";
   private static final String VERSION = "1.2.3-testVersion";
   private static final String ASTER_URL = "http://test-aster-url";
+  private static final long RETRY_INITIAL_BACKOFF = 1L;
 
   private EntitlementSyncTaskImpl task;
   private RuntimeInfo runtimeInfo;
@@ -84,6 +92,9 @@ public class TestEntitlementSyncTaskImpl {
 
     appConfig = new Configuration();
     appConfig.set(AsterServiceProvider.ASTER_URL, ASTER_URL);
+
+    // make test faster while still testing backoff logic
+    appConfig.set(EntitlementSyncTaskImpl.SYNC_RETRY_INITIAL_BACKOFF_CONFIG, RETRY_INITIAL_BACKOFF);
 
     asterService = mock(AsterService.class);
 
@@ -257,5 +268,119 @@ public class TestEntitlementSyncTaskImpl {
     task.syncEntitlement();
     verify(task).postToGetEntitlementUrl(anyString(), any());
     verify(activation, never()).setActivationKey(any());
+  }
+
+  @Test
+  public void testRetry() {
+    // assumptions this test uses
+    assertEquals(TimeUnit.SECONDS.toMillis(30), EntitlementSyncTaskImpl.SYNC_TIMEOUT_DEFAULT);
+    assertEquals(TimeUnit.MINUTES.toMillis(3), EntitlementSyncTaskImpl.SYNC_MAX_RETRY_WINDOW_DEFAULT);
+
+    when(asterRestClient.hasTokens()).thenReturn(true);
+    doCallRealMethod().when(task).postToGetEntitlementUrl(anyString(), any());
+    long startTime = System.currentTimeMillis();
+    when(task.getTime()).thenReturn(
+        startTime, // initialization
+        startTime + TimeUnit.SECONDS.toMillis(31), // after first call fails, slightly longer than timeout
+        startTime + TimeUnit.SECONDS.toMillis(62),
+        startTime + TimeUnit.SECONDS.toMillis(93),
+        startTime + TimeUnit.SECONDS.toMillis(124),
+        startTime + TimeUnit.SECONDS.toMillis(155),
+        startTime + TimeUnit.SECONDS.toMillis(186) // outside of retry window
+    );
+    responseStatus = 200;
+    AtomicInteger throwCount = new AtomicInteger(3); // fail three times, then succeed
+    doAnswer(args -> {
+      if (throwCount.getAndDecrement() > 0) {
+        throw new RuntimeException("test wrapper", new SocketTimeoutException("test ex"));
+      }
+      return response;
+    }).when(asterRestClient).doRestCall(any());
+
+    assertSame(response, task.postToGetEntitlementUrl("unused", ImmutableMap.of("not", "used")));
+    verify(asterRestClient, times(4)).doRestCall(any());
+    verify(task).sleep(1 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(2 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(4 * RETRY_INITIAL_BACKOFF);
+    verify(task, never()).sleep(eq(8 * RETRY_INITIAL_BACKOFF));
+    verify(task, never()).sleep(eq(16 * RETRY_INITIAL_BACKOFF));
+    verify(task, never()).sleep(eq(32 * RETRY_INITIAL_BACKOFF));
+
+    // test max retries
+    when(task.getTime()).thenReturn(
+        startTime, // initialization
+        startTime + TimeUnit.SECONDS.toMillis(31), // after first call fails, slightly longer than timeout
+        startTime + TimeUnit.SECONDS.toMillis(62),
+        startTime + TimeUnit.SECONDS.toMillis(93),
+        startTime + TimeUnit.SECONDS.toMillis(124),
+        startTime + TimeUnit.SECONDS.toMillis(155),
+        startTime + TimeUnit.SECONDS.toMillis(186) // outside of retry window, 7th try is not attempted
+    );
+    throwCount.set(6);
+    try {
+      task.postToGetEntitlementUrl("unused", ImmutableMap.of("not", "used"));
+      fail("Expected exception");
+    } catch (RuntimeException e) {
+      assertEquals("test wrapper", e.getMessage());
+    }
+    verify(asterRestClient, times(10)).doRestCall(any());
+    // expect 5 more sleeps
+    verify(task, times(2)).sleep(1 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(2)).sleep(2 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(2)).sleep(4 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(8 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(16 * RETRY_INITIAL_BACKOFF);
+    verify(task, never()).sleep(eq(32 * RETRY_INITIAL_BACKOFF));
+
+    // test retries of various status codes
+    when(task.getTime()).thenReturn(
+        startTime, // initialization
+        startTime + TimeUnit.SECONDS.toMillis(31), // after first call fails, slightly longer than timeout
+        startTime + TimeUnit.SECONDS.toMillis(62),
+        startTime + TimeUnit.SECONDS.toMillis(93),
+        startTime + TimeUnit.SECONDS.toMillis(124),
+        startTime + TimeUnit.SECONDS.toMillis(155),
+        startTime + TimeUnit.SECONDS.toMillis(186) // outside of retry window
+    );
+    when(response.getStatusCode()).thenReturn(504, 503, 502, 500, 200);
+    assertSame(response, task.postToGetEntitlementUrl("unused", ImmutableMap.of("not", "used")));
+    verify(asterRestClient, times(15)).doRestCall(any());
+    // expect 4 more sleeps
+    verify(task, times(3)).sleep(1 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(2 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(4 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(2)).sleep(8 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(16 * RETRY_INITIAL_BACKOFF);
+    verify(task, never()).sleep(eq(32 * RETRY_INITIAL_BACKOFF));
+
+    // test interrupted
+    when(task.getTime()).thenReturn(
+        startTime, // initialization
+        startTime + TimeUnit.SECONDS.toMillis(31), // after first call fails, slightly longer than timeout
+        startTime + TimeUnit.SECONDS.toMillis(62),
+        startTime + TimeUnit.SECONDS.toMillis(93),
+        startTime + TimeUnit.SECONDS.toMillis(124),
+        startTime + TimeUnit.SECONDS.toMillis(155),
+        startTime + TimeUnit.SECONDS.toMillis(186) // outside of retry window
+    );
+    // make it fail
+    throwCount.set(1);
+    // interrupted
+    when(task.sleep(anyLong())).thenReturn(false);
+    try {
+      task.postToGetEntitlementUrl("unused", ImmutableMap.of("not", "used"));
+      fail("Expected exception");
+    } catch (RuntimeException e) {
+      assertEquals("test wrapper", e.getMessage());
+    }
+    // 1 more rest call, retry was aborted
+    verify(asterRestClient, times(16)).doRestCall(any());
+    // 1 more sleep
+    verify(task, times(4)).sleep(1 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(2 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(4 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(2)).sleep(8 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(16 * RETRY_INITIAL_BACKOFF);
+    verify(task, never()).sleep(eq(32 * RETRY_INITIAL_BACKOFF));
   }
 }

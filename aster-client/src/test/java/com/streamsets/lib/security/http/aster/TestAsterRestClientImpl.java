@@ -16,6 +16,7 @@
 package com.streamsets.lib.security.http.aster;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -27,6 +28,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletException;
@@ -37,6 +39,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketTimeoutException;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
@@ -426,8 +429,17 @@ public class TestAsterRestClientImpl {
   }
 
   private static class ApiServlet extends HttpServlet {
+    volatile long sleepTime = 0;
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+      if (sleepTime > 0) {
+        try {
+          Thread.sleep(Long.valueOf(sleepTime));
+        } catch (InterruptedException e) {
+        }
+        sleepTime = 0;
+      }
+
       if (("Bearer " + USER_TOKEN_WITH_ORG).equals(req.getHeader("Authorization"))) {
         resp.setStatus(HttpServletResponse.SC_OK);
       } else {
@@ -570,6 +582,90 @@ public class TestAsterRestClientImpl {
       );
       Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
       Assert.assertTrue(tokenServlet.refreshDone);
+
+    } finally {
+      server.stop();
+    }
+
+  }
+
+  @Test
+  public void testTimeouts() throws Exception {
+    Server server = new Server(0);
+    ServletContextHandler context = new ServletContextHandler();
+    ApiServlet apiServlet = new ApiServlet();
+    context.addServlet(new ServletHolder(apiServlet), "/test");
+    context.setContextPath("/");
+    server.setHandler(context);
+    try {
+      server.start();
+      String asterUrl = "http://localhost:" + server.getURI().getPort();
+
+      AsterRestConfig config = new AsterRestConfig().setClientId("123")
+          .setClientVersion("version")
+          .setSubjectType(AsterRestConfig.SubjectType.DC)
+          .setLoginCallbackPath("/logincallback")
+          .setRegistrationCallbackPath("/registrationcallback")
+          .setAsterUrl(asterUrl)
+          .setStateCacheExpirationSecs(60)
+          .setAccessTokenMaxExpInSecs(600);
+
+      File file = new File("target", UUID.randomUUID().toString());
+      Assert.assertTrue(file.mkdir());
+      file = new File(file, "store.json");
+
+      // with valid access token
+      try (OutputStream os = new FileOutputStream(file)) {
+        new ObjectMapper().writeValue(os,
+            new AsterTokenResponse().setAccess_token(USER_TOKEN_WITH_ORG)
+                .setExpires_in(100)
+                .setExpires_on(Instant.now().plusSeconds(100).getEpochSecond())
+        );
+      }
+
+      AsterRestClientImpl rest = new AsterRestClientImpl(config, file);
+
+      long start = System.currentTimeMillis();
+      AsterRestClient.Response<Void> response = rest.doRestCall(new AsterRestClient.Request<>()
+          .setResourcePath(asterUrl + "/test")
+          .setRequestType(AsterRestClient.RequestType.GET)
+      );
+      long end = System.currentTimeMillis();
+      Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
+
+      long duration = end - start;
+
+      // make sure sleep is working, set timeout that is plenty high enough
+      int sleepTime = (int) Math.max(duration * 2, duration + 500);
+      apiServlet.sleepTime = sleepTime;
+      start = System.currentTimeMillis();
+      response = rest.doRestCall(new AsterRestClient.Request<>()
+          .setResourcePath(asterUrl + "/test")
+          .setRequestType(AsterRestClient.RequestType.GET)
+          .setTimeout(sleepTime * 2)
+      );
+      end = System.currentTimeMillis();
+
+      Assert.assertEquals(response.getStatusCode(), HttpStatus.OK.value());
+      Assert.assertTrue("Expected duration " + (end - start) + " >= sleepTime " + sleepTime,
+          end - start >= sleepTime);
+      Assert.assertTrue(end - start <= (long) sleepTime * 2);
+
+      // timeout shorter than sleep
+      apiServlet.sleepTime = sleepTime;
+      start = System.currentTimeMillis();
+      try {
+        response = rest.doRestCall(new AsterRestClient.Request<>().setResourcePath(asterUrl + "/test")
+            .setRequestType(AsterRestClient.RequestType.GET)
+            .setTimeout(sleepTime / 2));
+        Assert.fail("expected exception");
+      } catch (ResourceAccessException e) {
+        end = System.currentTimeMillis();
+        Assert.assertEquals(SocketTimeoutException.class, e.getCause().getClass());
+      }
+
+      Assert.assertTrue(end - start >= sleepTime / 2);
+      Assert.assertTrue(end - start < sleepTime);
 
     } finally {
       server.stop();
