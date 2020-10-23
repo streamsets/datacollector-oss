@@ -43,7 +43,7 @@ public class TestSdcIpcWithDiskBufferSourceUpgrader {
   }
 
   @Test
-  public void testV1ToV2() throws Exception {
+  public void testV1ToV3() throws Exception {
     TlsConfigBeanUpgraderTestUtil.testRawKeyStoreConfigsToTlsConfigBeanUpgrade(
         "configs.",
         new SdcIpcWithDiskBufferSourceUpgrader(),
@@ -52,9 +52,9 @@ public class TestSdcIpcWithDiskBufferSourceUpgrader {
   }
 
   @Test
-  public void testV2ToV3() {
-    Mockito.doReturn(2).when(context).getFromVersion();
-    Mockito.doReturn(3).when(context).getToVersion();
+  public void testV3ToV4() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
 
     String configPrefix = "configs.tlsConfigBean.";
     configs = upgrader.upgrade(configs, context);
