@@ -15,7 +15,6 @@
  */
 package com.streamsets.lib.security.http.aster;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface AsterRestClient {
@@ -33,9 +32,9 @@ public interface AsterRestClient {
   class Request<T> {
     private String resourcePath;
     private RequestType requestType;
-    private Map<String, String> headers = new HashMap<>();
     private T payload;
     private Class<T> payloadClass;
+    private int timeout = -1;
 
     public String getResourcePath() {
       return resourcePath;
@@ -55,15 +54,6 @@ public interface AsterRestClient {
       return this;
     }
 
-    public Map<String, String> getHeaders() {
-      return headers;
-    }
-
-    public Request<T> setHeaders(Map<String, String> headers) {
-      this.headers = headers;
-      return this;
-    }
-
     public T getPayload() {
       return payload;
     }
@@ -79,6 +69,15 @@ public interface AsterRestClient {
 
     public Request<T> setPayloadClass(Class<T> payloadClass) {
       this.payloadClass = payloadClass;
+      return this;
+    }
+
+    public int getTimeout() {
+      return timeout;
+    }
+
+    public Request<T> setTimeout(int timeout) {
+      this.timeout = timeout;
       return this;
     }
   }

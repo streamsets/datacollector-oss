@@ -17,6 +17,7 @@ package com.streamsets.datacollector.aster;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.activation.Activation;
 import com.streamsets.datacollector.http.AsterContext;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -26,13 +27,17 @@ import com.streamsets.datacollector.usagestats.StatsCollector;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.aster.AsterRestClient;
 import com.streamsets.lib.security.http.aster.AsterService;
+import com.streamsets.pipeline.lib.util.ThreadUtil;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.net.SocketTimeoutException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class EntitlementSyncTaskImpl extends AbstractTask implements EntitlementSyncTask {
   private static final Logger LOG = LoggerFactory.getLogger(EntitlementSyncTaskImpl.class);
@@ -42,6 +47,20 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
   static final String ACTIVATION_CODE = "activationCode";
   @VisibleForTesting
   static final String ACTIVATION_ENDPOINT_PATH = "/api/entitlements/v3/activations";
+  @VisibleForTesting
+  static final String SYNC_MAX_RETRY_WINDOW_CONFIG = "entitlement.sync.max.retry.window.ms";
+  @VisibleForTesting
+  static final long SYNC_MAX_RETRY_WINDOW_DEFAULT = TimeUnit.MINUTES.toMillis(3);
+  @VisibleForTesting
+  static final String SYNC_RETRY_INITIAL_BACKOFF_CONFIG = "entitlement.sync.initial.backoff.ms";
+  @VisibleForTesting
+  static final long SYNC_RETRY_INITIAL_BACKOFF_DEFAULT = TimeUnit.SECONDS.toMillis(1);
+  @VisibleForTesting
+  static final String SYNC_TIMEOUT_CONFIG = "entitlement.sync.timeout.ms";
+  @VisibleForTesting
+  static final int SYNC_TIMEOUT_DEFAULT = (int) TimeUnit.SECONDS.toMillis(30);
+
+  private static final Set<Integer> STATUS_CODES_TO_RETRY = ImmutableSet.of(500, 502, 503, 504);
 
   private final Activation activation;
   private final RuntimeInfo runtimeInfo;
@@ -49,6 +68,9 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
   private final Configuration appConfig;
   private final AsterContext asterContext;
   private final StatsCollector statsCollector;
+  private final long syncMaxRetryWindow;
+  private final long syncRetryInitialBackoff;
+  private final int syncTimeout;
 
   @Inject
   public EntitlementSyncTaskImpl(
@@ -66,6 +88,9 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
     this.appConfig = appConfig;
     this.asterContext = asterContext;
     this.statsCollector = statsCollector;
+    this.syncMaxRetryWindow = appConfig.get(SYNC_MAX_RETRY_WINDOW_CONFIG, SYNC_MAX_RETRY_WINDOW_DEFAULT);
+    this.syncRetryInitialBackoff = appConfig.get(SYNC_RETRY_INITIAL_BACKOFF_CONFIG, SYNC_RETRY_INITIAL_BACKOFF_DEFAULT);
+    this.syncTimeout = appConfig.get(SYNC_TIMEOUT_CONFIG, SYNC_TIMEOUT_DEFAULT);
   }
 
   @Override
@@ -175,9 +200,67 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
             .setResourcePath(entitlementUrl)
             .setRequestType(AsterRestClient.RequestType.POST)
             .setPayloadClass((Class)Map.class)
-            .setPayload(data);
+            .setPayload(data)
+            .setTimeout(syncTimeout);
 
-    return service.getRestClient().doRestCall(request);
+    long startTime = getTime();
+    long nextSleep = syncRetryInitialBackoff;
+    AsterRestClient.Response<Map<String, Object>> response = null;
+    RuntimeException exception = null;
+    while (true) {
+      try {
+        response = service.getRestClient().doRestCall(request);
+        int statusCode = response.getStatusCode();
+        if (!STATUS_CODES_TO_RETRY.contains(statusCode)) {
+          return response;
+        }
+        LOG.warn("Retrying entitlement sync after failure with status code {} and message {}",
+            statusCode,
+            response.getStatusMessage());
+        exception = null;
+      } catch (RuntimeException e) {
+        if (e.getCause() != null && e.getCause() instanceof SocketTimeoutException) {
+          LOG.warn("Retrying entitlement sync after socket timeout: " + e.getMessage());
+          exception = e;
+          response = null;
+        } else {
+          throw e;
+        }
+      }
+      long timeAfterAttempt = getTime();
+      long nextRun = timeAfterAttempt + nextSleep;
+      if (nextRun > startTime + syncMaxRetryWindow) {
+        // next run would start outside the retry window
+        LOG.warn("Next retry would be outside the retry window, giving up");
+        break;
+      }
+      LOG.debug("Sleeping for {} ms between retries", nextSleep);
+      if (!sleep(nextSleep)) {
+        LOG.debug("Entitlement Sync sleep interrupted");
+        break;
+      }
+      nextSleep *= 2; // exponential backoff
+    }
+    if (exception != null) {
+      throw exception;
+    }
+    return response;
+  }
+
+  @VisibleForTesting
+  long getTime() {
+    // allows easy mocking
+    return System.currentTimeMillis();
+  }
+
+  /**
+   * @param millis sleep duration in millis
+   * @return whether slept for full duration
+   */
+  @VisibleForTesting
+  boolean sleep(long millis) {
+    // allows easy mocking
+    return ThreadUtil.sleep(millis);
   }
 
   private String getEntitlementFromResponse(Map<String, Object> responseData) {
