@@ -16,20 +16,24 @@
 package com.streamsets.pipeline.stage.processor.mapper;
 
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.Field;
+import com.streamsets.pipeline.api.InvalidFieldPathException;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
+import com.streamsets.pipeline.lib.el.AggregationEL;
 import com.streamsets.pipeline.lib.el.ELUtils;
 import com.streamsets.pipeline.lib.el.FieldEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.el.AggregationEL;
 import com.streamsets.pipeline.lib.util.FieldUtils;
+import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.processor.expression.ELSupport;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -42,6 +46,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FieldMapperProcessor extends SingleLaneRecordProcessor {
   private static final Logger LOG = LoggerFactory.getLogger(FieldMapperProcessor.class);
@@ -51,6 +56,7 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
   private ELEval mapperConditionalEval;
   private ELEval aggregationEval;
   private ELVars expressionVars;
+  private DefaultErrorRecordHandler errorRecordHandler;
 
   public FieldMapperProcessor(FieldMapperProcessorConfig fieldMapperConfig) {
     this.fieldMapperConfig = fieldMapperConfig;
@@ -62,19 +68,45 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
     expressionVars = ELUtils.parseConstants(
         null, getContext(), Groups.MAPPER.name(), "constants", Errors.FIELD_MAPPER_01, issues
     );
-    mapperExpressionEval = createMapperExpressionEval(getContext());
-    if (!Strings.isNullOrEmpty(fieldMapperConfig.aggregationExpression)) {
-      aggregationEval = createAggregationEval(getContext());
-    } else {
-      aggregationEval = null;
-    }
-    if (!Strings.isNullOrEmpty(fieldMapperConfig.conditionalExpression)) {
-      this.mapperConditionalEval = createConditionalExpressionEval(getContext());
-    } else {
-      this.mapperConditionalEval = null;
+
+    mapperExpressionEval = null;
+    mapperConditionalEval = null;
+    aggregationEval = null;
+
+    if (validateEL("fieldMapperConfig.mappingExpression", fieldMapperConfig.mappingExpression, issues)) {
+      mapperExpressionEval = createMapperExpressionEval(getContext());
     }
 
+    if (validateEL("fieldMapperConfig.aggregationExpression", fieldMapperConfig.aggregationExpression, issues)) {
+      if (!Strings.isNullOrEmpty(fieldMapperConfig.aggregationExpression)) {
+        aggregationEval = createAggregationEval(getContext());
+      }
+    }
+
+    if (validateEL("fieldMapperConfig.conditionalExpression", fieldMapperConfig.conditionalExpression, issues)) {
+      if (!Strings.isNullOrEmpty(fieldMapperConfig.conditionalExpression)) {
+        mapperConditionalEval = createConditionalExpressionEval(getContext());
+      }
+    }
+
+    errorRecordHandler = new DefaultErrorRecordHandler(getContext());
+
     return issues;
+  }
+
+  private boolean validateEL(final String configName, final String el, final List<ConfigIssue> issues) {
+    boolean valid = true;
+    if(el != null) {
+      try {
+        getContext().parseEL(el);
+      } catch (ELEvalException ex) {
+        issues.add(getContext().createConfigIssue(
+            Groups.MAPPER.name(), configName, Errors.INVALID_EXPRESSION_04, el, ex.getMessage(), ex)
+        );
+        valid = false;
+      }
+    }
+    return valid;
   }
 
   private ELEval createMapperExpressionEval(ELContext elContext) {
@@ -115,23 +147,27 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
     RecordEL.setRecordInContext(expressionVars, record);
     TimeNowEL.setTimeNowInContext(expressionVars, new Date());
 
-    switch (fieldMapperConfig.operateOn) {
-      case FIELD_PATHS:
-        transformFieldPaths(record);
-        break;
-      case FIELD_VALUES:
-        transformFieldValues(record);
-        break;
-      case FIELD_NAMES:
-        transformFieldNames(record);
-        break;
-      default:
-        throw new IllegalStateException(String.format(
-            "Unrecognized operateOn value of %s",
-            fieldMapperConfig.operateOn
-        ));
+    try {
+      switch (fieldMapperConfig.operateOn) {
+        case FIELD_PATHS:
+          transformFieldPaths(record);
+          break;
+        case FIELD_VALUES:
+          transformFieldValues(record);
+          break;
+        case FIELD_NAMES:
+          transformFieldNames(record);
+          break;
+        default:
+          throw new IllegalStateException(String.format(
+              "Unrecognized operateOn value of %s",
+              fieldMapperConfig.operateOn
+          ));
+      }
+      batchMaker.addRecord(record);
+    } catch (final StageException ex) {
+      errorRecordHandler.onError(new OnRecordErrorException(record, ex.getErrorCode(), ex.getParams()));
     }
-    batchMaker.addRecord(record);
   }
 
   private void transformFieldValues(Record record) throws StageException {
@@ -154,11 +190,19 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
         return;
       }
 
-      final Object newValue = mapperExpressionEval.eval(
-          expressionVars,
-          fieldMapperConfig.mappingExpression,
-          Object.class
-      );
+      final Object newValue;
+      try {
+        newValue = mapperExpressionEval.eval(
+            expressionVars,
+            fieldMapperConfig.mappingExpression,
+            Object.class
+        );
+      } catch (ELEvalException e) {
+        throw new StageException(
+            Errors.EXPRESSION_EVALUATION_FAILURE_03,
+            fieldMapperConfig.mappingExpression, fieldPath, e.getMessage(), e
+        );
+      }
 
       final Field.Type newType = FieldUtils.getTypeFromObject(newValue);
 
@@ -230,11 +274,10 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
           }
         }
       } catch (ELEvalException e) {
-        throw new RuntimeException(String.format(
-            "Failed to evaluate mapper expression %s: %s",
-            fieldMapperConfig.mappingExpression,
-            e.getMessage()
-        ), e);
+        throw new StageException(
+            Errors.EXPRESSION_EVALUATION_FAILURE_03,
+            fieldMapperConfig.mappingExpression, fieldPath, e.getMessage(), e
+        );
       }
     });
 
@@ -284,11 +327,10 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
         newPathsToFields.computeIfAbsent(newPath, k -> new LinkedList<>());
         newPathsToFields.get(newPath).add(field);
       } catch (ELEvalException e) {
-        throw new RuntimeException(String.format(
-            "Failed to evaluate mapper expression %s: %s",
-            fieldMapperConfig.mappingExpression,
-            e.getMessage()
-        ), e);
+        throw new StageException(
+            Errors.EXPRESSION_EVALUATION_FAILURE_03,
+            fieldMapperConfig.mappingExpression, fieldPath, e.getMessage(), e
+        );
       }
       if (!fieldMapperConfig.maintainOriginalPaths) {
         pathsToDelete.add(fieldPath);
@@ -297,46 +339,70 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
     });
 
     for (String newPath : newPathsToFields.keySet()) {
-      final List<Field> mappedFields = new LinkedList<>(newPathsToFields.get(newPath));
-      if (aggregationEval != null) {
-        expressionVars.addVariable("fields", mappedFields);
-        AggregationEL.setFieldsToPreviousPathsInContext(expressionVars, fieldsToPreviousPaths);
-        final Object aggregationResult = aggregationEval.eval(
-            expressionVars,
-            fieldMapperConfig.aggregationExpression,
-            Object.class
-        );
-        expressionVars.addVariable("fields", null);
-        if (aggregationResult instanceof Field) {
-          record.set(newPath, (Field) aggregationResult);
+      String oldPaths = newPathsToFields.get(newPath)
+          .stream()
+          .map(fieldsToPreviousPaths::get)
+          .collect(Collectors.joining(", "));
+
+      try {
+        final List<Field> mappedFields = new LinkedList<>(newPathsToFields.get(newPath));
+        if (aggregationEval != null) {
+          expressionVars.addVariable("fields", mappedFields);
+          AggregationEL.setFieldsToPreviousPathsInContext(expressionVars, fieldsToPreviousPaths);
+          final Object aggregationResult;
+          try {
+            aggregationResult = aggregationEval.eval(
+                expressionVars,
+                fieldMapperConfig.aggregationExpression,
+                Object.class
+            );
+          } catch (ELEvalException e) {
+            throw new StageException(
+                Errors.EXPRESSION_EVALUATION_FAILURE_03,
+                fieldMapperConfig.aggregationExpression, oldPaths, e.getMessage(), e
+            );
+          }
+          expressionVars.addVariable("fields", null);
+          if (aggregationResult instanceof Field) {
+            record.set(newPath, (Field) aggregationResult);
+          } else {
+            final Field.Type aggregationResultType = FieldUtils.getTypeFromObject(aggregationResult);
+            record.set(newPath, Field.create(aggregationResultType, aggregationResult));
+          }
         } else {
-          final Field.Type aggregationResultType = FieldUtils.getTypeFromObject(aggregationResult);
-          record.set(newPath, Field.create(aggregationResultType, aggregationResult));
-        }
-      } else {
-        boolean replaceValues = false;
-        if (record.has(newPath)) {
-          final Field existingField = record.get(newPath);
-          if (existingField.getType() == Field.Type.LIST) {
-            final List<Field> valueAsList = existingField.getValueAsList();
-            if (!fieldMapperConfig.appendListValues) {
-              valueAsList.clear();
+          boolean replaceValues = false;
+          if (record.has(newPath)) {
+            final Field existingField = record.get(newPath);
+            if (existingField.getType() == Field.Type.LIST) {
+              final List<Field> valueAsList = existingField.getValueAsList();
+              if (!fieldMapperConfig.appendListValues) {
+                valueAsList.clear();
+              }
+              valueAsList.addAll(mappedFields);
+            } else if (fieldMapperConfig.structureChangeAllowed) {
+              replaceValues = true;
             }
-            valueAsList.addAll(mappedFields);
           } else if (fieldMapperConfig.structureChangeAllowed) {
             replaceValues = true;
           }
-        } else if (fieldMapperConfig.structureChangeAllowed) {
-          replaceValues = true;
-        }
 
-        if (replaceValues) {
-          if (mappedFields.size() > 1) {
-            record.set(newPath, Field.create(new LinkedList<>(mappedFields)));
-          } else {
-            record.set(newPath, mappedFields.iterator().next());
+          if (replaceValues) {
+            if (mappedFields.size() > 1) {
+              record.set(newPath, Field.create(new LinkedList<>(mappedFields)));
+            } else {
+              record.set(newPath, mappedFields.iterator().next());
+            }
           }
         }
+      } catch (final RuntimeException ex) {
+        // We cannot use Throwables.getRootCause here because InvalidFieldPathException may be in the middle of the chain.
+        Throwables.getCausalChain(ex)
+            .stream()
+            .filter(t -> t instanceof InvalidFieldPathException)
+            .findAny()
+            .orElseThrow(() -> ex);
+
+        throw new StageException(Errors.INVALID_EVALUATED_FIELD_PATH_02, newPath, oldPaths, ex);
       }
     }
     pathsToDelete.descendingIterator().forEachRemaining(path -> record.delete(path));
@@ -382,11 +448,13 @@ public class FieldMapperProcessor extends SingleLaneRecordProcessor {
           return true;
         }
       } catch (ELEvalException e) {
-        throw new RuntimeException(String.format(
-            "Failed to evaluate conditional expression %s: %s",
+        throw new StageException(
+            Errors.EXPRESSION_EVALUATION_FAILURE_03,
             fieldMapperConfig.conditionalExpression,
-            e.getMessage()
-        ), e);
+            fieldPath,
+            e.getMessage(),
+            e
+        );
       }
     }
     return false;

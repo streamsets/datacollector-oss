@@ -21,6 +21,9 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
   FIELD_MAPPER_01("Invalid constant '{}': {}"),
+  INVALID_EVALUATED_FIELD_PATH_02("Invalid evaluated field path [{}] for [{}]"),
+  EXPRESSION_EVALUATION_FAILURE_03("Failure during an expression evaluation [{}] for [{}]: {}"),
+  INVALID_EXPRESSION_04("Invalid expression [{}]: {}")
   ;
 
   private final String msg;
