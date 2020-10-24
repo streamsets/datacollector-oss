@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.record;
 
 import com.streamsets.datacollector.util.EscapeUtil;
+import com.streamsets.pipeline.api.InvalidFieldPathException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.util.FieldPathExpressionUtil;
 
@@ -140,7 +141,7 @@ public class PathElement {
               squareBracketsDepth++;
               break;
             default:
-              throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_INVALID_START));
+              throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_INVALID_START));
           }
         } else {
           if (requiresName) {
@@ -187,7 +188,7 @@ public class PathElement {
                   }
 
                   if (chars.length <= pos + 1) {
-                    throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_EMPTY_FIELD_NAME));
+                    throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_EMPTY_FIELD_NAME));
                   }
                   if (ch == chars[pos + 1]) {
                     collector.append(ch);
@@ -246,10 +247,10 @@ public class PathElement {
                         squareBracketsDepth = 0;
                         collector.setLength(0);
                       } catch (NumberFormatException ex) {
-                        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_NUMBER, fieldPath, pos, bracketedString), ex);
+                        throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH_NUMBER, fieldPath, pos, bracketedString), ex);
                       }
                     } else {
-                      throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_NOT_VALID_EXPR));
+                      throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, pos, REASON_NOT_VALID_EXPR));
                     }
                   }
                 } else {
@@ -269,9 +270,9 @@ public class PathElement {
 
       if(singleQuote || doubleQuote) {
         //If there is no matching quote
-        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_QUOTES));
+        throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH_REASON, fieldPath, 0, REASON_QUOTES));
       } else if (pos < chars.length) {
-        throw new IllegalArgumentException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
+        throw new InvalidFieldPathException(Utils.format(INVALID_FIELD_PATH, fieldPath, pos));
       } else if (collector.length() > 0) {
         // the last path element was a map entry, we need to create it.
         elements.add(PathElement.createMapElement(collector.toString()));
