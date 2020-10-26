@@ -76,7 +76,6 @@ public class JdbcTargetUpgrader extends JdbcBaseUpgrader{
         //fall through
         //We bumped the Sql server source to 10, so making it consistent
       case 9:
-        removeDriverClassNameAndTestQuery(configs);
         upgradeV8ToV9(configs);
         break;
       default:

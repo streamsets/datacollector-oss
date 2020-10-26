@@ -68,7 +68,6 @@ public class JdbcSourceUpgrader extends JdbcBaseUpgrader {
         //fall through
       case 11:
         //We bumped the Sql server source to 11, so making it consistent
-        removeDriverClassNameAndTestQuery(configs);
         upgradeV11ToV12(configs);
         break;
       default:
