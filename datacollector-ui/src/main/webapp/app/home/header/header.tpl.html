@@ -389,7 +389,7 @@
          tooltip-trigger="{{iconOnly ? 'mouseenter' : 'notooltip'}}"
          tooltip-popup-delay="500"
          ng-if="activeConfigStatus.executionMode != pipelineConstant.SLAVE && isAuthorized([userRoles.admin, userRoles.creator, userRoles.manager])"
-         ng-class="{'btn-selected': $storage.hideStageLibraryPanel}"
+         ng-class="{'btn-selected': !$storage.hideStageLibraryPanel}"
          ng-hide="isPipelineRunning || previewMode || snapshotMode"
          ng-click="$storage.hideStageLibraryPanel = !$storage.hideStageLibraryPanel">
         <span class="fa fa-th fa-14x"></span>
