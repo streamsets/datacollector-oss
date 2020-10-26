@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Kudu Lookup",
     description = "Performs KV lookups to enrich records",
     icon = "kudu.png",
