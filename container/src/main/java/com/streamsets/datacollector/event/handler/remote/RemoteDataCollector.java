@@ -342,19 +342,6 @@ public class RemoteDataCollector implements DataCollector {
       previewerId = GroupsInScope.executeIgnoreGroups(() -> {
         final Previewer previewer = manager.createPreviewer(user, name, rev, interceptorConfs, afterActionsFunction, false, connections);
         previewer.validateConfigs(timeoutMillis);
-
-        if (!EnumSet.of(PreviewStatus.VALIDATION_ERROR, PreviewStatus.INVALID).contains(previewer.getStatus())) {
-          previewer.start(
-              batches,
-              batchSize,
-              skipTargets,
-              skipLifecycleEvents,
-              stopStage,
-              stagesOverride,
-              timeoutMillis,
-              testOrigin
-          );
-        }
         return previewer.getId();
       });
     } catch (Exception ex) {
