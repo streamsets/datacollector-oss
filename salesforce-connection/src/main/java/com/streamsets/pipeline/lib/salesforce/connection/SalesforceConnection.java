@@ -45,7 +45,7 @@ public class SalesforceConnection {
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Username",
       displayPosition = 10,
       group = "FORCE"
@@ -55,7 +55,7 @@ public class SalesforceConnection {
   @ConfigDef(
       displayMode = ConfigDef.DisplayMode.BASIC,
       required = true,
-      type = ConfigDef.Type.STRING,
+      type = ConfigDef.Type.CREDENTIAL,
       label = "Password",
       displayPosition = 20,
       group = "FORCE"
