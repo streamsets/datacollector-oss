@@ -1311,8 +1311,8 @@ public class TestRemoteDataCollector {
     final MockPreviewer lastPreviewer = manager.getLastPreviewer();
 
     assertThat(lastPreviewer, notNullValue());
-    assertThat(lastPreviewer.previewStarted, equalTo(true));
     assertThat(lastPreviewer.getId(), equalTo(previewerId));
+
     lastPreviewer.stop();
     assertThat(this.afterActionsFunctionParam, equalTo(lastPreviewer));
     assertTrue(lastPreviewer.previewStopped);
