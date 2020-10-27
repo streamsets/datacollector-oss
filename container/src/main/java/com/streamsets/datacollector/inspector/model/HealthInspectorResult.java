@@ -29,9 +29,9 @@ public class HealthInspectorResult {
   /**
    * Info structure describes inspector that generated this result.
    */
-  private final HealthInspectorsInfo inspectorsInfo;
-  public HealthInspectorsInfo getInspectorsInfo() {
-    return inspectorsInfo;
+  private final HealthInspectorsInfo inspectorInfo;
+  public HealthInspectorsInfo getInspectorInfo() {
+    return inspectorInfo;
   }
 
   /**
@@ -43,7 +43,7 @@ public class HealthInspectorResult {
   }
 
   public HealthInspectorResult(HealthInspector checker, List<HealthInspectorEntry> entries) {
-    this.inspectorsInfo = new HealthInspectorsInfo(checker);
+    this.inspectorInfo = new HealthInspectorsInfo(checker);
     this.entries = Collections.unmodifiableList(entries);
   }
 
@@ -52,7 +52,7 @@ public class HealthInspectorResult {
       @JsonProperty("inspectorInfo") HealthInspectorsInfo inspectorsInfo,
       @JsonProperty("entries") List<HealthInspectorEntry> entries
   ) {
-    this.inspectorsInfo = inspectorsInfo;
+    this.inspectorInfo = inspectorsInfo;
     this.entries = entries;
   }
 

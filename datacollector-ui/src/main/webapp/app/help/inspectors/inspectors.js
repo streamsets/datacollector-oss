@@ -36,15 +36,15 @@ angular
 
     /**
      * Aggregating the check status to Inspector level
-     * Check if any of the checks are not green
+     * Check if any of the results are not green
      * If so mark the inspector red.
-     * If all checks are green mark it as green
+     * If all results are green mark it as green
      **/
     function parseHealthResults(response) {
-      for (var i = 0, inspectors = response.data.checks, l1 = response.data.checks.length; i < l1; i++) {
+      for (var i = 0, inspectors = response.data.results, l1 = response.data.results.length; i < l1; i++) {
         var hasError = false;
-        for (var j = 0, checks = inspectors[i].entries, l2 = inspectors[i].entries.length; j < l2; j++) {
-          if (checks[j].severity !== 'GREEN') {
+        for (var j = 0, results = inspectors[i].entries, l2 = inspectors[i].entries.length; j < l2; j++) {
+          if (results[j].severity !== 'GREEN') {
             hasError = true;
             break;
           }

@@ -26,7 +26,7 @@
                 <h4>
                   <i ng-if="inspector.severity === 'GREEN'" class="fa fa-check-circle fa-12x"></i>
                   <i ng-if="inspector.severity === 'RED'" class="fa fa-times-circle fa-12x"></i>
-                  <a href="javascript:;" ng-click="inspector.open=!inspector.open;" ng-bind="inspector.inspectorsInfo.name"></a>
+                  <a href="javascript:;" ng-click="inspector.open=!inspector.open;" ng-bind="inspector.inspectorInfo.name"></a>
                 </h4>
               </li>
             </ul>
@@ -36,10 +36,10 @@
                 <a href="javascript:;" ng-if="inspector.open" ng-click="inspector.open=!inspector.open;">close</a>
               </li>
               <li>
-                <a href="javascript:;" ng-click="expand(inspector);">list checks</a>
+                <a href="javascript:;" ng-click="expand(inspector);">list results</a>
               </li>
               <li>
-                <a href="javascript:;" ng-click="expand(inspector,true);">expand checks</a>
+                <a href="javascript:;" ng-click="expand(inspector,true);">expand results</a>
               </li>
             </ul>
           </div>

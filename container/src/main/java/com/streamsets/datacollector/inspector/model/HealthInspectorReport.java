@@ -18,23 +18,45 @@ package com.streamsets.datacollector.inspector.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class HealthInspectorReport {
 
   /**
+   * Date when this report was generated.
+   */
+  private final String reportTime;
+  public String getReportTime() {
+    return reportTime;
+  }
+
+  /**
+   * Number of miliseconds that this report took to generate.
+   */
+  private final long elapsedTime;
+  public long getElapsedTime() {
+    return elapsedTime;
+  }
+
+  /**
    * Individual results from the checks that were run.
    */
-  private final List<HealthInspectorResult> checks;
-  public List<HealthInspectorResult> getChecks() {
-    return checks;
+  private final List<HealthInspectorResult> results;
+  public List<HealthInspectorResult> getResults() {
+    return results;
   }
 
   @JsonCreator
   public HealthInspectorReport(
-      @JsonProperty("checks") List<HealthInspectorResult> checks
+      @JsonProperty("reportTime") String reportTime,
+      @JsonProperty("elapsedTime") long elapsedTime,
+      @JsonProperty("results") List<HealthInspectorResult> results
   ) {
-    this.checks = checks;
+    this.reportTime = reportTime;
+    this.elapsedTime = elapsedTime;
+    this.results = results;
   }
 
 }

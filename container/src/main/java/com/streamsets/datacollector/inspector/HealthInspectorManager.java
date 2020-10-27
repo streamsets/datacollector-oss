@@ -28,6 +28,7 @@ import com.streamsets.datacollector.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,6 +72,7 @@ public class HealthInspectorManager implements HealthInspector.Context {
   public HealthInspectorReport inspectHealth(List<String> inspectors) {
     LOG.info("Running Health Inspector with following inspectors: {}", String.join(",", inspectors));
     List<HealthInspectorResult> checks = new LinkedList<>();
+    long startTime = System.currentTimeMillis();
 
     for(HealthInspector checker : INSPECTORS) {
       if(inspectors.isEmpty() || inspectors.contains(checker.getClass().getSimpleName())) {
@@ -78,7 +80,11 @@ public class HealthInspectorManager implements HealthInspector.Context {
       }
     }
 
-    return new HealthInspectorReport(checks);
+    return new HealthInspectorReport(
+        LocalDateTime.now().toString(),
+        System.currentTimeMillis() - startTime,
+        checks
+    );
   }
 
   @Override
