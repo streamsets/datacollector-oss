@@ -75,10 +75,4 @@ angular
       }
     };
 
-    $scope.expand = function(resource, expandOperations) {
-      resource.open = true;
-      for (var i = 0, entries = resource.entries, l = entries.length; i < l; i++) {
-        entries[i].open = expandOperations;
-      }
-    };
   });

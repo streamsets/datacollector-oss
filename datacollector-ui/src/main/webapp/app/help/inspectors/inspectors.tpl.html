@@ -35,24 +35,20 @@
                 <a href="javascript:;" ng-if="!inspector.open" ng-click="inspector.open=!inspector.open;">open</a>
                 <a href="javascript:;" ng-if="inspector.open" ng-click="inspector.open=!inspector.open;">close</a>
               </li>
-              <li>
-                <a href="javascript:;" ng-click="expand(inspector);">list results</a>
-              </li>
-              <li>
-                <a href="javascript:;" ng-click="expand(inspector,true);">expand results</a>
-              </li>
             </ul>
           </div>
           <ul class="list-unstyled collapse operations" ng-class="{in:inspector.open}">
             <li ng-repeat="entry in inspector.entries track by $index" class="operation {{entry.severity}}">
               <div class="heading">
-                <a ng-click="entry.open=!entry.open;" href="javascript:;">
-                  <div class="clearfix">
-                    <span class="name" ng-bind="entry.name"></span>
-                    <span class="description" ng-bind="entry.description"></span>
-                    <span class="value pull-right" ng-bind="entry.value"></span>
-                  </div>
-                </a>
+                <div class="clearfix">
+                  <span class="name" ng-bind="entry.name"></span>
+                  <span class="description" ng-bind="entry.description"></span>
+                  <span ng-if="entry.details">
+                    <a href="javascript:;" ng-if="!entry.open" ng-click="entry.open=!entry.open;">Show Output</a>
+                    <a href="javascript:;" ng-if="entry.open" ng-click="entry.open=!entry.open;">Hide Output</a>
+                  </span>
+                  <span class="value pull-right" ng-bind="entry.value"></span>
+                </div>
               </div>
               <div class="content collapse" ng-class="{in: entry.details && entry.open}">
                 <div ng-if="entry.details">
