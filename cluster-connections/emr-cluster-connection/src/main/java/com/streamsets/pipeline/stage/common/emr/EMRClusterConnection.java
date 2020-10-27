@@ -359,6 +359,7 @@ public class EMRClusterConnection {
   public static final String USER_REGION_CUSTOM = "userRegionCustom";
   public static final String S3_STAGING_URI = "s3StagingUri";
   public static final String PROVISION_NEW_CLUSTER ="provisionNewCluster";
+  public static final String EMR_VERSION = "emrVersion";
   public static final String CLUSTER_PREFIX = "clusterPrefix";
   public static final String CLUSTER_ID = "clusterId";
   public static final String TERMINATE_CLUSTER = "terminateCluster";
@@ -413,6 +414,7 @@ public class EMRClusterConnection {
     props.setProperty(USER_REGION, getUserRegion());
     props.setProperty(S3_STAGING_URI, s3StagingUri);
     props.setProperty(PROVISION_NEW_CLUSTER, Boolean.toString(provisionNewCluster));
+    props.setProperty(EMR_VERSION, emrVersion);
     props.setProperty(CLUSTER_PREFIX, clusterPrefix);
     props.setProperty(CLUSTER_ID, clusterId);
     props.setProperty(SERVICE_ROLE, serviceRole);
