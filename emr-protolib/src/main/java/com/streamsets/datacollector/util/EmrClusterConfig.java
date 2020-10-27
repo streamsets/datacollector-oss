@@ -63,6 +63,10 @@ public class EmrClusterConfig {
     return props.getProperty(CLUSTER_PREFIX);
   }
 
+  public String getEMRVersion() {
+    return props.getProperty(EMR_VERSION);
+  }
+
   public String getClusterId() {
     return props.getProperty(CLUSTER_ID);
   }

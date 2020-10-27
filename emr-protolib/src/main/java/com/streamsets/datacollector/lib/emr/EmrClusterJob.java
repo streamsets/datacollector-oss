@@ -137,9 +137,16 @@ public class EmrClusterJob extends BaseStageLibraryDelegate implements ClusterJo
         );
       }
 
+      // prefix the version with emr- if it's not there already
+      // so, for example, 5.13.0 becomes emr-5.13.0
+      String emrVersion = emrClusterConfig.getEMRVersion();
+      final String emrLabelPrefix = "emr-";
+      if (!StringUtils.startsWith(emrVersion, emrLabelPrefix)) {
+        emrVersion = emrLabelPrefix + emrVersion;
+      }
       RunJobFlowRequest request = new RunJobFlowRequest()
           .withName(clusterName)
-          .withReleaseLabel(EmrInfo.getVersion())
+          .withReleaseLabel(emrVersion)
           .withServiceRole(emrClusterConfig.getServiceRole())
           .withJobFlowRole(emrClusterConfig.getJobFlowRole())
           .withVisibleToAllUsers(emrClusterConfig.isVisibleToAllUsers())
