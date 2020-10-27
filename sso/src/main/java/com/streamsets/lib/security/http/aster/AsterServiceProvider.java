@@ -26,7 +26,7 @@ public final class AsterServiceProvider {
   @VisibleForTesting
   public static final String ASTER_URL = "aster.url";
   // for local testing, use https://streamsets.dev:18632
-  public static final String ASTER_URL_DEFAULT = ""; // TODO: SET to internal (SDC-15601) and then prod (SDC-15602). Also update sdc.properties.
+  public static final String ASTER_URL_DEFAULT = "https://accounts.streamsets.com";
 
   private AsterServiceProvider() {
   }
