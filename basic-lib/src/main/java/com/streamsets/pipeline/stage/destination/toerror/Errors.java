@@ -20,8 +20,14 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
-  TOERROR_00,
+  TOERROR_00("Sent to error by previous stage"),
+  TOERROR_01("{}"),
   ;
+
+  private final String msg;
+  Errors(String msg) {
+    this.msg = msg;
+  }
 
   @Override
   public String getCode() {
@@ -30,7 +36,7 @@ public enum Errors implements ErrorCode {
 
   @Override
   public String getMessage() {
-    return "Sent to error by previous stage";
+    return msg;
   }
 
 }

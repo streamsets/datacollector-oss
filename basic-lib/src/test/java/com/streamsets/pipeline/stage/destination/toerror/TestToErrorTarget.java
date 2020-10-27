@@ -19,30 +19,53 @@ import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Target;
+import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestToErrorTarget {
 
-
   @Test
-  public void testOutErr() throws Exception {
-    Target target = new ToErrorTarget();
+  public void testOutErr() {
+    Target target = new ToErrorTarget(false, null);
     TargetRunner runner = new TargetRunner.Builder(ToErrorDTarget.class, target)
         .build();
     runner.runInit();
     try {
-
       Record record = RecordCreator.create();
       record.set(Field.create("Hello"));
       List<Record> input = ImmutableList.of(record);
       runner.runWrite(input);
       Assert.assertEquals(1, runner.getErrorRecords().size());
       Assert.assertEquals("Hello", runner.getErrorRecords().get(0).get().getValueAsString());
+    } finally {
+      runner.runDestroy();
+    }
+  }
+
+  @Test
+  public void testStopPipelineOnError() {
+    Target target = new ToErrorTarget(true, "${record:value('/errorMessage')}");
+    TargetRunner runner = new TargetRunner.Builder(ToErrorDTarget.class, target)
+        .build();
+    runner.runInit();
+    try {
+      Record record = RecordCreator.create();
+      Map<String, Field> map = new HashMap<>();
+      map.put("errorMessage", Field.create("Sample Error Message"));
+      record.set(Field.create(map));
+      List<Record> input = ImmutableList.of(record);
+      runner.runWrite(input);
+    } catch (OnRecordErrorException ex) {
+      Assert.assertNotNull(ex.getErrorCode());
+      Assert.assertEquals(Errors.TOERROR_01, ex.getErrorCode());
+      Assert.assertEquals("TOERROR_01 - Sample Error Message", ex.getMessage());
     } finally {
       runner.runDestroy();
     }

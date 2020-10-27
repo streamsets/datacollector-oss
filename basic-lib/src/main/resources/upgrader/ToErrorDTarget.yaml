@@ -16,5 +16,13 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: stopPipelineOnError
+          value: false
+      - setConfig:
+          name: errorMessage
+          value: "Sent to error by previous stage"
+
