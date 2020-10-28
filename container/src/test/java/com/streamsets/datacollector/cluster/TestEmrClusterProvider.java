@@ -47,6 +47,7 @@ public class TestEmrClusterProvider {
     pipelineConfigBean.sdcEmrConnection.masterInstanceType = AwsInstanceType.M4_2XLARGE;
     pipelineConfigBean.sdcEmrConnection.slaveInstanceType = AwsInstanceType.M4_2XLARGE;
     pipelineConfigBean.enableEMRDebugging = true;
+    pipelineConfigBean.sdcEmrConnection.emrVersion = "Something random";
     pipelineConfigBean.sdcEmrConnection.s3StagingUri = "";
     pipelineConfigBean.sdcEmrConnection.clusterPrefix = "";
     pipelineConfigBean.sdcEmrConnection.serviceRole = "";
