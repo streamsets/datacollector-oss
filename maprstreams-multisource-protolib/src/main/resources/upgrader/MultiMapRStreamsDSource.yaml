@@ -45,15 +45,66 @@ upgrades:
           value: false
   - toVersion: 7
     actions:
+      # migrate the keystore properties first, since we will need them to process the security option
       - setConfigFromStringMap:
-          name: conf.securityConfig.securityOption
+          name: conf.connectionConfig.connection.securityConfig.keystoreType
+          mapName: conf.kafkaOptions
+          key: ssl.keystore.type
+      - configStringMapRemove:
+          name: conf.kafkaOptions
+          key: ssl.keystore.type
+      - setConfigFromStringMap:
+          name: conf.connectionConfig.connection.securityConfig.keystoreFile
+          mapName: conf.kafkaOptions
+          key: ssl.keystore.location
+      - configStringMapRemove:
+          name: conf.kafkaOptions
+          key: ssl.keystore.location
+      - setConfigFromStringMap:
+          name: conf.connectionConfig.connection.securityConfig.keystorePassword
+          mapName: conf.kafkaOptions
+          key: ssl.keystore.password
+      - configStringMapRemove:
+          name: conf.kafkaOptions
+          key: ssl.keystore.password
+      # START migrating to conf.connectionConfig.connection.securityConfig.securityOption
+      # pseudocode for Kafka security config upgrade:
+      # legacyOption = "security.protocol" key of "conf.kafkaOptions" map
+      # if legacyOption = "SSL" AND keystoreFile is nonempty
+      #   securityOption = SSL_AUTH
+      # else
+      #   securityOption = legacyOption
+      # first, capture the legacyOption from the map
+      - setConfigFromStringMap:
+          name: temp.upgrade.kafka-security.protocol
           mapName: conf.kafkaOptions
           key: security.protocol
+      # next, set a temp config to capture the keystore, but ONLY if the old security protocol was SSL
+      - setConfig:
+          lookForName: temp.upgrade.kafka-security.protocol
+          ifValueMatches: "SSL"
+          name: temp.upgrade.kafka-security.ssl-auth-keystore
+          value: ${value("conf.connectionConfig.connection.securityConfig.keystoreFile")}
+          elseName: temp.upgrade.kafka-security.ssl-auth-keystore
+          elseValue: ""
+      # set the new security option to SSL_AUTH if that keystore config value we captured was nonempty
+      - setConfig:
+          lookForName: temp.upgrade.kafka-security.ssl-auth-keystore
+          ifValueMatches: "^.+$"
+          name: conf.connectionConfig.connection.securityConfig.securityOption
+          value: "SSL_AUTH"
+          elseName: conf.connectionConfig.connection.securityConfig.securityOption
+          elseValue: ${value("temp.upgrade.kafka-security.protocol")}
+      # remove the legacy protocol from the consumer options
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: security.protocol
+      # remove the temp configs we created
+      - removeConfigs:
+          namePattern: temp\.upgrade\.kafka-security..*
+      # FINISH migrating to conf.connectionConfig.connection.securityConfig.securityOption
       - setConfigFromStringMap:
-          name: conf.securityConfig.kerberosServiceName
+          name: conf.connectionConfig.connection.securityConfig.kerberosServiceName
           mapName: conf.kafkaOptions
           key: sasl.kerberos.service.name
       - configStringMapRemove:
@@ -61,64 +112,43 @@ upgrades:
           key: sasl.kerberos.service.name
       - renameConfig:
           oldNamePattern: conf.provideKeytab
-          newNamePattern: conf.securityConfig.provideKeytab
+          newNamePattern: conf.connectionConfig.connection.securityConfig.provideKeytab
       - renameConfig:
           oldNamePattern: conf.userKeytab
-          newNamePattern: conf.securityConfig.userKeytab
+          newNamePattern: conf.connectionConfig.connection.securityConfig.userKeytab
       - renameConfig:
           oldNamePattern: conf.userPrincipal
-          newNamePattern: conf.securityConfig.userPrincipal
+          newNamePattern: conf.connectionConfig.connection.securityConfig.userPrincipal
       - setConfigFromStringMap:
-          name: conf.securityConfig.truststoreType
+          name: conf.connectionConfig.connection.securityConfig.truststoreType
           mapName: conf.kafkaOptions
           key: ssl.truststore.type
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: ssl.truststore.type
       - setConfigFromStringMap:
-          name: conf.securityConfig.truststoreFile
+          name: conf.connectionConfig.connection.securityConfig.truststoreFile
           mapName: conf.kafkaOptions
           key: ssl.truststore.location
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: ssl.truststore.location
       - setConfigFromStringMap:
-          name: conf.securityConfig.truststorePassword
+          name: conf.connectionConfig.connection.securityConfig.truststorePassword
           mapName: conf.kafkaOptions
           key: ssl.truststore.password
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: ssl.truststore.password
       - setConfigFromStringMap:
-          name: conf.securityConfig.keystoreType
-          mapName: conf.kafkaOptions
-          key: ssl.keystore.type
-      - configStringMapRemove:
-          name: conf.kafkaOptions
-          key: ssl.keystore.type
-      - setConfigFromStringMap:
-          name: conf.securityConfig.keystoreFile
-          mapName: conf.kafkaOptions
-          key: ssl.keystore.location
-      - configStringMapRemove:
-          name: conf.kafkaOptions
-          key: ssl.keystore.location
-      - setConfigFromStringMap:
-          name: conf.securityConfig.keystorePassword
-          mapName: conf.kafkaOptions
-          key: ssl.keystore.password
-      - configStringMapRemove:
-          name: conf.kafkaOptions
-          key: ssl.keystore.password
-      - setConfigFromStringMap:
-          name: conf.securityConfig.keyPassword
+          name: conf.connectionConfig.connection.securityConfig.keyPassword
           mapName: conf.kafkaOptions
           key: ssl.key.password
       - configStringMapRemove:
           name: conf.kafkaOptions
           key: ssl.key.password
       - setConfigFromStringMap:
-          name: conf.securityConfig.enabledProtocols
+          name: conf.connectionConfig.connection.securityConfig.enabledProtocols
           mapName: conf.kafkaOptions
           key: ssl.enabled.protocols
       - configStringMapRemove:
