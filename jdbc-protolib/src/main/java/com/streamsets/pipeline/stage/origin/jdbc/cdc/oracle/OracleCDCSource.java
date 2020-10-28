@@ -536,8 +536,8 @@ public class OracleCDCSource extends BaseSource {
         try {
           Offset offset = new Offset(offsetVersion, startTime, lastCommitSCN.toPlainString(), sequenceNumber, lastTxnId);
           recordQueue.put(new RecordOffset(dummyRecord, offset));
-          resultSet = useLocalBuffering ? logMinerSession.queryContent(startTime)
-                                        : logMinerSession.queryContent(startTime, lastCommitSCN, sequenceNumber);
+          resultSet = useLocalBuffering ? logMinerSession.queryContent(startTime, endTime)
+                                        : logMinerSession.queryContent(startTime, endTime, lastCommitSCN, sequenceNumber);
 
           if (!sessionWindowInCurrent) {
             resultSet.setFetchSize(configBean.jdbcFetchSize);

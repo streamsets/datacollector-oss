@@ -287,14 +287,14 @@ public class LogMinerSession {
             commitScnColumn,
             ddlDictTracking ? Utils.format(" OR (OPERATION_CODE = {} AND SCN > ?)", DDL_CODE) : ""
         );
-        String conditions = Utils.format("TIMESTAMP >= ? AND {} AND {} AND ({})",
+        String conditions = Utils.format("TIMESTAMP >= ? AND TIMESTAMP < ? AND {} AND {} AND ({})",
             tablesCondition, opsCondition, restartCondition);
 
         result = connection.prepareStatement(Utils.format(SELECT_LOGMNR_CONTENT_QUERY, commitScnColumn, conditions));
 
       } else {
         String tnxOps = Utils.format("OPERATION_CODE IN ({},{})", COMMIT_CODE, ROLLBACK_CODE);
-        String conditions = Utils.format("TIMESTAMP >= ? AND (({} AND {}) OR {})",
+        String conditions = Utils.format("TIMESTAMP >= ? AND TIMESTAMP < ? AND (({} AND {}) OR {})",
             tablesCondition, opsCondition, tnxOps);
 
         result = connection.prepareStatement(Utils.format(SELECT_LOGMNR_CONTENT_QUERY, commitScnColumn, conditions));
@@ -494,11 +494,12 @@ public class LogMinerSession {
    * arguments passed to this function.
    *
    * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
+   * @param endTime Upper, exclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
    * @return A wrapper over the ResultSet with the CDC records retrieved.
    * @throws SQLException LogMinerSession is not active, COMMITED_DATA_ONLY is enabled, or a database connection error
    *     happened.
    */
-  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime) throws SQLException {
+  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime, LocalDateTime endTime) throws SQLException {
     if (!activeSession) {
       throw new SQLException("No LogMiner session started");
     }
@@ -506,6 +507,7 @@ public class LogMinerSession {
       throw new SQLException("Operation only supported when COMMITED_DATA_ONLY is not enabled.");
     }
     queryContentStatement.setString(1, startTime.format(dateTimeFormatter));
+    queryContentStatement.setString(2, endTime.format(dateTimeFormatter));
     queryContentStatement.setFetchSize(1);
     return new LogMinerResultSetWrapper(queryContentStatement.executeQuery(), databaseVersion);
   }
@@ -518,6 +520,7 @@ public class LogMinerSession {
    * arguments passed to this function.
    *
    * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
+   * @param endTime Upper, exclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
    * @param lastCommitSCN Filter for the COMMIT_SCN column in V$LOGMNR_CONTENTS. Rows returned satisfy the condition
    *     (COMMIT_SCN > lastCommitSCN) OR (COMMIT_SCN = lastCommitSCN AND SEQUENCE# > lastSequence).
    * @param lastSequence See {@code lastCommitSCN} above.
@@ -525,7 +528,8 @@ public class LogMinerSession {
    * @throws SQLException LogMinerSession is not active, COMMITED_DATA_ONLY is not enabled, or a database connection
    *     error happened.
    */
-  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime, BigDecimal lastCommitSCN, int lastSequence) throws SQLException {
+  public LogMinerResultSetWrapper queryContent(LocalDateTime startTime, LocalDateTime endTime,
+      BigDecimal lastCommitSCN, int lastSequence) throws SQLException {
     if (!activeSession) {
       throw new SQLException("No LogMiner session started");
     }
@@ -534,11 +538,12 @@ public class LogMinerSession {
     }
 
     queryContentStatement.setString(1, startTime.format(dateTimeFormatter));
-    queryContentStatement.setBigDecimal(2, lastCommitSCN);
-    queryContentStatement.setInt(3, lastSequence);
-    queryContentStatement.setBigDecimal(4, lastCommitSCN);
+    queryContentStatement.setString(2, endTime.format(dateTimeFormatter));
+    queryContentStatement.setBigDecimal(3, lastCommitSCN);
+    queryContentStatement.setInt(4, lastSequence);
+    queryContentStatement.setBigDecimal(5, lastCommitSCN);
     if (ddlDictTracking) {
-      queryContentStatement.setBigDecimal(5, lastCommitSCN);
+      queryContentStatement.setBigDecimal(6, lastCommitSCN);
     }
 
     queryContentStatement.setFetchSize(1);
