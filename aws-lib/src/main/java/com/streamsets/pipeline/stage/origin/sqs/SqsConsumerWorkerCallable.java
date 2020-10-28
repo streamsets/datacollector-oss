@@ -26,6 +26,7 @@ import com.amazonaws.services.sqs.model.ReceiveMessageResult;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.streamsets.pipeline.api.BatchContext;
+import com.streamsets.pipeline.api.DeliveryGuarantee;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
@@ -35,7 +36,6 @@ import com.streamsets.pipeline.api.service.dataformats.DataParser;
 import com.streamsets.pipeline.api.service.dataformats.DataParserException;
 import com.streamsets.pipeline.api.service.dataformats.RecoverableDataParserException;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -244,44 +244,56 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
 
   private void batchFlushHelper(boolean startNew) {
     if (batchContext != null) {
-      context.processBatch(batchContext);
-      if (!context.isPreview() && commitQueueUrlsToMessages.size() > 0) {
-        for (String queueUrl : commitQueueUrlsToMessages.keySet()) {
-          try {
-            Map<String, DeleteMessageBatchRequestEntry> deleteRequestEntries = new HashMap<>();
-            for (Message message : commitQueueUrlsToMessages.get(queueUrl)) {
-              deleteRequestEntries.put(message.getMessageId(),
-                  new DeleteMessageBatchRequestEntry().withReceiptHandle(message.getReceiptHandle())
-                                                      .withId(message.getMessageId())
-              );
-              if (deleteRequestEntries.size() >= numMessagesPerRequest) {
-                sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
-                deleteRequestEntries.clear();
-              }
-            }
-            if (!deleteRequestEntries.isEmpty()) {
-              sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
-            }
-          } catch (InterruptedException e) {
-            LOG.error(
-                "InterruptedException trying to delete SQS messages with IDs {} in queue {}: {}",
-                getPendingDeleteMessageIds(queueUrl),
-                queueUrl,
-                e.getMessage(),
-                e
-            );
-            Thread.currentThread().interrupt();
-            break;
-          }
-        }
+      if (!context.isPreview() && context.getDeliveryGuarantee() == DeliveryGuarantee.AT_MOST_ONCE) {
+        commitMessages();
       }
-      commitQueueUrlsToMessages.clear();
+
+      boolean batchSuccessful = context.processBatch(batchContext);
+
+      if (!context.isPreview() &&
+          batchSuccessful &&
+          context.getDeliveryGuarantee() == DeliveryGuarantee.AT_LEAST_ONCE) {
+        commitMessages();
+      }
     }
     batchRecordCount = 0;
-    if (startNew) {
+    if (startNew && !context.isStopped()) {
       batchContext = context.startBatch();
       lastBatchStartTimestamp = Clock.systemUTC().millis();
     }
+  }
+
+  private void commitMessages() {
+    for (final String queueUrl : commitQueueUrlsToMessages.keySet()) {
+      try {
+        Map<String, DeleteMessageBatchRequestEntry> deleteRequestEntries = new HashMap<>();
+        for (final Message message : commitQueueUrlsToMessages.get(queueUrl)) {
+          deleteRequestEntries.put(
+              message.getMessageId(),
+              new DeleteMessageBatchRequestEntry()
+                  .withReceiptHandle(message.getReceiptHandle())
+                  .withId(message.getMessageId())
+          );
+          if (deleteRequestEntries.size() >= numMessagesPerRequest) {
+            sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
+            deleteRequestEntries.clear();
+          }
+        }
+        if (!deleteRequestEntries.isEmpty()) {
+          sendDeleteMessageBatchRequest(queueUrl, deleteRequestEntries.values());
+        }
+      } catch (final InterruptedException ex) {
+        LOG.error(
+            "InterruptedException trying to delete SQS messages with IDs {} in queue {}",
+            getPendingDeleteMessageIds(queueUrl),
+            queueUrl,
+            ex
+        );
+        Thread.currentThread().interrupt();
+        break;
+      }
+    }
+    commitQueueUrlsToMessages.clear();
   }
 
   private void sendDeleteMessageBatchRequest(
@@ -314,7 +326,6 @@ public class SqsConsumerWorkerCallable implements Callable<Exception> {
     }
   }
 
-  @NotNull
   private String getPendingDeleteMessageIds(String queueUrl) {
     StringBuilder messageIds = new StringBuilder();
     commitQueueUrlsToMessages.get(queueUrl).forEach(message -> {
