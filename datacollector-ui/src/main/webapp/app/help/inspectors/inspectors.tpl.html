@@ -32,8 +32,8 @@
             </ul>
             <ul class="list-inline pull-right inspector-actions">
               <li>
-                <a href="javascript:;" ng-if="!inspector.open" ng-click="inspector.open=!inspector.open;">open</a>
-                <a href="javascript:;" ng-if="inspector.open" ng-click="inspector.open=!inspector.open;">close</a>
+                <a href="javascript:;" ng-if="!inspector.open" ng-click="toggleOpen(inspector)">open</a>
+                <a href="javascript:;" ng-if="inspector.open" ng-click="toggleOpen(inspector)">close</a>
               </li>
             </ul>
           </div>
@@ -44,8 +44,8 @@
                   <span class="name" ng-bind="entry.name"></span>
                   <span class="description" ng-bind="entry.description"></span>
                   <span ng-if="entry.details">
-                    <a href="javascript:;" ng-if="!entry.open" ng-click="entry.open=!entry.open;">Show Output</a>
-                    <a href="javascript:;" ng-if="entry.open" ng-click="entry.open=!entry.open;">Hide Output</a>
+                    <a href="javascript:;" ng-if="!entry.open" ng-click="toggleOpen(entry)">Show Output</a>
+                    <a href="javascript:;" ng-if="entry.open" ng-click="toggleOpen(entry)">Hide Output</a>
                   </span>
                   <span class="value pull-right" ng-bind="entry.value"></span>
                 </div>

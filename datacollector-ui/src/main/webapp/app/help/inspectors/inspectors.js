@@ -75,4 +75,11 @@ angular
       }
     };
 
+    /**
+     * Flips "open" toggle on any item given.
+     */
+    $scope.toggleOpen = function(item) {
+      item.open = !item.open;
+    };
+
   });
