@@ -452,18 +452,18 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
             header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_of3_bgh_scb__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d442730e458">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d442605e458">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d442730e461">Description</th>
+                            <th class="entry cellrowborder" id="d442605e461">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d442730e458 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d442605e458 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d442730e461 ">Event type. Uses the following event type:<ul class="ul" id="concept_of3_bgh_scb__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d442605e461 ">Event type. Uses the following event type:<ul class="ul" id="concept_of3_bgh_scb__ul_m12_mgp_qx">
                                     <li class="li">no-more-data - Generated after the origin completes
                                         processing all available objects and the number of seconds
                                         configured for Max Batch Wait Time has elapsed.</li>
@@ -474,16 +474,16 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d442730e458 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d442605e458 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d442730e461 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d442605e461 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d442730e458 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d442605e458 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_of3_bgh_scb__d31e2883" headers="d442730e461 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_of3_bgh_scb__d31e2883" headers="d442605e461 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -508,26 +508,26 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     to no-more-data and include the following fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_of3_bgh_scb__table_uw3_g24_scb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d442730e530">Event Record Field</th>
+              <th class="entry cellrowborder" id="d442605e530">Event Record Field</th>
 
-              <th class="entry cellrowborder" id="d442730e533">Description</th>
+              <th class="entry cellrowborder" id="d442605e533">Description</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr id="concept_of3_bgh_scb__d31e7687">
-              <td class="entry cellrowborder" headers="d442730e530 ">record-count</td>
+              <td class="entry cellrowborder" headers="d442605e530 ">record-count</td>
 
-              <td class="entry cellrowborder" headers="d442730e533 ">Number of records successfully generated since the pipeline started or since
+              <td class="entry cellrowborder" headers="d442605e533 ">Number of records successfully generated since the pipeline started or since
                 the last no-more-data event was created. </td>
 
             </tr>
 
             <tr id="concept_of3_bgh_scb__d31e7696">
-              <td class="entry cellrowborder" headers="d442730e530 ">error-count</td>
+              <td class="entry cellrowborder" headers="d442605e530 ">error-count</td>
 
-              <td class="entry cellrowborder" headers="d442730e533 ">Number of error records generated since the pipeline started or since the last
+              <td class="entry cellrowborder" headers="d442605e533 ">Number of error records generated since the pipeline started or since the last
                 no-more-data event was created.</td>
 
             </tr>
@@ -647,34 +647,34 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="MongoDB-ReadingAzureCosmosDB__table_tgh_gxx_nkb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d442730e743">Property</th>
+                                            <th class="entry cellrowborder" id="d442605e743">Property</th>
 
-                                            <th class="entry cellrowborder" id="d442730e746">Configuration</th>
+                                            <th class="entry cellrowborder" id="d442605e746">Configuration</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d442730e743 ">Connection String</td>
+                                            <td class="entry cellrowborder" headers="d442605e743 ">Connection String</td>
 
-                                            <td class="entry cellrowborder" headers="d442730e746 ">Enter the following string, substituting the host
+                                            <td class="entry cellrowborder" headers="d442605e746 ">Enter the following string, substituting the host
                                                 and
                                                 port:<pre class="pre codeblock"><code>mongodb://&lt;host&gt;:&lt;port&gt;/?ssl=true&amp;replicaSet=globaldb</code></pre></td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d442730e743 ">Database</td>
+                                            <td class="entry cellrowborder" headers="d442605e743 ">Database</td>
 
-                                            <td class="entry cellrowborder" headers="d442730e746 ">Enter the database ID.</td>
+                                            <td class="entry cellrowborder" headers="d442605e746 ">Enter the database ID.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d442730e743 ">Collection</td>
+                                            <td class="entry cellrowborder" headers="d442605e743 ">Collection</td>
 
-                                            <td class="entry cellrowborder" headers="d442730e746 ">Enter the collection ID.</td>
+                                            <td class="entry cellrowborder" headers="d442605e746 ">Enter the collection ID.</td>
 
                                         </tr>
 
@@ -842,41 +842,41 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d442730e1069">General Property</th>
+                                    <th class="entry cellrowborder" id="d442605e1069">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d442730e1072">Description</th>
+                                    <th class="entry cellrowborder" id="d442605e1072">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d442730e1069 ">Name</td>
+              <td class="entry cellrowborder" headers="d442605e1069 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d442730e1072 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d442730e1069 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d442730e1072 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d442605e1072 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d442730e1069 "><a class="xref" href="MongoDB.html#concept_vx3_1gh_scb">Produce
+              <td class="entry cellrowborder" headers="d442605e1069 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d442605e1072 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d442605e1069 "><a class="xref" href="MongoDB.html#concept_vx3_1gh_scb">Produce
                                             Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d442730e1072 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d442605e1072 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d442730e1069 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d442605e1069 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d442730e1072 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d31e808">
+              <td class="entry cellrowborder" headers="d442605e1072 ">Error record handling for the stage: <ul class="ul" id="task_mdf_2rs_ns__d31e808">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -901,18 +901,18 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_prm_rlt_tz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d442730e1161">MongoDB Property</th>
+                                    <th class="entry cellrowborder" id="d442605e1161">MongoDB Property</th>
 
-                                    <th class="entry cellrowborder" id="d442730e1164">Description</th>
+                                    <th class="entry cellrowborder" id="d442605e1164">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_mdf_2rs_ns__row-MongoConnectString">
-                                    <td class="entry cellrowborder" headers="d442730e1161 ">Connection String</td>
+                                    <td class="entry cellrowborder" headers="d442605e1161 ">Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d442730e1164 ">
+                                    <td class="entry cellrowborder" headers="d442605e1164 ">
                                         <div class="p">Connection string for the MongoDB instance. Use the
                 following
                 format:<pre class="pre codeblock"><code>mongodb://host1[:port1][,host2[:port2],...[,hostN[:portN]]][/[database][?options]]</code></pre>When
@@ -930,9 +930,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Enable Single Mode</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Enable Single Mode</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Select to connect to a single MongoDB server or node. If multiple nodes are
+            <td class="entry cellrowborder" headers="d442605e1164 ">Select to connect to a single MongoDB server or node. If multiple nodes are
               defined in the connection string, the stage connects only to the first node. <p class="p">Use
                 this option with care. If the stage cannot connect or the connection fails, the
                 pipeline stops. </p>
@@ -940,21 +940,21 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Database</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Database</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Name of the MongoDB database.</td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Collection</td>
-
-            <td class="entry cellrowborder" headers="d442730e1164 ">Name of the MongoDB collection to use.</td>
+            <td class="entry cellrowborder" headers="d442605e1164 ">Name of the MongoDB database.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Initial Offset</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Collection</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Initial offset to use to begin reading. When using a date or Object ID field as
+            <td class="entry cellrowborder" headers="d442605e1164 ">Name of the MongoDB collection to use.</td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Initial Offset</td>
+
+            <td class="entry cellrowborder" headers="d442605e1164 ">Initial offset to use to begin reading. When using a date or Object ID field as
               the offset field, enter a timestamp with the following format: <code class="ph codeph">YYYY-MM-DD
                 hh:mm:ss</code>. <p class="p">When using a string field, enter the string to
                 use.</p>
@@ -963,9 +963,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Offset Field Type</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Offset Field Type</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Data type of the offset field:<ul class="ul" id="task_mdf_2rs_ns__d31e7135">
+            <td class="entry cellrowborder" headers="d442605e1164 ">Data type of the offset field:<ul class="ul" id="task_mdf_2rs_ns__d31e7135">
                 <li class="li">ObjectId - Use for an Object ID field.</li>
 
                 <li class="li">Date - Use for a date field.</li>
@@ -978,10 +978,10 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 "><a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">Offset Field</a>
+            <td class="entry cellrowborder" headers="d442605e1161 "><a class="xref" href="MongoDB.html#concept_kx3_zrs_ns">Offset Field</a>
             </td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Field to use to track reads. Default is the _id field. <p class="p">You can use a nested
+            <td class="entry cellrowborder" headers="d442605e1164 ">Field to use to track reads. Default is the _id field. <p class="p">You can use a nested
                 offset field, such as o._id. You can also use any Object ID, date, or string field.
                 Results are not guaranteed for anything but the _id field.</p>
 </td>
@@ -989,34 +989,34 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Capped Collection</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Capped Collection</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">The collection is capped. Clear this option to read an uncapped
+            <td class="entry cellrowborder" headers="d442605e1164 ">The collection is capped. Clear this option to read an uncapped
               collection.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 ">Batch Size (records)</td>
+            <td class="entry cellrowborder" headers="d442605e1161 ">Batch Size (records)</td>
 
-            <td class="entry cellrowborder" headers="d442730e1164 ">Maximum number of records allowed in a batch.</td>
+            <td class="entry cellrowborder" headers="d442605e1164 ">Maximum number of records allowed in a batch.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 "><a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">Max
+            <td class="entry cellrowborder" headers="d442605e1161 "><a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">Max
                 Batch Wait Time</a>
             </td>
 
-            <td class="entry cellrowborder" id="task_mdf_2rs_ns__d31e7188" headers="d442730e1164 ">Amount of time the origin will wait to fill a
+            <td class="entry cellrowborder" id="task_mdf_2rs_ns__d31e7188" headers="d442605e1164 ">Amount of time the origin will wait to fill a
               batch before sending an empty batch. </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d442730e1161 "><a class="xref" href="MongoDB.html#concept_oy2_1dt_ns">Read Preference</a>
+            <td class="entry cellrowborder" headers="d442605e1161 "><a class="xref" href="MongoDB.html#concept_oy2_1dt_ns">Read Preference</a>
             </td>
 
-            <td class="entry cellrowborder" id="task_mdf_2rs_ns__d31e7199" headers="d442730e1164 ">Determines how the origin reads data from different
+            <td class="entry cellrowborder" id="task_mdf_2rs_ns__d31e7199" headers="d442605e1164 ">Determines how the origin reads data from different
               members of the MongoDB replica set.</td>
 
           </tr>
@@ -1035,32 +1035,32 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_qzt_xlz_mcb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
           <tr>
-            <th class="entry cellrowborder" id="d442730e1351">Credentials</th>
+            <th class="entry cellrowborder" id="d442605e1351">Credentials</th>
 
-            <th class="entry cellrowborder" id="d442730e1354">Description</th>
+            <th class="entry cellrowborder" id="d442605e1354">Description</th>
 
           </tr>
 
         </thead>
 <tbody class="tbody">
           <tr id="task_mdf_2rs_ns__d31e7231">
-            <td class="entry cellrowborder" headers="d442730e1351 ">Authentication Type</td>
+            <td class="entry cellrowborder" headers="d442605e1351 ">Authentication Type</td>
 
-            <td class="entry cellrowborder" headers="d442730e1354 ">Authentication used by the MongoDB server: Username/Password or LDAP.</td>
+            <td class="entry cellrowborder" headers="d442605e1354 ">Authentication used by the MongoDB server: Username/Password or LDAP.</td>
 
           </tr>
 
           <tr id="task_mdf_2rs_ns__d31e7240">
-            <td class="entry cellrowborder" headers="d442730e1351 ">Username</td>
+            <td class="entry cellrowborder" headers="d442605e1351 ">Username</td>
 
-            <td class="entry cellrowborder" headers="d442730e1354 ">MongoDB or LDAP user name.</td>
+            <td class="entry cellrowborder" headers="d442605e1354 ">MongoDB or LDAP user name.</td>
 
           </tr>
 
           <tr id="task_mdf_2rs_ns__d31e7249">
-            <td class="entry cellrowborder" headers="d442730e1351 ">Password</td>
+            <td class="entry cellrowborder" headers="d442605e1351 ">Password</td>
 
-            <td class="entry cellrowborder" headers="d442730e1354 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdf_2rs_ns__d15e6386">To
+            <td class="entry cellrowborder" headers="d442605e1354 ">MongoDB or LDAP password.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_mdf_2rs_ns__d15e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
@@ -1068,9 +1068,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d442730e1351 ">Authentication Source</td>
+            <td class="entry cellrowborder" headers="d442605e1351 ">Authentication Source</td>
 
-            <td class="entry cellrowborder" headers="d442730e1354 ">An optional alternate database name to perform delegated authentication.
+            <td class="entry cellrowborder" headers="d442605e1354 ">An optional alternate database name to perform delegated authentication.
                 <p class="p">Available for the Username/Password option.</p>
 </td>
 
@@ -1089,43 +1089,43 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                     <div class="p">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mdf_2rs_ns__table_ekt_wk2_ww" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:34.01360544217687%" /><col style="width:65.98639455782312%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d442730e1445">Advanced Property</th>
+                                        <th class="entry cellrowborder" id="d442605e1445">Advanced Property</th>
 
-                                        <th class="entry cellrowborder" id="d442730e1448">Description</th>
+                                        <th class="entry cellrowborder" id="d442605e1448">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Connections Per Host</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Connections Per Host</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum number of connections for each host.<p class="p">Default is 100.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Min Connections Per Host</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Min Connections Per Host</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
+            <td class="entry cellrowborder" headers="d442605e1448 ">Minimum number of connections for each host.<p class="p">Default is 0.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Connection Timeout</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Connection Timeout</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds to wait for a connection. <p class="p">Default is
               10,000.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Max Connection Idle Time</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Max Connection Idle Time</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds that a pooled connection can remain idle. When a
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds that a pooled connection can remain idle. When a
               pooled connection exceeds the idle time, the connection is closed. Use 0 to opt out of
               this property.<p class="p">Default is 0.</p>
 </td>
@@ -1133,9 +1133,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Max Connection Lifetime</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Max Connection Lifetime</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds that a pooled connection can be active. When a
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds that a pooled connection can be active. When a
               pooled connection exceeds the lifetime, the connection is closed. Use 0 to opt out of
               this property.<p class="p">Default is 0.</p>
 </td>
@@ -1143,9 +1143,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Max Wait Time</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Max Wait Time</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds that a thread can wait for a connection to become
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds that a thread can wait for a connection to become
               available. Use 0 to opt out of this property. Use a negative value to wait
                 indefinitely.<p class="p">Default is 120,000.</p>
 </td>
@@ -1153,9 +1153,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Server Selection Timeout</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Server Selection Timeout</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds that <span class="ph">Data Collector</span> waits for a server
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds that <span class="ph">Data Collector</span> waits for a server
               selection before throwing an exception. If you use 0, an exception is thrown
               immediately if no server is available. Use a negative value to wait
                 indefinitely.<p class="p">Default is 30,000.</p>
@@ -1164,9 +1164,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Threads Allowed to Block for Connection Multiplier</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Threads Allowed to Block for Connection Multiplier</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Multiplier that determines the maximum number of threads that can wait for a
+            <td class="entry cellrowborder" headers="d442605e1448 ">Multiplier that determines the maximum number of threads that can wait for a
               connection to become available from the pool. This number multiplied by the
               Connections Per Host value determines the maximum number of threads.<p class="p">Default is
                 5.</p>
@@ -1175,45 +1175,45 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Heartbeat Frequency</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Heartbeat Frequency</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">The frequency in milliseconds at which <span class="ph">Data Collector</span> attempts to determine the
+            <td class="entry cellrowborder" headers="d442605e1448 ">The frequency in milliseconds at which <span class="ph">Data Collector</span> attempts to determine the
               current state of each server in the cluster.<p class="p">Default is 10,000.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Min Heartbeat Frequency</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Min Heartbeat Frequency</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data Collector</span> waits at least this long
+            <td class="entry cellrowborder" headers="d442605e1448 ">Minimum heartbeat frequency in milliseconds. <span class="ph">Data Collector</span> waits at least this long
               before checking the state of each server.<p class="p">Default is 500.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Heartbeat Connection Timeout</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Heartbeat Connection Timeout</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds to wait for a connection used for the cluster
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds to wait for a connection used for the cluster
                 heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Heartbeat Socket Timeout</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Heartbeat Socket Timeout</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds for a socket timeout for connections used for the
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds for a socket timeout for connections used for the
               cluster heartbeat.<p class="p">Default is 20,000.</p>
 </td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Local Threshold</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Local Threshold</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is
+            <td class="entry cellrowborder" headers="d442605e1448 ">Local threshold in milliseconds. Requests are sent to a server whose ping time is
               less than or equal to the server with the fastest ping time plus the local threshold
                 value.<p class="p">Default is 15.</p>
 </td>
@@ -1221,39 +1221,39 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Required Replica Set Name</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Required Replica Set Name</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Required replica set name to use for the cluster.</td>
-
-          </tr>
-
-                                    <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Cursor Finalizer Enabled</td>
-
-            <td class="entry cellrowborder" headers="d442730e1448 ">Specifies whether to enable cursor finalizers.</td>
+            <td class="entry cellrowborder" headers="d442605e1448 ">Required replica set name to use for the cluster.</td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Socket Keep Alive</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Cursor Finalizer Enabled</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Specifies whether to enable socket keep alive. </td>
+            <td class="entry cellrowborder" headers="d442605e1448 ">Specifies whether to enable cursor finalizers.</td>
 
           </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">Socket Timeout</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Socket Keep Alive</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
+            <td class="entry cellrowborder" headers="d442605e1448 ">Specifies whether to enable socket keep alive. </td>
+
+          </tr>
+
+                                    <tr>
+            <td class="entry cellrowborder" headers="d442605e1445 ">Socket Timeout</td>
+
+            <td class="entry cellrowborder" headers="d442605e1448 ">Maximum time in milliseconds for the socket timeout. Use 0 to opt out of this
                 property.<p class="p">Default is 0.</p>
 </td>
 
           </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d442730e1445 ">SSL Enabled </td>
+                                        <td class="entry cellrowborder" headers="d442605e1445 ">SSL Enabled </td>
 
-                                        <td class="entry cellrowborder" headers="d442730e1448 ">Enables SSL/TLS between <span class="ph">Data Collector</span> and MongoDB.<p class="p">If the MongoDB certificate is signed
+                                        <td class="entry cellrowborder" headers="d442605e1448 ">Enables SSL/TLS between <span class="ph">Data Collector</span> and MongoDB.<p class="p">If the MongoDB certificate is signed
                                                 by a private CA or not trusted by the default Java
                                                 truststore, you also must define the truststore file
                                                 and password in the SDC_JAVA_OPTS environment
@@ -1263,9 +1263,9 @@ By default, the origin uses Secondary Preferred to avoid making unnecessary requ
                                     </tr>
 
                                     <tr>
-            <td class="entry cellrowborder" headers="d442730e1445 ">SSL Invalid Host Name Allowed</td>
+            <td class="entry cellrowborder" headers="d442605e1445 ">SSL Invalid Host Name Allowed</td>
 
-            <td class="entry cellrowborder" headers="d442730e1448 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
+            <td class="entry cellrowborder" headers="d442605e1448 ">Specifies whether invalid host names are allowed in SSL/TLS certificates.</td>
 
           </tr>
 

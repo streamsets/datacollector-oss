@@ -673,33 +673,33 @@ curBatch.process(entityName, offset.toString()))</code></pre></dd>
             origin have the standard event-related record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fv4_wjp_l3b__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d359694e818">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d359569e818">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d359694e821">Description</th>
+                            <th class="entry cellrowborder" id="d359569e821">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-              <td class="entry cellrowborder" headers="d359694e818 ">sdc.event.type</td>
+              <td class="entry cellrowborder" headers="d359569e818 ">sdc.event.type</td>
 
-              <td class="entry cellrowborder" headers="d359694e821 ">Event type, specified by the <code class="ph codeph">sdc.createEvent</code> method.</td>
+              <td class="entry cellrowborder" headers="d359569e821 ">Event type, specified by the <code class="ph codeph">sdc.createEvent</code> method.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d359694e818 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d359569e818 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d359694e821 ">Event version, specified by the <code class="ph codeph">sdc.createEvent</code>
+              <td class="entry cellrowborder" headers="d359569e821 ">Event version, specified by the <code class="ph codeph">sdc.createEvent</code>
                 method.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d359694e818 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d359569e818 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_fv4_wjp_l3b__d31e2883" headers="d359694e821 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_fv4_wjp_l3b__d31e2883" headers="d359569e821 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -836,40 +836,40 @@ grant codebase "file:///groovy/script" {
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xxs_5kj_l3b__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d359694e1104">General Property</th>
+                                    <th class="entry cellrowborder" id="d359569e1104">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d359694e1107">Description</th>
+                                    <th class="entry cellrowborder" id="d359569e1107">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d359694e1104 ">Name</td>
+              <td class="entry cellrowborder" headers="d359569e1104 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d359694e1107 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d359694e1104 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d359694e1107 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d359569e1107 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d359694e1104 "><a class="xref" href="GroovyScripting.html#concept_hn5_tjp_l3b">Produce Events</a></td>
+              <td class="entry cellrowborder" headers="d359569e1104 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d359694e1107 ">Generates event records when events occur. Use for
+              <td class="entry cellrowborder" headers="d359569e1107 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d359569e1104 "><a class="xref" href="GroovyScripting.html#concept_hn5_tjp_l3b">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d359569e1107 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d359694e1104 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d359569e1104 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d359694e1107 ">Error record handling for the stage: <ul class="ul" id="task_xxs_5kj_l3b__d31e808">
+              <td class="entry cellrowborder" headers="d359569e1107 ">Error record handling for the stage: <ul class="ul" id="task_xxs_5kj_l3b__d31e808">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -894,18 +894,18 @@ grant codebase "file:///groovy/script" {
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xxs_5kj_l3b__table_ugl_2lj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d359694e1196">Performance Property</th>
+                            <th class="entry cellrowborder" id="d359569e1196">Performance Property</th>
 
-                            <th class="entry cellrowborder" id="d359694e1199">Description</th>
+                            <th class="entry cellrowborder" id="d359569e1199">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d359694e1196 ">Batch Size</td>
+                            <td class="entry cellrowborder" headers="d359569e1196 ">Batch Size</td>
 
-                            <td class="entry cellrowborder" headers="d359694e1199 ">Number of records to generate in a single batch.<p class="p">The script
+                            <td class="entry cellrowborder" headers="d359569e1199 ">Number of records to generate in a single batch.<p class="p">The script
                                     accesses this value with the <code class="ph codeph">sdc.batchSize</code>
                                     constant and implements batch processing.</p>
 <p class="p">Default value is
@@ -915,9 +915,9 @@ grant codebase "file:///groovy/script" {
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d359694e1196 ">Number of Threads</td>
+                            <td class="entry cellrowborder" headers="d359569e1196 ">Number of Threads</td>
 
-                            <td class="entry cellrowborder" headers="d359694e1199 ">Number of threads that generate data concurrently in
+                            <td class="entry cellrowborder" headers="d359569e1199 ">Number of threads that generate data concurrently in
                                     parallel.<p class="p">The script accesses this value with the
                                         <code class="ph codeph">sdc.numThreads</code> constant and implements
                                     multithreaded processing.</p>
@@ -937,18 +937,18 @@ grant codebase "file:///groovy/script" {
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xxs_5kj_l3b__table_lk2_glj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d359694e1272">Script Property</th>
+                            <th class="entry cellrowborder" id="d359569e1272">Script Property</th>
 
-                            <th class="entry cellrowborder" id="d359694e1275">Description</th>
+                            <th class="entry cellrowborder" id="d359569e1275">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d359694e1272 ">User Script</td>
+                            <td class="entry cellrowborder" headers="d359569e1272 ">User Script</td>
 
-                            <td class="entry cellrowborder" headers="d359694e1275 ">Script that runs during pipeline execution.<div class="p">
+                            <td class="entry cellrowborder" headers="d359569e1275 ">Script that runs during pipeline execution.<div class="p">
                                     <div class="note tip"><span class="tiptitle">Tip:</span> To toggle full-screen editing, press either F11
                                         or Esc, depending on the operating system, when the cursor
                                         is in the editor.</div>
@@ -971,18 +971,18 @@ grant codebase "file:///groovy/script" {
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xxs_5kj_l3b__table_o1r_15p_l3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d359694e1323">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d359569e1323">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d359694e1326">Description</th>
+                                    <th class="entry cellrowborder" id="d359569e1326">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d359694e1323 "><a class="xref" href="GroovyScripting.html#concept_xfd_s1q_l3b">Record Type</a></td>
+                                    <td class="entry cellrowborder" headers="d359569e1323 "><a class="xref" href="GroovyScripting.html#concept_xfd_s1q_l3b">Record Type</a></td>
 
-                                    <td class="entry cellrowborder" headers="d359694e1326 ">Record type to use during script
+                                    <td class="entry cellrowborder" headers="d359569e1326 ">Record type to use during script
                                     execution:<ul class="ul" id="task_xxs_5kj_l3b__d38e1623">
                                     <li class="li">Data Collector Records - Select when scripts use <span class="ph">Data Collector</span> Java API methods to access records.</li>
 
@@ -996,9 +996,9 @@ grant codebase "file:///groovy/script" {
                                 </tr>
 
                                 <tr>
-                            <td class="entry cellrowborder" headers="d359694e1323 ">Parameters in Script</td>
+                            <td class="entry cellrowborder" headers="d359569e1323 ">Parameters in Script</td>
 
-                            <td class="entry cellrowborder" headers="d359694e1326 ">Script parameters and their values.<p class="p">The script accesses the
+                            <td class="entry cellrowborder" headers="d359569e1326 ">Script parameters and their values.<p class="p">The script accesses the
                                     values with the <code class="ph codeph">sdc.userParams</code>
                                 dictionary.</p>
 </td>

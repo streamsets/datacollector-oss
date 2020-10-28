@@ -421,18 +421,18 @@
             attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d255202e510">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d255077e510">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d255202e513">Description</th>
+                            <th class="entry cellrowborder" id="d255077e513">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d255202e510 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d255077e510 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d255202e513 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d255077e513 ">Event type. Uses one of the following event types:<ul class="ul" id="concept_iwg_r2p_my__ul_m12_mgp_qx">
                                     <li class="li">successful-query - Generated when the executor determines
                                         that Hive successfully ran the submitted query. </li>
 
@@ -445,16 +445,16 @@
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d255202e510 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d255077e510 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d255202e513 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d255077e513 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d255202e510 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d255077e510 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_iwg_r2p_my__d178e2883" headers="d255202e513 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_iwg_r2p_my__d178e2883" headers="d255077e513 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -477,18 +477,18 @@
                             the following field: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_rfk_mnp_my" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d255202e589">Event Field Name</th>
+                                            <th class="entry cellrowborder" id="d255077e589">Event Field Name</th>
 
-                                            <th class="entry cellrowborder" id="d255202e592">Description</th>
+                                            <th class="entry cellrowborder" id="d255077e592">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d255202e589 ">query</td>
+                                            <td class="entry cellrowborder" headers="d255077e589 ">query</td>
 
-                                            <td class="entry cellrowborder" headers="d255202e592 ">The query that Hive ran successfully.</td>
+                                            <td class="entry cellrowborder" headers="d255077e592 ">The query that Hive ran successfully.</td>
 
                                         </tr>
 
@@ -512,25 +512,25 @@
                             following fields: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_iwg_r2p_my__table_vlk_pnp_my" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d255202e640">Event Field Name</th>
+                                            <th class="entry cellrowborder" id="d255077e640">Event Field Name</th>
 
-                                            <th class="entry cellrowborder" id="d255202e643">Description</th>
+                                            <th class="entry cellrowborder" id="d255077e643">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d255202e640 ">query</td>
+                                            <td class="entry cellrowborder" headers="d255077e640 ">query</td>
 
-                                            <td class="entry cellrowborder" headers="d255202e643 ">The query that Hive failed to run. </td>
+                                            <td class="entry cellrowborder" headers="d255077e643 ">The query that Hive failed to run. </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d255202e640 ">unexecuted-queries</td>
+                                            <td class="entry cellrowborder" headers="d255077e640 ">unexecuted-queries</td>
 
-                                            <td class="entry cellrowborder" headers="d255202e643 ">Any additional queries that did not execute.
+                                            <td class="entry cellrowborder" headers="d255077e643 ">Any additional queries that did not execute.
                                                   <p class="p">The event record includes this field only when
                                                   you configure the executor to skip running
                                                   subsequent queries when a query fails.
@@ -572,46 +572,46 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__d441e7500" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d255202e723">General Property</th>
+                                    <th class="entry cellrowborder" id="d255077e723">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d255202e726">Description</th>
+                                    <th class="entry cellrowborder" id="d255077e726">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d255077e723 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 ">Stage Library</td>
+                                    <td class="entry cellrowborder" headers="d255077e723 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Library version that you want to use. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 "><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">Produce Events</a></td>
-
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Generates event records when events occur. Use for <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+                                    <td class="entry cellrowborder" headers="d255077e723 ">Stage Library</td>
 
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Library version that you want to use. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d255077e723 "><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_zrl_mhn_lx">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Generates event records when events occur. Use for <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d255077e723 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -623,9 +623,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+                                    <td class="entry cellrowborder" headers="d255077e723 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -636,9 +636,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e723 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d255077e723 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d255202e726 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d441e7600">
+                                    <td class="entry cellrowborder" headers="d255077e726 ">Error record handling for the stage: <ul class="ul" id="task_mgm_4lk_fx__d441e7600">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -664,18 +664,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_olb_4sx_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d255202e856">Hive Property</th>
+                                    <th class="entry cellrowborder" id="d255077e856">Hive Property</th>
 
-                                    <th class="entry cellrowborder" id="d255202e859">Description</th>
+                                    <th class="entry cellrowborder" id="d255077e859">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d255202e856 ">JDBC URL</td>
+              <td class="entry cellrowborder" headers="d255077e856 ">JDBC URL</td>
 
-              <td class="entry cellrowborder" headers="d255202e859 ">JDBC URL for Hive. You can use the default, or replace the expression for the
+              <td class="entry cellrowborder" headers="d255077e859 ">JDBC URL for Hive. You can use the default, or replace the expression for the
                 database name with a specific database name when appropriate.<div class="p">If your URL contains
                   a password with special characters, you must URL-encode (also called
                   percent-encoding) the special characters. Otherwise errors will occur when
@@ -695,9 +695,9 @@
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e856 ">JDBC Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d255077e856 ">JDBC Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d255202e859 ">
+                                    <td class="entry cellrowborder" headers="d255077e859 ">
                                         <p class="p">The fully-qualified JDBC driver name. </p>
 
                                         <p class="p">Before using an Impala JDBC driver, install the driver as
@@ -709,9 +709,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d255202e856 ">Hadoop Configuration Directory</td>
+              <td class="entry cellrowborder" headers="d255077e856 ">Hadoop Configuration Directory</td>
 
-              <td class="entry cellrowborder" headers="d255202e859 ">
+              <td class="entry cellrowborder" headers="d255077e859 ">
                 <p class="p">Absolute path to the directory containing the Hive and Hadoop configuration
                   files. For a Cloudera Manager installation, enter hive-conf. </p>
 
@@ -733,9 +733,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d255202e856 ">Additional Hadoop Configuration</td>
+              <td class="entry cellrowborder" headers="d255077e856 ">Additional Hadoop Configuration</td>
 
-              <td class="entry cellrowborder" headers="d255202e859 ">
+              <td class="entry cellrowborder" headers="d255077e859 ">
                 <p class="p">Additional properties to use. </p>
 
                 <p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click Add to add additional properties and
@@ -747,9 +747,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d255202e856 ">Additional JDBC Configuration Properties</td>
+              <td class="entry cellrowborder" headers="d255077e856 ">Additional JDBC Configuration Properties</td>
 
-              <td class="entry cellrowborder" headers="d255202e859 ">Additional JDBC configuration properties to pass to the JDBC driver.<p class="p">Using
+              <td class="entry cellrowborder" headers="d255077e859 ">Additional JDBC configuration properties to pass to the JDBC driver.<p class="p">Using
                     <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click Add to add additional properties and
                   define the property name and value. Use the property names and values as expected
                   by the JDBC driver.</p>
@@ -770,19 +770,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mgm_4lk_fx__table_ywf_ztx_mx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d255202e1023">Query Property</th>
+                                    <th class="entry cellrowborder" id="d255077e1023">Query Property</th>
 
-                                    <th class="entry cellrowborder" id="d255202e1026">Description</th>
+                                    <th class="entry cellrowborder" id="d255077e1026">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e1023 "><a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">SQL
+                                    <td class="entry cellrowborder" headers="d255077e1023 "><a class="xref" href="HiveQuery.html#concept_jzl_yrr_mx">SQL
                                         Queries</a></td>
 
-                                    <td class="entry cellrowborder" headers="d255202e1026 ">One or more SQL queries to execute on Hive or Impala upon
+                                    <td class="entry cellrowborder" headers="d255077e1026 ">One or more SQL queries to execute on Hive or Impala upon
                                         receiving an event record.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon to add additional
                                             queries.</p>
@@ -801,9 +801,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d255202e1023 ">Stop on Query Failure</td>
+                                    <td class="entry cellrowborder" headers="d255077e1023 ">Stop on Query Failure</td>
 
-                                    <td class="entry cellrowborder" headers="d255202e1026 ">Skips the remaining queries for an event record when a
+                                    <td class="entry cellrowborder" headers="d255077e1026 ">Skips the remaining queries for an event record when a
                                         query fails. <p class="p">By default, upon a failed query, the
                                             executor continues to run all configured queries for the
                                             event record. </p>

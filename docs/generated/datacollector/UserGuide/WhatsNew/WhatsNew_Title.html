@@ -163,8 +163,8 @@
          <li><span data-tocid="concept_cjx_y4k_wbb-d46e6307" class="topicref" data-id="concept_cjx_y4k_wbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_cjx_y4k_wbb">What's New in 3.0.0.0</a></span></span></li>
          <li><span data-tocid="concept_rrq_v3k_kbb-d46e6622" class="topicref" data-id="concept_rrq_v3k_kbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rrq_v3k_kbb">What's New in 2.7.2.0</a></span></span></li>
          <li><span data-tocid="concept_rr2_mbz_w1b-d46e6947" class="topicref" data-id="concept_rr2_mbz_w1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_rr2_mbz_w1b">What's New in 2.7.1.1</a></span></span></li>
-         <li><span data-tocid="unique_523263467-d46e7282" class="topicref" data-id="unique_523263467" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_523263467">What's New in 2.7.1.0</a></span></span></li>
-         <li><span data-tocid="unique_40125597-d46e7627" class="topicref" data-id="unique_40125597" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_40125597">What's New in 2.7.0.0</a></span></span></li>
+         <li><span data-tocid="unique_1138101209-d46e7282" class="topicref" data-id="unique_1138101209" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_1138101209">What's New in 2.7.1.0</a></span></span></li>
+         <li><span data-tocid="unique_184236386-d46e7627" class="topicref" data-id="unique_184236386" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#unique_184236386">What's New in 2.7.0.0</a></span></span></li>
          <li><span data-tocid="concept_avm_x1y_h1b-d46e7982" class="topicref" data-id="concept_avm_x1y_h1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_avm_x1y_h1b">What's New in 2.6.0.1</a></span></span></li>
          <li><span data-tocid="concept_bsw_cky_11b-d46e8347" class="topicref" data-id="concept_bsw_cky_11b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_bsw_cky_11b">What's New in 2.6.0.0</a></span></span></li>
          <li><span data-tocid="concept_afr_hly_tz-d46e8723" class="topicref" data-id="concept_afr_hly_tz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_afr_hly_tz">What's New in 2.5.1.0</a></span></span></li>
@@ -316,6 +316,11 @@
                                     assume another role, you first must define the IAM policy in AWS
                                     that allows the instance profile to assume a role. Then, you
                                     configure the required stage properties in <span class="ph">Data Collector</span>.</p>
+<div class="p">
+                                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph">Data Collector</span> will provide support to assume another role when using
+                                        AWS access keys in a future release.</div>
+
+                                </div>
 </li>
 
                             <li class="li"><a class="xref" href="../Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb">Kafka stages</a> - The Kafka Consumer, Kafka Multitopic
@@ -335,10 +340,7 @@
                                     Kerberos credentials have been moved from the Kafka tab to the
                                     Security tab.</p>
 Previously, you configured Kafka security by
-                                configuring additional Kafka configuration properties. If you
-                                upgrade Kafka stages configured for SSL/TLS with client
-                                authentication, you must perform a post-upgrade task, as described
-                                in <a class="xref" href="../Upgrade/PostUpgrade.html#concept_lxn_s5h_gnb">Update Pipelines that Use Kafka Security</a>.</li>
+                                configuring additional Kafka configuration properties. </li>
 
                             <li class="li">Amazon SQS Consumer origin - You can specify the names of queues to
                                 process instead of specifying queue name prefixes.</li>
@@ -429,25 +431,25 @@ Previously, you configured Kafka security by
                     <dd class="dd">This release includes the following <a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">new stage libraries</a>:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_jsb_14y_lnb__table_bkb_lqy_lnb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:59.01639344262295%" /><col style="width:40.98360655737705%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th dir="ltr" class="entry cellrowborder" style="text-align:left;" id="d717361e785">Stage Library Name</th>
+                                        <th dir="ltr" class="entry cellrowborder" style="text-align:left;" id="d717115e788">Stage Library Name</th>
 
-                                        <th dir="ltr" class="entry cellrowborder" style="text-align:left;" id="d717361e788">Description</th>
+                                        <th dir="ltr" class="entry cellrowborder" style="text-align:left;" id="d717115e791">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717361e785 ">streamsets-datacollector-elasticsearch_6-lib</td>
+                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717115e788 ">streamsets-datacollector-elasticsearch_6-lib</td>
 
-                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717361e788 ">For Elasticsearch 6.x. </td>
+                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717115e791 ">For Elasticsearch 6.x. </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717361e785 ">streamsets-datacollector-elasticsearch_7-lib</td>
+                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717115e788 ">streamsets-datacollector-elasticsearch_7-lib</td>
 
-                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717361e788 ">For Elasticsearch 7.x. </td>
+                                        <td dir="ltr" class="entry cellrowborder" style="text-align:left;" headers="d717115e791 ">For Elasticsearch 7.x. </td>
 
                                     </tr>
 
@@ -1230,18 +1232,18 @@ As you start designing pipelines, StreamSets recommends
                                 following new stage library:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gcq_bkh_blb__table_edq_2yk_1hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e2104">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e2107">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e2107">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e2110">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e2104 ">streamsets-datacollector-cdh_kafka_4_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e2107 ">streamsets-datacollector-cdh_kafka_4_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e2107 ">For the Cloudera distribution of Apache Kafka
+                                                <td class="entry cellrowborder" headers="d717115e2110 ">For the Cloudera distribution of Apache Kafka
                                                   - CDK 4.1.0 (based on Apache Kafka version
                                                   2.2.1).</td>
 
@@ -1665,26 +1667,26 @@ As you start designing pipelines, StreamSets recommends
                                 following new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rjw_bh2_hjb__table_edq_2yk_1hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e2833">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e2836">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e2836">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e2839">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e2833 ">streamsets-datacollector-cdh_6_3-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e2836 ">streamsets-datacollector-cdh_6_3-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e2836 ">For the Cloudera CDH version 6.3 distribution
+                                                <td class="entry cellrowborder" headers="d717115e2839 ">For the Cloudera CDH version 6.3 distribution
                                                   of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e2833 ">streamsets-datacollector-orchestrator-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e2836 ">streamsets-datacollector-orchestrator-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e2836 ">For the orchestration stages. </td>
+                                                <td class="entry cellrowborder" headers="d717115e2839 ">For the orchestration stages. </td>
 
                                             </tr>
 
@@ -1697,18 +1699,18 @@ As you start designing pipelines, StreamSets recommends
                                 to the following stage library: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rjw_bh2_hjb__table_f3x_ycn_bhb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e2881">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e2884">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e2884">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e2887">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e2881 ">streamsets-datacollector-hdp_3_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e2884 ">streamsets-datacollector-hdp_3_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e2884 ">For Hortonworks 3.1, the library now includes
+                                                <td class="entry cellrowborder" headers="d717115e2887 ">For Hortonworks 3.1, the library now includes
                                                   two additional stages:<ul class="ul" id="concept_rjw_bh2_hjb__ul_bwx_yr2_hjb">
                                                   <li dir="ltr" class="li">Spark Evaluator processor</li>
 
@@ -1935,42 +1937,42 @@ As you start designing pipelines, StreamSets recommends
                                 following new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bfw_mrk_43b__table_edq_2yk_1hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e3311">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e3314">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e3314">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e3317">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3311 ">streamsets-datacollector-cdh_6_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3314 ">streamsets-datacollector-cdh_6_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3314 ">For the Cloudera CDH version 6.1 distribution
+                                                <td class="entry cellrowborder" headers="d717115e3317 ">For the Cloudera CDH version 6.1 distribution
                                                   of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3311 ">streamsets-datacollector-cdh_6_2-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3314 ">streamsets-datacollector-cdh_6_2-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3314 ">For the Cloudera CDH version 6.2 distribution
+                                                <td class="entry cellrowborder" headers="d717115e3317 ">For the Cloudera CDH version 6.2 distribution
                                                   of Apache Hadoop. </td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3311 ">streamsets-datacollector-cdh_spark_2_3_r3-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3314 ">streamsets-datacollector-cdh_spark_2_3_r3-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3314 ">For the Cloudera CDH cluster Kafka with CDS
+                                                <td class="entry cellrowborder" headers="d717115e3317 ">For the Cloudera CDH cluster Kafka with CDS
                                                   powered by Spark 2.3 release 3. </td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3311 ">streamsets-datacollector-cdh_spark_2_3_r4-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3314 ">streamsets-datacollector-cdh_spark_2_3_r4-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3314 ">For the Cloudera CDH cluster Kafka with CDS
+                                                <td class="entry cellrowborder" headers="d717115e3317 ">For the Cloudera CDH cluster Kafka with CDS
                                                   powered by Spark 2.3 release 4.</td>
 
                                             </tr>
@@ -1984,50 +1986,50 @@ As you start designing pipelines, StreamSets recommends
                                 are now legacy stage libraries: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bfw_mrk_43b__table_f3x_ycn_bhb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e3377">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e3380">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e3380">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e3383">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3377 ">streamsets-datacollector-hdp_2_6-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3380 ">streamsets-datacollector-hdp_2_6-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3380 ">For the Hortonworks version 2.6.x
+                                                <td class="entry cellrowborder" headers="d717115e3383 ">For the Hortonworks version 2.6.x
                                                   distribution of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3377 ">streamsets-datacollector-hdp_2_6-flume-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3380 ">streamsets-datacollector-hdp_2_6-flume-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3380 ">For the Hortonworks version 2.6.x
+                                                <td class="entry cellrowborder" headers="d717115e3383 ">For the Hortonworks version 2.6.x
                                                   distribution of Apache Flume.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3377 ">streamsets-datacollector-hdp_2_6-hive2-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3380 ">streamsets-datacollector-hdp_2_6-hive2-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3380 ">For the Hortonworks version 2.6.x
+                                                <td class="entry cellrowborder" headers="d717115e3383 ">For the Hortonworks version 2.6.x
                                                   distribution of Apache Hive version 2.1.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3377 ">streamsets-datacollector-hdp_2_6_1-hive1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3380 ">streamsets-datacollector-hdp_2_6_1-hive1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3380 ">For the Hortonworks version 2.6.1
+                                                <td class="entry cellrowborder" headers="d717115e3383 ">For the Hortonworks version 2.6.1
                                                   distribution of Apache Hive version 1.x.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3377 ">streamsets-datacollector-hdp_2_6_2-hive1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e3380 ">streamsets-datacollector-hdp_2_6_2-hive1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e3380 ">For the Hortonworks version 2.6.2
+                                                <td class="entry cellrowborder" headers="d717115e3383 ">For the Hortonworks version 2.6.2
                                                   distribution of Apache Hive version 1.x.</td>
 
                                             </tr>
@@ -2420,33 +2422,33 @@ As you start designing pipelines, StreamSets recommends
                                 following new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_sjn_dcb_zhb__table_edq_2yk_1hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e3997">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e4000">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e4000">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e4003">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3997 ">streamsets-datacollector-cdh_5_16-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4000 ">streamsets-datacollector-cdh_5_16-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4000 ">For the Cloudera CDH version 5.16
+                                                <td class="entry cellrowborder" headers="d717115e4003 ">For the Cloudera CDH version 5.16
                                                   distribution of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3997 ">streamsets-datacollector-kinetica_7_0-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4000 ">streamsets-datacollector-kinetica_7_0-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4000 ">For Kinetica 7.0. </td>
+                                                <td class="entry cellrowborder" headers="d717115e4003 ">For Kinetica 7.0. </td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e3997 ">streamsets-datacollector-thycotic-credentialstore-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4000 ">streamsets-datacollector-thycotic-credentialstore-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4000 ">For the Thycotic Secret Server credential
+                                                <td class="entry cellrowborder" headers="d717115e4003 ">For the Thycotic Secret Server credential
                                                   store system. </td>
 
                                             </tr>
@@ -2460,65 +2462,65 @@ As you start designing pipelines, StreamSets recommends
                                 are now legacy stage libraries: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_sjn_dcb_zhb__table_f3x_ycn_bhb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e4054">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e4057">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e4057">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e4060">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-apache-kafka_0_11-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-apache-kafka_0_11-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For Kafka version 0.11.x.</td>
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For Kafka version 0.11.x.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-cdh_5_12-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-cdh_5_12-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For the Cloudera CDH version 5.12
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For the Cloudera CDH version 5.12
                                                   distribution of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-cdh_5_13-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-cdh_5_13-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For the Cloudera CDH version 5.13
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For the Cloudera CDH version 5.13
                                                   distribution of Apache Hadoop.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-cdh_kafka_2_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-cdh_kafka_2_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For the Cloudera distribution of Apache Kafka
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For the Cloudera distribution of Apache Kafka
                                                   2.1.x (0.9.0).</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-cdh_kafka_3_0-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-cdh_kafka_3_0-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For the Cloudera distribution of Apache Kafka
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For the Cloudera distribution of Apache Kafka
                                                   3.0.0 (0.11.0).</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-cdh-spark_2_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-cdh-spark_2_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For the Cloudera CDH cluster Kafka with CDS
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For the Cloudera CDH cluster Kafka with CDS
                                                   powered by Spark 2.1.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e4054 ">streamsets-datacollector-mapr_5_2-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e4057 ">streamsets-datacollector-mapr_5_2-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e4057 ">For MapR version 5.2.</td>
+                                                <td class="entry cellrowborder" headers="d717115e4060 ">For MapR version 5.2.</td>
 
                                             </tr>
 
@@ -2619,18 +2621,18 @@ As you start designing pipelines, StreamSets recommends
                 <dd class="dd ddexpand">With this release, you can use the following new Enterprise stage library:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lvk_lsk_1hb__table_ij3_jch_kgb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d717361e4304">Stage Library Name</th>
+                                    <th class="entry cellrowborder" id="d717115e4307">Stage Library Name</th>
 
-                                    <th class="entry cellrowborder" id="d717361e4307">Description</th>
+                                    <th class="entry cellrowborder" id="d717115e4310">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d717361e4304 ">streamsets-datacollector-oracle-lib</td>
+                                    <td class="entry cellrowborder" headers="d717115e4307 ">streamsets-datacollector-oracle-lib</td>
 
-                                    <td class="entry cellrowborder" headers="d717361e4307 ">For bulk loading from static Oracle tables.<p class="p">Includes
+                                    <td class="entry cellrowborder" headers="d717115e4310 ">For bulk loading from static Oracle tables.<p class="p">Includes
                                             the <a class="xref" href="../Origins/OracleBulk.html#concept_lnz_kzp_zgb">Oracle Bulkload</a> origin.</p>
 </td>
 
@@ -2815,40 +2817,40 @@ As you start designing pipelines, StreamSets recommends
                             new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lvk_lsk_1hb__table_edq_2yk_1hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d717361e4657">Stage Library Name</th>
+                                            <th class="entry cellrowborder" id="d717115e4660">Stage Library Name</th>
 
-                                            <th class="entry cellrowborder" id="d717361e4660">Description</th>
+                                            <th class="entry cellrowborder" id="d717115e4663">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4657 ">streamsets-datacollector-aws-secrets-manager-credentialstore-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e4660 ">streamsets-datacollector-aws-secrets-manager-credentialstore-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e4660 ">For the AWS Secrets Manager credential store
+                                            <td class="entry cellrowborder" headers="d717115e4663 ">For the AWS Secrets Manager credential store
                                                 system.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4657 ">streamsets-datacollector-hdp_3_1-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e4660 ">streamsets-datacollector-hdp_3_1-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e4660 ">For Hortonworks version 3.1.</td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4657 ">streamsets-datacollector-mapr_6_1-lib</td>
-
-                                            <td class="entry cellrowborder" headers="d717361e4660 ">For MapR version 6.1.0.</td>
+                                            <td class="entry cellrowborder" headers="d717115e4663 ">For Hortonworks version 3.1.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4657 ">streamsets-datacollector-mapr_6_1-mep6-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e4660 ">streamsets-datacollector-mapr_6_1-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e4660 ">For MapR 6.1.0, MapR Ecosystem Pack (MEP) version
+                                            <td class="entry cellrowborder" headers="d717115e4663 ">For MapR version 6.1.0.</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d717115e4660 ">streamsets-datacollector-mapr_6_1-mep6-lib</td>
+
+                                            <td class="entry cellrowborder" headers="d717115e4663 ">For MapR 6.1.0, MapR Ecosystem Pack (MEP) version
                                                 6.</td>
 
                                         </tr>
@@ -2862,26 +2864,26 @@ As you start designing pipelines, StreamSets recommends
                             now legacy stage libraries: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lvk_lsk_1hb__table_f3x_ycn_bhb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d717361e4723">Stage Library Name</th>
+                                            <th class="entry cellrowborder" id="d717115e4726">Stage Library Name</th>
 
-                                            <th class="entry cellrowborder" id="d717361e4726">Description</th>
+                                            <th class="entry cellrowborder" id="d717115e4729">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4723 ">streamsets-datacollector-cdh_5_10-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e4726 ">streamsets-datacollector-cdh_5_10-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e4726 ">For the Cloudera CDH version 5.10 distribution of
+                                            <td class="entry cellrowborder" headers="d717115e4729 ">For the Cloudera CDH version 5.10 distribution of
                                                 Apache Hadoop.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e4723 ">streamsets-datacollector-cdh_5_11-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e4726 ">streamsets-datacollector-cdh_5_11-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e4726 ">For the Cloudera CDH version 5.11 distribution of
+                                            <td class="entry cellrowborder" headers="d717115e4729 ">For the Cloudera CDH version 5.11 distribution of
                                                 Apache Hadoop.</td>
 
                                         </tr>
@@ -3019,36 +3021,36 @@ As you start designing pipelines, StreamSets recommends
                     <dd class="dd ddexpand">This release includes the following new Enterprise stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fnl_4lt_dgb__table_ij3_jch_kgb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d717361e5004">Stage Library Name</th>
+                                        <th class="entry cellrowborder" id="d717115e5007">Stage Library Name</th>
 
-                                        <th class="entry cellrowborder" id="d717361e5007">Description</th>
+                                        <th class="entry cellrowborder" id="d717115e5010">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d717361e5004 ">streamsets-datacollector-memsql-lib</td>
+                                        <td class="entry cellrowborder" headers="d717115e5007 ">streamsets-datacollector-memsql-lib</td>
 
-                                        <td class="entry cellrowborder" headers="d717361e5007 ">For MemSQL.<p dir="ltr" class="p">Includes the MemSQL Fast
+                                        <td class="entry cellrowborder" headers="d717115e5010 ">For MemSQL.<p dir="ltr" class="p">Includes the MemSQL Fast
                                                 Loader destination.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d717361e5004 ">streamsets-datacollector-snowflake-lib</td>
+                                        <td class="entry cellrowborder" headers="d717115e5007 ">streamsets-datacollector-snowflake-lib</td>
 
-                                        <td class="entry cellrowborder" headers="d717361e5007 ">For Snowflake.<p dir="ltr" class="p">Includes the Snowflake
+                                        <td class="entry cellrowborder" headers="d717115e5010 ">For Snowflake.<p dir="ltr" class="p">Includes the Snowflake
                                                 destination.</p>
 </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d717361e5004 ">streamsets-datacollector-teradata-lib</td>
+                                        <td class="entry cellrowborder" headers="d717115e5007 ">streamsets-datacollector-teradata-lib</td>
 
-                                        <td class="entry cellrowborder" headers="d717361e5007 ">For Teradata.<p dir="ltr" class="p">Includes the Teradata
+                                        <td class="entry cellrowborder" headers="d717115e5010 ">For Teradata.<p dir="ltr" class="p">Includes the Teradata
                                                 Consumer origin.</p>
 </td>
 
@@ -3110,7 +3112,7 @@ As you start designing pipelines, StreamSets recommends
                                         existing messages in a topic.<p class="p">In previous versions, the
                                             origin read only new messages by default. For
                                             information on upgrading pipelines that use the Kafka
-                                            Consumer origin, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_lxn_s5h_gnb">Update Kafka Pipelines</a>. </p>
+                                            Consumer origin, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_lxn_s5h_gnb">Update Kafka Consumer or Kafka Multitopic Consumer Pipelines</a>. </p>
 </li>
 
                                     <li class="li">A new Include Timestamps property enables you to include
@@ -3127,7 +3129,7 @@ As you start designing pipelines, StreamSets recommends
                                 origin to read all existing messages in a topic.<p dir="ltr" class="p">In
                                     previous versions, the origin read only new messages by default.
                                     For information on upgrading pipelines that use the Kafka
-                                    Multitopic Consumer origin, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_lxn_s5h_gnb">Update Kafka Pipelines</a>.</p>
+                                    Multitopic Consumer origin, see <a class="xref" href="../Upgrade/PostUpgrade.html#concept_lxn_s5h_gnb">Update Kafka Consumer or Kafka Multitopic Consumer Pipelines</a>.</p>
 </li>
 
                             <li class="li"><a class="xref" href="../Origins/PostgreSQL.html#task_v21_nm4_n2b">PostgreSQL CDC Client</a> - The origin now has a new default
@@ -3443,26 +3445,26 @@ As you start designing pipelines, StreamSets recommends
                                 following new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fnl_4lt_dgb__table_j34_d23_2gb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e5703">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e5706">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e5706">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e5709">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e5703 ">streamsets-datacollector-cdh_kafka_3_1-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e5706 ">streamsets-datacollector-cdh_kafka_3_1-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e5706 ">Cloudera distribution of Apache Kafka 3.1.0
+                                                <td class="entry cellrowborder" headers="d717115e5709 ">Cloudera distribution of Apache Kafka 3.1.0
                                                   (1.0.1).</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e5703 ">streamsets-datacollector-kinetica_6_2-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e5706 ">streamsets-datacollector-kinetica_6_2-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e5706 ">For Kinetica 6.2.<p class="p">Includes the KineticaDB
+                                                <td class="entry cellrowborder" headers="d717115e5709 ">For Kinetica 6.2.<p class="p">Includes the KineticaDB
                                                   destination.</p>
 </td>
 
@@ -3477,25 +3479,25 @@ As you start designing pipelines, StreamSets recommends
                                 to the following stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fnl_4lt_dgb__table_s3z_t23_2gb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                             <tr>
-                                                <th class="entry cellrowborder" id="d717361e5753">Stage Library Name</th>
+                                                <th class="entry cellrowborder" id="d717115e5756">Stage Library Name</th>
 
-                                                <th class="entry cellrowborder" id="d717361e5756">Description</th>
+                                                <th class="entry cellrowborder" id="d717115e5759">Description</th>
 
                                             </tr>
 
                                         </thead>
 <tbody class="tbody">
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e5753 ">streamsets-datacollector-apache-pulsar_2-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e5756 ">streamsets-datacollector-apache-pulsar_2-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e5756 ">Apache Pulsar version 2.x.</td>
+                                                <td class="entry cellrowborder" headers="d717115e5759 ">Apache Pulsar version 2.x.</td>
 
                                             </tr>
 
                                             <tr>
-                                                <td class="entry cellrowborder" headers="d717361e5753 ">streamsets-datacollector-cdh_6_0-lib</td>
+                                                <td class="entry cellrowborder" headers="d717115e5756 ">streamsets-datacollector-cdh_6_0-lib</td>
 
-                                                <td class="entry cellrowborder" headers="d717361e5756 ">Cloudera CDH version 6.0.x distribution of
+                                                <td class="entry cellrowborder" headers="d717115e5759 ">Cloudera CDH version 6.0.x distribution of
                                                   Apache Hadoop. Now includes the following
                                                   stages:<ul class="ul" id="concept_fnl_4lt_dgb__ul_wbk_v23_2gb">
                                                   <li class="li">HBase Lookup processor</li>
@@ -4072,7 +4074,7 @@ streamsets sch unregister</code></pre></li>
                             </ul>
 </li>
 
-                        <li class="li"><a class="xref" href="../Expression_Language/Functions.html#unique_780523376">Job
+                        <li class="li"><a class="xref" href="../Expression_Language/Functions.html#unique_11657424">Job
                                 functions</a> - This release includes the following new
                                 functions:<ul class="ul" id="concept_rs3_c31_2fb__ul_jcz_gp1_2fb">
                                 <li class="li">job:id() - Returns the ID of the job if the pipeline was run
@@ -4104,47 +4106,47 @@ streamsets sch unregister</code></pre></li>
                             new stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rs3_c31_2fb__table_vm3_zp1_2fb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d717361e6898">Stage Library Name</th>
+                                            <th class="entry cellrowborder" id="d717115e6901">Stage Library Name</th>
 
-                                            <th class="entry cellrowborder" id="d717361e6901">Description</th>
+                                            <th class="entry cellrowborder" id="d717115e6904">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-apache-kafka_1_1-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-apache-kafka_1_1-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">Apache Kafka version 1.1.x</td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-apache-kafka_2_0-lib</td>
-
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">Apache Kafka version 2.0.x</td>
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">Apache Kafka version 1.1.x</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-apache-pulsar_2-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-apache-kafka_2_0-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">Apache Pulsar version 2.1.0-incubating</td>
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">Apache Kafka version 2.0.x</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-azure-keyvault-credentialstore-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-apache-pulsar_2-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">Microsoft Azure Key Vault credential store
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">Apache Pulsar version 2.1.0-incubating</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-azure-keyvault-credentialstore-lib</td>
+
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">Microsoft Azure Key Vault credential store
                                                 system</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-cdh_6_0-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-cdh_6_0-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">Cloudera CDH version 6.0 distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">Cloudera CDH version 6.0 distribution of Apache
                                                   Hadoop<div class="note note"><span class="notetitle">Note:</span> Does not include the following
                                                   stages:<ul class="ul" id="concept_rs3_c31_2fb__ul_slh_npx_2fb">
                                                   <li class="li">HBase Lookup processor</li>
@@ -4160,25 +4162,25 @@ streamsets sch unregister</code></pre></li>
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-crypto-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-crypto-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">For cryptography stages, including the Encrypt
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">For cryptography stages, including the Encrypt
                                                 and Decrypt Fields processor</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-mapr_6_0-mep5-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-mapr_6_0-mep5-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">MapR Ecosystem Pack (MEP) version 5 for MapR
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">MapR Ecosystem Pack (MEP) version 5 for MapR
                                                 6.0.1</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e6898 ">streamsets-datacollector-tensorflow-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e6901 ">streamsets-datacollector-tensorflow-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e6901 ">TensorFlow</td>
+                                            <td class="entry cellrowborder" headers="d717115e6904 ">TensorFlow</td>
 
                                         </tr>
 
@@ -4191,88 +4193,88 @@ streamsets sch unregister</code></pre></li>
                             now legacy stage libraries:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rs3_c31_2fb__table_am4_nq1_2fb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d717361e7014">Stage Library Name</th>
+                                            <th class="entry cellrowborder" id="d717115e7017">Stage Library Name</th>
 
-                                            <th class="entry cellrowborder" id="d717361e7017">Description</th>
+                                            <th class="entry cellrowborder" id="d717115e7020">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-apache-kafka_0_9-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Apache Kafka version 0.9.x</td>
-
-                                        </tr>
-
-                                        <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
-
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Apache Kafka version 0.10.x</td>
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Apache Kafka version 0.9.x</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-cdh_5_8-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-apache-kafka_0_10-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Cloudera CDH version 5.8 distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Apache Kafka version 0.10.x</td>
+
+                                        </tr>
+
+                                        <tr>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-cdh_5_8-lib</td>
+
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Cloudera CDH version 5.8 distribution of Apache
                                                 Hadoop</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-cdh_5_9-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-cdh_5_9-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Cloudera CDH version 5.9 distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Cloudera CDH version 5.9 distribution of Apache
                                                 Hadoop</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-cdh_kafka_2_0-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-cdh_kafka_2_0-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Cloudera distribution of Apache Kafka 2.0.x
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Cloudera distribution of Apache Kafka 2.0.x
                                                 (0.9.0)</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-hdp_2_4-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-hdp_2_4-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Hortonworks version 2.4 distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Hortonworks version 2.4 distribution of Apache
                                                 Hadoop</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-hdp_2_4-hive1-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-hdp_2_4-hive1-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Hortonworks version 2.4.x distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Hortonworks version 2.4.x distribution of Apache
                                                 Hive version 1.x</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-hdp_2_5-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-hdp_2_5-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Hortonworks version 2.5.x distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Hortonworks version 2.5.x distribution of Apache
                                                 Hadoop</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-hdp_2_5-flume-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-hdp_2_5-flume-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">Hortonworks version 2.5.x distribution of Apache
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">Hortonworks version 2.5.x distribution of Apache
                                                 Flume</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d717361e7014 ">streamsets-datacollector-mapr_5_1-lib</td>
+                                            <td class="entry cellrowborder" headers="d717115e7017 ">streamsets-datacollector-mapr_5_1-lib</td>
 
-                                            <td class="entry cellrowborder" headers="d717361e7017 ">MapR version 5.1</td>
+                                            <td class="entry cellrowborder" headers="d717115e7020 ">MapR version 5.1</td>
 
                                         </tr>
 
@@ -6292,7 +6294,7 @@ streamsets sch unregister</code></pre></li>
     </div>
 
 </article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title34" id="unique_523263467">
+<article class="topic concept nested1" aria-labelledby="ariaid-title34" id="unique_1138101209">
     <h2 class="title topictitle2" id="ariaid-title34">What's New in 2.7.1.0</h2>
 
     <div class="body conbody">
@@ -6301,7 +6303,7 @@ streamsets sch unregister</code></pre></li>
                 
                     <dt class="dt dlterm">Stage Libraries</dt>
 
-                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_523263467__ul_s1w_cvr_1bb">
+                    <dd class="dd">Data Collector includes the following upgraded stage library:<ul class="ul" id="unique_1138101209__ul_s1w_cvr_1bb">
                             <li class="li"><a class="xref" href="../Installation/AddtionalStageLibs.html#concept_evs_xkm_s5">Jython 2.7.1</a></li>
 
                         </ul>
@@ -6312,7 +6314,7 @@ streamsets sch unregister</code></pre></li>
                     <dt class="dt dlterm">Origins</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_523263467__ul_gr5_hvr_1bb">
+                        <ul class="ul" id="unique_1138101209__ul_gr5_hvr_1bb">
                             <li class="li"><a class="xref" href="../Origins/AzureEventHub.html#concept_c1z_15q_1bb">New
                                     Azure Event Hub Consumer origin</a> - A multithreaded origin
                                 that reads data from Microsoft Azure Event Hub.</li>
@@ -6330,7 +6332,7 @@ streamsets sch unregister</code></pre></li>
                     <dt class="dt dlterm">Processors</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_523263467__ul_rh5_3vr_1bb">
+                        <ul class="ul" id="unique_1138101209__ul_rh5_3vr_1bb">
                             <li class="li"><a class="xref" href="../Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">New Schema Generator processor</a> - A processor that
                                 generates a schema for each record and writes the schema to a record
                                 header attribute. </li>
@@ -6344,7 +6346,7 @@ streamsets sch unregister</code></pre></li>
                     <dt class="dt dlterm">Destinations</dt>
 
                     <dd class="dd">
-                        <ul class="ul" id="unique_523263467__ul_s22_lvr_1bb">
+                        <ul class="ul" id="unique_1138101209__ul_s22_lvr_1bb">
                             <li class="li"><a class="xref" href="../Destinations/AzureEventHubProducer.html#concept_xq5_d5q_1bb">New Azure Event Hub Producer destination</a> - A destination
                                 that writes data to Microsoft Azure Event Hub.</li>
 
@@ -6362,7 +6364,7 @@ streamsets sch unregister</code></pre></li>
     </div>
 
 </article>
-<article class="topic concept nested1" aria-labelledby="ariaid-title35" id="unique_40125597">
+<article class="topic concept nested1" aria-labelledby="ariaid-title35" id="unique_184236386">
     <h2 class="title topictitle2" id="ariaid-title35">What's New in 2.7.0.0</h2>
 
     <div class="body conbody">
@@ -6375,7 +6377,7 @@ streamsets sch unregister</code></pre></li>
 
                 <dd class="dd"><span class="ph">Data Collector</span> now has a <a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential
                         store</a> API that integrates with the following credential store
-                        systems:<ul class="ul" id="unique_40125597__ul_vgr_3cz_w1b">
+                        systems:<ul class="ul" id="unique_184236386__ul_vgr_3cz_w1b">
                         <li class="li">Java keystore</li>
 
                         <li class="li">Hashicorp Vault</li>
@@ -6393,7 +6395,7 @@ streamsets sch unregister</code></pre></li>
                 </dd>
 
                 <dd class="dd ddexpand">
-                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_40125597__ul_ezm_4cz_w1b">
+                    <div class="p">The following JDBC stages can use the new credential functions:<ul class="ul" id="unique_184236386__ul_ezm_4cz_w1b">
                             <li class="li">JDBC Multitable Consumer origin</li>
 
                             <li class="li">JDBC Query Consumer origin</li>
@@ -6436,7 +6438,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Stage Libraries</dt>
 
                 <dd class="dd">
-                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_40125597__ul_cxp_d2z_w1b">
+                    <div class="p">Data Collector includes the following new stage libraries:<ul class="ul" id="unique_184236386__ul_cxp_d2z_w1b">
                             <li class="li">Apache Kudu version 1.4.0</li>
 
                             <li class="li">Cloudera CDH version 5.12 distribution of Hadoop</li>
@@ -6460,7 +6462,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Data Collector Configuration</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_hc5_q2z_w1b">
+                    <ul class="ul" id="unique_184236386__ul_hc5_q2z_w1b">
                         <li class="li"><a class="xref" href="../Configuration/Vault-Overview.html#concept_bmq_gl1_mw">Access Hashicorp Vault secrets</a> - The Data Collector Vault
                             integration now relies on Vault's App Role authentication backend.
                             Previously, Data Collector relied on Vault's App ID authentication
@@ -6497,7 +6499,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Dataflow Triggers</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_fg2_gfz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_fg2_gfz_w1b">
                         <li class="li"><a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_amg_2qr_t1b">Pipeline events</a> - The event framework now generates pipeline
                             lifecycle events when the pipeline stops and starts. You can pass each
                             pipeline event to an executor or to another pipeline for more complex
@@ -6513,7 +6515,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Origins</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_tpp_sfz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_tpp_sfz_w1b">
                         <li class="li"><a class="xref" href="../Origins/BigQuery.html#concept_cg3_y3v_q1b">New Google
                                 BigQuery origin</a> - An origin that executes a query job and
                             reads the result from Google BigQuery.</li>
@@ -6559,7 +6561,7 @@ streamsets sch unregister</code></pre></li>
                             configure the behavior for the origin when it encounters data of an
                             unknown data type.</li>
 
-                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_40125597__ul_gnl_rhz_w1b">
+                        <li class="li"><a class="xref" href="../Origins/MultiTableJDBCConsumer.html#concept_zp3_wnw_4y">JDBC Multitable Consumer origin enhancements</a>:<ul class="ul" id="unique_184236386__ul_gnl_rhz_w1b">
                                 <li class="li">You can now use the origin to perform multithreaded processing
                                     of partitions within a table. Use partition processing to handle
                                     even larger volumes of data. This enhancement also includes new
@@ -6576,7 +6578,7 @@ streamsets sch unregister</code></pre></li>
 </li>
 
                         <li class="li"><a class="xref" href="../Origins/OracleCDC.html#concept_rs5_hjj_tw">Oracle CDC
-                                Client origin enhancements</a>:<ul class="ul" id="unique_40125597__ul_ych_yhz_w1b">
+                                Client origin enhancements</a>:<ul class="ul" id="unique_184236386__ul_ych_yhz_w1b">
                                 <li class="li">The origin can now buffer data locally rather than utilizing
                                     Oracle LogMiner buffers.</li>
 
@@ -6625,7 +6627,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Processors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_py4_vmz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_py4_vmz_w1b">
                         <li class="li"><a class="xref" href="../Processors/DataParser.html#concept_xw3_4xk_r1b">New Data
                                 Parser processor</a> - Use the new processor to extract NetFlow
                             or syslog messages as well as other supported data formats that are
@@ -6651,7 +6653,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Destinations</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_wdl_lnz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_wdl_lnz_w1b">
                         <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_qsj_hk1_v1b">New Google Pub/Sub Publisher destination</a> - A destination
                             that publishes messages to Google Pub/Sub.</li>
 
@@ -6659,7 +6661,7 @@ streamsets sch unregister</code></pre></li>
                                 JMS Producer destination</a> - A destination that writes data to
                             JMS.</li>
 
-                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_40125597__ul_ls3_d4z_w1b">
+                        <li class="li">Amazon S3 destination enhancements:<ul class="ul" id="unique_184236386__ul_ls3_d4z_w1b">
                                 <li class="li">You can now use expressions in the <a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket property</a> for the Amazon S3 destination. This
                                     enables you to write records dynamically based expression
                                     evaluation.</li>
@@ -6705,7 +6707,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Executors</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_gqx_fpz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_gqx_fpz_w1b">
                         <li class="li"><a class="xref" href="../Executors/AmazonS3.html#concept_mvh_bnm_f1b">New Amazon
                                 S3 executor</a> - Use the Amazon S3 executor to create new Amazon
                             S3 objects for the specified content or add tags to existing objects
@@ -6723,7 +6725,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Dataflow Performance Manager</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_dwx_lpz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_dwx_lpz_w1b">
                         <li class="li"><a class="xref" href="../DPM/PipelineManagement.html#task_c4x_vff_p1b">Revert changes to published pipelines</a> - If you update a
                             published pipeline but decide not to publish the updates to DPM as a new
                             version, you can revert the changes made to the pipeline
@@ -6738,8 +6740,8 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Pipelines</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_ngb_qpz_w1b">
-                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_40125597__ul_rq1_tpz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_ngb_qpz_w1b">
+                        <li class="li"><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_pm4_txm_vq">Pipeline error handling enhancements</a>: <ul class="ul" id="unique_184236386__ul_rq1_tpz_w1b">
                                 <li class="li">Use the new Error Record Policy to specify the version of the
                                     record to include in error records. </li>
 
@@ -6764,14 +6766,14 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Data Formats</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_btq_yqz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_btq_yqz_w1b">
                         <li class="li"><a class="xref" href="../Data_Formats/WritingXML.html#concept_t2m_hhx_41b">Writing
                                 XML</a> - You can now use the Google Pub/Sub Publisher, JMS
                             Producer, and Kafka Producer destinations to write XML documents to
                             destination systems. Note the record structure requirement before you
                             use this data format. </li>
 
-                        <li class="li">Avro:<ul class="ul" id="unique_40125597__ul_k4b_yrz_w1b">
+                        <li class="li">Avro:<ul class="ul" id="unique_184236386__ul_k4b_yrz_w1b">
                                 <li class="li">Origins now write the Avro schema to an avroSchema record header
                                     attribute.</li>
 
@@ -6796,7 +6798,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Cluster Pipelines</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_40125597__ul_b14_nsz_w1b">
+                    <div class="p">This release includes the following <a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_rjc_4m5_lx" title="Data Collector can run a cluster pipeline using cluster batch or cluster streaming execution mode.">Cluster Yarn Streaming enhancements</a>:<ul class="ul" id="unique_184236386__ul_b14_nsz_w1b">
                             <li class="li">Use a new Worker Count property to limit the number of worker nodes
                                 used in Cluster Yarn Streaming pipelines. By default, a Data
                                 Collector worker is spawned for each partition in the topic. </li>
@@ -6814,7 +6816,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Expression Language</dt>
 
                 <dd class="dd">
-                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_40125597__ul_abf_qsz_w1b">
+                    <div class="p">This release includes the following new functions:<ul class="ul" id="unique_184236386__ul_abf_qsz_w1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential:get()</a> - Returns credential values from a
                                 credential store.</li>
 
@@ -6839,7 +6841,7 @@ streamsets sch unregister</code></pre></li>
 
                 <dd class="dd ddexpand">
                     <div class="p">
-                        <ul class="ul" id="unique_40125597__ul_k5c_rg4_z1b">
+                        <ul class="ul" id="unique_184236386__ul_k5c_rg4_z1b">
                             <li class="li"><a class="xref" href="../Expression_Language/Functions.html#concept_ahp_f4v_1r">str:indexOf()</a> - Returns the index within a string of the
                                 first occurrence of the specified subset of characters.</li>
 
@@ -6854,7 +6856,7 @@ streamsets sch unregister</code></pre></li>
                 <dt class="dt dlterm">Miscellaneous</dt>
 
                 <dd class="dd">
-                    <ul class="ul" id="unique_40125597__ul_y2k_htz_w1b">
+                    <ul class="ul" id="unique_184236386__ul_y2k_htz_w1b">
                         <li class="li"><a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Global bulk edit mode</a> - In any property where you would
                             previously click an Add icon to add additional configurations, you can
                             now switch to bulk edit mode to enter a list of configurations in JSON

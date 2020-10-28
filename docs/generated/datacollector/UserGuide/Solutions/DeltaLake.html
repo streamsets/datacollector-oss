@@ -562,18 +562,18 @@ ORDER BY Id</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uvc_zv2_ckb__table_s5c_lgv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e784">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e784">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e787">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e787">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_uvc_zv2_ckb__d118e137">
-                                    <td class="entry cellrowborder" headers="d691209e784 ">JDBC URL</td>
+                                    <td class="entry cellrowborder" headers="d691084e784 ">JDBC URL</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e787 ">Enter the JDBC URL that the destination uses to connect
+                                    <td class="entry cellrowborder" headers="d691084e787 ">Enter the JDBC URL that the destination uses to connect
                                         to the Databricks cluster. Remove the <code class="ph codeph">PWD</code>
                                         parameter from the URL, and then enter the personal access
                                         token value for the Token property below.<p class="p" id="task_uvc_zv2_ckb__d118e147">For example:
@@ -584,34 +584,34 @@ ORDER BY Id</code></pre>
                                 </tr>
 
                                 <tr id="task_uvc_zv2_ckb__d118e156">
-                                    <td class="entry cellrowborder" headers="d691209e784 ">Token</td>
+                                    <td class="entry cellrowborder" headers="d691084e784 ">Token</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e787 ">Enter the personal access token that you generated as a
+                                    <td class="entry cellrowborder" headers="d691084e787 ">Enter the personal access token that you generated as a
                                         prerequisite in Databricks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e784 ">Table Name</td>
+                                    <td class="entry cellrowborder" headers="d691084e784 ">Table Name</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e787 ">Enter <kbd class="ph userinput">sales.accounts</kbd> to write the
+                                    <td class="entry cellrowborder" headers="d691084e787 ">Enter <kbd class="ph userinput">sales.accounts</kbd> to write the
                                         data to the <code class="ph codeph">accounts</code> Delta Lake table in
                                         the <code class="ph codeph">sales</code> database.</td>
 
                                 </tr>
 
                                 <tr id="task_uvc_zv2_ckb__d118e183">
-                                    <td class="entry cellrowborder" headers="d691209e784 ">Enable Data Drift</td>
+                                    <td class="entry cellrowborder" headers="d691084e784 ">Enable Data Drift</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e787 ">Select to compensate for data drift and automatically
+                                    <td class="entry cellrowborder" headers="d691084e787 ">Select to compensate for data drift and automatically
                                         create new columns or tables.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e784 ">Auto Create Table</td>
+                                    <td class="entry cellrowborder" headers="d691084e784 ">Auto Create Table</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e787 ">Select to automatically create the new
+                                    <td class="entry cellrowborder" headers="d691084e787 ">Select to automatically create the new
                                             <kbd class="ph userinput">accounts</kbd> table in Delta
                                         Lake.</td>
 
@@ -652,26 +652,26 @@ ORDER BY Id</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_uvc_zv2_ckb__table_az3_lkv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e928">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e928">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e931">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e931">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e928 ">Purge Stage File After Ingesting</td>
+                                    <td class="entry cellrowborder" headers="d691084e928 ">Purge Stage File After Ingesting</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e931 ">Select to enable purging a staged file after its data is
+                                    <td class="entry cellrowborder" headers="d691084e931 ">Select to enable purging a staged file after its data is
                                         successfully written to a Delta Lake table.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e928 ">Bucket</td>
+                                    <td class="entry cellrowborder" headers="d691084e928 ">Bucket</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e931 ">Enter the path to the existing Amazon S3 location to
+                                    <td class="entry cellrowborder" headers="d691084e931 ">Enter the path to the existing Amazon S3 location to
                                         write the staged files. Use the following format:
                                                 <p class="p"><code class="ph codeph"> &lt;bucket&gt;/&lt;prefix&gt;
                                         </code></p>
@@ -680,9 +680,9 @@ ORDER BY Id</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e928 ">Use Instance Profile</td>
+                                    <td class="entry cellrowborder" headers="d691084e928 ">Use Instance Profile</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e931 ">Select to use the instance profile assigned to the EC2
+                                    <td class="entry cellrowborder" headers="d691084e931 ">Select to use the instance profile assigned to the EC2
                                         instance where Data Collector runs to connect to Amazon
                                             S3.<p class="p">If not using instance profiles, clear and enter
                                             your AWS secret access key pair.</p>
@@ -1069,40 +1069,40 @@ ORDER BY Id</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ppg_r3r_ckb__table_ejb_2t2_ckb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e1692">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e1692">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e1695">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e1695">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1692 ">Flatten</td>
+                                    <td class="entry cellrowborder" headers="d691084e1692 ">Flatten</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1695 ">Select <span class="ph uicontrol">Flatten specific
+                                    <td class="entry cellrowborder" headers="d691084e1695 ">Select <span class="ph uicontrol">Flatten specific
                                         fields</span>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1692 ">Fields</td>
+                                    <td class="entry cellrowborder" headers="d691084e1692 ">Fields</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1695 ">Enter <kbd class="ph userinput">/OldData</kbd>.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1692 ">Flatten in Place</td>
-
-                                    <td class="entry cellrowborder" headers="d691209e1695 ">Clear the property.</td>
+                                    <td class="entry cellrowborder" headers="d691084e1695 ">Enter <kbd class="ph userinput">/OldData</kbd>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1692 ">Target Field</td>
+                                    <td class="entry cellrowborder" headers="d691084e1692 ">Flatten in Place</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1695 ">Enter <kbd class="ph userinput">/</kbd> to write the flattened
+                                    <td class="entry cellrowborder" headers="d691084e1695 ">Clear the property.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d691084e1692 ">Target Field</td>
+
+                                    <td class="entry cellrowborder" headers="d691084e1695 ">Enter <kbd class="ph userinput">/</kbd> to write the flattened
                                         data to the root field.</td>
 
                                 </tr>
@@ -1215,18 +1215,18 @@ ORDER BY Id</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_orr_jj2_jlb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e1960">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e1960">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e1963">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e1963">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1960 ">JDBC URL</td>
+                                    <td class="entry cellrowborder" headers="d691084e1960 ">JDBC URL</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1963 ">Enter the JDBC URL that the destination uses to connect
+                                    <td class="entry cellrowborder" headers="d691084e1963 ">Enter the JDBC URL that the destination uses to connect
                                         to the Databricks cluster. Remove the <code class="ph codeph">PWD</code>
                                         parameter from the URL, and then enter the personal access
                                         token value for the Token property below.<p class="p" id="task_vh5_vws_ckb__d118e147">For example:
@@ -1237,34 +1237,34 @@ ORDER BY Id</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1960 ">Token</td>
+                                    <td class="entry cellrowborder" headers="d691084e1960 ">Token</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1963 ">Enter the personal access token that you generated as a
+                                    <td class="entry cellrowborder" headers="d691084e1963 ">Enter the personal access token that you generated as a
                                         prerequisite in Databricks. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1960 ">Table Name</td>
+                                    <td class="entry cellrowborder" headers="d691084e1960 ">Table Name</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1963 ">Enter <kbd class="ph userinput">customers_cdc</kbd> to write the
+                                    <td class="entry cellrowborder" headers="d691084e1963 ">Enter <kbd class="ph userinput">customers_cdc</kbd> to write the
                                         changed data to a <code class="ph codeph">customers_cdc</code> table in
                                         the default <code class="ph codeph">delta</code> database.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1960 ">Enable Data Drift</td>
+                                    <td class="entry cellrowborder" headers="d691084e1960 ">Enable Data Drift</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1963 ">Select to compensate for data drift and automatically
+                                    <td class="entry cellrowborder" headers="d691084e1963 ">Select to compensate for data drift and automatically
                                         create new columns or tables.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e1960 ">Auto Create Table</td>
+                                    <td class="entry cellrowborder" headers="d691084e1960 ">Auto Create Table</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e1963 ">Select so that the destination can automatically create
+                                    <td class="entry cellrowborder" headers="d691084e1963 ">Select so that the destination can automatically create
                                         the new <kbd class="ph userinput">customers_cdc</kbd> table in Delta
                                         Lake.</td>
 
@@ -1305,26 +1305,26 @@ ORDER BY Id</code></pre>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_az3_lkv_3lb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e2104">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e2104">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e2107">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e2107">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e2104 ">Purge Stage File After Ingesting</td>
+                                    <td class="entry cellrowborder" headers="d691084e2104 ">Purge Stage File After Ingesting</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e2107 ">Select to enable purging a staged file after its data is
+                                    <td class="entry cellrowborder" headers="d691084e2107 ">Select to enable purging a staged file after its data is
                                         successfully written to a Delta Lake table.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e2104 ">Bucket</td>
+                                    <td class="entry cellrowborder" headers="d691084e2104 ">Bucket</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e2107 ">Enter the path to the existing Amazon S3 location to
+                                    <td class="entry cellrowborder" headers="d691084e2107 ">Enter the path to the existing Amazon S3 location to
                                         write the staged files. Use the following format:
                                                 <p class="p"><code class="ph codeph"> &lt;bucket&gt;/&lt;prefix&gt;
                                         </code></p>
@@ -1333,9 +1333,9 @@ ORDER BY Id</code></pre>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e2104 ">Use Instance Profile</td>
+                                    <td class="entry cellrowborder" headers="d691084e2104 ">Use Instance Profile</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e2107 ">Select to use the instance profile assigned to the EC2
+                                    <td class="entry cellrowborder" headers="d691084e2107 ">Select to use the instance profile assigned to the EC2
                                         instance where Data Collector runs to connect to Amazon
                                             S3.<p class="p">If not using instance profiles, clear and enter
                                             your AWS secret access key pair.</p>
@@ -1380,25 +1380,25 @@ ORDER BY Id</code></pre>
                 <div class="itemgroup info">
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vh5_vws_ckb__table_ocx_mw2_jlb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d691209e2220">Property</th>
+                                    <th class="entry cellrowborder" id="d691084e2220">Property</th>
 
-                                    <th class="entry cellrowborder" id="d691209e2223">Value</th>
+                                    <th class="entry cellrowborder" id="d691084e2223">Value</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e2220 ">Table</td>
+                                    <td class="entry cellrowborder" headers="d691084e2220 ">Table</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e2223 ">Enter <kbd class="ph userinput">customers_cdc</kbd>.</td>
+                                    <td class="entry cellrowborder" headers="d691084e2223 ">Enter <kbd class="ph userinput">customers_cdc</kbd>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d691209e2220 ">Key Columns</td>
+                                    <td class="entry cellrowborder" headers="d691084e2220 ">Key Columns</td>
 
-                                    <td class="entry cellrowborder" headers="d691209e2223 ">Enter <kbd class="ph userinput">customer_id</kbd>.</td>
+                                    <td class="entry cellrowborder" headers="d691084e2223 ">Enter <kbd class="ph userinput">customer_id</kbd>.</td>
 
                                 </tr>
 

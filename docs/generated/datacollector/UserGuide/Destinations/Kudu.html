@@ -368,69 +368,69 @@
             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_gjj_dg3_jbb__table_ljg_nsr_cy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d163093e292">Data Collector Data Type</th>
+                            <th class="entry cellrowborder" id="d162968e292">Data Collector Data Type</th>
 
-                            <th class="entry cellrowborder" id="d163093e295">Kudu Data Type</th>
+                            <th class="entry cellrowborder" id="d162968e295">Kudu Data Type</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Boolean</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Boolean</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Bool</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Byte</td>
-
-                            <td class="entry cellrowborder" headers="d163093e295 ">Int8</td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">Bool</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Byte Array</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Byte</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Binary </td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">Int8</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Byte Array</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Decimal. Available in Kudu version 1.7 and later. If using an
+                            <td class="entry cellrowborder" headers="d162968e295 ">Binary </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Decimal</td>
+
+                            <td class="entry cellrowborder" headers="d162968e295 ">Decimal. Available in Kudu version 1.7 and later. If using an
                                 earlier version of Kudu, configure your pipeline to convert the
                                 Decimal data type to a different Kudu data type.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Double</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Double</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Double</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Float</td>
-
-                            <td class="entry cellrowborder" headers="d163093e295 ">Float</td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">Double</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Integer</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Float</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Int32</td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">Float</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Long</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Integer</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Int64 or Unixtime_micros. The destination determines the data
+                            <td class="entry cellrowborder" headers="d162968e295 ">Int32</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Long</td>
+
+                            <td class="entry cellrowborder" headers="d162968e295 ">Int64 or Unixtime_micros. The destination determines the data
                                 type to use based on the mapped Kudu column. <p class="p">The <span class="ph">Data Collector</span> Long data type stores millisecond values. The Kudu
                                     Unixtime_micros data type stores microsecond values. When
                                     converting to the Unixtime_micros data type, the destination
@@ -441,16 +441,16 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">Short</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">Short</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">Int16</td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">Int16</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d163093e292 ">String</td>
+                            <td class="entry cellrowborder" headers="d162968e292 ">String</td>
 
-                            <td class="entry cellrowborder" headers="d163093e295 ">String</td>
+                            <td class="entry cellrowborder" headers="d162968e295 ">String</td>
 
                         </tr>
 
@@ -524,39 +524,39 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__d28e7374" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d163093e545">General Property</th>
+                                    <th class="entry cellrowborder" id="d162968e545">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d163093e548">Description</th>
+                                    <th class="entry cellrowborder" id="d162968e548">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_c4x_tmh_4v__d28e7396">
-                                    <td class="entry cellrowborder" headers="d163093e545 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d162968e545 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Stage name.</td>
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr id="task_c4x_tmh_4v__d28e7405">
-                                    <td class="entry cellrowborder" headers="d163093e545 ">Description</td>
+                                    <td class="entry cellrowborder" headers="d162968e545 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr id="task_c4x_tmh_4v__d28e7414">
-                                    <td class="entry cellrowborder" headers="d163093e545 ">Stage Library</td>
+                                    <td class="entry cellrowborder" headers="d162968e545 ">Stage Library</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Library version that you want to use. </td>
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Library version that you want to use. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e545 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+                                    <td class="entry cellrowborder" headers="d162968e545 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -568,9 +568,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e545 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+                                    <td class="entry cellrowborder" headers="d162968e545 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -581,9 +581,9 @@
                                 </tr>
 
                                 <tr id="task_c4x_tmh_4v__d28e7453">
-                                    <td class="entry cellrowborder" headers="d163093e545 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d162968e545 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d163093e548 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d28e7461">
+                                    <td class="entry cellrowborder" headers="d162968e548 ">Error record handling for the stage: <ul class="ul" id="task_c4x_tmh_4v__d28e7461">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -608,25 +608,25 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__table_rk2_xqh_4v" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d163093e663">Kudu Property</th>
+                                    <th class="entry cellrowborder" id="d162968e663">Kudu Property</th>
 
-                                    <th class="entry cellrowborder" id="d163093e666">Description</th>
+                                    <th class="entry cellrowborder" id="d162968e666">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d163093e663 ">Kudu Masters</td>
+            <td class="entry cellrowborder" headers="d162968e663 ">Kudu Masters</td>
 
-            <td class="entry cellrowborder" headers="d163093e666 ">Comma-separated list of connection information for the Kudu masters to use. Use
+            <td class="entry cellrowborder" headers="d162968e666 ">Comma-separated list of connection information for the Kudu masters to use. Use
               the following format: <pre class="pre codeblock"><code>&lt;host&gt;:&lt;port&gt;</code></pre></td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d163093e663 ">Table Name</td>
+            <td class="entry cellrowborder" headers="d162968e663 ">Table Name</td>
 
-            <td class="entry cellrowborder" headers="d163093e666 ">Table to write to. Enter one of the following: <div class="p">
+            <td class="entry cellrowborder" headers="d162968e666 ">Table to write to. Enter one of the following: <div class="p">
                 <ul class="ul" id="task_c4x_tmh_4v__d57e7617">
                   <li class="li">Name of an existing Kudu table. If the table doesn't exist, the pipeline fails
                     to start.</li>
@@ -650,28 +650,28 @@
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e663 ">Field to Column Mapping</td>
+                                    <td class="entry cellrowborder" headers="d162968e663 ">Field to Column Mapping</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e666 ">Use to define specific mappings between record fields and
+                                    <td class="entry cellrowborder" headers="d162968e666 ">Use to define specific mappings between record fields and
                                         Kudu columns. By default, the destination writes field data
                                         to columns with matching names.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e663 "><a class="xref" href="Kudu.html#concept_dvg_vvj_wx">Default
+                                    <td class="entry cellrowborder" headers="d162968e663 "><a class="xref" href="Kudu.html#concept_dvg_vvj_wx">Default
                                             Operation</a></td>
 
-                                    <td class="entry cellrowborder" headers="d163093e666 ">Default CRUD operation to
+                                    <td class="entry cellrowborder" headers="d162968e666 ">Default CRUD operation to
                                         perform if the <code class="ph codeph">sdc.operation.type</code> record
                                         header attribute is not set. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e663 ">Change Log Format</td>
+                                    <td class="entry cellrowborder" headers="d162968e663 ">Change Log Format</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e666 ">If the incoming data is a change data capture log read
+                                    <td class="entry cellrowborder" headers="d162968e666 ">If the incoming data is a change data capture log read
                                         from the following source systems, select the source system
                                         so that the destination can determine the format of the
                                             log:<ul class="ul" id="task_c4x_tmh_4v__ul_add_3ph_vbb">
@@ -702,18 +702,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_c4x_tmh_4v__table_idr_prh_4v" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d163093e791">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d162968e791">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d163093e794">Description</th>
+                                    <th class="entry cellrowborder" id="d162968e794">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e791 ">External Consistency</td>
+                                    <td class="entry cellrowborder" headers="d162968e791 ">External Consistency</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e794 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
+                                    <td class="entry cellrowborder" headers="d162968e794 ">External consistency mode used to write to Kudu:<ul class="ul" id="task_c4x_tmh_4v__ul_hrm_wsh_4v">
                                             <li class="li">Client Propagated - Ensures that writes from a
                                                 single client are automatically externally
                                                 consistent. </li>
@@ -730,9 +730,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e791 ">Mutation Buffer Space</td>
+                                    <td class="entry cellrowborder" headers="d162968e791 ">Mutation Buffer Space</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e794 ">The size of the buffer that Kudu uses to write a single
+                                    <td class="entry cellrowborder" headers="d162968e794 ">The size of the buffer that Kudu uses to write a single
                                         batch of data, in records. Should be equal to or greater
                                         than the number of records in the batch passed from the
                                             pipeline.<p class="p">Default is 1000 records. </p>
@@ -741,9 +741,9 @@
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d163093e791 ">Maximum Number of Worker Threads</td>
+            <td class="entry cellrowborder" headers="d162968e791 ">Maximum Number of Worker Threads</td>
 
-            <td class="entry cellrowborder" headers="d163093e794 ">The maximum number of threads to use to perform processing for the stage.
+            <td class="entry cellrowborder" headers="d162968e794 ">The maximum number of threads to use to perform processing for the stage.
                 <p class="p">Default is 0, which is the Kudu default – twice the number of available cores on
                 the <span class="ph">Data Collector</span> machine. Use this
                 property to limit the number of threads that can be used. </p>
@@ -752,18 +752,18 @@
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e791 ">Operation Timeout (milliseconds)</td>
+                                    <td class="entry cellrowborder" headers="d162968e791 ">Operation Timeout (milliseconds)</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e794 ">Number of milliseconds to allow for operations such as
+                                    <td class="entry cellrowborder" headers="d162968e794 ">Number of milliseconds to allow for operations such as
                                             writes.<p class="p">Default is 10000, or 10 seconds.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e791 ">Admin Operation Timeout (milliseconds)</td>
+                                    <td class="entry cellrowborder" headers="d162968e791 ">Admin Operation Timeout (milliseconds)</td>
 
-                                    <td class="entry cellrowborder" headers="d163093e794 ">Number of milliseconds to allow for admin-type
+                                    <td class="entry cellrowborder" headers="d162968e794 ">Number of milliseconds to allow for admin-type
                                         operations, such as opening a table or getting a table
                                             schema.<p class="p">Default is 30000, or 30 seconds.</p>
 </td>
@@ -771,10 +771,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d163093e791 "><a class="xref" href="Kudu.html#concept_dvg_vvj_wx">Unsupported
+                                    <td class="entry cellrowborder" headers="d162968e791 "><a class="xref" href="Kudu.html#concept_dvg_vvj_wx">Unsupported
                                             Operation Handling</a></td>
 
-                                    <td class="entry cellrowborder" headers="d163093e794 ">Action to take when the
+                                    <td class="entry cellrowborder" headers="d162968e794 ">Action to take when the
                                         CRUD operation type defined in the
                                             <code class="ph codeph">sdc.operation.type</code> record header
                                         attribute is not supported:<ul class="ul" id="task_c4x_tmh_4v__d28e9808">

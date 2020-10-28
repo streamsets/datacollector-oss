@@ -735,33 +735,33 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
             origin have the standard event-related record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ibl_tj3_p3b__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d401169e907">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d401044e907">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d401169e910">Description</th>
+                            <th class="entry cellrowborder" id="d401044e910">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-              <td class="entry cellrowborder" headers="d401169e907 ">sdc.event.type</td>
+              <td class="entry cellrowborder" headers="d401044e907 ">sdc.event.type</td>
 
-              <td class="entry cellrowborder" headers="d401169e910 ">Event type, specified by the <code class="ph codeph">sdc.createEvent</code> method.</td>
+              <td class="entry cellrowborder" headers="d401044e910 ">Event type, specified by the <code class="ph codeph">sdc.createEvent</code> method.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d401169e907 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d401044e907 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d401169e910 ">Event version, specified by the <code class="ph codeph">sdc.createEvent</code>
+              <td class="entry cellrowborder" headers="d401044e910 ">Event version, specified by the <code class="ph codeph">sdc.createEvent</code>
                 method.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d401169e907 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d401044e907 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_ibl_tj3_p3b__d31e2883" headers="d401169e910 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_ibl_tj3_p3b__d31e2883" headers="d401044e910 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -851,40 +851,40 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d401169e1100">General Property</th>
+                                    <th class="entry cellrowborder" id="d401044e1100">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d401169e1103">Description</th>
+                                    <th class="entry cellrowborder" id="d401044e1103">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d401169e1100 ">Name</td>
+              <td class="entry cellrowborder" headers="d401044e1100 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d401169e1103 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d401169e1100 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d401169e1103 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d401044e1103 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d401169e1100 "><a class="xref" href="JythonScripting.html#concept_ukb_2b3_p3b">Produce Events</a></td>
+              <td class="entry cellrowborder" headers="d401044e1100 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d401169e1103 ">Generates event records when events occur. Use for
+              <td class="entry cellrowborder" headers="d401044e1103 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d401044e1100 "><a class="xref" href="JythonScripting.html#concept_ukb_2b3_p3b">Produce Events</a></td>
+
+                                    <td class="entry cellrowborder" headers="d401044e1103 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d401169e1100 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d401044e1100 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d401169e1103 ">Error record handling for the stage: <ul class="ul" id="task_ptn_xnj_l3b__d31e808">
+              <td class="entry cellrowborder" headers="d401044e1103 ">Error record handling for the stage: <ul class="ul" id="task_ptn_xnj_l3b__d31e808">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -909,18 +909,18 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_ugl_2lj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d401169e1192">Performance Property</th>
+                            <th class="entry cellrowborder" id="d401044e1192">Performance Property</th>
 
-                            <th class="entry cellrowborder" id="d401169e1195">Description</th>
+                            <th class="entry cellrowborder" id="d401044e1195">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d401169e1192 ">Batch Size</td>
+                            <td class="entry cellrowborder" headers="d401044e1192 ">Batch Size</td>
 
-                            <td class="entry cellrowborder" headers="d401169e1195 ">Number of records to generate in a single batch.<p class="p">The script
+                            <td class="entry cellrowborder" headers="d401044e1195 ">Number of records to generate in a single batch.<p class="p">The script
                                     accesses this value with the <code class="ph codeph">sdc.batchSize</code>
                                     constant and implements batch processing.</p>
 <p class="p">Default value is
@@ -930,9 +930,9 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d401169e1192 ">Number of Threads</td>
+                            <td class="entry cellrowborder" headers="d401044e1192 ">Number of Threads</td>
 
-                            <td class="entry cellrowborder" headers="d401169e1195 ">Number of threads that generate data concurrently in
+                            <td class="entry cellrowborder" headers="d401044e1195 ">Number of threads that generate data concurrently in
                                     parallel.<p class="p">The script accesses this value with the
                                         <code class="ph codeph">sdc.numThreads</code> constant and implements
                                     multithreaded processing.</p>
@@ -952,18 +952,18 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_lk2_glj_q3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d401169e1268">Script Property</th>
+                            <th class="entry cellrowborder" id="d401044e1268">Script Property</th>
 
-                            <th class="entry cellrowborder" id="d401169e1271">Description</th>
+                            <th class="entry cellrowborder" id="d401044e1271">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d401169e1268 ">User Script</td>
+                            <td class="entry cellrowborder" headers="d401044e1268 ">User Script</td>
 
-                            <td class="entry cellrowborder" headers="d401169e1271 ">Script that runs during pipeline execution.<div class="p">
+                            <td class="entry cellrowborder" headers="d401044e1271 ">Script that runs during pipeline execution.<div class="p">
                                     <div class="note tip"><span class="tiptitle">Tip:</span> To toggle full-screen editing, press either F11
                                         or Esc, depending on the operating system, when the cursor
                                         is in the editor.</div>
@@ -986,18 +986,18 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ptn_xnj_l3b__table_o1r_15p_l3b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d401169e1319">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d401044e1319">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d401169e1322">Description</th>
+                                    <th class="entry cellrowborder" id="d401044e1322">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d401169e1319 "><a class="xref" href="JythonScripting.html#concept_bp3_vjh_p3b">Record Type</a></td>
+                                    <td class="entry cellrowborder" headers="d401044e1319 "><a class="xref" href="JythonScripting.html#concept_bp3_vjh_p3b">Record Type</a></td>
 
-                                    <td class="entry cellrowborder" headers="d401169e1322 ">Record type to use during script
+                                    <td class="entry cellrowborder" headers="d401044e1322 ">Record type to use during script
                                     execution:<ul class="ul" id="task_ptn_xnj_l3b__d38e1623">
                                     <li class="li">Data Collector Records - Select when scripts use <span class="ph">Data Collector</span> Java API methods to access records.</li>
 
@@ -1011,9 +1011,9 @@ cur_batch.process(entity_name, str(offset))</code></pre></dd>
                                 </tr>
 
                                 <tr>
-                            <td class="entry cellrowborder" headers="d401169e1319 ">Parameters in Script</td>
+                            <td class="entry cellrowborder" headers="d401044e1319 ">Parameters in Script</td>
 
-                            <td class="entry cellrowborder" headers="d401169e1322 ">Script parameters and their values.<p class="p">The script accesses the
+                            <td class="entry cellrowborder" headers="d401044e1322 ">Script parameters and their values.<p class="p">The script accesses the
                                     values with the <code class="ph codeph">sdc.userParams</code>
                                 dictionary.</p>
 </td>

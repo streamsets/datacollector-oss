@@ -399,25 +399,25 @@
                 versions:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_sdj_d2b_2hb__table_kbg_5t1_2hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:40%" /><col style="width:60%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" style="text-align:left;" id="d537663e576"><span class="ph">Data Collector</span> Version</th>
+                            <th class="entry cellrowborder" style="text-align:left;" id="d537538e576"><span class="ph">Data Collector</span> Version</th>
 
-                            <th class="entry cellrowborder" style="text-align:left;" id="d537663e581">Supported Stage Library Version</th>
+                            <th class="entry cellrowborder" style="text-align:left;" id="d537538e581">Supported Stage Library Version</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d537663e576 "><span class="ph">Data Collector</span> 3.8.x and later</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d537538e576 "><span class="ph">Data Collector</span> 3.8.x and later</td>
 
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d537663e581 ">Teradata Enterprise Library 1.0.1</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d537538e581 ">Teradata Enterprise Library 1.0.1</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d537663e576 "><span class="ph">Data Collector</span> 3.7.x</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d537538e576 "><span class="ph">Data Collector</span> 3.7.x</td>
 
-                            <td class="entry cellrowborder" style="text-align:left;" headers="d537663e581 ">Teradata Enterprise Library 1.0.0</td>
+                            <td class="entry cellrowborder" style="text-align:left;" headers="d537538e581 ">Teradata Enterprise Library 1.0.0</td>
 
                         </tr>
 
@@ -1611,18 +1611,18 @@ Each thread runs one SQL query for the batches
         <div class="p">The origin can provide the following JDBC header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_xrx_11y_4y__table_p1c_q5c_kw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:40%" /><col style="width:60%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d537663e2316">JDBC Header Attribute</th>
+                            <th class="entry cellrowborder" id="d537538e2316">JDBC Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d537663e2319">Description</th>
+                            <th class="entry cellrowborder" id="d537538e2319">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 "> jdbc.tables</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 "> jdbc.tables</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 ">
+                            <td class="entry cellrowborder" headers="d537538e2319 ">
                                 <div class="p"><span class="ph" id="concept_xrx_11y_4y__d18e65">Provides a
                                         comma-separated list of source tables for the fields in the
                                         record.</span><div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers provide this
@@ -1635,25 +1635,25 @@ Each thread runs one SQL query for the batches
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 ">jdbc.partition</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 ">jdbc.partition</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 ">Provides the full offset key for the partition that produced the
+                            <td class="entry cellrowborder" headers="d537538e2319 ">Provides the full offset key for the partition that produced the
                                 record</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 ">jdbc.threadNumber</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 ">jdbc.threadNumber</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 ">Provides the number of the thread that produced the record.
+                            <td class="entry cellrowborder" headers="d537538e2319 ">Provides the number of the thread that produced the record.
                             </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 ">jdbc.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 ">jdbc.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 "><span class="ph" id="concept_xrx_11y_4y__d18e81">Provides
+                            <td class="entry cellrowborder" headers="d537538e2319 "><span class="ph" id="concept_xrx_11y_4y__d18e81">Provides
                                     the numeric value of the original SQL data type for each field
                                     in the record. See the <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY" target="_blank">Java documentation</a> for
                                     a list of the data types that correspond to numeric
@@ -1662,17 +1662,17 @@ Each thread runs one SQL query for the batches
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 ">jdbc.&lt;column name&gt;.precision</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 ">jdbc.&lt;column name&gt;.precision</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 ">Provides the original precision for all
+                            <td class="entry cellrowborder" headers="d537538e2319 ">Provides the original precision for all
                                 numeric and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2316 ">jdbc.&lt;column name&gt;.scale</td>
+                            <td class="entry cellrowborder" headers="d537538e2316 ">jdbc.&lt;column name&gt;.scale</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2319 ">Provides the original scale for all numeric
+                            <td class="entry cellrowborder" headers="d537538e2319 ">Provides the original scale for all numeric
                                 and decimal fields. </td>
 
                         </tr>
@@ -1709,42 +1709,42 @@ Each thread runs one SQL query for the batches
             data types:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_eqk_yrh_wkb__d18e152" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:16.666666666666664%" /><col style="width:25%" /><col style="width:58.333333333333336%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d537663e2464"><span class="ph">Data Collector</span> Data Type</th>
+                            <th class="entry cellrowborder" id="d537538e2464"><span class="ph">Data Collector</span> Data Type</th>
 
-                            <th class="entry cellrowborder" id="d537663e2469">Generated Field Attribute</th>
+                            <th class="entry cellrowborder" id="d537538e2469">Generated Field Attribute</th>
 
-                            <th class="entry cellrowborder" id="d537663e2472">Description</th>
+                            <th class="entry cellrowborder" id="d537538e2472">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2464 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d537538e2464 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2469 ">precision</td>
+                            <td class="entry cellrowborder" headers="d537538e2469 ">precision</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2472 ">Provides the original precision for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d537538e2472 ">Provides the original precision for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2464 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d537538e2464 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2469 ">scale</td>
+                            <td class="entry cellrowborder" headers="d537538e2469 ">scale</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2472 ">Provides the original scale for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d537538e2472 ">Provides the original scale for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2464 ">Datetime</td>
+                            <td class="entry cellrowborder" headers="d537538e2464 ">Datetime</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2469 ">nanoSeconds</td>
+                            <td class="entry cellrowborder" headers="d537538e2469 ">nanoSeconds</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2472 ">Provides the original nanoseconds for every timestamp
+                            <td class="entry cellrowborder" headers="d537538e2472 ">Provides the original nanoseconds for every timestamp
                                 column.</td>
 
                         </tr>
@@ -1813,18 +1813,18 @@ Each thread runs one SQL query for the batches
             origin have the following event-related record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_h4j_4zs_kz__EventHead-NoMoreData-table" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d537663e2660">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d537538e2660">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d537663e2663">Description</th>
+                            <th class="entry cellrowborder" id="d537538e2663">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d537663e2660 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d537538e2660 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d537663e2663 ">Event type. Uses the following type:<ul class="ul" id="concept_h4j_4zs_kz__ul_f4w_xrs_kz">
+                            <td class="entry cellrowborder" headers="d537538e2663 ">Event type. Uses the following type:<ul class="ul" id="concept_h4j_4zs_kz__ul_f4w_xrs_kz">
                                     <li class="li" id="concept_h4j_4zs_kz__noMoreData-bullet">no-more-data - Generated when the
                                         origin completes processing all data returned by the queries
                                         for all tables.</li>
@@ -1841,16 +1841,16 @@ Each thread runs one SQL query for the batches
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d537663e2660 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d537538e2660 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d537663e2663 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d537538e2663 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d537663e2660 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d537538e2660 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_h4j_4zs_kz__d31e2883" headers="d537663e2663 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_h4j_4zs_kz__d31e2883" headers="d537538e2663 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -1898,26 +1898,26 @@ Each thread runs one SQL query for the batches
                 <dd class="dd ddexpand">The schema-finished event record has the following additional fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_h4j_4zs_kz__table_dfv_3cc_12b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d537663e2768">Event Record Field</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d537538e2768">Event Record Field</th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d537663e2771">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d537538e2771">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2768 ">schema</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2768 ">schema</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2771 ">The schema that has returned no remaining data to be
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2771 ">The schema that has returned no remaining data to be
                                         processed.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2768 ">tables</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2768 ">tables</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2771 ">A list of the tables within the schema that have no
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2771 ">A list of the tables within the schema that have no
                                         remaining data.</td>
 
                                 </tr>
@@ -1937,26 +1937,26 @@ Each thread runs one SQL query for the batches
                 <dd class="dd ddexpand">The table-finished event record has the following additional fields:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_h4j_4zs_kz__table_qzm_lcc_12b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d537663e2822">Event Record Field</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d537538e2822">Event Record Field</th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d537663e2825">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d537538e2825">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2822 ">schema</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2822 ">schema</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2825 ">The schema associated with the table that has no
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2825 ">The schema associated with the table that has no
                                         remaining data to be processed.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2822 ">table</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2822 ">table</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537663e2825 ">The table that has no remaining data to be
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d537538e2825 ">The table that has no remaining data to be
                                         processed.</td>
 
                                 </tr>
@@ -1992,42 +1992,42 @@ Each thread runs one SQL query for the batches
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__table_ac1_hss_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d537663e2906">General Property</th>
+                                    <th class="entry cellrowborder" id="d537538e2906">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d537663e2909">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e2909">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2906 ">Name</td>
+              <td class="entry cellrowborder" headers="d537538e2906 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d537663e2909 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d537663e2906 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d537663e2909 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d537538e2909 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2906 ">
+              <td class="entry cellrowborder" headers="d537538e2906 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d537538e2909 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d537538e2906 ">
                                         <a class="xref" href="Teradata.html#concept_wjj_gzs_kz">Produce
                                         Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e2909 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d537538e2909 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2906 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d537538e2906 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d537663e2909 ">Error record handling for the stage: <ul class="ul" id="task_xrj_z5p_1fb__d31e808">
+              <td class="entry cellrowborder" headers="d537538e2909 ">Error record handling for the stage: <ul class="ul" id="task_xrj_z5p_1fb__d31e808">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -2051,18 +2051,18 @@ Each thread runs one SQL query for the batches
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__table_zpr_xs2_py" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d537663e2999">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d537538e2999">JDBC Property</th>
 
-                                    <th class="entry cellrowborder" id="d537663e3002">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e3002">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">JDBC Connection String</td>
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">JDBC Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 "><span class="ph">Connection string used to connect to
+                                    <td class="entry cellrowborder" headers="d537538e3002 "><span class="ph">Connection string used to connect to
                   the database.</span><p class="p">The default value is
                                                 <code class="ph codeph">jdbc:teradata://</code>. Build your
                                             connection string from the default value. For example,
@@ -2074,9 +2074,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">Fast Export</td>
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">Fast Export</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 ">Enables Teradata Fast Export functionality. When enabled,
+                                    <td class="entry cellrowborder" headers="d537538e3002 ">Enables Teradata Fast Export functionality. When enabled,
                                         the origin can quickly retrieve large amounts of data from a
                                         Teradata Database table or view, provided all Teradata data
                                         types in the source table or view support JDBC Fast Export.
@@ -2086,29 +2086,29 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Use Credentials</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Use Credentials</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 "><span class="ph" id="task_xrj_z5p_1fb__d31e3190">Enables entering credentials on the Credentials
+              <td class="entry cellrowborder" headers="d537538e3002 "><span class="ph" id="task_xrj_z5p_1fb__d31e3190">Enables entering credentials on the Credentials
                   tab. Use when you do not include credentials in the JDBC connection
                 string.</span></td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Queries per Second</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Queries per Second</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Maximum number of queries to run in a second across all partitions and tables.
+              <td class="entry cellrowborder" headers="d537538e3002 ">Maximum number of queries to run in a second across all partitions and tables.
                 Use 0 for no limit.<p class="p">Default is 10. </p>
 </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">
                                         <a class="xref" href="Teradata.html#concept_tz5_fw5_gz">Number of
                                             Threads</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 ">Number of threads the origin generates and uses for
+                                    <td class="entry cellrowborder" headers="d537538e3002 ">Number of threads the origin generates and uses for
                 multithreaded processing.<p class="p">Configure the Maximum Pool Size property on the Advanced
                   tab to be equal to or greater than this value.</p>
 </td>
@@ -2116,11 +2116,11 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">
                                         <a class="xref" href="Teradata.html#concept_n5t_zgx_4y">Per Batch
                                             Strategy</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 "><span class="ph">Strategy to create
+                                    <td class="entry cellrowborder" headers="d537538e3002 "><span class="ph">Strategy to create
                   each batch of data:</span><ul class="ul" id="task_xrj_z5p_1fb__ul_i1p_skd_1gb">
                   <li class="li">Switch Tables - When performing only multithreaded table processing, each
                     thread creates a batch of data from one table, and then switches to the next
@@ -2141,17 +2141,17 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Max Batch Size (records)</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Max Batch Size (records)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Maximum number of records to include in a batch.</td>
+              <td class="entry cellrowborder" headers="d537538e3002 ">Maximum number of records to include in a batch.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 "><a class="xref" href="Teradata.html#concept_n5t_zgx_4y">Batches from Result Set</a>
+                                    <td class="entry cellrowborder" headers="d537538e2999 "><a class="xref" href="Teradata.html#concept_n5t_zgx_4y">Batches from Result Set</a>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 ">Number of batches to create from the result set.
+                                    <td class="entry cellrowborder" headers="d537538e3002 ">Number of batches to create from the result set.
                 After a thread creates this number of batches, the database closes the result set
                 and then another thread can read from the same table.<p class="p">Use a positive integer to
                   set a limit on the number of batches created from the result set. Use -1 to opt
@@ -2164,9 +2164,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">Result Set Cache Size </td>
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">Result Set Cache Size </td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 ">Number of result sets to cache in the database. Use a
+                                    <td class="entry cellrowborder" headers="d537538e3002 ">Number of result sets to cache in the database. Use a
                 positive integer to set a limit on the number of cached result sets. Use -1 to opt
                 out of this property.<p class="p">By default, the origin caches an unlimited number of result
                   sets.</p>
@@ -2175,17 +2175,17 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Max Clob Size (characters)</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Max Clob Size (characters)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Maximum number of characters to be read in a Clob field. Larger data is
+              <td class="entry cellrowborder" headers="d537538e3002 ">Maximum number of characters to be read in a Clob field. Larger data is
                 truncated.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Max Blob Size (bytes)</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Max Blob Size (bytes)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">
+              <td class="entry cellrowborder" headers="d537538e3002 ">
                 <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
               </td>
@@ -2193,9 +2193,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Number of Retries on SQL Error</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Number of Retries on SQL Error</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Number of times a thread tries to read a batch of data after receiving an SQL
+              <td class="entry cellrowborder" headers="d537538e3002 ">Number of times a thread tries to read a batch of data after receiving an SQL
                 error. After a thread retries this number of times, the thread handles the error
                 based on the error handling configured for the origin.<p class="p">Use to handle transient
                   network or connection issues that prevent a thread from reading a batch of
@@ -2206,26 +2206,26 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Data Time Zone</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Data Time Zone</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Time zone to use to evaluate datetime-based offset column conditions. </td>
+              <td class="entry cellrowborder" headers="d537538e3002 ">Time zone to use to evaluate datetime-based offset column conditions. </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 "><a class="xref" href="Teradata.html#concept_h4j_4zs_kz">No-more-data Event
+                                    <td class="entry cellrowborder" headers="d537538e2999 "><a class="xref" href="Teradata.html#concept_h4j_4zs_kz">No-more-data Event
                                             Generation Delay (seconds)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 ">Number of seconds to delay generation of the
+                                    <td class="entry cellrowborder" headers="d537538e3002 ">Number of seconds to delay generation of the
                 no-more-data event after processing all rows. Use to allow time for additional data
                 to arrive before generating the no-more-data event. </td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Quote Character</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Quote Character</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Quote character to use around schema, table, and column names in the query.
+              <td class="entry cellrowborder" headers="d537538e3002 ">Quote character to use around schema, table, and column names in the query.
                 Select the character that the database uses to permit lower case, mixed-case, or
                 special characters in schema, table, or column names:<ul class="ul" id="task_xrj_z5p_1fb__d31e3338">
                   <li class="li">None - Uses no character around names in the query. For example:
@@ -2245,9 +2245,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">Convert Timestamp To String</td>
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">Convert Timestamp To String</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 "><span class="ph">Enables the origin to write
+                                    <td class="entry cellrowborder" headers="d537538e3002 "><span class="ph">Enables the origin to write
                   timestamps as string values rather than datetime values. Strings maintain the
                   precision stored in the source database.</span>
                                         <p class="p"><span class="ph">When writing timestamps to <span class="ph">Data Collector</span> date or time data
@@ -2258,9 +2258,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e2999 ">Fetch Size</td>
+                                    <td class="entry cellrowborder" headers="d537538e2999 ">Fetch Size</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3002 "><span class="ph">Maximum number of rows to fetch and store in memory on
+                                    <td class="entry cellrowborder" headers="d537538e3002 "><span class="ph">Maximum number of rows to fetch and store in memory on
                   the <span class="ph">Data Collector</span> machine. The
                   size cannot be zero.</span><p class="p"><span class="ph" id="task_xrj_z5p_1fb__d31e3391">Default is 1,000.</span></p>
 <p class="p">For more information about configuring a fetch
@@ -2270,9 +2270,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e2999 ">Additional JDBC Configuration Properties</td>
+              <td class="entry cellrowborder" headers="d537538e2999 ">Additional JDBC Configuration Properties</td>
 
-              <td class="entry cellrowborder" headers="d537663e3002 ">Additional JDBC configuration properties to use. To add properties, click
+              <td class="entry cellrowborder" headers="d537538e3002 ">Additional JDBC configuration properties to use. To add properties, click
                   <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
                   property names and values as expected by JDBC. </p>
 </td>
@@ -2293,18 +2293,18 @@ Each thread runs one SQL query for the batches
                         configuration</a>:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__table_cvl_qp5_qy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d537663e3320">Tables Property </th>
+                                    <th class="entry cellrowborder" id="d537538e3320">Tables Property </th>
 
-                                    <th class="entry cellrowborder" id="d537663e3323">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e3323">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Schema</a></td>
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Schema</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 "><span class="ph">Pattern of the schema names included in this
+                                    <td class="entry cellrowborder" headers="d537538e3323 "><span class="ph">Pattern of the schema names included in this
                   table configuration. Use the SQL LIKE syntax to define the pattern. Enter
                     <kbd class="ph userinput">%</kbd> to match all schemas. If you enter no value, the origin
                   only reads from tables without a specified schema.</span>
@@ -2313,10 +2313,10 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Table Name
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Table Name
                                             Pattern</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 "><span class="ph">Pattern of the table names to read for
+                                    <td class="entry cellrowborder" headers="d537538e3323 "><span class="ph">Pattern of the table names to read for
                   this table configuration. Use the SQL LIKE syntax to define the pattern.
                     </span><p class="p">Default is the percentage wildcard (%)
                   which matches all tables in the schema.</p>
@@ -2325,10 +2325,10 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Table Exclusion
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Table Exclusion
                                             Pattern </a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 ">Pattern of the table names to exclude
+                                    <td class="entry cellrowborder" headers="d537538e3323 ">Pattern of the table names to exclude
                 from being read for this table configuration. Use a Java-based regular expression,
                 or regex, to define the pattern.<p class="p">Leave empty if you do not need to exclude any
                   tables.</p>
@@ -2337,10 +2337,10 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Schema Exclusion
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_ank_41x_4y">Schema Exclusion
                                             Pattern </a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 ">Pattern of the schema names to exclude
+                                    <td class="entry cellrowborder" headers="d537538e3323 ">Pattern of the schema names to exclude
                 from being read for this table configuration. Use a Java-based regular expression,
                 or regex, to define the pattern.<p class="p">Leave empty if you do not need to exclude any
                   schemas.</p>
@@ -2349,10 +2349,10 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Override Offset
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Override Offset
                                             Columns</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 "><span class="ph">Determines whether to use the primary
+                                    <td class="entry cellrowborder" headers="d537538e3323 "><span class="ph">Determines whether to use the primary
                   keys or other columns as the offset columns for this table configuration. </span><p class="p">Select to override the primary keys and define
                   other offset columns. Clear to use existing primary keys as the offset columns.
                     </p>
@@ -2365,9 +2365,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3598" headers="d537663e3320 ">Offset Columns</td>
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3598" headers="d537538e3320 ">Offset Columns</td>
 
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3601" headers="d537663e3323 ">Offset columns to use. <p class="p" id="task_xrj_z5p_1fb__d31e3603">As a best practice, an offset column should be an
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3601" headers="d537538e3323 ">Offset columns to use. <p class="p" id="task_xrj_z5p_1fb__d31e3603">As a best practice, an offset column should be an
                   incremental and unique column that does not contain null values. Having an index
                   on this column is strongly encouraged since the underlying query uses an ORDER BY
                   and inequality operators on this column.</p>
@@ -2376,10 +2376,10 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Initial
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Initial
                                         Offset</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 ">Offset value to use for this table configuration
+                                    <td class="entry cellrowborder" headers="d537538e3323 ">Offset value to use for this table configuration
                 when the pipeline starts. Enter the primary key name or offset column name and
                 value. For Datetime columns, enter a Long value.<p class="p">When you define multiple offset
                   columns, you must define an initial offset value for each column, in the same
@@ -2389,19 +2389,19 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_xwr_bhm_nbb">Enable Non-Incremental Load</a></td>
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_xwr_bhm_nbb">Enable Non-Incremental Load</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 ">Enables non-incremental processing of
+                                    <td class="entry cellrowborder" headers="d537538e3323 ">Enables non-incremental processing of
                 tables that do not include a primary key or offset column. Do not use when requiring
                 multithreaded partition processing. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 ">Multithreaded Partition
+                                    <td class="entry cellrowborder" headers="d537538e3320 ">Multithreaded Partition
                 Processing Mode</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 "><span class="ph">Determines how the origin
+                                    <td class="entry cellrowborder" headers="d537538e3323 "><span class="ph">Determines how the origin
                   performs multithreaded processing. Select one of the following options:</span><ul class="ul" id="task_xrj_z5p_1fb__ul_btn_wfj_t1b">
                                             <li class="li">Off - The origin performs <a class="xref" href="Teradata.html#concept_tz5_fw5_gz">multithreaded table processing</a>.<p class="p">Can be
                                                   used to perform <a class="xref" href="Teradata.html#concept_xwr_bhm_nbb">non-incremental processing</a> of tables
@@ -2428,9 +2428,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3674" headers="d537663e3320 ">Partition Size</td>
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3674" headers="d537538e3320 ">Partition Size</td>
 
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3677" headers="d537663e3323 ">Range of values in the offset column to use to
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3677" headers="d537538e3323 ">Range of values in the offset column to use to
                 create partitions. <p class="p">If the offset column is a Datetime column, provide the
                   partition size in milliseconds. For example, to create a partition for every hour,
                   enter 3,600,000.</p>
@@ -2441,9 +2441,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3687" headers="d537663e3320 ">Max Partitions</td>
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3687" headers="d537538e3320 ">Max Partitions</td>
 
-              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3690" headers="d537663e3323 ">Maximum number of partitions to be maintained or
+              <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d31e3690" headers="d537538e3323 ">Maximum number of partitions to be maintained or
                 processed at one time for a single table. Adjusting this value can increase
                 throughput depending on various factors, including the machine running <span class="ph">Data Collector</span> and
                 the database server type and capacity.<p class="p">The minimum positive value is 2, to ensure
@@ -2459,10 +2459,10 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Offset Column
+                                    <td class="entry cellrowborder" headers="d537538e3320 "><a class="xref" href="Teradata.html#concept_yfx_mhx_4y" title="The Teradata Consumer origin uses an offset column and initial offset value to determine where to start reading data within tables and partitions.">Offset Column
                                             Conditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3323 ">Additional conditions that the origin
+                                    <td class="entry cellrowborder" headers="d537538e3323 ">Additional conditions that the origin
                 uses to determine where to start reading data for this table configuration. The
                 origin adds the defined condition to the WHERE clause of the SQL query. <p class="p">Use the
                   expression language to define the conditions. For example, you can use the
@@ -2485,26 +2485,26 @@ Each thread runs one SQL query for the batches
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__d23e5380" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr id="task_xrj_z5p_1fb__d23e5390">
-                                    <th class="entry cellrowborder" id="d537663e3574">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d537538e3574">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d537663e3577">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e3577">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d23e5404" headers="d537663e3574 ">Username</td>
+                                    <td class="entry cellrowborder" id="task_xrj_z5p_1fb__d23e5404" headers="d537538e3574 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3577 "><span class="ph" id="task_xrj_z5p_1fb__d23e5408">User name for the
+                                    <td class="entry cellrowborder" headers="d537538e3577 "><span class="ph" id="task_xrj_z5p_1fb__d23e5408">User name for the
                                             JDBC connection.</span></td>
 
                                 </tr>
 
                                 <tr id="task_xrj_z5p_1fb__d23e5412">
-                                    <td class="entry cellrowborder" headers="d537663e3574 ">Password</td>
+                                    <td class="entry cellrowborder" headers="d537538e3574 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3577 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xrj_z5p_1fb__d15e6386">To
+                                    <td class="entry cellrowborder" headers="d537538e3577 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xrj_z5p_1fb__d15e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
@@ -2525,26 +2525,26 @@ Each thread runs one SQL query for the batches
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__d23e5437" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d537663e3647">Legacy Drivers Property</th>
+                                    <th class="entry cellrowborder" id="d537538e3647">Legacy Drivers Property</th>
 
-                                    <th class="entry cellrowborder" id="d537663e3650">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e3650">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3647 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d537538e3647 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3650 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d537538e3650 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3647 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d537538e3647 ">Connection Health Test Query</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3650 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d537538e3650 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -2562,27 +2562,27 @@ Each thread runs one SQL query for the batches
                 <div class="itemgroup info">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xrj_z5p_1fb__table_z1c_hjj_kw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d537663e3703">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d537538e3703">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d537663e3706">Description</th>
+                                    <th class="entry cellrowborder" id="d537538e3706">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Maximum Pool Size</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Maximum Pool Size</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Maximum number of connections to create. Must be equal to or greater than the
+              <td class="entry cellrowborder" headers="d537538e3706 ">Maximum number of connections to create. Must be equal to or greater than the
                 value of the Number of Threads property.<p class="p">Default is 1.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Minimum Idle Connections</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Minimum Idle Connections</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Minimum number of connections to create and maintain. To define a fixed
+              <td class="entry cellrowborder" headers="d537538e3706 ">Minimum number of connections to create and maintain. To define a fixed
                 connection pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1.
                 </p>
 </td>
@@ -2590,9 +2590,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Connection Timeout (seconds)</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Connection Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Maximum time to wait for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d537538e3706 ">Maximum time to wait for a connection. Use a time constant in an expression to
                 define the time increment. <div class="p">Default is 30 seconds, defined as follows:
                   <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
@@ -2600,9 +2600,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Idle Timeout (seconds)</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Idle Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Maximum time to allow a connection to idle. Use a time constant in an
+              <td class="entry cellrowborder" headers="d537538e3706 ">Maximum time to allow a connection to idle. Use a time constant in an
                 expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
                   connections.</p>
 <p class="p">When the entered value is close to or more than the maximum
@@ -2615,9 +2615,9 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Max Connection Lifetime (seconds)</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Max Connection Lifetime (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Maximum lifetime for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d537538e3706 ">Maximum lifetime for a connection. Use a time constant in an expression to
                 define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
 <p class="p">When a maximum
                   lifetime is set, the minimum valid value is 30 minutes.</p>
@@ -2628,27 +2628,27 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Auto Commit</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Auto Commit</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
+              <td class="entry cellrowborder" headers="d537538e3706 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
                 commits the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Enforce Read-only Connection</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Enforce Read-only Connection</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
+              <td class="entry cellrowborder" headers="d537538e3706 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
                   enabled. Disabling this property is not recommended. </p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">Transaction Isolation</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">Transaction Isolation</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+              <td class="entry cellrowborder" headers="d537538e3706 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
                   default transaction isolation level set for the database. You can override the
                   database default by setting the level to any of the following:</p>
 <ul class="ul" id="task_xrj_z5p_1fb__d31e3867">
@@ -2666,17 +2666,17 @@ Each thread runs one SQL query for the batches
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3703 ">Init Query</td>
+                                    <td class="entry cellrowborder" headers="d537538e3703 ">Init Query</td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3706 "><span class="ph">SQL query to perform immediately after the stage
+                                    <td class="entry cellrowborder" headers="d537538e3706 "><span class="ph">SQL query to perform immediately after the stage
                   connects to the database. Use to set up the database session as needed.</span></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d537663e3703 "><a class="xref" href="Teradata.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables.">Initial Table Order Strategy</a></td>
+                                    <td class="entry cellrowborder" headers="d537538e3703 "><a class="xref" href="Teradata.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables.">Initial Table Order Strategy</a></td>
 
-                                    <td class="entry cellrowborder" headers="d537663e3706 ">Initial order used to read the tables:<ul class="ul" id="task_xrj_z5p_1fb__d31e3905">
+                                    <td class="entry cellrowborder" headers="d537538e3706 ">Initial order used to read the tables:<ul class="ul" id="task_xrj_z5p_1fb__d31e3905">
                   <li class="li" id="task_xrj_z5p_1fb__d31e3907">None - Reads the tables in the order that they are
                     listed in the database.</li>
 
@@ -2692,9 +2692,9 @@ Each thread runs one SQL query for the batches
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d537663e3703 ">On Unknown Type</td>
+              <td class="entry cellrowborder" headers="d537538e3703 ">On Unknown Type</td>
 
-              <td class="entry cellrowborder" headers="d537663e3706 ">Action to take when the origin encounters a record with an unsupported data
+              <td class="entry cellrowborder" headers="d537538e3706 ">Action to take when the origin encounters a record with an unsupported data
                   type:<ul class="ul" id="task_xrj_z5p_1fb__d31e3965">
                   <li class="li">Stop Pipeline - Stops the pipeline after completing processing the previous
                     records.</li>
