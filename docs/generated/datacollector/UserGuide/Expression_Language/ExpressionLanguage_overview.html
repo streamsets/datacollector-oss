@@ -331,52 +331,52 @@
                     <dd class="dd">The following table includes some examples of conditions:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_zhy_jmp_tt" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:55.55555555555556%" /><col style="width:44.44444444444444%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d268937e326">Sample Condition Expressions</th>
+                                        <th class="entry cellrowborder" id="d268812e326">Sample Condition Expressions</th>
 
-                                        <th class="entry cellrowborder" id="d268937e329">Description</th>
+                                        <th class="entry cellrowborder" id="d268812e329">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e326 ">${record:value('/payment_type') == 'CRD'}</td>
+                                        <td class="entry cellrowborder" headers="d268812e326 ">${record:value('/payment_type') == 'CRD'}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e329 ">In a Stream Selector, this condition routes records
+                                        <td class="entry cellrowborder" headers="d268812e329 ">In a Stream Selector, this condition routes records
                                             where the payment type is credit card to the
                                             stream.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e326 ">${record:value('[3]/State') == "MD"}</td>
+                                        <td class="entry cellrowborder" headers="d268812e326 ">${record:value('[3]/State') == "MD"}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e329 ">The same as above, but for a record in list
+                                        <td class="entry cellrowborder" headers="d268812e329 ">The same as above, but for a record in list
                                             format.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e326 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
+                                        <td class="entry cellrowborder" headers="d268812e326 ">${record:errorCode()=="FIELD_MERGER_02"}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e329 ">Used in a Stream Selector in an error pipeline, this
+                                        <td class="entry cellrowborder" headers="d268812e329 ">Used in a Stream Selector in an error pipeline, this
                                             condition routes records with the FIELD_MERGER_02 error
                                             to a stream that corrects the error.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e326 ">${record:value("[20]/value") == ""}</td>
+                                        <td class="entry cellrowborder" headers="d268812e326 ">${record:value("[20]/value") == ""}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e329 ">When used in an alert, triggers an alert when the
+                                        <td class="entry cellrowborder" headers="d268812e329 ">When used in an alert, triggers an alert when the
                                             specified field contains no data.</td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e326 ">${record:type('/ID')=STRING}</td>
+                                        <td class="entry cellrowborder" headers="d268812e326 ">${record:type('/ID')=STRING}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e329 ">In the Stream Selector, routes records where the ID
+                                        <td class="entry cellrowborder" headers="d268812e329 ">In the Stream Selector, routes records where the ID
                                             is a String to a branch that includes a Field Type
                                             Converter to convert the field to a numeric data
                                             type.</td>
@@ -396,32 +396,32 @@
                             expressions:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_zrt_lz5_gy" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:55.55555555555556%" /><col style="width:44.44444444444444%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d268937e404">Sample if-then-else Expressions</th>
+                                        <th class="entry cellrowborder" id="d268812e404">Sample if-then-else Expressions</th>
 
-                                        <th class="entry cellrowborder" id="d268937e407">Description</th>
+                                        <th class="entry cellrowborder" id="d268812e407">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e404 ">
+                                        <td class="entry cellrowborder" headers="d268812e404 ">
                                             <p class="p">${record:value('/gender')=='1'?'M':(record:value('/gender')=='2'?'F':'U')}</p>
 
                                         </td>
 
-                                        <td class="entry cellrowborder" headers="d268937e407 ">Replaces 1 with "M", 2 with "F", and any other value
+                                        <td class="entry cellrowborder" headers="d268812e407 ">Replaces 1 with "M", 2 with "F", and any other value
                                             with "U" for unknown. </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e404 ">
+                                        <td class="entry cellrowborder" headers="d268812e404 ">
                                             <p class="p">${record:value('/phone_home')!=""?record:value('/phone_home'):(record:value('/phone_mobile')!=""?record:value('/phone_mobile'):(record:value('/phone_work')!=""?record:value('/phone_work'):''))}</p>
 
                                         </td>
 
-                                        <td class="entry cellrowborder" headers="d268937e407 ">
+                                        <td class="entry cellrowborder" headers="d268812e407 ">
                                             <div class="p">The phone number to use for a  primary_phone field
                                                 based on phone numbers in the home_phone,
                                                 mobile_phone and work_phone fields:<ul class="ul" id="concept_r1w_tkp_tt__ul_plh_pbv_gy">
@@ -456,26 +456,26 @@
                     <dd class="dd">The following table includes some string manipulation examples:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_wnx_v5s_q5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:55.55555555555556%" /><col style="width:44.44444444444444%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d268937e478">Sample String Manipulation Expressions</th>
+                                        <th class="entry cellrowborder" id="d268812e478">Sample String Manipulation Expressions</th>
 
-                                        <th class="entry cellrowborder" id="d268937e481">Description</th>
+                                        <th class="entry cellrowborder" id="d268812e481">Description</th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e478 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
+                                        <td class="entry cellrowborder" headers="d268812e478 ">${record:valueOrDefault('/Payment', 'unknown')} </td>
 
-                                        <td class="entry cellrowborder" headers="d268937e481 ">Replaces missing or null values in the Payment field
+                                        <td class="entry cellrowborder" headers="d268812e481 ">Replaces missing or null values in the Payment field
                                             with "unknown". </td>
 
                                     </tr>
 
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e478 ">${str:toUpper(record:value('/STATE')}</td>
+                                        <td class="entry cellrowborder" headers="d268812e478 ">${str:toUpper(record:value('/STATE')}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e481 ">Capitalizes all strings in the STATE field.</td>
+                                        <td class="entry cellrowborder" headers="d268812e481 ">Capitalizes all strings in the STATE field.</td>
 
                                     </tr>
 
@@ -491,20 +491,20 @@
                     <dd class="dd">The following table includes an example of a numeric operation:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_r1w_tkp_tt__table_txw_dvs_q5" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:55.55555555555556%" /><col style="width:44.44444444444444%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                        <th class="entry cellrowborder" id="d268937e529">Sample Numeric Operations</th>
+                                        <th class="entry cellrowborder" id="d268812e529">Sample Numeric Operations</th>
 
-                                        <th class="entry cellrowborder" id="d268937e532"> </th>
+                                        <th class="entry cellrowborder" id="d268812e532"> </th>
 
                                     </tr>
 
                                 </thead>
 <tbody class="tbody">
                                     <tr>
-                                        <td class="entry cellrowborder" headers="d268937e529 ">${record:value('/total_amount') -
+                                        <td class="entry cellrowborder" headers="d268812e529 ">${record:value('/total_amount') -
                                             (record:value('/tip_amount') + record:value('/tolls') +
                                             record:value('/mta_tax'))}</td>
 
-                                        <td class="entry cellrowborder" headers="d268937e532 ">An expression that calculates trip revenue by
+                                        <td class="entry cellrowborder" headers="d268812e532 ">An expression that calculates trip revenue by
                                             subtracting the tip, taxes, and tolls from the total
                                             fare amount</td>
 

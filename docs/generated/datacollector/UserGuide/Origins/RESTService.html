@@ -817,18 +817,18 @@
                   generated response includes the following JSON keys or XML elements: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_mhb_sbv_s2b__d15e2672" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                          <th class="entry cellrowborder" style="text-align:left;" id="d482350e1152">Response Key or Element</th>
+                                          <th class="entry cellrowborder" style="text-align:left;" id="d482225e1152">Response Key or Element</th>
 
-                                          <th class="entry cellrowborder" style="text-align:left;" id="d482350e1155">Value</th>
+                                          <th class="entry cellrowborder" style="text-align:left;" id="d482225e1155">Value</th>
 
                                     </tr>
 
                               </thead>
 <tbody class="tbody">
                                     <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1152 ">httpStatusCode</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1152 ">httpStatusCode</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1155 ">The status code associated with the records in the
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1155 ">The status code associated with the records in the
                                                   response.<p class="p">If the records in the generated
                                                   response share the same status code, the code is
                                                   written to the httpStatusCode key or element. If
@@ -840,27 +840,27 @@
                                     </tr>
 
                                     <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1152 ">data</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1152 ">data</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1155 ">A list of records passed to the origin by the
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1155 ">A list of records passed to the origin by the
                                                 microservice destinations used in the
                                                 pipeline.</td>
 
                                     </tr>
 
                                     <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1152 ">error</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1152 ">error</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1155 ">A list of pipeline error records passed to the
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1155 ">A list of pipeline error records passed to the
                                                 origin by the Send Response to Origin pipeline error
                                                 handling. </td>
 
                                     </tr>
 
                                     <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1152 ">errorMessage</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1152 ">errorMessage</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e1155 ">The error message associated with the first error
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e1155 ">The error message associated with the first error
                                                 record in the response. <p class="p">Used only when the
                                                   response includes error records. </p>
 </td>
@@ -1214,32 +1214,32 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e986" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e1714">General Property</th>
+                                    <th class="entry cellrowborder" id="d482225e1714">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e1717">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e1717">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1714 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d482225e1714 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1717 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1714 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d482350e1717 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d482225e1717 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1714 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e1714 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1717 ">Error record handling for the stage: <ul class="ul" id="task_upp_lgp_q2b__d23e1034">
+                                    <td class="entry cellrowborder" headers="d482225e1717 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d482225e1714 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d482225e1717 ">Error record handling for the stage: <ul class="ul" id="task_upp_lgp_q2b__d23e1034">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1265,43 +1265,43 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__table_ugj_my3_4y" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e1791">HTTP Property</th>
+                                    <th class="entry cellrowborder" id="d482225e1791">HTTP Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e1794">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e1794">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 "><a class="xref" href="RESTService.html#concept_xls_51z_cmb" title="You can configure the origin to use Data Collector as an API gateway instead of listening for messages at an HTTP endpoint.">Use API Gateway</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 "><a class="xref" href="RESTService.html#concept_xls_51z_cmb" title="You can configure the origin to use Data Collector as an API gateway instead of listening for messages at an HTTP endpoint.">Use API Gateway</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Use <span class="ph">Data Collector</span> as an API gateway instead of listening at a port number
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Use <span class="ph">Data Collector</span> as an API gateway instead of listening at a port number
                                         for requests.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Gateway Service Name</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Gateway Service Name</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Service name for the pipeline. <span class="ph">Data Collector</span> routes requests that include the specified service name
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Service name for the pipeline. <span class="ph">Data Collector</span> routes requests that include the specified service name
                                         to the origin.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 "><a class="xref" href="RESTService.html#concept_cr3_n4l_2mb">Require Gateway Authentication</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 "><a class="xref" href="RESTService.html#concept_cr3_n4l_2mb">Require Gateway Authentication</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Requires the gateway to authenticate the user in each
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Requires the gateway to authenticate the user in each
                                         request. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 "><a class="xref" href="RESTService.html#concept_xff_n1l_2mb">HTTP Listening Port</a>
+                                    <td class="entry cellrowborder" headers="d482225e1791 "><a class="xref" href="RESTService.html#concept_xff_n1l_2mb">HTTP Listening Port</a>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Listening port to use. Not used when gateway
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Listening port to use. Not used when gateway
                                         authentication is enabled. <p class="p">When listening at a port, the
                                             port number must be included in the URL that the REST
                                             API client uses to pass data. </p>
@@ -1312,9 +1312,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 "><a class="xref" href="RESTService.html#concept_ttw_wtd_kz">List of Application IDs</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 "><a class="xref" href="RESTService.html#concept_ttw_wtd_kz">List of Application IDs</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Optional list of application IDs used to pass requests to
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Optional list of application IDs used to pass requests to
                                         the REST Service origin. When specified, REST API clients
                                         must pass one of the listed IDs in the request. <p class="p">The
                                             application ID can be passed in either the request
@@ -1324,9 +1324,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Max Concurrent Requests</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Max Concurrent Requests</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Maximum number of REST API clients allowed to send
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Maximum number of REST API clients allowed to send
                                         messages to the origin at one time. <p class="p">If the origin reaches
                                             the configured maximum and receives additional requests
                                             from different clients, it processes those requests as
@@ -1340,9 +1340,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Application ID in URL</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Application ID in URL</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Enables reading the application ID from the URL. Use when
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Enables reading the application ID from the URL. Use when
                                         REST API clients include the application ID in the URL query
                                         parameter instead of in the request header.<p class="p">For more
                                             information, see <a class="xref" href="RESTService.html#concept_ttw_wtd_kz">Using Application IDs</a>.</p>
@@ -1351,42 +1351,42 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Max Request Size (MB)</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Max Request Size (MB)</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Maximum size of the request body that the origin can
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Maximum size of the request body that the origin can
                                         process. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__KerberosSPNEGO">Use Kerberos with SPNEGO Authentication</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__KerberosSPNEGO">Use Kerberos with SPNEGO Authentication</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Performs Kerberos authentication over HTTP. Does not
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Performs Kerberos authentication over HTTP. Does not
                                         require <span class="ph">Data Collector</span> to be Kerberos-enabled.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Kerberos Realm</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Kerberos Realm</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Kerberos realm where the SPNEGO service is
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Kerberos realm where the SPNEGO service is
                                         located.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">HTTP-SPNEGO Principal</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">HTTP-SPNEGO Principal</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Kerberos service principal defined in the keytab file.
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Kerberos service principal defined in the keytab file.
                                         Should use the following
                                         format:<pre class="pre codeblock"><code>HTTP/&lt;fully qualified hostname&gt;@&lt;KerberosRealm&gt;</code></pre></td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1791 ">Keytab File</td>
+                                    <td class="entry cellrowborder" headers="d482225e1791 ">Keytab File</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1794 ">Path to the keytab file that contains the specified
+                                    <td class="entry cellrowborder" headers="d482225e1794 ">Path to the keytab file that contains the specified
                                         Kerberos service principal.</td>
 
                                 </tr>
@@ -1404,19 +1404,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e1993">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d482225e1993">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e1996">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e1996">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e1993 "><a class="xref" href="RESTService.html#concept_aaf_ss4_qy">Data
+                                    <td class="entry cellrowborder" headers="d482225e1993 "><a class="xref" href="RESTService.html#concept_aaf_ss4_qy">Data
                                             Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e1996 ">Type of data to be processed. Use one of the following
+                                    <td class="entry cellrowborder" headers="d482225e1996 ">Type of data to be processed. Use one of the following
                                             options:<ul class="ul" id="task_upp_lgp_q2b__ul_c52_h4g_sy">
                                             <li class="li">Avro</li>
 
@@ -1452,18 +1452,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e1732" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2079">Binary Property</th>
+                                    <th class="entry cellrowborder" id="d482225e2079">Binary Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2082">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2082">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2079 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e2079 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2082 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e2082 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1480,9 +1480,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2079 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e2079 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e2082 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e2082 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1491,9 +1491,9 @@
             </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e1764">
-                                    <td class="entry cellrowborder" headers="d482350e2079 ">Max Data Size (bytes)</td>
+                                    <td class="entry cellrowborder" headers="d482225e2079 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2082 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry cellrowborder" headers="d482225e2082 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -1511,18 +1511,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e1867" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2164">Datagram Properties</th>
+                                    <th class="entry cellrowborder" id="d482225e2164">Datagram Properties</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2167">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2167">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 ">Datagram Packet Format</td>
+                                    <td class="entry cellrowborder" headers="d482225e2164 ">Datagram Packet Format</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 ">Packet format of the data: <ul class="ul" id="task_upp_lgp_q2b__ul_q1q_yp4_4x">
+                                    <td class="entry cellrowborder" headers="d482225e2167 ">Packet format of the data: <ul class="ul" id="task_upp_lgp_q2b__ul_q1q_yp4_4x">
                                             <li class="li">collectd</li>
 
                                             <li class="li">NetFlow</li>
@@ -1537,18 +1537,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 ">TypesDB File Path</td>
+                                    <td class="entry cellrowborder" headers="d482225e2164 ">TypesDB File Path</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">Path to a user-provided types.db
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">Path to a user-provided types.db
                                             file. Overrides the default types.db file.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 ">Auth File</td>
+                                    <td class="entry cellrowborder" headers="d482225e2164 ">Auth File</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">Path to an optional authentication
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">Path to an optional authentication
                                             file. Use an authentication file to accept signed and
                                             encrypted data.</span><p class="p">For collectd data only.</p>
 </td>
@@ -1556,10 +1556,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 ">Convert Hi-Res Time &amp;
+                                    <td class="entry cellrowborder" headers="d482225e2164 ">Convert Hi-Res Time &amp;
                                         Interval</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">Converts the collectd high
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">Converts the collectd high
                                             resolution time format interval and timestamp to UNIX
                                             time, in milliseconds.</span><p class="p">For collectd data only.</p>
 </td>
@@ -1567,19 +1567,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 ">Exclude Interval</td>
+                                    <td class="entry cellrowborder" headers="d482225e2164 ">Exclude Interval</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">Excludes the interval field from
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">Excludes the interval field from
                                             output record.</span><p class="p">For collectd data only.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 "><span class="ph"><a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">Record Generation Mode </a></span>
+                                    <td class="entry cellrowborder" headers="d482225e2164 "><span class="ph"><a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_jdh_hxk_3bb">Record Generation Mode </a></span>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">Determines the type of
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">Determines the type of
                                             values to include in the record. Select one of the
                                             following options:</span><ul class="ul" id="task_upp_lgp_q2b__ul_zgh_m4l_3bb">
                                             <li class="li">Raw Only</li>
@@ -1595,10 +1595,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 "><span class="ph">Max Templates in
+                                    <td class="entry cellrowborder" headers="d482225e2164 "><span class="ph">Max Templates in
                                             Cache</span></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">The maximum number of
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">The maximum number of
                                             templates to store in the template cache. For more
                                             information about templates, see <a class="xref" href="../Data_Formats/NetFlow_Overview.html#concept_ivr_j1l_3bb">Caching NetFlow 9 Templates</a>.</span><p class="p"><span class="ph">Default is -1
                                                 for an unlimited cache size.</span></p>
@@ -1608,10 +1608,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e2164 "><span class="ph">Template Cache
+                                    <td class="entry cellrowborder" headers="d482225e2164 "><span class="ph">Template Cache
                                             Timeout (ms)</span></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2167 "><span class="ph">The maximum number
+                                    <td class="entry cellrowborder" headers="d482225e2167 "><span class="ph">The maximum number
                                             of milliseconds to cache an idle template. Templates
                                             unused for more than the specified time are evicted from
                                             the cache. For more information about templates, see
@@ -1623,16 +1623,16 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2164 ">Charset</td>
+              <td class="entry cellrowborder" headers="d482225e2164 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d482350e2167 ">Character encoding of the messages to be processed.</td>
+              <td class="entry cellrowborder" headers="d482225e2167 ">Character encoding of the messages to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2164 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d482225e2164 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2167 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d482225e2167 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1650,18 +1650,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e2024" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2364">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d482225e2364">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2367">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2367">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_upp_lgp_q2b__d23e2046">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Delimiter Format Type</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Delimiter Format Type</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_upp_lgp_q2b__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1695,17 +1695,17 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2059">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Indicates whether a file contains a header line, and
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2068">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format <kbd class="ph userinput">\uNNNN</kbd>, where
@@ -1722,9 +1722,9 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2093">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Multi Character Field Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Multi Character Field Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Characters that delimit fields for multi-character
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Characters that delimit fields for multi-character
                                         delimiter format.<p class="p">Default is two pipe characters
                                         (||).</p>
 </td>
@@ -1732,9 +1732,9 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2104">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Multi Character Line Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Multi Character Line Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Characters that delimit lines or records for
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Characters that delimit lines or records for
                                         multi-character delimiter format.<p class="p">Default is the newline
                                             character (\n).</p>
 </td>
@@ -1742,48 +1742,48 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2116">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Escape Character</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Escape Character</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Escape character for a custom or multi-character
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Escape character for a custom or multi-character
                                         delimiter format.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2125">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Quote character for a custom or multi-character delimiter
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Quote character for a custom or multi-character delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2134">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Enable Comments</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Enable Comments</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Allows commented data to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Allows commented data to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2143">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Comment Marker</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Comment Marker</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Character that marks a comment when comments are enabled
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Character that marks a comment when comments are enabled
                                         for custom delimiter format.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2152">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Lines to Skip</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Lines to Skip</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Number of lines to skip before reading data. </td>
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Number of lines to skip before reading data. </td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2364 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e2364 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2367 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e2367 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1800,9 +1800,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2364 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e2364 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e2367 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e2367 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1811,18 +1811,18 @@
             </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2172">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Allow Extra Columns</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Allow Extra Columns</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">When processing data with a header line, allows
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2181">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Extra Column Prefix</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Extra Column Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <code class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</code>. <p class="p">For
@@ -1833,9 +1833,9 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2201">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Max Record Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Max Record Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
@@ -1843,17 +1843,17 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2212">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Ignore Empty Lines</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Ignore Empty Lines</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Allows empty lines to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Allows empty lines to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2221">
-                                    <td class="entry cellrowborder" headers="d482350e2364 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Root field type to use:<ul class="ul" id="task_upp_lgp_q2b__d23e2229">
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Root field type to use:<ul class="ul" id="task_upp_lgp_q2b__d23e2229">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1869,31 +1869,31 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2240">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">Parse NULLs</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">Parse NULLs</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">Replaces the specified string constant with null
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2249">
-                                    <td class="entry cellrowborder" headers="d482350e2364 ">NULL Constant</td>
+                                    <td class="entry cellrowborder" headers="d482225e2364 ">NULL Constant</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2367 ">String constant to replace with null values.</td>
+                                    <td class="entry cellrowborder" headers="d482225e2367 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2364 ">Charset</td>
+              <td class="entry cellrowborder" headers="d482225e2364 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d482350e2367 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d482225e2367 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2364 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d482225e2364 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2367 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d482225e2367 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1911,18 +1911,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e2621" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2718">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d482225e2718">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2721">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2721">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_upp_lgp_q2b__d23e2643">
-                                    <td class="entry cellrowborder" headers="d482350e2718 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d482225e2718 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2721 ">Type of JSON content. Use one of the following options: <div class="p">
+                                    <td class="entry cellrowborder" headers="d482225e2721 ">Type of JSON content. Use one of the following options: <div class="p">
                                             <ul class="ul" id="task_upp_lgp_q2b__d23e2652">
                                                 <li class="li">Array of Objects </li>
 
@@ -1936,9 +1936,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2718 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e2718 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2721 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e2721 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1955,9 +1955,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2718 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e2718 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e2721 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e2721 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1966,9 +1966,9 @@
             </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e2673">
-                                    <td class="entry cellrowborder" headers="d482350e2718 ">Max Object Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d482225e2718 ">Max Object Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2721 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry cellrowborder" headers="d482225e2721 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1978,16 +1978,16 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2718 ">Charset</td>
+              <td class="entry cellrowborder" headers="d482225e2718 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d482350e2721 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d482225e2721 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2718 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d482225e2718 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2721 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d482225e2721 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -2005,18 +2005,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e3084" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2859">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d482225e2859">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2862">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2862">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_upp_lgp_q2b__d23e3106">
-                                    <td class="entry cellrowborder" headers="d482350e2859 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d482225e2859 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2862 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d482225e2862 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory,
                                             <code class="ph codeph">$SDC_RESOURCES</code>.<p class="p">For information about
                                             generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. <span class="ph">For more information about environment variables, see
@@ -2026,9 +2026,9 @@
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3125">
-                                    <td class="entry cellrowborder" headers="d482350e2859 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d482225e2859 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2862 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d482225e2862 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -2038,17 +2038,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3140">
-                                    <td class="entry cellrowborder" headers="d482350e2859 ">Delimited Messages</td>
+                                    <td class="entry cellrowborder" headers="d482225e2859 ">Delimited Messages</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e2862 ">Indicates if a message might include more than one
+                                    <td class="entry cellrowborder" headers="d482225e2862 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2859 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e2859 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2862 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e2862 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -2065,9 +2065,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2859 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e2859 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e2862 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e2862 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -2088,18 +2088,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e3288" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e2989">SDC Record Property</th>
+                                    <th class="entry cellrowborder" id="d482225e2989">SDC Record Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e2992">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e2992">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2989 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e2989 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e2992 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e2992 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -2116,9 +2116,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e2989 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e2989 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e2992 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e2992 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -2139,18 +2139,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__d23e3868" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e3065">XML Property</th>
+                                    <th class="entry cellrowborder" id="d482225e3065">XML Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e3068">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e3068">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_upp_lgp_q2b__d23e3890">
-                                    <td class="entry cellrowborder" headers="d482350e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
                                             the following:<ul class="ul" id="task_upp_lgp_q2b__d23e3900">
@@ -2177,9 +2177,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e3065 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d482225e3065 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d482350e3068 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
+              <td class="entry cellrowborder" headers="d482225e3068 ">The compression format of the files:<ul class="ul" id="task_upp_lgp_q2b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -2196,9 +2196,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e3065 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d482225e3065 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d482350e3068 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d482225e3068 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -2207,9 +2207,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3929">
-                                    <td class="entry cellrowborder" headers="d482350e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_qls_yfs_vkb" title="You can include the root element in the generated record by enabling the Preserve Root Element property.">Preserve Root Element</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_qls_yfs_vkb" title="You can include the root element in the generated record by enabling the Preserve Root Element property.">Preserve Root Element</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">Includes the root element in the generated
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">Includes the root element in the generated
                                             records.<p class="p">When omitting a delimiter to generate a
                                             single record, the root element is the root element of
                                             the XML document. </p>
@@ -2223,9 +2223,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3943">
-                                    <td class="entry cellrowborder" headers="d482350e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">Includes the XPath to each parsed XML element and XML
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p class="p">When not selected,
                                             this information is not included in the record. By
@@ -2243,9 +2243,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3961">
-                                    <td class="entry cellrowborder" headers="d482350e3065 ">Namespaces </td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 ">Namespaces </td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -2260,9 +2260,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e3986">
-                                    <td class="entry cellrowborder" headers="d482350e3065 ">Output Field Attributes</td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 ">Output Field Attributes</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">Includes XML attributes and namespace declarations in the
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">Includes XML attributes and namespace declarations in the
                                         record as field attributes. When not selected, XML
                                         attributes and namespace declarations are included in the
                                         record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
@@ -2276,9 +2276,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_upp_lgp_q2b__d23e4002">
-                                    <td class="entry cellrowborder" headers="d482350e3065 ">Max Record Length (chars) </td>
+                                    <td class="entry cellrowborder" headers="d482225e3065 ">Max Record Length (chars) </td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3068 ">
+                                    <td class="entry cellrowborder" headers="d482225e3068 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling. </p>
 
@@ -2290,16 +2290,16 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e3065 ">Charset</td>
+              <td class="entry cellrowborder" headers="d482225e3065 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d482350e3068 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d482225e3068 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d482350e3065 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d482225e3065 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d482350e3068 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d482225e3068 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -2323,49 +2323,49 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__table_isk_mgv_zz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d482350e3333">TLS Property</th>
+                                    <th class="entry cellrowborder" id="d482225e3333">TLS Property</th>
 
-                                    <th class="entry cellrowborder" id="d482350e3336">Description</th>
+                                    <th class="entry cellrowborder" id="d482225e3336">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__SSLTLS-AddOptions">Use TLS</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__SSLTLS-AddOptions">Use TLS</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Enables the use of TLS. </td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Require Client Authentication</td>
-
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Requires mutual SSL/TLS authentication.</td>
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Enables the use of TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Use Remote Keystore</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Require Client Authentication</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Enables loading the contents of the keystore from a
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Requires mutual SSL/TLS authentication.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Use Remote Keystore</td>
+
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Enables loading the contents of the keystore from a
                                         remote credential store or from values entered in the stage
                                         properties. For more information, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_q2c_hj2_1nb" title="You can configure stages to load the contents of the keystore or truststore from a remote credential store or from values entered in the stage properties. The stage builds the keystore or truststore from the private key and certificates retrieved from the credential store or entered in the stage properties.">Remote Keystore and Truststore</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Private Key</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Private Key</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Private key used in the remote keystore. Enter a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the key or
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Private key used in the remote keystore. Enter a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the key or
                                         enter the contents of the key.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Certificate Chain</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Certificate Chain</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Each PEM certificate used in the remote keystore. Enter a
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Each PEM certificate used in the remote keystore. Enter a
                                             <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the certificate
                                         or enter the contents of the certificate.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <strong class="ph b">Add</strong> icon to add additional
@@ -2375,9 +2375,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Keystore File</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Keystore File</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Path to the local keystore file. Enter an absolute path
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Path to the local keystore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
@@ -2387,9 +2387,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Keystore Type</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Keystore Type</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Type of keystore to use. Use one of the following
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Type of keystore to use. Use one of the following
                                             types:<ul class="ul" id="task_upp_lgp_q2b__d23e4886">
                                             <li class="li">Java Keystore File (JKS)</li>
 
@@ -2402,9 +2402,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Keystore Password</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Keystore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Password to the keystore file. A password is optional,
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Password to the keystore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
@@ -2415,27 +2415,27 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Keystore Key Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Keystore Key Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Algorithm to manage the keystore. <p class="p">Default is
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Algorithm to manage the keystore. <p class="p">Default is
                                                 <span class="ph">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Use Remote Truststore</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Use Remote Truststore</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Enables loading the contents of the truststore from a
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Enables loading the contents of the truststore from a
                                         remote credential store or from values entered in the stage
                                         properties. For more information, see <a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_q2c_hj2_1nb" title="You can configure stages to load the contents of the keystore or truststore from a remote credential store or from values entered in the stage properties. The stage builds the keystore or truststore from the private key and certificates retrieved from the credential store or entered in the stage properties.">Remote Keystore and Truststore</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Trusted Certificates</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Trusted Certificates</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Each PEM certificate used in the remote truststore. Enter
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Each PEM certificate used in the remote truststore. Enter
                                         a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the certificate
                                         or enter the contents of the certificate.<p class="p">Using <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <strong class="ph b">Add</strong> icon to add additional
@@ -2445,9 +2445,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Path to the local truststore file. Enter an absolute path
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Path to the local truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
@@ -2457,9 +2457,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Truststore Type</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Truststore Type</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS #12 (p12 file)</li>
@@ -2471,9 +2471,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Truststore Password</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Truststore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Password to the truststore file. A password is optional,
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
@@ -2484,25 +2484,25 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Truststore Trust Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_upp_lgp_q2b__d23e5063">SunX509</span>.</p>
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_upp_lgp_q2b__d23e5063">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Use Default Protocols</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Use Default Protocols</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
                                         different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">TLS protocols to use. To use a protocol other than the
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">TLS protocols to use. To use a protocol other than the
                                         default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -2511,17 +2511,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="../Pipeline_Configuration/SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Uses a default cipher suite for the SSL/TLS handshake. To
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Uses a default cipher suite for the SSL/TLS handshake. To
                                         use a different cipher suite, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 ">Cipher Suites</td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 ">Cipher Suites</td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="../Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -2533,9 +2533,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d482350e3333 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__SSLTLS-AddOptions">Basic Authentication Users</a></td>
+                                    <td class="entry cellrowborder" headers="d482225e3333 "><a class="xref" href="RESTService.html#concept_i1w_dk2_fmb__SSLTLS-AddOptions">Basic Authentication Users</a></td>
 
-                                    <td class="entry cellrowborder" headers="d482350e3336 ">
+                                    <td class="entry cellrowborder" headers="d482225e3336 ">
                                         <p class="p">List of user names and passwords that can be used for the
                                             connection. When listed, each request must include one
                                             of the specified user names and passwords. </p>
@@ -2563,26 +2563,26 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_upp_lgp_q2b__table_r3g_fty_q2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d482350e3748"><a class="xref" href="RESTService.html#concept_mhb_sbv_s2b">HTTP Response Property</a></th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d482225e3748"><a class="xref" href="RESTService.html#concept_mhb_sbv_s2b">HTTP Response Property</a></th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d482350e3753">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d482225e3753">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">Send Raw Response</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">Send Raw Response</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Enables the origin to send a response without an
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Enables the origin to send a response without an
                                                 envelope. </td>
 
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">Data Format</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">Data Format</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Data format of the payload. Select one of the
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Data format of the payload. Select one of the
                                                 following options: <ul class="ul" id="task_upp_lgp_q2b__d15e2564">
                                                   <li class="li">JSON</li>
 
@@ -2594,9 +2594,9 @@ Use a message type defined in the
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">JSON Content</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">JSON Content</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Method used to present multiple records in a JSON
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Method used to present multiple records in a JSON
                                                   response:<ul class="ul" id="task_upp_lgp_q2b__d15e2581">
                                                   <li class="li">JSON array of objects</li>
 
@@ -2610,36 +2610,36 @@ Use a message type defined in the
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">Charset</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">Charset</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Character set of the request body in a JSON
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Character set of the request body in a JSON
                                                 response. Available for the JSON data
                                                 format.</td>
 
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">Pretty Format</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">Pretty Format</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Enables the origin to write XML responses with
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Enables the origin to write XML responses with
                                                 human readable indentation. Available for the XML
                                                 data format.</td>
 
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">Validate Schema</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">Validate Schema</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Enables the origin to validate XML responses
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Enables the origin to validate XML responses
                                                 against the provided schema. Available for the XML
                                                 data format. </td>
 
                                     </tr>
 
                                 <tr>
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3748 ">XML Schema</td>
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3748 ">XML Schema</td>
 
-                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482350e3753 ">Schema that the origin uses to validate XML
+                                          <td class="entry cellrowborder" style="text-align:left;" headers="d482225e3753 ">Schema that the origin uses to validate XML
                                                 responses. Available when validating schemas for the
                                                 XML data format.</td>
 

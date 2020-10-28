@@ -764,32 +764,32 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e986" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e957">General Property</th>
+                                    <th class="entry cellrowborder" id="d472321e957">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e960">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e960">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e957 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d472321e957 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e960 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d472446e957 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d472446e960 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d472321e960 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e957 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e957 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e960 ">Error record handling for the stage: <ul class="ul" id="task_jvp_f5l_r1b__d23e1034">
+                                    <td class="entry cellrowborder" headers="d472321e960 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d472321e957 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+
+                                    <td class="entry cellrowborder" headers="d472321e960 ">Error record handling for the stage: <ul class="ul" id="task_jvp_f5l_r1b__d23e1034">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -815,27 +815,27 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__table_v3q_nj4_v1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1034">Pub/Sub Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1034">Pub/Sub Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1037">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1037">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1034 ">Subscription ID</td>
+                                    <td class="entry cellrowborder" headers="d472321e1034 ">Subscription ID</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1037 ">Google Pub/Sub subscription ID to receive messages
+                                    <td class="entry cellrowborder" headers="d472321e1037 ">Google Pub/Sub subscription ID to receive messages
                                         from.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1034 "><a class="xref" href="PubSub.html#concept_rbq_fh4_v1b">Num
+                                    <td class="entry cellrowborder" headers="d472321e1034 "><a class="xref" href="PubSub.html#concept_rbq_fh4_v1b">Num
                                             Pipeline Runners</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1037 ">The number of threads that the origin generates and uses
+                                    <td class="entry cellrowborder" headers="d472321e1037 ">The number of threads that the origin generates and uses
                                         for multithreaded processing. Enter a positive integer or an
                                         expression that evaluates to a positive integer.<div class="p">By
                                             default, the origin uses the following expression to
@@ -850,19 +850,19 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1034 ">Max Batch Size (records)</td>
+                                    <td class="entry cellrowborder" headers="d472321e1034 ">Max Batch Size (records)</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1037 ">Maximum amount of records to include in a batch. Honors
+                                    <td class="entry cellrowborder" headers="d472321e1037 ">Maximum amount of records to include in a batch. Honors
                                         values up to the <span class="ph">Data Collector</span> maximum batch size. <p class="p">Default is 1000. The <span class="ph">Data Collector</span> default is 1000.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1034 "><a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">Max Batch
+                                    <td class="entry cellrowborder" headers="d472321e1034 "><a class="xref" href="Origins_overview.html#concept_ypd_vgr_5q">Max Batch
                                             Wait Time (ms)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1037 ">Amount of time the origin will wait to fill a batch
+                                    <td class="entry cellrowborder" headers="d472321e1037 ">Amount of time the origin will wait to fill a batch
                                         before sending an empty batch. </td>
 
                                 </tr>
@@ -883,25 +883,25 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__table_phz_fmp_wmb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1134">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1134">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1137">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1137">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1134 ">Project ID</td>
+                                    <td class="entry cellrowborder" headers="d472321e1134 ">Project ID</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1137 ">Project ID to connect to.</td>
+                                    <td class="entry cellrowborder" headers="d472321e1137 ">Project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1134 "><a class="xref" href="PubSub.html#concept_dp3_bh4_v1b">Credentials Provider</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e1134 "><a class="xref" href="PubSub.html#concept_dp3_bh4_v1b">Credentials Provider</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1137 ">Credentials to use:<ul class="ul" id="task_jvp_f5l_r1b__ul_tmm_2rp_v1b">
+                                    <td class="entry cellrowborder" headers="d472321e1137 ">Credentials to use:<ul class="ul" id="task_jvp_f5l_r1b__ul_tmm_2rp_v1b">
                                             <li class="li"><a class="xref" href="PubSub.html#concept_ovd_l5q_v1b">Default credentials provider</a> - <span class="ph">Uses Google Cloud default
                                                   credentials. </span></li>
 
@@ -920,9 +920,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1134 "><a class="xref" href="PubSub.html#concept_jqh_v5q_v1b">Credentials File Path (JSON) </a></td>
+                                    <td class="entry cellrowborder" headers="d472321e1134 "><a class="xref" href="PubSub.html#concept_jqh_v5q_v1b">Credentials File Path (JSON) </a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1137 ">Path to the Google Cloud service
+                                    <td class="entry cellrowborder" headers="d472321e1137 ">Path to the Google Cloud service
                                         account credentials file that the stage uses to connect. The
                                         credentials file must be a JSON file.<p class="p">Enter a path
                                             relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
@@ -932,9 +932,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1134 "><a class="xref" href="PubSub.html#concept_trq_prp_wmb">Credentials File Content (JSON)</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e1134 "><a class="xref" href="PubSub.html#concept_trq_prp_wmb">Credentials File Content (JSON)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1137 ">Contents of a Google Cloud service
+                                    <td class="entry cellrowborder" headers="d472321e1137 ">Contents of a Google Cloud service
                                         account credentials JSON file used to connect.<p class="p">Enter
                                             JSON-formatted credential information in plain text, or
                                             use an expression to call the information from <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or a <span class="ph"><span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential store.</a></span></span></p>
@@ -957,27 +957,27 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__table_dyp_lnp_v1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1267">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1267">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1270">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1270">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1267 ">Number of Subscribers</td>
+                                    <td class="entry cellrowborder" headers="d472321e1267 ">Number of Subscribers</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1270 ">Number of subscribers to spawn.<p class="p">Default is
+                                    <td class="entry cellrowborder" headers="d472321e1270 ">Number of subscribers to spawn.<p class="p">Default is
                                         1.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1267 ">Subscriber Thread Pool Size</td>
+                                    <td class="entry cellrowborder" headers="d472321e1267 ">Subscriber Thread Pool Size</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1270 ">Size of the thread pool for each subscriber. Enter a
+                                    <td class="entry cellrowborder" headers="d472321e1270 ">Size of the thread pool for each subscriber. Enter a
                                         positive integer or an expression that evaluates to a
                                         positive integer.<div class="p">By default, the origin uses the
                                             following expression to configure the property based on
@@ -988,9 +988,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1267 ">Custom Endpoint</td>
+                                    <td class="entry cellrowborder" headers="d472321e1267 ">Custom Endpoint</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1270 ">Optional endpoint to receive messages, entered in the
+                                    <td class="entry cellrowborder" headers="d472321e1270 ">Optional endpoint to receive messages, entered in the
                                         following
                                             format:<pre class="pre codeblock"><code>&lt;host name&gt;:&lt;port number&gt;</code></pre><p class="p">Use
                                             to test with a Cloud SDK emulator for Google
@@ -1012,19 +1012,19 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__table_hvy_pt3_vx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1344">Data Format Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1344">Data Format Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1347">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1347">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d472446e1344 "><a class="xref" href="PubSub.html#concept_vww_3h4_v1b">Data
+                                    <td class="entry cellrowborder" headers="d472321e1344 "><a class="xref" href="PubSub.html#concept_vww_3h4_v1b">Data
                                         Format</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1347 ">Type of data to be read. Use one of the following
+                                    <td class="entry cellrowborder" headers="d472321e1347 ">Type of data to be read. Use one of the following
                                             options:<ul class="ul" id="task_jvp_f5l_r1b__ul_www_ncj_vx">
                                             <li class="li">Avro</li>
 
@@ -1060,18 +1060,18 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e1412" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1431">Avro Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1431">Avro Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1434">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1434">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_jvp_f5l_r1b__d23e1434">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Avro Schema Location</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Avro Schema Location</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Location of the Avro schema definition to use when
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Location of the Avro schema definition to use when
                                         processing data:<ul class="ul" id="task_jvp_f5l_r1b__d23e1441">
                                             <li class="li">Message/Data Includes Schema - Use the schema in the
                                                 message.</li>
@@ -1091,9 +1091,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1456">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Avro Schema</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Avro Schema</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Avro schema definition used to process the data.
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Avro schema definition used to process the data.
                                         Overrides any existing schema definitions associated with
                                         the data. <p class="p">You can optionally use the
                                                 <code class="ph codeph">runtime:loadResource</code> function to
@@ -1104,9 +1104,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1470">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Schema Registry URLs</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Schema Registry URLs</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Confluent Schema Registry URLs used to look up the
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Confluent Schema Registry URLs used to look up the
                                         schema. To add a URL, click <span class="ph uicontrol">Add</span> and
                                         then enter the URL in the following
                                         format:<pre class="pre codeblock"><code>http://&lt;host name&gt;:&lt;port number&gt;</code></pre></td>
@@ -1114,9 +1114,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__Mess-row-BasicAuthUserInfo">
-              <td class="entry cellrowborder" headers="d472446e1431 ">Basic Auth User Info</td>
+              <td class="entry cellrowborder" headers="d472321e1431 ">Basic Auth User Info</td>
 
-              <td class="entry cellrowborder" headers="d472446e1434 ">User information needed to connect to Confluent Schema Registry when using
+              <td class="entry cellrowborder" headers="d472321e1434 ">User information needed to connect to Confluent Schema Registry when using
                 basic authentication. <p class="p">Enter the key and secret from the
                     <code class="ph codeph">schema.registry.basic.auth.user.info</code> setting in Schema Registry
                   using the following format: </p>
@@ -1131,9 +1131,9 @@ gcloud iam service-accounts keys create key.json --iam-account=my-account@my-pro
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1489">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Lookup Schema By</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Lookup Schema By</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Method used to look up the schema in Confluent Schema
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Method used to look up the schema in Confluent Schema
                                             Registry:<ul class="ul" id="task_jvp_f5l_r1b__d23e1496">
                                             <li class="li">Subject - Look up the specified Avro schema
                                                 subject.</li>
@@ -1150,9 +1150,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1511">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Schema Subject</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Schema Subject</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Avro schema subject to look up in Confluent Schema
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Avro schema subject to look up in Confluent Schema
                                             Registry.<p class="p">If the specified subject has multiple schema
                                             versions, the stage uses the latest schema version for
                                             that subject. To use an older version, find the
@@ -1164,9 +1164,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1525">
-                                    <td class="entry cellrowborder" headers="d472446e1431 ">Schema ID</td>
+                                    <td class="entry cellrowborder" headers="d472321e1431 ">Schema ID</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1434 ">Avro schema ID to look up in Confluent Schema
+                                    <td class="entry cellrowborder" headers="d472321e1434 ">Avro schema ID to look up in Confluent Schema
                                         Registry.</td>
 
                                 </tr>
@@ -1184,18 +1184,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e1732" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1599">Binary Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1599">Binary Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1602">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1602">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1599 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e1599 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e1602 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e1602 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1212,9 +1212,9 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1599 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e1599 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e1602 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e1602 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1223,9 +1223,9 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e1764">
-                                    <td class="entry cellrowborder" headers="d472446e1599 ">Max Data Size (bytes)</td>
+                                    <td class="entry cellrowborder" headers="d472321e1599 ">Max Data Size (bytes)</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1602 ">Maximum number of bytes in the message. Larger messages
+                                    <td class="entry cellrowborder" headers="d472321e1602 ">Maximum number of bytes in the message. Larger messages
                                         cannot be processed or written to error. </td>
 
                                 </tr>
@@ -1243,18 +1243,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e2024" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e1684">Delimited Property</th>
+                                    <th class="entry cellrowborder" id="d472321e1684">Delimited Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e1687">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e1687">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_jvp_f5l_r1b__d23e2046">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Delimiter Format Type</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Delimiter Format Type</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Delimiter format type. Use one of the following options:
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Delimiter format type. Use one of the following options:
                                             <ul class="ul" id="task_jvp_f5l_r1b__ul_s5z_b3z_3r">
                         <li class="li"><span class="ph uicontrol">Default CSV</span> - File that includes comma-separated
                               values. Ignores empty lines in the file.</li>
@@ -1288,17 +1288,17 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2059">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Header Line</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Header Line</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Indicates whether a file contains a header line, and
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Indicates whether a file contains a header line, and
                                         whether to use the header line.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2068">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Delimiter Character</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Delimiter Character</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Delimiter character for a custom delimiter format. Select
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Delimiter character for a custom delimiter format. Select
                                         one of the available options or use Other to enter a custom
                                             character.<p class="p">You can enter a Unicode control character
                                             using the format <kbd class="ph userinput">\uNNNN</kbd>, where
@@ -1315,9 +1315,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2093">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Multi Character Field Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Multi Character Field Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Characters that delimit fields for multi-character
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Characters that delimit fields for multi-character
                                         delimiter format.<p class="p">Default is two pipe characters
                                         (||).</p>
 </td>
@@ -1325,9 +1325,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2104">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Multi Character Line Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Multi Character Line Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Characters that delimit lines or records for
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Characters that delimit lines or records for
                                         multi-character delimiter format.<p class="p">Default is the newline
                                             character (\n).</p>
 </td>
@@ -1335,48 +1335,48 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2116">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Escape Character</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Escape Character</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Escape character for a custom or multi-character
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Escape character for a custom or multi-character
                                         delimiter format.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2125">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Quote Character</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Quote Character</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Quote character for a custom or multi-character delimiter
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Quote character for a custom or multi-character delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2134">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Enable Comments</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Enable Comments</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Allows commented data to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Allows commented data to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2143">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Comment Marker</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Comment Marker</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Character that marks a comment when comments are enabled
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Character that marks a comment when comments are enabled
                                         for custom delimiter format.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2152">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Lines to Skip</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Lines to Skip</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Number of lines to skip before reading data. </td>
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Number of lines to skip before reading data. </td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1684 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e1684 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e1687 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e1687 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1393,9 +1393,9 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1684 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e1684 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e1687 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e1687 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1404,18 +1404,18 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2172">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Allow Extra Columns</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Allow Extra Columns</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">When processing data with a header line, allows
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">When processing data with a header line, allows
                                         processing records with more columns than exist in the
                                         header line.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2181">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Extra Column Prefix</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Extra Column Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Prefix to use for any additional columns. Extra columns
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Prefix to use for any additional columns. Extra columns
                                         are named using the prefix and sequential increasing
                                         integers as follows:
                                             <code class="ph codeph">&lt;prefix&gt;&lt;integer&gt;</code>. <p class="p">For
@@ -1426,9 +1426,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2201">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Max Record Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Max Record Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Maximum length of a record in characters. Longer records
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Maximum length of a record in characters. Longer records
                                         are not read. <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
                         buffer size. For more information, see <a class="xref" href="Origins_overview.html#concept_svg_2zl_d1b">Maximum Record Size</a>.</span></p>
 </td>
@@ -1436,17 +1436,17 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2212">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Ignore Empty Lines</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Ignore Empty Lines</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Allows empty lines to be ignored for custom delimiter
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Allows empty lines to be ignored for custom delimiter
                                         format.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2221">
-                                    <td class="entry cellrowborder" headers="d472446e1684 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 "><a class="xref" href="../Data_Formats/Delimited.html#concept_zcg_bm4_fs">Root Field Type</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Root field type to use:<ul class="ul" id="task_jvp_f5l_r1b__d23e2229">
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Root field type to use:<ul class="ul" id="task_jvp_f5l_r1b__d23e2229">
                                             <li class="li">List-Map - Generates an indexed list of data.
                                                 Enables you to use standard functions to process
                                                 data. Use for new pipelines.</li>
@@ -1462,31 +1462,31 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2240">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">Parse NULLs</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">Parse NULLs</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">Replaces the specified string constant with null
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">Replaces the specified string constant with null
                                         values.</td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2249">
-                                    <td class="entry cellrowborder" headers="d472446e1684 ">NULL Constant</td>
+                                    <td class="entry cellrowborder" headers="d472321e1684 ">NULL Constant</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e1687 ">String constant to replace with null values.</td>
+                                    <td class="entry cellrowborder" headers="d472321e1687 ">String constant to replace with null values.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1684 ">Charset</td>
+              <td class="entry cellrowborder" headers="d472321e1684 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d472446e1687 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d472321e1687 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e1684 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d472321e1684 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d472446e1687 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d472321e1687 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1504,18 +1504,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e2621" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e2038">JSON Property</th>
+                                    <th class="entry cellrowborder" id="d472321e2038">JSON Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e2041">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e2041">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_jvp_f5l_r1b__d23e2643">
-                                    <td class="entry cellrowborder" headers="d472446e2038 ">JSON Content</td>
+                                    <td class="entry cellrowborder" headers="d472321e2038 ">JSON Content</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2041 ">Type of JSON content. Use one of the following options: <div class="p">
+                                    <td class="entry cellrowborder" headers="d472321e2041 ">Type of JSON content. Use one of the following options: <div class="p">
                                             <ul class="ul" id="task_jvp_f5l_r1b__d23e2652">
                                                 <li class="li">Array of Objects </li>
 
@@ -1529,9 +1529,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2038 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e2038 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2041 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e2041 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1548,9 +1548,9 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2038 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e2038 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e2041 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e2041 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1559,9 +1559,9 @@ Overrides any existing schema definitions associated
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e2673">
-                                    <td class="entry cellrowborder" headers="d472446e2038 ">Max Object Length (chars)</td>
+                                    <td class="entry cellrowborder" headers="d472321e2038 ">Max Object Length (chars)</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2041 ">Maximum number of characters in a JSON object. <p class="p">Longer
+                                    <td class="entry cellrowborder" headers="d472321e2041 ">Maximum number of characters in a JSON object. <p class="p">Longer
                                             objects are diverted to the pipeline for error handling.
                                                 </p>
 <p class="p"><span class="ph">This property can be limited by the <span class="ph">Data Collector</span> parser
@@ -1571,16 +1571,16 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2038 ">Charset</td>
+              <td class="entry cellrowborder" headers="d472321e2038 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d472446e2041 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d472321e2041 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2038 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d472321e2038 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2041 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d472321e2041 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1598,18 +1598,18 @@ Overrides any existing schema definitions associated
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e3084" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e2179">Protobuf Property</th>
+                                    <th class="entry cellrowborder" id="d472321e2179">Protobuf Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e2182">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e2182">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_jvp_f5l_r1b__d23e3106">
-                                    <td class="entry cellrowborder" headers="d472446e2179 ">Protobuf Descriptor File </td>
+                                    <td class="entry cellrowborder" headers="d472321e2179 ">Protobuf Descriptor File </td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2182 ">Descriptor file (.desc) to use. The descriptor file must
+                                    <td class="entry cellrowborder" headers="d472321e2182 ">Descriptor file (.desc) to use. The descriptor file must
                                         be in the <span class="ph">Data Collector</span> resources directory,
                                             <code class="ph codeph">$SDC_RESOURCES</code>.<p class="p">For information about
                                             generating the descriptor file, see <a class="xref" href="../Data_Formats/Protobuf-Prerequisites.html" title="Perform the following prerequisites before reading or writing protobuf data.">Protobuf Data Format Prerequisites</a>. <span class="ph">For more information about environment variables, see
@@ -1619,9 +1619,9 @@ Overrides any existing schema definitions associated
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3125">
-                                    <td class="entry cellrowborder" headers="d472446e2179 ">Message Type</td>
+                                    <td class="entry cellrowborder" headers="d472321e2179 ">Message Type</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2182 ">The fully-qualified name for the message type to use when
+                                    <td class="entry cellrowborder" headers="d472321e2182 ">The fully-qualified name for the message type to use when
                                         reading data.<p class="p">Use the following format:
                                                 <code class="ph codeph">&lt;package name&gt;.&lt;message
                                             type&gt;</code>. </p>
@@ -1631,17 +1631,17 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3140">
-                                    <td class="entry cellrowborder" headers="d472446e2179 ">Delimited Messages</td>
+                                    <td class="entry cellrowborder" headers="d472321e2179 ">Delimited Messages</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2182 ">Indicates if a message might include more than one
+                                    <td class="entry cellrowborder" headers="d472321e2182 ">Indicates if a message might include more than one
                                         protobuf message.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2179 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e2179 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2182 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e2182 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1658,9 +1658,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2179 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e2179 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e2182 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e2182 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1681,18 +1681,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e3288" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e2309">SDC Record Property</th>
+                                    <th class="entry cellrowborder" id="d472321e2309">SDC Record Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e2312">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e2312">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2309 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e2309 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2312 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e2312 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1709,9 +1709,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2309 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e2309 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e2312 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e2312 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1732,18 +1732,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e3495" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e2386">Text Property</th>
+                                    <th class="entry cellrowborder" id="d472321e2386">Text Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e2389">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e2389">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2386 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e2386 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2389 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e2389 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1760,9 +1760,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2386 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e2386 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e2389 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e2389 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1771,9 +1771,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3527">
-                                    <td class="entry cellrowborder" headers="d472446e2386 ">Max Line Length</td>
+                                    <td class="entry cellrowborder" headers="d472321e2386 ">Max Line Length</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2389 ">Maximum number of characters allowed for a line. Longer
+                                    <td class="entry cellrowborder" headers="d472321e2389 ">Maximum number of characters allowed for a line. Longer
                                         lines are truncated.<p class="p">Adds a boolean field to the record to
                                             indicate if it was truncated. The field name is
                                             Truncated. </p>
@@ -1784,38 +1784,38 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3540">
-                                    <td class="entry cellrowborder" headers="d472446e2386 "><a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Use Custom Delimiter</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e2386 "><a class="xref" href="../Data_Formats/TextCDelim.html#concept_lg2_gcg_jx">Use Custom Delimiter</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2389 ">Uses custom delimiters to define records instead of line
+                                    <td class="entry cellrowborder" headers="d472321e2389 ">Uses custom delimiters to define records instead of line
                                         breaks. </td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3550">
-                                    <td class="entry cellrowborder" headers="d472446e2386 ">Custom Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d472321e2386 ">Custom Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2389 ">One or more characters to use to define records. </td>
+                                    <td class="entry cellrowborder" headers="d472321e2389 ">One or more characters to use to define records. </td>
 
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3560">
-                                    <td class="entry cellrowborder" headers="d472446e2386 ">Include Custom Delimiter</td>
+                                    <td class="entry cellrowborder" headers="d472321e2386 ">Include Custom Delimiter</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2389 ">Includes delimiter characters in the record.</td>
+                                    <td class="entry cellrowborder" headers="d472321e2389 ">Includes delimiter characters in the record.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2386 ">Charset</td>
+              <td class="entry cellrowborder" headers="d472321e2386 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d472446e2389 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d472321e2389 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2386 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d472321e2386 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2389 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d472321e2389 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>
@@ -1833,18 +1833,18 @@ Use a message type defined in the
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_jvp_f5l_r1b__d23e3868" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d472446e2536">XML Property</th>
+                                    <th class="entry cellrowborder" id="d472321e2536">XML Property</th>
 
-                                    <th class="entry cellrowborder" id="d472446e2539">Description</th>
+                                    <th class="entry cellrowborder" id="d472321e2539">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_jvp_f5l_r1b__d23e3890">
-                                    <td class="entry cellrowborder" headers="d472446e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_tmc_4bc_dy">Delimiter Element</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">
                                         <div class="p">Delimiter to use to generate records. Omit a delimiter to
                                             treat the entire XML document as one record. Use one of
                                             the following:<ul class="ul" id="task_jvp_f5l_r1b__d23e3900">
@@ -1871,9 +1871,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2536 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
+              <td class="entry cellrowborder" headers="d472321e2536 "><a class="xref" href="../Data_Formats/DataFormats-Overview.html#concept_uxr_g52_qs" title="Origins and processors that read files can read uncompressed files, compressed files, archives, and compressed archives.">Compression Format </a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2539 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
+              <td class="entry cellrowborder" headers="d472321e2539 ">The compression format of the files:<ul class="ul" id="task_jvp_f5l_r1b__d31e1653">
                   <li class="li">None - Processes only uncompressed files.</li>
 
                   <li class="li">Compressed File - Processes files compressed by the supported compression
@@ -1890,9 +1890,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2536 ">File Name Pattern within Compressed Directory</td>
+              <td class="entry cellrowborder" headers="d472321e2536 ">File Name Pattern within Compressed Directory</td>
 
-              <td class="entry cellrowborder" headers="d472446e2539 ">For archive and compressed archive files, file name pattern that represents the
+              <td class="entry cellrowborder" headers="d472321e2539 ">For archive and compressed archive files, file name pattern that represents the
                 files to process within the compressed directory. You can use UNIX-style wildcards,
                 such as an asterisk or question mark. For example, *.json.<p class="p">Default is *, which
                   processes all files.</p>
@@ -1901,9 +1901,9 @@ Use a message type defined in the
             </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3929">
-                                    <td class="entry cellrowborder" headers="d472446e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_qls_yfs_vkb" title="You can include the root element in the generated record by enabling the Preserve Root Element property.">Preserve Root Element</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_qls_yfs_vkb" title="You can include the root element in the generated record by enabling the Preserve Root Element property.">Preserve Root Element</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">Includes the root element in the generated
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">Includes the root element in the generated
                                             records.<p class="p">When omitting a delimiter to generate a
                                             single record, the root element is the root element of
                                             the XML document. </p>
@@ -1917,9 +1917,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3943">
-                                    <td class="entry cellrowborder" headers="d472446e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 "><a class="xref" href="../Data_Formats/XMLDFormat.html#concept_w3k_1ch_qz">Include Field XPaths</a></td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">Includes the XPath to each parsed XML element and XML
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">Includes the XPath to each parsed XML element and XML
                                         attribute in field attributes. Also includes each namespace
                                         in an xmlns record header attribute. <p class="p">When not selected,
                                             this information is not included in the record. By
@@ -1937,9 +1937,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3961">
-                                    <td class="entry cellrowborder" headers="d472446e2536 ">Namespaces </td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 ">Namespaces </td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">Namespace prefix and URI to use when parsing the XML
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">Namespace prefix and URI to use when parsing the XML
                                         document. Define namespaces when the XML element being used
                                         includes a namespace prefix or when the XPath expression
                                         includes namespaces.<p class="p">For information about using
@@ -1954,9 +1954,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e3986">
-                                    <td class="entry cellrowborder" headers="d472446e2536 ">Output Field Attributes</td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 ">Output Field Attributes</td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">Includes XML attributes and namespace declarations in the
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">Includes XML attributes and namespace declarations in the
                                         record as field attributes. When not selected, XML
                                         attributes and namespace declarations are included in the
                                         record as fields.<div class="note note"><span class="notetitle">Note:</span> <span class="ph">Field attributes are automatically included in
@@ -1970,9 +1970,9 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr id="task_jvp_f5l_r1b__d23e4002">
-                                    <td class="entry cellrowborder" headers="d472446e2536 ">Max Record Length (chars) </td>
+                                    <td class="entry cellrowborder" headers="d472321e2536 ">Max Record Length (chars) </td>
 
-                                    <td class="entry cellrowborder" headers="d472446e2539 ">
+                                    <td class="entry cellrowborder" headers="d472321e2539 ">
                                         <p class="p">The maximum number of characters in a record. Longer
                                             records are diverted to the pipeline for error handling. </p>
 
@@ -1984,16 +1984,16 @@ Use a message type defined in the
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2536 ">Charset</td>
+              <td class="entry cellrowborder" headers="d472321e2536 ">Charset</td>
 
-              <td class="entry cellrowborder" headers="d472446e2539 ">Character encoding of the files to be processed.</td>
+              <td class="entry cellrowborder" headers="d472321e2539 ">Character encoding of the files to be processed.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d472446e2536 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
+              <td class="entry cellrowborder" headers="d472321e2536 "><a class="xref" href="../Pipeline_Design/ControlCharacters.html#concept_hfs_dkm_js" title="You can use several stages to remove control characters - such as escape or end-of-transmission characters - from data. Remove control characters to avoid creating invalid records.">Ignore Control Characters</a></td>
 
-              <td class="entry cellrowborder" headers="d472446e2539 ">Removes all ASCII control characters except for the tab, line feed, and
+              <td class="entry cellrowborder" headers="d472321e2539 ">Removes all ASCII control characters except for the tab, line feed, and
                 carriage return characters.</td>
 
             </tr>

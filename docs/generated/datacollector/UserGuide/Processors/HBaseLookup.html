@@ -314,33 +314,33 @@
             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_txl_x4s_bw__table_lh5_myy_bw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d630356e200">Lookup Parameter</th>
+                            <th class="entry cellrowborder" id="d630231e200">Lookup Parameter</th>
 
-                            <th class="entry cellrowborder" id="d630356e203">Description</th>
+                            <th class="entry cellrowborder" id="d630231e203">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d630356e200 ">Row</td>
+                            <td class="entry cellrowborder" headers="d630231e200 ">Row</td>
 
-                            <td class="entry cellrowborder" headers="d630356e203 ">The row to look up in HBase. </td>
+                            <td class="entry cellrowborder" headers="d630231e203 ">The row to look up in HBase. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d630356e200 ">Column</td>
+                            <td class="entry cellrowborder" headers="d630231e200 ">Column</td>
 
-                            <td class="entry cellrowborder" headers="d630356e203 ">The column of the row to use. The column must use the following
+                            <td class="entry cellrowborder" headers="d630231e203 ">The column of the row to use. The column must use the following
                                 format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre></td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d630356e200 ">Timestamp</td>
+                            <td class="entry cellrowborder" headers="d630231e200 ">Timestamp</td>
 
-                            <td class="entry cellrowborder" headers="d630356e203 ">The timestamp associated with the row and column. The timestamp
+                            <td class="entry cellrowborder" headers="d630231e203 ">The timestamp associated with the row and column. The timestamp
                                 must be a Datetime type.</td>
 
                         </tr>
@@ -574,32 +574,32 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__d180e6786" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d630356e599">General Property</th>
+                                    <th class="entry cellrowborder" id="d630231e599">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d630356e602">Description</th>
+                                    <th class="entry cellrowborder" id="d630231e602">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_z25_b3q_bw__d180e6808">
-                                    <td class="entry cellrowborder" headers="d630356e599 ">Name</td>
+                                    <td class="entry cellrowborder" headers="d630231e599 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e602 ">Stage name.</td>
+                                    <td class="entry cellrowborder" headers="d630231e602 ">Stage name.</td>
 
                                 </tr>
 
                                 <tr id="task_z25_b3q_bw__d180e6817">
-                                    <td class="entry cellrowborder" headers="d630356e599 ">Description</td>
+                                    <td class="entry cellrowborder" headers="d630231e599 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e602 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d630231e602 ">Optional description.</td>
 
                                 </tr>
 
                                 <tr id="task_z25_b3q_bw__d180e6826">
-                                    <td class="entry cellrowborder" headers="d630356e599 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e599 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e602 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d630231e602 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -611,9 +611,9 @@
                                 </tr>
 
                                 <tr id="task_z25_b3q_bw__d180e6840">
-                                    <td class="entry cellrowborder" headers="d630356e599 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e599 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e602 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d630231e602 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -624,9 +624,9 @@
                                 </tr>
 
                                 <tr id="task_z25_b3q_bw__d180e6855">
-                                    <td class="entry cellrowborder" headers="d630356e599 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e599 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e602 ">Error record handling for the stage: <ul class="ul" id="task_z25_b3q_bw__d180e6863">
+                                    <td class="entry cellrowborder" headers="d630231e602 ">Error record handling for the stage: <ul class="ul" id="task_z25_b3q_bw__d180e6863">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -653,18 +653,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__table_ns1_p1s_zv" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d630356e707">Lookup Property</th>
+                                    <th class="entry cellrowborder" id="d630231e707">Lookup Property</th>
 
-                                    <th class="entry cellrowborder" id="d630356e710">Description</th>
+                                    <th class="entry cellrowborder" id="d630231e710">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e707 ">Mode</td>
+            <td class="entry cellrowborder" headers="d630231e707 ">Mode</td>
 
-            <td class="entry cellrowborder" headers="d630356e710 ">Mode used to perform the lookups:<ul class="ul" id="task_z25_b3q_bw__d62e4170">
+            <td class="entry cellrowborder" headers="d630231e710 ">Mode used to perform the lookups:<ul class="ul" id="task_z25_b3q_bw__d62e4170">
                 <li class="li">Per Batch - Performs a bulk lookup of all keys in a batch. The processor
                   performs a single lookup for each batch.</li>
 
@@ -679,10 +679,10 @@
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e707 "><a class="xref" href="HBaseLookup.html#concept_txl_x4s_bw" title="When you define the lookup key, you specify the row and optionally the column and timestamp to look up in HBase.">Row
+                                    <td class="entry cellrowborder" headers="d630231e707 "><a class="xref" href="HBaseLookup.html#concept_txl_x4s_bw" title="When you define the lookup key, you specify the row and optionally the column and timestamp to look up in HBase.">Row
                                             Expression</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e710 ">Row to look up in HBase. Enter a row name or enter an
+                                    <td class="entry cellrowborder" headers="d630231e710 ">Row to look up in HBase. Enter a row name or enter an
                                         expression that defines the row.<div class="p">For example, enter the
                                             following expression to use the data in the
                                             department_id field as the
@@ -692,9 +692,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e707 ">Column Expression</td>
+                                    <td class="entry cellrowborder" headers="d630231e707 ">Column Expression</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e710 ">Optional column family and qualifier of the row for the
+                                    <td class="entry cellrowborder" headers="d630231e710 ">Optional column family and qualifier of the row for the
                                         lookup. Enter a column name or enter an expression that
                                         defines the column. The column name must use the following
                                             format:<pre class="pre codeblock"><code>&lt;column-family&gt;:&lt;qualifier&gt;</code></pre><p class="p">If
@@ -705,9 +705,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e707 ">Timestamp Expression</td>
+                                    <td class="entry cellrowborder" headers="d630231e707 ">Timestamp Expression</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e710 ">Optional timestamp of the row and column for the lookup.
+                                    <td class="entry cellrowborder" headers="d630231e710 ">Optional timestamp of the row and column for the lookup.
                                         Enter value with a Datetime type or an expression that
                                         evaluates to a Datetime type.<p class="p">If empty, the processor
                                             returns the value with the most recent
@@ -717,9 +717,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e707 ">Output Field</td>
+                                    <td class="entry cellrowborder" headers="d630231e707 ">Output Field</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e710 ">Name of the field in the record to pass the lookup value.
+                                    <td class="entry cellrowborder" headers="d630231e710 ">Name of the field in the record to pass the lookup value.
                                         You can specify an existing field or a new field. If the
                                         field does not exist, HBase Lookup creates the field.
                                     </td>
@@ -727,17 +727,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e707 "><a class="xref" href="HBaseLookup.html#concept_xvz_zjy_bw">Enable Local Caching</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e707 "><a class="xref" href="HBaseLookup.html#concept_xvz_zjy_bw">Enable Local Caching</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e710 ">Specifies whether to locally cache the returned key-value
+                                    <td class="entry cellrowborder" headers="d630231e710 ">Specifies whether to locally cache the returned key-value
               pairs.</td>
 
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e707 ">Maximum Entries to Cache</td>
+            <td class="entry cellrowborder" headers="d630231e707 ">Maximum Entries to Cache</td>
 
-            <td class="entry cellrowborder" headers="d630356e710 ">Maximum number of key-value pairs to cache. When the maximum number is reached,
+            <td class="entry cellrowborder" headers="d630231e710 ">Maximum number of key-value pairs to cache. When the maximum number is reached,
               the processor evicts the oldest key-value pairs from the cache. <p class="p">Default is -1,
                 which means unlimited.</p>
 </td>
@@ -745,9 +745,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e707 ">Eviction Policy Type</td>
+            <td class="entry cellrowborder" headers="d630231e707 ">Eviction Policy Type</td>
 
-            <td class="entry cellrowborder" headers="d630356e710 ">Policy used to evict key-value pairs from the local cache when the expiration
+            <td class="entry cellrowborder" headers="d630231e710 ">Policy used to evict key-value pairs from the local cache when the expiration
               time has passed:<ul class="ul" id="task_z25_b3q_bw__d62e4209">
                 <li class="li">Expire After Last Access - Measures the expiration time since the key-value pair
                   was last accessed by a read or a write.</li>
@@ -761,18 +761,18 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e707 ">Expiration Time</td>
+            <td class="entry cellrowborder" headers="d630231e707 ">Expiration Time</td>
 
-            <td class="entry cellrowborder" headers="d630356e710 ">Amount of time that a key-value pair can remain in the local cache without being
+            <td class="entry cellrowborder" headers="d630231e710 ">Amount of time that a key-value pair can remain in the local cache without being
               accessed or written to. <p class="p">Default is 1 second.</p>
 </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e707 ">Time Unit</td>
+            <td class="entry cellrowborder" headers="d630231e707 ">Time Unit</td>
 
-            <td class="entry cellrowborder" headers="d630356e710 ">Unit of time for the expiration time. <p class="p">Default is seconds.</p>
+            <td class="entry cellrowborder" headers="d630231e710 ">Unit of time for the expiration time. <p class="p">Default is seconds.</p>
 </td>
 
           </tr>
@@ -790,18 +790,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_z25_b3q_bw__table_wzb_wly_bw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d630356e876">HBase Property</th>
+                                    <th class="entry cellrowborder" id="d630231e876">HBase Property</th>
 
-                                    <th class="entry cellrowborder" id="d630356e879">Description</th>
+                                    <th class="entry cellrowborder" id="d630231e879">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e876 ">ZooKeeper Quorum</td>
+            <td class="entry cellrowborder" headers="d630231e876 ">ZooKeeper Quorum</td>
 
-            <td class="entry cellrowborder" headers="d630356e879 ">Comma-separated list of servers in the ZooKeeper quorum. Use the following
+            <td class="entry cellrowborder" headers="d630231e879 ">Comma-separated list of servers in the ZooKeeper quorum. Use the following
               format: <pre class="pre codeblock"><code>&lt;host&gt;.&lt;domain&gt;.com</code></pre><p class="p">To ensure a connection,
                 enter additional broker URIs.</p>
 </td>
@@ -809,23 +809,23 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e876 ">ZooKeeper Client Port</td>
+            <td class="entry cellrowborder" headers="d630231e876 ">ZooKeeper Client Port</td>
 
-            <td class="entry cellrowborder" headers="d630356e879 ">Port number clients use to connect to the ZooKeeper servers. </td>
-
-          </tr>
-
-                                <tr>
-            <td class="entry cellrowborder" headers="d630356e876 ">ZooKeeper Parent Znode</td>
-
-            <td class="entry cellrowborder" headers="d630356e879 ">Root node that contains all znodes used by the HBase cluster.</td>
+            <td class="entry cellrowborder" headers="d630231e879 ">Port number clients use to connect to the ZooKeeper servers. </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d630356e876 ">Table Name</td>
+            <td class="entry cellrowborder" headers="d630231e876 ">ZooKeeper Parent Znode</td>
 
-            <td class="entry cellrowborder" headers="d630356e879 ">Name of the HBase table to use. Enter a table name or a namespace and table name
+            <td class="entry cellrowborder" headers="d630231e879 ">Root node that contains all znodes used by the HBase cluster.</td>
+
+          </tr>
+
+                                <tr>
+            <td class="entry cellrowborder" headers="d630231e876 ">Table Name</td>
+
+            <td class="entry cellrowborder" headers="d630231e879 ">Name of the HBase table to use. Enter a table name or a namespace and table name
               as follows: &lt;namespace&gt;.&lt;tablename&gt;. <p class="p">If you do not enter a table name, HBase
                 uses the default namespace. </p>
 </td>
@@ -833,9 +833,9 @@
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e876 "><a class="xref" href="HBaseLookup.html#concept_nqg_lcy_bw" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase. By default, Data Collector uses the user account who started it to connect.">Kerberos Authentication</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e876 "><a class="xref" href="HBaseLookup.html#concept_nqg_lcy_bw" title="You can use Kerberos authentication to connect to HBase. When you use Kerberos authentication, Data Collector uses the Kerberos principal and keytab to connect to HBase. By default, Data Collector uses the user account who started it to connect.">Kerberos Authentication</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e879 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
+                                    <td class="entry cellrowborder" headers="d630231e879 ">Uses Kerberos credentials to connect to HBase.<p class="p">When
                 selected, uses the Kerberos principal and keytab defined in the <span class="ph">Data Collector</span> configuration file,
                   <code class="ph codeph">$SDC_CONF/sdc.properties</code>. </p>
 </td>
@@ -843,9 +843,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e876 "><a class="xref" href="HBaseLookup.html#concept_bzv_cdy_bw">HBase User</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e876 "><a class="xref" href="HBaseLookup.html#concept_bzv_cdy_bw">HBase User</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e879 ">The HBase user to use to look up data from HBase. When
+                                    <td class="entry cellrowborder" headers="d630231e879 ">The HBase user to use to look up data from HBase. When
                                         using this property, make sure HBase is configured
                                             appropriately.<p class="p">When not configured, the pipeline uses
                                             the currently logged in <span class="ph">Data Collector</span> user. </p>
@@ -855,9 +855,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e876 "><a class="xref" href="HBaseLookup.html#concept_nks_rdy_bw">HBase Configuration Directory</a></td>
+                                    <td class="entry cellrowborder" headers="d630231e876 "><a class="xref" href="HBaseLookup.html#concept_nks_rdy_bw">HBase Configuration Directory</a></td>
 
-                                    <td class="entry cellrowborder" headers="d630356e879 ">Location of the HDFS configuration files. <p class="p">For
+                                    <td class="entry cellrowborder" headers="d630231e879 ">Location of the HDFS configuration files. <p class="p">For
                 a Cloudera Manager installation, enter <code class="ph codeph">hbase-conf</code>. For all other
                 installations, use a directory or symlink within the <span class="ph">Data Collector</span> resources
                 directory.</p>
@@ -873,9 +873,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d630356e876 ">HBase Configuration</td>
+                                    <td class="entry cellrowborder" headers="d630231e876 ">HBase Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d630356e879 ">
+                                    <td class="entry cellrowborder" headers="d630231e879 ">
               <p class="p">Additional HBase configuration properties to use. </p>
 
               <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and define the property name

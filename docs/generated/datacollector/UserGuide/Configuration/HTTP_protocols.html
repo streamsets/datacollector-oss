@@ -540,18 +540,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_mhn_j55_52b__table_knc_1g3_1bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d53308e692"><span class="ph">Data Collector</span> HTTPS Property</th>
+                                    <th class="entry cellrowborder" id="d53183e692"><span class="ph">Data Collector</span> HTTPS Property</th>
 
-                                    <th class="entry cellrowborder" id="d53308e697">Description</th>
+                                    <th class="entry cellrowborder" id="d53183e697">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e692 ">sdc.base.http.url</td>
+                                    <td class="entry cellrowborder" headers="d53183e692 ">sdc.base.http.url</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e697 "><span class="ph">Data Collector</span> URL. If the property is uncommented and defined, modify
+                                    <td class="entry cellrowborder" headers="d53183e697 "><span class="ph">Data Collector</span> URL. If the property is uncommented and defined, modify
                                         to use the HTTPS protocol and the secure port number, for
                                                 example:<p class="p"><code class="ph codeph">sdc.base.http.url=https://myhost:18636</code></p>
 <p class="p">If
@@ -562,9 +562,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e692 ">https.port</td>
+                                    <td class="entry cellrowborder" headers="d53183e692 ">https.port</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e697 ">Secure port number for <span class="ph">Data Collector</span>. For example, 18636.<p class="p">Any number besides -1 enables the
+                                    <td class="entry cellrowborder" headers="d53183e697 ">Secure port number for <span class="ph">Data Collector</span>. For example, 18636.<p class="p">Any number besides -1 enables the
                                             secure port number.</p>
 <div class="note note"><span class="notetitle">Note:</span> When both the HTTP and HTTPS
                                             port properties are defined in the configuration file,
@@ -574,9 +574,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e692 ">https.keystore.path</td>
+                                    <td class="entry cellrowborder" headers="d53183e692 ">https.keystore.path</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e697 ">Path and name of the keystore file. Enter an absolute
+                                    <td class="entry cellrowborder" headers="d53183e697 ">Path and name of the keystore file. Enter an absolute
                                         path or a path relative to the <code class="ph codeph">$SDC_CONF</code>
                                             directory.<p class="p">In our example, we'd configure the property
                                             as follows:</p>
@@ -597,9 +597,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e692 ">https.keystore.password</td>
+                                    <td class="entry cellrowborder" headers="d53183e692 ">https.keystore.password</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e697 ">Password to open the keystore file. <span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
+                                    <td class="entry cellrowborder" headers="d53183e697 ">Password to open the keystore file. <span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
                         and then use a function to retrieve the password.</span><div class="p">In our example, we added the password to the
                                             default password text file used by <span class="ph">Data Collector</span>. So we'd simply use the default property value as
                                             follows:<pre class="pre codeblock"><code>https.keystore.password=${file("keystore-password.txt")}</code></pre></div>
@@ -711,18 +711,18 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wqf_c1w_52b__table_knc_1g3_1bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d53308e1016">Cluster Pipeline Keystore Property</th>
+                                    <th class="entry cellrowborder" id="d53183e1016">Cluster Pipeline Keystore Property</th>
 
-                                    <th class="entry cellrowborder" id="d53308e1019">Description</th>
+                                    <th class="entry cellrowborder" id="d53183e1019">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1016 ">https.cluster.keystore.path</td>
+                                    <td class="entry cellrowborder" headers="d53183e1016 ">https.cluster.keystore.path</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1019 ">Absolute path and file name of the keystore file on
+                                    <td class="entry cellrowborder" headers="d53183e1019 ">Absolute path and file name of the keystore file on
                                         worker nodes. The file must be in the same location on each
                                         worker node.<p class="p">In our example, we'd configure the property
                                             as follows:</p>
@@ -734,9 +734,9 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1016 ">https.cluster.keystore.password</td>
+                                    <td class="entry cellrowborder" headers="d53183e1016 ">https.cluster.keystore.password</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1019 ">Absolute path and name of the file that contains the
+                                    <td class="entry cellrowborder" headers="d53183e1019 ">Absolute path and name of the file that contains the
                                         password to the keystore file on the worker nodes. The file
                                         must be in the same location on each worker node.<div class="p">In our
                                             example, we'd configure the property as
@@ -760,18 +760,18 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_wqf_c1w_52b__table_db4_k9w_58b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d53308e1085">Cluster Pipeline Truststore Property</th>
+                                    <th class="entry cellrowborder" id="d53183e1085">Cluster Pipeline Truststore Property</th>
 
-                                    <th class="entry cellrowborder" id="d53308e1088">Description</th>
+                                    <th class="entry cellrowborder" id="d53183e1088">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1085 ">https.truststore.path</td>
+                                    <td class="entry cellrowborder" headers="d53183e1085 ">https.truststore.path</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1088 ">Path and name of the truststore file on the gateway node
+                                    <td class="entry cellrowborder" headers="d53183e1088 ">Path and name of the truststore file on the gateway node
                                         that stores certificates to trust the identity of the worker
                                         nodes. Enter the same path that you entered for the
                                         truststore file configured for <span class="ph">Data Collector</span>.<p class="p">In our example, we'd configure the property as
@@ -790,9 +790,9 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1085 ">https.truststore.password</td>
+                                    <td class="entry cellrowborder" headers="d53183e1085 ">https.truststore.password</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1088 ">Password or path and name of the file that contains the
+                                    <td class="entry cellrowborder" headers="d53183e1088 ">Password or path and name of the file that contains the
                                         password to the truststore file on the gateway node. Enter
                                         the same truststore password that you configured for <span class="ph">Data Collector</span>. <p class="p">If configuring a path to a password file, enter an
                                             absolute path or a path relative to the
@@ -805,9 +805,9 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1085 ">https.cluster.truststore.path</td>
+                                    <td class="entry cellrowborder" headers="d53183e1085 ">https.cluster.truststore.path</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1088 ">Absolute path and name of the truststore file on the
+                                    <td class="entry cellrowborder" headers="d53183e1088 ">Absolute path and name of the truststore file on the
                                         worker nodes that stores the certificate to trust the
                                         identity of the gateway node. The file must be in the same
                                         location on each worker node.<p class="p">In our example, we'd
@@ -820,9 +820,9 @@ ListenStream=0.0.0.0:18636</code></pre></div>
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d53308e1085 ">https.cluster.truststore.password</td>
+                                    <td class="entry cellrowborder" headers="d53183e1085 ">https.cluster.truststore.password</td>
 
-                                    <td class="entry cellrowborder" headers="d53308e1088 ">Absolute path and name of the file that contains the
+                                    <td class="entry cellrowborder" headers="d53183e1088 ">Absolute path and name of the file that contains the
                                         password to the truststore file on the worker nodes. The
                                         file must be in the same location on each worker node.<div class="p">In
                                             our example, we'd configure the property as

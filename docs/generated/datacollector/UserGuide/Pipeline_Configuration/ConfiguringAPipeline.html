@@ -300,18 +300,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_ryh_vfm_zs" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e158">Pipeline Property</th>
+                                    <th class="entry cellrowborder" id="d563155e158">Pipeline Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e161">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e161">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Title</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Title</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Title of the pipeline. <p class="p"><span class="ph">Data Collector</span> uses the alphanumeric characters
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Title of the pipeline. <p class="p"><span class="ph">Data Collector</span> uses the alphanumeric characters
                                             entered for the pipeline title as a prefix for the
                                             generated pipeline ID. For example, if you enter
                                                 <kbd class="ph userinput">My Pipeline *&amp;%&amp;^^
@@ -328,16 +328,16 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Description</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Optional description of the pipeline.</td>
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Optional description of the pipeline.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Labels</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Labels</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Optional labels to assign to the pipeline. <p class="p">Use labels
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Optional labels to assign to the pipeline. <p class="p">Use labels
                                             to group similar pipelines. For example, you might want
                                             to group pipelines by database schema or by the test or
                                             production environment. </p>
@@ -352,9 +352,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode.">Execution Mode</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e158 "><a class="xref" href="../Cluster_Mode/ClusterPipelines.html#concept_hmh_kfn_1s" title="A cluster pipeline is a pipeline that runs in cluster execution mode. You can run a pipeline in standalone execution mode or cluster execution mode.">Execution Mode</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Execution mode of the pipeline:<ul class="ul" id="task_xlv_jdw_kq__ul_bn5_jsz_zr">
                                             <li class="li">Standalone - A single <span class="ph">Data Collector</span> process runs the pipeline.</li>
 
                                             <li class="li">Cluster Batch - <span class="ph">Data Collector</span> spawns additional workers as needed to process
@@ -384,9 +384,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><span class="ph">Data Collector Edge</span> URL</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 "><span class="ph">Data Collector Edge</span> URL</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">
+                                    <td class="entry cellrowborder" headers="d563155e161 ">
                                         <p class="p">For edge pipelines, the URL to the <span class="ph">SDC Edge</span> installation. Used when you directly publish and
                                             manage the pipeline on an <span class="ph">SDC Edge</span> that is not registered with <span class="ph">Control Hub</span>. You can leave the default value when you publish the
                                             pipeline to <span class="ph">Control Hub</span>, add the pipeline to a job, and start the job on a
@@ -400,9 +400,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">Delivery Guarantee</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e158 "><a class="xref" href="../Pipeline_Design/DatainMotion.html#concept_ffz_hhw_kq" title="When you configure a pipeline, you define how you want data to be treated: Do you want to prevent the loss of data or the duplication of data?">Delivery Guarantee</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Determines how <span class="ph">Data Collector</span> handles data after an unexpected event causes the
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Determines how <span class="ph">Data Collector</span> handles data after an unexpected event causes the
                                         pipeline to stop running:<ul class="ul" id="task_xlv_jdw_kq__ul_b4v_51m_sq">
                                             <li class="li">At Least Once - Ensures all data is processed and
                                                 written to the destination. Might result in
@@ -419,9 +419,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><a class="xref" href="../Pipeline_Design/TestOrigin.html#concept_sgt_s5v_g2b" title="A test origin can provide test data for data preview to aid in pipeline development. In Control Hub, you can also use test origins when developing pipeline fragments. Test origins are not used when running a pipeline.">Test Origin</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e158 "><a class="xref" href="../Pipeline_Design/TestOrigin.html#concept_sgt_s5v_g2b" title="A test origin can provide test data for data preview to aid in pipeline development. In Control Hub, you can also use test origins when developing pipeline fragments. Test origins are not used when running a pipeline.">Test Origin</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">A virtual origin to provide test data for data preview.
+                                    <td class="entry cellrowborder" headers="d563155e161 ">A virtual origin to provide test data for data preview.
                                         Only used when the Test Origin option is selected in the
                                         Preview Configuration dialog box. <p class="p">To enable the use of a
                                             test origin, select the origin to access the test data,
@@ -434,9 +434,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Start Event</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Start Event</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Determines how the start event is handled. Select one of
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Determines how the start event is handled. Select one of
                                         the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_jmt_hht_51b">
                                             <li class="li">Discard - Use when you don't want to use the
                                                 event.</li>
@@ -459,9 +459,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Stop Event</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Stop Event</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Determines how the stop event is handled. Select one of
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Determines how the stop event is handled. Select one of
                                         the following options:<ul class="ul" id="task_xlv_jdw_kq__ul_gcx_5ht_51b">
                                             <li class="li">Discard - Use when you don't want to use the
                                                 event.</li>
@@ -484,19 +484,19 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><a class="xref" href="Retry.html#concept_cgm_ktz_2t" title="By default, when Data Collector encounters a stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That is, it waits a period of time, and then tries again to run the pipeline.">Retry Pipeline
+                                    <td class="entry cellrowborder" headers="d563155e158 "><a class="xref" href="Retry.html#concept_cgm_ktz_2t" title="By default, when Data Collector encounters a stage-level error that might cause a standalone pipeline to fail, it retries the pipeline. That is, it waits a period of time, and then tries again to run the pipeline.">Retry Pipeline
                                             on Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Retries the pipeline upon error. <p class="p"><span class="ph"><img class="image" id="task_xlv_jdw_kq__d135e198" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not available in <span class="ph">Data Collector Edge</span> pipelines.</span>
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Retries the pipeline upon error. <p class="p"><span class="ph"><img class="image" id="task_xlv_jdw_kq__d135e198" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not available in <span class="ph">Data Collector Edge</span> pipelines.</span>
                                         </p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Retry Attempts</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Retry Attempts</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Number of retries attempted. Use -1 to retry
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Number of retries attempted. Use -1 to retry
                                         indefinitely. <p class="p">The wait time between retries starts at 15
                                             seconds and doubles until reaching five
                                                 minutes.</p>
@@ -506,10 +506,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 "><a class="xref" href="PipelineRateLimit.html#concept_erj_qg4_qv" title="You can limit the rate at which a Data Collector pipeline processes records by defining the maximum number of records that the pipeline can read in a second.">Rate Limit (records /
+                                    <td class="entry cellrowborder" headers="d563155e158 "><a class="xref" href="PipelineRateLimit.html#concept_erj_qg4_qv" title="You can limit the rate at which a Data Collector pipeline processes records by defining the maximum number of records that the pipeline can read in a second.">Rate Limit (records /
                                             sec)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Maximum number of records that the pipeline can read in a
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Maximum number of records that the pipeline can read in a
                                         second. Use 0 or no value to set no rate limit.<p class="p">Default is
                                             0.</p>
 <p class="p"><span class="ph"><img class="image" id="task_xlv_jdw_kq__d135e198" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not available in <span class="ph">Data Collector Edge</span> pipelines.</span></p>
@@ -518,9 +518,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Max Runners </td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Max Runners </td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">The maximum number of pipeline runners to use in a
+                                    <td class="entry cellrowborder" headers="d563155e161 ">The maximum number of pipeline runners to use in a
                                         multithreaded pipeline. <p class="p">Use 0 for no limit. When set to
                                             0, <span class="ph">Data Collector</span> generates up to the maximum number of threads or
                                             concurrency configured in the origin. </p>
@@ -534,9 +534,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Runner Idle Time (sec)</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Runner Idle Time (sec)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">
+                                    <td class="entry cellrowborder" headers="d563155e161 ">
                                         <p class="p">Minimum number of seconds a pipeline runner waits when
                                             idle before generating an empty batch. The number of
                                             empty batches that are generated by pipeline runners
@@ -558,9 +558,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e158 ">Create Failure Snapshot</td>
+                                    <td class="entry cellrowborder" headers="d563155e158 ">Create Failure Snapshot</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e161 ">Automatically creates a snapshot if the pipeline fails
+                                    <td class="entry cellrowborder" headers="d563155e161 ">Automatically creates a snapshot if the pipeline fails
                                         because of data-related errors. Can be used to troubleshoot
                                         the pipeline. <p class="p"><span class="ph"><img class="image" id="task_xlv_jdw_kq__d135e198" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> Not available in <span class="ph">Data Collector Edge</span> pipelines.</span></p>
 </td>
@@ -588,27 +588,27 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_zwz_34j_rz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e689">Notifications Property</th>
+                                    <th class="entry cellrowborder" id="d563155e689">Notifications Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e692">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e692">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e689 "><a class="xref" href="Notifications.html#concept_mtn_k4j_rz">Notify on Pipeline State
+                                    <td class="entry cellrowborder" headers="d563155e689 "><a class="xref" href="Notifications.html#concept_mtn_k4j_rz">Notify on Pipeline State
                                             Changes</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e692 ">Sends notifications when the pipeline encounters the
+                                    <td class="entry cellrowborder" headers="d563155e692 ">Sends notifications when the pipeline encounters the
                                         listed pipeline states. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e689 ">Email IDs</td>
+                                    <td class="entry cellrowborder" headers="d563155e689 ">Email IDs</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e692 ">Email addresses to receive notification when the pipeline
+                                    <td class="entry cellrowborder" headers="d563155e692 ">Email addresses to receive notification when the pipeline
                                         state changes to one of the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         addresses. </td>
@@ -616,9 +616,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e689 "><a class="xref" href="Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e689 "><a class="xref" href="Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e692 ">Webhook to send when the pipeline state changes to one of
+                                    <td class="entry cellrowborder" headers="d563155e692 ">Webhook to send when the pipeline state changes to one of
                                         the specified states. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon to add additional
                                         webhooks.</td>
@@ -626,23 +626,23 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">Webhook URL</td>
+              <td class="entry cellrowborder" headers="d563155e689 ">Webhook URL</td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">URL to send the HTTP request.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">Headers</td>
-
-              <td class="entry cellrowborder" headers="d563280e692 ">Optional HTTP request headers. </td>
+              <td class="entry cellrowborder" headers="d563155e692 ">URL to send the HTTP request.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">HTTP Method</td>
+              <td class="entry cellrowborder" headers="d563155e689 ">Headers</td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_xlv_jdw_kq__d232e586">
+              <td class="entry cellrowborder" headers="d563155e692 ">Optional HTTP request headers. </td>
+
+            </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d563155e689 ">HTTP Method</td>
+
+              <td class="entry cellrowborder" headers="d563155e692 ">HTTP method. Use one of the following methods: <ul class="ul" id="task_xlv_jdw_kq__d232e586">
                   <li class="li">GET</li>
 
                   <li class="li">PUT</li>
@@ -659,9 +659,9 @@
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e689 "><a class="xref" href="Webhooks.html#concept_rby_1rl_rz">Payload</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e689 "><a class="xref" href="Webhooks.html#concept_rby_1rl_rz">Payload</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e692 ">Optional payload to use. Available for PUT, POST, and
+                                    <td class="entry cellrowborder" headers="d563155e692 ">Optional payload to use. Available for PUT, POST, and
                                         DELETE methods. <p class="p">Use any valid content type.</p>
 <p class="p">You can
                                             use webhook parameters in the payload to include
@@ -674,33 +674,33 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">Content Type</td>
+              <td class="entry cellrowborder" headers="d563155e689 ">Content Type</td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">Optional content type of the payload. Configure this property when the content
+              <td class="entry cellrowborder" headers="d563155e692 ">Optional content type of the payload. Configure this property when the content
                 type is not declared in the request headers.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">Authentication Type</td>
+              <td class="entry cellrowborder" headers="d563155e689 ">Authentication Type</td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">Optional authentication type to include in the request. Use None, Basic,
+              <td class="entry cellrowborder" headers="d563155e692 ">Optional authentication type to include in the request. Use None, Basic,
                 Digest, or Universal.<p class="p">Use Basic for Form authentication.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">User Name </td>
+              <td class="entry cellrowborder" headers="d563155e689 ">User Name </td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">User name to include when using authentication. </td>
+              <td class="entry cellrowborder" headers="d563155e692 ">User name to include when using authentication. </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e689 ">Password</td>
+              <td class="entry cellrowborder" headers="d563155e689 ">Password</td>
 
-              <td class="entry cellrowborder" headers="d563280e692 ">Password to include when using authentication.</td>
+              <td class="entry cellrowborder" headers="d563155e692 ">Password to include when using authentication.</td>
 
             </tr>
 
@@ -717,18 +717,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d330e416" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.77777777777778%" /><col style="width:72.22222222222221%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e872">Error Records Property</th>
+                                    <th class="entry cellrowborder" id="d563155e872">Error Records Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e875">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e875">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e872 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_kgc_l4y_5r">Error Records</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e872 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_kgc_l4y_5r">Error Records</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e875 ">Determines how to handle records that cannot be processed
+                                    <td class="entry cellrowborder" headers="d563155e875 ">Determines how to handle records that cannot be processed
                                         as expected. <p class="p">Use one of the following options: </p>
 <ul class="ul" id="task_xlv_jdw_kq__d330e448">
                                             <li class="li">Discard - Discards error records.</li>
@@ -783,9 +783,9 @@
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e501">
-                                    <td class="entry cellrowborder" headers="d563280e872 ">Error Record Policy</td>
+                                    <td class="entry cellrowborder" headers="d563155e872 ">Error Record Policy</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e875 ">Determines the version of the record to use as a basis
+                                    <td class="entry cellrowborder" headers="d563155e875 ">Determines the version of the record to use as a basis
                                         for an error record. For more information, see <a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_itr_mzw_j1b">Error Records and Version</a>.</td>
 
                                 </tr>
@@ -804,18 +804,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d330e536" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d563280e998">Send Response to Origin Property</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d563155e998">Send Response to Origin Property</th>
 
-                                    <th class="entry cellrowborder" style="text-align:left;" id="d563280e1001">Description</th>
+                                    <th class="entry cellrowborder" style="text-align:left;" id="d563155e1001">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d563280e998 ">Status Code</td>
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d563155e998 ">Status Code</td>
 
-                                    <td class="entry cellrowborder" style="text-align:left;" headers="d563280e1001 ">HTTP status code for the error records. Default is 500,
+                                    <td class="entry cellrowborder" style="text-align:left;" headers="d563155e1001 ">HTTP status code for the error records. Default is 500,
                                         representing an internal server error. <p class="p">All error records
                                             are included in the response as error
                                         records.</p>
@@ -837,18 +837,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_vcw_5dk_gjb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e1046">Amazon S3 Property</th>
+                                    <th class="entry cellrowborder" id="d563155e1046">Amazon S3 Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e1049">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e1049">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="AmazonSecurity.html#concept_ypw_hbj_3nb">Authentication Method</a></td>
+            <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="AmazonSecurity.html#concept_ypw_hbj_3nb">Authentication Method</a></td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1145" headers="d563280e1049 ">Authentication method used to connect to Amazon Web
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1145" headers="d563155e1049 ">Authentication method used to connect to Amazon Web
                 Services:<ul class="ul" id="task_xlv_jdw_kq__d232e1147">
                 <li class="li">AWS Keys - Authenticates using an AWS access key pair.</li>
 
@@ -864,33 +864,33 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Access Key ID</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Access Key ID</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">AWS access key ID. Required when using AWS keys to authenticate with AWS.</td>
+            <td class="entry cellrowborder" headers="d563155e1049 ">AWS access key ID. Required when using AWS keys to authenticate with AWS.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Secret Access Key</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Secret Access Key</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">AWS secret access key. Required when using AWS keys to authenticate with
+            <td class="entry cellrowborder" headers="d563155e1049 ">AWS secret access key. Required when using AWS keys to authenticate with
               AWS.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="AmazonSecurity.html#concept_inb_tdj_3nb" title="When using instance profile authentication, you can configure an Amazon stage to assume another IAM role.">Assume Role</a></td>
+            <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="AmazonSecurity.html#concept_inb_tdj_3nb" title="When using instance profile authentication, you can configure an Amazon stage to assume another IAM role.">Assume Role</a></td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Temporarily assumes another role to authenticate with AWS.<p class="p">Available when using
+            <td class="entry cellrowborder" headers="d563155e1049 ">Temporarily assumes another role to authenticate with AWS.<p class="p">Available when using
                 instance profile authentication.</p>
 </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Role ARN</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Role ARN</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Amazon resource name (ARN) of the role to assume, entered in the following
+            <td class="entry cellrowborder" headers="d563155e1049 ">Amazon resource name (ARN) of the role to assume, entered in the following
                   format:<p class="p"><code class="ph codeph">arn:aws:iam::&lt;account_id&gt;:role/&lt;role_name&gt;</code></p>
 <p class="p">Where
                   <code class="ph codeph">&lt;account_id&gt;</code> is the ID of your AWS account and
@@ -904,9 +904,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Role Session Name</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Role Session Name</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Optional name for the session created by assuming a role. Overrides the default
+            <td class="entry cellrowborder" headers="d563155e1049 ">Optional name for the session created by assuming a role. Overrides the default
               unique identifier for the session.<p class="p">Available when assuming another role for instance
                 profile authentication.</p>
 </td>
@@ -914,9 +914,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Session Timeout</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Session Timeout</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Maximum number of seconds for each session created by assuming a role. The
+            <td class="entry cellrowborder" headers="d563155e1049 ">Maximum number of seconds for each session created by assuming a role. The
               session is refreshed if the pipeline continues to run for longer than this amount of
                 time.<p class="p">Set to a value between 3,600 seconds and 43,200 seconds. </p>
 <p class="p">Available
@@ -926,9 +926,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Set Session Tags</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Set Session Tags</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Sets a session tag to record the name of the currently logged in <span class="ph">Data Collector</span> user that starts the
+            <td class="entry cellrowborder" headers="d563155e1049 ">Sets a session tag to record the name of the currently logged in <span class="ph">Data Collector</span> user that starts the
               pipeline or the <span class="ph">Control Hub</span> user
               that starts the job for the pipeline. The instance profile verifies that the user set
               in the session tag can assume the specified role.<p class="p">Select only when the <a class="xref" href="AmazonSecurity.html#concept_n42_zlj_3nb" title="In AWS, define an IAM policy that allows the instance profile to assume a role.">IAM policy</a> defined for the instance profile uses session tags and
@@ -943,24 +943,24 @@
           </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Region</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Region</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Amazon S3 region. </td>
+              <td class="entry cellrowborder" headers="d563155e1049 ">Amazon S3 region. </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Endpoint</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Endpoint</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+              <td class="entry cellrowborder" headers="d563155e1049 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
                 name.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket</a></td>
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_bnp_gwp_f1b">Bucket</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Bucket to use when writing records.<p class="p">Enter a bucket name or define an
+              <td class="entry cellrowborder" headers="d563155e1049 ">Bucket to use when writing records.<p class="p">Enter a bucket name or define an
                   expression that evaluates to bucket names. </p>
 <p class="p">When using datetime variables in
                   the expression, be sure to configure the time basis for the stage.</p>
@@ -969,16 +969,16 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Common Prefix</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Common Prefix</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Common prefix that determines where objects are written. </td>
+              <td class="entry cellrowborder" headers="d563155e1049 ">Common prefix that determines where objects are written. </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qw5_gtq_yv">Partition Prefix</a></td>
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qw5_gtq_yv">Partition Prefix</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Optional partition prefix to specify the partition to use. <p class="p">Use a specific
+              <td class="entry cellrowborder" headers="d563155e1049 ">Optional partition prefix to specify the partition to use. <p class="p">Use a specific
                   partition prefix or define an expression that evaluates to a partition prefix.
                   </p>
 <p class="p">When using datetime variables in the expression, be sure to configure the
@@ -988,9 +988,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Object Name Suffix</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Object Name Suffix</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Suffix to use for object names, such as txt or json. When used, the destination
+              <td class="entry cellrowborder" headers="d563155e1049 ">Suffix to use for object names, such as txt or json. When used, the destination
                 adds a period and the configured suffix as follows: &lt;object
                   name&gt;.&lt;suffix&gt;.<p class="p">You can include periods within the suffix, but do not start
                   the suffix with a period. Forward slashes are not allowed.</p>
@@ -1001,16 +1001,16 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_adm_kn1_mw">Use Server-Side Encryption</a></td>
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_adm_kn1_mw">Use Server-Side Encryption</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Enables server-side encryption.</td>
+              <td class="entry cellrowborder" headers="d563155e1049 ">Enables server-side encryption.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Server-Side Encryption Option</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Server-Side Encryption Option</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Option that Amazon S3 uses to manage the encryption keys:<ul class="ul" id="task_xlv_jdw_kq__d232e1347">
+              <td class="entry cellrowborder" headers="d563155e1049 ">Option that Amazon S3 uses to manage the encryption keys:<ul class="ul" id="task_xlv_jdw_kq__d232e1347">
                   <li class="li">SSE-S3 - Use Amazon S3-managed keys.</li>
 
                   <li class="li">SSE-KMS - Use Amazon Web Services KMS-managed keys.</li>
@@ -1024,9 +1024,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">AWS KMS Key ARN</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">AWS KMS Key ARN</td>
 
-              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1367" headers="d563280e1049 ">Amazon resource name (ARN) of the AWS KMS master encryption key.
+              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1367" headers="d563155e1049 ">Amazon resource name (ARN) of the AWS KMS master encryption key.
                 Use the following
                   format:<pre class="pre codeblock"><code>&lt;arn&gt;:&lt;aws&gt;:&lt;kms&gt;:&lt;region&gt;:&lt;acct ID&gt;:&lt;key&gt;/&lt;key ID&gt;</code></pre><p class="p">Used
                   for SSE-KMS encryption only.</p>
@@ -1035,18 +1035,18 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Delimiter</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Delimiter</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash
+              <td class="entry cellrowborder" headers="d563155e1049 ">Delimiter used by Amazon S3 to define the prefix hierarchy.<p class="p">Default is slash
                   ( / ).</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Encryption Context</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Encryption Context</td>
 
-              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1380" headers="d563280e1049 ">Key-value pairs to use for the encryption context.
+              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1380" headers="d563155e1049 ">Key-value pairs to use for the encryption context.
                 Click <span class="ph uicontrol">Add</span> to add key-value pairs.<p class="p">Used for SSE-KMS
                   encryption only.</p>
 </td>
@@ -1054,27 +1054,27 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Customer Encryption Key</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Customer Encryption Key</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">The 256-bit and Base64 encoded encryption key to use.<p class="p">Used for SSE-C
+              <td class="entry cellrowborder" headers="d563155e1049 ">The 256-bit and Base64 encoded encryption key to use.<p class="p">Used for SSE-C
                   encryption only.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Customer Encryption Key MD5</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Customer Encryption Key MD5</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">The 128-bit and Base64 encoded MD5 digest of the encryption key according to
+              <td class="entry cellrowborder" headers="d563155e1049 ">The 128-bit and Base64 encoded MD5 digest of the encryption key according to
                 RFC 1321.<p class="p">Used for SSE-C encryption only.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qtb_njg_vw">Data Time Zone</a></td>
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qtb_njg_vw">Data Time Zone</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">
+              <td class="entry cellrowborder" headers="d563155e1049 ">
                 <p class="p">Time zone for the destination system. Used with the time basis to resolve
                   datetimes in a time-based bucket or partition prefix. </p>
 
@@ -1083,9 +1083,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qtb_njg_vw">Time Basis</a></td>
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_qtb_njg_vw">Time Basis</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">
+              <td class="entry cellrowborder" headers="d563155e1049 ">
                 <div class="p">Time basis to use for writing to a time-based bucket or partition prefix. Use one
                   of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d232e1486">
                     <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the processing time as the time basis
@@ -1109,91 +1109,91 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_lkp_jd3_yv">Object
+              <td class="entry cellrowborder" headers="d563155e1046 "><a class="xref" href="../Destinations/AmazonS3.html#concept_lkp_jd3_yv">Object
                   Name Prefix</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Defines a prefix for object names written by the destination. By default,
+              <td class="entry cellrowborder" headers="d563155e1049 ">Defines a prefix for object names written by the destination. By default,
                 object names start with <code class="ph codeph">sdc</code> as follows: <code class="ph codeph">sdc-&lt;UTC
                   timestamp&gt;-&lt;counter&gt;</code>. </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e1046 ">Compress with Gzip</td>
+              <td class="entry cellrowborder" headers="d563155e1046 ">Compress with Gzip</td>
 
-              <td class="entry cellrowborder" headers="d563280e1049 ">Compresses files with gzip before writing to Amazon S3.</td>
+              <td class="entry cellrowborder" headers="d563155e1049 ">Compresses files with gzip before writing to Amazon S3.</td>
 
             </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Connection Timeout</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Connection Timeout</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4014" headers="d563280e1049 ">Seconds to wait for a response before closing the connection.
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4014" headers="d563155e1049 ">Seconds to wait for a response before closing the connection.
                 <p class="p">Default is 10 seconds.</p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Socket Timeout</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Socket Timeout</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4025" headers="d563280e1049 ">Seconds to wait for a response to a query.</td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Retry Count</td>
-
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4034" headers="d563280e1049 ">Maximum number of times to retry requests.</td>
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4025" headers="d563155e1049 ">Seconds to wait for a response to a query.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Use Proxy</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Retry Count</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4043" headers="d563280e1049 ">Specifies whether to use a proxy to connect.</td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy Host</td>
-
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4052" headers="d563280e1049 ">Proxy host.</td>
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4034" headers="d563155e1049 ">Maximum number of times to retry requests.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy Port</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Use Proxy</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4062" headers="d563280e1049 ">Proxy port.</td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy User</td>
-
-            <td class="entry cellrowborder" headers="d563280e1049 ">User name for proxy credentials.</td>
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4043" headers="d563155e1049 ">Specifies whether to use a proxy to connect.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy Password</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy Host</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d233e6386">To
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4052" headers="d563155e1049 ">Proxy host.</td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy Port</td>
+
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4062" headers="d563155e1049 ">Proxy port.</td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy User</td>
+
+            <td class="entry cellrowborder" headers="d563155e1049 ">User name for proxy credentials.</td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy Password</td>
+
+            <td class="entry cellrowborder" headers="d563155e1049 ">Password for proxy credentials.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d233e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy Domain</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy Domain</td>
 
-            <td class="entry cellrowborder" headers="d563280e1049 ">Optional domain name for the proxy server.</td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Proxy Workstation</td>
-
-            <td class="entry cellrowborder" headers="d563280e1049 ">Optional workstation for the proxy server.</td>
+            <td class="entry cellrowborder" headers="d563155e1049 ">Optional domain name for the proxy server.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Thread Pool Size for Parallel Uploads</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Proxy Workstation</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4108" headers="d563280e1049 ">Size of the thread pool for parallel uploads. Used when
+            <td class="entry cellrowborder" headers="d563155e1049 ">Optional workstation for the proxy server.</td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Thread Pool Size for Parallel Uploads</td>
+
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4108" headers="d563155e1049 ">Size of the thread pool for parallel uploads. Used when
               writing to multiple partitions and writing large objects in multiple parts.<p class="p">When
                 writing to multiple partitions, setting this property up to the number of partitions
                 being written to can improve performance. </p>
@@ -1204,16 +1204,16 @@
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Multipart Upload Threshold</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Multipart Upload Threshold</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4122" headers="d563280e1049 ">Minimum batch size in bytes for the destination to use
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4122" headers="d563155e1049 ">Minimum batch size in bytes for the destination to use
               multipart uploads.</td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d563280e1046 ">Minimum Upload Part Size</td>
+            <td class="entry cellrowborder" headers="d563155e1046 ">Minimum Upload Part Size</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4131" headers="d563280e1049 ">Minimum part size in bytes for multipart uploads.</td>
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e4131" headers="d563155e1049 ">Minimum part size in bytes for multipart uploads.</td>
 
           </tr>
 
@@ -1231,18 +1231,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_abt_n11_ft" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e1597">Write to Pipeline Property</th>
+                                    <th class="entry cellrowborder" id="d563155e1597">Write to Pipeline Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e1600">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e1600">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 "><a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">SDC RPC Connection</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 "><a class="xref" href="../Destinations/SDC_RPCdest.html#concept_icz_wzw_dt" title="In an SDC RPC destination, the RPC connections define where the destination passes data.">SDC RPC Connection</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Connection information for the destination pipeline to
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Connection information for the destination pipeline to
                                         continue processing data. Use the following format:
                                             <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>. <p class="p">Use a single
                                             RPC connection for each destination pipeline. Using
@@ -1256,34 +1256,34 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">SDC RPC ID</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">SDC RPC ID</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">User-defined ID to allow the destination to pass data to
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">User-defined ID to allow the destination to pass data to
                                         an SDC RPC origin. Use this ID in all SDC RPC origins to
                                         process data from the destination.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Use TLS</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Use TLS</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e4752" headers="d563280e1600 ">Enables the use of TLS. </td>
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e4752" headers="d563155e1600 ">Enables the use of TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Use Remote Truststore</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Use Remote Truststore</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Enables loading the contents of the truststore from a
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Enables loading the contents of the truststore from a
                                         remote credential store or from values entered in the stage
                                         properties. For more information, see <a class="xref" href="SSL-TLS.html#concept_q2c_hj2_1nb" title="You can configure stages to load the contents of the keystore or truststore from a remote credential store or from values entered in the stage properties. The stage builds the keystore or truststore from the private key and certificates retrieved from the credential store or entered in the stage properties.">Remote Keystore and Truststore</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Trusted Certificates</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Trusted Certificates</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Each PEM certificate used in the remote truststore. Enter
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Each PEM certificate used in the remote truststore. Enter
                                         a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the certificate
                                         or enter the contents of the certificate.<p class="p">Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <strong class="ph b">Add</strong> icon to add additional
@@ -1293,9 +1293,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 "><a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 "><a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Path to the local truststore file. Enter an absolute path
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Path to the local truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
@@ -1305,9 +1305,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Truststore Type</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Truststore Type</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS #12 (p12 file)</li>
@@ -1319,9 +1319,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Truststore Password</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Truststore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Password to the truststore file. A password is optional,
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
@@ -1332,25 +1332,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Truststore Trust Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_xlv_jdw_kq__d330e5063">SunX509</span>.</p>
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_xlv_jdw_kq__d330e5063">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Use Default Protocols</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Use Default Protocols</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
                                         different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 "><a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 "><a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">TLS protocols to use. To use a protocol other than the
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">TLS protocols to use. To use a protocol other than the
                                         default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -1359,17 +1359,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 "><a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 "><a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Uses a default cipher suite for the SSL/TLS handshake. To
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Uses a default cipher suite for the SSL/TLS handshake. To
                                         use a different cipher suite, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Cipher Suites</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Cipher Suites</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher
@@ -1381,9 +1381,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Retries Per Batch</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Retries Per Batch</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Number of times the destination tries to write a batch to
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Number of times the destination tries to write a batch to
                                         the SDC RPC origin. <p class="p" id="task_xlv_jdw_kq__d330e10917">When the
                                             destination cannot write the batch within the configured
                                             number of retries, it fails the batch.</p>
@@ -1393,9 +1393,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Back Off Period</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Back Off Period</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Milliseconds to wait before retrying writing a batch to
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Milliseconds to wait before retrying writing a batch to
                                         the SDC RPC origin.<p class="p" id="task_xlv_jdw_kq__d330e10930">The value that
                                             you enter increases exponentially after each retry,
                                             until it reaches the maximum wait time of 5 minutes. For
@@ -1413,9 +1413,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Connection Timeout (ms)</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Connection Timeout (ms)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Milliseconds to establish a connection to the SDC RPC
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Milliseconds to establish a connection to the SDC RPC
                                         origin. <p class="p">The destination retries the connection based on
                                             the Retries Per Batch property.</p>
 <p class="p">Default is 5000
@@ -1425,9 +1425,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 ">Read Timeout (ms)</td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 ">Read Timeout (ms)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Milliseconds to wait for the SDC RPC origin to read data
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Milliseconds to wait for the SDC RPC origin to read data
                                         from a batch. <p class="p" id="task_xlv_jdw_kq__d330e10958">The destination retries
                                             the write based on the Retries Per Batch property.</p>
 <p class="p" id="task_xlv_jdw_kq__d330e10960">Default is 2000
@@ -1437,9 +1437,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e1597 "><a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">Use Compression</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e1597 "><a class="xref" href="../Destinations/SDC_RPCdest.html#concept_zdq_rdj_r5" title="The SDC RPC destination compresses data by default when passing data to an SDC RPC origin. When necessary, you can disable compression in the destination.">Use Compression</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1600 ">Enables the destination to use compression to pass data
+                                    <td class="entry cellrowborder" headers="d563155e1600 ">Enables the destination to use compression to pass data
                                         to the SDC RPC origin. Enabled by default. </td>
 
                                 </tr>
@@ -1458,33 +1458,33 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_m3z_dyl_3db" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e1940">Event Hub Property</th>
+                                    <th class="entry cellrowborder" id="d563155e1940">Event Hub Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e1943">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e1943">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_xlv_jdw_kq__d330e9520">
-                                    <td class="entry cellrowborder" headers="d563280e1940 ">Namespace Name</td>
+                                    <td class="entry cellrowborder" headers="d563155e1940 ">Namespace Name</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1943 ">The name of the namespace that contains the event hub
+                                    <td class="entry cellrowborder" headers="d563155e1943 ">The name of the namespace that contains the event hub
                                         that you want to use.</td>
 
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9529">
-                                    <td class="entry cellrowborder" headers="d563280e1940 ">Event Hub Name</td>
+                                    <td class="entry cellrowborder" headers="d563155e1940 ">Event Hub Name</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1943 ">The event hub name.</td>
+                                    <td class="entry cellrowborder" headers="d563155e1943 ">The event hub name.</td>
 
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9538">
-                                    <td class="entry cellrowborder" headers="d563280e1940 ">Shared Access Policy Name</td>
+                                    <td class="entry cellrowborder" headers="d563155e1940 ">Shared Access Policy Name</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1943 ">The policy name associated with the namespace. <p class="p">To
+                                    <td class="entry cellrowborder" headers="d563155e1943 ">The policy name associated with the namespace. <p class="p">To
                                             retrieve the policy name, when logged into the Azure
                                             portal, navigate to your namespace and event hub, and
                                             then click Shared Access Policies for a list of
@@ -1497,9 +1497,9 @@
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9551">
-                                    <td class="entry cellrowborder" headers="d563280e1940 ">Connection String Key </td>
+                                    <td class="entry cellrowborder" headers="d563155e1940 ">Connection String Key </td>
 
-                                    <td class="entry cellrowborder" headers="d563280e1943 ">One of the connection string keys associated with the
+                                    <td class="entry cellrowborder" headers="d563155e1943 ">One of the connection string keys associated with the
                                         specified shared access policy. <p class="p">To retrieve a connection
                                             string key, after accessing the list of shared access
                                             policies, click the policy name, and then copy the
@@ -1524,33 +1524,33 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_aln_mxx_ty" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e2022">Elasticsearch Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2022">Elasticsearch Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2025">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2025">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Cluster HTTP URI</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Cluster HTTP URI</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">HTTP URI used to connect to the cluster. Use the
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">HTTP URI used to connect to the cluster. Use the
                                         following format:
                                         <pre class="pre codeblock"><code>&lt;host&gt;:&lt;port&gt;</code></pre></td>
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Use Security</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Use Security</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Specifies whether security is enabled on the
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Specifies whether security is enabled on the
                                         Elasticsearch cluster. </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Index</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Index</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Index for the generated documents. Enter an index name or
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Index for the generated documents. Enter an index name or
                                         an expression that evaluates to the index name. <p class="p">For
                                             example, if you enter <code class="ph codeph">customer</code> as the
                                             index, the destination writes the document within the
@@ -1563,9 +1563,9 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Mapping</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Mapping</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Mapping type for the generated documents. Enter the
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Mapping type for the generated documents. Enter the
                                         mapping type, an expression that evaluates to the mapping
                                         type, or a field that includes the mapping type. <p class="p">For
                                             example, if you enter <code class="ph codeph">user</code> as the
@@ -1575,9 +1575,9 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 "><a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">Document ID</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 "><a class="xref" href="../Destinations/Elasticsearch.html#concept_yr2_1tf_z5" title="When appropriate, you can specify an expression that defines the document ID. When you do not specify an expression, Elasticsearch generates IDs for each document.">Document ID</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Expression that evaluates to the ID for the generated
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Expression that evaluates to the ID for the generated
                                         documents. When you do not specify an ID, Elasticsearch
                                         creates an ID for each document.<p class="p">By default, the
                                             destination allows Elasticsearch to create the
@@ -1586,17 +1586,17 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Additional HTTP Params</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Additional HTTP Params</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Additional HTTP parameters that you want to send as query
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Additional HTTP parameters that you want to send as query
                                         string parameters to Elasticsearch. Enter the exact
                                         parameter name and value expected by Elasticsearch.</td>
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Detect Additional Nodes in Cluster</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Detect Additional Nodes in Cluster</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Detects additional nodes in the cluster based on the
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Detects additional nodes in the cluster based on the
                                         configured Cluster URI. <p class="p">Selecting this property is the
                                             equivalent to setting the client.transport.sniff
                                             Elasticsearch property to true. </p>
@@ -1608,9 +1608,9 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 "><a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">Time Basis</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 "><a class="xref" href="../Destinations/Elasticsearch.html#concept_dd3_vhk_r5" title="The time basis is the time used by the Elasticsearch destination to write records to time-based indexes. When indexes have no time component, you can ignore the time basis property.">Time Basis</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Time basis to use for writing to time-based indexes. Use
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Time basis to use for writing to time-based indexes. Use
                                         one of the following expressions:<ul class="ul" id="task_xlv_jdw_kq__d330e9717">
                                             <li class="li"><code class="ph codeph">${time:now()}</code> - Uses the processing
                                                 time as the time basis. The processing time is the
@@ -1631,16 +1631,16 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Data Time Zone</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Data Time Zone</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Time zone for the destination system. Used to resolve
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Time zone for the destination system. Used to resolve
                                         datetimes in time-based indexes. </td>
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Parent ID</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Parent ID</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Optional parent ID for the generated documents. Enter a
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Optional parent ID for the generated documents. Enter a
                                         parent ID or an expression that evaluates to the parent ID.
                                             <p class="p">Use to establish a parent-child relationship between
                                             documents in the same index.</p>
@@ -1648,9 +1648,9 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Routing</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Routing</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">Optional custom routing value for the generated
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">Optional custom routing value for the generated
                                         documents. Enter a routing value or an expression that
                                         evaluates to the routing value.<p class="p">Elasticsearch routes a
                                             document to a particular shard in an index based on the
@@ -1663,9 +1663,9 @@
 
                                 </tr>
 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2022 ">Data Charset</td>
+                                    <td class="entry cellrowborder" headers="d563155e2022 ">Data Charset</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2025 ">
+                                    <td class="entry cellrowborder" headers="d563155e2025 ">
                                         <p class="p">Character encoding of the data to be processed. </p>
 
                                     </td>
@@ -1682,18 +1682,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d330e9863" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr id="task_xlv_jdw_kq__d330e9873">
-                                    <th class="entry cellrowborder" id="d563280e2224">Security Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2224">Security Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2227">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2227">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr id="task_xlv_jdw_kq__d330e9885">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">Mode</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">Mode</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9890" headers="d563280e2227 ">Authentication method to
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9890" headers="d563155e2227 ">Authentication method to
                                             use:<ul class="ul" id="task_xlv_jdw_kq__d330e9892">
                                             <li class="li">Basic - Authenticate with Elasticsearch user name
                                                 and password. Select this option for Elasticsearch
@@ -1710,27 +1710,27 @@
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9902">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">User Name</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">User Name</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2227 ">Elasticsearch user name. <p class="p">Available when using Basic
+                                    <td class="entry cellrowborder" headers="d563155e2227 ">Elasticsearch user name. <p class="p">Available when using Basic
                                             authentication.</p>
 </td>
 
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9913">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">Password</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2227 ">Password for the user account.<p class="p">Available when using
+                                    <td class="entry cellrowborder" headers="d563155e2227 ">Password for the user account.<p class="p">Available when using
                                             Basic authentication.</p>
 </td>
 
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9924">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">Region</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">Region</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2227 ">Amazon Web Services region that hosts the Elasticsearch
+                                    <td class="entry cellrowborder" headers="d563155e2227 ">Amazon Web Services region that hosts the Elasticsearch
                                             domain.<p class="p">Available when using AWS Signature V4
                                             authentication.</p>
 </td>
@@ -1738,9 +1738,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">Access Key ID</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">Access Key ID</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9940" headers="d563280e2227 ">AWS access key ID.
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9940" headers="d563155e2227 ">AWS access key ID.
                                         Required when not using instance profile
                                             credentials.<p class="p">Available when using AWS Signature V4
                                             authentication.</p>
@@ -1749,9 +1749,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">Secret Access Key</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">Secret Access Key</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9952" headers="d563280e2227 ">AWS secret access
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e9952" headers="d563155e2227 ">AWS secret access
                                         key. Required when not using instance profile
                                             credentials.<p class="p">Available when using AWS Signature V4
                                             authentication.</p>
@@ -1760,9 +1760,9 @@
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9958">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">SSL Truststore Path</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">SSL Truststore Path</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2227 ">Location of the truststore file. <p class="p">Configuring this
+                                    <td class="entry cellrowborder" headers="d563155e2227 ">Location of the truststore file. <p class="p">Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.truststore.path Elasticsearch property.
                                             </p>
@@ -1773,9 +1773,9 @@
                                 </tr>
 
                                 <tr id="task_xlv_jdw_kq__d330e9971">
-                                    <td class="entry cellrowborder" headers="d563280e2224 ">SSL Truststore Password</td>
+                                    <td class="entry cellrowborder" headers="d563155e2224 ">SSL Truststore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2227 ">Password for the truststore file. <p class="p">Configuring this
+                                    <td class="entry cellrowborder" headers="d563155e2227 ">Password for the truststore file. <p class="p">Configuring this
                                             property is the equivalent to configuring the
                                             shield.ssl.truststore.password Elasticsearch property.
                                             </p>
@@ -1798,25 +1798,25 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_gy3_1y4_1r" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e2360">Write to File Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2360">Write to File Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2363">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2363">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2360 ">Directory</td>
+                                    <td class="entry cellrowborder" headers="d563155e2360 ">Directory</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2363 ">Local directory for error record files. </td>
+                                    <td class="entry cellrowborder" headers="d563155e2363 ">Local directory for error record files. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2360 ">File Prefix</td>
+                                    <td class="entry cellrowborder" headers="d563155e2360 ">File Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2363 ">Prefix used for error record files. Use to differentiate
+                                    <td class="entry cellrowborder" headers="d563155e2363 ">Prefix used for error record files. Use to differentiate
                                         error record files from other files in the directory.<p class="p">Uses
                                             the prefix sdc-${sdc:id()} by default. The prefix
                                             evaluates to sdc-&lt;<span class="ph">Data Collector</span> ID&gt;. This provides default differentiation in case
@@ -1831,9 +1831,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2360 ">File Wait Time (secs)</td>
+                                    <td class="entry cellrowborder" headers="d563155e2360 ">File Wait Time (secs)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2363 ">Number of seconds <span class="ph">Data Collector</span> waits for error records. After that time, it creates a
+                                    <td class="entry cellrowborder" headers="d563155e2363 ">Number of seconds <span class="ph">Data Collector</span> waits for error records. After that time, it creates a
                                         new error record file. <p class="p">You can enter a number of seconds
                                             or use the default expression to enter the time in
                                             minutes. </p>
@@ -1842,9 +1842,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2360 ">Max File Size (MB)</td>
+                                    <td class="entry cellrowborder" headers="d563155e2360 ">Max File Size (MB)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2363 ">Maximum size for error files. Exceeding this size creates
+                                    <td class="entry cellrowborder" headers="d563155e2363 ">Maximum size for error files. Exceeding this size creates
                                         a new error file. <p class="p">Use 0 to avoid using this
                                         property.</p>
 </td>
@@ -1865,34 +1865,34 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_rkp_53v_5bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e2463">Google Cloud Storage Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2463">Google Cloud Storage Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2466">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2466">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 ">Project ID</td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 ">Project ID</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10088" headers="d563280e2466 ">Project ID to connect to.</td>
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10088" headers="d563155e2466 ">Project ID to connect to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 ">Bucket</td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 ">Bucket</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Bucket to use when writing records.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Bucket to use when writing records.<div class="note note"><span class="notetitle">Note:</span> The bucket name must be DNS compliant. For more
                   information about bucket naming conventions, see the <a class="xref" href="https://cloud.google.com/storage/docs/naming" target="_blank">Google Cloud Storage documentation</a>.</div>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_otx_vxn_sbb">Credentials Provider</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_otx_vxn_sbb">Credentials Provider</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Credentials to use:<ul class="ul" id="task_xlv_jdw_kq__ul_tmm_2rp_v1b">
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Credentials to use:<ul class="ul" id="task_xlv_jdw_kq__ul_tmm_2rp_v1b">
                                             <li class="li"><a class="xref" href="../Destinations/GCS.html#concept_sv1_byn_sbb">Default credentials provider</a> - <span class="ph">Uses Google Cloud default
                                                   credentials. </span></li>
 
@@ -1911,17 +1911,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 ">Common Prefix</td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 ">Common Prefix</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Common prefix that determines where objects are written.
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Common prefix that determines where objects are written.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_hbh_lyn_sbb">Credentials File Path (JSON) </a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_hbh_lyn_sbb">Credentials File Path (JSON) </a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Path to the Google Cloud service
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Path to the Google Cloud service
                                         account credentials file that the stage uses to connect. The
                                         credentials file must be a JSON file.<p class="p">Enter a path
                                             relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
@@ -1931,9 +1931,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_hbh_lyn_sbb">Credentials File Content (JSON)</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_hbh_lyn_sbb">Credentials File Content (JSON)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Contents of a Google Cloud service
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Contents of a Google Cloud service
                                         account credentials JSON file used to connect.<p class="p">Enter
                                             JSON-formatted credential information in plain text, or
                                             use an expression to call the information from <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or a <span class="ph"><span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential store.</a></span></span></p>
@@ -1942,9 +1942,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_qsx_ryn_sbb">Partition Prefix</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_qsx_ryn_sbb">Partition Prefix</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Optional partition prefix to specify the partition to
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Optional partition prefix to specify the partition to
                                         use. <p class="p">Use a specific partition prefix or define an
                                             expression that evaluates to a partition prefix.
                                             </p>
@@ -1956,9 +1956,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 ">Data Time Zone</td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 ">Data Time Zone</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">
                                         <p class="p">Time zone for the destination system. Used to resolve
                                             datetimes in a time-based partition prefix. </p>
 
@@ -1967,9 +1967,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_ffn_tc4_sbb">Time Basis</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_ffn_tc4_sbb">Time Basis</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">
                                         <div class="p">Time basis to use for writing to a time-based bucket or
                                             partition prefix. Use one of the following
                                                 expressions:<ul class="ul" id="task_xlv_jdw_kq__d330e10264">
@@ -1997,9 +1997,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2463 "><a class="xref" href="../Destinations/GCS.html#concept_s1m_j24_sbb">Object Name Prefix</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2463 "><a class="xref" href="../Destinations/GCS.html#concept_s1m_j24_sbb">Object Name Prefix</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2466 ">Defines a prefix for object names written by the
+                                    <td class="entry cellrowborder" headers="d563155e2466 ">Defines a prefix for object names written by the
                                         destination. By default, object names start with "sdc" as
                                         follows: <code class="ph codeph">sdc-&lt;UUID&gt;</code>. <p class="p">Not required for
                                             the whole file data format. </p>
@@ -2021,32 +2021,32 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_wdw_vhv_5bb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e2697">Google Pub/Sub Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2697">Google Pub/Sub Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2700">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2700">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Topic ID</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Topic ID</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Google Pub/Sub topic ID to write messages to.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Project ID</td>
-
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10088" headers="d563280e2700 ">Project ID to connect to.</td>
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Google Pub/Sub topic ID to write messages to.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_snf_1wq_v1b">Credentials Provider</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Project ID</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10100" headers="d563280e2700 ">Credentials to use:<ul class="ul" id="task_xlv_jdw_kq__d330e10102">
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10088" headers="d563155e2700 ">Project ID to connect to.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d563155e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_snf_1wq_v1b">Credentials Provider</a></td>
+
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10100" headers="d563155e2700 ">Credentials to use:<ul class="ul" id="task_xlv_jdw_kq__d330e10102">
                                             <li class="li"><a class="xref" href="../Destinations/PubSubPublisher.html#concept_e1w_mwq_v1b">Default credentials provider </a>- <span class="ph" id="task_xlv_jdw_kq__d330e10108">Uses Google Cloud default
                                                   credentials. </span></li>
 
@@ -2065,9 +2065,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_wbh_twq_v1b">Credentials File Path (JSON)</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_wbh_twq_v1b">Credentials File Path (JSON)</a></td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10133" headers="d563280e2700 ">Path to the Google Cloud service
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10133" headers="d563155e2700 ">Path to the Google Cloud service
                                         account credentials file that the stage uses to connect. The
                                         credentials file must be a JSON file.<p class="p">Enter a path
                                             relative to the <span class="ph">Data Collector</span> resources directory, <code class="ph codeph">$SDC_RESOURCES</code>,
@@ -2077,9 +2077,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_exf_ct3_wmb">Credentials File Content (JSON)</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 "><a class="xref" href="../Destinations/PubSubPublisher.html#concept_exf_ct3_wmb">Credentials File Content (JSON)</a></td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10150" headers="d563280e2700 ">Contents of a Google Cloud service
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10150" headers="d563155e2700 ">Contents of a Google Cloud service
                                         account credentials JSON file used to connect.<p class="p">Enter
                                             JSON-formatted credential information in plain text, or
                                             use an expression to call the information from <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or a <span class="ph"><span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential store.</a></span></span></p>
@@ -2088,9 +2088,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Request Bytes Threshold</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Request Bytes Threshold</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Size of accumulated messages that triggers sending
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Size of accumulated messages that triggers sending
                                         messages as a batch. Specify in bytes.<p class="p">Default is
                                             1000.</p>
 </td>
@@ -2098,18 +2098,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Messages Count Threshold</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Messages Count Threshold</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Number of accumulated messages that triggers sending
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Number of accumulated messages that triggers sending
                                         messages as a batch. <p class="p">Default is 100.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Default Delay Threshold (ms)</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Default Delay Threshold (ms)</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Elapsed time since the arrival of the first message that
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Elapsed time since the arrival of the first message that
                                         triggers sending messages as a batch. Specify in
                                         milliseconds. <p class="p">Default is 1.</p>
 
@@ -2118,18 +2118,18 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Batch Enabled</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Batch Enabled</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Select to have the destination send messages in batches.
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Select to have the destination send messages in batches.
                                         When disabled, the destination writes each message
                                         individually, ignoring threshold properties.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Max Outstanding Message Count</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Max Outstanding Message Count</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Number of unprocessed messages that the destination
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Number of unprocessed messages that the destination
                                         stores in memory before taking an action to control the flow
                                         of messages. You might want to control the flow of messages
                                         when the destination can read messages faster than it can
@@ -2142,9 +2142,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Max Outstanding Request Bytes</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Max Outstanding Request Bytes</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Number of unprocessed bytes that the destination stores
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Number of unprocessed bytes that the destination stores
                                         in memory before taking an action to control the flow of
                                         messages. <p class="p">Set to 0 to never control the flow based on
                                             message size. To control the message flow when using
@@ -2155,9 +2155,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2697 ">Limit Exceeded Behavior</td>
+                                    <td class="entry cellrowborder" headers="d563155e2697 ">Limit Exceeded Behavior</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2700 ">Action to take when either the count or size of
+                                    <td class="entry cellrowborder" headers="d563155e2700 ">Action to take when either the count or size of
                                         unprocessed messages exceeds the specified limit. Select one
                                         of the following options: <ul class="ul" id="task_xlv_jdw_kq__ul_g5d_dvy_hhb">
                                             <li class="li">Throw Exception - Triggers pipeline error
@@ -2187,18 +2187,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_lb5_svh_ms" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:27.77777777777778%" /><col style="width:72.22222222222221%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e2925">Write to Kafka Property</th>
+                                    <th class="entry cellrowborder" id="d563155e2925">Write to Kafka Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e2928">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e2928">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2925 ">Message Key Format</td>
+                                    <td class="entry cellrowborder" headers="d563155e2925 ">Message Key Format</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2928 ">Data format of the message key values to pass to Kafka.
+                                    <td class="entry cellrowborder" headers="d563155e2928 ">Data format of the message key values to pass to Kafka.
                                         Ignore this property when not <a class="xref" href="KMessageKey.html#concept_kdj_kzf_tmb">passing message key values to Kafka</a>.<p class="p">For more
                                             information about working with Kafka message key values,
                                             see <a class="xref" href="KMessageKey.html#concept_ujc_cml_smb">Kafka Message Keys</a>.</p>
@@ -2207,9 +2207,9 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">Broker URI</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">Broker URI</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Connection string for the Kafka broker. Use the
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Connection string for the Kafka broker. Use the
                                             following format:
                                                 <code class="ph codeph">&lt;host&gt;:&lt;port&gt;</code>.<p class="p">To ensure a
                                                 connection, enter a comma-separated list of
@@ -2219,9 +2219,9 @@
                                     </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e2925 ">Security Option</td>
+                                    <td class="entry cellrowborder" headers="d563155e2925 ">Security Option</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e2928 ">Authentication and encryption option used to connect to
+                                    <td class="entry cellrowborder" headers="d563155e2928 ">Authentication and encryption option used to connect to
                                         the Kafka brokers:<ul class="ul" id="task_xlv_jdw_kq__ul_ahg_ts5_ymb">
                                             <li class="li">None (Security Protocol=PLAINTEXT) - Uses no
                                                 authentication or encryption.</li>
@@ -2246,18 +2246,18 @@
                                 </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">Topic</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">Topic</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">Kafka Configuration</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">Kafka Configuration</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Additional Kafka properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Additional Kafka properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <span class="ph uicontrol">Add</span> icon and define the Kafka
                                             property name and value. <p class="p">Use the property names and
                                                 values as expected by Kafka. Do not use the
@@ -2267,27 +2267,27 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
 
-                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10522" headers="d563280e2928 ">Evaluates an expression at
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10522" headers="d563155e2928 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">Topic Expression</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">Topic Expression</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Expression used to determine where each record is
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">Topic White List</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">Topic White List</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">List of valid topic names to write to when using
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -2298,9 +2298,9 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d330e10555">
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d330e10555">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -2322,9 +2322,9 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
 
-                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10577" headers="d563280e2928 ">Expression to use with the
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10577" headers="d563155e2928 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -2342,17 +2342,17 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 ">One Message per Batch</td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 ">One Message per Batch</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">For each batch, writes the records to each partition
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e2925 "><a class="xref" href="KMessageKey.html#concept_kdj_kzf_tmb">Kafka Message Key</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e2925 "><a class="xref" href="KMessageKey.html#concept_kdj_kzf_tmb">Kafka Message Key</a></td>
 
-                                        <td class="entry cellrowborder" headers="d563280e2928 ">Passes message key values stored in a record header
+                                        <td class="entry cellrowborder" headers="d563155e2928 ">Passes message key values stored in a record header
                                             attribute to Kafka as message keys. <p class="p">Enter an
                                                 expression that specifies the attribute where the
                                                 message keys are stored. </p>
@@ -2383,18 +2383,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_cgq_yn4_yr" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:22.22222222222222%" /><col style="width:77.77777777777779%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e3183">Kinesis Property</th>
+                                    <th class="entry cellrowborder" id="d563155e3183">Kinesis Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e3186">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e3186">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3183 "><a class="xref" href="AmazonSecurity.html#concept_ypw_hbj_3nb">Authentication Method</a></td>
+              <td class="entry cellrowborder" headers="d563155e3183 "><a class="xref" href="AmazonSecurity.html#concept_ypw_hbj_3nb">Authentication Method</a></td>
 
-              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1290" headers="d563280e3186 ">Authentication method used to connect to Amazon Web
+              <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1290" headers="d563155e3186 ">Authentication method used to connect to Amazon Web
                   Services:<ul class="ul" id="task_xlv_jdw_kq__d232e1292">
                   <li class="li">AWS Keys - Authenticates using an AWS access key pair.</li>
 
@@ -2406,33 +2406,33 @@
             </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Access Key ID</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Access Key ID</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">AWS access key ID. Required when using AWS keys to authenticate with AWS.</td>
+            <td class="entry cellrowborder" headers="d563155e3186 ">AWS access key ID. Required when using AWS keys to authenticate with AWS.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Secret Access Key</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Secret Access Key</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">AWS secret access key. Required when using AWS keys to authenticate with
+            <td class="entry cellrowborder" headers="d563155e3186 ">AWS secret access key. Required when using AWS keys to authenticate with
               AWS.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 "><a class="xref" href="AmazonSecurity.html#concept_inb_tdj_3nb" title="When using instance profile authentication, you can configure an Amazon stage to assume another IAM role.">Assume Role</a></td>
+            <td class="entry cellrowborder" headers="d563155e3183 "><a class="xref" href="AmazonSecurity.html#concept_inb_tdj_3nb" title="When using instance profile authentication, you can configure an Amazon stage to assume another IAM role.">Assume Role</a></td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Temporarily assumes another role to authenticate with AWS.<p class="p">Available when using
+            <td class="entry cellrowborder" headers="d563155e3186 ">Temporarily assumes another role to authenticate with AWS.<p class="p">Available when using
                 instance profile authentication.</p>
 </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Role ARN</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Role ARN</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Amazon resource name (ARN) of the role to assume, entered in the following
+            <td class="entry cellrowborder" headers="d563155e3186 ">Amazon resource name (ARN) of the role to assume, entered in the following
                   format:<p class="p"><code class="ph codeph">arn:aws:iam::&lt;account_id&gt;:role/&lt;role_name&gt;</code></p>
 <p class="p">Where
                   <code class="ph codeph">&lt;account_id&gt;</code> is the ID of your AWS account and
@@ -2446,9 +2446,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Role Session Name</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Role Session Name</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Optional name for the session created by assuming a role. Overrides the default
+            <td class="entry cellrowborder" headers="d563155e3186 ">Optional name for the session created by assuming a role. Overrides the default
               unique identifier for the session.<p class="p">Available when assuming another role for instance
                 profile authentication.</p>
 </td>
@@ -2456,9 +2456,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Session Timeout</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Session Timeout</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Maximum number of seconds for each session created by assuming a role. The
+            <td class="entry cellrowborder" headers="d563155e3186 ">Maximum number of seconds for each session created by assuming a role. The
               session is refreshed if the pipeline continues to run for longer than this amount of
                 time.<p class="p">Set to a value between 3,600 seconds and 43,200 seconds. </p>
 <p class="p">Available
@@ -2468,9 +2468,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Set Session Tags</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Set Session Tags</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Sets a session tag to record the name of the currently logged in <span class="ph">Data Collector</span> user that starts the
+            <td class="entry cellrowborder" headers="d563155e3186 ">Sets a session tag to record the name of the currently logged in <span class="ph">Data Collector</span> user that starts the
               pipeline or the <span class="ph">Control Hub</span> user
               that starts the job for the pipeline. The instance profile verifies that the user set
               in the session tag can assume the specified role.<p class="p">Select only when the <a class="xref" href="AmazonSecurity.html#concept_n42_zlj_3nb" title="In AWS, define an IAM policy that allows the instance profile to assume a role.">IAM policy</a> defined for the instance profile uses session tags and
@@ -2485,31 +2485,31 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Region</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Region</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
+            <td class="entry cellrowborder" headers="d563155e3186 ">Amazon Web Services region that hosts the Kinesis cluster.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Endpoint</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Endpoint</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
+            <td class="entry cellrowborder" headers="d563155e3186 ">Endpoint to connect to when you select Other for the region. Enter the endpoint
               name.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Stream Name</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Stream Name</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Kinesis stream name.</td>
+            <td class="entry cellrowborder" headers="d563155e3186 ">Kinesis stream name.</td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Kinesis Producer Configuration</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Kinesis Producer Configuration</td>
 
-            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1917" headers="d563280e3186 ">Additional Kinesis properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add
+            <td class="entry cellrowborder" id="task_xlv_jdw_kq__d232e1917" headers="d563155e3186 ">Additional Kinesis properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to add
               properties. Define the Kinesis property name and value.<p class="p">When you add a configuration
                 property, enter the exact property name and the value. The stage does not validate
                 the property names or values. </p>
@@ -2518,9 +2518,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Partitioning Strategy</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Partitioning Strategy</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_xlv_jdw_kq__d232e1887">
+            <td class="entry cellrowborder" headers="d563155e3186 ">Strategy to write data to Kinesis shards:<ul class="ul" id="task_xlv_jdw_kq__d232e1887">
                 <li class="li">Random - Generates a random partition key.</li>
 
                 <li class="li">
@@ -2534,18 +2534,18 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3183 ">Partition Expression</td>
+            <td class="entry cellrowborder" headers="d563155e3183 ">Partition Expression</td>
 
-            <td class="entry cellrowborder" headers="d563280e3186 ">Expression to generate the partition key used to pass data to different shards.
+            <td class="entry cellrowborder" headers="d563155e3186 ">Expression to generate the partition key used to pass data to different shards.
                 <p class="p">Use for the expression partition strategy. </p>
 </td>
 
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3183 ">Preserve Record Order</td>
+                                    <td class="entry cellrowborder" headers="d563155e3183 ">Preserve Record Order</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3186 ">Select to preserve the order of records. Enabling this
+                                    <td class="entry cellrowborder" headers="d563155e3186 ">Select to preserve the order of records. Enabling this
                                         option can reduce pipeline performance.</td>
 
                                 </tr>
@@ -2564,45 +2564,45 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__d330e10697" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e3447">MapR Streams Producer Property</th>
+                                    <th class="entry cellrowborder" id="d563155e3447">MapR Streams Producer Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e3450">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e3450">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_ok1_cwr_xr" title="Kafka Producer can write a record to the topic based on an expression. When Kafka Producer evaluates a record, it calculates the expression based on record values and writes the record to the resulting topic.">Runtime Topic Resolution</a></td>
 
-                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10522" headers="d563280e3450 ">Evaluates an expression at
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10522" headers="d563155e3450 ">Evaluates an expression at
                                             runtime to determine the topic to use for each
                                             record.</td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 ">Topic</td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 ">Topic</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e3450 ">Topic to use. <p class="p">Not available when using runtime
+                                        <td class="entry cellrowborder" headers="d563155e3450 ">Topic to use. <p class="p">Not available when using runtime
                                                 topic resolution.</p>
 </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 ">Topic Expression</td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 ">Topic Expression</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e3450 ">Expression used to determine where each record is
+                                        <td class="entry cellrowborder" headers="d563155e3450 ">Expression used to determine where each record is
                                             written when using runtime topic resolution. Use an
                                             expression that evaluates to a topic name. </td>
 
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 ">Topic White List</td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 ">Topic White List</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e3450 ">List of valid topic names to write to when using
+                                        <td class="entry cellrowborder" headers="d563155e3450 ">List of valid topic names to write to when using
                                             runtime topic resolution. Use to avoid writing to
                                             invalid topics. Records that resolve to invalid topic
                                             names are passed to the stage for error handling. <p class="p">Use
@@ -2613,9 +2613,9 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Strategy</a></td>
 
-                                        <td class="entry cellrowborder" headers="d563280e3450 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d330e10555">
+                                        <td class="entry cellrowborder" headers="d563155e3450 ">Strategy to use to write to partitions:<ul class="ul" id="task_xlv_jdw_kq__d330e10555">
                                                 <li class="li">Round Robin - Takes turns writing to different
                                                   partitions.</li>
 
@@ -2637,9 +2637,9 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 "><a class="xref" href="../Destinations/KProducer.html#concept_qpm_xp4_4r" title="The partition strategy determines how to write data to Kafka partitions. You can use a partition strategy to balance the work load or to write data semantically.">Partition Expression</a></td>
 
-                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10577" headers="d563280e3450 ">Expression to use with the
+                                        <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e10577" headers="d563155e3450 ">Expression to use with the
                                             default or expression partition strategy. <p class="p">When using
                                                 the default partition strategy, specify an
                                                 expression that returns the partition key from the
@@ -2657,18 +2657,18 @@
                                     </tr>
 
                                 <tr>
-                                        <td class="entry cellrowborder" headers="d563280e3447 ">One Message per Batch</td>
+                                        <td class="entry cellrowborder" headers="d563155e3447 ">One Message per Batch</td>
 
-                                        <td class="entry cellrowborder" headers="d563280e3450 ">For each batch, writes the records to each partition
+                                        <td class="entry cellrowborder" headers="d563155e3450 ">For each batch, writes the records to each partition
                                             as a single message. </td>
 
                                     </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3447 "><a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">MapR Streams Configuration</a>
+                                    <td class="entry cellrowborder" headers="d563155e3447 "><a class="xref" href="../Destinations/MapRStreamsProd.html#concept_lzy_xlg_2v" title="You can add custom configuration properties to MapR Streams Producer.">MapR Streams Configuration</a>
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3450 ">Additional configuration properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
+                                    <td class="entry cellrowborder" headers="d563155e3450 ">Additional configuration properties to use. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                             <span class="ph uicontrol">Add</span> icon and define the MapR
                                         Streams property name and value.<p class="p">Use the property names
                                             and values as expected by MapR.</p>
@@ -2692,18 +2692,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_xlv_jdw_kq__table_a2r_l4t_kcb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d563280e3616">MQTT Property</th>
+                                    <th class="entry cellrowborder" id="d563155e3616">MQTT Property</th>
 
-                                    <th class="entry cellrowborder" id="d563280e3619">Description</th>
+                                    <th class="entry cellrowborder" id="d563155e3619">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3616 ">Broker URL</td>
+            <td class="entry cellrowborder" headers="d563155e3616 ">Broker URL</td>
 
-            <td class="entry cellrowborder" headers="d563280e3619 ">MQTT Broker URL. Enter in the following
+            <td class="entry cellrowborder" headers="d563155e3619 ">MQTT Broker URL. Enter in the following
                 format:<pre class="pre codeblock"><code>&lt;tcp | ssl&gt;://&lt;hostname&gt;:&lt;port&gt;</code></pre><p class="p">Use ssl for
                 secure connections to the broker.</p>
 <div class="p">For
@@ -2713,9 +2713,9 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3616 ">Client ID</td>
+            <td class="entry cellrowborder" headers="d563155e3616 ">Client ID</td>
 
-            <td class="entry cellrowborder" headers="d563280e3619 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
+            <td class="entry cellrowborder" headers="d563155e3619 ">MQTT Client ID. The ID must be unique across all clients connecting to the same
                 broker.<div class="p">You can define an expression that evaluates to the client ID. For example,
                 enter the following expression to use the unique pipeline ID as the client
                 ID:<pre class="pre codeblock"><code>${pipeline:id()}</code></pre></div>
@@ -2730,17 +2730,17 @@
           </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3616 "><a class="xref" href="../Destinations/MQTTPublisher.html#concept_bbq_w5q_mz" title="The MQTT Publisher destination writes messages to a single topic on the MQTT broker. Any MQTT client subscribed to that topic receives the messages. A topic is a string that the broker uses to filter messages for each connected client.">Topic</a></td>
+              <td class="entry cellrowborder" headers="d563155e3616 "><a class="xref" href="../Destinations/MQTTPublisher.html#concept_bbq_w5q_mz" title="The MQTT Publisher destination writes messages to a single topic on the MQTT broker. Any MQTT client subscribed to that topic receives the messages. A topic is a string that the broker uses to filter messages for each connected client.">Topic</a></td>
 
-              <td class="entry cellrowborder" headers="d563280e3619 ">Topic to publish to. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to
+              <td class="entry cellrowborder" headers="d563155e3619 ">Topic to publish to. Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the <span class="ph uicontrol">Add</span> icon to
                 read from additional topics. </td>
 
             </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3616 ">Quality of Service</td>
+            <td class="entry cellrowborder" headers="d563155e3616 ">Quality of Service</td>
 
-            <td class="entry cellrowborder" headers="d563280e3619 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_xlv_jdw_kq__d232e6854">
+            <td class="entry cellrowborder" headers="d563155e3619 ">Determines the quality of service level used to guarantee message delivery:<ul class="ul" id="task_xlv_jdw_kq__d232e6854">
                 <li class="li">At Most Once (0)</li>
 
                 <li class="li">At Least Once (1)</li>
@@ -2755,9 +2755,9 @@
           </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3616 ">Client Persistence Mechanism</td>
+              <td class="entry cellrowborder" headers="d563155e3616 ">Client Persistence Mechanism</td>
 
-              <td class="entry cellrowborder" headers="d563280e3619 ">Determines the persistence mechanism that the destination uses to guarantee
+              <td class="entry cellrowborder" headers="d563155e3619 ">Determines the persistence mechanism that the destination uses to guarantee
                 message delivery when the quality of service level is at least once or exactly once.
                 Select one of the following options:<ul class="ul" id="task_xlv_jdw_kq__d232e6972">
                   <li class="li">Memory - Store messages in memory on the <span class="ph">Data Collector</span> machine until the
@@ -2776,9 +2776,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3616 ">Client Persistence Data Directory</td>
+              <td class="entry cellrowborder" headers="d563155e3616 ">Client Persistence Data Directory</td>
 
-              <td class="entry cellrowborder" headers="d563280e3619 ">Local directory on the <span class="ph">Data Collector</span> machine where the
+              <td class="entry cellrowborder" headers="d563155e3619 ">Local directory on the <span class="ph">Data Collector</span> machine where the
                 destination temporarily stores messages in a file when you configure file
                   persistence.<p class="p">The user who starts <span class="ph">Data Collector</span> must have read and
                   write access to this directory.</p>
@@ -2787,9 +2787,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3616 ">Keep Alive Interval (secs)</td>
+              <td class="entry cellrowborder" headers="d563155e3616 ">Keep Alive Interval (secs)</td>
 
-              <td class="entry cellrowborder" headers="d563280e3619 ">Maximum time in seconds to allow the connection to the MQTT broker to remain
+              <td class="entry cellrowborder" headers="d563155e3619 ">Maximum time in seconds to allow the connection to the MQTT broker to remain
                 idle. After the destination publishes no messages for this amount of time, the
                 connection is closed. The destination must reconnect to the MQTT broker.<p class="p">Default
                   is 60 seconds.</p>
@@ -2798,9 +2798,9 @@
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Use Credentials</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Use Credentials</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Enables entering MQTT credentials. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d233e6386">To
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Enables entering MQTT credentials. <div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_xlv_jdw_kq__d233e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
@@ -2808,31 +2808,31 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Username</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">MQTT user name.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Password</td>
-
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">MQTT password.</td>
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">MQTT user name.</td>
 
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d563280e3616 ">Clean Session</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Password</td>
 
-            <td class="entry cellrowborder" headers="d563280e3619 ">Enables connecting to the MQTT broker using a clean session, or a non-persistent
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">MQTT password.</td>
+
+                                </tr>
+
+                                <tr>
+            <td class="entry cellrowborder" headers="d563155e3616 ">Clean Session</td>
+
+            <td class="entry cellrowborder" headers="d563155e3619 ">Enables connecting to the MQTT broker using a clean session, or a non-persistent
               connection. See the MQTT documentation for details about MQTT clean sessions.</td>
 
           </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d563280e3616 ">Retain the Message</td>
+              <td class="entry cellrowborder" headers="d563155e3616 ">Retain the Message</td>
 
-              <td class="entry cellrowborder" headers="d563280e3619 ">Determines whether or not the MQTT broker retains the message last published by
+              <td class="entry cellrowborder" headers="d563155e3619 ">Determines whether or not the MQTT broker retains the message last published by
                 the destination when no MQTT client is subscribed to listen to the topic. <p class="p">When
                   selected, the MQTT broker retains the last message published by the destination.
                   Any messages published earlier are lost. When cleared, all messages published by
@@ -2844,25 +2844,25 @@
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Use TLS</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Use TLS</td>
 
-                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e4752" headers="d563280e3619 ">Enables the use of TLS. </td>
+                                    <td class="entry cellrowborder" id="task_xlv_jdw_kq__d330e4752" headers="d563155e3619 ">Enables the use of TLS. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Use Remote Truststore</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Use Remote Truststore</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Enables loading the contents of the truststore from a
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Enables loading the contents of the truststore from a
                                         remote credential store or from values entered in the stage
                                         properties. For more information, see <a class="xref" href="SSL-TLS.html#concept_q2c_hj2_1nb" title="You can configure stages to load the contents of the keystore or truststore from a remote credential store or from values entered in the stage properties. The stage builds the keystore or truststore from the private key and certificates retrieved from the credential store or entered in the stage properties.">Remote Keystore and Truststore</a>.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Trusted Certificates</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Trusted Certificates</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Each PEM certificate used in the remote truststore. Enter
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Each PEM certificate used in the remote truststore. Enter
                                         a <a class="xref" href="../Expression_Language/Functions.html#concept_yvc_3qs_r1b">credential function</a> that returns the certificate
                                         or enter the contents of the certificate.<p class="p">Using <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a>, click the
                                                 <strong class="ph b">Add</strong> icon to add additional
@@ -2872,9 +2872,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 "><a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 "><a class="xref" href="SSL-TLS.html#concept_kqb_rqf_5z">Truststore File</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Path to the local truststore file. Enter an absolute path
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Path to the local truststore file. Enter an absolute path
                                         to the file or a path relative to the <span class="ph">Data Collector</span> resources directory: <span class="ph filepath">$SDC_RESOURCES</span>.
                                                 <p class="p"><span class="ph">For more information about environment variables, see
                               <a class="xref" href="../Configuration/DCEnvironmentConfig.html#concept_rng_qym_qr">Data Collector Environment Configuration</a>.</span></p>
@@ -2884,9 +2884,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Truststore Type</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Truststore Type</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Type of truststore to use. Use one of the following types:<ul class="ul">
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Type of truststore to use. Use one of the following types:<ul class="ul">
                                             <li class="li">Java Keystore File (JKS)</li>
 
                                             <li class="li">PKCS #12 (p12 file)</li>
@@ -2898,9 +2898,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Truststore Password</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Truststore Password</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Password to the truststore file. A password is optional,
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Password to the truststore file. A password is optional,
                                         but recommended.<div class="p">
                                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
@@ -2911,25 +2911,25 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Truststore Trust Algorithm</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Truststore Trust Algorithm</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_xlv_jdw_kq__d330e5063">SunX509</span>.</p>
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Algorithm to manage the truststore. <p class="p">Default is <span class="ph" id="task_xlv_jdw_kq__d330e5063">SunX509</span>.</p>
 </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Use Default Protocols</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Use Default Protocols</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Uses the default <span class="ph">TLSv1.2</span> transport layer security (TLS) protocol. To use a
                                         different protocol, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 "><a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 "><a class="xref" href="SSL-TLS.html#concept_mvs_cxf_5z">Transport Protocols</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">TLS protocols to use. To use a protocol other than the
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">TLS protocols to use. To use a protocol other than the
                                         default <span class="ph">TLSv1.2</span>, click the <span class="ph uicontrol">Add</span> icon and enter the
                                         protocol name. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add
                                             protocols.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as <span class="ph">TLSv1.2</span>.</div>
@@ -2938,17 +2938,17 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 "><a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 "><a class="xref" href="SSL-TLS.html#concept_cwx_dyf_5z">Use Default Cipher Suites</a></td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Uses a default cipher suite for the SSL/TLS handshake. To
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Uses a default cipher suite for the SSL/TLS handshake. To
                                         use a different cipher suite, clear this option.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d563280e3616 ">Cipher Suites</td>
+                                    <td class="entry cellrowborder" headers="d563155e3616 ">Cipher Suites</td>
 
-                                    <td class="entry cellrowborder" headers="d563280e3619 ">Cipher suites to use. To use a cipher suite that is not a
+                                    <td class="entry cellrowborder" headers="d563155e3619 ">Cipher suites to use. To use a cipher suite that is not a
                                         part of the default set, click the
                                             <span class="ph uicontrol">Add</span> icon and enter the name of
                                         the cipher suite. You can use <a class="xref" href="SimpleBulkEdit.html#concept_alb_b3y_cbb">simple or bulk edit mode</a> to add cipher

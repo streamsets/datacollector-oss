@@ -329,42 +329,42 @@
     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_n2n_r2q_s2b__table_kmx_hxv_s2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
           <tr>
-            <th class="entry cellrowborder" id="d224889e256">Supported Origin</th>
+            <th class="entry cellrowborder" id="d224764e256">Supported Origin</th>
 
-            <th class="entry cellrowborder" id="d224889e259">Limitations</th>
+            <th class="entry cellrowborder" id="d224764e259">Limitations</th>
 
           </tr>
 
         </thead>
 <tbody class="tbody">
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Data
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Data
                 Generator</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random
                 Record Source</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Raw Data
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Raw Data
                 Source</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq">Directory</a></td>
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/Directory.html#concept_qcq_54n_jq">Directory</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">Edge pipelines do not support multithreaded processing. <p class="p">In an edge pipeline,
+            <td class="entry cellrowborder" headers="d224764e259 ">Edge pipelines do not support multithreaded processing. <p class="p">In an edge pipeline,
                 the Directory origin always creates a single thread to read the files even if you
                 configure it to use multiple threads.</p>
 </td>
@@ -372,10 +372,10 @@
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/FileTail.html#concept_n1y_qyp_5q">File Tail
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/FileTail.html#concept_n1y_qyp_5q">File Tail
               </a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">
+            <td class="entry cellrowborder" headers="d224764e259 ">
               <div class="p">In edge pipelines, the File Tail origin can use the following naming conventions
                 for archived files: <ul class="ul" id="concept_n2n_r2q_s2b__FTail-Naming-ul">
                   <li class="li">Active File with Reverse Counter</li>
@@ -391,18 +391,18 @@ If you configure the origin to use other active file naming conventions, the
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/gRPCClient.html#concept_yp1_4zs_yfb">gRPC
               Client</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/HTTPClient.html#concept_wk4_bjz_5r">HTTP
               Client</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">
+            <td class="entry cellrowborder" headers="d224764e259 ">
               <p class="p">In edge pipelines, the HTTP Client origin does not support batch processing mode,
                 pagination, or OAuth2 authorization.</p>
 
@@ -411,10 +411,10 @@ If you configure the origin to use other active file naming conventions, the
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/HTTPServer.html#concept_s2p_5hb_4y">HTTP
               Server</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">Edge pipelines do not support multithreaded processing. <p class="p">In an edge pipeline,
+            <td class="entry cellrowborder" headers="d224764e259 ">Edge pipelines do not support multithreaded processing. <p class="p">In an edge pipeline,
                 the HTTP Server origin always creates a single thread to read the files even if you
                 configure it to use multiple threads.</p>
 </td>
@@ -422,10 +422,10 @@ If you configure the origin to use other active file naming conventions, the
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/MQTTSubscriber.html#concept_ukz_3vt_lz">MQTT
                 Subscriber</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">
+            <td class="entry cellrowborder" headers="d224764e259 ">
               <p class="p">Edge pipelines that use MQTT stages require using an intermediary MQTT broker.</p>
 
               <p class="p"><span class="ph">For example, an edge sending pipeline uses an MQTT Publisher
@@ -438,34 +438,34 @@ If you configure the origin to use other active file naming conventions, the
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Sensor
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Sensor
                 Reader</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/SystemMetrics.html#concept_gzy_gmv_32b">System
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/SystemMetrics.html#concept_gzy_gmv_32b">System
                 Metrics</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/WebSocketClient.html#concept_unk_nzk_fbb">WebSocket
                 Client</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e256 "><a class="xref" href="../Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event
+            <td class="entry cellrowborder" headers="d224764e256 "><a class="xref" href="../Origins/WindowsLog.html#concept_agf_5jv_sbb">Windows Event
                 Log</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e259 ">None</td>
+            <td class="entry cellrowborder" headers="d224764e259 ">None</td>
 
           </tr>
 
@@ -490,69 +490,69 @@ If you configure the origin to use other active file naming conventions, the
                 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ih5_s2q_s2b__table_vgd_qnw_s2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                                <th class="entry cellrowborder" id="d224889e488">Supported Processor</th>
+                                                <th class="entry cellrowborder" id="d224764e488">Supported Processor</th>
 
-                                                <th class="entry cellrowborder" id="d224889e491">Limitations</th>
+                                                <th class="entry cellrowborder" id="d224764e491">Limitations</th>
 
                                         </tr>
 
                                 </thead>
 <tbody class="tbody">
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
-
-                                        </tr>
-
-                                        <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Identity</a></td>
-
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random Error</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Identity</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
-
-                                        </tr>
-
-                                        <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></td>
-
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">Dev Random Error</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">In edge pipelines, the JavaScript Evaluator
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></td>
+
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></td>
+
+                                                <td class="entry cellrowborder" headers="d224764e491 ">In edge pipelines, the JavaScript Evaluator
                                                   processor does not support the sdcFunctions
                                                   scripting object.</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e491 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e488 "><a class="xref" href="../Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e488 "><a class="xref" href="../Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e491 ">In edge pipelines, the TensorFlow Evaluator
+                                                <td class="entry cellrowborder" headers="d224764e491 ">In edge pipelines, the TensorFlow Evaluator
                                                   processor can evaluate each record. It cannot
                                                   evaluate the entire batch.</td>
 
@@ -583,74 +583,74 @@ If you configure the origin to use other active file naming conventions, the
                 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_fs1_52q_s2b__table_kwb_b4w_s2b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                                <th class="entry cellrowborder" id="d224889e646">Destination</th>
+                                                <th class="entry cellrowborder" id="d224764e646">Destination</th>
 
-                                                <th class="entry cellrowborder" id="d224889e649">Limitations</th>
+                                                <th class="entry cellrowborder" id="d224764e649">Limitations</th>
 
                                         </tr>
 
                                 </thead>
 <tbody class="tbody">
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/AmazonS3.html#concept_avx_bnq_rt">Amazon S3</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">In edge pipelines, the Amazon S3 destination
+                                                <td class="entry cellrowborder" headers="d224764e649 ">In edge pipelines, the Amazon S3 destination
                                                   does not generate event records after streaming a
                                                   whole file.</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/CoAPClient.html#concept_hw5_s3n_sz">CoAP Client</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/HTTPClient.html#concept_khl_sg5_lz">HTTP Client</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">In edge pipelines, the HTTP Client
+                                                <td class="entry cellrowborder" headers="d224764e649 ">In edge pipelines, the HTTP Client
                                                   destination does not support OAuth 2
                                                   authentication.</td>
 
                                         </tr>
 
           <tr>
-            <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></td>
+            <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/InfluxDB.html#concept_inf_db_sr">InfluxDB</a></td>
 
-            <td class="entry cellrowborder" headers="d224889e649 ">In edge pipelines, the InfluxDB destination does not support automatically
+            <td class="entry cellrowborder" headers="d224764e649 ">In edge pipelines, the InfluxDB destination does not support automatically
               creating the database in InfluxDB.</td>
 
           </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/KProducer.html#concept_oq2_5jl_zq">Kafka Producer</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">In edge pipelines, the Kafka Producer
+                                                <td class="entry cellrowborder" headers="d224764e649 ">In edge pipelines, the Kafka Producer
                                                   destination does not support Kerberos
                                                   authentication to connect to Kafka.</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/KinFirehose.html#concept_bjv_dpk_kv">Kinesis Firehose</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
-
-                                        </tr>
-
-                                        <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></td>
-
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/KinProducer.html#concept_swk_h1j_yr">Kinesis Producer</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">Edge pipelines that use MQTT stages require
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/MQTTPublisher.html#concept_odz_txt_lz">MQTT Publisher</a></td>
+
+                                                <td class="entry cellrowborder" headers="d224764e649 ">Edge pipelines that use MQTT stages require
                                                   using an intermediary MQTT broker.<p class="p"><span class="ph">For example, an edge sending pipeline uses an MQTT Publisher
                 destination to write to an MQTT broker. The MQTT broker temporarily stores the data
                 until the MQTT Subscriber origin in the <span class="ph">Data Collector</span> receiving pipeline reads
@@ -660,31 +660,31 @@ If you configure the origin to use other active file naming conventions, the
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/ToError.html#concept_ryn_v3z_lr">To Error</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/ToError.html#concept_ryn_v3z_lr">To Error</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
-
-                                        </tr>
-
-                                        <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">To Event</a></td>
-
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/Trash.html#concept_htf_ydj_wq">Trash</a></td>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Pipeline_Design/DevStages.html#concept_czx_ktn_ht">To Event</a></td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
 
                                         </tr>
 
                                         <tr>
-                                                <td class="entry cellrowborder" headers="d224889e646 "><a class="xref" href="../Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/Trash.html#concept_htf_ydj_wq">Trash</a></td>
+
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
+
+                                        </tr>
+
+                                        <tr>
+                                                <td class="entry cellrowborder" headers="d224764e646 "><a class="xref" href="../Destinations/WebSocketClient.html#concept_l4d_mjn_lz">WebSocket Client</a>
                                                 </td>
 
-                                                <td class="entry cellrowborder" headers="d224889e649 ">None</td>
+                                                <td class="entry cellrowborder" headers="d224764e649 ">None</td>
 
                                         </tr>
 

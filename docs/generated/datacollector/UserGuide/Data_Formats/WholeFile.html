@@ -404,45 +404,45 @@
             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_a2s_4jw_1x__table_qp4_lk5_bz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /><col style="width:33.33333333333333%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d73833e420">Origin</th>
+                            <th class="entry cellrowborder" id="d73708e420">Origin</th>
 
-                            <th class="entry cellrowborder" id="d73833e423">File Name Field Path</th>
+                            <th class="entry cellrowborder" id="d73708e423">File Name Field Path</th>
 
-                            <th class="entry cellrowborder" id="d73833e426">Base Expression</th>
+                            <th class="entry cellrowborder" id="d73708e426">Base Expression</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d73833e420 ">Directory</td>
+                            <td class="entry cellrowborder" headers="d73708e420 ">Directory</td>
 
-                            <td class="entry cellrowborder" headers="d73833e423 ">/fileInfo/filename</td>
+                            <td class="entry cellrowborder" headers="d73708e423 ">/fileInfo/filename</td>
 
-                            <td class="entry cellrowborder" headers="d73833e426 ">${record:value('/fileInfo/filename')}</td>
-
-                        </tr>
-
-                        <tr>
-                            <td class="entry cellrowborder" headers="d73833e420 ">SFTP/FTP</td>
-
-                            <td class="entry cellrowborder" headers="d73833e423 ">/fileInfo/filename</td>
-
-                            <td class="entry cellrowborder" headers="d73833e426 ">${record:value('/fileInfo/filename')}</td>
+                            <td class="entry cellrowborder" headers="d73708e426 ">${record:value('/fileInfo/filename')}</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d73833e420 ">Amazon S3</td>
+                            <td class="entry cellrowborder" headers="d73708e420 ">SFTP/FTP</td>
 
-                            <td class="entry cellrowborder" headers="d73833e423 ">/fileInfo/objectKey</td>
+                            <td class="entry cellrowborder" headers="d73708e423 ">/fileInfo/filename</td>
 
-                            <td class="entry cellrowborder" headers="d73833e426 ">${record:value('/fileInfo/objectKey')}* </td>
+                            <td class="entry cellrowborder" headers="d73708e426 ">${record:value('/fileInfo/filename')}</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" colspan="3" headers="d73833e420 d73833e423 d73833e426 ">* Note that the objectKey field can
+                            <td class="entry cellrowborder" headers="d73708e420 ">Amazon S3</td>
+
+                            <td class="entry cellrowborder" headers="d73708e423 ">/fileInfo/objectKey</td>
+
+                            <td class="entry cellrowborder" headers="d73708e426 ">${record:value('/fileInfo/objectKey')}* </td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="entry cellrowborder" colspan="3" headers="d73708e420 d73708e423 d73708e426 ">* Note that the objectKey field can
                                 include a field path as well as a file name. Use this expression
                                 when the objectKey is just a file name.</td>
 

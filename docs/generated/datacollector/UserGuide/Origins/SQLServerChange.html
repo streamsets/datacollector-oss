@@ -715,18 +715,18 @@
         <div class="p">The origin provides the following header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_pc4_xts_r1b__table_ygr_kft_r1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:40%" /><col style="width:60%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d519609e832">Header Attribute Name</th>
+                            <th class="entry cellrowborder" id="d519484e832">Header Attribute Name</th>
 
-                            <th class="entry cellrowborder" id="d519609e835">Description</th>
+                            <th class="entry cellrowborder" id="d519484e835">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">sdc.operation.type</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">sdc.operation.type</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">
+                            <td class="entry cellrowborder" headers="d519484e835 ">
                                 <div class="p">The origin uses the following values to represent the operation
                                     type: <ul class="ul" id="concept_pc4_xts_r1b__ul_qnr_xmz_t1b">
                                         <li class="li">1 for INSERT</li>
@@ -743,9 +743,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.tables</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.tables</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">
+                            <td class="entry cellrowborder" headers="d519484e835 ">
                                 <div class="p"><span class="ph" id="concept_pc4_xts_r1b__d18e65">Provides a
                                         comma-separated list of source tables for the fields in the
                                         record.</span><div class="note note"><span class="notetitle">Note:</span> Not all JDBC drivers provide this
@@ -757,9 +757,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.&lt;column name&gt;.jdbcType</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.&lt;column name&gt;.jdbcType</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 "><span class="ph" id="concept_pc4_xts_r1b__d18e81">Provides
+                            <td class="entry cellrowborder" headers="d519484e835 "><span class="ph" id="concept_pc4_xts_r1b__d18e81">Provides
                                     the numeric value of the original SQL data type for each field
                                     in the record. See the <a class="xref" href="https://docs.oracle.com/javase/8/docs/api/constant-values.html#java.sql.Types.ARRAY" target="_blank">Java documentation</a> for
                                     a list of the data types that correspond to numeric
@@ -768,25 +768,25 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.&lt;column name&gt;.jdbc.precision</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Provides the original precision for all
+                            <td class="entry cellrowborder" headers="d519484e835 ">Provides the original precision for all
                                 numeric and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.&lt;column name&gt;.jdbc.scale</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Provides the original scale for all numeric
+                            <td class="entry cellrowborder" headers="d519484e835 ">Provides the original scale for all numeric
                                 and decimal fields. </td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.SYS_CHANGE_COLUMNS</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.SYS_CHANGE_COLUMNS</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Lists the columns that have changed since the last
+                            <td class="entry cellrowborder" headers="d519484e835 ">Lists the columns that have changed since the last
                                     sync.<p class="p">Returns NULL when column change tracking is not enabled,
                                     when the operation is insert or delete, or when all non-primary
                                     key columns were updated at once.</p>
@@ -795,24 +795,24 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.SYS_CHANGE_CONTEXT</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.SYS_CHANGE_CONTEXT</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Provides change context information when available.</td>
+                            <td class="entry cellrowborder" headers="d519484e835 ">Provides change context information when available.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.SYS_CHANGE_CREATION_VERSION</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.SYS_CHANGE_CREATION_VERSION</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Provides the version number associated with the last insert
+                            <td class="entry cellrowborder" headers="d519484e835 ">Provides the version number associated with the last insert
                                 operation.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.SYS_CHANGE_OPERATION</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.SYS_CHANGE_OPERATION</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Indicates the type of change that occurred:<ul class="ul" id="concept_pc4_xts_r1b__ul_ml1_v5z_r1b">
+                            <td class="entry cellrowborder" headers="d519484e835 ">Indicates the type of change that occurred:<ul class="ul" id="concept_pc4_xts_r1b__ul_ml1_v5z_r1b">
                                     <li class="li">I for insert</li>
 
                                     <li class="li">D for delete</li>
@@ -825,9 +825,9 @@
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e832 ">jdbc.SYS_CHANGE_VERSION</td>
+                            <td class="entry cellrowborder" headers="d519484e832 ">jdbc.SYS_CHANGE_VERSION</td>
 
-                            <td class="entry cellrowborder" headers="d519609e835 ">Provides the version number of the most recent change to the
+                            <td class="entry cellrowborder" headers="d519484e835 ">Provides the version number of the most recent change to the
                                 row.</td>
 
                         </tr>
@@ -919,42 +919,42 @@
             data types:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ks5_tqh_wkb__d18e346" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:16.666666666666664%" /><col style="width:25%" /><col style="width:58.333333333333336%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d519609e1121"><span class="ph">Data Collector</span> Data Type</th>
+                            <th class="entry cellrowborder" id="d519484e1121"><span class="ph">Data Collector</span> Data Type</th>
 
-                            <th class="entry cellrowborder" id="d519609e1126">Generated Field Attribute</th>
+                            <th class="entry cellrowborder" id="d519484e1126">Generated Field Attribute</th>
 
-                            <th class="entry cellrowborder" id="d519609e1129">Description</th>
+                            <th class="entry cellrowborder" id="d519484e1129">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e1121 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d519484e1121 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1126 ">precision</td>
+                            <td class="entry cellrowborder" headers="d519484e1126 ">precision</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1129 ">Provides the original precision for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d519484e1129 ">Provides the original precision for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e1121 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d519484e1121 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1126 ">scale</td>
+                            <td class="entry cellrowborder" headers="d519484e1126 ">scale</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1129 ">Provides the original scale for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d519484e1129 ">Provides the original scale for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e1121 ">Datetime</td>
+                            <td class="entry cellrowborder" headers="d519484e1121 ">Datetime</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1126 ">nanoSeconds</td>
+                            <td class="entry cellrowborder" headers="d519484e1126 ">nanoSeconds</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1129 ">Provides the original nanoseconds for every datetime, datetime2,
+                            <td class="entry cellrowborder" headers="d519484e1129 ">Provides the original nanoseconds for every datetime, datetime2,
                                 or smalldatetime column.</td>
 
                         </tr>
@@ -1007,18 +1007,18 @@
             Change Tracking origin have the following event-related record header attributes:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_ckx_z3v_s1b__EventHead-NoMoreData-table" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d519609e1277">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d519484e1277">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d519609e1280">Description</th>
+                            <th class="entry cellrowborder" id="d519484e1280">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d519609e1277 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d519484e1277 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d519609e1280 ">Event type. Uses the following type:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
+                            <td class="entry cellrowborder" headers="d519484e1280 ">Event type. Uses the following type:<ul class="ul" id="concept_ckx_z3v_s1b__ul_f4w_xrs_kz">
                                     <li class="li" id="concept_ckx_z3v_s1b__noMoreData-bullet">no-more-data - Generated when the
                                         origin completes processing all data in the specified change
                                         tables.</li>
@@ -1029,16 +1029,16 @@
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d519609e1277 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d519484e1277 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d519609e1280 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d519484e1280 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d519609e1277 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d519484e1277 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_ckx_z3v_s1b__d31e2883" headers="d519609e1280 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_ckx_z3v_s1b__d31e2883" headers="d519484e1280 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -1069,41 +1069,41 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__table_znb_nbc_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d519609e1370">General Property</th>
+                                    <th class="entry cellrowborder" id="d519484e1370">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d519609e1373">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1373">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1370 ">Name</td>
+              <td class="entry cellrowborder" headers="d519484e1370 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d519609e1373 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d519609e1370 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d519609e1373 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d519484e1373 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1370 "><a class="xref" href="SQLServerChange.html#concept_byp_dgv_s1b">Produce
+              <td class="entry cellrowborder" headers="d519484e1370 ">Description</td>
+
+              <td class="entry cellrowborder" headers="d519484e1373 ">Optional description.</td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d519484e1370 "><a class="xref" href="SQLServerChange.html#concept_byp_dgv_s1b">Produce
                                             Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1373 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d519484e1373 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1370 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+              <td class="entry cellrowborder" headers="d519484e1370 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-              <td class="entry cellrowborder" headers="d519609e1373 ">Error record handling for the stage: <ul class="ul" id="task_vsh_22s_r1b__d31e808">
+              <td class="entry cellrowborder" headers="d519484e1373 ">Error record handling for the stage: <ul class="ul" id="task_vsh_22s_r1b__d31e808">
                   <li class="li">Discard - Discards the record.</li>
 
                   <li class="li">Send to Error - Sends the record to the pipeline for error handling.</li>
@@ -1127,18 +1127,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__table_g3z_pg5_s1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d519609e1462">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d519484e1462">JDBC Property</th>
 
-                                    <th class="entry cellrowborder" id="d519609e1465">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1465">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 ">JDBC Connection String</td>
+                                    <td class="entry cellrowborder" headers="d519484e1462 ">JDBC Connection String</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 ">
+                                    <td class="entry cellrowborder" headers="d519484e1465 ">
                                         <p class="p">Connection string to use to connect to the database. </p>
 
                                     </td>
@@ -1146,10 +1146,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 "><a class="xref" href="SQLServerChange.html#concept_ofh_gns_r1b">Number of
+                                    <td class="entry cellrowborder" headers="d519484e1462 "><a class="xref" href="SQLServerChange.html#concept_ofh_gns_r1b">Number of
                                             Threads</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 ">Number of threads the origin generates and uses for
+                                    <td class="entry cellrowborder" headers="d519484e1465 ">Number of threads the origin generates and uses for
                 multithreaded processing.<p class="p">Configure the Maximum Pool Size property on the Advanced
                   tab to be equal to or greater than this value.</p>
 </td>
@@ -1157,10 +1157,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Per Batch
+                                    <td class="entry cellrowborder" headers="d519484e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Per Batch
                                             Strategy</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 "><span class="ph" id="task_vsh_22s_r1b__d31e3225">Strategy to create
+                                    <td class="entry cellrowborder" headers="d519484e1465 "><span class="ph" id="task_vsh_22s_r1b__d31e3225">Strategy to create
                   each batch of data:</span><ul class="ul" id="task_vsh_22s_r1b__d31e3227">
                   <li class="li">Switch Tables - When performing only multithreaded table processing, each
                     thread creates a batch of data from one table, and then switches to the next
@@ -1181,10 +1181,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Batches
+                                    <td class="entry cellrowborder" headers="d519484e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Batches
                                             from Result Set</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 ">Number of batches to create from the result set.
+                                    <td class="entry cellrowborder" headers="d519484e1465 ">Number of batches to create from the result set.
                 After a thread creates this number of batches, the database closes the result set
                 and then another thread can read from the same table.<p class="p">Use a positive integer to
                   set a limit on the number of batches created from the result set. Use -1 to opt
@@ -1197,10 +1197,10 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Result
+                                    <td class="entry cellrowborder" headers="d519484e1462 "><a class="xref" href="SQLServerChange.html#concept_qms_jns_r1b">Result
                                             Set Cache Size</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 ">Number of result sets to cache in the database. Use a
+                                    <td class="entry cellrowborder" headers="d519484e1465 ">Number of result sets to cache in the database. Use a
                 positive integer to set a limit on the number of cached result sets. Use -1 to opt
                 out of this property.<p class="p">By default, the origin caches an unlimited number of result
                   sets.</p>
@@ -1209,16 +1209,16 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Data Time Zone</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Data Time Zone</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Time zone to use to evaluate datetime-based offset column conditions. </td>
+              <td class="entry cellrowborder" headers="d519484e1465 ">Time zone to use to evaluate datetime-based offset column conditions. </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 ">Fetch Size</td>
+                                    <td class="entry cellrowborder" headers="d519484e1462 ">Fetch Size</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 "><span class="ph" id="task_vsh_22s_r1b__ph-FetchSize1">Maximum number of rows to fetch
+                                    <td class="entry cellrowborder" headers="d519484e1465 "><span class="ph" id="task_vsh_22s_r1b__ph-FetchSize1">Maximum number of rows to fetch
                                             and store in memory on the <span class="ph">Data Collector</span> machine. Enter zero to use the default fetch size set
                                             in the database.</span><p class="p"><span class="ph">Default is 1,000.</span></p>
 </td>
@@ -1226,42 +1226,42 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Use Credentials</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Use Credentials</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 "><span class="ph" id="task_vsh_22s_r1b__d31e3190">Enables entering credentials on the Credentials
+              <td class="entry cellrowborder" headers="d519484e1465 "><span class="ph" id="task_vsh_22s_r1b__d31e3190">Enables entering credentials on the Credentials
                   tab. Use when you do not include credentials in the JDBC connection
                 string.</span></td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Queries per Second</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Queries per Second</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Maximum number of queries to run in a second across all partitions and tables.
+              <td class="entry cellrowborder" headers="d519484e1465 ">Maximum number of queries to run in a second across all partitions and tables.
                 Use 0 for no limit.<p class="p">Default is 10. </p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Max Batch Size (records)</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Max Batch Size (records)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Maximum number of records to include in a batch.</td>
+              <td class="entry cellrowborder" headers="d519484e1465 ">Maximum number of records to include in a batch.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Max Clob Size (characters)</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Max Clob Size (characters)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Maximum number of characters to be read in a Clob field. Larger data is
+              <td class="entry cellrowborder" headers="d519484e1465 ">Maximum number of characters to be read in a Clob field. Larger data is
                 truncated.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Max Blob Size (bytes)</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Max Blob Size (bytes)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">
+              <td class="entry cellrowborder" headers="d519484e1465 ">
                 <p class="p">Maximum number of bytes to be read in a Blob field. </p>
 
               </td>
@@ -1269,9 +1269,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Number of Retries on SQL Error</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Number of Retries on SQL Error</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Number of times a thread tries to read a batch of data after receiving an SQL
+              <td class="entry cellrowborder" headers="d519484e1465 ">Number of times a thread tries to read a batch of data after receiving an SQL
                 error. After a thread retries this number of times, the thread handles the error
                 based on the error handling configured for the origin.<p class="p">Use to handle transient
                   network or connection issues that prevent a thread from reading a batch of
@@ -1282,19 +1282,19 @@
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 "><a class="xref" href="SQLServerChange.html#concept_ckx_z3v_s1b">No-more-data Event Generation Delay
+                                    <td class="entry cellrowborder" headers="d519484e1462 "><a class="xref" href="SQLServerChange.html#concept_ckx_z3v_s1b">No-more-data Event Generation Delay
                                         (seconds)</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 ">Number of seconds to delay generation of the
+                                    <td class="entry cellrowborder" headers="d519484e1465 ">Number of seconds to delay generation of the
                 no-more-data event after processing all rows. Use to allow time for additional data
                 to arrive before generating the no-more-data event. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1462 ">Convert Timestamp To String</td>
+                                    <td class="entry cellrowborder" headers="d519484e1462 ">Convert Timestamp To String</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1465 "><span class="ph">Enables the origin to write
+                                    <td class="entry cellrowborder" headers="d519484e1465 "><span class="ph">Enables the origin to write
                   timestamps as string values rather than datetime values. Strings maintain the
                   precision stored in the source database.</span> For example, strings can maintain the precision of a
                                         high-precision SQL Server datetime2 field.<p class="p"><span class="ph">When writing timestamps to <span class="ph">Data Collector</span> date or time data
@@ -1305,9 +1305,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1462 ">Additional JDBC Configuration Properties</td>
+              <td class="entry cellrowborder" headers="d519484e1462 ">Additional JDBC Configuration Properties</td>
 
-              <td class="entry cellrowborder" headers="d519609e1465 ">Additional JDBC configuration properties to use. To add properties, click
+              <td class="entry cellrowborder" headers="d519484e1465 ">Additional JDBC configuration properties to use. To add properties, click
                   <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
                   property names and values as expected by JDBC. </p>
 </td>
@@ -1328,27 +1328,27 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__table_c11_hl5_s1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d519609e1727"><a class="xref" href="SQLServerChange.html#concept_sx3_d11_s1b">Change
+                                    <th class="entry cellrowborder" id="d519484e1727"><a class="xref" href="SQLServerChange.html#concept_sx3_d11_s1b">Change
                                             Tracking Property</a></th>
 
-                                    <th class="entry cellrowborder" id="d519609e1732">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1732">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1727 ">Schema Name</td>
+                                    <td class="entry cellrowborder" headers="d519484e1727 ">Schema Name</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1732 ">Name of the schema to use for this table
+                                    <td class="entry cellrowborder" headers="d519484e1732 ">Name of the schema to use for this table
                                         configuration.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1727 ">Table Name Pattern</td>
+                                    <td class="entry cellrowborder" headers="d519484e1727 ">Table Name Pattern</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1732 ">
+                                    <td class="entry cellrowborder" headers="d519484e1732 ">
                                         <p class="p" id="task_vsh_22s_r1b__d23e5288">Pattern of the table names to read
                                             for this table configuration. Use the SQL LIKE syntax to
                                             define the pattern. </p>
@@ -1361,9 +1361,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1727 ">Table Exclusion Pattern</td>
+                                    <td class="entry cellrowborder" headers="d519484e1727 ">Table Exclusion Pattern</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1732 ">Pattern of the table names
+                                    <td class="entry cellrowborder" headers="d519484e1732 ">Pattern of the table names
                                         to exclude from being read for this table configuration. Use
                                         a Java-based regular expression, or regex, to define the
                                             pattern.<p class="p">Leave empty if you do not need to exclude any
@@ -1375,9 +1375,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1727 ">Initial Offset</td>
+                                    <td class="entry cellrowborder" headers="d519484e1727 ">Initial Offset</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1732 ">Offset value to use for this table configuration when the
+                                    <td class="entry cellrowborder" headers="d519484e1732 ">Offset value to use for this table configuration when the
                                         pipeline starts. When processing an offset, the origin
                                         starts with the first value greater than the specified
                                             offset.<p class="p">Use -1 to opt out of an initial offset. With
@@ -1405,26 +1405,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d23e5380" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr id="task_vsh_22s_r1b__d23e5390">
-                                    <th class="entry cellrowborder" id="d519609e1821">Credentials Property</th>
+                                    <th class="entry cellrowborder" id="d519484e1821">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d519609e1824">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1824">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" id="task_vsh_22s_r1b__d23e5404" headers="d519609e1821 ">Username</td>
+                                    <td class="entry cellrowborder" id="task_vsh_22s_r1b__d23e5404" headers="d519484e1821 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1824 "><span class="ph" id="task_vsh_22s_r1b__d23e5408">User name for the
+                                    <td class="entry cellrowborder" headers="d519484e1824 "><span class="ph" id="task_vsh_22s_r1b__d23e5408">User name for the
                                             JDBC connection.</span></td>
 
                                 </tr>
 
                                 <tr id="task_vsh_22s_r1b__d23e5412">
-                                    <td class="entry cellrowborder" headers="d519609e1821 ">Password</td>
+                                    <td class="entry cellrowborder" headers="d519484e1821 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1824 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_vsh_22s_r1b__d15e6386">To
+                                    <td class="entry cellrowborder" headers="d519484e1824 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_vsh_22s_r1b__d15e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
@@ -1445,26 +1445,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__d23e5437" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d519609e1894">Legacy Drivers Property</th>
+                                    <th class="entry cellrowborder" id="d519484e1894">Legacy Drivers Property</th>
 
-                                    <th class="entry cellrowborder" id="d519609e1897">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1897">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1894 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d519484e1894 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1897 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d519484e1897 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1894 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d519484e1894 ">Connection Health Test Query</td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1897 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d519484e1897 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1482,19 +1482,19 @@
                 <div class="itemgroup info">The defaults for these properties should work in most cases:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_vsh_22s_r1b__table_z1c_hjj_kw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d519609e1950">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d519484e1950">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d519609e1953">Description</th>
+                                    <th class="entry cellrowborder" id="d519484e1953">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d519609e1950 "><a class="xref" href="SQLServerChange.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables.">Initial
+                                    <td class="entry cellrowborder" headers="d519484e1950 "><a class="xref" href="SQLServerChange.html#concept_nff_2hx_4y" title="You can define the initial order that the origin uses to read the tables.">Initial
                                             Table Order Strategy</a></td>
 
-                                    <td class="entry cellrowborder" headers="d519609e1953 ">Initial order used to read the tables:<ul class="ul" id="task_vsh_22s_r1b__ul_d5f_kcd_t1b">
+                                    <td class="entry cellrowborder" headers="d519484e1953 ">Initial order used to read the tables:<ul class="ul" id="task_vsh_22s_r1b__ul_d5f_kcd_t1b">
                                             <li class="li">None - Reads the tables in the order that they are
                     listed in the database.</li>
 
@@ -1507,9 +1507,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">On Unknown Type</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">On Unknown Type</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Action to take when the origin encounters a record with an unsupported data
+              <td class="entry cellrowborder" headers="d519484e1953 ">Action to take when the origin encounters a record with an unsupported data
                   type:<ul class="ul" id="task_vsh_22s_r1b__d31e3965">
                   <li class="li">Stop Pipeline - Stops the pipeline after completing processing the previous
                     records.</li>
@@ -1523,18 +1523,18 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Maximum Pool Size</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Maximum Pool Size</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Maximum number of connections to create. Must be equal to or greater than the
+              <td class="entry cellrowborder" headers="d519484e1953 ">Maximum number of connections to create. Must be equal to or greater than the
                 value of the Number of Threads property.<p class="p">Default is 1.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Minimum Idle Connections</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Minimum Idle Connections</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Minimum number of connections to create and maintain. To define a fixed
+              <td class="entry cellrowborder" headers="d519484e1953 ">Minimum number of connections to create and maintain. To define a fixed
                 connection pool, set to the same value as Maximum Pool Size. <p class="p">Default is 1.
                 </p>
 </td>
@@ -1542,9 +1542,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Connection Timeout (seconds)</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Connection Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Maximum time to wait for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d519484e1953 ">Maximum time to wait for a connection. Use a time constant in an expression to
                 define the time increment. <div class="p">Default is 30 seconds, defined as follows:
                   <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
@@ -1552,9 +1552,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Idle Timeout (seconds)</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Idle Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Maximum time to allow a connection to idle. Use a time constant in an
+              <td class="entry cellrowborder" headers="d519484e1953 ">Maximum time to allow a connection to idle. Use a time constant in an
                 expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
                   connections.</p>
 <p class="p">When the entered value is close to or more than the maximum
@@ -1567,9 +1567,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Max Connection Lifetime (seconds)</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Max Connection Lifetime (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Maximum lifetime for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d519484e1953 ">Maximum lifetime for a connection. Use a time constant in an expression to
                 define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
 <p class="p">When a maximum
                   lifetime is set, the minimum valid value is 30 minutes.</p>
@@ -1580,27 +1580,27 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Auto Commit</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Auto Commit</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
+              <td class="entry cellrowborder" headers="d519484e1953 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
                 commits the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Enforce Read-only Connection</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Enforce Read-only Connection</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
+              <td class="entry cellrowborder" headers="d519484e1953 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
                   enabled. Disabling this property is not recommended. </p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d519609e1950 ">Transaction Isolation</td>
+              <td class="entry cellrowborder" headers="d519484e1950 ">Transaction Isolation</td>
 
-              <td class="entry cellrowborder" headers="d519609e1953 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+              <td class="entry cellrowborder" headers="d519484e1953 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
                   default transaction isolation level set for the database. You can override the
                   database default by setting the level to any of the following:</p>
 <ul class="ul" id="task_vsh_22s_r1b__d31e3867">

@@ -270,27 +270,27 @@
                 <dd class="dd ddexpand">Configure the following properties in the file:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_c4b_5bb_mw__table_tdn_zkx_v1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:46%" /><col style="width:54%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d59600e186">Vault Property</th>
+                                    <th class="entry cellrowborder" id="d59475e186">Vault Property</th>
 
-                                    <th class="entry cellrowborder" id="d59600e189">Description</th>
+                                    <th class="entry cellrowborder" id="d59475e189">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.addr</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.addr</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Required. Vault server URL entered in the following
+            <td class="entry cellrowborder" headers="d59475e189 ">Required. Vault server URL entered in the following
                 format:<pre class="pre codeblock"><code>https://&lt;host name&gt;:&lt;port number&gt;</code></pre><p class="p">Use HTTPS to
                 avoid unencrypted communication.</p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.role.id</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.role.id</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Required. Vault Role ID that <span class="ph">Data Collector</span> uses to authenticate with
+            <td class="entry cellrowborder" headers="d59475e189 ">Required. Vault Role ID that <span class="ph">Data Collector</span> uses to authenticate with
               Vault. The Role ID is configured within Vault by your Vault administrator. <div class="p">The <span class="ph">Data Collector</span> Vault integration relies
                 on Vault's App Role authentication backend.<div class="note important"><span class="importanttitle">Important:</span> The App ID
                   authentication backend has been deprecated by Hashicorp and will be removed in a
@@ -302,9 +302,9 @@
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.secret.id</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.secret.id</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Required. Vault Secret ID that <span class="ph">Data Collector</span> uses to authenticate with
+            <td class="entry cellrowborder" headers="d59475e189 ">Required. Vault Secret ID that <span class="ph">Data Collector</span> uses to authenticate with
               Vault. The Secret ID is configured within Vault by your Vault administrator. <p class="p">To
                     <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the Secret ID</a></span>, store the Secret ID in an external location and then use a
                 function to retrieve the Secret ID.</p>
@@ -315,106 +315,106 @@
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.lease.renewal.interval.sec</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.lease.renewal.interval.sec</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Seconds to wait before checking for leases that need renewal.
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Seconds to wait before checking for leases that need renewal.
                 <p class="p">Default is 60. </p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.lease.expiration.buffer.sec</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.lease.expiration.buffer.sec</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Buffer for expiring leases. <span class="ph">Data Collector</span> renews leases that expire
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Buffer for expiring leases. <span class="ph">Data Collector</span> renews leases that expire
               in less than the specified number of seconds.<p class="p">Default is 120. </p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.open.timeout</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.open.timeout</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Timeout to establish an HTTP connection to Vault in milliseconds.
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Timeout to establish an HTTP connection to Vault in milliseconds.
                 <p class="p">Default is 0 for no limit. </p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.address</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.address</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Proxy URL. Configure to use a proxy to access Vault. </td>
-
-          </tr>
-<tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.port</td>
-
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Proxy port. Configure to use a proxy to access Vault. </td>
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Proxy URL. Configure to use a proxy to access Vault. </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.username</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.port</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Proxy username. Configure to use a proxy to access Vault. </td>
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Proxy port. Configure to use a proxy to access Vault. </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.password</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.username</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Proxy password. Configure to use a proxy to access Vault. <p class="p"><span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Proxy username. Configure to use a proxy to access Vault. </td>
+
+          </tr>
+<tr>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.proxy.password</td>
+
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Proxy password. Configure to use a proxy to access Vault. <p class="p"><span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
                         and then use a function to retrieve the password.</span></p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.read.timeout</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.read.timeout</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Milliseconds to wait for data before timing out. <p class="p">Default is 0 for no
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Milliseconds to wait for data before timing out. <p class="p">Default is 0 for no
                 limit. </p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.enabled.protocols</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.enabled.protocols</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. SSL/TLS-enabled protocols. Versions TLSv1.2 or later are
                 recommended.<p class="p">Default is TLSv1.2,TLSv1.3.</p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.truststore.file</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.truststore.file</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Path to a Java truststore file. Required when using a private CA or
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Path to a Java truststore file. Required when using a private CA or
               certificates not trusted by the Java default truststore. </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.truststore.password</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.truststore.password</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Password for the truststore file. <p class="p"><span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Password for the truststore file. <p class="p"><span class="ph">To <span class="ph"><a class="xref" href="DCConfig.html#concept_aqc_dbt_zr" title="You can protect sensitive data in Data Collector configuration files by storing the data in an external location and then using the file or exec function to retrieve the data.">protect the password</a></span>, store the password in an external location
                         and then use a function to retrieve the password.</span></p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.verify</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.verify</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Whether to verify that the Vault server hostname matches its
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Whether to verify that the Vault server hostname matches its
                 certificate.<p class="p">Default is true. False is not recommended.</p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.timeout</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.ssl.timeout</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Timeout for the SSL/TLS handshake in milliseconds. <p class="p">Default is 0 for
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Timeout for the SSL/TLS handshake in milliseconds. <p class="p">Default is 0 for
                 no limit. </p>
 </td>
 
           </tr>
 <tr>
-            <td class="entry cellrowborder" headers="d59600e186 ">credentialStore.&lt;cstore ID&gt;.config.timeout</td>
+            <td class="entry cellrowborder" headers="d59475e186 ">credentialStore.&lt;cstore ID&gt;.config.timeout</td>
 
-            <td class="entry cellrowborder" headers="d59600e189 ">Optional. Timeout to read from Vault in milliseconds, after a connection has been
+            <td class="entry cellrowborder" headers="d59475e189 ">Optional. Timeout to read from Vault in milliseconds, after a connection has been
                 established.<p class="p">Default is 0 for no limit. </p>
 </td>
 
