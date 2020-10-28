@@ -15,19 +15,16 @@
  */
 package com.streamsets.pipeline.stage.origin.httptokafka;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.config.upgrade.KafkaSecurityUpgradeHelper;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetUpgrader;
 import com.streamsets.pipeline.stage.util.tls.TlsConfigBeanUpgraderTestUtil;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +36,7 @@ public class TestHttpToKafkaSourceUpgrader {
 
   @Before
   public void setUp() {
-    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HttpToKafkaDSource.yaml");
-    upgrader = new SelectorStageUpgrader("stage", null, yamlResource);
+    upgrader = SelectorStageUpgrader.createTestInstanceForStageClass(HttpToKafkaDSource.class);
     configs = new ArrayList<>();
     context = Mockito.mock(StageUpgrader.Context.class);
   }
@@ -70,55 +66,12 @@ public class TestHttpToKafkaSourceUpgrader {
 
   @Test
   public void testV3toV4() {
-    List<Config> configs = new ArrayList<>();
-
-    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/HttpToKafkaDSource.yaml");
-    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
-        "stage",
-        new KafkaTargetUpgrader(),
-        yamlResource
+    KafkaSecurityUpgradeHelper.testUpgradeSecurityOptions(
+        upgrader,
+        3,
+        "conf",
+        "kafkaProducerConfigs",
+        "metadataBrokerList"
     );
-
-    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
-    Mockito.doReturn(3).when(context).getFromVersion();
-    Mockito.doReturn(4).when(context).getToVersion();
-
-    configs.add(new Config("conf.kafkaProducerConfigs", ImmutableList.of(
-        ImmutableMap.of("key", "security.protocol", "value", "SASL_PLAINTEXT"),
-        ImmutableMap.of("key", "sasl.kerberos.service.name", "value", "kafka"),
-        ImmutableMap.of("key", "ssl.truststore.type", "value", "JKS"),
-        ImmutableMap.of("key", "ssl.truststore.location", "value", "/tmp/truststore"),
-        ImmutableMap.of("key", "ssl.truststore.password", "value", "trustpwd"),
-        ImmutableMap.of("key", "ssl.keystore.type", "value", "PKCS12"),
-        ImmutableMap.of("key", "ssl.keystore.location", "value", "/tmp/keystore"),
-        ImmutableMap.of("key", "ssl.keystore.password", "value", "keystpwd"),
-        ImmutableMap.of("key", "ssl.key.password", "value", "keypwd"),
-        ImmutableMap.of("key", "ssl.enabled.protocols", "value", "TlSv1.2, TLSv1.3")
-    )));
-
-    configs.add(new Config("conf.provideKeytab", true));
-    configs.add(new Config("conf.userKeytab", "userKeytab"));
-    configs.add(new Config("conf.userPrincipal", "sdc/sdc@CLUSTER"));
-
-    configs.add(new Config("conf.metadataBrokerList", "localhost:9092"));
-
-    configs = upgrader.upgrade(configs, context);
-
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.securityOption", "SASL_PLAINTEXT");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.kerberosServiceName", "kafka");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.provideKeytab", true);
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.userKeytab", "userKeytab");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.userPrincipal", "sdc/sdc@CLUSTER");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.truststoreType", "JKS");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.truststoreFile", "/tmp/truststore");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.truststorePassword", "trustpwd");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.keystoreType", "PKCS12");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.keystoreFile", "/tmp/keystore");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.keystorePassword", "keystpwd");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.keyPassword", "keypwd");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.securityConfig.enabledProtocols", "TlSv1.2, TLSv1.3");
-    UpgraderTestUtils.assertExists(configs, "conf.connectionConfig.connection.metadataBrokerList", "localhost:9092");
-
-    UpgraderTestUtils.assertExists(configs, "conf.kafkaProducerConfigs", ImmutableList.of());
   }
 }

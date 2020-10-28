@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.upgrader;
 
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.Stage;
+import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import org.slf4j.Logger;
@@ -127,4 +129,23 @@ public class SelectorStageUpgrader implements StageUpgrader {
     }
   }
 
+  /**
+   * Returns a SelectorStageUpgrader suitable for unit testing that stage's upgrader.  Not for production use (the
+   * stageName is populated with a dummy value).
+   *
+   * @param stageClass the stage class (needs to have {@link StageDef} annotation)
+   * @return a {@link SelectorStageUpgrader} for the given stage class
+   */
+  public static SelectorStageUpgrader createTestInstanceForStageClass(Class<? extends Stage> stageClass) {
+    final StageDef stageDef = stageClass.getAnnotation(StageDef.class);
+    try {
+      return new SelectorStageUpgrader(
+          "testStage",
+          stageDef.upgrader().newInstance(),
+          stageClass.getClassLoader().getResource(stageDef.upgraderDef())
+      );
+    } catch (InstantiationException | IllegalAccessException e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

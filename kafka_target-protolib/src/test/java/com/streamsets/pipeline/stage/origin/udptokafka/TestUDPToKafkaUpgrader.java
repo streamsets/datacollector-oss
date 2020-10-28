@@ -15,11 +15,9 @@
  */
 package com.streamsets.pipeline.stage.origin.udptokafka;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
-import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.config.upgrade.KafkaSecurityUpgradeHelper;
 import com.streamsets.pipeline.stage.origin.ipctokafka.SdcIpcToKafkaUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
@@ -46,45 +44,12 @@ public class TestUDPToKafkaUpgrader {
 
   @Test
   public void testV3toV4() {
-    Mockito.doReturn(3).when(context).getFromVersion();
-    Mockito.doReturn(4).when(context).getToVersion();
-
-    configs.add(new Config("kafkaTargetConfig.kafkaProducerConfigs", ImmutableList.of(
-        ImmutableMap.of("key", "security.protocol", "value", "SASL_PLAINTEXT"),
-        ImmutableMap.of("key", "sasl.kerberos.service.name", "value", "kafka"),
-        ImmutableMap.of("key", "ssl.truststore.type", "value", "JKS"),
-        ImmutableMap.of("key", "ssl.truststore.location", "value", "/tmp/truststore"),
-        ImmutableMap.of("key", "ssl.truststore.password", "value", "trustpwd"),
-        ImmutableMap.of("key", "ssl.keystore.type", "value", "PKCS12"),
-        ImmutableMap.of("key", "ssl.keystore.location", "value", "/tmp/keystore"),
-        ImmutableMap.of("key", "ssl.keystore.password", "value", "keystpwd"),
-        ImmutableMap.of("key", "ssl.key.password", "value", "keypwd"),
-        ImmutableMap.of("key", "ssl.enabled.protocols", "value", "TlSv1.2, TLSv1.3")
-    )));
-
-    configs.add(new Config("kafkaTargetConfig.provideKeytab", true));
-    configs.add(new Config("kafkaTargetConfig.userKeytab", "userKeytab"));
-    configs.add(new Config("kafkaTargetConfig.userPrincipal", "sdc/sdc@CLUSTER"));
-
-    configs.add(new Config("kafkaTargetConfig.metadataBrokerList", "localhost:9092"));
-
-    configs = upgrader.upgrade(configs, context);
-
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.securityOption", "SASL_PLAINTEXT");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.kerberosServiceName", "kafka");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.provideKeytab", true);
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.userKeytab", "userKeytab");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.userPrincipal", "sdc/sdc@CLUSTER");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.truststoreType", "JKS");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.truststoreFile", "/tmp/truststore");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.truststorePassword", "trustpwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.keystoreType", "PKCS12");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.keystoreFile", "/tmp/keystore");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.keystorePassword", "keystpwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.keyPassword", "keypwd");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.securityConfig.enabledProtocols", "TlSv1.2, TLSv1.3");
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.connectionConfig.connection.metadataBrokerList", "localhost:9092");
-
-    UpgraderTestUtils.assertExists(configs, "kafkaTargetConfig.kafkaProducerConfigs", ImmutableList.of());
+    KafkaSecurityUpgradeHelper.testUpgradeSecurityOptions(
+        SelectorStageUpgrader.createTestInstanceForStageClass(UDPToKafkaDSource.class),
+        3,
+        "kafkaTargetConfig",
+        "kafkaProducerConfigs",
+        "metadataBrokerList"
+    );
   }
 }
