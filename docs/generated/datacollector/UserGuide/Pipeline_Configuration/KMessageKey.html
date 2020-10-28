@@ -1,0 +1,604 @@
+
+<!DOCTYPE html
+  PUBLIC "" "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link>        
+      <meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Kafka Message Keys" /><meta name="abstract" content="" /><meta name="description" content="You can configure the Kafka Consumer and Kafka Multitopic Consumer origins to capture the message keys included in each Kafka message and store them in generated records. Kafka message keys can be ..." /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ujc_cml_smb" /><title>Kafka Message Keys</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ujc_cml_smb-d46e38162" />         
+        
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Latest compiled and minified Bootstrap CSS -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap.min.css" />
+
+        <!-- Bootstrap Optional theme -->
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/bootstrap/css/bootstrap-theme.min.css" />
+        <link rel="stylesheet" href="../../../oxygen-webhelp/lib/jquery-ui/jquery-ui.min.css" />
+
+        <!-- Template default styles  -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/app/topic-page.css?buildId=2018042310" />
+        
+
+        <script type="text/javascript" src="../../../oxygen-webhelp/lib/jquery/jquery-3.1.1.min.js"><!----></script>
+
+        <script data-main="../../../oxygen-webhelp/app/topic-page.js" src="../../../oxygen-webhelp/lib/requirejs/require.js"></script>
+        
+        <!-- Skin resources -->
+        <link rel="stylesheet" type="text/css" href="../../../oxygen-webhelp/template/light.css?buildId=2018042310" />
+        <!-- EXM-36950 - Expand the args.hdf parameter here -->
+        
+        
+    <link rel="stylesheet" type="text/css" href="../../../skin.css" /></head>
+
+    <body class="wh_topic_page frmBody">
+        <!-- EXM-36950 - Expand the args.hdr parameter here -->
+        
+        
+        
+<nav class="navbar navbar-default wh_header">
+    <div class="container-fluid">
+        <div class="wh_header_flex_container">
+            <div class="wh_logo_and_publication_title_container">
+                <div class="wh_logo_and_publication_title">
+                    
+                    <!--
+                            This component will be generated when the next parameters are specified in the transformation scenario:
+                            'webhelp.logo.image' and 'webhelp.logo.image.target.url'.
+                            See: http://oxygenxml.com/doc/versions/17.1/ug-editor/#topics/dita_webhelp_output.html.
+                    -->
+                    <a href="http://streamsets.com" class=" wh_logo hidden-xs "></a>
+                    <div class=" wh_publication_title "><a href="../../../index.html"><span class="booktitle">  <span class="ph mainbooktitle"><span class="ph">Data Collector</span> User Guide</span>  </span></a></div>
+                    
+                </div>
+                
+                <!-- The menu button for mobile devices is copied in the output only when the 'webhelp.show.top.menu' parameter is set to 'yes' -->
+                
+            </div>
+
+            <div class="wh_top_menu_and_indexterms_link collapse navbar-collapse">
+                
+                
+                <div class=" wh_indexterms_link "><a href="../../../indexTerms.html" title="Index"><span>Index</span></a></div>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+
+        <div class=" wh_search_input "><form id="searchForm" method="get" action="../../../search.html"><div><input type="search" placeholder="Search " class="wh_search_textfield" id="textToSearch" name="searchQuery" /><button type="submit" class="wh_search_button"><span>Search</span></button></div><script><!--
+                                    $(document).ready(function () {
+                                        $('#searchForm').submit(function (e) {
+                                            if ($('.wh_search_textfield').val().length < 1) {
+                                                e.preventDefault();
+                                            }
+                                        });
+                                    });
+                                --></script></form></div>
+        
+        <div class="container-fluid">
+            <div class="row">
+
+                <nav class="wh_tools hidden-print">
+                    <div data-tooltip-position="bottom" class=" wh_breadcrumb "><ol xmlns:html="http://www.w3.org/1999/xhtml" class="hidden-print"><li><span class="home"><a href="../../../index.html"><span>Home</span></a></span></li>
+   <li><span class="topicref" data-id="concept_qn1_wn4_kq"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li class="active"><span class="topicref" data-id="concept_ujc_cml_smb"><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb">Kafka Message Keys</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ol></div>
+
+                    <div class="wh_right_tools hidden-sm hidden-xs">
+                        <div class=" wh_navigation_links "><span id="topic_navigation_links" class="navheader">
+  
+<span class="navprev"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb" title="Security in Kafka Stages"></a></span>  
+<span class="navnext"><a class="link" href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr" title="Implicit and Explicit Validation"></a></span>  </span></div>
+                        <button class="wh_hide_highlight" title="Toggle search highlights"></button>
+                        <button class="webhelp_expand_collapse_sections" data-next-state="collapsed" title="Collapse sections"></button>
+                        <div class=" wh_print_link print "><a href="javascript:window.print();" title="Print this page"></a></div>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="wh_content_area">
+                <div class="row">
+                    
+                        <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
+                            <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
+   <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e1069" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_l4q_flb_kr-d46e12090" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e14866" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e25044" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e33436" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e35308" class="topicref" data-id="concept_qn1_wn4_kq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_izr_f2p_rq-d46e35330" class="topicref" data-id="concept_izr_f2p_rq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_mjg_ly5_pgb-d46e35354" class="topicref" data-id="concept_mjg_ly5_pgb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ProductIcons_Doc.html">Pipeline Types and Icons in Documentation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In <span class="ph">Data Collector</span>, you can configure pipelines that are run by <span class="ph">Data Collector</span> and         pipelines that are run by <span class="ph">Data Collector Edge</span>.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_cgm_ktz_2t-d46e35388" class="topicref" data-id="concept_cgm_ktz_2t" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_erj_qg4_qv-d46e35412" class="topicref" data-id="concept_erj_qg4_qv" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ddf_hr1_rmb-d46e35436" class="topicref" data-id="concept_ddf_hr1_rmb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AdvancedOptions.html">Advanced Options</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Pipelines and most pipeline stages include advanced options with default values that         should work in most cases. By
+                        default, each pipeline and stage hides the advanced options.         Advanced options can include individual properties or
+                        complete tabs.
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_alb_b3y_cbb-d46e35461" class="topicref" data-id="concept_alb_b3y_cbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_h5b_kcr_kz-d46e35485" class="topicref" data-id="concept_h5b_kcr_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
+                        change the values for each pipeline run without having to         edit the pipeline. 
+                        
+                     </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_jcw_n4t_51b-d46e36920" class="topicref" data-id="concept_jcw_n4t_51b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
+         <li><span data-tocid="concept_mp1_t3l_rz-d46e36974" class="topicref" data-id="concept_mp1_t3l_rz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
+         <li><span data-tocid="concept_mtn_k4j_rz-d46e37122" class="topicref" data-id="concept_mtn_k4j_rz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_dd1_n3f_5z-d46e37147" class="topicref" data-id="concept_dd1_n3f_5z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Encryption</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Many stages can use SSL/TLS encryption to securely connect to the external system. </p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ypw_hbj_3nb-d46e37530" class="topicref" data-id="concept_ypw_hbj_3nb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AmazonSecurity.html#concept_ypw_hbj_3nb">Security in Amazon Stages</a></span></span></li>
+         <li><span data-tocid="concept_jpy_ln5_klb-d46e37687" class="topicref" data-id="concept_jpy_ln5_klb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb">Security in Kafka Stages</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ujc_cml_smb-d46e38162" class="topicref" data-id="concept_ujc_cml_smb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb">Kafka Message Keys</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_dyb_s4b_5mb-d46e38247" class="topicref" data-id="concept_dyb_s4b_5mb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_dyb_s4b_5mb">Storing Message Keys</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_qrp_lmq_smb-d46e38271" class="topicref" data-id="concept_qrp_lmq_smb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_qrp_lmq_smb">Message Key Formats</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_kdj_kzf_tmb-d46e38401" class="topicref" data-id="concept_kdj_kzf_tmb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_kdj_kzf_tmb">Passing Key Values to Kafka</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+               <li><span data-tocid="concept_jrn_smb_5mb-d46e38466" class="topicref" data-id="concept_jrn_smb_5mb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_jrn_smb_5mb">Example: Storing and Passing Kafka Message Keys</a><span class="wh-tooltip">
+                           
+                           <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                           </span></span></span></li>
+            </ul>
+         </li>
+         <li><span data-tocid="concept_azs_swf_jr-d46e38541" class="topicref" data-id="concept_azs_swf_jr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+         <li><span data-tocid="concept_ofb_1cm_xq-d46e38565" class="topicref" data-id="concept_ofb_1cm_xq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
+         <li><span data-tocid="task_xlv_jdw_kq-d46e39263" class="topicref" data-id="task_xlv_jdw_kq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+                     
+                     <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+                     </span></span></span></li>
+      </ul>
+   </li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e39288" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e41548" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e112031" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e132720" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e161471" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e171123" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e173726" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e177260" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e179451" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e183788" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e184370" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e184742" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e185034" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e185516" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e186661" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e187617" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_asx_fdz_sq-d46e190245" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e191502" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e193332" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e198182" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e199387" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e204830" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e204885" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e205107" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e208778" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+   <li><span data-tocid="concept_chv_vmj_wr-d46e209001" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+               
+               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
+               </span></span></span></li>
+</ul></div>
+                        </nav>
+                    
+                    
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
+                        <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_ujc_cml_smb">
+    <h1 class="title topictitle1" id="ariaid-title1">Kafka Message Keys</h1>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">You can configure the Kafka
+            Consumer and Kafka Multitopic Consumer origins to capture the message keys included in
+            each Kafka message and store them in generated records. Kafka message keys can be string
+            values or Avro messages, depending on how your Kafka system is configured. </p>
+
+        <p class="p">Store message key values in a record when you want to use the values in pipeline
+            processing logic or to write them to destination systems. When you store message key
+            values, you can also configure a Kafka Producer destination to pass those values to
+            Kafka as Kafka message keys. This allows Kafka to reuse the original message keys
+            instead of generating new message keys for the data.</p>
+
+        <p class="p">If you have no need for message keys, you can discard them. The Kafka Consumer and Kafka
+            Multitopic Consumer origins discard message keys by default. </p>
+
+    </div>
+
+<article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_dyb_s4b_5mb">
+    <h2 class="title topictitle2" id="ariaid-title2">Storing Message Keys</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">You can configure the Kafka
+            Consumer and Kafka Multitopic Consumer origins to capture Kafka message keys and store
+            them in records. Store message key values when you want to use them in the pipeline,
+            write them to destinations, or pass them to Kafka to use as message keys. By default,
+            the origins discard Kafka message keys.</p>
+
+        <div class="p">Kafka origins can store message key values in the following locations:<dl class="dl">
+                
+                    <dt class="dt dlterm">In a specified record field</dt>
+
+                    <dd class="dd">Store message key values in a specified field when you want to perform
+                        processing based on field values. When you store message key values in a
+                        field, you can access the values easily with expression-based and
+                        field-based stages, such as the Stream Selector or Field Replacer
+                        processors. </dd>
+
+                    <dd class="dd ddexpand">You might also store message key values in a field when you want to write
+                        message key values to destinations.</dd>
+
+                
+                
+                    <dt class="dt dlterm">In a specified record header attribute</dt>
+
+                    <dd class="dd">Store message key values in a specified record header attribute when you
+                        want to use the Kafka Producer to pass message key values to Kafka as Kafka
+                        message keys. </dd>
+
+                    <dd class="dd ddexpand">You can use <code class="ph codeph">record:attribute</code> functions to access string
+                        message key  values from within the pipeline. You cannot use functions to
+                        access Avro message key values in record header attributes because the Avro
+                        data is binary.</dd>
+
+                    <dd class="dd ddexpand">By default, record header attributes are not included in records when
+                        records are written to destination systems. To easily write message key
+                        values to destination systems, store the values in record fields. </dd>
+
+                
+                
+                    <dt class="dt dlterm">In a specified record field and record header attribute</dt>
+
+                    <dd class="dd">Store message key values in both a specified record field and a specified
+                        record header attribute when you have multiple uses for message key values. </dd>
+
+                    <dd class="dd ddexpand">This option enables easy access to message key values in record fields and
+                        allows passing message key values to Kafka as Kafka message keys. </dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title3" id="concept_qrp_lmq_smb">
+    <h2 class="title topictitle2" id="ariaid-title3">Message Key Formats</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">Kafka message
+            keys can be string values or Avro messages, depending on how your Kafka system is
+            configured. </p>
+
+        <p class="p">The format of the message keys determines how message key values are stored in the
+            record, and how you work with those values.</p>
+
+    </div>
+
+<article class="topic concept nested2" aria-labelledby="ariaid-title4" id="concept_c1g_dds_smb">
+    <h3 class="title topictitle3" id="ariaid-title4">String Message Keys</h3>
+
+    <div class="body conbody">
+        <p class="p">When Kafka message keys are string values, the string values
+            are simply written to the specified record field or record header attribute, as
+            expected. </p>
+
+        <div class="p">The expression that you use to access message key values differs depending on where the
+            values are stored:<dl class="dl">
+                
+                    <dt class="dt dlterm">In record fields</dt>
+
+                    <dd class="dd">To access message key values stored in a field, use the
+                            <code class="ph codeph">record:value</code> function, as
+                        follows:<pre class="pre codeblock"><code>${record:value('/&lt;message key field name&gt;')}</code></pre></dd>
+
+                    <dd class="dd ddexpand">Specify the field where message key values are stored, as defined in the
+                        Kafka origin. By default, Kafka origins use the following field path:
+                            <code class="ph codeph">/kafkaMessageKey</code>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">In record header attributes</dt>
+
+                    <dd class="dd">To access message key values stored in a record header attribute, use the
+                            <code class="ph codeph">record:attribute</code> function, as follows:
+                        <pre class="pre codeblock"><code>${record:attribute('&lt;message key attribute name&gt;'}</code></pre>Specify
+                        the name of the attribute where message key values are stored, as defined in
+                        the Kafka origin. By default, Kafka origins use the following attribute
+                        name: <code class="ph codeph">kafkaMessageKey</code>.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested2" aria-labelledby="ariaid-title5" id="concept_mhl_3ds_smb">
+    <h3 class="title topictitle3" id="ariaid-title5">Avro Message Keys</h3>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <div class="p">When Kafka message keys are Avro messages, the message key
+            values are handled differently depending on where they are stored:<dl class="dl">
+                
+                    <dt class="dt dlterm">In record fields</dt>
+
+                    <dd class="dd">When you store Avro message key values in a field, the origin converts the
+                        binary Avro message key to a map and writes it to the specified field. </dd>
+
+                    <dd class="dd ddexpand">Store Avro message key values in a field when you want to use message key
+                        values within a pipeline. You can access data within the map as you would
+                        any other map field. </dd>
+
+                    <dd class="dd ddexpand">For example, to access string data in a first level <code class="ph codeph">info</code>
+                        field in the <code class="ph codeph">kafkaMessageKey</code> map field, you might use the
+                        following
+                        expression:<pre class="pre codeblock"><code>${record:value('/kafkaMessageKey/info')}</code></pre></dd>
+
+                
+                
+                    <dt class="dt dlterm">In record header attributes</dt>
+
+                    <dd class="dd">When you store Avro message key values in a record header attribute, the
+                        origin performs the following tasks:<ul class="ul" id="concept_mhl_3ds_smb__ul_vt3_xdb_5mb">
+                            <li class="li">Stores the Avro schema in an <code class="ph codeph">avroKeySchema</code>
+                                attribute.</li>
+
+                            <li class="li">Encodes the binary Avro message key using Base64, then stores it in
+                                the specified attribute.</li>
+
+                        </ul>
+</dd>
+
+                    <dd class="dd ddexpand">Store Avro message key values in a record header attribute when you want to
+                        pass the message key values to Kafka as Kafka message keys. </dd>
+
+                
+            </dl>
+</div>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> To perform processing within a pipeline using Avro message key values,
+                store them as record fields. To pass Avro message keys to Kafka as Kafka message
+                keys, store them in record header attributes. To perform both tasks, store them in
+                both locations.</div>
+
+        </div>
+
+    </div>
+
+</article>
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title6" id="concept_kdj_kzf_tmb">
+    <h2 class="title topictitle2" id="ariaid-title6">Passing Key Values to Kafka</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">You can configure the Kafka Producer destination to pass
+            message key values stored in record header attributes to Kafka to be used as message
+            keys. This enables Kafka to use existing message keys instead of creating new keys for
+            the records. </p>
+
+        <div class="p">To configure the destination to pass message key values to Kafka, configure the following
+                properties:<ul class="ul" id="concept_kdj_kzf_tmb__ul_wkr_4pc_5mb">
+                <li class="li">Kafka Message Key property on the Kafka tab - Define an expression that
+                    indicates the location of the message key values in the records. </li>
+
+                <li class="li">Message Key Format property on the Data format tab - Select the format of the
+                    message key values: String or Avro. </li>
+
+            </ul>
+</div>
+
+        <div class="p">
+            <div class="note tip"><span class="tiptitle">Tip:</span> When you select the Message Key Format property, the destination
+                provides a default expression in the Kafka Message Key property that you can edit as
+                needed.</div>
+
+        </div>
+
+        <div class="p">The expression that you use in the Kafka Message Key property depends on the data format
+            of the original message keys: <dl class="dl">
+                
+                    <dt class="dt dlterm">String</dt>
+
+                    <dd class="dd">For string message keys, use the following expression for the Kafka Message
+                        Key property:</dd>
+
+                    <dd class="dd ddexpand">
+                        <pre class="pre codeblock"><code>${record:attribute('&lt;message key attribute name&gt;'}</code></pre>
+                    </dd>
+
+                    <dd class="dd ddexpand">Specify the name of the attribute where message key values are stored, as
+                        defined in the Kafka origin. By default, Kafka origins use the following
+                        attribute name: <code class="ph codeph">kafkaMessageKey</code>.</dd>
+
+                
+                
+                    <dt class="dt dlterm">Avro</dt>
+
+                    <dd class="dd">For Avro message keys, use the following expression for the Kafka Message
+                        Key
+                        property:<pre class="pre codeblock"><code>${avro:decode(record:attribute('avroKeySchema'),base64:decodeBytes(record:attribute('&lt;messsage key attribute name')))}</code></pre></dd>
+
+                    <dd class="dd ddexpand">The first part of the expression defines the location of the schema for Avro
+                        message keys. Do not change this part of the expression.</dd>
+
+                    <dd class="dd ddexpand">The second part of the expression defines where the message key values are
+                        stored. Specify the name of the attribute where message key values are
+                        stored, as defined in the Kafka origin. By default, Kafka origins use the
+                        following attribute name: <code class="ph codeph">kafkaMessageKey</code>.</dd>
+
+                
+            </dl>
+</div>
+
+    </div>
+
+</article>
+<article class="topic concept nested1" aria-labelledby="ariaid-title7" id="concept_jrn_smb_5mb">
+    <h2 class="title topictitle2" id="ariaid-title7">Example: Storing and Passing Kafka Message Keys</h2>
+
+    
+    <div class="body conbody"><p class="shortdesc"></p>
+
+        <p class="p">Say you want to use string Kafka message key values to route records to different
+            processing streams. Then, after all pipeline processing is complete, you want to write
+            records to a different Kafka topic and you want the resulting messages to use the
+            original message keys. </p>
+
+        <div class="p">To do this, use either the Kafka Consumer or Kafka Multitopic Consumer origin. Then, on
+            the Kafka tab: <ul class="ul" id="concept_jrn_smb_5mb__ul_pg2_5cg_vmb">
+                <li class="li">Set the Key Capture Mode property to Record Header and Field. </li>
+
+                <li class="li">Use the default value for the Key Capture Field property,
+                        <code class="ph codeph">/kafkaMessageKey</code>.</li>
+
+                <li class="li">Use the default value for the Key Capture Header Attribute property,
+                        <code class="ph codeph">kafkaMessageKey</code>. </li>
+
+            </ul>
+</div>
+
+        <p class="p">This enables the origin to capture and store the Kafka message keys in the specified field
+            and attribute. </p>
+
+        <p class="p">Then, add a Stream Selector to the pipeline to route data to different processing streams
+            based on the values in the <code class="ph codeph">/kafkaMessageKey</code> field path.</p>
+
+        <div class="p">To write the data and pass message key values to Kafka, add a Kafka Producer destination,
+            and then: <ul class="ul" id="concept_jrn_smb_5mb__ul_hxv_cdg_vmb">
+                <li class="li">On the Data Format tab of the destination, select String for the Message Key
+                    Format property. </li>
+
+                <li class="li">On the Kafka tab, verify that the default expression for the Kafka Message Key
+                    property provides message key values to Kafka:
+                        <code class="ph codeph">${record:value('/kafkaMessageKey')}</code>.</li>
+
+            </ul>
+</div>
+
+        <p class="p">This enables the Kafka Producer to pass message key values stored in the
+                <code class="ph codeph">kafkaMessageKey</code> record header attribute to Kafka to be used as
+            message keys. </p>
+
+    </div>
+
+</article>
+</article>
+</article></main></div>
+                        
+                        
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div> <nav class="navbar navbar-default wh_footer">
+  <div class=" footer-container text-center ">
+    <!-- Copyright 2018 StreamSets Inc. --><!-- SDC google analytics --><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-60917135-3', 'auto');
+  ga('send', 'pageview');
+</script>
+  </div>
+</nav>
+
+        
+        <div id="go2top">
+            <span class="glyphicon glyphicon-chevron-up"></span>
+        </div>
+        
+        <!-- The modal container for images -->
+        <div id="modal_img_large" class="modal">
+            <span class="close glyphicon glyphicon-remove"></span>
+            <!-- Modal Content (The Image) -->
+            <img class="modal-content" id="modal-img" />
+            <!-- Modal Caption (Image Text) -->
+            <div id="caption"></div>
+        </div>
+        
+        <script src="../../../oxygen-webhelp/lib/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+        © Apache License, Version 2.0.
+    </body>
+</html>

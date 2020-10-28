@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The JDBC Lookup processor uses a JDBC connection to perform lookups in a database table and pass the lookup values to fields. Use the JDBC Lookup to enrich ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="JDBC Lookup" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ysc_ccy_hw" /><title>JDBC Lookup</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ysc_ccy_hw-d46e120487" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="Supported pipeline types: Data Collector The JDBC Lookup processor uses a JDBC connection to perform lookups in a database table and pass the lookup values to fields. Use the JDBC Lookup to enrich ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="JDBC Lookup" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/Processors_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_ysc_ccy_hw" /><title>JDBC Lookup</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_ysc_ccy_hw-d46e123068" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -99,67 +99,67 @@
                         <nav role="navigation" id="wh_publication_toc" class="col-lg-3 col-md-3 col-sm-3 hidden-xs navbar hidden-print">
                             <div class=" wh_publication_toc " data-tooltip-position="right"><ul>
    <li><span data-tocid="concept_htw_ghg_jq-d46e53" class="topicref" data-id="concept_htw_ghg_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Getting_Started/GettingStarted_Title.html#concept_htw_ghg_jq">Getting Started</a></span></span></li>
-   <li><span data-tocid="concept_hz3_5fk_fy-d46e934" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_hz3_5fk_fy-d46e1069" class="topicref" data-id="concept_hz3_5fk_fy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/WhatsNew/WhatsNew_Title.html#concept_hz3_5fk_fy">What's New</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e11487" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e14096" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e24270" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e32173" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e34045" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e37133" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e12090" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e14866" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e25044" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e33436" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e35308" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e39288" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e39393" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e109450" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_hpr_twm_jq-d46e109472" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e41548" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e112031" class="topicref" data-id="concept_yjl_nc5_jq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_hpr_twm_jq-d46e112053" class="topicref" data-id="concept_hpr_twm_jq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_overview.html#concept_hpr_twm_jq">Processors</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ujj_spy_kv-d46e109496" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a></span></span></li>
-         <li><span data-tocid="concept_wtr_mpy_kv-d46e109550" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a></span></span></li>
-         <li><span data-tocid="concept_akz_zsr_2jb-d46e109604" class="topicref" data-id="concept_akz_zsr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ControlHubAPI.html#concept_akz_zsr_2jb">Control Hub API</a></span></span></li>
-         <li><span data-tocid="concept_rxk_1dq_2fb-d46e109985" class="topicref" data-id="concept_rxk_1dq_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/CouchbaseLookup.html#concept_rxk_1dq_2fb">Couchbase Lookup</a></span></span></li>
-         <li><span data-tocid="concept_hw1_gq4_3fb-d46e110085" class="topicref" data-id="concept_hw1_gq4_3fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataGenerator.html#concept_hw1_gq4_3fb">Data Generator</a></span></span></li>
-         <li><span data-tocid="concept_xw3_4xk_r1b-d46e110236" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a></span></span></li>
-         <li><span data-tocid="concept_nlz_k3v_gfb-d46e110332" class="topicref" data-id="concept_nlz_k3v_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DatabricksML.html#concept_nlz_k3v_gfb">Databricks ML Evaluator (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_ez5_pvf_wbb-d46e110548" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
-         <li><span data-tocid="concept_zs3_vfk_hfb-d46e110602" class="topicref" data-id="concept_zs3_vfk_hfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/EncryptDecrypt.html#concept_zs3_vfk_hfb">Encrypt and Decrypt Fields</a></span></span></li>
-         <li><span data-tocid="concept_zm2_pp3_wq-d46e111185" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
-         <li><span data-tocid="concept_njn_3kk_fx-d46e111395" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
-         <li><span data-tocid="concept_ivv_c3k_wq-d46e111543" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a></span></span></li>
-         <li><span data-tocid="concept_q5y_tdq_xgb-d46e111759" class="topicref" data-id="concept_q5y_tdq_xgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMapper.html#concept_q5y_tdq_xgb">Field Mapper</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ujj_spy_kv-d46e112077" class="topicref" data-id="concept_ujj_spy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Decoder.html#concept_ujj_spy_kv">Base64 Field Decoder</a></span></span></li>
+         <li><span data-tocid="concept_wtr_mpy_kv-d46e112131" class="topicref" data-id="concept_wtr_mpy_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Base64Encoder.html#concept_wtr_mpy_kv">Base64 Field Encoder</a></span></span></li>
+         <li><span data-tocid="concept_akz_zsr_2jb-d46e112185" class="topicref" data-id="concept_akz_zsr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ControlHubAPI.html#concept_akz_zsr_2jb">Control Hub API</a></span></span></li>
+         <li><span data-tocid="concept_rxk_1dq_2fb-d46e112566" class="topicref" data-id="concept_rxk_1dq_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/CouchbaseLookup.html#concept_rxk_1dq_2fb">Couchbase Lookup</a></span></span></li>
+         <li><span data-tocid="concept_hw1_gq4_3fb-d46e112666" class="topicref" data-id="concept_hw1_gq4_3fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataGenerator.html#concept_hw1_gq4_3fb">Data Generator</a></span></span></li>
+         <li><span data-tocid="concept_xw3_4xk_r1b-d46e112817" class="topicref" data-id="concept_xw3_4xk_r1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DataParser.html#concept_xw3_4xk_r1b">Data Parser</a></span></span></li>
+         <li><span data-tocid="concept_nlz_k3v_gfb-d46e112913" class="topicref" data-id="concept_nlz_k3v_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/DatabricksML.html#concept_nlz_k3v_gfb">Databricks ML Evaluator (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_ez5_pvf_wbb-d46e113129" class="topicref" data-id="concept_ez5_pvf_wbb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Delay.html#concept_ez5_pvf_wbb">Delay</a></span></span></li>
+         <li><span data-tocid="concept_zs3_vfk_hfb-d46e113183" class="topicref" data-id="concept_zs3_vfk_hfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/EncryptDecrypt.html#concept_zs3_vfk_hfb">Encrypt and Decrypt Fields</a></span></span></li>
+         <li><span data-tocid="concept_zm2_pp3_wq-d46e113766" class="topicref" data-id="concept_zm2_pp3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Expression.html#concept_zm2_pp3_wq">Expression Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_njn_3kk_fx-d46e113976" class="topicref" data-id="concept_njn_3kk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldFlattener.html#concept_njn_3kk_fx">Field Flattener</a></span></span></li>
+         <li><span data-tocid="concept_ivv_c3k_wq-d46e114124" class="topicref" data-id="concept_ivv_c3k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldHasher.html#concept_ivv_c3k_wq">Field Hasher</a></span></span></li>
+         <li><span data-tocid="concept_q5y_tdq_xgb-d46e114340" class="topicref" data-id="concept_q5y_tdq_xgb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMapper.html#concept_q5y_tdq_xgb">Field Mapper</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_hjc_t4k_wq-d46e112055" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a></span></span></li>
-         <li><span data-tocid="concept_pgm_tsl_gt-d46e112154" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a></span></span></li>
-         <li><span data-tocid="concept_krp_5fv_vy-d46e112208" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a></span></span></li>
-         <li><span data-tocid="concept_ekg_313_qw-d46e112307" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
-         <li><span data-tocid="concept_jdd_blr_wq-d46e112406" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
-         <li><span data-tocid="concept_vyv_zsg_ht-d46e112460" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a></span></span></li>
-         <li><span data-tocid="concept_rw4_2d3_4cb-d46e112565" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a></span></span></li>
-         <li><span data-tocid="concept_vlj_vph_yq-d46e112782" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a></span></span></li>
-         <li><span data-tocid="concept_is3_zkp_wq-d46e112992" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a></span></span></li>
-         <li><span data-tocid="concept_o3b_t1k_yx-d46e113211" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
-         <li><span data-tocid="concept_fch_fc3_ms-d46e113421" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
-         <li><span data-tocid="concept_ldh_sct_gv-d46e113703" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
-         <li><span data-tocid="concept_mnj_zhq_bw-d46e114668" class="topicref" data-id="concept_mnj_zhq_bw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a></span></span></li>
-         <li><span data-tocid="concept_rz5_nft_zv-d46e115049" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
-         <li><span data-tocid="concept_ghx_ypr_fw-d46e116131" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a></span></span></li>
-         <li><span data-tocid="concept_ghx_ypr_fw-d46e119491" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPRouter.html#concept_ghx_ypr_fw">HTTP Router</a></span></span></li>
-         <li><span data-tocid="concept_n2p_jgf_lr-d46e119547" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
-         <li class="active"><span data-tocid="concept_ysc_ccy_hw-d46e120487" class="topicref" data-id="concept_ysc_ccy_hw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_cvq_brj_bhb-d46e120630" class="topicref" data-id="concept_cvq_brj_bhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_cvq_brj_bhb">Database Vendors and Drivers</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_hjc_t4k_wq-d46e114636" class="topicref" data-id="concept_hjc_t4k_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMasker.html#concept_hjc_t4k_wq">Field Masker</a></span></span></li>
+         <li><span data-tocid="concept_pgm_tsl_gt-d46e114735" class="topicref" data-id="concept_pgm_tsl_gt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldMerger.html#concept_pgm_tsl_gt">Field Merger</a></span></span></li>
+         <li><span data-tocid="concept_krp_5fv_vy-d46e114789" class="topicref" data-id="concept_krp_5fv_vy" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldOrder.html#concept_krp_5fv_vy">Field Order</a></span></span></li>
+         <li><span data-tocid="concept_ekg_313_qw-d46e114888" class="topicref" data-id="concept_ekg_313_qw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ListPivoter.html#concept_ekg_313_qw">Field Pivoter</a></span></span></li>
+         <li><span data-tocid="concept_jdd_blr_wq-d46e114987" class="topicref" data-id="concept_jdd_blr_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRemover.html#concept_jdd_blr_wq">Field Remover</a></span></span></li>
+         <li><span data-tocid="concept_vyv_zsg_ht-d46e115041" class="topicref" data-id="concept_vyv_zsg_ht" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldRenamer.html#concept_vyv_zsg_ht">Field Renamer</a></span></span></li>
+         <li><span data-tocid="concept_rw4_2d3_4cb-d46e115146" class="topicref" data-id="concept_rw4_2d3_4cb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldReplacer.html#concept_rw4_2d3_4cb">Field Replacer</a></span></span></li>
+         <li><span data-tocid="concept_vlj_vph_yq-d46e115363" class="topicref" data-id="concept_vlj_vph_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldSplitter.html#concept_vlj_vph_yq">Field Splitter</a></span></span></li>
+         <li><span data-tocid="concept_is3_zkp_wq-d46e115573" class="topicref" data-id="concept_is3_zkp_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldTypeConverter.html#concept_is3_zkp_wq">Field Type Converter</a></span></span></li>
+         <li><span data-tocid="concept_o3b_t1k_yx-d46e115792" class="topicref" data-id="concept_o3b_t1k_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/FieldZip.html#concept_o3b_t1k_yx">Field Zip</a></span></span></li>
+         <li><span data-tocid="concept_fch_fc3_ms-d46e116002" class="topicref" data-id="concept_fch_fc3_ms" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/GeoIP.html#concept_fch_fc3_ms">Geo IP</a></span></span></li>
+         <li><span data-tocid="concept_ldh_sct_gv-d46e116284" class="topicref" data-id="concept_ldh_sct_gv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Groovy.html#concept_ldh_sct_gv">Groovy Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_mnj_zhq_bw-d46e117249" class="topicref" data-id="concept_mnj_zhq_bw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HBaseLookup.html#concept_mnj_zhq_bw">HBase Lookup</a></span></span></li>
+         <li><span data-tocid="concept_rz5_nft_zv-d46e117630" class="topicref" data-id="concept_rz5_nft_zv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HiveMetadata.html#concept_rz5_nft_zv">Hive Metadata</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e118712" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPClient.html#concept_ghx_ypr_fw">HTTP Client</a></span></span></li>
+         <li><span data-tocid="concept_ghx_ypr_fw-d46e122072" class="topicref" data-id="concept_ghx_ypr_fw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/HTTPRouter.html#concept_ghx_ypr_fw">HTTP Router</a></span></span></li>
+         <li><span data-tocid="concept_n2p_jgf_lr-d46e122128" class="topicref" data-id="concept_n2p_jgf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JavaScript.html#concept_n2p_jgf_lr">JavaScript Evaluator</a></span></span></li>
+         <li class="active"><span data-tocid="concept_ysc_ccy_hw-d46e123068" class="topicref" data-id="concept_ysc_ccy_hw" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_ysc_ccy_hw">JDBC Lookup</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_cvq_brj_bhb-d46e123211" class="topicref" data-id="concept_cvq_brj_bhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_cvq_brj_bhb">Database Vendors and Drivers</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">The JDBC Lookup processor can perform lookups of database data from multiple database         vendors.</p>
                            </span></span></span></li>
-               <li><span data-tocid="concept_nw3_t3p_tw-d46e120848" class="topicref" data-id="concept_nw3_t3p_tw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_nw3_t3p_tw">Installing the JDBC Driver</a></span></span></li>
-               <li><span data-tocid="concept_jt5_kx2_px-d46e120920" class="topicref" data-id="concept_jt5_kx2_px" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_jt5_kx2_px">Lookup Cache</a></span></span></li>
-               <li><span data-tocid="concept_lfb_1gh_wkb-d46e121202" class="topicref" data-id="concept_lfb_1gh_wkb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_lfb_1gh_wkb">JDBC Field Attributes</a></span></span></li>
-               <li><span data-tocid="concept_k3l_hrd_wz-d46e121315" class="topicref" data-id="concept_k3l_hrd_wz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_k3l_hrd_wz">Monitoring a JDBC Lookup</a><span class="wh-tooltip">
+               <li><span data-tocid="concept_nw3_t3p_tw-d46e123429" class="topicref" data-id="concept_nw3_t3p_tw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_nw3_t3p_tw">Installing the JDBC Driver</a></span></span></li>
+               <li><span data-tocid="concept_jt5_kx2_px-d46e123501" class="topicref" data-id="concept_jt5_kx2_px" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_jt5_kx2_px">Lookup Cache</a></span></span></li>
+               <li><span data-tocid="concept_lfb_1gh_wkb-d46e123783" class="topicref" data-id="concept_lfb_1gh_wkb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_lfb_1gh_wkb">JDBC Field Attributes</a></span></span></li>
+               <li><span data-tocid="concept_k3l_hrd_wz-d46e123896" class="topicref" data-id="concept_k3l_hrd_wz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#concept_k3l_hrd_wz">Monitoring a JDBC Lookup</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When you monitor a pipeline that includes the JDBC Lookup processor, the Summary tab         displays statistics about the
                               queries that the JDBC Lookup processor performs. Use the         statistics to help identify any performance bottlenecks encountered
@@ -167,95 +167,92 @@
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_kbr_2cy_hw-d46e121441" class="topicref" data-id="task_kbr_2cy_hw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#task_kbr_2cy_hw">Configuring a JDBC Lookup</a></span></span></li>
+               <li><span data-tocid="task_kbr_2cy_hw-d46e124022" class="topicref" data-id="task_kbr_2cy_hw" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCLookup.html#task_kbr_2cy_hw">Configuring a JDBC Lookup</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_qbx_lcy_hw-d46e121575" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
-         <li><span data-tocid="concept_jmg_hw1_h1b-d46e122036" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
-         <li><span data-tocid="concept_bs1_4t3_yq-d46e122092" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
-         <li><span data-tocid="concept_a1h_lkf_lr-d46e122149" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
-         <li><span data-tocid="concept_a1x_3wl_p1b-d46e123089" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_qbx_lcy_hw-d46e124156" class="topicref" data-id="concept_qbx_lcy_hw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JDBCTee.html#concept_qbx_lcy_hw">JDBC Tee</a></span></span></li>
+         <li><span data-tocid="concept_jmg_hw1_h1b-d46e124617" class="topicref" data-id="concept_jmg_hw1_h1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONGenerator.html#concept_jmg_hw1_h1b">JSON Generator</a></span></span></li>
+         <li><span data-tocid="concept_bs1_4t3_yq-d46e124673" class="topicref" data-id="concept_bs1_4t3_yq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/JSONParser.html#concept_bs1_4t3_yq">JSON Parser</a></span></span></li>
+         <li><span data-tocid="concept_a1h_lkf_lr-d46e124730" class="topicref" data-id="concept_a1h_lkf_lr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Jython.html#concept_a1h_lkf_lr">Jython Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_a1x_3wl_p1b-d46e125670" class="topicref" data-id="concept_a1x_3wl_p1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ulm_qdq_fs-d46e123552" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
-         <li><span data-tocid="concept_wnr_wlv_gfb-d46e123651" class="topicref" data-id="concept_wnr_wlv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MLeap.html#concept_wnr_wlv_gfb">MLeap Evaluator</a></span></span></li>
-         <li><span data-tocid="concept_rrp_t4w_2fb-d46e123867" class="topicref" data-id="concept_rrp_t4w_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MongoDBLookup.html#concept_rrp_t4w_2fb">MongoDB Lookup</a></span></span></li>
-         <li><span data-tocid="concept_r3s_3fv_gfb-d46e124334" class="topicref" data-id="concept_r3s_3fv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb">PMML Evaluator</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ulm_qdq_fs-d46e126133" class="topicref" data-id="concept_ulm_qdq_fs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/LogParser.html#concept_ulm_qdq_fs">Log Parser</a></span></span></li>
+         <li><span data-tocid="concept_wnr_wlv_gfb-d46e126232" class="topicref" data-id="concept_wnr_wlv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MLeap.html#concept_wnr_wlv_gfb">MLeap Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_rrp_t4w_2fb-d46e126448" class="topicref" data-id="concept_rrp_t4w_2fb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/MongoDBLookup.html#concept_rrp_t4w_2fb">MongoDB Lookup</a></span></span></li>
+         <li><span data-tocid="concept_r3s_3fv_gfb-d46e126915" class="topicref" data-id="concept_r3s_3fv_gfb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PMML.html#concept_r3s_3fv_gfb">PMML Evaluator</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_lcp_ssh_qcb-d46e124627" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
-         <li><span data-tocid="concept_z3m_v52_zq-d46e124914" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a></span></span></li>
-         <li><span data-tocid="concept_ng3_lpr_pv-d46e125014" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a></span></span></li>
-         <li><span data-tocid="concept_k23_3rk_yx-d46e125171" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a></span></span></li>
-         <li><span data-tocid="concept_rfz_ks3_x1b-d46e125541" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
-         <li><span data-tocid="concept_cpx_1lm_zx-d46e125751" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_lcp_ssh_qcb-d46e127208" class="topicref" data-id="concept_lcp_ssh_qcb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/PostgreSQLMetadata.html#concept_lcp_ssh_qcb">PostgreSQL Metadata</a></span></span></li>
+         <li><span data-tocid="concept_z3m_v52_zq-d46e127495" class="topicref" data-id="concept_z3m_v52_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RDeduplicator.html#concept_z3m_v52_zq">Record Deduplicator</a></span></span></li>
+         <li><span data-tocid="concept_ng3_lpr_pv-d46e127595" class="topicref" data-id="concept_ng3_lpr_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/RedisLookup.html#concept_ng3_lpr_pv">Redis Lookup</a></span></span></li>
+         <li><span data-tocid="concept_k23_3rk_yx-d46e127752" class="topicref" data-id="concept_k23_3rk_yx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SalesforceLookup.html#concept_k23_3rk_yx">Salesforce Lookup</a></span></span></li>
+         <li><span data-tocid="concept_rfz_ks3_x1b-d46e128122" class="topicref" data-id="concept_rfz_ks3_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SchemaGenerator.html#concept_rfz_ks3_x1b">Schema Generator</a></span></span></li>
+         <li><span data-tocid="concept_cpx_1lm_zx-d46e128332" class="topicref" data-id="concept_cpx_1lm_zx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Spark.html#concept_cpx_1lm_zx">Spark Evaluator</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zh2_kfj_tdb-d46e126131" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a></span></span></li>
-         <li><span data-tocid="concept_irv_l5r_2jb-d46e126692" class="topicref" data-id="concept_irv_l5r_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StartJob-P.html#concept_irv_l5r_2jb">Start Jobs</a></span></span></li>
-         <li><span data-tocid="concept_bbc_cxr_2jb-d46e126936" class="topicref" data-id="concept_bbc_cxr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StartPipe-P.html#concept_bbc_cxr_2jb">Start Pipelines</a></span></span></li>
-         <li><span data-tocid="concept_aqz_t4r_pv-d46e127088" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a></span></span></li>
-         <li><span data-tocid="concept_tqv_t5r_wq-d46e127145" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a></span></span></li>
-         <li><span data-tocid="concept_otg_csh_z2b-d46e127299" class="topicref" data-id="concept_otg_csh_z2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a></span></span></li>
-         <li><span data-tocid="concept_o5k_dmf_zq-d46e127771" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
-         <li><span data-tocid="concept_xv5_xbd_zlb-d46e128054" class="topicref" data-id="concept_xv5_xbd_zlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WaitJob.html#concept_xv5_xbd_zlb">Wait for Jobs</a></span></span></li>
-         <li><span data-tocid="concept_kd3_qld_zlb-d46e128204" class="topicref" data-id="concept_kd3_qld_zlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WaitPipe.html#concept_kd3_qld_zlb">Wait for Pipelines</a></span></span></li>
-         <li><span data-tocid="concept_nwg_rx4_l2b-d46e128356" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a></span></span></li>
-         <li><span data-tocid="concept_ofb_svm_5bb-d46e129185" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Windowing Aggregator</a></span></span></li>
-         <li><span data-tocid="concept_ck4_255_sv-d46e129982" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
-         <li><span data-tocid="concept_dtt_q5q_k5-d46e130081" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
+         <li><span data-tocid="concept_zh2_kfj_tdb-d46e128712" class="topicref" data-id="concept_zh2_kfj_tdb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/SQLParser.html#concept_zh2_kfj_tdb">SQL Parser</a></span></span></li>
+         <li><span data-tocid="concept_irv_l5r_2jb-d46e129273" class="topicref" data-id="concept_irv_l5r_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StartJob-P.html#concept_irv_l5r_2jb">Start Jobs</a></span></span></li>
+         <li><span data-tocid="concept_bbc_cxr_2jb-d46e129517" class="topicref" data-id="concept_bbc_cxr_2jb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StartPipe-P.html#concept_bbc_cxr_2jb">Start Pipelines</a></span></span></li>
+         <li><span data-tocid="concept_aqz_t4r_pv-d46e129669" class="topicref" data-id="concept_aqz_t4r_pv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StaticLookup.html#concept_aqz_t4r_pv">Static Lookup</a></span></span></li>
+         <li><span data-tocid="concept_tqv_t5r_wq-d46e129726" class="topicref" data-id="concept_tqv_t5r_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/StreamSelector.html#concept_tqv_t5r_wq">Stream Selector</a></span></span></li>
+         <li><span data-tocid="concept_otg_csh_z2b-d46e129880" class="topicref" data-id="concept_otg_csh_z2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/TensorFlow.html#concept_otg_csh_z2b">TensorFlow Evaluator</a></span></span></li>
+         <li><span data-tocid="concept_o5k_dmf_zq-d46e130352" class="topicref" data-id="concept_o5k_dmf_zq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/ValueReplacer.html#concept_o5k_dmf_zq">Value Replacer (Deprecated)</a></span></span></li>
+         <li><span data-tocid="concept_xv5_xbd_zlb-d46e130635" class="topicref" data-id="concept_xv5_xbd_zlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WaitJob.html#concept_xv5_xbd_zlb">Wait for Jobs</a></span></span></li>
+         <li><span data-tocid="concept_kd3_qld_zlb-d46e130785" class="topicref" data-id="concept_kd3_qld_zlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WaitPipe.html#concept_kd3_qld_zlb">Wait for Pipelines</a></span></span></li>
+         <li><span data-tocid="concept_nwg_rx4_l2b-d46e130937" class="topicref" data-id="concept_nwg_rx4_l2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/WholeFileTransformer.html#concept_nwg_rx4_l2b">Whole File Transformer</a></span></span></li>
+         <li><span data-tocid="concept_ofb_svm_5bb-d46e131766" class="topicref" data-id="concept_ofb_svm_5bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Aggregator.html#concept_ofb_svm_5bb">Windowing Aggregator</a></span></span></li>
+         <li><span data-tocid="concept_ck4_255_sv-d46e132563" class="topicref" data-id="concept_ck4_255_sv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLFlattener.html#concept_ck4_255_sv">XML Flattener</a></span></span></li>
+         <li><span data-tocid="concept_dtt_q5q_k5-d46e132662" class="topicref" data-id="concept_dtt_q5q_k5" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/XMLParser.html#concept_dtt_q5q_k5">XML Parser</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e130139" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e157853" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e167505" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e170108" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e173645" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_agj_cfj_br-d46e132720" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e161471" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e171123" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e173726" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e177260" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e175836" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e180173" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e179451" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e183788" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e180755" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e181127" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e181419" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e181901" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e183046" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e184002" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e184370" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e184742" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e185034" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e185516" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e186661" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e187617" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e186630" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e190245" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e187887" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e189717" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e191502" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e193332" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e198182" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e199387" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e194215" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e195420" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e204830" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e204885" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e200863" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e200918" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e205107" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e208778" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e201140" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e204811" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
-               
-               <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
-               </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e205034" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e209001" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -269,9 +266,9 @@
 
     <div class="body conbody">
         <div class="p"><div class="simpletable-container"><table cellpadding="4" cellspacing="0" summary="" id="concept_ysc_ccy_hw__simpletable_k44_gfm_rgb" border="0" class="simpletable"><col style="width:100%" /><thead></thead><tbody><tr class="strow">
-                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_ysc_ccy_hw__d44e112">
+                <td style="vertical-align:top;" class="stentry"><a class="xref" href="../Pipeline_Configuration/ProductIcons_Doc.html#concept_mjg_ly5_pgb" title="In Data Collector, you can configure pipelines that are run by Data Collector and pipelines that are run by Data Collector Edge.">Supported pipeline types:</a><ul class="ul" id="concept_ysc_ccy_hw__d46e112">
                         <li class="li">
-                            <p class="p"><img class="image" id="concept_ysc_ccy_hw__d44e117" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
+                            <p class="p"><img class="image" id="concept_ysc_ccy_hw__d46e117" src="../../../reusable-content/shared-graphics/icon-SDC.png" height="21" width="21" /> Data Collector</p>
 
                         </li>
 
@@ -289,7 +286,7 @@
             department_name output field.</p>
 
         <div class="p">
-            <div class="note note"><span class="notetitle">Note:</span> This processor does not support lookups on Hive or Kudu. Use the <a class="xref" href="KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a> processor to look
+            <div class="note important"><span class="importanttitle">Important:</span> This processor does not support lookups on Hive, Impala, or Kudu. Use the <a class="xref" href="KuduLookup.html#concept_a1x_3wl_p1b">Kudu Lookup</a> processor to look
                 up Kudu data.</div>
 
         </div>
@@ -330,21 +327,21 @@
 
         <div class="p"><span class="ph">StreamSets</span> has tested the stage with the following database vendors, versions, and JDBC
                         drivers:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cvq_brj_bhb__d87e3442" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_cvq_brj_bhb__d88e3518" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                     <tr>
-                                          <th class="entry cellrowborder" id="d625235e280">Database Vendor</th>
+                                          <th class="entry cellrowborder" id="d642304e280">Database Vendor</th>
 
-                                          <th class="entry cellrowborder" id="d625235e283">Versions and Drivers</th>
+                                          <th class="entry cellrowborder" id="d642304e283">Versions and Drivers</th>
 
                                     </tr>
 
                               </thead>
 <tbody class="tbody">
-                                    <tr id="concept_cvq_brj_bhb__d87e3464">
-                                          <td class="entry cellrowborder" headers="d625235e280 ">MySQL</td>
+                                    <tr id="concept_cvq_brj_bhb__d88e3540">
+                                          <td class="entry cellrowborder" headers="d642304e280 ">MySQL</td>
 
-                                          <td class="entry cellrowborder" headers="d625235e283 ">
-                                                <ul class="ul" id="concept_cvq_brj_bhb__d87e3471">
+                                          <td class="entry cellrowborder" headers="d642304e283 ">
+                                                <ul class="ul" id="concept_cvq_brj_bhb__d88e3547">
                                                   <li class="li">MySQL 5.7 with the MySQL Connector/J 8.0.12
                                                   driver </li>
 
@@ -358,18 +355,19 @@
                                     </tr>
 
                                     <tr>
-                                          <td class="entry cellrowborder" headers="d625235e280 ">Oracle</td>
+                                          <td class="entry cellrowborder" headers="d642304e280 ">Oracle</td>
 
-                                          <td class="entry cellrowborder" headers="d625235e283 "><span class="ph" id="concept_cvq_brj_bhb__d87e3488">Oracle 11g and 19c
-                                                  with the Oracle 11.2.0 JDBC driver</span></td>
+                                          <td class="entry cellrowborder" headers="d642304e283 "><span class="ph" id="concept_cvq_brj_bhb__d88e3564">Oracle 11g and 19c,
+                                                  and Oracle RAC 12c and 19c with the Oracle 19.3.0
+                                                  JDBC driver</span></td>
 
                                     </tr>
 
-                                    <tr id="concept_cvq_brj_bhb__d87e3492">
-                                          <td class="entry cellrowborder" headers="d625235e280 ">PostgreSQL</td>
+                                    <tr id="concept_cvq_brj_bhb__d88e3568">
+                                          <td class="entry cellrowborder" headers="d642304e280 ">PostgreSQL</td>
 
-                                          <td class="entry cellrowborder" headers="d625235e283 ">
-                                                <ul class="ul" id="concept_cvq_brj_bhb__d87e3499">
+                                          <td class="entry cellrowborder" headers="d642304e283 ">
+                                                <ul class="ul" id="concept_cvq_brj_bhb__d88e3575">
                                                   <li class="li">PostgreSQL 9.4.18</li>
 
                                                   <li class="li">PostgreSQL 9.6.2</li>
@@ -389,9 +387,9 @@
                                     </tr>
 
                                     <tr>
-                                          <td class="entry cellrowborder" headers="d625235e280 ">Microsoft SQL Server</td>
+                                          <td class="entry cellrowborder" headers="d642304e280 ">Microsoft SQL Server</td>
 
-                                          <td class="entry cellrowborder" headers="d625235e283 "><span class="ph" id="concept_cvq_brj_bhb__d87e3525">SQL Server
+                                          <td class="entry cellrowborder" headers="d642304e283 "><span class="ph" id="concept_cvq_brj_bhb__d88e3601">SQL Server
                                                   2017</span><p class="p"><span class="ph">When connecting to Microsoft SQL Server, you do not
                         need to install a JDBC driver. <span class="ph">Data Collector</span> includes the
                         JDBC driver required for SQL Server.</span></p>
@@ -418,221 +416,221 @@
         <div class="p">The processor supports the following MySQL data types:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_bz1_4v2_hmb__table_h15_1w2_hmb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d625235e408">MySQL Data Type</th>
+              <th class="entry cellrowborder" id="d642304e408">MySQL Data Type</th>
 
-              <th class="entry cellrowborder" id="d625235e411"><span class="ph">Data Collector</span> Data Type</th>
+              <th class="entry cellrowborder" id="d642304e411"><span class="ph">Data Collector</span> Data Type</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Bigint</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Bigint</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Long</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Bigint Unsigned</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Decimal</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Long</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Binary</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Bigint Unsigned</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Blob</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Decimal</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Char</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Binary</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Date</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Date</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Datetime</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Blob</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Datetime</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Decimal </td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Decimal</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Char</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Double</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Enum</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Float</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Date</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Float</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Int</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Integer</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Date</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Int Unsigned</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Datetime</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Long</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Json</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Datetime</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Linestring</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Decimal </td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Medium Int</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Integer</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Decimal</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Medium Int Unsigned</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Double</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Long</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Numeric </td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Decimal</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Double</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Point</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Enum</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Polygon</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Set </td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Float</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Smallint</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Short</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Float</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Smallint Unsigned</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Int</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Integer</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Text</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Integer</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Time</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Int Unsigned</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Time</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Timestamp</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Datetime</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Long</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Tinyint, Tinyint Unsigned</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Json</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Short</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Varbinary</td>
-
-              <td class="entry cellrowborder" headers="d625235e411 ">Byte Array</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Varchar</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Linestring</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e408 ">Year</td>
+              <td class="entry cellrowborder" headers="d642304e408 ">Medium Int</td>
 
-              <td class="entry cellrowborder" headers="d625235e411 ">Date</td>
+              <td class="entry cellrowborder" headers="d642304e411 ">Integer</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Medium Int Unsigned</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Long</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Numeric </td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Decimal</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Point</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Polygon</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Set </td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Smallint</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Short</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Smallint Unsigned</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Integer</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Text</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Time</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Time</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Timestamp</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Datetime</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Tinyint, Tinyint Unsigned</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Short</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Varbinary</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Byte Array</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Varchar</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e408 ">Year</td>
+
+              <td class="entry cellrowborder" headers="d642304e411 ">Date</td>
 
             </tr>
 
@@ -655,116 +653,116 @@
         <div class="p">The processor supports the following Oracle data types:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_uyf_4w2_hmb__table_ikh_ww2_hmb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d625235e735">Oracle Data Type</th>
+              <th class="entry cellrowborder" id="d642304e735">Oracle Data Type</th>
 
-              <th class="entry cellrowborder" id="d625235e738"><span class="ph">Data Collector</span> Data Type</th>
+              <th class="entry cellrowborder" id="d642304e738"><span class="ph">Data Collector</span> Data Type</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Number</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Number</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">Decimal</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Char</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">Decimal</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Varchar, Varchar2</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Char</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Nchar, NvarChar2</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Binary_float</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Varchar, Varchar2</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">Float</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Binary_double</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Date</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Nchar, NvarChar2</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">Datetime</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Timestamp</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">Datetime</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Timestamp with time zone</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Binary_float</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">Zoned_datetime</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Timestamp with local time zone</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">Zoned_datetime</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">Float</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Long</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Binary_double</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Blob</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">Byte_array</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">Double</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Clob</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Date</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">Nclob</td>
-
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">Datetime</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e735 ">XMLType</td>
+              <td class="entry cellrowborder" headers="d642304e735 ">Timestamp</td>
 
-              <td class="entry cellrowborder" headers="d625235e738 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e738 ">Datetime</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Timestamp with time zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">Zoned_datetime</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Timestamp with local time zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">Zoned_datetime</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Long</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Blob</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">Byte_array</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Clob</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">Nclob</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e735 ">XMLType</td>
+
+              <td class="entry cellrowborder" headers="d642304e738 ">String</td>
 
             </tr>
 
@@ -787,277 +785,277 @@
         <div class="p">The processor supports the following PostgreSQL data types:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_tkm_ny2_hmb__table_k5k_ry2_hmb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d625235e925">PostgreSQL Data Type</th>
+              <th class="entry cellrowborder" id="d642304e925">PostgreSQL Data Type</th>
 
-              <th class="entry cellrowborder" id="d625235e928"><span class="ph">Data Collector</span> Data Type</th>
+              <th class="entry cellrowborder" id="d642304e928"><span class="ph">Data Collector</span> Data Type</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Array</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Array</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Bigint</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Long</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Bit Varying </td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Bigint</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Boolean</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Boolean</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Long</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Box</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Bit Varying </td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Bytea</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Byte Array</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Char </td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Boolean</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Cidr</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Boolean</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Circle</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Box</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Composite Type</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Date</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Bytea</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">Date</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Daterange</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Byte Array</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Decimal</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Char </td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">Decimal</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Double Precision</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Enum</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Cidr</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Inet</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Int4range, Int8range</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Circle</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Integer</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Integer</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Interval</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Composite Type</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Json, Jsonb</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Line</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Date</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Lseg</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Date</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Macaddr</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Daterange</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Money</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Numeric</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Decimal</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">Decimal</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Numrange</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Decimal</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Path</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Double Precision</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Point</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Double</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Polygon</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Enum</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Real</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Float</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Smallint</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Inet</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">Short</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Text</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Time, Time with Time Zone</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Int4range, Int8range</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">Time</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Timestamp, Timestamp with Time Zone</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">Time</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Tsrange</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Integer</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Txtzrange</td>
-
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">Integer</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Uuid</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Interval</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e925 ">Varchar</td>
+              <td class="entry cellrowborder" headers="d642304e925 ">Json, Jsonb</td>
 
-              <td class="entry cellrowborder" headers="d625235e928 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Line</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Lseg</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Macaddr</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Money</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Double</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Numeric</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Decimal</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Numrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Path</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Point</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Polygon</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Real</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Float</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Smallint</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Short</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Text</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Time, Time with Time Zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Time</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Timestamp, Timestamp with Time Zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">Time</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Tsrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Txtzrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Uuid</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e925 ">Varchar</td>
+
+              <td class="entry cellrowborder" headers="d642304e928 ">String</td>
 
             </tr>
 
@@ -1084,277 +1082,277 @@
             
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_rxc_rz2_hmb__table_oz3_5z2_hmb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:50%" /><col style="width:50%" /></colgroup><thead class="thead" style="text-align:left;">
             <tr>
-              <th class="entry cellrowborder" id="d625235e1330">PostgreSQL Data Type</th>
+              <th class="entry cellrowborder" id="d642304e1330">PostgreSQL Data Type</th>
 
-              <th class="entry cellrowborder" id="d625235e1333"><span class="ph">Data Collector</span> Data Type</th>
+              <th class="entry cellrowborder" id="d642304e1333"><span class="ph">Data Collector</span> Data Type</th>
 
             </tr>
 
           </thead>
 <tbody class="tbody">
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Array</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Array</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Bigint</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Long</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Bit Varying </td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Bigint</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Boolean</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Boolean</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Long</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Box</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Bit Varying </td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Bytea</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Byte Array</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Char </td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Boolean</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Cidr</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Boolean</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Circle</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Box</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Composite Type</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Date</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Bytea</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">Date</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Daterange</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Byte Array</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Decimal</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Char </td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">Decimal</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Double Precision</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Enum</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Cidr</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Inet</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Int4range, Int8range</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Circle</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Integer</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Integer</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Interval</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Composite Type</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Json, Jsonb</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Line</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Date</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Lseg</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Date</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Macaddr</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Daterange</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Money</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Double</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Numeric</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Decimal</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">Decimal</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Numrange</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Decimal</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Path</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Double Precision</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Point</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Double</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Polygon</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Enum</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Real</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Float</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Smallint</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Inet</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">Short</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Text</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Time, Time with Time Zone</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Int4range, Int8range</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">Time</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Timestamp, Timestamp with Time Zone</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">Time</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Tsrange</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Integer</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
-
-            </tr>
-
-            <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Txtzrange</td>
-
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">Integer</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Uuid</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Interval</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
             <tr>
-              <td class="entry cellrowborder" headers="d625235e1330 ">Varchar</td>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Json, Jsonb</td>
 
-              <td class="entry cellrowborder" headers="d625235e1333 ">String</td>
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Line</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Lseg</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Macaddr</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Money</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Double</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Numeric</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Decimal</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Numrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Path</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Point</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Polygon</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Real</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Float</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Smallint</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Short</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Text</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Time, Time with Time Zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Time</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Timestamp, Timestamp with Time Zone</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">Time</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Tsrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Txtzrange</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Uuid</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
+
+            </tr>
+
+            <tr>
+              <td class="entry cellrowborder" headers="d642304e1330 ">Varchar</td>
+
+              <td class="entry cellrowborder" headers="d642304e1333 ">String</td>
 
             </tr>
 
@@ -1511,7 +1509,7 @@
 
         <div class="p">The following data type conversions do not include all information in the corresponding
             <span class="ph">Data Collector</span>
-            data type:<ul class="ul" id="concept_lfb_1gh_wkb__d973e135">
+            data type:<ul class="ul" id="concept_lfb_1gh_wkb__d988e135">
                 <li class="li">Database Decimal and Numeric data types are converted to the <span class="ph">Data Collector</span> Decimal data type, which does not store scale and precision.</li>
 
                 <li class="li">The database Timestamp data type is converted to the <span class="ph">Data Collector</span> Datetime data type, which does not store nanoseconds.</li>
@@ -1522,44 +1520,44 @@
         <div class="p">To preserve this information during data type conversion, the origin
             generates the following field attributes for these <span class="ph">Data Collector</span>
             data types:
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lfb_1gh_wkb__d973e152" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:16.666666666666664%" /><col style="width:25%" /><col style="width:58.333333333333336%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_lfb_1gh_wkb__d988e152" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:16.666666666666664%" /><col style="width:25%" /><col style="width:58.333333333333336%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d625235e1939"><span class="ph">Data Collector</span> Data Type</th>
+                            <th class="entry cellrowborder" id="d642304e1939"><span class="ph">Data Collector</span> Data Type</th>
 
-                            <th class="entry cellrowborder" id="d625235e1944">Generated Field Attribute</th>
+                            <th class="entry cellrowborder" id="d642304e1944">Generated Field Attribute</th>
 
-                            <th class="entry cellrowborder" id="d625235e1947">Description</th>
+                            <th class="entry cellrowborder" id="d642304e1947">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d625235e1939 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d642304e1939 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1944 ">precision</td>
+                            <td class="entry cellrowborder" headers="d642304e1944 ">precision</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1947 ">Provides the original precision for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d642304e1947 ">Provides the original precision for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d625235e1939 ">Decimal</td>
+                            <td class="entry cellrowborder" headers="d642304e1939 ">Decimal</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1944 ">scale</td>
+                            <td class="entry cellrowborder" headers="d642304e1944 ">scale</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1947 ">Provides the original scale for every decimal or numeric
+                            <td class="entry cellrowborder" headers="d642304e1947 ">Provides the original scale for every decimal or numeric
                                 column.</td>
 
                         </tr>
 
                         <tr>
-                            <td class="entry cellrowborder" headers="d625235e1939 ">Datetime</td>
+                            <td class="entry cellrowborder" headers="d642304e1939 ">Datetime</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1944 ">nanoSeconds</td>
+                            <td class="entry cellrowborder" headers="d642304e1944 ">nanoSeconds</td>
 
-                            <td class="entry cellrowborder" headers="d625235e1947 ">Provides the original nanoseconds for every timestamp
+                            <td class="entry cellrowborder" headers="d642304e1947 ">Provides the original nanoseconds for every timestamp
                                 column.</td>
 
                         </tr>
@@ -1616,34 +1614,34 @@
                     following properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e6683" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e6786" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d625235e2112">General Property</th>
+                                    <th class="entry cellrowborder" id="d642304e2112">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d625235e2115">Description</th>
+                                    <th class="entry cellrowborder" id="d642304e2115">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
-                                <tr id="task_kbr_2cy_hw__d180e6705">
-                                    <td class="entry cellrowborder" headers="d625235e2112 ">Name</td>
+                                <tr id="task_kbr_2cy_hw__d180e6808">
+                                    <td class="entry cellrowborder" headers="d642304e2112 ">Name</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2115 ">Stage name.</td>
-
-                                </tr>
-
-                                <tr id="task_kbr_2cy_hw__d180e6714">
-                                    <td class="entry cellrowborder" headers="d625235e2112 ">Description</td>
-
-                                    <td class="entry cellrowborder" headers="d625235e2115 ">Optional description.</td>
+                                    <td class="entry cellrowborder" headers="d642304e2115 ">Stage name.</td>
 
                                 </tr>
 
-                                <tr id="task_kbr_2cy_hw__d180e6723">
-                                    <td class="entry cellrowborder" headers="d625235e2112 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+                                <tr id="task_kbr_2cy_hw__d180e6817">
+                                    <td class="entry cellrowborder" headers="d642304e2112 ">Description</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2115 ">Fields that must include data for the record to be passed
+                                    <td class="entry cellrowborder" headers="d642304e2115 ">Optional description.</td>
+
+                                </tr>
+
+                                <tr id="task_kbr_2cy_hw__d180e6826">
+                                    <td class="entry cellrowborder" headers="d642304e2112 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+
+                                    <td class="entry cellrowborder" headers="d642304e2115 ">Fields that must include data for the record to be passed
                                         into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might
                                             include fields that the stage uses.</div>
 <p class="p">Records
@@ -1654,10 +1652,10 @@
 
                                 </tr>
 
-                                <tr id="task_kbr_2cy_hw__d180e6737">
-                                    <td class="entry cellrowborder" headers="d625235e2112 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+                                <tr id="task_kbr_2cy_hw__d180e6840">
+                                    <td class="entry cellrowborder" headers="d642304e2112 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2115 ">Conditions that must evaluate to TRUE to allow a record
+                                    <td class="entry cellrowborder" headers="d642304e2115 ">Conditions that must evaluate to TRUE to allow a record
                                         to enter the stage for processing. Click
                                             <span class="ph uicontrol">Add</span> to create additional
                                         preconditions. <p class="p">Records that do not meet all preconditions
@@ -1667,10 +1665,10 @@
 
                                 </tr>
 
-                                <tr id="task_kbr_2cy_hw__d180e6752">
-                                    <td class="entry cellrowborder" headers="d625235e2112 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
+                                <tr id="task_kbr_2cy_hw__d180e6855">
+                                    <td class="entry cellrowborder" headers="d642304e2112 "><a class="xref" href="../Pipeline_Design/ErrorHandling.html#concept_atr_j4y_5r">On Record Error</a></td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2115 ">Error record handling for the stage: <ul class="ul" id="task_kbr_2cy_hw__d180e6760">
+                                    <td class="entry cellrowborder" headers="d642304e2115 ">Error record handling for the stage: <ul class="ul" id="task_kbr_2cy_hw__d180e6863">
                                             <li class="li">Discard - Discards the record.</li>
 
                                             <li class="li">Send to Error - Sends the record to the pipeline for
@@ -1696,18 +1694,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__table_lnm_dyp_tw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:33.33333333333333%" /><col style="width:66.66666666666666%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d625235e2220">JDBC Property</th>
+                                    <th class="entry cellrowborder" id="d642304e2220">JDBC Property</th>
 
-                                    <th class="entry cellrowborder" id="d625235e2223">Description</th>
+                                    <th class="entry cellrowborder" id="d642304e2223">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" id="task_kbr_2cy_hw__d61e3038" headers="d625235e2220 ">JDBC Connection String</td>
+              <td class="entry cellrowborder" id="task_kbr_2cy_hw__d62e3138" headers="d642304e2220 ">JDBC Connection String</td>
 
-              <td class="entry cellrowborder" headers="d625235e2223 "><span class="ph" id="task_kbr_2cy_hw__d61e3042">Connection string used to connect to
+              <td class="entry cellrowborder" headers="d642304e2223 "><span class="ph" id="task_kbr_2cy_hw__d62e3142">Connection string used to connect to
                   the database.</span><p class="p">Some databases, such as PostgreSQL, require the schema in the
                   connection string. Use the connection string format required by the
                     database.</p>
@@ -1716,18 +1714,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2220 ">Use Credentials</td>
+                                    <td class="entry cellrowborder" headers="d642304e2220 ">SQL Query</td>
 
-              <td class="entry cellrowborder" headers="d625235e2223 "><span class="ph" id="task_kbr_2cy_hw__d61e3090">Enables entering credentials on the Credentials
-                  tab. Use when you do not include credentials in the JDBC connection
-                string.</span></td>
-
-            </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2220 ">SQL Query</td>
-
-                                    <td class="entry cellrowborder" headers="d625235e2223 ">SQL query to use to look up data in the database. Use the
+                                    <td class="entry cellrowborder" headers="d642304e2223 ">SQL query to use to look up data in the database. Use the
                                         following syntax for the
                                             query:<pre class="pre codeblock"><code>SELECT &lt;column1 name&gt;, &lt;column2 name&gt; FROM &lt;table name&gt; WHERE &lt;column3 name&gt; =
     '${record:value(&lt;field path&gt;)}'</code></pre><div class="p">For
@@ -1739,9 +1728,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2220 ">Column Mappings</td>
+                                    <td class="entry cellrowborder" headers="d642304e2220 ">Column Mappings</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2223 ">Use to override the default column to field mappings. By
+                                    <td class="entry cellrowborder" headers="d642304e2223 ">Use to override the default column to field mappings. By
                                         default, columns are written to fields of the same name.
                                             <div class="p">Enter the following:<ul class="ul" id="task_kbr_2cy_hw__ul_jvy_5mm_xw">
                                                 <li class="li">Column Name - Name of the database column that
@@ -1781,18 +1770,18 @@
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" id="task_kbr_2cy_hw__d61e4172" headers="d625235e2220 ">Multiple Values Behavior</td>
+            <td class="entry cellrowborder" id="task_kbr_2cy_hw__d62e4272" headers="d642304e2220 ">Multiple Values Behavior</td>
 
-            <td class="entry cellrowborder" id="task_kbr_2cy_hw__d61e4175" headers="d625235e2223 "><span class="ph" id="task_kbr_2cy_hw__d61e4176">Action to take upon finding multiple matching
+            <td class="entry cellrowborder" id="task_kbr_2cy_hw__d62e4275" headers="d642304e2223 "><span class="ph" id="task_kbr_2cy_hw__d62e4276">Action to take upon finding multiple matching
                 values:</span>
-              <ul class="ul" id="task_kbr_2cy_hw__d61e4179">
-                <li class="li" id="task_kbr_2cy_hw__d61e4181">First value only - Returns the first
+              <ul class="ul" id="task_kbr_2cy_hw__d62e4279">
+                <li class="li" id="task_kbr_2cy_hw__d62e4281">First value only - Returns the first
                   value.</li>
 
-                <li class="li" id="task_kbr_2cy_hw__d61e4184">All values as a list - Returns every
+                <li class="li" id="task_kbr_2cy_hw__d62e4284">All values as a list - Returns every
                   matching value in a list in a single record. </li>
 
-                <li class="li" id="task_kbr_2cy_hw__d61e4187">Split into multiple records - Returns
+                <li class="li" id="task_kbr_2cy_hw__d62e4287">Split into multiple records - Returns
                   every matching value in a separate record. </li>
 
               </ul>
@@ -1801,10 +1790,10 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d625235e2220 ">Missing Values Behavior</td>
+            <td class="entry cellrowborder" headers="d642304e2220 ">Missing Values Behavior</td>
 
-            <td class="entry cellrowborder" headers="d625235e2223 ">Action to take upon finding no return values in fields with no default value
-                defined:<ul class="ul" id="task_kbr_2cy_hw__d61e4199">
+            <td class="entry cellrowborder" headers="d642304e2223 ">Action to take upon finding no return values in fields with no default value
+                defined:<ul class="ul" id="task_kbr_2cy_hw__d62e4299">
                 <li class="li">Send to error - Sends the record to error.</li>
 
                 <li class="li">Pass the record along the pipeline unchanged - Passes the record without a
@@ -1814,36 +1803,54 @@
 </td>
 
           </tr>
-                                
-                                <tr>
-              <td class="entry cellrowborder" headers="d625235e2220 ">Max Clob Size (characters)</td>
 
-              <td class="entry cellrowborder" headers="d625235e2223 ">Maximum number of characters to be read in a Clob field. Larger data is
+                                <tr>
+              <td class="entry cellrowborder" headers="d642304e2220 ">Max Clob Size (characters)</td>
+
+              <td class="entry cellrowborder" headers="d642304e2223 ">Maximum number of characters to be read in a Clob field. Larger data is
                 truncated.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2220 ">Max Blob Size (bytes)</td>
+                                    <td class="entry cellrowborder" headers="d642304e2220 ">Max Blob Size (bytes)</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2223 ">Maximum number of bytes to be read in a Blob field.
+                                    <td class="entry cellrowborder" headers="d642304e2223 ">Maximum number of bytes to be read in a Blob field.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2220 ">Enable Local Caching <a class="xref" href="JDBCLookup.html#concept_jt5_kx2_px">
-                                            <img class="image" id="task_kbr_2cy_hw__image_h2p_p7v_uh" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+                                    <td class="entry cellrowborder" headers="d642304e2220 "><a class="xref" href="JDBCLookup.html#concept_xdx_xqq_vcb">Retry on Missing Value</a></td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2223 ">Specifies whether to locally cache the returned
+                                    <td class="entry cellrowborder" headers="d642304e2223 ">Specifies whether to retry lookups for known missing
+                                        values. By default, the processor caches and then always
+                                        returns the default value for known missing values to avoid
+                                        unnecessary lookups. </td>
+
+                                </tr>
+
+                                <tr>
+              <td class="entry cellrowborder" headers="d642304e2220 ">Use Credentials</td>
+
+              <td class="entry cellrowborder" headers="d642304e2223 "><span class="ph" id="task_kbr_2cy_hw__d62e3190">Enables entering credentials on the Credentials
+                  tab. Use when you do not include credentials in the JDBC connection
+                string.</span></td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d642304e2220 "><a class="xref" href="JDBCLookup.html#concept_jt5_kx2_px">Enable Local Caching</a></td>
+
+                                    <td class="entry cellrowborder" headers="d642304e2223 ">Specifies whether to locally cache the returned
               values.</td>
 
                                 </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d625235e2220 ">Maximum Entries to Cache</td>
+            <td class="entry cellrowborder" headers="d642304e2220 ">Maximum Entries to Cache</td>
 
-            <td class="entry cellrowborder" headers="d625235e2223 ">Maximum number of values to cache. When the maximum number is reached, the
+            <td class="entry cellrowborder" headers="d642304e2223 ">Maximum number of values to cache. When the maximum number is reached, the
               processor evicts the oldest values from the cache. <p class="p">Default is -1, which means
                 unlimited.</p>
 </td>
@@ -1851,10 +1858,10 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d625235e2220 ">Eviction Policy Type</td>
+            <td class="entry cellrowborder" headers="d642304e2220 ">Eviction Policy Type</td>
 
-            <td class="entry cellrowborder" headers="d625235e2223 ">Policy used to evict values from the local cache when the expiration time has
-                passed:<ul class="ul" id="task_kbr_2cy_hw__d61e4236">
+            <td class="entry cellrowborder" headers="d642304e2223 ">Policy used to evict values from the local cache when the expiration time has
+                passed:<ul class="ul" id="task_kbr_2cy_hw__d62e4336">
                 <li class="li">Expire After Last Access - Measures the expiration time since the value was last
                   accessed by a read or a write.</li>
 
@@ -1867,37 +1874,26 @@
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d625235e2220 ">Expiration Time</td>
+            <td class="entry cellrowborder" headers="d642304e2220 ">Expiration Time</td>
 
-            <td class="entry cellrowborder" headers="d625235e2223 ">Amount of time that a value can remain in the local cache without being accessed
+            <td class="entry cellrowborder" headers="d642304e2223 ">Amount of time that a value can remain in the local cache without being accessed
               or written to. <p class="p">Default is 1 second.</p>
 </td>
 
           </tr>
 
                                 <tr>
-            <td class="entry cellrowborder" headers="d625235e2220 ">Time Unit</td>
+            <td class="entry cellrowborder" headers="d642304e2220 ">Time Unit</td>
 
-            <td class="entry cellrowborder" headers="d625235e2223 ">Unit of time for the expiration time. <p class="p">Default is seconds.</p>
+            <td class="entry cellrowborder" headers="d642304e2223 ">Unit of time for the expiration time. <p class="p">Default is seconds.</p>
 </td>
 
           </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2220 ">Retry on Missing Value <a class="xref" href="JDBCLookup.html#concept_xdx_xqq_vcb">
-                                            <img class="image" id="task_kbr_2cy_hw__image_h9l_p8v_lh" src="../Graphics/icon_moreInfo.png" height="12" width="12" /></a></td>
+              <td class="entry cellrowborder" headers="d642304e2220 ">Additional JDBC Configuration Properties</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2223 ">Specifies whether to retry lookups for known missing
-                                        values. By default, the processor caches and then always
-                                        returns the default value for known missing values to avoid
-                                        unnecessary lookups. </td>
-
-                                </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d625235e2220 ">Additional JDBC Configuration Properties</td>
-
-              <td class="entry cellrowborder" headers="d625235e2223 ">Additional JDBC configuration properties to use. To add properties, click
+              <td class="entry cellrowborder" headers="d642304e2223 ">Additional JDBC configuration properties to use. To add properties, click
                   <span class="ph uicontrol">Add</span> and define the JDBC property name and value. <p class="p">Use the
                   property names and values as expected by JDBC. </p>
 </td>
@@ -1911,34 +1907,34 @@
                 </div>
             </li>
 <li class="li step stepexpand">
-                <span class="ph cmd" id="task_kbr_2cy_hw__d180e5261">If you configured the origin to enter JDBC credentials
+                <span class="ph cmd" id="task_kbr_2cy_hw__d180e5369">If you configured the origin to enter JDBC credentials
                     separately from the JDBC connection string on the <span class="keyword wintitle">JDBC</span> tab,
                     then configure the following properties on the <span class="keyword wintitle">Credentials</span>
                     tab:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e5272" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
-                                <tr id="task_kbr_2cy_hw__d180e5282">
-                                    <th class="entry cellrowborder" id="d625235e2484">Credentials Property</th>
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e5380" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+                                <tr id="task_kbr_2cy_hw__d180e5390">
+                                    <th class="entry cellrowborder" id="d642304e2480">Credentials Property</th>
 
-                                    <th class="entry cellrowborder" id="d625235e2487">Description</th>
+                                    <th class="entry cellrowborder" id="d642304e2483">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" id="task_kbr_2cy_hw__d180e5296" headers="d625235e2484 ">Username</td>
+                                    <td class="entry cellrowborder" id="task_kbr_2cy_hw__d180e5404" headers="d642304e2480 ">Username</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2487 "><span class="ph" id="task_kbr_2cy_hw__d180e5300">User name for the
+                                    <td class="entry cellrowborder" headers="d642304e2483 "><span class="ph" id="task_kbr_2cy_hw__d180e5408">User name for the
                                             JDBC connection.</span></td>
 
                                 </tr>
 
-                                <tr id="task_kbr_2cy_hw__d180e5304">
-                                    <td class="entry cellrowborder" headers="d625235e2484 ">Password</td>
+                                <tr id="task_kbr_2cy_hw__d180e5412">
+                                    <td class="entry cellrowborder" headers="d642304e2480 ">Password</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2487 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_kbr_2cy_hw__d87e6308">To
+                                    <td class="entry cellrowborder" headers="d642304e2483 ">Password for the JDBC account.<div class="note tip"><span class="tiptitle">Tip:</span> <span class="ph" id="task_kbr_2cy_hw__d88e6386">To
                         secure sensitive information such as user names and passwords, you can use
                               <a class="xref" href="../Pipeline_Configuration/RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></span></div>
 </td>
@@ -1957,28 +1953,28 @@
                     properties:</span>
                 <div class="itemgroup info">
                     
-<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e5329" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
+<div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__d180e5437" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d625235e2557">Legacy Drivers Property</th>
+                                    <th class="entry cellrowborder" id="d642304e2553">Legacy Drivers Property</th>
 
-                                    <th class="entry cellrowborder" id="d625235e2560">Description</th>
+                                    <th class="entry cellrowborder" id="d642304e2556">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2557 ">JDBC Class Driver Name</td>
+                                    <td class="entry cellrowborder" headers="d642304e2553 ">JDBC Class Driver Name</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2560 ">Class name for the JDBC driver. Required for JDBC
+                                    <td class="entry cellrowborder" headers="d642304e2556 ">Class name for the JDBC driver. Required for JDBC
                                         versions older than version 4.0.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2557 ">Connection Health Test Query</td>
+                                    <td class="entry cellrowborder" headers="d642304e2553 ">Connection Health Test Query</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2560 ">Optional query to test the health of a connection.
+                                    <td class="entry cellrowborder" headers="d642304e2556 ">Optional query to test the health of a connection.
                                         Recommended only when the JDBC version is older than 4.0.
                                     </td>
 
@@ -1996,27 +1992,27 @@
                 <div class="itemgroup info">The defaults for these properties should work in most cases: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_kbr_2cy_hw__table_z1c_hjj_kw" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d625235e2612">Advanced Property</th>
+                                    <th class="entry cellrowborder" id="d642304e2608">Advanced Property</th>
 
-                                    <th class="entry cellrowborder" id="d625235e2615">Description</th>
+                                    <th class="entry cellrowborder" id="d642304e2611">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Maximum Pool Size </td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Maximum Pool Size </td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
+              <td class="entry cellrowborder" headers="d642304e2611 ">Maximum number of connections to create. <p class="p">Default is 1. The recommended value
                   is 1.</p>
 </td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d625235e2612 ">Minimum Idle Connections</td>
+                                    <td class="entry cellrowborder" headers="d642304e2608 ">Minimum Idle Connections</td>
 
-                                    <td class="entry cellrowborder" headers="d625235e2615 ">When local caching is not enabled, determines the minimum
+                                    <td class="entry cellrowborder" headers="d642304e2611 ">When local caching is not enabled, determines the minimum
                                         number of connections to the database to create and
                                             maintain.<p class="p">When local caching is enabled, also
                                             determines the number of available cores that can be
@@ -2031,9 +2027,9 @@
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Connection Timeout</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Connection Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Maximum time to wait for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d642304e2611 ">Maximum time to wait for a connection. Use a time constant in an expression to
                 define the time increment. <div class="p">Default is 30 seconds, defined as follows:
                   <pre class="pre codeblock"><code>${30 * SECONDS}</code></pre></div>
 </td>
@@ -2041,9 +2037,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Idle Timeout</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Idle Timeout (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Maximum time to allow a connection to idle. Use a time constant in an
+              <td class="entry cellrowborder" headers="d642304e2611 ">Maximum time to allow a connection to idle. Use a time constant in an
                 expression to define the time increment. <p class="p">Use 0 to avoid removing any idle
                   connections.</p>
 <p class="p">When the entered value is close to or more than the maximum
@@ -2056,9 +2052,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Max Connection Lifetime</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Max Connection Lifetime (seconds)</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Maximum lifetime for a connection. Use a time constant in an expression to
+              <td class="entry cellrowborder" headers="d642304e2611 ">Maximum lifetime for a connection. Use a time constant in an expression to
                 define the time increment. <p class="p">Use 0 to set no maximum lifetime.</p>
 <p class="p">When a maximum
                   lifetime is set, the minimum valid value is 30 minutes.</p>
@@ -2069,30 +2065,30 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Auto Commit</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Auto Commit</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
+              <td class="entry cellrowborder" headers="d642304e2611 ">Determines if auto-commit mode is enabled. In auto-commit mode, the database
                 commits the data for each record. <p class="p">Default is disabled.</p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Enforce Read-only Connection</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Enforce Read-only Connection</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
+              <td class="entry cellrowborder" headers="d642304e2611 ">Creates read-only connections to avoid any type of write. <p class="p">Default is
                   enabled. Disabling this property is not recommended. </p>
 </td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d625235e2612 ">Transaction Isolation</td>
+              <td class="entry cellrowborder" headers="d642304e2608 ">Transaction Isolation</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
+              <td class="entry cellrowborder" headers="d642304e2611 ">Transaction isolation level used to connect to the database. <p class="p">Default is the
                   default transaction isolation level set for the database. You can override the
                   database default by setting the level to any of the following:</p>
-<ul class="ul" id="task_kbr_2cy_hw__d61e3767">
+<ul class="ul" id="task_kbr_2cy_hw__d62e3867">
                   <li class="li">Read committed </li>
 
                   <li class="li">Read uncommitted </li>
@@ -2107,9 +2103,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" id="task_kbr_2cy_hw__d61e3785" headers="d625235e2612 ">Init Query</td>
+              <td class="entry cellrowborder" id="task_kbr_2cy_hw__d62e3885" headers="d642304e2608 ">Init Query</td>
 
-              <td class="entry cellrowborder" headers="d625235e2615 "><span class="ph" id="task_kbr_2cy_hw__d61e3789">SQL query to perform immediately after the stage
+              <td class="entry cellrowborder" headers="d642304e2611 "><span class="ph" id="task_kbr_2cy_hw__d62e3889">SQL query to perform immediately after the stage
                   connects to the database. Use to set up the database session as needed.</span><p class="p">For
                   example, the following query sets the time zone for the session for a MySQL
                   database: <code class="ph codeph">SET time_zone = timezone;</code></p>
