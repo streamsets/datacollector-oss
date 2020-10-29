@@ -16,7 +16,11 @@
 package com.streamsets.pipeline.stage.origin.mysql;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -409,8 +413,58 @@ public abstract class MysqlSource extends BaseSource {
     }
     ServerException e = serverErrors.poll();
     if (e != null) {
+      // Dump additional database state to help troubleshoot what is going on
+      dumpServerReplicationStatus();
       // record policy does not matter - stop pipeline
       throw new StageException(Errors.MYSQL_006, e.getMessage(), e);
+    }
+  }
+
+  /**
+   * Dump various replication status from the server into log, to aim with debugging in case that there is something
+   * weird going on.
+   */
+  private void dumpServerReplicationStatus() {
+    dumpQueryToLogs("show master status");
+    dumpQueryToLogs("show slave status");
+    dumpQueryToLogs("show binary logs");
+  }
+
+  /**
+   * Execute given query and print it into logs. We expect that the result set is small and will be cut on 20 entries.
+   *
+   * @param query
+   */
+  private void dumpQueryToLogs(String query) {
+    try (
+      Connection connection = dataSource.getConnection();
+      Statement statement = connection.createStatement();
+      ResultSet rs = statement.executeQuery(query)
+    ) {
+      StringBuilder builder = new StringBuilder();
+      ResultSetMetaData metadata = rs.getMetaData();
+
+      LOG.debug("Output of query: {}", query);
+      for(int i = 1; i <= metadata.getColumnCount(); i++) {
+        builder.append(metadata.getColumnName(i));
+        builder.append(';');
+      }
+      LOG.debug(builder.toString());
+
+      int rows = 0;
+      while(rs.next()) {
+        rows++;
+
+        builder = new StringBuilder();
+        for(int i = 1; i <= metadata.getColumnCount(); i++) {
+          builder.append(rs.getObject(i).toString());
+          builder.append(';');
+        }
+        LOG.debug(builder.toString());
+      }
+      LOG.debug("{} rows", rows);
+    } catch (Throwable e) {
+      LOG.error("Got error while executing: {}", query, e);
     }
   }
 }
