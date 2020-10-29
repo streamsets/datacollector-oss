@@ -949,7 +949,7 @@
   <pluginRepositories>
     <pluginRepository>
       <id>cdh.plugin.repo</id>
-      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
       <name>Cloudera Repositories</name>
       <snapshots>
         <enabled>false</enabled>
@@ -960,7 +960,7 @@
   <repositories>
     <repository>
       <id>cdh.repo</id>
-      <url>https://repository.cloudera.com/content/groups/cloudera-repos</url>
+      <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
       <name>Cloudera Repositories</name>
       <snapshots>
         <enabled>false</enabled>
@@ -982,7 +982,7 @@
     </repository>
     <repository>
       <id>mapr-releases</id>
-      <url>http://repository.mapr.com/maven/</url>
+      <url>https://repository.mapr.com/maven/</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
