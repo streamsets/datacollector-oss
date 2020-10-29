@@ -99,7 +99,9 @@ public class KafkaSecurityUpgradeHelper {
         // if the keystore is not empty, we should end up with SSL_AUTH
         new String[] {"/tmp/keystore", "SSL", "SSL_AUTH"},
         // if the keystore is not empty, but the protocol is something besides SSL, it should be preserved
-        new String[] {"/tmp/keystore", "SASL_PLAINTEXT", "SASL_PLAINTEXT"}
+        new String[] {"/tmp/keystore", "SASL_PLAINTEXT", "SASL_PLAINTEXT"},
+        // if the protocol is blank, we should default to PLAINTEXT
+        new String[] {"", "", "PLAINTEXT"}
     };
     for (String[] testCase : cases) {
       final String keystore = testCase[0];

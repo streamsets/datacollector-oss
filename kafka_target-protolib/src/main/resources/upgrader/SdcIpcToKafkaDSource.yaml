@@ -91,6 +91,12 @@ upgrades:
       # remove the temp configs we created
       - removeConfigs:
           namePattern: temp\.upgrade\.kafka-security..*
+      # set it to a default of PLAINTEXT if it wasn't already set above
+      - setConfig:
+          lookForName: conf.connectionConfig.connection.securityConfig.securityOption
+          ifValueMatches: "^$"
+          name: conf.connectionConfig.connection.securityConfig.securityOption
+          value: "PLAINTEXT"
       # FINISH migrating to conf.connectionConfig.connection.securityConfig.securityOption
       - setConfigFromStringMap:
           name: conf.connectionConfig.connection.securityConfig.kerberosServiceName
