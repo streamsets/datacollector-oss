@@ -99,6 +99,7 @@ public class ConfigDefinitionJson   {
   private BigInteger min;
   private String group = null;
   private DisplayModeEnum displayMode = DisplayModeEnum.BASIC;
+  private String connectionType = null;
 
 public enum EvaluationEnum {
   IMPLICIT("IMPLICIT"),
@@ -393,6 +394,18 @@ public enum EvaluationEnum {
   public ConfigDefinitionJson setDisplayMode(DisplayModeEnum displayMode) {
     this.displayMode = displayMode;
     return this;
+  }
+
+  /**
+   **/
+  @ApiModelProperty(value = "")
+  @JsonProperty("connectionType")
+  public String getConnectionType() {
+    return connectionType;
+  }
+
+  public void setConnectionType(String connectionType) {
+    this.connectionType = connectionType;
   }
 
   @Override
