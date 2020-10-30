@@ -189,7 +189,7 @@ public class FieldTypeConverterProcessor extends SingleLaneRecordProcessor {
               converterConfig.decimalScaleRoundingStrategy,
               converterConfig.getFormatter()
           );
-        } catch (ParseException | IllegalArgumentException e) {
+        } catch (Exception e) {
           throw new OnRecordErrorException(Errors.CONVERTER_00,
               matchingField,
               field.getType(),
