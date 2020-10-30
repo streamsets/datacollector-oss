@@ -21,20 +21,20 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
+import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.lib.http.AuthenticationFailureException;
 import com.streamsets.pipeline.lib.http.Errors;
 import com.streamsets.pipeline.lib.http.Groups;
 import com.streamsets.pipeline.lib.http.oauth2.OAuth2ConfigBean;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
-import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
-import org.apache.commons.lang.StringUtils;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.origin.http.HttpResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.HttpStatusResponseActionConfigBean;
 import com.streamsets.pipeline.stage.origin.http.ResponseAction;
+import com.streamsets.pipeline.stage.origin.restservice.RestServiceReceiver;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +43,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -61,10 +61,14 @@ public abstract class HttpStageUtil {
   public static final String CONTENT_TYPE_HEADER = "Content-Type";
   public static final String DEFAULT_CONTENT_TYPE = "application/json";
 
+  HttpStageUtil(){
+    //Empty constructor
+  }
+
   public static Object getFirstHeaderIgnoreCase(String name, MultivaluedMap<String, Object> headers) {
     for (final Map.Entry<String, List<Object>> headerEntry : headers.entrySet()) {
       if (name.equalsIgnoreCase(headerEntry.getKey())) {
-        if (headerEntry.getValue() != null && headerEntry.getValue().size() > 0) {
+        if (headerEntry.getValue() != null && !headerEntry.getValue().isEmpty()) {
           return headerEntry.getValue().get(0);
         }
         break;
@@ -82,7 +86,7 @@ public abstract class HttpStageUtil {
     }
   }
 
-  public static boolean getNewOAuth2Token(OAuth2ConfigBean oauth2, Client client) throws StageException {
+  public static boolean getNewOAuth2Token(OAuth2ConfigBean oauth2, Client client) {
     LOG.info("OAuth2 Authentication token has likely expired. Fetching new token.");
     try {
       oauth2.reInit(client);
@@ -100,8 +104,6 @@ public abstract class HttpStageUtil {
     switch (dataFormat) {
       case TEXT:
         return MediaType.TEXT_PLAIN;
-      case BINARY:
-        return MediaType.APPLICATION_OCTET_STREAM;
       case JSON:
       case SDC_JSON:
         return MediaType.APPLICATION_JSON;
@@ -232,7 +234,7 @@ public abstract class HttpStageUtil {
       AtomicInteger retryCount,
       AtomicLong backoffIntervalLinear,
       AtomicLong backoffIntervalExponential
-  ) throws StageException {
+  ) {
     return applyResponseAction(
         actionConf,
         firstOccurence,
@@ -258,7 +260,6 @@ public abstract class HttpStageUtil {
    * @param inputRecord the input record which led to this action (to be used when generating error records)
    * @param errorRecordMessage a message to be included in the error record, if generated
    * @return true if any sleep (for backoffs) was uninterrupted, false if it was not
-   * @throws StageException if the configured action was to throw a {@link StageException}
    */
   public static boolean applyResponseAction(
       HttpResponseActionConfigBean actionConf,
@@ -269,7 +270,7 @@ public abstract class HttpStageUtil {
       AtomicLong backoffIntervalExponential,
       Record inputRecord,
       String errorRecordMessage
-  ) throws StageException {
+  ) {
     if (firstOccurence) {
       retryCount.set(0);
     } else {
