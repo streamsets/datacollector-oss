@@ -1536,7 +1536,7 @@ angular.module('dataCollectorApp.common')
        * @returns {*}
        */
       getHealthInspectorsStatus: function() {
-        return $http.get(apiBase + '/system/health/run');
+        return $http.get(apiBase + '/system/health/report');
       }
     };
 

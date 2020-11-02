@@ -344,7 +344,7 @@ public class AdminResource {
   }
 
   @GET
-  @Path("/health/run")
+  @Path("/health/report")
   @ApiOperation(value = "Inspects health of the Data Collector instance.", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
