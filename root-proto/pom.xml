@@ -50,7 +50,7 @@
     -->
     <awaitility.version>2.0.0</awaitility.version>
     <aws-encryption-sdk.version>1.3.5</aws-encryption-sdk.version>
-    <awssdk.version>1.11.872</awssdk.version>
+    <awssdk.version>1.11.892</awssdk.version>
     <bouncycastle.version>1.64</bouncycastle.version>
     <conscrypt.version>1.2.0</conscrypt.version>
     <metrics.version>4.0.3</metrics.version>
