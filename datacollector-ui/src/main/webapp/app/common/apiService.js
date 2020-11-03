@@ -1531,13 +1531,22 @@ angular.module('dataCollectorApp.common')
       },
 
       /**
-       * Returns results of health inspectors
+       * Returns list of available health inspectors.
        *
        * @returns {*}
        */
-      getHealthInspectorsStatus: function() {
-        return $http.get(apiBase + '/system/health/report');
-      }
+      getHealthInspectors: function() {
+        return $http.get(apiBase + '/system/health/inspectors');
+      },
+
+      /**
+       * Get Health Inspector Report.
+       *
+       * @returns {*}
+       */
+      getHealthInspectorReport: function(inspectors) {
+        return $http.get(apiBase + '/system/health/report?inspectors=' + inspectors);
+      },
     };
 
     api.activation = {

@@ -1,7 +1,5 @@
 <div class="panel panel-default page-panel sdc-inspectors-page">
 
-  <div show-loading="fetching"></div>
-
   <div class="panel-heading clearfix">
     <div class="panel-title size-toolbar">
       <h3 class="pull-left" translate="inspectors.title">Data Collector Health Inspector</h3>
@@ -26,16 +24,23 @@
                 <h4>
                   <i ng-if="inspector.severity === 'GREEN'" class="fa fa-check-circle fa-12x"></i>
                   <i ng-if="inspector.severity === 'RED'" class="fa fa-times-circle fa-12x"></i>
+                  <i ng-if="inspector.severity === '?'" class="fa fa-question fa-12x"></i>
                   <a href="javascript:;" ng-click="inspector.open=!inspector.open;" ng-bind="inspector.inspectorInfo.name"></a>
                 </h4>
               </li>
             </ul>
             <ul class="list-inline pull-right inspector-actions">
-              <li>
+              <li ng-if="inspector.severity !== '?'">
+                <a href="javascript:;" ng-click="rerunInspector(inspector)">Rerun</a>
+              </li>
+              <li ng-if="inspector.severity !== '?'">
                 <a href="javascript:;" ng-if="!inspector.open" ng-click="toggleOpen(inspector)">open</a>
                 <a href="javascript:;" ng-if="inspector.open" ng-click="toggleOpen(inspector)">close</a>
               </li>
             </ul>
+          </div>
+          <div class="text-center" ng-if="inspector.severity === '?'">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
           </div>
           <ul class="list-unstyled collapse operations" ng-class="{in:inspector.open}">
             <li ng-repeat="entry in inspector.entries track by $index" class="operation {{entry.severity}}">

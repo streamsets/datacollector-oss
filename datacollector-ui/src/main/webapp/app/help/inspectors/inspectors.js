@@ -34,40 +34,54 @@ angular
   .controller('InspectorController', function ($scope, $q, configuration, Analytics, api) {
     $scope.fetching = true;
 
-    /**
-     * Aggregating the check status to Inspector level
-     * Check if any of the results are not green
-     * If so mark the inspector red.
-     * If all results are green mark it as green
-     **/
-    function parseHealthResults(response) {
-      for (var i = 0, inspectors = response.data.results, l1 = response.data.results.length; i < l1; i++) {
-        var hasError = false;
-        for (var j = 0, results = inspectors[i].entries, l2 = inspectors[i].entries.length; j < l2; j++) {
-          if (results[j].severity !== 'GREEN') {
-            hasError = true;
-            break;
+    function getAndProcessHealthReport(inspector) {
+      inspector.severity = '?';
+      inspector.open = false;
+
+      // Run report for this inspector
+      api.system.getHealthInspectorReport(inspector.inspectorInfo.className).then(function(reportResponse) {
+        inspector.entries = reportResponse.data.results[0].entries;
+
+        // By default we presume that all entries were green
+        inspector.severity = 'GREEN';
+        angular.forEach(inspector.entries, function(entry) {
+          if(entry.severity !== 'GREEN') {
+            inspector.severity = 'RED';
+            inspector.open = true;
           }
-        }
-        inspectors[i].severity = hasError ? 'RED' : 'GREEN';
-        // auto expand the inspector with the error
-        inspectors[i].open = hasError;
-      }
+        });
+      });
+    }
+
+    function parseHealthInspectors(response) {
+      var inspectors = [];
+
+      // Convert each of the inspectors into wrapping structure so that we can insert results from a separate
+      // REST call a bit later on.
+      angular.forEach(response.data, function(inspector) {
+        var inspector = {
+          inspectorInfo: inspector,
+          severity: '?',
+          open: false
+        };
+
+        inspectors.push(inspector);
+        getAndProcessHealthReport(inspector);
+      });
 
       return inspectors;
     }
 
     $q.all([
       configuration.init(),
-      api.system.getHealthInspectorsStatus()
+      api.system.getHealthInspectors()
     ]).then(function(results) {
       if(configuration.isAnalyticsEnabled()) {
         Analytics.trackPage('/collector/inspectors');
       }
-      $scope.inspectors = parseHealthResults(results[1]);
+      $scope.inspectors = parseHealthInspectors(results[1]);
       $scope.fetching = false;
     });
-
 
     $scope.expandAll = function(expandOperations) {
       for (var i = 0, inspectors = $scope.inspectors, l = inspectors.length; i < l; i++) {
@@ -80,6 +94,10 @@ angular
      */
     $scope.toggleOpen = function(item) {
       item.open = !item.open;
+    };
+
+    $scope.rerunInspector = function(inspector) {
+      getAndProcessHealthReport(inspector);
     };
 
   });
