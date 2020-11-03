@@ -1535,8 +1535,8 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getHealthInspectors: function() {
-        return $http.get(apiBase + '/system/health/inspectors');
+      getHealthCheckCategories: function() {
+        return $http.get(apiBase + '/system/health/categories');
       },
 
       /**
@@ -1544,8 +1544,8 @@ angular.module('dataCollectorApp.common')
        *
        * @returns {*}
        */
-      getHealthInspectorReport: function(inspectors) {
-        return $http.get(apiBase + '/system/health/report?inspectors=' + inspectors);
+      getHealthReport: function(categories) {
+        return $http.get(apiBase + '/system/health/report?categories=' + categories);
       },
     };
 

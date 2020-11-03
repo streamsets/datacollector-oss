@@ -22,7 +22,7 @@ import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
 import com.streamsets.datacollector.http.GaugeValue;
 import com.streamsets.datacollector.inspector.HealthInspectorManager;
-import com.streamsets.datacollector.inspector.model.HealthInspectorReport;
+import com.streamsets.datacollector.inspector.model.HealthReport;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,7 +106,7 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
         context.getConfiguration(),
         context.getRuntimeInfo()
     );
-    HealthInspectorReport healthReport = healthInspector.inspectHealth(Collections.emptyList());
+    HealthReport healthReport = healthInspector.inspectHealth(Collections.emptyList());
     writer.writeJson("health_inspector/report.json", healthReport);
   }
 

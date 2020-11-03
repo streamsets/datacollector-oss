@@ -17,9 +17,9 @@ package com.streamsets.datacollector.inspector.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.streamsets.datacollector.inspector.HealthInspector;
+import com.streamsets.datacollector.inspector.HealthCategory;
 
-public class HealthInspectorsInfo {
+public class HeathCategoryInfo {
   /**
    * Human readable name of the inspector.
    */
@@ -44,14 +44,14 @@ public class HealthInspectorsInfo {
     return className;
   }
 
-  public HealthInspectorsInfo(HealthInspector inspector) {
+  public HeathCategoryInfo(HealthCategory inspector) {
     this.name = inspector.getName();
     this.fullClassName = inspector.getClass().getName();
     this.className = inspector.getClass().getSimpleName();
   }
 
   @JsonCreator
-  public HealthInspectorsInfo(
+  public HeathCategoryInfo(
       @JsonProperty("name") String name,
       @JsonProperty("fullClassName") String fullClassName,
       @JsonProperty("className") String className

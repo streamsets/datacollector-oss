@@ -15,14 +15,14 @@
  */
 package com.streamsets.datacollector.inspector;
 
-import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
+import com.streamsets.datacollector.inspector.model.HealthCategoryResult;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 
 /**
  * Individual inspectors that can run various health checks on the system.
  */
-public interface HealthInspector {
+public interface HealthCategory {
 
   interface Context {
     /**
@@ -44,6 +44,6 @@ public interface HealthInspector {
   /**
    * Perform the actual health inspection for this checker.
    */
-  HealthInspectorResult inspectHealth(Context context);
+  HealthCategoryResult inspectHealth(Context context);
 
 }

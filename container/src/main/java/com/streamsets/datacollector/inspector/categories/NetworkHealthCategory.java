@@ -13,18 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.inspector.inspectors;
+package com.streamsets.datacollector.inspector.categories;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.inspector.HealthInspector;
-import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
-import com.streamsets.datacollector.inspector.model.HealthInspectorEntry;
+import com.streamsets.datacollector.inspector.HealthCategory;
+import com.streamsets.datacollector.inspector.model.HealthCategoryResult;
+import com.streamsets.datacollector.inspector.model.HealthCheck;
 import com.streamsets.datacollector.util.ProcessUtil;
 
 import java.util.List;
 
 
-public class NetworkInspector implements HealthInspector {
+public class NetworkHealthCategory implements HealthCategory {
 
   private static final String HOST_KEY = "health_inspector.network.host";
   private static final String HOST_DEFAULT = "www.streamsets.com";
@@ -35,8 +35,8 @@ public class NetworkInspector implements HealthInspector {
   }
 
   @Override
-  public HealthInspectorResult inspectHealth(Context context) {
-    HealthInspectorResult.Builder builder = new HealthInspectorResult.Builder(this);
+  public HealthCategoryResult inspectHealth(Context context) {
+    HealthCategoryResult.Builder builder = new HealthCategoryResult.Builder(this);
 
     String host = context.getConfiguration().get(HOST_KEY, HOST_DEFAULT);
 
@@ -47,13 +47,13 @@ public class NetworkInspector implements HealthInspector {
   }
 
   private void runCommand(
-      HealthInspectorResult.Builder builder,
+      HealthCategoryResult.Builder builder,
       String name,
       String description,
       List<String> command
   ) {
     ProcessUtil.Output output = ProcessUtil.executeCommandAndLoadOutput(command, 5);
-    builder.addEntry(name, output.success ? HealthInspectorEntry.Severity.GREEN : HealthInspectorEntry.Severity.RED)
+    builder.addHealthCheck(name, output.success ? HealthCheck.Severity.GREEN : HealthCheck.Severity.RED)
         .withDescription(description)
         .withDetails(output);
   }

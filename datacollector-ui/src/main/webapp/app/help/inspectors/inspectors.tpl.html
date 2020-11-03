@@ -17,47 +17,47 @@
   <div class="panel-body" ng-style="{'height': (windowHeight - 60 - 51) + 'px', 'width': (windowWidth) + 'px'}" resize>
     <div class="health-inspector-ui" aria-live="polite" aria-relevant="additions removals">
       <ul class="list-unstyled endpoints">
-        <li ng-repeat="inspector in inspectors track by $index" class="inspector" ng-class="{active:inspector.open}">
+        <li ng-repeat="category in categories track by $index" class="inspector" ng-class="{active:category.open}">
           <div class="clearfix">
             <ul class="list-inline pull-left inspector-heading">
               <li>
                 <h4>
-                  <i ng-if="inspector.severity === 'GREEN'" class="fa fa-check-circle fa-12x"></i>
-                  <i ng-if="inspector.severity === 'RED'" class="fa fa-times-circle fa-12x"></i>
-                  <i ng-if="inspector.severity === '?'" class="fa fa-question fa-12x"></i>
-                  <a href="javascript:;" ng-click="inspector.open=!inspector.open;" ng-bind="inspector.inspectorInfo.name"></a>
+                  <i ng-if="category.severity === 'GREEN'" class="fa fa-check-circle fa-12x"></i>
+                  <i ng-if="category.severity === 'RED'" class="fa fa-times-circle fa-12x"></i>
+                  <i ng-if="category.severity === '?'" class="fa fa-question fa-12x"></i>
+                  <a href="javascript:;" ng-click="toggleOpen(category)" ng-bind="category.categoryInfo.name"></a>
                 </h4>
               </li>
             </ul>
             <ul class="list-inline pull-right inspector-actions">
-              <li ng-if="inspector.severity !== '?'">
-                <a href="javascript:;" ng-click="rerunInspector(inspector)">Rerun</a>
+              <li ng-if="category.severity !== '?'">
+                <a href="javascript:;" ng-click="rerunCategory(category)">Rerun</a>
               </li>
-              <li ng-if="inspector.severity !== '?'">
-                <a href="javascript:;" ng-if="!inspector.open" ng-click="toggleOpen(inspector)">open</a>
-                <a href="javascript:;" ng-if="inspector.open" ng-click="toggleOpen(inspector)">close</a>
+              <li ng-if="category.severity !== '?'">
+                <a href="javascript:;" ng-if="!category.open" ng-click="toggleOpen(category)">open</a>
+                <a href="javascript:;" ng-if="category.open" ng-click="toggleOpen(category)">close</a>
               </li>
             </ul>
           </div>
-          <div class="text-center" ng-if="inspector.severity === '?'">
+          <div class="text-center" ng-if="category.severity === '?'">
             <i class="fa fa-spinner fa-spin fa-2x"></i>
           </div>
-          <ul class="list-unstyled collapse operations" ng-class="{in:inspector.open}">
-            <li ng-repeat="entry in inspector.entries track by $index" class="operation {{entry.severity}}">
+          <ul class="list-unstyled collapse operations" ng-class="{in:category.open}">
+            <li ng-repeat="check in category.healthChecks track by $index" class="operation {{check.severity}}">
               <div class="heading">
                 <div class="clearfix">
-                  <span class="name" ng-bind="entry.name"></span>
-                  <span class="description" ng-bind="entry.description"></span>
-                  <span ng-if="entry.details">
-                    <a href="javascript:;" ng-if="!entry.open" ng-click="toggleOpen(entry)">Show Output</a>
-                    <a href="javascript:;" ng-if="entry.open" ng-click="toggleOpen(entry)">Hide Output</a>
+                  <span class="name" ng-bind="check.name"></span>
+                  <span class="description" ng-bind="check.description"></span>
+                  <span ng-if="check.details">
+                    <a href="javascript:;" ng-if="!check.open" ng-click="toggleOpen(check)">Show Output</a>
+                    <a href="javascript:;" ng-if="check.open" ng-click="toggleOpen(check)">Hide Output</a>
                   </span>
-                  <span class="value pull-right" ng-bind="entry.value"></span>
+                  <span class="value pull-right" ng-bind="check.value"></span>
                 </div>
               </div>
-              <div class="content collapse" ng-class="{in: entry.details && entry.open}">
-                <div ng-if="entry.details">
-                  <pre ng-bind="entry.details"></pre>
+              <div class="content collapse" ng-class="{in: check.details && check.open}">
+                <div ng-if="check.details">
+                  <pre ng-bind="check.details"></pre>
                 </div>
               </div>
             </li>

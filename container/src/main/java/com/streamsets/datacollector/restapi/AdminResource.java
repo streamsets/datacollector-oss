@@ -331,8 +331,8 @@ public class AdminResource {
   }
 
   @GET
-  @Path("/health/inspectors")
-  @ApiOperation(value = "Get list of available health inspectors", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @Path("/health/categories")
+  @ApiOperation(value = "Get list of available health check categories", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response getHealthInspector() throws IOException {
@@ -345,18 +345,18 @@ public class AdminResource {
 
   @GET
   @Path("/health/report")
-  @ApiOperation(value = "Inspects health of the Data Collector instance.", response = Map.class, authorizations = @Authorization(value = "basic"))
+  @ApiOperation(value = "Generate health report for given categories (all by default).", response = Map.class, authorizations = @Authorization(value = "basic"))
   @Produces(MediaType.APPLICATION_JSON)
   @RolesAllowed({AuthzRole.ADMIN, AuthzRole.ADMIN_REMOTE})
   public Response getHealthInspector(
-      @QueryParam("inspectors") @DefaultValue("") String inspectors
+      @QueryParam("categories") @DefaultValue("") String categories
   ) throws IOException {
     HealthInspectorManager healthInspector = new HealthInspectorManager(
         config,
         runtimeInfo
     );
     return Response.ok(
-        healthInspector.inspectHealth(Lists.newArrayList(Splitter.on(" , ").trimResults().omitEmptyStrings().split(inspectors)))
+        healthInspector.inspectHealth(Lists.newArrayList(Splitter.on(" , ").trimResults().omitEmptyStrings().split(categories)))
     ).build();
   }
 

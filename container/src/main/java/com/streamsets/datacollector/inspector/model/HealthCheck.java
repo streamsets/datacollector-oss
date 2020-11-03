@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.streamsets.datacollector.util.ProcessUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 
-public class HealthInspectorEntry {
+public class HealthCheck {
 
   /**
    * Severity of the result entry.
@@ -112,7 +112,7 @@ public class HealthInspectorEntry {
   }
 
   @JsonCreator
-  public HealthInspectorEntry(
+  public HealthCheck(
       @JsonProperty("name") String name,
       @JsonProperty("value") Object value,
       @JsonProperty("severity") Severity severity,
@@ -165,8 +165,8 @@ public class HealthInspectorEntry {
       return this;
     }
 
-    public HealthInspectorEntry build() {
-      return new HealthInspectorEntry(
+    public HealthCheck build() {
+      return new HealthCheck(
           name,
           value,
           severity,

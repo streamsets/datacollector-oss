@@ -16,13 +16,13 @@
 package com.streamsets.datacollector.inspector;
 
 import com.google.common.collect.ImmutableList;
-import com.streamsets.datacollector.inspector.inspectors.ConfigurationInspector;
-import com.streamsets.datacollector.inspector.inspectors.MachineInspector;
-import com.streamsets.datacollector.inspector.inspectors.NetworkInspector;
-import com.streamsets.datacollector.inspector.inspectors.JvmInstanceInspector;
-import com.streamsets.datacollector.inspector.model.HealthInspectorResult;
-import com.streamsets.datacollector.inspector.model.HealthInspectorReport;
-import com.streamsets.datacollector.inspector.model.HealthInspectorsInfo;
+import com.streamsets.datacollector.inspector.categories.ConfigurationHealthCategory;
+import com.streamsets.datacollector.inspector.categories.MachineHealthCategory;
+import com.streamsets.datacollector.inspector.categories.NetworkHealthCategory;
+import com.streamsets.datacollector.inspector.categories.JvmInstanceHealthCategory;
+import com.streamsets.datacollector.inspector.model.HealthCategoryResult;
+import com.streamsets.datacollector.inspector.model.HealthReport;
+import com.streamsets.datacollector.inspector.model.HeathCategoryInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import org.slf4j.Logger;
@@ -33,17 +33,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HealthInspectorManager implements HealthInspector.Context {
+public class HealthInspectorManager implements HealthCategory.Context {
   private static final Logger LOG = LoggerFactory.getLogger(HealthInspectorManager.class);
 
   /**
    * List of registered inspectors.
    */
-  private static final List<HealthInspector> INSPECTORS = ImmutableList.of(
-      new ConfigurationInspector(),
-      new JvmInstanceInspector(),
-      new MachineInspector(),
-      new NetworkInspector()
+  private static final List<HealthCategory> CATEGORIES = ImmutableList.of(
+      new ConfigurationHealthCategory(),
+      new JvmInstanceHealthCategory(),
+      new MachineHealthCategory(),
+      new NetworkHealthCategory()
   );
 
   private final Configuration configuration;
@@ -60,27 +60,27 @@ public class HealthInspectorManager implements HealthInspector.Context {
   /**
    * Return list of available inspectors.
    */
-  public List<HealthInspectorsInfo> availableInspectors() {
-    return INSPECTORS.stream().map(HealthInspectorsInfo::new).collect(Collectors.toList());
+  public List<HeathCategoryInfo> availableInspectors() {
+    return CATEGORIES.stream().map(HeathCategoryInfo::new).collect(Collectors.toList());
   }
 
   /**
    * Actually run the health checks and return their output.
    *
-   * @param inspectors If empty, run all inspectors, otherwise run only selected ones
+   * @param categories If empty, run all categories, otherwise run only selected ones
    */
-  public HealthInspectorReport inspectHealth(List<String> inspectors) {
-    LOG.info("Running Health Inspector with following inspectors: {}", String.join(",", inspectors));
-    List<HealthInspectorResult> checks = new LinkedList<>();
+  public HealthReport inspectHealth(List<String> categories) {
+    LOG.info("Running Health Inspector with following categories: {}", String.join(",", categories));
+    List<HealthCategoryResult> checks = new LinkedList<>();
     long startTime = System.currentTimeMillis();
 
-    for(HealthInspector checker : INSPECTORS) {
-      if(inspectors.isEmpty() || inspectors.contains(checker.getClass().getSimpleName())) {
-        checks.add(checker.inspectHealth(this));
+    for(HealthCategory category : CATEGORIES) {
+      if(categories.isEmpty() || categories.contains(category.getClass().getSimpleName())) {
+        checks.add(category.inspectHealth(this));
       }
     }
 
-    return new HealthInspectorReport(
+    return new HealthReport(
         LocalDateTime.now().toString(),
         System.currentTimeMillis() - startTime,
         checks
