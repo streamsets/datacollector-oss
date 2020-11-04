@@ -18,7 +18,7 @@ package com.streamsets.pipeline.stage.processor.jdbclookup;
 import com.google.common.base.Throwables;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.streamsets.pipeline.api.Batch;
 import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Processor;
@@ -46,11 +46,10 @@ import com.streamsets.pipeline.stage.destination.jdbc.Groups;
 import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.format.DateTimeFormat;
@@ -390,7 +389,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     } catch (ELEvalException e) {
       LOG.error(JdbcErrors.JDBC_01.getMessage(), query, e);
       throw new OnRecordErrorException(record, JdbcErrors.JDBC_01, query);
-    } catch (ExecutionException e) {
+    } catch (UncheckedExecutionException | ExecutionException e) {
       Throwables.propagateIfPossible(e.getCause(), StageException.class);
       throw new IllegalStateException(e); // The cache loader shouldn't throw anything that isn't a StageException.
     } catch (OnRecordErrorException error) { // NOSONAR
