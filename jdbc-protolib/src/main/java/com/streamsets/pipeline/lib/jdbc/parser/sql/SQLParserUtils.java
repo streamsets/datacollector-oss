@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
+import com.amazonaws.util.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
 import org.parboiled.Node;
@@ -51,6 +52,9 @@ public class SQLParserUtils {
       boolean caseSensitive,
       Set<String> columnsExpected
   ) throws UnparseableSQLException {
+    if (StringUtils.isNullOrEmpty(sql)) {
+      throw new UnparseableEmptySQLException(sql);
+    }
     Rule parseRule;
     switch (type) {
       case OracleCDCOperationCode.INSERT_CODE:

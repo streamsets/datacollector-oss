@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.PrecisionAndScale;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.UnparseableEmptySQLException;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLListener;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLParser;
@@ -1016,21 +1017,27 @@ public class OracleCDCSource extends BaseSource {
         attributes.get(RS_ID) + OFFSET_DELIM + attributes.get(SSN) :
         attributes.get(SCN) + OFFSET_DELIM + attributes.get(SEQ);
     Record record = getContext().createRecord(id);
+    boolean emptySQL = false;
     if (configBean.parseQuery) {
-      Map<String, String> columns;
+      Map<String, String> columns = new HashMap<>();
       if (configBean.useNewParser) {
         Set<String> columnsExpected = null;
         if (configBean.allowNulls && table.isNotEmpty()) {
           columnsExpected = tableSchemas.get(table).keySet();
         }
-        columns = SQLParserUtils.process(
+        try {
+          columns = SQLParserUtils.process(
             sqlParser.get(),
             sql,
             operationCode,
             configBean.allowNulls,
             configBean.baseConfigBean.caseSensitive,
             columnsExpected
-        );
+          );
+        } catch (UnparseableEmptySQLException e) {
+          LOG.debug("Empty Redo Log SQL: '{}'. That is probably caused by a column type not supported by LogMiner.", e.getMessage());
+          emptySQL = true;
+        }
       } else {
         // Walk it and attach our sqlListener
         sqlListener.get().reset();
@@ -1044,9 +1051,13 @@ public class OracleCDCSource extends BaseSource {
         if (configBean.allowNulls && table.isNotEmpty()) {
           sqlListener.get().setColumns(tableSchemas.get(table).keySet());
         }
-
-        parseTreeWalker.get().walk(sqlListener.get(), ParseUtil.getParserRuleContext(sql, operationCode));
-        columns = sqlListener.get().getColumns();
+        if (StringUtils.isBlank(sql)) {
+          LOG.debug("Empty Redo Log SQL: That is probably caused by a column type not supported by LogMiner.");
+          emptySQL = true;
+        } else {
+          parseTreeWalker.get().walk(sqlListener.get(), ParseUtil.getParserRuleContext(sql, operationCode));
+          columns = sqlListener.get().getColumns();
+        }
       }
 
       String rowId = columns.get(ROWID);
@@ -1083,6 +1094,7 @@ public class OracleCDCSource extends BaseSource {
           fields.put(columnName, createdField);
         }
       }
+
       record.set(Field.create(fields));
       attributes.forEach((k, v) -> record.getHeader().setAttribute(k, v));
 
@@ -1096,8 +1108,9 @@ public class OracleCDCSource extends BaseSource {
             }
         ).collect(Collectors.toList());
       }
-      if (!fieldTypeExceptions.isEmpty()) {
-        boolean add = handleUnsupportedFieldTypes(record, errorStringJoiner.join(errorColumns));
+      if (!fieldTypeExceptions.isEmpty() || emptySQL) {
+        String errorString = fieldTypeExceptions.isEmpty() ? "LogMiner returned empty SQL Redo statement." : errorStringJoiner.join(errorColumns);
+        boolean add = handleUnsupportedFieldTypes(record, errorString);
         if (add) {
           return record;
         } else {
