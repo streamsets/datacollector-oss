@@ -64,6 +64,7 @@ angular
         'Apache Kudu',
         'Apache Solr',
         'CDH',
+        'CDP',
         'Credential Stores',
         'Elasticsearch',
         'Groovy',

@@ -14,7 +14,7 @@
        translate="home.restart.successMessage">
   </div>
 
-  <div ng-if="operationStatus !== 'complete'">
+  <div ng-if="operationStatus !== 'complete' && operationStatus !== 'restarting'">
     <div ng-if="registrationNeeded" class="alert alert-info" role="alert">
       <p>To install additional libraries, you will need to register with StreamSets.</p>
       <div class="register-button">
@@ -24,18 +24,19 @@
     <div ng-if="maprStageLib" class="alert alert-info" role="alert">
       You must perform additional steps to install MapR stage libraries. For more information, see <a href="https://streamsets.com/documentation/datacollector/latest/help/#Installation/MapR-Prerequisites.html" target="_blank">MapR Prerequisites</a>.
     </div>
+
+    <p>The stage library for the <strong>{{missingStageInfo.definition.label}}</strong> stage is not installed. </p>
+    <p>To use this stage in the pipeline, install the following stage library and restart Data Collector. </p>
+
+    <div class="controls col-lg-7 col-md-8">
+      <select class="form-control"
+              name="stageLibrary"
+              ng-model="selectedLibraryModel.libraryId"
+              ng-options="item.libraryId as item.libraryLabel for item in missingStageInfo.libraryList | orderBy:'libraryLabel'">
+      </select>
+    </div>
   </div>
 
-  <p>The stage library for the <strong>{{missingStageInfo.definition.label}}</strong> stage is not installed. </p>
-  <p>To use this stage in the pipeline, install the following stage library and restart Data Collector. </p>
-
-  <div class="controls col-lg-7 col-md-8">
-    <select class="form-control"
-            name="stageLibrary"
-            ng-model="selectedLibraryModel.libraryId"
-            ng-options="item.libraryId as item.libraryLabel for item in missingStageInfo.libraryList">
-    </select>
-  </div>
 
 </div>
 <div class="modal-footer">

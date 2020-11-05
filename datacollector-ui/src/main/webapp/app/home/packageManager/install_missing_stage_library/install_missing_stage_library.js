@@ -30,58 +30,34 @@ angular
       libraryList: _.clone(libraryList),
       maprStageLib: false,
       operationStatus: 'incomplete',
-      operationStatusMap: {},
       failedLibraries: [],
-      errorMap: {},
+      errorRes: undefined,
       registrationNeeded: false,
       selectedLibraryModel: {
         libraryId: missingStageInfo.libraryList[0].libraryId
       },
 
-      install: function(givenLibraries) {
-        $scope.operationStatus = 'installing';
-
-        var libraries = givenLibraries || libraryList;
-        var librariesToInstall = [libraries.shift()];
-        var library = librariesToInstall[0];
-
-        $scope.operationStatusMap[library.stageLibraryManifest.stageLibId] = 'installing';
-
-        var stageLibIdList = [];
-        angular.forEach(librariesToInstall, function (lib) {
-          var id = lib.stageLibraryManifest.stageLibId;
-          if (withStageLibVersion) {
-            id += ":" + lib.stagelibVersion;
-          }
-          stageLibIdList.push(id);
+      install: function() {
+        var libraryInfo = _.find(missingStageInfo.libraryList, function (l) {
+          return l.libraryId === $scope.selectedLibraryModel.libraryId;
         });
 
+        $scope.operationStatus = 'installing';
+        var stageLibIdList = [$scope.selectedLibraryModel.libraryId];
         api.pipelineAgent.installLibraries(stageLibIdList, withStageLibVersion)
             .then(function () {
-              library.installed = true;
-              $scope.operationStatusMap[library.stageLibraryManifest.stageLibId] = 'installed';
               $rootScope.common.trackEvent(
                   pipelineConstant.STAGE_LIBRARY_CATEGORY,
                   pipelineConstant.INSTALL_ACTION,
-                  library.label,
+                  libraryInfo.libraryLabel,
                   1
               );
-
-              if (libraries.length > 0) {
-                $scope.install(libraries);
-              } else {
-                $scope.operationStatus = 'complete';
-              }
+              $scope.operationStatus = 'complete';
             })
             .catch(function (res) {
-              $scope.failedLibraries.push(library);
-              $scope.operationStatusMap[library.stageLibraryManifest.stageLibId] = 'failed';
-              $scope.errorMap[library.stageLibraryManifest.stageLibId] = res.data;
-
-              if (libraries.length > 0) {
-                $scope.install(libraries);
-              } else {
-                $scope.operationStatus = 'complete';
+              if (res.data) {
+                $scope.common.errors = [res.data];
+                $scope.operationStatus = 'failed';
               }
             }
           );
