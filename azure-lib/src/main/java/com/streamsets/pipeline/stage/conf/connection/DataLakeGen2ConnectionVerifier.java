@@ -34,6 +34,8 @@ import org.apache.hadoop.fs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -85,11 +87,28 @@ public class DataLakeGen2ConnectionVerifier extends ConnectionVerifier {
 
     DataLakeGen2BaseConfig conf = new DataLakeGen2BaseConfig();
     conf.connection = connection;
+
+    // Adding dummy configuration for Advanced Configuration. Not including anything will throw an NPE
+    // when running sourceConf.init below.
     conf.advancedConfiguration = Arrays.asList(new HadoopConfigBean("sample.config", "ok"));
 
     DataLakeGen2SourceConfigBean sourceConf = new DataLakeGen2SourceConfigBean();
     sourceConf.dataLakeConfig = conf;
     sourceConf.init(getContext(), issues);
+
+    // An incorrect hostname will time out dynamic preview, so we will perform a basic validation that the host is
+    // reachable. This is in lieu of using the Hadoop client to configure a timeout, which we have not been
+    // successful at implementing.
+    if (issues.isEmpty()) {
+      try {
+        URL endpoint = new URL("https://" + conf.connection.accountFQDN.get());
+        HttpURLConnection urlConnection = (HttpURLConnection) endpoint.openConnection();
+        urlConnection.connect();
+      } catch (Exception e) {
+        LOG.debug(Errors.ADLS_02.getMessage(), e.getMessage(), e);
+        issues.add(getContext().createConfigIssue("ADLS", "connection", Errors.ADLS_02, e.toString()));
+      }
+    }
 
     if (issues.isEmpty()) {
       try {
