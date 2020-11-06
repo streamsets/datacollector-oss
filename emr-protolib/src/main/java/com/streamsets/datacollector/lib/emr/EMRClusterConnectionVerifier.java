@@ -17,9 +17,7 @@ package com.streamsets.datacollector.lib.emr;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
 import com.amazonaws.services.elasticmapreduce.model.AmazonElasticMapReduceException;
@@ -41,7 +39,6 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnectionGroups;
-import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.apache.commons.lang3.StringUtils;
@@ -96,9 +93,13 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
   @Override
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
-    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext());
 
     final String region = connection.region == AwsRegion.OTHER ? connection.customRegion : connection.region.getId();
+
+    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig,
+        getContext(),
+        Regions.fromName(region.toLowerCase())
+    );
 
     Exception unhandledValidationException = null;
 

@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.amazonaws.ClientConfiguration;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesis.producer.Attempt;
 import com.amazonaws.services.kinesis.producer.KinesisProducer;
 import com.amazonaws.services.kinesis.producer.KinesisProducerConfiguration;
@@ -134,18 +135,14 @@ public class KinesisTarget extends BaseTarget {
       );
       generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
       try {
-        KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration.fromProperties(additionalConfigs)
-                                                                                  .setCredentialsProvider(AWSKinesisUtil
-                                                                                      .getCredentialsProvider(
-                                                                                          conf.connection.awsConfig,
-                                                                                          getContext()
-                                                                                      ));
+        KinesisProducerConfiguration producerConfig = KinesisProducerConfiguration.fromProperties(additionalConfigs);
 
+        Regions region = Regions.DEFAULT_REGION;
         if (conf.connection.region == AwsRegion.OTHER) {
           Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
           if (matcher.find()) {
+            region = Regions.fromName(matcher.group(1).toLowerCase());
             producerConfig.setKinesisEndpoint(conf.connection.endpoint.substring(matcher.start(), matcher.end()));
-            producerConfig.setRegion(matcher.group(1));
           } else {
             issues.add(getContext().createConfigIssue(
                 Groups.KINESIS.name(),
@@ -154,8 +151,14 @@ public class KinesisTarget extends BaseTarget {
             ));
           }
         } else {
-          producerConfig.setRegion(conf.connection.region.getId());
+          region = Regions.fromName(conf.connection.region.getId().toLowerCase());
         }
+
+        producerConfig.setRegion(region.getName().toLowerCase())
+                      .setCredentialsProvider(AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig,
+                          getContext(),
+                          region
+                      ));
 
         // Mock injected during testing, we shouldn't clobber it.
         if (kinesisProducer == null) {

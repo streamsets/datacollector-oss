@@ -19,6 +19,7 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.streamsets.pipeline.api.ConfigDef;
@@ -109,7 +110,13 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
       }
 
       try {
-        credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext());
+        Regions regions = Regions.DEFAULT_REGION;
+
+        if (connection.region.equals(AwsRegion.OTHER)) {
+          regions = Regions.fromName(connection.region.getId().toLowerCase());
+        }
+
+        credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext(), regions);
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(Groups.SQS.name(),
             SQS_CONNECTION_CONFIG_PREFIX + "awsConfig",

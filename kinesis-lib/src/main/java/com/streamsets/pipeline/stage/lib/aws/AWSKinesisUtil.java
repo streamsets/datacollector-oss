@@ -21,7 +21,9 @@ import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.retry.RetryMode;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Tag;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.Stage;
@@ -50,19 +52,24 @@ public class AWSKinesisUtil {
 
   private AWSKinesisUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context) {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context, Regions region) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
-    if (config.credentialMode == AWSCredentialMode.WITH_CREDENTIALS) {
-      if (!StringUtils.isEmpty(config.awsAccessKeyId.get()) && !StringUtils.isEmpty(config.awsSecretAccessKey.get())) {
-        credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(config.awsAccessKeyId.get(),
-            config.awsSecretAccessKey.get()
-        ));
-      }
-    } else if (config.credentialMode == AWSCredentialMode.WITH_IAM_ROLES && config.isAssumeRole) {
+    final String accessKeyId = config.awsAccessKeyId != null ? config.awsAccessKeyId.get() : null;
+    final String secretAccessKey = config.awsSecretAccessKey != null ? config.awsSecretAccessKey.get() : null;
+
+    if (config.credentialMode.equals(AWSCredentialMode.WITH_CREDENTIALS) &&
+        !StringUtils.isEmpty(accessKeyId) &&
+        !StringUtils.isEmpty(secretAccessKey)) {
+      credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKeyId, secretAccessKey));
+
+    }
+
+    if (config.isAssumeRole) {
       STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
           config.roleARN.get(),
           config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
-      ).withRoleSessionDurationSeconds(config.sessionDuration);
+      ).withRoleSessionDurationSeconds(config.sessionDuration)
+       .withStsClient(AWSSecurityTokenServiceClientBuilder.standard().withCredentials(credentialsProvider).withRegion(region).build());
 
       if (config.setSessionTags) {
         builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
@@ -71,6 +78,7 @@ public class AWSKinesisUtil {
 
       credentialsProvider = builder.build();
     }
+
     return credentialsProvider;
   }
 

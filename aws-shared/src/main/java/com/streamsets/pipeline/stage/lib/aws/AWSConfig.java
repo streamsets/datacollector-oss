@@ -64,7 +64,7 @@ public class AWSConfig {
       displayPosition = -100,
       group = "#0",
       dependsOn = "credentialMode",
-      triggeredByValue = "WITH_IAM_ROLES")
+      triggeredByValue = {"WITH_IAM_ROLES", "WITH_CREDENTIALS"})
   public boolean isAssumeRole;
 
   @ConfigDef(displayMode = ConfigDef.DisplayMode.BASIC,

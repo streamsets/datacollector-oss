@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.stage.lib.kinesis.verifier;
 
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
 import com.amazonaws.services.kinesisfirehose.model.DescribeDeliveryStreamRequest;
@@ -85,9 +86,9 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
   @Override
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
+    Regions region = Regions.DEFAULT_REGION;
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
-          AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, getContext()));
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard();
 
       if (connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(connection.endpoint);
@@ -101,9 +102,14 @@ public class KinesisFirehoseVerifier extends ConnectionVerifier {
           ));
         }
       } else {
-        builder.withRegion(connection.region.getId());
+        region = Regions.fromName(connection.region.getId().toLowerCase());
+        builder.withRegion(region);
       }
-      AmazonKinesisFirehose firehoseClient = builder.build();
+
+      AmazonKinesisFirehose firehoseClient = builder
+          .withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, getContext(), region))
+          .build();
+
       firehoseClient.describeDeliveryStream(new DescribeDeliveryStreamRequest()
           .withDeliveryStreamName(STREAM_EXIST_PREFIX + UUID.randomUUID().toString()));
     } catch (ResourceNotFoundException ex) {

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.lib.kinesis;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.model.BillingMode;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClientBuilder;
@@ -140,15 +141,17 @@ public class KinesisUtil {
       ClientConfiguration awsClientConfig, AwsKinesisStreamConnection connection, Stage.Context context
   ) {
     AmazonKinesisClientBuilder builder = AmazonKinesisClientBuilder.standard().withClientConfiguration(checkNotNull(
-        awsClientConfig)).withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, context));
+        awsClientConfig));
 
+    Regions region = Regions.DEFAULT_REGION;
     if (AwsRegion.OTHER == connection.region) {
       builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint, null));
     } else {
-      builder.withRegion(connection.region.getId());
+      region = Regions.fromName(connection.region.getId().toLowerCase());
+      builder.withRegion(region);
     }
 
-    return builder.build();
+    return builder.withCredentials(AWSKinesisUtil.getCredentialsProvider(connection.awsConfig, context, region)).build();
   }
 
   /**

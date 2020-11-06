@@ -20,6 +20,7 @@ import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.regions.Regions;
 import com.streamsets.pipeline.api.Stage;
 import org.junit.Assert;
 import org.junit.Test;
@@ -35,7 +36,8 @@ public class TestAWSUtil {
     awsConfig.awsSecretAccessKey = () -> "xyz";
 
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
-        Mockito.mock(Stage.Context.class)
+        Mockito.mock(Stage.Context.class),
+        Regions.DEFAULT_REGION
     );
     Assert.assertEquals("abc", credentialsProvider.getCredentials().getAWSAccessKeyId());
     Assert.assertEquals("xyz", credentialsProvider.getCredentials().getAWSSecretKey());
@@ -51,7 +53,8 @@ public class TestAWSUtil {
 
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
         awsConfig,
-        Mockito.mock(Stage.Context.class)
+        Mockito.mock(Stage.Context.class),
+        Regions.DEFAULT_REGION
     );
     Assert.assertEquals(DefaultAWSCredentialsProviderChain.getInstance(), credentialsProvider);
   }
@@ -63,7 +66,8 @@ public class TestAWSUtil {
 
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
         awsConfig,
-        Mockito.mock(Stage.Context.class)
+        Mockito.mock(Stage.Context.class),
+        Regions.DEFAULT_REGION
     );
     Assert.assertEquals(DefaultAWSCredentialsProviderChain.getInstance(), credentialsProvider);
   }
@@ -75,7 +79,8 @@ public class TestAWSUtil {
 
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
         awsConfig,
-        Mockito.mock(Stage.Context.class)
+        Mockito.mock(Stage.Context.class),
+        Regions.DEFAULT_REGION
     );
     Assert.assertTrue(AWSStaticCredentialsProvider.class.equals(credentialsProvider.getClass()));
     Assert.assertTrue(AnonymousAWSCredentials.class.equals(credentialsProvider.getCredentials().getClass()));

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.common.s3;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.streamsets.pipeline.api.Stage;
@@ -59,7 +60,16 @@ public class S3ConnectionCreator {
       int maxErrorRetries,
       boolean usePathAddressModel
   ) {
-    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, context);
+    Regions regions = Regions.DEFAULT_REGION;
+
+    if (connection.useRegion && !connection.region.equals(AwsRegion.OTHER)){
+      regions = Regions.fromName(connection.region.getId().toLowerCase());
+    }
+
+    AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig,
+        context,
+        regions
+    );
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(connection.proxyConfig);
 
     if (maxErrorRetries >= 0) {

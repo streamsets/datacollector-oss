@@ -229,15 +229,12 @@ public class KinesisSource extends BasePushSource {
                                                                                      .withClientConfiguration(
                                                                                          clientConfiguration);
 
-      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig, getContext());
-
+      Regions region = Regions.DEFAULT_REGION;
 
       if (conf.connection.region == AwsRegion.OTHER) {
         Matcher matcher = KinesisUtil.REGION_PATTERN.matcher(conf.connection.endpoint);
         if (matcher.find()) {
-          Regions region = Regions.valueOf(matcher.group(1).toUpperCase().replace("-", "_"));
-          dynamoBuilder.withRegion(region).withCredentials(credentials);
-          cloudWatchBuilder.withRegion(region).withCredentials(credentials);
+          region = Regions.fromName(matcher.group(1).toLowerCase());
         } else {
           issues.add(getContext().createConfigIssue(Groups.KINESIS.name(),
               KINESIS_CONFIG_BEAN_CONNECTION + ".endpoint",
@@ -245,11 +242,12 @@ public class KinesisSource extends BasePushSource {
           ));
         }
       } else {
-        Regions region = Regions.valueOf(conf.connection.region.name());
-        dynamoBuilder.withRegion(region).withCredentials(credentials);
-        cloudWatchBuilder.withRegion(region).withCredentials(credentials);
+        region = Regions.fromName(conf.connection.region.getId().toLowerCase());
       }
 
+      credentials = AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig, getContext(), region);
+      dynamoBuilder.withRegion(region).withCredentials(credentials);
+      cloudWatchBuilder.withRegion(region).withCredentials(credentials);
       dynamoDBClient = dynamoBuilder.build();
       cloudWatchClient = cloudWatchBuilder.build();
     } catch (StageException ex) {
@@ -325,9 +323,7 @@ public class KinesisSource extends BasePushSource {
     return hostname + ":" + UUID.randomUUID();
   }
 
-  private void previewProcess(
-      int maxBatchSize, BatchMaker batchMaker
-  ) throws IOException {
+  private void previewProcess(int maxBatchSize, BatchMaker batchMaker) throws IOException {
     String shardId = KinesisUtil.getLastShardId(clientConfiguration, conf, conf.streamName, getContext());
 
     GetShardIteratorRequest getShardIteratorRequest = new GetShardIteratorRequest();
@@ -351,7 +347,7 @@ public class KinesisSource extends BasePushSource {
         getContext()
     );
 
-    int batchSize = results.size() > maxBatchSize ? maxBatchSize : results.size();
+    int batchSize = Math.min(results.size(), maxBatchSize);
 
     for (int index = 0; index < batchSize; index++) {
       com.amazonaws.services.kinesis.model.Record record = results.get(index);

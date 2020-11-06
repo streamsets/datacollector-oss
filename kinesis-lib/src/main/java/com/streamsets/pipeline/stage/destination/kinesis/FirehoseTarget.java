@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.destination.kinesis;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehose;
 import com.amazonaws.services.kinesisfirehose.AmazonKinesisFirehoseClientBuilder;
 import com.amazonaws.services.kinesisfirehose.model.DeliveryStreamStatus;
@@ -88,9 +89,9 @@ public class FirehoseTarget extends BaseTarget {
     }
 
     generatorFactory = conf.dataFormatConfig.getDataGeneratorFactory();
+    Regions region = Regions.DEFAULT_REGION;
     try {
-      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard().withCredentials(
-          AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig, getContext()));
+      AmazonKinesisFirehoseClientBuilder builder = AmazonKinesisFirehoseClientBuilder.standard();
 
       if (conf.connection.region == AwsRegion.OTHER) {
         Matcher matcher = REGION_PATTERN.matcher(conf.connection.endpoint);
@@ -107,10 +108,15 @@ public class FirehoseTarget extends BaseTarget {
           ));
         }
       } else {
-        builder.withRegion(conf.connection.region.getId());
+        region = Regions.fromName(conf.connection.region.getId().toLowerCase());
+        builder.withRegion(region);
       }
 
-      firehoseClient = builder.build();
+      firehoseClient = builder.withCredentials(AWSKinesisUtil.getCredentialsProvider(conf.connection.awsConfig,
+          getContext(),
+          region
+      )).build();
+
       DescribeDeliveryStreamResult describeResult =
           firehoseClient.describeDeliveryStream(new DescribeDeliveryStreamRequest()
           .withDeliveryStreamName(conf.streamName));

@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.sqs;
 import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSAsync;
 import com.amazonaws.services.sqs.AmazonSQSAsyncClientBuilder;
@@ -91,8 +92,19 @@ public class SqsConsumer extends BasePushSource {
       ));
       return issues;
     }
+
+    AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard().withClientConfiguration(clientConfiguration);
+
+    Regions region = Regions.DEFAULT_REGION;
+    if (conf.connection.region == AwsRegion.OTHER) {
+      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint, null));
+    } else {
+      region = Regions.fromName(conf.connection.region.getId().toLowerCase());
+      builder.withRegion(region);
+    }
+
     try {
-      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig, getContext());
+      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig, getContext(), region);
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "awsConfig",
@@ -103,19 +115,10 @@ public class SqsConsumer extends BasePushSource {
       return issues;
     }
 
-    AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
-                                                           .withClientConfiguration(clientConfiguration)
-                                                           .withCredentials(credentials);
-    if (conf.connection.region == AwsRegion.OTHER) {
-      builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(conf.connection.endpoint, null));
-    } else {
-      builder.withRegion(conf.connection.region.getId());
-    }
-
     if (conf.specifyQueueURL) {
       conf.queueUrls.forEach(url -> queueUrlToPrefix.put(url, url));
     } else {
-      AmazonSQS validationClient = builder.build();
+      AmazonSQS validationClient = builder.withCredentials(credentials).build();
       for (int i = 0; i < conf.queuePrefixes.size(); i++) {
         final String queueNamePrefix = conf.queuePrefixes.get(i);
         ListQueuesResult result = validationClient.listQueues(new ListQueuesRequest(queueNamePrefix));

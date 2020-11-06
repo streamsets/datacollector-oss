@@ -22,6 +22,8 @@ import com.amazonaws.auth.AnonymousAWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.auth.STSAssumeRoleSessionCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClientBuilder;
 import com.amazonaws.services.securitytoken.model.Tag;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.Stage;
@@ -39,7 +41,7 @@ public class AWSUtil {
 
   private AWSUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context) {
+  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context, Regions region) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     final String accessKeyId = config.awsAccessKeyId != null ? config.awsAccessKeyId.get() : null;
     final String secretAccessKey = config.awsSecretAccessKey != null ? config.awsSecretAccessKey.get() : null;
@@ -51,23 +53,26 @@ public class AWSUtil {
         }
         break;
       case WITH_IAM_ROLES:
-        if (config.isAssumeRole) {
-          STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
-              config.roleARN.get(),
-              config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
-          ).withRoleSessionDurationSeconds(config.sessionDuration);
-
-          if (config.setSessionTags) {
-            builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
-                                                                       .withValue(context.getUserContext().getUser())));
-          }
-
-          credentialsProvider = builder.build();
-        }
+        // Using the DefaultAWSCredentialsProviderChain
         break;
       case WITH_ANONYMOUS_CREDENTIALS:
         credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
         break;
+    }
+
+    if (config.isAssumeRole) {
+      STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
+          config.roleARN.get(),
+          config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
+      ).withRoleSessionDurationSeconds(config.sessionDuration)
+       .withStsClient(AWSSecurityTokenServiceClientBuilder.standard().withCredentials(credentialsProvider).withRegion(region).build());
+
+      if (config.setSessionTags) {
+        builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
+                                                                   .withValue(context.getUserContext().getUser())));
+      }
+
+      credentialsProvider = builder.build();
     }
 
     return credentialsProvider;
@@ -85,6 +90,9 @@ public class AWSUtil {
                 secretAccessKey
             ));
           }
+          break;
+        case WITH_IAM_ROLES:
+          // Using the DefaultAWSCredentialsProviderChain
           break;
         case WITH_ANONYMOUS_CREDENTIALS:
           credentialsProvider = new AWSStaticCredentialsProvider(new AnonymousAWSCredentials());
