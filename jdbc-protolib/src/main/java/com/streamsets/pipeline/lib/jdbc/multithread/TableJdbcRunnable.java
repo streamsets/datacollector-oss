@@ -36,7 +36,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public final class TableJdbcRunnable extends JdbcBaseRunnable {
+public class TableJdbcRunnable extends JdbcBaseRunnable {
   private static final Logger LOG = LoggerFactory.getLogger(TableJdbcRunnable.class);
 
   public TableJdbcRunnable(

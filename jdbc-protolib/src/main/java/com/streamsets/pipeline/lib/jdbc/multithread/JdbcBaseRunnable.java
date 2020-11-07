@@ -16,6 +16,7 @@
 
 package com.streamsets.pipeline.lib.jdbc.multithread;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Throwables;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -235,7 +236,8 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
    * Generate a batch (looping through as many tables as needed) until a batch can be generated
    * and then commit offset.
    */
-  private void generateBatchAndCommitOffset(BatchContext batchContext) {
+  @VisibleForTesting
+  protected void generateBatchAndCommitOffset(BatchContext batchContext) {
     int recordCount = 0;
     int eventCount = 0;
     try {
@@ -341,7 +343,6 @@ public abstract class JdbcBaseRunnable implements Runnable, JdbcRunnable {
         }
       }
     }
-
 
   private void handleSqlException(SQLException sqlE) {
     numSQLErrors++;

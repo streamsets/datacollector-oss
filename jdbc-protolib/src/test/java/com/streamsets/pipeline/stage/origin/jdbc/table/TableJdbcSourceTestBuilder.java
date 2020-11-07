@@ -15,10 +15,16 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.table;
 
+import com.google.common.base.Throwables;
+import com.streamsets.pipeline.api.BatchContext;
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
+import com.streamsets.pipeline.lib.jdbc.multithread.JdbcBaseRunnable;
+import com.streamsets.pipeline.lib.jdbc.multithread.JdbcRunnableBuilder;
+import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
+import com.streamsets.pipeline.lib.jdbc.multithread.TableJdbcRunnable;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 
@@ -50,6 +56,7 @@ public class TableJdbcSourceTestBuilder {
   private int numberOfBatchesFromResultset;
   private QuoteChar quoteChar;
   private int numSQLErrorRetries;
+  private PostProcessBatchCallback postProcessBatchCallback;
 
 
   public TableJdbcSourceTestBuilder(String jdbcUrl, boolean useCredentials, String username, String password) {
@@ -75,10 +82,16 @@ public class TableJdbcSourceTestBuilder {
     this.numberOfBatchesFromResultset = -1;
     this.quoteChar = QuoteChar.NONE;
     this.numSQLErrorRetries = 0;
+    this.postProcessBatchCallback = tableProvider -> {};
   }
 
   public TableJdbcSourceTestBuilder() {
    this("", false, "", "");
+  }
+
+  public TableJdbcSourceTestBuilder postProcessBatchCallback(final PostProcessBatchCallback postProcessBatchCallback) {
+    this.postProcessBatchCallback = postProcessBatchCallback;
+    return this;
   }
 
   public TableJdbcSourceTestBuilder connectionString(String connectionString) {
@@ -237,7 +250,43 @@ public class TableJdbcSourceTestBuilder {
         hikariPoolConfigBean,
         commonSourceConfigBean,
         tableJdbcConfigBean
-    );
+    ) {
+      @Override
+      protected JdbcRunnableBuilder createJdbcRunnableBuilder() {
+        return new JdbcRunnableBuilder() {
+          @Override
+          public JdbcBaseRunnable build() {
+            return new TableJdbcRunnable(
+                context,
+                threadNumber,
+                batchSize,
+                offsets,
+                tableProvider,
+                connectionManager,
+                tableJdbcConfigBean,
+                commonSourceConfigBean,
+                tableReadContextCache,
+                queryRateLimiter
+            ) {
+              @Override
+              protected void generateBatchAndCommitOffset(final BatchContext batchContext) {
+                super.generateBatchAndCommitOffset(batchContext);
+
+                try {
+                  postProcessBatchCallback.callback(tableProvider);
+                } catch (final Exception ex) {
+                  Throwables.propagate(ex);
+                }
+              }
+            };
+          }
+        };
+      }
+    };
+  }
+
+  public interface PostProcessBatchCallback {
+    void callback(MultithreadedTableProvider tableProvider) throws Exception;
   }
 
   public static class TableConfigBeanTestBuilder {

@@ -49,7 +49,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Helper class for maintaining and organizing workable tables to threads
  */
-public final class MultithreadedTableProvider {
+public class MultithreadedTableProvider {
   private static final Logger LOG = LoggerFactory.getLogger(MultithreadedTableProvider.class);
 
   private Map<String, TableContext> tableContextMap;
@@ -66,6 +66,7 @@ public final class MultithreadedTableProvider {
   private Queue<String> sortedTableOrder;
 
   private final ThreadLocal<Deque<TableRuntimeContext>> ownedTablesQueue = ThreadLocal.withInitial(LinkedList::new);
+  private final ThreadLocal<TableRuntimeContext> lastOwnedPartition = new ThreadLocal<>();
   private final ConcurrentMap<TableContext, Integer> maxPartitionWithDataPerTable = Maps.newConcurrentMap();
 
   private final SortedSetMultimap<TableContext, TableRuntimeContext> activeRuntimeContexts = TableRuntimeContext.buildSortedPartitionMap();
@@ -340,6 +341,11 @@ public final class MultithreadedTableProvider {
     return ownedTablesQueue.get();
   }
 
+  @VisibleForTesting
+  TableRuntimeContext getLastOwnedPartition() {
+    return lastOwnedPartition.get();
+  }
+
   private String getCurrentThreadName() {
     return Thread.currentThread().getName();
   }
@@ -371,15 +377,10 @@ public final class MultithreadedTableProvider {
   @VisibleForTesting
   void acquireTableAsNeeded(int threadNumber) throws InterruptedException {
     if (!getOwnedTablesQueue().isEmpty() && batchTableStrategy == BatchTableStrategy.SWITCH_TABLES) {
-      final TableRuntimeContext lastOwnedPartition = getOwnedTablesQueue().pollLast();
+      TableRuntimeContext lastOwnedPartition = getLastOwnedPartition();
 
-
-      if (getTableContextMap().containsValue(lastOwnedPartition.getSourceTableContext())) {
-        sharedAvailableTablesList.add(lastOwnedPartition);
-      }
-
-      TableContext lastOwnedTable = lastOwnedPartition.getSourceTableContext();
       // need to cycle off all partitions from the same table to the end of the queue
+      TableContext lastOwnedTable = lastOwnedPartition.getSourceTableContext();
       TableRuntimeContext first = sharedAvailableTablesList.peekFirst();
       while (first != null && first.getSourceTableContext().equals(lastOwnedTable)
           && !first.equals(lastOwnedPartition)) {
@@ -397,12 +398,45 @@ public final class MultithreadedTableProvider {
         // Get the new head of the queue
         first = sharedAvailableTablesList.peekFirst();
       }
-    }
 
-    if (getOwnedTablesQueue().isEmpty()) {
-      TableRuntimeContext head = sharedAvailableTablesList.pollFirst();
-      if (head != null) {
-        offerToOwnedTablesQueue(head, threadNumber);
+      if (!sharedAvailableTablesList.isEmpty() && threadNumToMaxTableSlots.get(threadNumber) > getOwnedTablesQueue().size()) {
+        // We will search for the first not empty table to own it.
+        // If all tables are empty and we own another table we will not take anything:
+        // let other threads (if any) try checking if there are new data.
+        boolean added = false;
+        TableRuntimeContext last = sharedAvailableTablesList.peekLast();
+        TableRuntimeContext current = sharedAvailableTablesList.pollFirst();
+        while(true) {
+          TableContext candidate = current.getSourceTableContext();
+          if (!added && !tablesWithNoMoreData.contains(current.getSourceTableContext())
+              // We will take only partitions of other tables (to implement the SWITCH_TABLES strategy).
+              // It doesn't make sens to take another partition of the same table
+              // If we already work on a table, let's first finish with that partition,
+              // and let's alllow other threads to take a partition of this table to improve performance.
+              && getOwnedTablesQueue().stream().map(ot -> ot.getSourceTableContext()).noneMatch(ot -> ot == candidate)
+          ) {
+            // There is a not empty table
+            if (lastOwnedPartition == getOwnedTablesQueue().peekLast()) {
+              getOwnedTablesQueue().offerFirst(current);
+            } else {
+              getOwnedTablesQueue().offerLast(current);
+            }
+            added = true;
+          } else {
+            sharedAvailableTablesList.offerLast(current);
+          }
+          if (current == last) { // We walked throw all avaialble partitions, we need to go out
+            break;
+          }
+          current = sharedAvailableTablesList.pollFirst();
+        }
+      }
+    } else {
+      if (getOwnedTablesQueue().isEmpty()) {
+        TableRuntimeContext head = sharedAvailableTablesList.pollFirst();
+        if (head != null) {
+          offerToOwnedTablesQueue(head, threadNumber);
+        }
       }
     }
 
@@ -608,7 +642,10 @@ public final class MultithreadedTableProvider {
       acquireTableAsNeeded(threadNumber);
 
       final TableRuntimeContext partition = getOwnedTablesQueue().pollFirst();
-      if (partition != null) {
+      if (partition == null) {
+        lastOwnedPartition.remove();
+      } else {
+        lastOwnedPartition.set(partition);
         offerToOwnedTablesQueue(partition, threadNumber);
       }
       return partition;

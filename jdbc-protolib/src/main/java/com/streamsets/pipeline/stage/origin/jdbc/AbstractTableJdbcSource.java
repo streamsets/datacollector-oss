@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
@@ -84,7 +85,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
   protected final HikariPoolConfigBean hikariConfigBean;
   protected final CommonSourceConfigBean commonSourceConfigBean;
   protected final TableJdbcConfigBean tableJdbcConfigBean;
-  private Map<String, TableContext> allTableContexts;
+  protected Map<String, TableContext> allTableContexts;
   private final Map<String, Integer> qualifiedTableNameToConfigIndex;
   //If we have more state to clean up, we can introduce a state manager to do that which
   //can keep track of different closeables from different threads
@@ -399,7 +400,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
 
       List<Future> allFutures = new LinkedList<>();
       IntStream.range(0, numberOfThreads).forEach(threadNumber -> {
-        JdbcBaseRunnable runnable = new JdbcRunnableBuilder()
+        JdbcBaseRunnable runnable = createJdbcRunnableBuilder()
             .context(getContext())
             .threadNumber(threadNumber)
             .batchSize(batchSize)
@@ -495,6 +496,11 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
         Thread.currentThread().interrupt();
       }
     }
+  }
+
+  @VisibleForTesting
+  protected JdbcRunnableBuilder createJdbcRunnableBuilder() {
+    return new JdbcRunnableBuilder();
   }
 
   /**

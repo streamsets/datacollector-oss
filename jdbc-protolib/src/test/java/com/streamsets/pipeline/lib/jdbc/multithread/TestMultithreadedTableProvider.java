@@ -39,6 +39,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 public class TestMultithreadedTableProvider extends BaseMultithreadedTableProviderTest {
 
@@ -705,4 +708,234 @@ public class TestMultithreadedTableProvider extends BaseMultithreadedTableProvid
     assertEquals(offset, table.getOffset());
   }
 
+  @Test
+  public void testPartitionIsNotAddedIfItsTableHasNoDataOrWeAlreadyOwnAPartitionOfTheSameTable() throws Exception {
+    // given
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    Map<Integer, Integer> slots = new HashMap<>();
+    slots.put(0, 10);
+
+    MultithreadedTableProvider p = new MultithreadedTableProvider(tableContextMap,
+        sortedTableOrder,
+        slots,
+        1,
+        BatchTableStrategy.SWITCH_TABLES,
+        null
+    );
+    MultithreadedTableProvider provider = spy(p);
+
+    TableRuntimeContext p1 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p2 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p3 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p4 = mock(TableRuntimeContext.class);
+
+    TableContext ta = mock(TableContext.class);
+    TableContext tb = mock(TableContext.class);
+    TableContext tc = mock(TableContext.class);
+
+    when(p1.getSourceTableContext()).thenReturn(ta);
+    when(p2.getSourceTableContext()).thenReturn(ta);
+    when(p3.getSourceTableContext()).thenReturn(tb);
+    when(p4.getSourceTableContext()).thenReturn(tc);
+
+    provider.getOwnedTablesQueue().offerLast(p1);
+    provider.getOwnedTablesQueue().offerLast(p3);
+    provider.getSharedAvailableTablesList().offerLast(p2);
+    provider.getSharedAvailableTablesList().offerLast(p4);
+    provider.getTablesWithNoMoreData().add(tc);
+
+    TableRuntimeContext p0 = mock(TableRuntimeContext.class);
+    TableContext t0 = mock(TableContext.class);
+    when(p0.getSourceTableContext()).thenReturn(t0);
+
+    when(provider.getLastOwnedPartition()).thenReturn(p0);
+
+    // when
+    TableRuntimeContext r = provider.nextTable(0);
+
+    // then:
+    // p2 and p4 are available, but p2 belongs to the same table as p1, thus it makes no sense to pick it up;
+    // p4 belongs to a table with no data
+    // We expect the list of owned partitions doesn't change, only the order changes.
+    assertEquals(Arrays.asList(p3, p1), provider.getOwnedTablesQueue());
+    // And the shared list also stays unchanged.
+    assertEquals(Arrays.asList(p2, p4), provider.getSharedAvailableTablesList());
+    // The last owned partition should the one that was the first in the list.
+    assertEquals(p1, p.getLastOwnedPartition());
+    assertEquals(r, p1);
+  }
+
+  @Test
+  public void testPartitionIsAddedIfItsTableHasNoDataAndWeDoNotOwnAnything() throws Exception {
+    // given
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    Map<Integer, Integer> slots = new HashMap<>();
+    slots.put(0, 10);
+
+    MultithreadedTableProvider p = new MultithreadedTableProvider(tableContextMap,
+        sortedTableOrder,
+        slots,
+        1,
+        BatchTableStrategy.SWITCH_TABLES,
+        null
+    );
+    MultithreadedTableProvider provider = spy(p);
+
+    TableRuntimeContext p1 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p2 = mock(TableRuntimeContext.class);
+    TableContext ta = mock(TableContext.class);
+
+    when(p1.getSourceTableContext()).thenReturn(ta);
+    when(p2.getSourceTableContext()).thenReturn(ta);
+
+    provider.getSharedAvailableTablesList().offerLast(p1);
+    provider.getSharedAvailableTablesList().offerLast(p2);
+
+    TableRuntimeContext p0 = mock(TableRuntimeContext.class);
+    TableContext t0 = mock(TableContext.class);
+    when(p0.getSourceTableContext()).thenReturn(t0);
+
+    when(provider.getLastOwnedPartition()).thenReturn(p0);
+
+    // when
+    TableRuntimeContext r = provider.nextTable(0);
+
+    // then:
+    // p1 belongs to a table with no data.
+    // We still want to take it since we do not own anything, maybe there are new data in the table.
+    assertEquals(Collections.singletonList(p1), provider.getOwnedTablesQueue());
+    // And the added table should be removed from the shared list
+    assertEquals(Collections.singletonList(p2), provider.getSharedAvailableTablesList());
+    // The last owned partition should the one that was the first in the list.
+    assertEquals(p1, p.getLastOwnedPartition());
+    assertEquals(r, p1);
+  }
+
+  @Test
+  public void testPartitionIsAddedToEndIfTheLastProcessedPartitionWasRemovedFromTheOwnedPartitionQueue() throws Exception {
+    // given
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    Map<Integer, Integer> slots = new HashMap<>();
+    slots.put(0, 10);
+
+    MultithreadedTableProvider p = new MultithreadedTableProvider(tableContextMap,
+        sortedTableOrder,
+        slots,
+        1,
+        BatchTableStrategy.SWITCH_TABLES,
+        null
+    );
+    MultithreadedTableProvider provider = spy(p);
+
+    TableRuntimeContext p1 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p2 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p3 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p4 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p5 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p6 = mock(TableRuntimeContext.class);
+
+    TableContext ta = mock(TableContext.class);
+    TableContext tb = mock(TableContext.class);
+    TableContext tc = mock(TableContext.class);
+
+    when(p1.getSourceTableContext()).thenReturn(ta);
+    when(p2.getSourceTableContext()).thenReturn(ta);
+    when(p3.getSourceTableContext()).thenReturn(tb);
+    when(p4.getSourceTableContext()).thenReturn(tb);
+    when(p5.getSourceTableContext()).thenReturn(tc);
+    when(p6.getSourceTableContext()).thenReturn(tc);
+
+    provider.getOwnedTablesQueue().offerLast(p1);
+    provider.getOwnedTablesQueue().offerLast(p2);
+    provider.getSharedAvailableTablesList().offerLast(p3);
+    provider.getSharedAvailableTablesList().offerLast(p4);
+    provider.getSharedAvailableTablesList().offerLast(p5);
+    provider.getSharedAvailableTablesList().offerLast(p6);
+    provider.getTablesWithNoMoreData().add(tb);
+
+    TableRuntimeContext p0 = mock(TableRuntimeContext.class);
+    TableContext t0 = mock(TableContext.class);
+    when(p0.getSourceTableContext()).thenReturn(t0);
+
+    when(provider.getLastOwnedPartition()).thenReturn(p0);
+
+    // when
+    TableRuntimeContext r = provider.nextTable(0);
+
+    // then:
+    // p2 is not the last owned partition (p0) and p3 and p4 are empty
+    // We expect p5 to be added at the end and then p1 will be taken as the next table and put after p5
+    assertEquals(Arrays.asList(p2, p5, p1), provider.getOwnedTablesQueue());
+    // And the added table should be removed from the shared list
+    assertEquals(Arrays.asList(p3, p4, p6), provider.getSharedAvailableTablesList());
+    // The last owned partition should the one that was the first in the list.
+    assertEquals(p1, p.getLastOwnedPartition());
+    assertEquals(p1, r);
+  }
+
+  @Test
+  public void testPartitionIsAddedToBeginningIfTheLastProcessedPartitionIsStillInTheOwnedPartitionQueue() throws Exception {
+    // given
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    Map<Integer, Integer> slots = new HashMap<>();
+    slots.put(0, 10);
+
+    MultithreadedTableProvider p = new MultithreadedTableProvider(tableContextMap,
+        sortedTableOrder,
+        slots,
+        1,
+        BatchTableStrategy.SWITCH_TABLES,
+        null
+    );
+    MultithreadedTableProvider provider = spy(p);
+
+    TableRuntimeContext p1 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p2 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p3 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p4 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p5 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p6 = mock(TableRuntimeContext.class);
+
+    TableContext ta = mock(TableContext.class);
+    TableContext tb = mock(TableContext.class);
+    TableContext tc = mock(TableContext.class);
+
+    when(p1.getSourceTableContext()).thenReturn(ta);
+    when(p2.getSourceTableContext()).thenReturn(ta);
+    when(p3.getSourceTableContext()).thenReturn(tb);
+    when(p4.getSourceTableContext()).thenReturn(tb);
+    when(p5.getSourceTableContext()).thenReturn(tc);
+    when(p6.getSourceTableContext()).thenReturn(tc);
+
+    provider.getOwnedTablesQueue().offerLast(p1);
+    provider.getOwnedTablesQueue().offerLast(p2);
+    provider.getSharedAvailableTablesList().offerLast(p3);
+    provider.getSharedAvailableTablesList().offerLast(p4);
+    provider.getSharedAvailableTablesList().offerLast(p5);
+    provider.getSharedAvailableTablesList().offerLast(p6);
+    provider.getTablesWithNoMoreData().add(tb);
+
+    when(provider.getLastOwnedPartition()).thenReturn(p2);
+
+    // when
+    TableRuntimeContext r = provider.nextTable(0);
+
+    // then:
+    // p2 is the last owned partition and p3 and p4 are empty
+    // We expect p5 to be added at the beginning and then selected as the next current partition and moved to the end
+    assertEquals(Arrays.asList(p1, p2, p5), provider.getOwnedTablesQueue());
+    // And the added table should be removed from the shared list
+    assertEquals(Arrays.asList(p3, p4, p6), provider.getSharedAvailableTablesList());
+    // The last owned partition should the one that was the first in the list.
+    assertEquals(p5, p.getLastOwnedPartition());
+    assertEquals(p5, r);
+  }
 }
