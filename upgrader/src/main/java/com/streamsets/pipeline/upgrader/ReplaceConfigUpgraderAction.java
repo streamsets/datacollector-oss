@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfigUpgraderAction, T> {
@@ -32,6 +33,7 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
   private Object ifOldValueMatches = MATCHES_ALL;
   private String tokenForOldValue = DEFAULT_TOKEN;
   private Object newValue;
+  private Integer newValueFromMatchIndex;
   private Object elseNewValue;
 
   public ReplaceConfigUpgraderAction(Function<T, ConfigsAdapter> wrapper) {
@@ -69,6 +71,15 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
     return this;
   }
 
+  public ReplaceConfigUpgraderAction setNewValueFromMatchIndex(Object matchIndex) {
+    if (matchIndex instanceof Integer) {
+      this.newValueFromMatchIndex = ((Integer) matchIndex).intValue();
+    } else {
+      throw new StageException(Errors.YAML_UPGRADER_14, matchIndex);
+    }
+    return this;
+  }
+
   public Object getElseNewValue() {
     return elseNewValue;
   }
@@ -94,6 +105,20 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
     return value;
   }
 
+  protected Object getNewValueFromMatchIndex(ConfigsAdapter.Pair config) {
+    Pattern pattern = Pattern.compile(getIfOldValueMatches().toString());
+    Matcher match = pattern.matcher(config.getValue().toString());
+    if (match.matches()) {
+      try {
+        newValue = match.group(newValueFromMatchIndex);
+      } catch (IndexOutOfBoundsException e) {
+        return elseNewValue;
+      }
+      return newValue;
+    }
+    return elseNewValue;
+  }
+
   @Override
   public void upgrade(
       StageUpgrader.Context context,
@@ -101,7 +126,12 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
       T configs
   ) {
     Utils.checkNotNull(getName(), "name");
-    Utils.checkNotNull(getNewValue(), "newValue");
+    if (newValue != null && newValueFromMatchIndex != null) {
+      throw new StageException(Errors.YAML_UPGRADER_15);
+    } else if (newValue == null && newValueFromMatchIndex == null) {
+      throw new StageException(Errors.YAML_UPGRADER_16);
+    }
+
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair config = configsAdapter.find(getName());
     if (config != null) {
@@ -115,8 +145,10 @@ public class ReplaceConfigUpgraderAction<T> extends UpgraderAction<ReplaceConfig
         } else {
           matches = config.getValue().equals(getIfOldValueMatches());
         }
-        if (matches) {
+        if (matches && newValueFromMatchIndex == null) {
           configsAdapter.set(getName(), getNewValue(originalConfigs, config.getValue(), getNewValue()));
+        } else if (matches && newValueFromMatchIndex != null){
+          configsAdapter.set(getName(), getNewValueFromMatchIndex(config));
         } else if (getElseNewValue() != null) {
           configsAdapter.set(getName(), getNewValue(originalConfigs, config.getValue(), getElseNewValue()));
         }

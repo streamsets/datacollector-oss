@@ -219,6 +219,28 @@ public class TestYamlStageUpgraderLoader {
   }
 
   @Test
+  public void testReplaceConfigsWithIndex() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+    String url = "http://testurl.special.com/partToExtract/endpoint";
+    configs.add(new Config("urlConfig1", url));
+    configs.add(new Config("urlConfig2", url));
+    configs.add(new Config("urlConfig3", url));
+    configs.add(new Config("urlConfig4", "http://testurl.notspecial.com/foo/endpoint"));
+
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 10, 11));
+
+    Assert.assertEquals(4, configs.size());
+    Assert.assertEquals("partToExtract", find(configs, "urlConfig1").getValue());
+    Assert.assertEquals("should-not-match", find(configs, "urlConfig2").getValue());
+    Assert.assertEquals("endpoint", find(configs, "urlConfig3").getValue());
+    Assert.assertEquals("should-return-else-value", find(configs, "urlConfig4").getValue());
+  }
+
+  @Test
   public void testStringCollectionsConfigs() {
     URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
     YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);

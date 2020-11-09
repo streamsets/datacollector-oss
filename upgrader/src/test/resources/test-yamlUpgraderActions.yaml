@@ -373,3 +373,26 @@ upgrades:
         value: not-matched
         elseName: newIfConfig2
         elseValue: ${value("newConfig")}
+
+- toVersion: 11
+  actions:
+    - replaceConfig:
+        name: urlConfig1
+        ifOldValueMatches: http://testurl.special.com/(.*)/endpoint
+        newValueFromMatchIndex: 1
+        elseNewValue: not-needed-should-match
+    - replaceConfig:
+        name: urlConfig2
+        ifOldValueMatches: http://testurl.notspecial.com/(.*)/endpoint
+        newValueFromMatchIndex: 1
+        elseNewValue: should-not-match
+    - replaceConfig:
+        name: urlConfig3
+        ifOldValueMatches: http://testurl.special.com/(.*)/(.*)
+        newValueFromMatchIndex: 2
+        elseNewValue: not-needed-should-match
+    - replaceConfig:
+        name: urlConfig4
+        ifOldValueMatches: http://testurl.notspecial.com/(.*)/endpoint
+        newValueFromMatchIndex: 2
+        elseNewValue: should-return-else-value

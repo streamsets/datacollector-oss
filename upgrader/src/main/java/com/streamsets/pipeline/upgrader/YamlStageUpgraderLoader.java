@@ -175,6 +175,9 @@ public class YamlStageUpgraderLoader {
       action.setIfOldValueMatches(map.get("ifOldValueMatches"));
     }
     action.setTokenForOldValue((String) map.get("tokenForOldValue"));
+    if (map.containsKey("newValueFromMatchIndex")) {
+      action.setNewValueFromMatchIndex(map.get("newValueFromMatchIndex"));
+    }
     return action;
   }
 
