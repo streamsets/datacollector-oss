@@ -96,4 +96,33 @@ public class TestPubSubTargetUpgrader {
     UpgraderTestUtils.assertExists(configs, newPrefix + credentialsFileContent, credentialsFileContentValue);
     UpgraderTestUtils.assertExists(configs, newPrefix + credentialsProvider, credentialsProviderValue);
   }
+
+  @Test
+  public void testUpgradeV3ToV4() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    String prefix = "conf.";
+
+    String maxOutstandingElementCount = "maxOutstandingElementCount";
+    String maxOutstandingRequestBytes = "maxOutstandingRequestBytes";
+
+    //If the value was 0 we will set it to the new defaults
+    configs.add(new Config(prefix + maxOutstandingElementCount, 0));
+    configs.add(new Config(prefix + maxOutstandingRequestBytes, 0));
+
+    configs = upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertExists(configs, prefix + maxOutstandingElementCount, 1000);
+    UpgraderTestUtils.assertExists(configs, prefix + maxOutstandingRequestBytes, 8000);
+
+    configs.clear();
+
+    // If the value was already changed we will use the existing values
+    configs.add(new Config(prefix + maxOutstandingElementCount, 100));
+    configs.add(new Config(prefix + maxOutstandingRequestBytes, 800));
+
+    configs = upgrader.upgrade(configs, context);
+    UpgraderTestUtils.assertExists(configs, prefix + maxOutstandingElementCount, 100);
+    UpgraderTestUtils.assertExists(configs, prefix + maxOutstandingRequestBytes, 800);
+  }
 }

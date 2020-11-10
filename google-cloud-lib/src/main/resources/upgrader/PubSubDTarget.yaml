@@ -22,3 +22,13 @@ upgrades:
       - renameConfig:
           oldNamePattern: ^conf.credentials.(.*$)
           newNamePattern: conf.credentials.connection.(0)
+  - toVersion: 4
+    actions:
+      - replaceConfig:
+          name: conf.maxOutstandingElementCount
+          ifOldValueMatches: 0
+          newValue: 1000
+      - replaceConfig:
+          name: conf.maxOutstandingRequestBytes
+          ifOldValueMatches: 0
+          newValue: 8000

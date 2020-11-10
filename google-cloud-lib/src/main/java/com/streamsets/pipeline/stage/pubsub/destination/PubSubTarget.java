@@ -108,14 +108,10 @@ public class PubSubTarget extends BaseTarget {
     try {
       FlowControlSettings.Builder flowControlSettingsBuilder = FlowControlSettings.newBuilder()
                                                                                   .setLimitExceededBehavior(
-                                                                                      getLimitExceededBehaviour(
-                                                                                          conf.limitExceededBehavior));
-      if (conf.maxOutstandingElementCount > 0) {
-        flowControlSettingsBuilder.setMaxOutstandingElementCount(conf.maxOutstandingElementCount);
-      }
-      if (conf.maxOutstandingRequestBytes > 0) {
-        flowControlSettingsBuilder.setMaxOutstandingRequestBytes(conf.maxOutstandingRequestBytes);
-      }
+                                                                                      getLimitExceededBehaviour(conf.limitExceededBehavior))
+                                                                                  .setMaxOutstandingElementCount(conf.maxOutstandingElementCount)
+                                                                                  .setMaxOutstandingRequestBytes(conf.maxOutstandingRequestBytes);
+
       FlowControlSettings flowControlSettings = flowControlSettingsBuilder.build();
 
       BatchingSettings batchingSettings = BatchingSettings.newBuilder()
@@ -165,7 +161,7 @@ public class PubSubTarget extends BaseTarget {
   }
 
   @Override
-  public void write(Batch batch) throws StageException {
+  public void write(Batch batch) {
     pendingMessages.clear();
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
@@ -203,7 +199,7 @@ public class PubSubTarget extends BaseTarget {
     }
   }
 
-  private void publish(Record record) throws StageException {
+  private void publish(Record record) {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     try (DataGenerator generator = generatorFactory.getGenerator(os)) {
       generator.write(record);
@@ -224,8 +220,7 @@ public class PubSubTarget extends BaseTarget {
     pendingMessages.add(new PendingMessage(record, messageIdFuture));
   }
 
-  private FlowController.LimitExceededBehavior getLimitExceededBehaviour(LimitExceededBehaviour limitExceededBehavior)
-      throws StageException {
+  private FlowController.LimitExceededBehavior getLimitExceededBehaviour(LimitExceededBehaviour limitExceededBehavior) {
     switch (limitExceededBehavior) {
       case BLOCK:
         return FlowController.LimitExceededBehavior.Block;

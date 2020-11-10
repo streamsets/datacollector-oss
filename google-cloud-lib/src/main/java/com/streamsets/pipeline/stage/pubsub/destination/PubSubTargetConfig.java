@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.lib.googlecloud.GoogleCloudCredentialsConfig;
 import com.streamsets.pipeline.lib.googlecloud.PubSubCredentialsConfig;
 import com.streamsets.pipeline.stage.destination.lib.DataGeneratorFormatConfig;
 import com.streamsets.pipeline.stage.pubsub.origin.DataFormatChooserValues;
@@ -104,12 +103,11 @@ public class PubSubTargetConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Outstanding Message Count",
-      description = "Maximum number of outstanding messages to keep in memory before enforcing flow control. Set to " +
-          "zero to avoid defining a maximum outstanding message count",
+      description = "Maximum number of unprocessed messages to keep in memory before enforcing flow control",
       displayPosition = 50,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      defaultValue = "0",
-      min = 0,
+      defaultValue = "1000",
+      min = 1,
       group = "ADVANCED")
   public long maxOutstandingElementCount;
 
@@ -117,12 +115,11 @@ public class PubSubTargetConfig {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Max Outstanding Request Bytes",
-      description = "Maximum number of outstanding bytes to keep in memory before enforcing flow control. Set to zero" +
-          " to avoid defining a maximum outstanding request bytes",
+      description = "Maximum number of unprocessed bytes to keep in memory before enforcing flow control",
       displayPosition = 60,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      defaultValue = "0",
-      min = 0,
+      defaultValue = "8000",
+      min = 1,
       group = "ADVANCED")
   public long maxOutstandingRequestBytes;
 

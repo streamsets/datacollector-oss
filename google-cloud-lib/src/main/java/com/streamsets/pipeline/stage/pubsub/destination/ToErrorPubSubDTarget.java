@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.DataFormat;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Write to Google Pub Sub",
     description = "Writes error records to Google Pub Sub",
     upgrader = PubSubTargetUpgrader.class,
