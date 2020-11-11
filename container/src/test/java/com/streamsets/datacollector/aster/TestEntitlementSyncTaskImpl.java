@@ -49,6 +49,7 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -291,8 +292,21 @@ public class TestEntitlementSyncTaskImpl {
     responseStatus = 200;
     AtomicInteger throwCount = new AtomicInteger(3); // fail three times, then succeed
     doAnswer(args -> {
-      if (throwCount.getAndDecrement() > 0) {
-        throw new RuntimeException("test wrapper", new SocketTimeoutException("test ex"));
+      int currentCount = throwCount.getAndDecrement();
+      if (currentCount > 0) {
+        switch (currentCount) {
+          case 2:
+            throw new HttpServerErrorException("500 Internal Server Error");
+          case 3:
+            throw new RuntimeException(new HttpServerErrorException("502 Bad Gateway"));
+          case 4:
+            throw new RuntimeException("wrapper message is ignored",
+                new HttpServerErrorException("503 Service Unavailable"));
+          case 5:
+            throw new HttpServerErrorException("504 Gateway Timeout");
+          default: // also case 1
+            throw new RuntimeException("test wrapper", new SocketTimeoutException("test ex"));
+        }
       }
       return response;
     }).when(asterRestClient).doRestCall(any());
@@ -376,6 +390,32 @@ public class TestEntitlementSyncTaskImpl {
     // 1 more rest call, retry was aborted
     verify(asterRestClient, times(16)).doRestCall(any());
     // 1 more sleep
+    verify(task, times(4)).sleep(1 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(2 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(3)).sleep(4 * RETRY_INITIAL_BACKOFF);
+    verify(task, times(2)).sleep(8 * RETRY_INITIAL_BACKOFF);
+    verify(task).sleep(16 * RETRY_INITIAL_BACKOFF);
+    verify(task, never()).sleep(eq(32 * RETRY_INITIAL_BACKOFF));
+
+    // test non-retriable exception
+    when(task.getTime()).thenReturn(
+        startTime, // initialization
+        startTime + TimeUnit.SECONDS.toMillis(31), // after first call fails, slightly longer than timeout
+        startTime + TimeUnit.SECONDS.toMillis(62),
+        startTime + TimeUnit.SECONDS.toMillis(93),
+        startTime + TimeUnit.SECONDS.toMillis(124),
+        startTime + TimeUnit.SECONDS.toMillis(155),
+        startTime + TimeUnit.SECONDS.toMillis(186) // outside of retry window, 7th try is not attempted
+    );
+    doThrow(new RuntimeException("other exception")).when(asterRestClient).doRestCall(any());
+    try {
+      task.postToGetEntitlementUrl("unused", ImmutableMap.of("not", "used"));
+      fail("Expected exception");
+    } catch (RuntimeException e) {
+      assertEquals("other exception", e.getMessage());
+    }
+    verify(asterRestClient, times(17)).doRestCall(any());
+    // expect 0 more sleeps, no retries
     verify(task, times(4)).sleep(1 * RETRY_INITIAL_BACKOFF);
     verify(task, times(3)).sleep(2 * RETRY_INITIAL_BACKOFF);
     verify(task, times(3)).sleep(4 * RETRY_INITIAL_BACKOFF);

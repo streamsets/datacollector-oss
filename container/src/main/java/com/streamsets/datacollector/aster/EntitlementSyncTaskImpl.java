@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import java.net.SocketTimeoutException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -219,11 +220,19 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
             response.getStatusMessage());
         exception = null;
       } catch (RuntimeException e) {
+        boolean retry = false;
         if (e.getCause() != null && e.getCause() instanceof SocketTimeoutException) {
+          retry = true;
           LOG.warn("Retrying entitlement sync after socket timeout: " + e.getMessage());
           exception = e;
           response = null;
-        } else {
+        } else if (getStatusCode(e).map(STATUS_CODES_TO_RETRY::contains).orElse(false)) {
+          retry = true;
+          LOG.warn("Retrying entitlement sync after: {}", e.getMessage());
+          exception = e;
+          response = null;
+        }
+        if (!retry) {
           throw e;
         }
       }
@@ -261,6 +270,26 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
   boolean sleep(long millis) {
     // allows easy mocking
     return ThreadUtil.sleep(millis);
+  }
+
+  @VisibleForTesting
+  Optional<Integer> getStatusCode(RuntimeException e) {
+    Throwable nextE = e;
+    while (true) {
+      // check if it is the expected class type. The actual class is not visible in this classloader, so check name
+      if (nextE.getClass().getSimpleName().equals("HttpServerErrorException")) {
+        if (nextE.getMessage().matches("[0-9][0-9][0-9] .*")) { // Matches syntax of HttpServerErrorException
+          return Optional.of(Integer.valueOf(nextE.getMessage().substring(0, 3)));
+        }
+        break;
+      }
+
+      if (nextE.getCause() == null || nextE.getCause() == nextE) {
+        break;
+      }
+      nextE = nextE.getCause();
+    }
+    return Optional.empty();
   }
 
   private String getEntitlementFromResponse(Map<String, Object> responseData) {
