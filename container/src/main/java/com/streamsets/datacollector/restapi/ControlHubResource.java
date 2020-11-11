@@ -20,6 +20,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.RuleDefinitions;
 import com.streamsets.datacollector.credential.CredentialStoresTask;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
+import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.execution.CommitPipelineJson;
@@ -32,6 +33,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.ControlHubUtil;
 import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,6 +56,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 
 @Path("/v1/controlHub")
@@ -68,11 +71,13 @@ public class ControlHubResource {
   private final Configuration config;
   private final String controlHubBaseUrl;
   private final RuntimeInfo runtimeInfo;
+  private final BuildInfo buildInfo;
   private final String user;
 
   @Inject
   public ControlHubResource(
       Configuration config,
+      BuildInfo buildInfo,
       RuntimeInfo runtimeInfo,
       StageLibraryTask stageLibrary,
       CredentialStoresTask credentialStoresTask,
@@ -80,6 +85,7 @@ public class ControlHubResource {
       Principal principal
   ) {
     this.config = config;
+    this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
     this.stageLibrary = stageLibrary;
     this.credentialStoresTask = credentialStoresTask;
@@ -118,6 +124,15 @@ public class ControlHubResource {
   ) throws PipelineException, IOException {
     checkIfControlHubEnabled();
     PipelineConfiguration pipelineConfiguration = store.load(pipelineId, "0");
+    PipelineConfigurationValidator validator = new PipelineConfigurationValidator(
+        stageLibrary,
+        buildInfo,
+        pipelineId,
+        pipelineConfiguration,
+        user,
+        new HashMap<>()
+    );
+    pipelineConfiguration = validator.validate();
     RuleDefinitions ruleDefinitions = store.retrieveRules(pipelineId, "0");
     PipelineEnvelopeJson pipelineEnvelopeJson = PipelineConfigurationUtil.getPipelineEnvelope(
         stageLibrary,
