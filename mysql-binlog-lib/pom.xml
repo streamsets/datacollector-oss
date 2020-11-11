@@ -34,7 +34,7 @@
   <properties>
     <jackson.version>2.8.8</jackson.version>
     <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
-    <mysql-binlog-connector-java.version>0.21.0</mysql-binlog-connector-java.version>
+    <mysql-binlog-connector-java.version>0.23.3</mysql-binlog-connector-java.version>
     <joda.version>2.8</joda.version>
     <guava.version>19.0</guava.version>
   </properties>
@@ -70,7 +70,7 @@
 
     <!-- Compile Dependencies -->
     <dependency>
-      <groupId>com.github.shyiko</groupId>
+      <groupId>com.zendesk</groupId>
       <artifactId>mysql-binlog-connector-java</artifactId>
       <version>${mysql-binlog-connector-java.version}</version>
     </dependency>
