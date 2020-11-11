@@ -31,7 +31,7 @@ public abstract class AzureConnection {
       defaultValue = "example.dfs.core.windows.net",
       label = "Account FQDN",
       description = "The fully qualified domain name of the Data Lake Storage account",
-      displayPosition = 10,
+      displayPosition = 1,
       group = "#0"
   )
   public CredentialValue accountFQDN;
@@ -42,7 +42,7 @@ public abstract class AzureConnection {
       defaultValue = "example-blob-container",
       label = "Storage Container / File System",
       description = "Name of the storage container or file system in the storage account",
-      displayPosition = 20,
+      displayPosition = 2,
       group = "#0"
   )
   public CredentialValue storageContainer;
@@ -53,7 +53,7 @@ public abstract class AzureConnection {
       defaultValue = "CLIENT",
       label = "Authentication Method",
       description = "Method used to authenticate connections to Azure",
-      displayPosition = 40,
+      displayPosition = 4,
       group = "#0"
   )
   @ValueChooserModel(OAuthProviderTypeValues.class)
@@ -64,7 +64,7 @@ public abstract class AzureConnection {
       type = ConfigDef.Type.CREDENTIAL,
       label = "Application ID",
       description = "Azure application id",
-      displayPosition = 50,
+      displayPosition = 5,
       group = "#0",
       dependsOn = "authMethod",
       triggeredByValue = {"CLIENT", "MSI"}
@@ -76,7 +76,7 @@ public abstract class AzureConnection {
       defaultValue = "",
       label = "Tenant ID",
       description = "Azure tenant ID",
-      displayPosition = 60,
+      displayPosition = 6,
       group = "#0",
       dependsOn = "authMethod",
       triggeredByValue = {"CLIENT", "MSI"})
@@ -87,7 +87,7 @@ public abstract class AzureConnection {
       defaultValue = "",
       label = "Application Key",
       description = "Azure application key",
-      displayPosition = 60,
+      displayPosition = 7,
       group = "#0",
       dependsOn = "authMethod",
       triggeredByValue = "CLIENT")
@@ -98,7 +98,7 @@ public abstract class AzureConnection {
       defaultValue = "",
       label = "Account Shared Key",
       description = "Azure storage account shared key",
-      displayPosition = 70,
+      displayPosition = 7,
       group = "#0",
       dependsOn = "authMethod",
       triggeredByValue = "SHARED_KEY")

@@ -43,7 +43,7 @@ public class ADLSGen2Connection extends AzureConnection {
       defaultValue = "true",
       label = "Secure Connection",
       description = "Enable a secure connection using abfss",
-      displayPosition = 30,
+      displayPosition = 3,
       group = "#0"
   )
   public boolean secureConnection;
