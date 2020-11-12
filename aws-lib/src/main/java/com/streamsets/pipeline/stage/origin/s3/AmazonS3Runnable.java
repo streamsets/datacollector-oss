@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.s3;
 import com.amazonaws.AbortedException;
 import com.amazonaws.AmazonClientException;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.google.common.base.Throwables;
@@ -323,14 +324,26 @@ public class AmazonS3Runnable implements Runnable {
     S3Object partialS3ObjectForMetadata;
     //partialObject with fetchSize 1 byte.
     //This is mostly used for extracting metadata and such.
-    partialS3ObjectForMetadata = AmazonS3Util.getObjectRange(s3Client,
-        s3ConfigBean.s3Config.bucket,
-        s3ObjectSummary.getKey(),
-        1,
-        s3ConfigBean.sseConfig.useCustomerSSEKey,
-        s3ConfigBean.sseConfig.customerKey,
-        s3ConfigBean.sseConfig.customerKeyMd5
-    );
+    if(s3ObjectSummary.getSize() == 0) {
+      partialS3ObjectForMetadata = AmazonS3Util.getObject(
+          s3Client,
+          s3ConfigBean.s3Config.bucket,
+          s3ObjectSummary.getKey(),
+          s3ConfigBean.sseConfig.useCustomerSSEKey,
+          s3ConfigBean.sseConfig.customerKey,
+          s3ConfigBean.sseConfig.customerKeyMd5
+      );
+    } else {
+      partialS3ObjectForMetadata = AmazonS3Util.getObjectRange(
+          s3Client,
+          s3ConfigBean.s3Config.bucket,
+          s3ObjectSummary.getKey(),
+          1,
+          s3ConfigBean.sseConfig.useCustomerSSEKey,
+          s3ConfigBean.sseConfig.customerKey,
+          s3ConfigBean.sseConfig.customerKeyMd5
+      );
+    }
 
     S3FileRef.Builder s3FileRefBuilder = new S3FileRef.Builder().s3Client(s3Client)
                                                                 .s3ObjectSummary(s3ObjectSummary)
