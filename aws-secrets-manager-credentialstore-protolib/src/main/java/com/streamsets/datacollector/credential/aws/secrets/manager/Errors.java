@@ -19,11 +19,14 @@ import com.streamsets.pipeline.api.ErrorCode;
 
 public enum Errors implements ErrorCode {
   AWS_SECRETS_MANAGER_CRED_STORE_00("Missing configuration '{}'"),
-  AWS_SECRETS_MANAGER_CRED_STORE_01("Unable to connect to AWS Secrets Manager. Verify your configuration is correct. "
-      + "Message: {}"),
+  AWS_SECRETS_MANAGER_CRED_STORE_01("Unable to connect to AWS Secrets Manager. Verify your configuration is correct. " +
+      "Message: {}"),
   AWS_SECRETS_MANAGER_CRED_STORE_02("Credential '{}' could not be retrieved"),
   AWS_SECRETS_MANAGER_CRED_STORE_03("Credential '{}' could not be retrieved'. Message: {}"),
   AWS_SECRETS_MANAGER_CRED_STORE_04("Key '{}' could not be be retrieved from Credential '{}'"),
+  AWS_SECRETS_MANAGER_CRED_STORE_05("Security method must be set to 'accessKeys' or 'instanceProfile'"),
+  AWS_SECRETS_MANAGER_CRED_STORE_06(
+      "If 'accessKeys' authentication method is selected, both 'accessKey' and 'secretKey' must be set"),
   ;
 
   private final String message;

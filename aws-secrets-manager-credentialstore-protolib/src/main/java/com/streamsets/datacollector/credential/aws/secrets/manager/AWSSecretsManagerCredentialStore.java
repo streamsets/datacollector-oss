@@ -46,17 +46,26 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
   private static final Logger LOG = LoggerFactory.getLogger(AWSSecretsManagerCredentialStore.class);
 
   public static final String NAME_KEY_SEPARATOR_PROP = "nameKey.separator";
-  public static final String NAME_KEY_SEPARTOR_DEFAULT = "&";
+  public static final String NAME_KEY_SEPARATOR_DEFAULT = "&";
   public static final String SEPARATOR_OPTION = "separator";
   public static final String AWS_REGION_PROP = "region";
+  public static final String SECURITY_METHOD_PROP = "security.method";
   public static final String AWS_ACCESS_KEY_PROP = "access.key";
   public static final String AWS_SECRET_KEY_PROP = "secret.key";
   public static final String CACHE_MAX_SIZE_PROP = "cache.max.size";
   public static final String CACHE_TTL_MILLIS_PROP = "cache.ttl.millis";
   public static final String ALWAYS_REFRESH_OPTION = "alwaysRefresh";
 
+  public static final String AUTH_METHOD_INSTANCE_PROFILE = "instanceProfile";
+  public static final String AUTH_METHOD_ACCESS_KEYS = "accessKeys";
+
   private SecretCache secretCache;
   private String nameKeySeparator;
+
+  private String region;
+  private String accessKey;
+  private String secretKey;
+  private String securityMethod;
 
   @Override
   public List<ConfigIssue> init(Context context) {
@@ -64,63 +73,82 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
 
     nameKeySeparator = context.getConfig(NAME_KEY_SEPARATOR_PROP);
     if (nameKeySeparator == null) {
-      nameKeySeparator = NAME_KEY_SEPARTOR_DEFAULT;
+      nameKeySeparator = NAME_KEY_SEPARATOR_DEFAULT;
     }
 
-    String region = context.getConfig(AWS_REGION_PROP);
+    region = context.getConfig(AWS_REGION_PROP);
     if (region == null || region.isEmpty()) {
       issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_00, AWS_REGION_PROP));
     }
 
-    String accessKey = context.getConfig(AWS_ACCESS_KEY_PROP);
-    String secretKey = context.getConfig(AWS_SECRET_KEY_PROP);
 
     String cacheSizeStr = context.getConfig(CACHE_MAX_SIZE_PROP);
-    int cacheSize = (cacheSizeStr != null)
-        ? Integer.parseInt(cacheSizeStr)
-        : SecretCacheConfiguration.DEFAULT_MAX_CACHE_SIZE;
+    int cacheSize = cacheSizeStr != null
+                    ? Integer.parseInt(cacheSizeStr)
+                    : SecretCacheConfiguration.DEFAULT_MAX_CACHE_SIZE;
 
     String cacheTTLStr = context.getConfig(CACHE_TTL_MILLIS_PROP);
-    long cacheTTL = (cacheTTLStr != null)
-        ? Integer.parseInt(cacheTTLStr)
-        : SecretCacheConfiguration.DEFAULT_CACHE_ITEM_TTL;
+    long cacheTTL = cacheTTLStr != null
+                    ? Integer.parseInt(cacheTTLStr)
+                    : SecretCacheConfiguration.DEFAULT_CACHE_ITEM_TTL;
+
+    securityMethod = context.getConfig(SECURITY_METHOD_PROP);
+    accessKey = context.getConfig(AWS_ACCESS_KEY_PROP);
+    secretKey = context.getConfig(AWS_SECRET_KEY_PROP);
+
+    if (StringUtils.isEmpty(securityMethod)) {
+      //For backwards compatibility, if the user does not set the property is defaulted to access keys
+      securityMethod = (!StringUtils.isEmpty(accessKey) && !StringUtils.isEmpty(secretKey))
+                       ? AUTH_METHOD_ACCESS_KEYS
+                       : AUTH_METHOD_INSTANCE_PROFILE;
+
+      LOG.error(
+          "Missing security.method is not set, it will be mandatory in future release, defaulting to {}",
+          securityMethod
+      );
+    }
+
+    if (securityMethod.equals(AUTH_METHOD_ACCESS_KEYS)) {
+      if (StringUtils.isEmpty(accessKey) || StringUtils.isEmpty(secretKey)) {
+        issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_06));
+      }
+    } else if (!securityMethod.equals(AUTH_METHOD_INSTANCE_PROFILE)) {
+      issues.add(context.createConfigIssue(Errors.AWS_SECRETS_MANAGER_CRED_STORE_05));
+    }
 
     if (issues.isEmpty()) {
       LOG.debug("Creating Secret Cache for region '{}'", region);
-      secretCache = createSecretCache(accessKey, secretKey, region, cacheSize, cacheTTL);
+      secretCache = createSecretCache(cacheSize, cacheTTL);
       validateCredentialStoreConnection(context, issues);
     }
 
     return issues;
   }
 
-  public static AWSCredentialsProvider getCredentialsProvider(String accessKey, String secretKey) {
-    if (!StringUtils.isEmpty(accessKey) && !StringUtils.isEmpty(secretKey)) {
-      return new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
-    } else {
-      return new DefaultAWSCredentialsProviderChain();
+  public AWSCredentialsProvider getCredentialsProvider() {
+    AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
+
+    if (AUTH_METHOD_ACCESS_KEYS.equals(securityMethod)) {
+      credentialsProvider = new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey));
     }
+
+    return credentialsProvider;
   }
 
-  protected SecretCache createSecretCache(
-      String awsAccessKey,
-      String awsSecretKey,
-      String region,
-      int cacheSize,
-      long cacheTTL
-  ) {
-    AWSCredentialsProvider credentials = getCredentialsProvider(awsAccessKey, awsSecretKey);
-    AWSSecretsManagerClientBuilder clientBuilder = AWSSecretsManagerClientBuilder
-        .standard()
-        .withRegion(region)
-        .withCredentials(credentials);
+  protected SecretCache createSecretCache(int cacheSize, long cacheTTL) {
+    AWSCredentialsProvider credentials = getCredentialsProvider();
+    AWSSecretsManagerClientBuilder clientBuilder = AWSSecretsManagerClientBuilder.standard()
+                                                                                 .withRegion(getRegion())
+                                                                                 .withCredentials(credentials);
 
-    SecretCacheConfiguration cacheConf = new SecretCacheConfiguration()
-        .withMaxCacheSize(cacheSize)
-        .withCacheItemTTL(cacheTTL)
-        .withClient(clientBuilder.build());
+    SecretCacheConfiguration cacheConf = new SecretCacheConfiguration().withMaxCacheSize(cacheSize).withCacheItemTTL(
+        cacheTTL).withClient(clientBuilder.build());
 
     return new SecretCache(cacheConf);
+  }
+
+  String getRegion() {
+    return region;
   }
 
   @Override
@@ -134,10 +162,10 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
     }
 
     Map<String, String> optionsMap = options != null ? Splitter.on(",")
-        .omitEmptyStrings()
-        .trimResults()
-        .withKeyValueSeparator("=")
-        .split(options) : Collections.emptyMap();
+                                                               .omitEmptyStrings()
+                                                               .trimResults()
+                                                               .withKeyValueSeparator("=")
+                                                               .split(options) : Collections.emptyMap();
 
     String separator = optionsMap.get(SEPARATOR_OPTION);
     if (separator == null) {
@@ -146,10 +174,10 @@ public class AWSSecretsManagerCredentialStore implements CredentialStore {
 
     String[] splits = name.split(Pattern.quote(separator), 2);
     if (splits.length != 2) {
-      throw new IllegalArgumentException(
-          Utils.format("AWSSecretsManagerCredentialStore name '{}' should be '<name>{}<key>'",
-              name,
-              separator
+      throw new IllegalArgumentException(Utils.format("AWSSecretsManagerCredentialStore name '{}' should be " +
+              "'<name>{}<key>'",
+          name,
+          separator
       ));
     }
 
