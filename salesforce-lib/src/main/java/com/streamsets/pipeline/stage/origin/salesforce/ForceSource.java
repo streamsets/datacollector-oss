@@ -480,7 +480,7 @@ public class ForceSource extends BaseSource implements ForceStage {
 
         if (delay > 0) {
           // Sleep in one second increments so we don't tie up the app.
-          LOG.info("{}ms remaining until next fetch.", delay);
+          LOG.debug("{}ms remaining until next fetch.", delay);
           ThreadUtil.sleep(Math.min(delay, 1000));
 
           return lastSourceOffset;
