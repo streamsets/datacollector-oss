@@ -119,11 +119,6 @@
     <!-- azure -->
     <dependency>
       <groupId>com.microsoft.azure</groupId>
-      <artifactId>azure-data-lake-store-sdk</artifactId>
-      <version>${azure.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.microsoft.azure</groupId>
       <artifactId>azure-eventhubs</artifactId>
       <version>${azure-eventhubs.version}</version>
     </dependency>
