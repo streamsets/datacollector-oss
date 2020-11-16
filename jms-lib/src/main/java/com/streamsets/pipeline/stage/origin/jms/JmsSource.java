@@ -23,12 +23,13 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
+import com.streamsets.pipeline.lib.jms.config.connection.SecurityPropertyBean;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.ConnectionFactory;
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import java.util.ArrayList;
@@ -40,7 +41,6 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   private static final Logger LOG = LoggerFactory.getLogger(JmsSource.class);
 
   private final BasicConfig basicConfig;
-  private final CredentialsConfig credentialsConfig;
   private final JmsSourceConfig jmsConfig;
   private final JmsMessageConsumerFactory jmsMessageConsumerFactory;
   private final JmsMessageConverter jmsMessageConverter;
@@ -51,11 +51,10 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
   private long messagesConsumed;
   private boolean checkBatchSize = true;
 
-  public JmsSource(BasicConfig basicConfig, CredentialsConfig credentialsConfig, JmsSourceConfig jmsConfig,
+  public JmsSource(BasicConfig basicConfig, JmsSourceConfig jmsConfig,
                    JmsMessageConsumerFactory jmsMessageConsumerFactory,
                    JmsMessageConverter jmsMessageConverter, InitialContextFactory initialContextFactory) {
     this.basicConfig = basicConfig;
-    this.credentialsConfig = credentialsConfig;
     this.jmsConfig = jmsConfig;
     this.jmsMessageConsumerFactory = jmsMessageConsumerFactory;
     this.jmsMessageConverter = jmsMessageConverter;
@@ -70,37 +69,46 @@ public class JmsSource extends BaseSource implements OffsetCommitter {
       Properties contextProperties = new Properties();
       contextProperties.setProperty(
         javax.naming.Context.INITIAL_CONTEXT_FACTORY,
-        jmsConfig.initialContextFactory);
+        jmsConfig.connection.initialContextFactory);
       contextProperties.setProperty(
-        javax.naming.Context.PROVIDER_URL, jmsConfig.providerURL);
-      if (jmsConfig.initialContextFactory.toLowerCase(Locale.ENGLISH).contains("oracle")) {
-        contextProperties.setProperty("db_url", jmsConfig.providerURL); // workaround for SDC-2068
+        javax.naming.Context.PROVIDER_URL, jmsConfig.connection.providerURL);
+      if (jmsConfig.connection.initialContextFactory.toLowerCase(Locale.ENGLISH).contains("oracle")) {
+        contextProperties.setProperty("db_url", jmsConfig.connection.providerURL); // workaround for SDC-2068
       }
       contextProperties.putAll(jmsConfig.contextProperties);
       if (jmsConfig.clientID != null) {
         contextProperties.setProperty("clientID", jmsConfig.clientID);
       }
+      for (SecurityPropertyBean props : jmsConfig.connection.additionalSecurityProps) {
+        contextProperties.put(props.key, props.value.get());
+      }
+
       initialContext = initialContextFactory.create(contextProperties);
     } catch (NamingException ex) {
       LOG.info(Utils.format(
-          JmsErrors.JMS_00.getMessage(), jmsConfig.initialContextFactory,
-        jmsConfig.providerURL, ex.toString()), ex);
+          JmsErrors.JMS_00.getMessage(), jmsConfig.connection.initialContextFactory,
+        jmsConfig.connection.providerURL, ex.toString()), ex);
       issues.add(getContext().createConfigIssue(
           JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_00,
-        jmsConfig.initialContextFactory, jmsConfig.providerURL, ex.toString()));
+        jmsConfig.connection.initialContextFactory, jmsConfig.connection.providerURL, ex.toString()));
     }
     if (issues.isEmpty()) {
       try {
-        connectionFactory = (ConnectionFactory) initialContext.lookup(jmsConfig.connectionFactory);
+        connectionFactory = (ConnectionFactory) initialContext.lookup(jmsConfig.connection.connectionFactory);
       } catch (NamingException ex) {
-        LOG.info(Utils.format(JmsErrors.JMS_01.getMessage(), jmsConfig.initialContextFactory, ex.toString()), ex);
+        LOG.info(Utils.format(JmsErrors.JMS_01.getMessage(), jmsConfig.connection.initialContextFactory, ex.toString()), ex);
         issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), "jmsConfig.initialContextFactory", JmsErrors.JMS_01,
-          jmsConfig.connectionFactory, ex.toString()));
+          jmsConfig.connection.connectionFactory, ex.toString()));
       }
     }
     if (issues.isEmpty()) {
-      jmsMessageConsumer = jmsMessageConsumerFactory.create(initialContext, connectionFactory, basicConfig,
-        credentialsConfig, jmsConfig, jmsMessageConverter);
+      jmsMessageConsumer = jmsMessageConsumerFactory.create(
+          initialContext,
+          connectionFactory,
+          basicConfig,
+          jmsConfig,
+          jmsMessageConverter
+      );
       issues.addAll(jmsMessageConsumer.init(getContext()));
     }
     // no dependencies on the above for initialization

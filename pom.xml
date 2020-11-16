@@ -289,6 +289,7 @@
     <module>google-cloud-support</module>
     <module>apache-kudu-connection</module>
     <module>azure-connection</module>
+    <module>jms-connection</module>
   </modules>
 
   <build>

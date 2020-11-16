@@ -26,10 +26,10 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
 import com.streamsets.pipeline.lib.jms.config.DestinationType;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
+import com.streamsets.pipeline.lib.jms.config.connection.JmsConnection;
 import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.sdk.service.SdkJsonDataFormatGeneratorService;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
@@ -77,7 +77,6 @@ public class TestJmsTarget {
 
   private Connection connection;
   private BrokerService broker;
-  private CredentialsConfig credentialsConfig;
   private JmsTargetConfig jmsTargetConfig;
 
   @Rule
@@ -103,15 +102,15 @@ public class TestJmsTarget {
     broker.setPlugins(new BrokerPlugin[]{authentication});
     broker.start();
 
-    credentialsConfig = new CredentialsConfig();
     jmsTargetConfig = new JmsTargetConfig();
-    credentialsConfig.useCredentials = true;
-    credentialsConfig.username = () -> USERNAME;
-    credentialsConfig.password = () -> PASSWORD;
+    jmsTargetConfig.connection = new JmsConnection();
+    jmsTargetConfig.connection.useCredentials = true;
+    jmsTargetConfig.connection.username = () -> USERNAME;
+    jmsTargetConfig.connection.password = () -> PASSWORD;
     jmsTargetConfig.destinationName = JNDI_PREFIX + DESTINATION_NAME;
-    jmsTargetConfig.initialContextFactory = INITIAL_CONTEXT_FACTORY;
-    jmsTargetConfig.connectionFactory = CONNECTION_FACTORY;
-    jmsTargetConfig.providerURL = BROKER_BIND_URL;
+    jmsTargetConfig.connection.initialContextFactory = INITIAL_CONTEXT_FACTORY;
+    jmsTargetConfig.connection.connectionFactory = CONNECTION_FACTORY;
+    jmsTargetConfig.connection.providerURL = BROKER_BIND_URL;
     // Create a connection and start
     ConnectionFactory factory = new ActiveMQConnectionFactory(USERNAME,
         PASSWORD, BROKER_BIND_URL);
@@ -156,7 +155,6 @@ public class TestJmsTarget {
 
   private TargetRunner createRunner() {
     JmsTarget destination = new JmsTarget(
-        credentialsConfig,
         jmsTargetConfig,
         new JmsMessageProducerFactoryImpl(),
         new InitialContextFactory()
@@ -180,19 +178,19 @@ public class TestJmsTarget {
 
   @Test
   public void testInvalidInitialContext() throws Exception {
-    jmsTargetConfig.initialContextFactory = "invalid";
+    jmsTargetConfig.connection.initialContextFactory = "invalid";
     runInit("JMS_00");
   }
 
   @Test
   public void testInvalidConnectionFactory() throws Exception {
-    jmsTargetConfig.connectionFactory = "invalid";
+    jmsTargetConfig.connection.connectionFactory = "invalid";
     runInit("JMS_01");
   }
 
   @Test
   public void testInvalidCreds() throws Exception {
-    credentialsConfig.username = () -> "invalid";
+    jmsTargetConfig.connection.username = () -> "invalid";
     runInit("JMS_04");
   }
 

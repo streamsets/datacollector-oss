@@ -16,7 +16,6 @@
 package com.streamsets.pipeline.stage.destination.jms;
 
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 
 import javax.jms.ConnectionFactory;
 import javax.naming.InitialContext;
@@ -27,14 +26,12 @@ public class JmsMessageProducerFactoryImpl implements JmsMessageProducerFactory 
   public JmsMessageProducer create(
       InitialContext initialContext,
       ConnectionFactory connectionFactory,
-      CredentialsConfig credentialsConfig,
       JmsTargetConfig jmsTargetConfig,
       Stage.Context context
   ) {
     return new JmsMessageProducerImpl(
         initialContext,
         connectionFactory,
-        credentialsConfig,
         jmsTargetConfig,
         context
     );

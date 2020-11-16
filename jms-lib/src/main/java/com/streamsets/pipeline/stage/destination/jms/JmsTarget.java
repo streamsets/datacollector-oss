@@ -22,7 +22,7 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
+import com.streamsets.pipeline.lib.jms.config.connection.SecurityPropertyBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +38,6 @@ public class JmsTarget extends BaseTarget {
   private static final String JMS_TARGET_DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
   private static final String JMS_TARGET_CONFIG_INITIAL_CTX_FACTORY = "jmsTargetConfig.initialContextFactory";
 
-  private final CredentialsConfig credentialsConfig;
   private final JmsTargetConfig jmsTargetConfig;
   private final JmsMessageProducerFactory jmsMessageProducerFactory;
   private final InitialContextFactory initialContextFactory;
@@ -47,12 +46,10 @@ public class JmsTarget extends BaseTarget {
   private int messagesSent;
 
   public JmsTarget(
-      CredentialsConfig credentialsConfig,
       JmsTargetConfig jmsTargetConfig,
       JmsMessageProducerFactory jmsMessageProducerFactory,
       InitialContextFactory initialContextFactory)
   {
-    this.credentialsConfig = credentialsConfig;
     this.jmsTargetConfig = jmsTargetConfig;
     this.jmsMessageProducerFactory = jmsMessageProducerFactory;
     this.initialContextFactory = initialContextFactory;
@@ -66,20 +63,26 @@ public class JmsTarget extends BaseTarget {
 
     try {
       Properties contextProperties = new Properties();
-      contextProperties.setProperty(javax.naming.Context.INITIAL_CONTEXT_FACTORY, jmsTargetConfig.initialContextFactory);
-      contextProperties.setProperty(javax.naming.Context.PROVIDER_URL, jmsTargetConfig.providerURL);
-      if (jmsTargetConfig.initialContextFactory.toLowerCase(Locale.ENGLISH).contains("oracle")) {
-        contextProperties.setProperty("db_url", jmsTargetConfig.providerURL); // workaround for SDC-2068
+      contextProperties.setProperty(
+          javax.naming.Context.INITIAL_CONTEXT_FACTORY,
+          jmsTargetConfig.connection.initialContextFactory
+      );
+      contextProperties.setProperty(javax.naming.Context.PROVIDER_URL, jmsTargetConfig.connection.providerURL);
+      if (jmsTargetConfig.connection.initialContextFactory.toLowerCase(Locale.ENGLISH).contains("oracle")) {
+        contextProperties.setProperty("db_url", jmsTargetConfig.connection.providerURL); // workaround for SDC-2068
       }
       contextProperties.putAll(jmsTargetConfig.contextProperties);
+      for (SecurityPropertyBean props : jmsTargetConfig.connection.additionalSecurityProps) {
+        contextProperties.put(props.key, props.value.get());
+      }
 
       initialContext = initialContextFactory.create(contextProperties);
     } catch (NamingException ex) {
       LOG.info(
           Utils.format(
               JmsErrors.JMS_00.getMessage(),
-              jmsTargetConfig.initialContextFactory,
-              jmsTargetConfig.providerURL,
+              jmsTargetConfig.connection.initialContextFactory,
+              jmsTargetConfig.connection.providerURL,
               ex.toString()
           ),
           ex
@@ -89,26 +92,29 @@ public class JmsTarget extends BaseTarget {
               JmsGroups.JMS.name(),
               JMS_TARGET_CONFIG_INITIAL_CTX_FACTORY,
               JmsErrors.JMS_00,
-              jmsTargetConfig.initialContextFactory,
-              jmsTargetConfig.providerURL,
+              jmsTargetConfig.connection.initialContextFactory,
+              jmsTargetConfig.connection.providerURL,
               ex.toString()
           )
       );
     }
     if(issues.isEmpty()) {
       try {
-        connectionFactory = (ConnectionFactory) initialContext.lookup(jmsTargetConfig.connectionFactory);
+        connectionFactory = (ConnectionFactory) initialContext.lookup(jmsTargetConfig.connection.connectionFactory);
       } catch (NamingException ex) {
-        LOG.info(Utils.format(JmsErrors.JMS_01.getMessage(), jmsTargetConfig.initialContextFactory, ex.toString()), ex);
+        LOG.info(
+            Utils.format(JmsErrors.JMS_01.getMessage(),
+                jmsTargetConfig.connection.initialContextFactory,
+                ex.toString()
+            ), ex);
         issues.add(getContext().createConfigIssue(JmsGroups.JMS.name(), JMS_TARGET_CONFIG_INITIAL_CTX_FACTORY, JmsErrors.JMS_01,
-            jmsTargetConfig.connectionFactory, ex.toString()));
+            jmsTargetConfig.connection.connectionFactory, ex.toString()));
       }
     }
     if(issues.isEmpty()) {
       jmsMessageProducer = jmsMessageProducerFactory.create(
           initialContext,
           connectionFactory,
-          credentialsConfig,
           jmsTargetConfig,
           getContext()
       );

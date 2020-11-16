@@ -16,44 +16,38 @@
 package com.streamsets.pipeline.lib.jms.config;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.jms.config.connection.JmsConnection;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class BaseJmsConfig {
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JMS Initial Context Factory",
-      description = "ActiveMQ example: org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "JMS"
-  )
-  public String initialContextFactory;
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JNDI Connection Factory",
-      description = "ActiveMQ example: ConnectionFactory",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "JMS"
+      type = ConfigDef.Type.MODEL,
+      connectionType = JmsConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "JMS",
+      displayPosition = -500
   )
-  public String connectionFactory;
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "JMS Provider URL",
-      description = "ActiveMQ example: tcp://mqserver:61616",
-      displayPosition = 30,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "JMS"
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
   )
-  public String providerURL;
+  public JmsConnection connection;
 
   @ConfigDef(
       required = false,
@@ -79,7 +73,7 @@ public class BaseJmsConfig {
       group = "JMS"
 )
   public Boolean useClientID = false;
-  
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,

@@ -28,12 +28,11 @@ import com.streamsets.pipeline.api.service.ServiceDependency;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatParserService;
 import com.streamsets.pipeline.lib.jms.config.InitialContextFactory;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 import com.streamsets.pipeline.stage.origin.lib.MessageConfig;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "JMS Consumer",
     description = "Reads data from a JMS source.",
     icon = "jms.png",
@@ -57,9 +56,6 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
   public BasicConfig basicConfig;
 
   @ConfigDefBean(groups = {"JMS"})
-  public CredentialsConfig credentialsConfig;
-
-  @ConfigDefBean(groups = {"JMS"})
   public MessageConfig messageConfig;
 
   @ConfigDefBean
@@ -67,7 +63,7 @@ public class JmsDSource extends DSourceOffsetCommitter implements ErrorListener 
 
   @Override
   protected Source createSource() {
-    return new JmsSource(basicConfig, credentialsConfig, jmsConfig,
+    return new JmsSource(basicConfig, jmsConfig,
       new JmsMessageConsumerFactoryImpl(), new JmsMessageConverterImpl(messageConfig),
       new InitialContextFactory());
   }

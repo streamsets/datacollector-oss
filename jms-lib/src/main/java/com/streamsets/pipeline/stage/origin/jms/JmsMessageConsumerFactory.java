@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jms;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
 import javax.jms.ConnectionFactory;
@@ -24,6 +23,5 @@ import javax.naming.InitialContext;
 public interface JmsMessageConsumerFactory {
 
   JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
+                         BasicConfig basicConfig, JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter);
 }

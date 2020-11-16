@@ -32,7 +32,6 @@ import com.streamsets.pipeline.api.service.dataformats.DataGenerator;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jms.config.JmsErrors;
 import com.streamsets.pipeline.lib.jms.config.JmsGroups;
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.slf4j.Logger;
@@ -62,7 +61,6 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   private static final String CONN_FACTORY_CONFIG_NAME = "jmsTargetConfig.connectionFactory";
   private final InitialContext initialContext;
   private final ConnectionFactory connectionFactory;
-  private final CredentialsConfig credentialsConfig;
   private final JmsTargetConfig jmsTargetConfig;
   private final Stage.Context context;
   private final DataFormatGeneratorService generatorService;
@@ -76,13 +74,11 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   public JmsMessageProducerImpl(
     InitialContext initialContext,
     ConnectionFactory connectionFactory,
-    CredentialsConfig credentialsConfig,
     JmsTargetConfig jmsTargetConfig,
     Stage.Context context
   ) {
     this.initialContext = initialContext;
     this.connectionFactory = connectionFactory;
-    this.credentialsConfig = credentialsConfig;
     this.jmsTargetConfig = jmsTargetConfig;
     this.context = context;
     this.generatorService = context.getService(DataFormatGeneratorService.class);
@@ -92,13 +88,16 @@ public class JmsMessageProducerImpl implements JmsMessageProducer {
   public List<Stage.ConfigIssue> init(Target.Context context) {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     try {
-      if(credentialsConfig.useCredentials) {
-        connection = connectionFactory.createConnection(credentialsConfig.username.get(), credentialsConfig.password.get());
+      if(jmsTargetConfig.connection.useCredentials) {
+        connection = connectionFactory.createConnection(
+            jmsTargetConfig.connection.username.get(),
+            jmsTargetConfig.connection.password.get()
+        );
       } else {
         connection = connectionFactory.createConnection();
       }
     } catch (JMSException|StageException ex) {
-      if (credentialsConfig.useCredentials) {
+      if (jmsTargetConfig.connection.useCredentials) {
         issues.add(context.createConfigIssue(
             JmsGroups.JMS.name(),
             CONN_FACTORY_CONFIG_NAME,

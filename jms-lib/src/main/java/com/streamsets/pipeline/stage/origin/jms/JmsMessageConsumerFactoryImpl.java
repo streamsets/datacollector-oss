@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.stage.origin.jms;
 
-import com.streamsets.pipeline.stage.common.CredentialsConfig;
 import com.streamsets.pipeline.stage.origin.lib.BasicConfig;
 
 import javax.jms.ConnectionFactory;
@@ -25,9 +24,7 @@ public class JmsMessageConsumerFactoryImpl implements JmsMessageConsumerFactory 
 
   @Override
   public JmsMessageConsumer create(InitialContext initialContext, ConnectionFactory connectionFactory,
-                         BasicConfig basicConfig, CredentialsConfig credentialsConfig,
-                         JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter) {
-    return new JmsMessageConsumerImpl(initialContext, connectionFactory, basicConfig, credentialsConfig,
-        jmsConfig, jmsMessageConverter);
+                         BasicConfig basicConfig, JmsSourceConfig jmsConfig, JmsMessageConverter jmsMessageConverter) {
+    return new JmsMessageConsumerImpl(initialContext, connectionFactory, basicConfig, jmsConfig, jmsMessageConverter);
   }
 }

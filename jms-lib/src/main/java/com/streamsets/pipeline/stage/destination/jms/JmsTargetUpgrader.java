@@ -20,7 +20,9 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.api.service.dataformats.DataFormatGeneratorService;
+import com.streamsets.pipeline.lib.jms.config.connection.SecurityPropertyBean;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,7 +32,16 @@ public class JmsTargetUpgrader implements StageUpgrader {
     switch (context.getFromVersion()) {
       case 1:
         upgradeV1ToV2(configs, context);
-        break;
+        if (context.getToVersion() == 2) {
+          break;
+        }
+        // fall through
+      case 2:
+        upgradeV2toV3(configs, context);
+        if (context.getToVersion() == 3) {
+          break;
+        }
+        // fall through
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
@@ -56,5 +67,49 @@ public class JmsTargetUpgrader implements StageUpgrader {
 
     // And finally register new service
     context.registerService(DataFormatGeneratorService.class, dataFormatConfigs);
+  }
+
+  /**
+   * Adding connection catalog.
+   */
+  private void upgradeV2toV3(List<Config> configs, Context context) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "jmsTargetConfig.initialContextFactory":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.initialContextFactory", config.getValue()));
+          break;
+        case "jmsTargetConfig.connectionFactory":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.connectionFactory", config.getValue()));
+          break;
+        case "jmsTargetConfig.providerURL":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.providerURL", config.getValue()));
+          break;
+        case "credentialsConfig.useCredentials":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.useCredentials", config.getValue()));
+          break;
+        case "credentialsConfig.username":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.username", config.getValue()));
+          break;
+        case "credentialsConfig.password":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsTargetConfig.connection.password", config.getValue()));
+          break;
+        default:
+          break;
+      }
+    }
+
+    configs.add(new Config("jmsTargetConfig.connection.additionalSecurityProps", null));
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }

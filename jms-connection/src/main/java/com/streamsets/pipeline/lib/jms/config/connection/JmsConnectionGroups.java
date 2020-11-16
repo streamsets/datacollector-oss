@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.destination.jms;
 
-import com.streamsets.pipeline.api.Stage;
+package com.streamsets.pipeline.lib.jms.config.connection;
 
-import javax.jms.ConnectionFactory;
-import javax.naming.InitialContext;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-/**
- * Implementations of this interface will provide a new instance of JmsMessageProducer
- */
-public interface JmsMessageProducerFactory {
+@GenerateResourceBundle
+public enum JmsConnectionGroups implements Label {
+  JMS("JMS"),
+  CREDENTIALS("Credentials"),
+  ;
 
-  JmsMessageProducer create(
-      InitialContext initialContext,
-      ConnectionFactory connectionFactory,
-      JmsTargetConfig jmsTargetConfig,
-      Stage.Context context
-  );
+  private final String label;
+
+  JmsConnectionGroups(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return this.label;
+  }
 }

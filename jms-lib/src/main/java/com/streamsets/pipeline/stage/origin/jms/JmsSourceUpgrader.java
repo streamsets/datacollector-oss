@@ -62,7 +62,16 @@ public class JmsSourceUpgrader implements StageUpgrader {
         // fall through
       case 6:
         upgradeV6ToV7(configs);
-        break;
+        if (context.getToVersion() == 7) {
+          break;
+        }
+        // fall through
+      case 7:
+        upgradeV7toV8(configs, context);
+        if (context.getToVersion() == 8) {
+          break;
+        }
+        // fall through
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
@@ -115,5 +124,49 @@ public class JmsSourceUpgrader implements StageUpgrader {
     configs.add(new Config("jmsConfig.clientID", null));
     configs.add(new Config("jmsConfig.durableSubscription", false));
     configs.add(new Config("jmsConfig.durableSubscriptionName", null));
+  }
+
+  /**
+   * Adding connection catalog.
+   */
+  private void upgradeV7toV8(List<Config> configs, Context context) {
+    List<Config> configsToRemove = new ArrayList<>();
+    List<Config> configsToAdd = new ArrayList<>();
+
+    for (Config config : configs) {
+      switch (config.getName()) {
+        case "jmsConfig.initialContextFactory":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.initialContextFactory", config.getValue()));
+          break;
+        case "jmsConfig.connectionFactory":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.connectionFactory", config.getValue()));
+          break;
+        case "jmsConfig.providerURL":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.providerURL", config.getValue()));
+          break;
+        case "credentialsConfig.useCredentials":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.useCredentials", config.getValue()));
+          break;
+        case "credentialsConfig.username":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.username", config.getValue()));
+          break;
+        case "credentialsConfig.password":
+          configsToRemove.add(config);
+          configsToAdd.add(new Config("jmsConfig.connection.password", config.getValue()));
+          break;
+        default:
+          break;
+      }
+    }
+
+    configs.add(new Config("jmsConfig.connection.additionalSecurityProps", null));
+
+    configs.removeAll(configsToRemove);
+    configs.addAll(configsToAdd);
   }
 }
