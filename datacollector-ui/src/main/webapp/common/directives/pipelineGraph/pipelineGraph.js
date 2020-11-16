@@ -616,8 +616,14 @@ angular.module('pipelineGraphDirectives', [])
         stageErrorCounts = graph.previewStageErrorCounts;
       }
 
+      var uniqueEdges = new Set();
       thisGraph.paths = thisGraph.paths.data(thisGraph.edges, function(d){
-        return String(d.source.instanceName) + '+' + String(d.target.instanceName);
+        var edgeName = String(d.source.instanceName) + '+' + String(d.target.instanceName);
+        if (uniqueEdges.has(edgeName)) {
+          console.error('Duplicate edge found: ', edgeName);
+        }
+        uniqueEdges.add(edgeName);
+        return edgeName;
       });
 
       // update existing nodes
