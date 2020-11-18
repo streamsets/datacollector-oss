@@ -37,8 +37,6 @@ import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -130,8 +128,7 @@ public class TestCredentialStoresTaskImpl {
     Mockito.when(libraryDef.getName()).thenReturn("lib");
     CredentialStoreDefinition storeDef =
         CredentialStoreDefinitionExtractor.get().extract(libraryDef, MyCredentialStore.class);
-    ClassLoader cl = new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
-    Mockito.when(libraryDef.getClassLoader()).thenReturn(cl);
+
 
     Configuration conf = new Configuration();
     conf.set("credentialStores", "id");
@@ -147,18 +144,18 @@ public class TestCredentialStoresTaskImpl {
     Assert.assertEquals(1, storeTask.getConfiguredStoreDefinititions().size());
     Assert.assertTrue(store instanceof ClassloaderInContextCredentialStore);
 
-    GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("g", "n", "o").get());
+    GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("g", "n", "o"));
 
     // enforcing Fail
     try {
-      GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("h", "n", "o").get());
+      GroupsInScope.execute(ImmutableSet.of("g"), () -> store.get("h", "n", "o"));
       Assert.fail();
     } catch (Exception ex) {
       Assert.assertTrue("Got " + ex.getClass().getName(), ex instanceof StageException);
     }
 
     // not enforcing
-    GroupsInScope.executeIgnoreGroups(() -> store.get("g", "n", "o").get());
+    GroupsInScope.executeIgnoreGroups(() -> store.get("g", "n", "o"));
 
     storeTask.stopTask();
   }
