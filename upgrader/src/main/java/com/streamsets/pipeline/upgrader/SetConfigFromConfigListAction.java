@@ -31,6 +31,7 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
   private String elementName;
   private String listName;
   private boolean deleteFieldInList;
+  private boolean elementMustExist;
 
   public SetConfigFromConfigListAction(Function<T, ConfigsAdapter> wrapper) {
     super(wrapper);
@@ -44,6 +45,7 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
     Utils.checkNotNull(getListName(), "listName");
     Utils.checkNotNull(getElementName(), "elementName");
     Utils.checkNotNull(mustDeleteFieldInList(), "deleteFieldInList");
+    Utils.checkNotNull(elementMustExist(), "elementMustExist");
 
     ConfigsAdapter configsAdapter = wrap(configs);
     ConfigsAdapter.Pair configListPair = configsAdapter.find(getListName());
@@ -58,19 +60,22 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
         configsInList.stream().filter(pair -> pair.getName().equals(getElementName())).findFirst();
 
     if(!pairWithConfigOptional.isPresent()) {
-      throw new StageException(Errors.YAML_UPGRADER_03, Utils.format("{} within list {}", getElementName(),
-          getListName()));
+      if(elementMustExist) {
+        throw new StageException(Errors.YAML_UPGRADER_03,
+            Utils.format("{} within list {}", getElementName(), getListName())
+        );
+      }
     }
+    else {
+      Config pairWithConfig = (Config) pairWithConfigOptional.get();
 
-    Config pairWithConfig = (Config) pairWithConfigOptional.get();
+      configsAdapter.set(getName(), pairWithConfig.getValue());
 
-    configsAdapter.set(getName(), pairWithConfig.getValue());
-
-    if(mustDeleteFieldInList()) {
-      configsInList.remove(pairWithConfig);
-      configsAdapter.set(getListName(), configsInList);
+      if (mustDeleteFieldInList()) {
+        configsInList.remove(pairWithConfig);
+        configsAdapter.set(getListName(), configsInList);
+      }
     }
-
   }
 
 
@@ -99,6 +104,15 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
 
   public SetConfigFromConfigListAction<T> setListName(String listName) {
     this.listName = listName;
+    return this;
+  }
+
+  public boolean elementMustExist() {
+    return elementMustExist;
+  }
+
+  public SetConfigFromConfigListAction<T> setElementMustExist(boolean elementMustExist) {
+    this.elementMustExist = elementMustExist;
     return this;
   }
 }

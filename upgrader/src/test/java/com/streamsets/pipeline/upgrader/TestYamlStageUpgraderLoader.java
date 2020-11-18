@@ -18,6 +18,7 @@ package com.streamsets.pipeline.upgrader;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.testing.pipeline.stage.TestUpgraderContext;
 import org.junit.Assert;
 import org.junit.Test;
@@ -547,6 +548,49 @@ public class TestYamlStageUpgraderLoader {
     Assert.assertEquals("content", newField.getValue());
 
   }
+
+  @Test(expected = StageException.class)
+  public void testSetConfigFromConfigListAction_ElementDoesNotExistAndMustExist() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+
+    List<Config> listOfConfigs = new ArrayList<>();
+
+    configs.add(
+        new Config(
+            "list",
+            listOfConfigs
+        )
+    );
+
+    upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 13, 14));
+
+  }
+
+  @Test
+  public void testSetConfigFromConfigListAction_ElementDoesNotExistAndNoNeedToExist() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+
+    List<Config> listOfConfigs = new ArrayList<>();
+
+    configs.add(
+        new Config(
+            "list",
+            listOfConfigs
+        )
+    );
+
+    upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 14, 15));
+
+  }
+
 
 
 }

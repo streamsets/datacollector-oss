@@ -283,6 +283,7 @@ public class YamlStageUpgraderLoader {
     String listName = (String) map.get("listName");
     String elementName = (String) map.get("elementName");
     boolean deleteFieldInList = (Boolean) map.get("deleteFieldInList");
+    boolean elementMustExist = (Boolean) map.get("elementMustExist");
     SetConfigFromConfigListAction action = new SetConfigFromConfigListAction(wrapper);
     action.setName(name);
     action.setListName(listName);

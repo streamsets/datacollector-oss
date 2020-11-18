@@ -400,15 +400,35 @@ upgrades:
 - toVersion: 12
   actions:
     - setConfigFromConfigList:
-        name: list
+        name: fieldName
+        listName: list
         elementName: element
-        fieldName: fieldName
+        elementMustExist: true
         deleteFieldInList: true
 
 - toVersion: 13
   actions:
     - setConfigFromConfigList:
-        name: list
+        name: fieldName
+        listName: list
         elementName: element
-        fieldName: fieldName
+        elementMustExist: true
+        deleteFieldInList: false
+
+- toVersion: 14
+  actions:
+    - setConfigFromConfigList:
+        name: fieldName
+        listName: listName
+        elementName: element
+        elementMustExist: true
+        deleteFieldInList: false
+
+- toVersion: 15
+  actions:
+    - setConfigFromConfigList:
+        name: fieldName
+        listName: list
+        elementName: element
+        elementMustExist: true
         deleteFieldInList: false
