@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.Config;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -109,6 +110,8 @@ public class YamlStageUpgraderLoader {
       action = parseRegisterService(wrapper, map);
     } else if (map.containsKey("setConfigFromStringMap")) {
       action = parseSetConfigFromStringMapAction(wrapper, map);
+    } else if (map.containsKey("setConfigFromConfigList")) {
+      action = parseSetConfigFromConfigListAction(wrapper, map);
     } else {
       throw new StageException(Errors.YAML_UPGRADER_08, toVersion, stageName, resource);
     }
@@ -268,6 +271,23 @@ public class YamlStageUpgraderLoader {
     action.setName(name);
     action.setMapName(mapName);
     action.setKey(key);
+    return action;
+  }
+
+  SetConfigFromConfigListAction parseSetConfigFromConfigListAction(
+      Function<?, UpgraderAction.ConfigsAdapter> wrapper,
+      Map<String, Object> map
+  ) {
+    map = (Map) map.get("setConfigFromConfigList");
+    String name = (String) map.get("name");
+    String listName = (String) map.get("listName");
+    String elementName = (String) map.get("elementName");
+    boolean deleteFieldInList = (Boolean) map.get("deleteFieldInList");
+    SetConfigFromConfigListAction action = new SetConfigFromConfigListAction(wrapper);
+    action.setName(name);
+    action.setListName(listName);
+    action.setElementName(elementName);
+    action.setDeleteFieldInList(deleteFieldInList);
     return action;
   }
 

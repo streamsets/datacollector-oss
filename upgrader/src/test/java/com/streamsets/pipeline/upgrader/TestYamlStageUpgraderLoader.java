@@ -459,4 +459,94 @@ public class TestYamlStageUpgraderLoader {
     Assert.assertNotNull(upgradeContext.getRegisteredServices().get(Service3.class));
     Assert.assertEquals(0, upgradeContext.getRegisteredServices().get(Service3.class).size());
   }
+
+  @Test
+  public void testSetConfigFromConfigListAction_DeleteAfterInsertion() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+
+    List<Config> listOfConfigs = new ArrayList<Config>() {
+      {
+        add(
+            new Config(
+                "element",
+                "content"
+            )
+        );
+      }
+    };
+
+    configs.add(
+        new Config(
+            "list",
+            listOfConfigs
+        )
+    );
+
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 11, 12));
+
+    Assert.assertEquals(2, configs.size());
+
+    Config newListOfConfigs = configs.get(0);
+
+    Assert.assertTrue(newListOfConfigs.getValue() instanceof List);
+    Assert.assertTrue(((List) newListOfConfigs.getValue()).isEmpty());
+
+    Config newField = configs.get(1);
+
+    Assert.assertEquals("fieldName", newField.getName());
+    Assert.assertEquals("content", newField.getValue());
+
+  }
+
+  @Test
+  public void testSetConfigFromConfigListAction_DoNotDeleteAfterInsertion() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+
+    List<Config> listOfConfigs = new ArrayList<Config>() {
+      {
+        add(
+            new Config(
+                "element",
+                "content"
+            )
+        );
+      }
+    };
+
+    configs.add(
+        new Config(
+            "list",
+            listOfConfigs
+        )
+    );
+
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 12, 13));
+
+    Assert.assertEquals(2, configs.size());
+
+    Config newListOfConfigs = configs.get(0);
+
+    Assert.assertTrue(newListOfConfigs.getValue() instanceof List);
+    Assert.assertEquals(1, ((List) newListOfConfigs.getValue()).size());
+    Config configInsideList = (Config) ((List) newListOfConfigs.getValue()).get(0);
+    Assert.assertEquals("element", configInsideList.getName());
+    Assert.assertEquals("content", configInsideList.getValue());
+    Assert.assertFalse(((List) newListOfConfigs.getValue()).isEmpty());
+
+    Config newField = configs.get(1);
+
+    Assert.assertEquals("fieldName", newField.getName());
+    Assert.assertEquals("content", newField.getValue());
+
+  }
+
+
 }

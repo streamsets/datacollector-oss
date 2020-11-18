@@ -396,3 +396,19 @@ upgrades:
         ifOldValueMatches: http://testurl.notspecial.com/(.*)/endpoint
         newValueFromMatchIndex: 2
         elseNewValue: should-return-else-value
+
+- toVersion: 12
+  actions:
+    - setConfigFromConfigList:
+        name: list
+        elementName: element
+        fieldName: fieldName
+        deleteFieldInList: true
+
+- toVersion: 13
+  actions:
+    - setConfigFromConfigList:
+        name: list
+        elementName: element
+        fieldName: fieldName
+        deleteFieldInList: false
