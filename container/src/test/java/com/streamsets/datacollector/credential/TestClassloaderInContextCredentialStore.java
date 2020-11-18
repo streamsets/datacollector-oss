@@ -50,10 +50,8 @@ public class TestClassloaderInContextCredentialStore {
 
     @Override
     public CredentialValue get(String group, String name, String credentialStoreOptions) throws StageException {
-      return () -> {
-        Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
-        return "credential";
-      };
+      Assert.assertEquals(expectedClassLoader, Thread.currentThread().getContextClassLoader());
+      return () -> "credential";
     }
 
     @Override
