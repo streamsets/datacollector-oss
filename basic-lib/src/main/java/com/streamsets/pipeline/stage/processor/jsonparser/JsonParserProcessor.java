@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.api.base.SingleLaneRecordProcessor;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.api.ext.json.Mode;
+import com.streamsets.pipeline.api.impl.TypeSupportConversionException;
 import com.streamsets.pipeline.lib.parser.json.JsonCharDataParser;
 
 import java.io.IOException;
@@ -45,7 +46,12 @@ public class JsonParserProcessor extends SingleLaneRecordProcessor {
     if (field == null) {
       throw new OnRecordErrorException(Errors.JSONP_00, record.getHeader().getSourceId(), fieldPathToParse);
     } else {
-      String value = field.getValueAsString();
+      String value = null;
+      try {
+        value = field.getValueAsString();
+      } catch (final TypeSupportConversionException ex) {
+        throw new OnRecordErrorException(record, ex.errorCode, ex.params);
+      }
       if (value == null) {
         throw new OnRecordErrorException(Errors.JSONP_01, record.getHeader().getSourceId(), fieldPathToParse);
       }
