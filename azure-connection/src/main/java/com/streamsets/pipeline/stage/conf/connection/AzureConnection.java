@@ -67,7 +67,7 @@ public abstract class AzureConnection {
       displayPosition = 5,
       group = "#0",
       dependsOn = "authMethod",
-      triggeredByValue = {"CLIENT", "MSI"}
+      triggeredByValue = "CLIENT"
   )
   public CredentialValue clientId;
 
@@ -79,7 +79,8 @@ public abstract class AzureConnection {
       displayPosition = 6,
       group = "#0",
       dependsOn = "authMethod",
-      triggeredByValue = {"CLIENT", "MSI"})
+      triggeredByValue = "CLIENT"
+  )
   public CredentialValue tenantId;
 
   @ConfigDef(required = true,
@@ -90,7 +91,8 @@ public abstract class AzureConnection {
       displayPosition = 7,
       group = "#0",
       dependsOn = "authMethod",
-      triggeredByValue = "CLIENT")
+      triggeredByValue = "CLIENT"
+  )
   public CredentialValue clientKey;
 
   @ConfigDef(required = true,
@@ -101,6 +103,7 @@ public abstract class AzureConnection {
       displayPosition = 7,
       group = "#0",
       dependsOn = "authMethod",
-      triggeredByValue = "SHARED_KEY")
+      triggeredByValue = "SHARED_KEY"
+  )
   public CredentialValue accountKey;
 }

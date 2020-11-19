@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.Label;
 
 public enum OAuthProviderType implements Label {
   CLIENT("OAuth with Service Principal", "org.apache.hadoop.fs.azurebfs.oauth2.ClientCredsTokenProvider"),
-  MSI("Managed Service Identity", "org.apache.hadoop.fs.azurebfs.oauth2.MsiTokenProvider"),
   SHARED_KEY("Shared Key", ""),
   ;
 

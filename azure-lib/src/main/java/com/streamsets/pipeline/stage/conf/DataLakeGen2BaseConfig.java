@@ -130,25 +130,6 @@ public class DataLakeGen2BaseConfig {
         ));
         break;
 
-      case MSI:
-        hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_PROPERTY_NAME,
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_DEFAULT_VALUE
-        ));
-        hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_TOKEN_PROVIDER_TYPE_PROPERTY_NAME,
-            this.connection.authMethod.getOAuthTypeClass()
-        ));
-        hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(
-           ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_MSI_TENANT,
-           this.connection.tenantId
-        ));
-        hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ID,
-            this.connection.clientId
-        ));
-        break;
-
       case SHARED_KEY:
         hdfsBaseConfigBean.hdfsConfigs.add(new HadoopConfigBean(
             String.format(FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME, accountFQDNString),

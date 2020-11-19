@@ -167,30 +167,6 @@ public class DataLakeGen2MetadataConfig {
         );
         break;
 
-      case MSI:
-        hdfsConfigs.put(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_PROPERTY_NAME,
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_AUTH_TYPE_DEFAULT_VALUE
-        );
-        hdfsConfigs.put(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_TOKEN_PROVIDER_TYPE_PROPERTY_NAME,
-            this.connection.authMethod.getOAuthTypeClass()
-        );
-        hdfsConfigs.put(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_MSI_TENANT,
-            tenantIdString
-        );
-        hdfsConfigs.put(
-            ADLSGen2Properties.FS_AZURE_ACCOUNT_OAUTH_CLIENT_ID,
-            resolveCredentialValue(
-                context,
-                this.connection.clientId,
-                ADLS_CONFIG_CLIENT_ID,
-                issues
-            )
-        );
-        break;
-
       case SHARED_KEY:
         hdfsConfigs.put(
             String.format(FS_AZURE_ACCOUNT_SHARED_KEY_PROPERTY_NAME, accountFQDNString),
