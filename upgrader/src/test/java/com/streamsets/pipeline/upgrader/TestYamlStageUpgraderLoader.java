@@ -26,6 +26,7 @@ import org.junit.Test;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -469,13 +470,15 @@ public class TestYamlStageUpgraderLoader {
 
     List<Config> configs = new ArrayList<>();
 
-    List<Config> listOfConfigs = new ArrayList<Config>() {
+    List<Map<String, String>> listOfConfigs = new ArrayList<Map<String, String>>() {
       {
         add(
-            new Config(
-                "element",
-                "content"
-            )
+            new HashMap<String, String>() {
+              {
+                put("name", "element");
+                put("value", "content");
+              }
+            }
         );
       }
     };
@@ -511,13 +514,15 @@ public class TestYamlStageUpgraderLoader {
 
     List<Config> configs = new ArrayList<>();
 
-    List<Config> listOfConfigs = new ArrayList<Config>() {
+    List<Map<String, String>> listOfConfigs = new ArrayList<Map<String, String>>() {
       {
         add(
-            new Config(
-                "element",
-                "content"
-            )
+            new HashMap<String, String>() {
+              {
+                put("name", "element");
+                put("value", "content");
+              }
+            }
         );
       }
     };
@@ -537,9 +542,11 @@ public class TestYamlStageUpgraderLoader {
 
     Assert.assertTrue(newListOfConfigs.getValue() instanceof List);
     Assert.assertEquals(1, ((List) newListOfConfigs.getValue()).size());
-    Config configInsideList = (Config) ((List) newListOfConfigs.getValue()).get(0);
-    Assert.assertEquals("element", configInsideList.getName());
-    Assert.assertEquals("content", configInsideList.getValue());
+    List<Map> configInsideList = (List) newListOfConfigs.getValue();
+    Assert.assertEquals(1, configInsideList.size());
+    Map<String, String> firstConfig = configInsideList.get(0);
+    Assert.assertEquals("element", firstConfig.get("name"));
+    Assert.assertEquals("content", firstConfig.get("value"));
     Assert.assertFalse(((List) newListOfConfigs.getValue()).isEmpty());
 
     Config newField = configs.get(1);
@@ -578,7 +585,7 @@ public class TestYamlStageUpgraderLoader {
 
     List<Config> configs = new ArrayList<>();
 
-    List<Config> listOfConfigs = new ArrayList<>();
+    List<Map<String, String>> listOfConfigs = new ArrayList<>();
 
     configs.add(
         new Config(

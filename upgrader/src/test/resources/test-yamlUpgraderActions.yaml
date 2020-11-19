@@ -430,5 +430,5 @@ upgrades:
         name: fieldName
         listName: list
         elementName: element
-        elementMustExist: true
+        elementMustExist: false
         deleteFieldInList: false

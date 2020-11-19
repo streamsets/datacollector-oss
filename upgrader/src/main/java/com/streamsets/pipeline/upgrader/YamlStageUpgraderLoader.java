@@ -289,6 +289,7 @@ public class YamlStageUpgraderLoader {
     action.setListName(listName);
     action.setElementName(elementName);
     action.setDeleteFieldInList(deleteFieldInList);
+    action.setElementMustExist(elementMustExist);
     return action;
   }
 

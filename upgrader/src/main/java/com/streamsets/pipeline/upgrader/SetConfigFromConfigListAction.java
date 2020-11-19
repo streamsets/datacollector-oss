@@ -54,27 +54,29 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
       throw new StageException(Errors.YAML_UPGRADER_03, getListName());
     }
 
-    List<Config> configsInList = (List) configListPair.getValue();
+    List<Map<String, String>> configsInList = (List) configListPair.getValue();
 
-    Optional pairWithConfigOptional =
-        configsInList.stream().filter(pair -> pair.getName().equals(getElementName())).findFirst();
+    boolean found = false;
+    Map<String, String> mapContainingKey = null;
 
-    if(!pairWithConfigOptional.isPresent()) {
-      if(elementMustExist) {
-        throw new StageException(Errors.YAML_UPGRADER_03,
-            Utils.format("{} within list {}", getElementName(), getListName())
-        );
+    for(Map<String, String> config: configsInList) {
+      found = config.get("name").equals(getElementName());
+      if(found) {
+        mapContainingKey = config;
+        configsAdapter.set(getName(), mapContainingKey.get("value"));
+        break;
       }
     }
-    else {
-      Config pairWithConfig = (Config) pairWithConfigOptional.get();
 
-      configsAdapter.set(getName(), pairWithConfig.getValue());
+    if(!found && elementMustExist()) {
+      throw new StageException(Errors.YAML_UPGRADER_03,
+          Utils.format("{} within list {}", getElementName(), getListName())
+      );
+    }
 
-      if (mustDeleteFieldInList()) {
-        configsInList.remove(pairWithConfig);
-        configsAdapter.set(getListName(), configsInList);
-      }
+    if(found && mustDeleteFieldInList()) {
+      configsInList.remove(mapContainingKey);
+      configsAdapter.set(getListName(), configsInList);
     }
   }
 
