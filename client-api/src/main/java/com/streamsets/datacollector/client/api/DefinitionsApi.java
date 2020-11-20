@@ -71,7 +71,7 @@ public class DefinitionsApi {
     byte[] postBinaryBody = null;
 
     // create path and map variables
-    String path = "/v1/definitions".replaceAll("\\{format\\}","json");
+    String path = "/v1/definitions";
 
     // query params
     List<Pair> queryParams = new ArrayList<Pair>();
