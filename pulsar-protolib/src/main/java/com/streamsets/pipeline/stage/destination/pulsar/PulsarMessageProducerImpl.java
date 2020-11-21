@@ -115,7 +115,6 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                        @Override
                                        public Producer load(String key) throws Exception {
                                          ProducerBuilder producerBuilder = pulsarClient.newProducer()
-                                                                       .properties(pulsarConfig.properties)
                                                                        .topic(key)
                                                                        .messageRoutingMode(pulsarConfig.partitionType
                                                                            .getMessageRoutingMode())
@@ -124,6 +123,9 @@ public class PulsarMessageProducerImpl implements PulsarMessageProducer {
                                                                        .compressionType(pulsarConfig.compressionType
                                                                            .getCompressionType())
                                                                        .blockIfQueueFull(true);
+                                         if(pulsarConfig.properties != null && !pulsarConfig.properties.isEmpty()) {
+                                           producerBuilder.properties(pulsarConfig.properties);
+                                         }
                                          if (pulsarConfig.asyncSend) {
                                            producerBuilder.maxPendingMessages(pulsarConfig.maxPendingMessages)
                                                           .enableBatching(pulsarConfig.enableBatching)

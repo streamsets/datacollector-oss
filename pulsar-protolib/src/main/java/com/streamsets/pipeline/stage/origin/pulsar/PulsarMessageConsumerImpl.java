@@ -83,7 +83,6 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
       // pulsar client
       pulsarClient = pulsarConfig.getClient();
       ConsumerBuilder consumerBuilder = pulsarClient.newConsumer()
-                                                    .properties(pulsarConfig.properties)
                                                     .subscriptionName(pulsarConfig.subscriptionName)
                                                     .consumerName(pulsarConfig.consumerName)
                                                     .receiverQueueSize(pulsarConfig.receiverQueueSize)
@@ -95,6 +94,9 @@ public class PulsarMessageConsumerImpl implements PulsarMessageConsumer {
                                                         .getSubscriptionInitialPosition())
                                                     .priorityLevel(pulsarConfig.priorityLevel);
 
+      if(pulsarConfig.properties != null && !pulsarConfig.properties.isEmpty()) {
+        consumerBuilder.properties(pulsarConfig.properties);
+      }
       if (!pulsarConfig.subscriptionType.equals(PulsarSubscriptionType.SHARED)) {
         consumerBuilder = consumerBuilder.readCompacted(pulsarConfig.readCompacted);
       }

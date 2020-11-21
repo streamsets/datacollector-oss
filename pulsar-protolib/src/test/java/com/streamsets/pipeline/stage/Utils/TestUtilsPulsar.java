@@ -32,6 +32,7 @@ import com.streamsets.pipeline.stage.origin.pulsar.PulsarSubscriptionType;
 import com.streamsets.pipeline.stage.origin.pulsar.PulsarTopicsSelector;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.impl.MessageImpl;
+import org.apache.pulsar.common.api.proto.PulsarApi;
 import org.apache.pulsar.shade.io.netty.buffer.Unpooled;
 
 import java.util.ArrayList;
@@ -163,7 +164,7 @@ public class TestUtilsPulsar {
   }
 
   public static Message getPulsarMessage(String messageId, byte[] payload) {
-    return new MessageImpl<byte[]>(messageId, messageId, new HashMap<>(), Unpooled.wrappedBuffer(payload), null);
+    return new MessageImpl<byte[]>(messageId, messageId, new HashMap<>(), Unpooled.wrappedBuffer(payload), null, PulsarApi.MessageMetadata.newBuilder());
   }
 
 }
