@@ -475,7 +475,7 @@ public class TestYamlStageUpgraderLoader {
         add(
             new HashMap<String, String>() {
               {
-                put("name", "element");
+                put("key", "element");
                 put("value", "content");
               }
             }
@@ -519,7 +519,7 @@ public class TestYamlStageUpgraderLoader {
         add(
             new HashMap<String, String>() {
               {
-                put("name", "element");
+                put("key", "element");
                 put("value", "content");
               }
             }
@@ -545,7 +545,7 @@ public class TestYamlStageUpgraderLoader {
     List<Map> configInsideList = (List) newListOfConfigs.getValue();
     Assert.assertEquals(1, configInsideList.size());
     Map<String, String> firstConfig = configInsideList.get(0);
-    Assert.assertEquals("element", firstConfig.get("name"));
+    Assert.assertEquals("element", firstConfig.get("key"));
     Assert.assertEquals("content", firstConfig.get("value"));
     Assert.assertFalse(((List) newListOfConfigs.getValue()).isEmpty());
 
