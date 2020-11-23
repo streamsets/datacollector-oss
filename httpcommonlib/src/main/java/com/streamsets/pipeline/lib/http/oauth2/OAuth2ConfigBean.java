@@ -522,6 +522,11 @@ public class OAuth2ConfigBean {
 
   public void reInit(Client webClient) throws AuthenticationFailureException, IOException, StageException { // NOSONAR
     filter.setShouldInsertHeader(false); // don't insert the header for requests to get new tokens.
+    if (credentialsGrantType == OAuth2GrantTypes.JWT) {
+      // Set current time in EL Vars to resolve EL correctly
+      TimeNowEL.setTimeNowInContext(elVars, new Date());
+      TimeEL.setCalendarInContext(elVars, Calendar.getInstance());
+    }
     try {
       String newToken = obtainAccessToken(webClient);
       filter.setAuthToken(parseAccessToken(newToken));

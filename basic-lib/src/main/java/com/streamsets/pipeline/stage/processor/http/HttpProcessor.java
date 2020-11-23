@@ -110,6 +110,7 @@ public class HttpProcessor extends SingleLaneProcessor {
   private boolean lastRequestTimedOut = false;
   private boolean haveMorePages;
   private boolean appliedRetryAction;
+  private boolean renewedToken;
 
   private ELVars resourceVars;
   private ELVars bodyVars;
@@ -358,7 +359,7 @@ public class HttpProcessor extends SingleLaneProcessor {
 
           completeRequest(record, future);
 
-          if (conf.pagination.mode != PaginationMode.NONE && !appliedRetryAction) {
+          if (conf.pagination.mode != PaginationMode.NONE && !appliedRetryAction && !renewedToken) {
             Record recordResp = recordsResponse.get(0);
             String resultFieldPath = conf.pagination.keepAllFields ? conf.pagination.resultFieldPath : "";
             List listResponse = (List) recordResp.get(resultFieldPath).getValue();
@@ -381,7 +382,7 @@ public class HttpProcessor extends SingleLaneProcessor {
             }
             // Pause between paging requests so we don't get rate limited.
             uninterrupted = ThreadUtil.sleep(conf.pagination.rateLimit);
-          } else {
+          } else if (!renewedToken) {
             currentRecord = getContext().createRecord("");
             currentRecord.set(Field.create(recordsResponse.stream().map(Record::get).collect(Collectors.toList())));
           }
@@ -432,13 +433,14 @@ public class HttpProcessor extends SingleLaneProcessor {
 
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
     boolean numRetriesExceed = action != null && (responseState.retryCount > action.getMaxNumRetries());
-    return waitTimeNotExp &&
+    return (waitTimeNotExp &&
         uninterrupted &&
         !lastRequestTimedOut &&
         !close &&
         conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
         (thereIsNextLink || !isLink || appliedRetryAction) &&
-        !numRetriesExceed;
+        !numRetriesExceed)
+        || renewedToken;
   }
 
 
@@ -724,6 +726,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       long start
   ) {
     appliedRetryAction = false;
+    renewedToken = false;
     ResponseState responseState;
 
     if (recordsToResponseState.containsKey(record)) {
@@ -747,6 +750,7 @@ public class HttpProcessor extends SingleLaneProcessor {
           (recordResponse.getStatus() == 403 || recordResponse.getStatus() == 401) &&
           !failOn403) {
         HttpStageUtil.getNewOAuth2Token(conf.client.oauth2, httpClientCommon.getClient());
+        renewedToken = true;
         return false;
       } else if (responseStatus < 200 || responseStatus >= 300) {
         resolvedRecords.remove(record);
