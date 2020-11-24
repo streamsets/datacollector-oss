@@ -938,4 +938,62 @@ public class TestMultithreadedTableProvider extends BaseMultithreadedTableProvid
     assertEquals(p5, p.getLastOwnedPartition());
     assertEquals(p5, r);
   }
+
+  @Test
+  public void testSharedPartitionQueueDoesNotChangeIfAllPartitionsBelongToTheOwnedTable() throws Exception {
+    // given
+    Map<String, TableContext> tableContextMap = new HashMap<>();
+    Queue<String> sortedTableOrder = new LinkedList<>();
+
+    Map<Integer, Integer> slots = new HashMap<>();
+    slots.put(0, 10);
+
+    MultithreadedTableProvider p = new MultithreadedTableProvider(tableContextMap,
+        sortedTableOrder,
+        slots,
+        1,
+        BatchTableStrategy.SWITCH_TABLES,
+        null
+    );
+    MultithreadedTableProvider provider = spy(p);
+
+    TableRuntimeContext p1 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p2 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p3 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p4 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p5 = mock(TableRuntimeContext.class);
+    TableRuntimeContext p6 = mock(TableRuntimeContext.class);
+
+    TableContext ta = mock(TableContext.class);
+
+    when(p1.getSourceTableContext()).thenReturn(ta);
+    when(p2.getSourceTableContext()).thenReturn(ta);
+    when(p3.getSourceTableContext()).thenReturn(ta);
+    when(p4.getSourceTableContext()).thenReturn(ta);
+    when(p5.getSourceTableContext()).thenReturn(ta);
+    when(p6.getSourceTableContext()).thenReturn(ta);
+
+    provider.getOwnedTablesQueue().offerLast(p1);
+
+    provider.getSharedAvailableTablesList().offerLast(p2);
+    provider.getSharedAvailableTablesList().offerLast(p3);
+    provider.getSharedAvailableTablesList().offerLast(p4);
+    provider.getSharedAvailableTablesList().offerLast(p5);
+    provider.getSharedAvailableTablesList().offerLast(p6);
+
+    when(provider.getLastOwnedPartition()).thenReturn(p1);
+
+    // when
+    TableRuntimeContext r = provider.nextTable(0);
+
+    // then:
+    // p1 is the last owned partition and other partitions belong to the same table.
+    // We expect we do not take any new partition to process
+    assertEquals(Collections.singletonList(p1), provider.getOwnedTablesQueue());
+    // And the shared queue stays unchanged
+    assertEquals(Arrays.asList(p2, p3, p4, p5, p6), provider.getSharedAvailableTablesList());
+    // The last owned partition should be the same as before
+    assertEquals(p1, p.getLastOwnedPartition());
+    assertEquals(p1, r);
+  }
 }
