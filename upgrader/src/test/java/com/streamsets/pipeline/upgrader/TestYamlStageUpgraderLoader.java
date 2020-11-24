@@ -563,9 +563,7 @@ public class TestYamlStageUpgraderLoader {
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
-
     List<Config> listOfConfigs = new ArrayList<>();
-
     configs.add(
         new Config(
             "list",
@@ -574,7 +572,6 @@ public class TestYamlStageUpgraderLoader {
     );
 
     upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 13, 14));
-
   }
 
   @Test
@@ -584,9 +581,7 @@ public class TestYamlStageUpgraderLoader {
     YamlStageUpgrader upgrader = loader.get();
 
     List<Config> configs = new ArrayList<>();
-
     List<Map<String, String>> listOfConfigs = new ArrayList<>();
-
     configs.add(
         new Config(
             "list",
@@ -595,9 +590,26 @@ public class TestYamlStageUpgraderLoader {
     );
 
     upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 14, 15));
-
   }
 
+  @Test
+  public void testSetConfigFromConfigListAction_EmptyMapProperty() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
 
+    List<Config> configs = new ArrayList<>();
+    List<Map<String, String>> listOfConfigs = new ArrayList<>();
+    Map<String, String> emptyProperty = new HashMap<>();
+    emptyProperty.put("", "");
+    listOfConfigs.add(emptyProperty);
+    configs.add(
+            new Config(
+                    "list",
+                    listOfConfigs
+            )
+    );
 
+    upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 14, 15));
+  }
 }

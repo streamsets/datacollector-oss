@@ -60,7 +60,7 @@ public class SetConfigFromConfigListAction<T> extends UpgraderAction<SetConfigFr
     Map<String, String> mapContainingKey = null;
 
     for(Map<String, String> config: configsInList) {
-      found = config.get("key").equals(getElementName());
+      found = getElementName().equalsIgnoreCase(config.get("key"));
       if(found) {
         mapContainingKey = config;
         configsAdapter.set(getName(), mapContainingKey.get("value"));
