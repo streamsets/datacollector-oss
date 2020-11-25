@@ -432,3 +432,10 @@ upgrades:
         elementName: element
         elementMustExist: false
         deleteFieldInList: false
+
+- toVersion: 16
+  actions:
+    - setConfigFromJoinedConfigList:
+        name: fieldName
+        listName: list
+        delimiter: ","

@@ -112,6 +112,8 @@ public class YamlStageUpgraderLoader {
       action = parseSetConfigFromStringMapAction(wrapper, map);
     } else if (map.containsKey("setConfigFromConfigList")) {
       action = parseSetConfigFromConfigListAction(wrapper, map);
+    } else if (map.containsKey("setConfigFromJoinedConfigList")) {
+      action = parseSetConfigFromJoinedConfigListAction(wrapper, map);
     } else {
       throw new StageException(Errors.YAML_UPGRADER_08, toVersion, stageName, resource);
     }
@@ -290,6 +292,21 @@ public class YamlStageUpgraderLoader {
     action.setElementName(elementName);
     action.setDeleteFieldInList(deleteFieldInList);
     action.setElementMustExist(elementMustExist);
+    return action;
+  }
+
+  SetConfigFromJoinedConfigListAction parseSetConfigFromJoinedConfigListAction(
+      Function<?, UpgraderAction.ConfigsAdapter> wrapper,
+      Map<String, Object> map
+  ) {
+    map = (Map) map.get("setConfigFromJoinedConfigList");
+    String name = (String) map.get("name");
+    String listName = (String) map.get("listName");
+    String delimiter = (String) map.get("delimiter");
+    SetConfigFromJoinedConfigListAction action = new SetConfigFromJoinedConfigListAction(wrapper);
+    action.setName(name);
+    action.setListName(listName);
+    action.setDelimiter(delimiter);
     return action;
   }
 

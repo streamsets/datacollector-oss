@@ -612,4 +612,28 @@ public class TestYamlStageUpgraderLoader {
 
     upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 14, 15));
   }
+
+  @Test
+  public void testSetConfigFromJoinedConfigList() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("test-yamlUpgraderActions.yaml");
+    YamlStageUpgraderLoader loader = new YamlStageUpgraderLoader("stage", yamlResource);
+    YamlStageUpgrader upgrader = loader.get();
+
+    List<Config> configs = new ArrayList<>();
+
+    List<String> listOfConfigs = ImmutableList.of("a", "b", "c");
+
+    configs.add(
+        new Config(
+            "list",
+            listOfConfigs
+        )
+    );
+
+    configs = upgrader.upgrade(configs, new TestUpgraderContext("lib", "stage", "instance", 15, 16));
+
+    Config newConfig = configs.get(1);
+    Assert.assertTrue(newConfig.getValue() instanceof String);
+    Assert.assertEquals(newConfig.getValue(), "a,b,c");
+  }
 }
