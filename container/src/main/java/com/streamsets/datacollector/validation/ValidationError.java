@@ -74,6 +74,7 @@ public enum ValidationError implements ErrorCode {
   VALIDATION_0036("{} cannot have event streams '{}'"),
   VALIDATION_0037("Stage can't be on the main pipeline canvas"),
   VALIDATION_0038("Connection definition does not exist, type '{}', version '{}'"),
+  VALIDATION_0039("Stage '{}' and '{}' have more then one shared lane"),
 
   //Rule Validation Errors
   VALIDATION_0040("The data rule property '{}' must be defined"),

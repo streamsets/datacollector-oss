@@ -512,6 +512,25 @@ public class PipelineFragmentConfigurationValidator {
           preview = false;
         }
 
+        // How many lanes are shared between the two stages
+        Set<String> sharedLanes = Sets.intersection(
+            new HashSet<>(stageConf.getOutputLanes()),
+            new HashSet<>(downStreamStageConf.getInputLanes())
+        );
+        if(sharedLanes.size() > 1) {
+          // More then one lane connecting the two stages
+          issues.add(IssueCreator
+              .getPipeline()
+              .create(
+                  downStreamStageConf.getInstanceName(),
+                  ValidationError.VALIDATION_0039,
+                  stageConf.getInstanceName(),
+                  downStreamStageConf.getInstanceName()
+              )
+          );
+          preview = false;
+        }
+
         openOutputs.removeAll(downStreamStageConf.getInputLanes());
         openEvents.removeAll(downStreamStageConf.getInputLanes());
       }
