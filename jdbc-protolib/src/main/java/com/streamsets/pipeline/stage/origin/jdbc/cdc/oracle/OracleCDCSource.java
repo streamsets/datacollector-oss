@@ -859,7 +859,7 @@ public class OracleCDCSource extends BaseSource {
       bufferedRecordsLock.lock();
       try {
         bufferedRecords.remove(key);
-        LOG.info(ROLLBACK_MESSAGE, key.txnId);
+        LOG.debug(ROLLBACK_MESSAGE, key.txnId);
       } finally {
         bufferedRecordsLock.unlock();
       }
