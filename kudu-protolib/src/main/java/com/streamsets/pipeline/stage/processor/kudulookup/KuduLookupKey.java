@@ -17,6 +17,7 @@ package com.streamsets.pipeline.stage.processor.kudulookup;
 
 import com.streamsets.pipeline.api.Field;
 import java.util.Map;
+import java.util.Objects;
 
 public class KuduLookupKey {
 
@@ -28,4 +29,22 @@ public class KuduLookupKey {
     this.columns = columns;
   }
 
+  @Override
+  public boolean equals(final Object secondObject) {
+    boolean result = secondObject == this;
+
+    if (!result && secondObject != null && secondObject.getClass() == this.getClass()) {
+      KuduLookupKey secondKuduLookupKey = (KuduLookupKey) secondObject;
+
+      result = Objects.equals(tableName, secondKuduLookupKey.tableName)
+          && Objects.equals(columns, secondKuduLookupKey.columns);
+    }
+
+    return result;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(tableName) ^ Objects.hashCode(columns);
+  }
 }
