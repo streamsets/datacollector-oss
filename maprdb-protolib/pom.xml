@@ -38,6 +38,7 @@
     <hadoop.version>2.7.0-mapr-1710</hadoop.version>
     <hbase.version>1.1.8-mapr-1710</hbase.version>
     <mapr.version>6.0.0-mapr</mapr.version>
+    <snakeyaml.version>1.27</snakeyaml.version>
  </properties>
 
   <dependencies>
@@ -69,6 +70,12 @@
           <artifactId>servlet-api</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>${snakeyaml.version}</version>
     </dependency>
 
     <dependency>
