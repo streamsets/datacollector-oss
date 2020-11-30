@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.15.0</version>
+    <version>3.15.0-0027</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-mapr-common</artifactId>
-  <version>3.15.0</version>
+  <version>3.15.0-0027</version>
   <description>StreamSets Data Collector MapR Common</description>
   <name>StreamSets Data Collector MapR Common</name>
   <packaging>jar</packaging>

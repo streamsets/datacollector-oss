@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.15.0</version>
+    <version>3.15.0-0027</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdc-hbase-api</artifactId>
-  <version>3.15.0</version>
+  <version>3.15.0-0027</version>
   <description>StreamSets Data Collector SDC HBase API</description>
   <name>StreamSets Data Collector SDC HBase API</name>
   <packaging>jar</packaging>
