@@ -24,11 +24,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.20.0-SNAPSHOT</version>
+    <version>3.20.0</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <artifactId>streamsets-apache-kudu-connection</artifactId>
-  <version>3.20.0-SNAPSHOT</version>
+  <version>3.20.0</version>
   <description>StreamSets Data Collector Apache Kudu Connection</description>
   <name>StreamSets Data Collector Apache Kudu Connection</name>
   <packaging>jar</packaging>

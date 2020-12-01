@@ -22,11 +22,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.20.0-SNAPSHOT</version>
+    <version>3.20.0</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-jdbc-sap-hana-lib</artifactId>
-  <version>3.20.0-SNAPSHOT</version>
+  <version>3.20.0</version>
   <description>StreamSets Data Collector JDBC SAP Hana Lib</description>
   <name>StreamSets Data Collector JDBC SAP Hana Lib</name>
 
