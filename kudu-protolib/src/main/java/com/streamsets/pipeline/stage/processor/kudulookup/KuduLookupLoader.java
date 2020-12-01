@@ -46,9 +46,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String, Field>>> {
+public class KuduLookupLoader extends CacheLoader<KuduLookupKey, Optional<List<LookupItem>>> {
   private static final Logger LOG = LoggerFactory.getLogger(KuduLookupLoader.class);
 
   private final AsyncKuduClient kuduClient;
@@ -103,8 +104,8 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
   }
 
   @Override
-  public List<Map<String, Field>> load(KuduLookupKey key) throws Exception {
-    List<Map<String, Field>> lookupItems = new ArrayList<>();
+  public Optional<List<LookupItem>> load(KuduLookupKey key) throws Exception {
+    List<LookupItem> lookupItems = new ArrayList<>();
     AsyncKuduScanner scanner = null;
     Timer.Context t = selectTimer.time();
 
@@ -167,23 +168,27 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
               fields.put(column.getValue(), field);
             }
           }
-          lookupItems.add(fields);
+          lookupItems.add(new LookupItem(fields, false));
         }
       }
       // No data found. Apply default if 'pass to next stage' is set and default value is configured
       if (lookupItems.isEmpty() && conf.missingLookupBehavior == MissingValuesBehavior.PASS_RECORD_ON) {
         Map<String, Field> addDefaults = new HashMap<>();
         for (Map.Entry<String, String> output: outputColumnToField.entrySet()) {
-          ColumnSchema columnSchema = schema.getColumn(output.getKey());
-          if (!outputDefault.get(output.getKey()).isEmpty()) {
-            addDefaults.put(output.getValue(), Field.create(
-                KuduUtils.convertFromKuduType(columnSchema.getType()),
-                outputDefault.get(output.getKey())
-                )
+          String columnName = output.getKey();
+          String fieldName = output.getValue();
+          ColumnSchema columnSchema = schema.getColumn(columnName);
+          String defaultValue = outputDefault.get(columnName);
+          if (!defaultValue.isEmpty()) {
+            addDefaults.put(
+              fieldName,
+              Field.create(
+                KuduUtils.convertFromKuduType(columnSchema.getType()), defaultValue
+              )
             );
           }
         }
-        lookupItems.add(addDefaults);
+        lookupItems.add(new LookupItem(addDefaults, true));
       }
     } catch (KuduException e) {
       // Exception executing query
@@ -199,7 +204,7 @@ public class KuduLookupLoader extends CacheLoader<KuduLookupKey, List<Map<String
       }
       selectMeter.mark();
     }
-    return lookupItems;
+    return Optional.of(lookupItems);
   }
 
   private void addPredicate(Field field, AsyncKuduScanner.AsyncKuduScannerBuilder scannerBuilder, KuduTable kuduTable, String keyColumn)

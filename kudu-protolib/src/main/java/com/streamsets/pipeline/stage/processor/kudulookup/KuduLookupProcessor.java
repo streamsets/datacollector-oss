@@ -36,19 +36,19 @@ import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.lib.kudu.Errors;
 import com.streamsets.pipeline.stage.lib.kudu.KuduAccessor;
 import com.streamsets.pipeline.stage.lib.kudu.KuduFieldMappingConfig;
-import com.streamsets.pipeline.stage.lib.kudu.KuduUtils;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import org.apache.kudu.client.AsyncKuduClient;
 import org.apache.kudu.client.AsyncKuduSession;
-import org.apache.kudu.client.KuduTable;
 import org.apache.kudu.client.OperationResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 public class KuduLookupProcessor extends SingleLaneRecordProcessor {
@@ -71,7 +71,7 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
   private ELEval tableNameEval;
   private ELVars tableNameVars;
 
-  private LoadingCache<KuduLookupKey, List<Map<String, Field>>> cache;
+  private LoadingCache<KuduLookupKey, Optional<List<LookupItem>>> cache;
   private CacheCleaner cacheCleaner;
 
   public KuduLookupProcessor(KuduLookupConfig conf) {
@@ -152,7 +152,20 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
 
     if (issues.isEmpty()) {
       store = new KuduLookupLoader(getContext(), kuduClient, keyColumns, columnToField, conf);
-      cache = LookupUtils.buildCache(store, conf.cache);
+      // We cannot use the standard loading cache here because it doesn't support
+      // the retryOnCacheMiss value set to true.
+      // But we also cannot use the optional loading cache as is because we cannot provide
+      // default values at init time. To get default values we need to convert them from strings
+      // into corresponding target types which we will know only after we get table metadata.
+      // So, to use the optional loading cache we we give it an empty list as a defult value.
+      // This empty list will never be used since our loader always retruns not empty optional
+      // value (it may contain an empty list too, but the optional value will be not empty).
+      // With this implementation the cache for default values will be always on.
+      // To disable the cacheing for default values depending on the retryOnCacheMiss conf value,
+      // we will invalidate manually a value that we get from the cache if
+      // 1) it's a default value and
+      // 2) retryOnCacheMiss is ON
+      cache = LookupUtils.buildCache(store, conf.cache, Optional.of(Collections.emptyList()));
       cacheCleaner = new CacheCleaner(cache, "KuduLookupProcessor", 10 * 60 * 1000);
     }
     return issues;
@@ -208,7 +221,23 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
     try {
       try {
         KuduLookupKey key = generateLookupKey(record, tableName);
-        List<Map<String, Field>> values = cache.get(key);
+        List<LookupItem> values = cache.get(key).get();
+        for (LookupItem value : values) {
+          if (value.defaultItem) {
+            if (values.size() != 1) {
+              // If we get here, then something has changed which breaks our assumtions here.
+              // This is our bug and not an issue caused by a user input.
+              // We cannot continue, the current state of the app is unpredictable.
+              // Thus we cannot throw a record nor stage exception here.
+              // This sort of errors should be caught before going to production by our tests.
+              throw new IllegalStateException("There should be only one default item in the cache for a key");
+            }
+            if (conf.cache.retryOnCacheMiss) {
+              cache.invalidate(key);
+            }
+          }
+        }
+
         if (values.isEmpty()) {
           // No record found
           if (conf.missingLookupBehavior == MissingValuesBehavior.SEND_TO_ERROR) {
@@ -220,13 +249,13 @@ public class KuduLookupProcessor extends SingleLaneRecordProcessor {
         } else {
           switch (conf.multipleValuesBehavior) {
             case FIRST_ONLY:
-              setFieldsInRecord(record, values.get(0));
+              setFieldsInRecord(record, values.get(0).values);
               batchMaker.addRecord(record);
               break;
             case SPLIT_INTO_MULTIPLE_RECORDS:
-              for(Map<String, Field> lookupItem : values) {
+              for(LookupItem lookupItem : values) {
                 Record newRecord = getContext().cloneRecord(record);
-                setFieldsInRecord(newRecord, lookupItem);
+                setFieldsInRecord(newRecord, lookupItem.values);
                 batchMaker.addRecord(newRecord);
               }
               break;
