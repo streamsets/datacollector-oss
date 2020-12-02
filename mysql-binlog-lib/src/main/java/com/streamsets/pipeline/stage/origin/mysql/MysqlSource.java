@@ -231,6 +231,9 @@ public abstract class MysqlSource extends BaseSource {
       lastSourceOffset = "";
     }
 
+    LOG.trace("Client position at the begging of a batch {}:{}", client.getBinlogFilename(), client.getBinlogPosition());
+    LOG.trace("Stored offset at the begging of a batch: {}", lastSourceOffset);
+
     // since last invocation there could errors happen
     handleErrors();
 
@@ -240,7 +243,6 @@ public abstract class MysqlSource extends BaseSource {
       getContext().reportError(Errors.MYSQL_010, maxBatchSize);
       checkBatchSize = false;
     }
-
 
     long startTime = System.currentTimeMillis();
     while (recordCounter < batchSize && (startTime + getConfig().maxWaitTime) > System.currentTimeMillis()) {
@@ -276,6 +278,9 @@ public abstract class MysqlSource extends BaseSource {
         }
       }
     }
+
+    LOG.trace("Client position at the end of a batch {}:{}", client.getBinlogFilename(), client.getBinlogPosition());
+    LOG.trace("Stored offset at the end of a batch: {}", lastSourceOffset);
     return lastSourceOffset;
   }
 
@@ -384,17 +389,45 @@ public abstract class MysqlSource extends BaseSource {
   private void registerClientLifecycleListener() {
     client.registerLifecycleListener(new BinaryLogClient.AbstractLifecycleListener() {
       @Override
+      public void onConnect(BinaryLogClient client) {
+        LOG.info("Connected to server {} with client position {}:{}",
+          client.getMasterServerId(),
+          client.getBinlogFilename(),
+          client.getBinlogPosition()
+        );
+      }
+
+      @Override
       public void onCommunicationFailure(BinaryLogClient client, Exception ex) {
         if (ex instanceof ServerException) {
           serverErrors.add((ServerException) ex);
         } else {
-          LOG.error("Unhandled communication error: {}", ex.getMessage(), ex);
+          LOG.error("Unhandled communication error with client at position {}:{}: {}",
+              ex.getMessage(),
+              client.getBinlogFilename(),
+              client.getBinlogFilename(),
+              ex
+          );
         }
       }
 
       @Override
       public void onEventDeserializationFailure(BinaryLogClient client, Exception ex) {
-        LOG.error("Error deserializing event: {}", ex.getMessage(), ex);
+        LOG.error("Error deserializing event with client at position {}:{}: {}",
+            ex.getMessage(),
+            client.getBinlogFilename(),
+            client.getBinlogPosition(),
+            ex
+        );
+      }
+
+      @Override
+      public void onDisconnect(BinaryLogClient client) {
+        LOG.info("Disconnected from server {} with client at position {}:{}",
+            client.getMasterServerId(),
+            client.getBinlogFilename(),
+            client.getBinlogPosition()
+        );
       }
     });
   }
@@ -413,6 +446,8 @@ public abstract class MysqlSource extends BaseSource {
     }
     ServerException e = serverErrors.poll();
     if (e != null) {
+      // Dump current position of the client
+      LOG.debug("Client position while handling error: {}:{}", client.getBinlogFilename(), client.getBinlogPosition());
       // Dump additional database state to help troubleshoot what is going on
       dumpServerReplicationStatus();
       // record policy does not matter - stop pipeline
