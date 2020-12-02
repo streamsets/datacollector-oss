@@ -435,6 +435,7 @@ public class TestJDBCBaseRecordWriter {
     /* isColumnTypeBinary() - true assertions */
 
     Assert.assertTrue(writer.isColumnTypeBinary(Types.BINARY));
+    Assert.assertTrue(writer.isColumnTypeBinary(Types.BLOB));
     Assert.assertTrue(writer.isColumnTypeBinary(Types.LONGVARBINARY));
     Assert.assertTrue(writer.isColumnTypeBinary(Types.VARBINARY));
 

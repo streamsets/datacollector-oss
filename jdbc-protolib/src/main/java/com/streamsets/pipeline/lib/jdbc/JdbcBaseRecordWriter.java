@@ -72,6 +72,7 @@ public abstract class JdbcBaseRecordWriter implements JdbcRecordWriter {
   /* Static lists for column type checking in setParamsToStatement */
   private Set<Integer> binaryTypes = new HashSet<>(Arrays.asList(
       Types.BINARY,
+      Types.BLOB,
       Types.LONGVARBINARY,
       Types.VARBINARY
   ));
