@@ -183,7 +183,7 @@ public class EntitlementSyncTaskImpl extends AbstractTask implements Entitlement
         "productId", runtimeInfo.getId(),
         "productType", runtimeInfo.getProductName().equals(RuntimeInfo.SDC_PRODUCT) ?
             "DATA_COLLECTOR" : "TRANSFORMER",
-        "productUrl", runtimeInfo.getBaseHttpUrl(),
+        "productUrl", runtimeInfo.getBaseHttpUrl(true),
         "productVersion", buildInfo.getVersion()
         ),
         "version", 2

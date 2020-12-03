@@ -854,8 +854,8 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     }
   }
 
-  protected String getHttpUrl() {
-    return runtimeInfo.getBaseHttpUrl();
+  protected String getHttpUrl(boolean removeTrailingSlashes) {
+    return runtimeInfo.getBaseHttpUrl(removeTrailingSlashes);
   }
 
   @Override
@@ -888,21 +888,21 @@ public abstract class WebServerTask extends AbstractTask implements Registration
         String hostname = conf.get(HTTP_BIND_HOST, HTTP_BIND_HOST_DEFAULT);
         baseHttpUrl += !"0.0.0.0".equals(hostname) ? hostname : InetAddress.getLocalHost().getCanonicalHostName();
         baseHttpUrl += ":" + port;
-        if (runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
+        if (runtimeInfo.getBaseHttpUrl(true).equals(RuntimeInfo.UNDEF)) {
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
         }
         runtimeInfo.setOriginalHttpUrl(baseHttpUrl);
       } catch(UnknownHostException ex) {
         LOG.debug("Exception during hostname resolution: {0}", ex);
         String baseHttpUrl = server.getURI().toString();
-        if (runtimeInfo.getBaseHttpUrl().equals(RuntimeInfo.UNDEF)) {
+        if (runtimeInfo.getBaseHttpUrl(true).equals(RuntimeInfo.UNDEF)) {
           runtimeInfo.setBaseHttpUrl(baseHttpUrl);
         }
         runtimeInfo.setOriginalHttpUrl(baseHttpUrl);
       }
 
-      System.out.println(Utils.format("Running on URI : '{}'", getHttpUrl()));
-      LOG.info("Running on URI : '{}'", getHttpUrl());
+      System.out.println(Utils.format("Running on URI : '{}'", getHttpUrl(false)));
+      LOG.info("Running on URI : '{}'", getHttpUrl(false));
       for (Connector connector : server.getConnectors()) {
         if (connector instanceof ServerConnector) {
           port = ((ServerConnector)connector).getLocalPort();
@@ -1078,7 +1078,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
   protected abstract String getComponentId(Configuration appConfiguration);
 
   protected Map<String, String> getRegistrationAttributes() {
-    return ImmutableMap.of(SSOConstants.SERVICE_BASE_URL_ATTR, this.runtimeInfo.getBaseHttpUrl());
+    return ImmutableMap.of(SSOConstants.SERVICE_BASE_URL_ATTR, this.runtimeInfo.getBaseHttpUrl(true));
   }
 
   @VisibleForTesting

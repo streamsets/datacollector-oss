@@ -732,7 +732,7 @@ public abstract class BaseClusterProvider implements ClusterProvider {
       String topic = sourceConfigs.get(TOPIC);
       String pipelineName = sourceInfo.get(ClusterModeConstants.CLUSTER_PIPELINE_NAME);
       mesosHostingJarDir = MESOS_HOSTING_DIR_PARENT + File.separatorChar + getSha256(getMesosHostingDir(topic, pipelineName));
-      mesosURL = runtimeInfo.getBaseHttpUrl() + File.separatorChar + mesosHostingJarDir + File.separatorChar
+      mesosURL = runtimeInfo.getBaseHttpUrl(true) + File.separatorChar + mesosHostingJarDir + File.separatorChar
                  + clusterBootstrapJar.getName();
     } else if (executionMode == ExecutionMode.CLUSTER_YARN_STREAMING) {
       jarsToShip.add(clusterBootstrapJar.getAbsolutePath());

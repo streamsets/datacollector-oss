@@ -143,7 +143,7 @@ public class EmailNotifier implements StateEventListener {
         java.text.DateFormat dateTimeFormat = new SimpleDateFormat(EmailConstants.DATE_MASK, Locale.ENGLISH);
         emailBody = emailBody.replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(toState.getTimeStamp())))
           .replace(EmailConstants.PIPELINE_NAME_KEY, Strings.nullToEmpty(pipelineTitle))
-          .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL +
+          .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl(true) + EmailConstants.PIPELINE_URL +
             toState.getPipelineId().replaceAll(" ", "%20"));
         try {
           emailSender.send(emails, subject, emailBody);

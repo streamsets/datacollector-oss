@@ -108,7 +108,7 @@ public class TestRuntimeInfo {
   public void testDefaultIdAndBaseHttpUrl() {
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
-    Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
+    Assert.assertEquals("UNDEF", info.getBaseHttpUrl(true));
   }
 
   @Test
@@ -134,7 +134,7 @@ public class TestRuntimeInfo {
     ObjectGraph og  = ObjectGraph.create(RuntimeModule.class);
     og.get(Configuration.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
-    Assert.assertEquals("HTTP", info.getBaseHttpUrl());
+    Assert.assertEquals("HTTP", info.getBaseHttpUrl(true));
     Assert.assertEquals("AUTH_TOKEN", info.getAppAuthToken());
     Assert.assertTrue(info.isDPMEnabled());
     Assert.assertEquals("foo", info.getDeploymentId());
@@ -159,7 +159,7 @@ public class TestRuntimeInfo {
       ObjectGraph og = ObjectGraph.create(RuntimeModule.class);
       og.get(Configuration.class);
       RuntimeInfo info = og.get(RuntimeInfo.class);
-      Assert.assertEquals("HTTP", info.getBaseHttpUrl());
+      Assert.assertEquals("HTTP", info.getBaseHttpUrl(true));
     } finally {
       // set productName back to default value of SDC
       RuntimeModule.setProductName(RuntimeInfo.SDC_PRODUCT);
@@ -188,7 +188,7 @@ public class TestRuntimeInfo {
     og.get(Configuration.class);
     RuntimeInfo info = og.get(RuntimeInfo.class);
     Assert.assertTrue(info instanceof SlaveRuntimeInfo);
-    Assert.assertEquals("UNDEF", info.getBaseHttpUrl());
+    Assert.assertEquals("UNDEF", info.getBaseHttpUrl(true));
     Assert.assertEquals("MASTER_ID", info.getMasterSDCId());
     Assert.assertEquals("AUTH_TOKEN", info.getAppAuthToken());
     Assert.assertTrue(((SlaveRuntimeInfo)info).isRemotePipeline());
@@ -202,13 +202,15 @@ public class TestRuntimeInfo {
   public void testTrailingSlashRemovedFromHttpURL() throws Exception {
     RuntimeInfo runtimeInfo = new StandaloneRuntimeInfo(RuntimeInfo.SDC_PRODUCT,null, null, null);
     runtimeInfo.setBaseHttpUrl("http://localhost:18630");
-    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl(true));
     // add a leading forward slash
     runtimeInfo.setBaseHttpUrl("http://localhost:18630/");
-    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl(true));
     // add two leading forward slash
     runtimeInfo.setBaseHttpUrl("http://localhost:18630//");
-    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl());
+    Assert.assertEquals("http://localhost:18630", runtimeInfo.getBaseHttpUrl(true));
+    runtimeInfo.setBaseHttpUrl("http://localhost:18630/");
+    Assert.assertEquals("http://localhost:18630/", runtimeInfo.getBaseHttpUrl(false));
   }
 
   @Test

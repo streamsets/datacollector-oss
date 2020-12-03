@@ -48,7 +48,7 @@ public class TestDataCollectorWebServerTask {
     UsersManager usersManager = new TrxUsersManager(file);
     BuildInfo buildInfo = ProductBuildInfo.getDefault();
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getBaseHttpUrl()).thenReturn("url");
+    Mockito.when(runtimeInfo.getBaseHttpUrl(true)).thenReturn("url");
     WebServerTask webServerTask = new DataCollectorWebServerTask(
         buildInfo,
         runtimeInfo,
@@ -62,7 +62,7 @@ public class TestDataCollectorWebServerTask {
     Map<String, String> expectedAttrs = ImmutableMap.<String, String>builder().put(
         SSOConstants.SERVICE_BASE_URL_ATTR,
         runtimeInfo
-        .getBaseHttpUrl())
+        .getBaseHttpUrl(true))
         .put("sdcJavaVersion", System.getProperty("java.runtime.version"))
         .put("sdcVersion", buildInfo.getVersion())
         .put("sdcBuildDate", buildInfo.getBuiltDate())

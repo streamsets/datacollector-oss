@@ -248,7 +248,7 @@ public class Pipeline {
 
     // Publish LineageEvent first...
     if(productionExecution) {
-      LineageEvent event = createLineageEvent(LineageEventType.START, runner.getRuntimeInfo().getBaseHttpUrl());
+      LineageEvent event = createLineageEvent(LineageEventType.START, runner.getRuntimeInfo().getBaseHttpUrl(true));
       lineagePublisherTask.publishEvent(event);
     }
 
@@ -512,7 +512,7 @@ public class Pipeline {
     }
 
     if(productionExecution) {
-      LineageEvent event = createLineageEvent(LineageEventType.STOP, runner.getRuntimeInfo().getBaseHttpUrl());
+      LineageEvent event = createLineageEvent(LineageEventType.STOP, runner.getRuntimeInfo().getBaseHttpUrl(true));
       event.getProperties().put("Pipeline_Stop_Reason", stopReason.name());
       lineagePublisherTask.publishEvent(event);
     }

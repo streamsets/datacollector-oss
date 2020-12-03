@@ -387,7 +387,7 @@ public class TestWebServerTask {
       webServerTask.initTask();
       webServerTask.runTask();
       await().atMost(Duration.TEN_SECONDS).until(flag.hasStarted());
-      String url = webServerTask.getHttpUrl();
+      String url = webServerTask.getHttpUrl(true);
       Response response = ClientBuilder.newClient()
           .target(url)
           .request()

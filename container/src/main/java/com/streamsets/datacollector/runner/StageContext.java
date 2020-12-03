@@ -545,7 +545,7 @@ public class StageContext extends ProtoContext implements
         startTime,
         pipelineId,
         getSdcId(),
-        runtimeInfo.getBaseHttpUrl() + LineageEventImpl.PARTIAL_URL + pipelineId,
+        runtimeInfo.getBaseHttpUrl(true) + LineageEventImpl.PARTIAL_URL + pipelineId,
         stageInfo.getInstanceName(),
         pipelineDescription,
         rev,

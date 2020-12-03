@@ -149,8 +149,12 @@ public abstract class RuntimeInfo {
     this.httpUrl = url;
   }
 
-  public String getBaseHttpUrl() {
-    return StringUtils.stripEnd(httpUrl, "/");
+  public String getBaseHttpUrl(boolean removeTrailingSlashes) {
+    if (removeTrailingSlashes) {
+      return StringUtils.stripEnd(httpUrl, "/");
+    }
+
+    return httpUrl;
   }
 
   public void setOriginalHttpUrl(String url) {
@@ -303,7 +307,7 @@ public abstract class RuntimeInfo {
   }
 
   public String getClusterCallbackURL() {
-    return getBaseHttpUrl() + CALLBACK_URL;
+    return getBaseHttpUrl(true) + CALLBACK_URL;
   }
 
   public void setRemoteRegistrationStatus(boolean remoteRegistrationSuccessful) {
@@ -401,7 +405,7 @@ public abstract class RuntimeInfo {
     if (configFile.exists()) {
       try(FileReader reader = new FileReader(configFile)) {
         conf.load(reader);
-        runtimeInfo.setBaseHttpUrl(conf.get(runtimeInfo.getBaseHttpUrlAttr(), runtimeInfo.getBaseHttpUrl()));
+        runtimeInfo.setBaseHttpUrl(conf.get(runtimeInfo.getBaseHttpUrlAttr(), runtimeInfo.getBaseHttpUrl(false)));
         String appAuthToken = conf.get(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "").trim();
         runtimeInfo.setAppAuthToken(appAuthToken);
         boolean isDPMEnabled = conf.get(RemoteSSOService.DPM_ENABLED, RemoteSSOService.DPM_ENABLED_DEFAULT);
@@ -497,7 +501,7 @@ public abstract class RuntimeInfo {
     }
     apiGatewayInfoMap.put(gatewayInfo.getServiceName(), gatewayInfo);
     String basePath = gatewayInfo.getNeedGatewayAuth() ? "rest" : "public-rest";
-    return Utils.format(GATEWAY_END_POINT_TEMPLATE, getBaseHttpUrl(), basePath, gatewayInfo.getServiceName());
+    return Utils.format(GATEWAY_END_POINT_TEMPLATE, getBaseHttpUrl(true), basePath, gatewayInfo.getServiceName());
   }
 
   public synchronized void unregisterApiGateway(GatewayInfo gatewayInfo) {

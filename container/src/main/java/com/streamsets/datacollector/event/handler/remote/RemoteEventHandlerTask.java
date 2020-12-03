@@ -372,7 +372,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     Runtime runtime = Runtime.getRuntime();
     SDCInfoEvent sdcInfoEvent = new SDCInfoEvent(
         runtimeInfo.getId(),
-        runtimeInfo.getBaseHttpUrl(),
+        runtimeInfo.getBaseHttpUrl(false),
         System.getProperty("java.runtime.version"),
         stageInfoList,
         new SDCBuildInfo(buildInfo.getVersion(),

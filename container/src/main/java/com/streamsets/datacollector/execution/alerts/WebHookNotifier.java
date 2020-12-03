@@ -113,7 +113,7 @@ public class WebHookNotifier implements StateEventListener {
                           escapeValue(Strings.nullToEmpty(pipelineTitle), webhookConfig.contentType))
                   .replace(WebhookConstants.PIPELINE_URL_KEY,
                           escapeValue(Strings.nullToEmpty(
-                                  runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20")), webhookConfig.contentType))
+                                  runtimeInfo.getBaseHttpUrl(true) + EmailConstants.PIPELINE_URL + toState.getPipelineId().replaceAll(" ", "%20")), webhookConfig.contentType))
                   .replace(WebhookConstants.PIPELINE_STATE_KEY,
                           escapeValue(Strings.nullToEmpty(toState.getStatus().toString()), webhookConfig.contentType))
                   .replace(WebhookConstants.TIME_KEY,

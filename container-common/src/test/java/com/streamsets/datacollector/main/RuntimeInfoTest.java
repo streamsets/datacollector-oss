@@ -61,7 +61,6 @@ public class RuntimeInfoTest {
     // Validate that we see expected configs
     Configuration configuration = new Configuration();
     RuntimeInfo.loadOrReloadConfigs(runtimeInfo, configuration);
-    String baseUrl = runtimeInfo.getBaseHttpUrl();
     assertEquals("true", configuration.get("sdc", null));
     assertEquals("true", configuration.get("sch", null));
   }

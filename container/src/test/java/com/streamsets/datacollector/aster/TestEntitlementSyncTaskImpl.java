@@ -83,7 +83,7 @@ public class TestEntitlementSyncTaskImpl {
     runtimeInfo = mock(RuntimeInfo.class);
     when(runtimeInfo.getProductName()).thenReturn(RuntimeInfo.SDC_PRODUCT);
     when(runtimeInfo.getId()).thenReturn(PRODUCT_ID);
-    when(runtimeInfo.getBaseHttpUrl()).thenReturn(BASE_URL);
+    when(runtimeInfo.getBaseHttpUrl(true)).thenReturn(BASE_URL);
 
     buildInfo = mock(BuildInfo.class);
     when(buildInfo.getVersion()).thenReturn(VERSION);

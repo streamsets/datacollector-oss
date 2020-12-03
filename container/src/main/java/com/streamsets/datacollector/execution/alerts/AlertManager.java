@@ -106,7 +106,7 @@ public class AlertManager {
         .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date(timestamp)))
         .replace(EmailConstants.PIPELINE_NAME_KEY, Strings.nullToEmpty(pipelineTitle))
         .replace(EmailConstants.DESCRIPTION_KEY, Strings.nullToEmpty(description))
-        .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineId);
+        .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl(true) + EmailConstants.PIPELINE_URL + pipelineId);
       subject = EmailConstants.STREAMSETS_DATA_COLLECTOR_ALERT + subject;
       if (LOG.isDebugEnabled()) {
         LOG.debug("Email Alert: subject = " + subject + ", body = " + emailBody);
@@ -151,7 +151,7 @@ public class AlertManager {
             .replace(EmailConstants.TIME_KEY, dateTimeFormat.format(new Date((Long) System.currentTimeMillis())))
             .replace(EmailConstants.PIPELINE_NAME_KEY, Strings.nullToEmpty(pipelineTitle))
             .replace(EmailConstants.CONDITION_KEY, Strings.nullToEmpty(ruleDefinition.getCondition()))
-            .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl() + EmailConstants.PIPELINE_URL + pipelineId);
+            .replace(EmailConstants.URL_KEY, runtimeInfo.getBaseHttpUrl(true) + EmailConstants.PIPELINE_URL + pipelineId);
 
           if(ruleDefinition instanceof DataRuleDefinition) {
             emailBody = emailBody.replace(EmailConstants.ALERT_NAME_KEY, ((DataRuleDefinition)ruleDefinition).getLabel());
@@ -214,7 +214,7 @@ public class AlertManager {
               .replace(WebhookConstants.ALERT_CONDITION_KEY, Strings.nullToEmpty(ruleDefinition.getCondition()))
               .replace(WebhookConstants.TIME_KEY, dateTimeFormat.format(new Date((Long) System.currentTimeMillis())))
               .replace(WebhookConstants.PIPELINE_TITLE_KEY, Strings.nullToEmpty(pipelineTitle))
-              .replace(WebhookConstants.PIPELINE_URL_KEY, runtimeInfo.getBaseHttpUrl() +
+              .replace(WebhookConstants.PIPELINE_URL_KEY, runtimeInfo.getBaseHttpUrl(true) +
                   EmailConstants.PIPELINE_URL + pipelineId.replaceAll(" ", "%20"));
 
           WebTarget webTarget = ClientBuilder.newClient().target(webhookConfig.webhookUrl);

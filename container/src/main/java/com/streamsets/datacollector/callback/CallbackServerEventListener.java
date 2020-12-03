@@ -80,12 +80,12 @@ class CallbackServerEventListener {
     try {
       Map<String, String> authenticationToken = runtimeInfo.getAuthenticationTokens();
       CallbackInfo callbackInfo =
-          new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, runtimeInfo.getBaseHttpUrl(),
+          new CallbackInfo(user, name, rev, sdcClusterToken, sdcSlaveToken, runtimeInfo.getBaseHttpUrl(true),
               authenticationToken.get(AuthzRole.ADMIN), authenticationToken.get(AuthzRole.CREATOR),
               authenticationToken.get(AuthzRole.MANAGER), authenticationToken.get(AuthzRole.GUEST),
               callbackObjectType, callbackObject, runtimeInfo.getId());
       if (IS_TRACE_ENABLED) {
-        LOG.trace("Calling back on " + callbackServerURL + " with the sdc url of " + runtimeInfo.getBaseHttpUrl());
+        LOG.trace("Calling back on " + callbackServerURL + " with the sdc url of " + runtimeInfo.getBaseHttpUrl(true));
       }
       Response response = request.post(Entity.json(BeanHelper.wrapCallbackInfo(callbackInfo)));
       if (response.getStatus() != 200) {
