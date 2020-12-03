@@ -58,6 +58,11 @@
 @health-inspector-red-hide: #c8787a;
 @health-inspector-red-bg: #f5e8e8;
 
+@health-inspector-yellow-text: #c5862b;
+@health-inspector-yellow-border: #f0e0ca;
+@health-inspector-yellow-hide: #dcb67f;
+@health-inspector-yellow-bg: #f9f2e9;
+
 @headings-line-height:    1.1;
 @line-height-computed:    20px;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
@@ -224,7 +229,6 @@
       }
 
       pre{
-        background-color: #fcf6db;
         border: 1px solid #e5e0c6;
         max-height: 200px;
         overflow: auto;
@@ -279,6 +283,10 @@
 
   .GREEN{
     .health-check(@health-inspector-green-text, @health-inspector-green-border, @health-inspector-green-hide, @health-inspector-green-bg);
+  }
+
+  .YELLOW{
+    .health-check(@health-inspector-yellow-text, @health-inspector-yellow-border, @health-inspector-yellow-hide, @health-inspector-yellow-bg);
   }
 
   .RED{
