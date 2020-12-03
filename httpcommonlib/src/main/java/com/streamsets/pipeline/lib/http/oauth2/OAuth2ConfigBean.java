@@ -461,7 +461,9 @@ public class OAuth2ConfigBean {
       default:
     }
     for (BodyKeyValueBean additionalValue : additionalValues) {
-      requestValues.put(additionalValue.key, Collections.singletonList(additionalValue.value.get()));
+      if (!StringUtils.isBlank(additionalValue.key)) {
+        requestValues.put(additionalValue.key, Collections.singletonList(additionalValue.value.get()));
+      }
     }
     return Entity.form(requestValues);
   }
