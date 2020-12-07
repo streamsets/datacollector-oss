@@ -34,6 +34,8 @@ public class TestDataLakeGen2SourceUpgrader {
   private List<Config> configs;
   private StageUpgrader.Context context;
 
+  private final String prefix = "dataLakeGen2SourceConfigBean.";
+
   @Before
   public void setUp() {
     upgrader = new SelectorStageUpgrader("stage", new DataLakeGen2SourceUpgrader(), null);
@@ -61,26 +63,26 @@ public class TestDataLakeGen2SourceUpgrader {
     // Test assuming auth token endpoint is set.
     String authUrl = "https://login.microsoftonline.com/example/oauth2/token";
 
-    configs.add(new Config("dataLakeConfig.accountFQDN", "v1"));
-    configs.add(new Config("dataLakeConfig.storageContainer", "v2"));
-    configs.add(new Config("dataLakeConfig.authMethod", "v3"));
-    configs.add(new Config("dataLakeConfig.clientId", "v4"));
-    configs.add(new Config("dataLakeConfig.clientKey", "v5"));
-    configs.add(new Config("dataLakeConfig.accountKey", "v6"));
-    configs.add(new Config("dataLakeConfig.secureConnection", "v7"));
-    configs.add(new Config("dataLakeConfig.authTokenEndpoint", authUrl));
+    configs.add(new Config(prefix+"dataLakeConfig.accountFQDN", "v1"));
+    configs.add(new Config(prefix+"dataLakeConfig.storageContainer", "v2"));
+    configs.add(new Config(prefix+"dataLakeConfig.authMethod", "v3"));
+    configs.add(new Config(prefix+"dataLakeConfig.clientId", "v4"));
+    configs.add(new Config(prefix+"dataLakeConfig.clientKey", "v5"));
+    configs.add(new Config(prefix+"dataLakeConfig.accountKey", "v6"));
+    configs.add(new Config(prefix+"dataLakeConfig.secureConnection", "v7"));
+    configs.add(new Config(prefix+"dataLakeConfig.authTokenEndpoint", authUrl));
 
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.accountFQDN", "v1");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.storageContainer", "v2");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.authMethod", "SHARED_KEY");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.clientId", "v4");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.clientKey", "v5");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.accountKey", "v6");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.secureConnection", "v7");
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.tenantId", "example");
-    UpgraderTestUtils.assertNoneExist(configs, "dataLakeConfig.authTokenEndpoint");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.accountFQDN", "v1");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.storageContainer", "v2");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.authMethod", "SHARED_KEY");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.clientId", "v4");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.clientKey", "v5");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.accountKey", "v6");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.secureConnection", "v7");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.tenantId", "example");
+    UpgraderTestUtils.assertNoneExist(configs, prefix+"dataLakeConfig.authTokenEndpoint");
 
     Assert.assertEquals(8, configs.size());
   }
@@ -92,11 +94,11 @@ public class TestDataLakeGen2SourceUpgrader {
 
     // Test assuming auth token endpoint is set to old default value.
     String defaultAuthUrl = "https://login.microsoftonline.com/example-example";
-    configs.add(new Config("dataLakeConfig.authTokenEndpoint", defaultAuthUrl));
+    configs.add(new Config(prefix+"dataLakeConfig.authTokenEndpoint", defaultAuthUrl));
 
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, "dataLakeConfig.connection.tenantId", "");
-    UpgraderTestUtils.assertNoneExist(configs, "dataLakeConfig.authTokenEndpoint");
+    UpgraderTestUtils.assertExists(configs, prefix+"dataLakeConfig.connection.tenantId", "");
+    UpgraderTestUtils.assertNoneExist(configs, prefix+"dataLakeConfig.authTokenEndpoint");
   }
 }

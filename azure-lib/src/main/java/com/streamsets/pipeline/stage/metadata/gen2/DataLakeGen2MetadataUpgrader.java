@@ -25,6 +25,8 @@ import java.util.List;
 
 public class DataLakeGen2MetadataUpgrader implements StageUpgrader {
 
+  private final String prefix = "connection.";
+
   @Override
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     int fromVersion = context.getFromVersion();
@@ -32,7 +34,7 @@ public class DataLakeGen2MetadataUpgrader implements StageUpgrader {
     switch (fromVersion) {
       case 1:
         // Call helper util function for upgrading when adding connections.
-        AzureUtils.updateConfigsForConnections(configs);
+        AzureUtils.updateConfigsForConnections(configs, prefix);
         break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
