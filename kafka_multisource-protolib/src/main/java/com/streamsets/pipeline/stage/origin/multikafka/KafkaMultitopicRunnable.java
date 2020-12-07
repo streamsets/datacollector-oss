@@ -215,40 +215,45 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
     String messageId = getMessageId(topic, partition, offset);
     List<Record> records = new ArrayList<>();
 
-    try (DataParser parser = parserFactory.getParser(messageId, payload)) {
-      Record record = parser.parse();
+    if (payload == null) {
+      LOG.debug("NULL value (tombstone) read, it has been discarded");
+    } else {
 
-      while (record != null) {
-        record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, topic);
-        record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, String.valueOf(partition));
-        record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
-        if (conf.timestampsEnabled) {
-          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
-          record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+      try (DataParser parser = parserFactory.getParser(messageId, payload)) {
+        Record record = parser.parse();
+
+        while (record != null) {
+          record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, topic);
+          record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, String.valueOf(partition));
+          record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+          if (conf.timestampsEnabled) {
+            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
+            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+          }
+
+          handleMessageKey(messageKey, record, partition, offset);
+          records.add(record);
+          record = parser.parse();
         }
+      } catch (DataParserException | IOException e) {
+        Record record = getContext().createRecord(messageId);
+        record.set(Field.create(payload));
+        errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_37, messageId, e.toString(), e));
+      }
 
-        handleMessageKey(messageKey, record, partition, offset);
+      // Add the Kafka offset to be committed
+      offsetsMap.put(new TopicPartition(topic, partition), new OffsetAndMetadata(offset + 1));
+
+      if (conf.produceSingleRecordPerMessage) {
+        List<Field> list = new ArrayList<>();
+        for (Record record : records) {
+          list.add(record.get());
+        }
+        Record record = records.get(0);
+        record.set(Field.create(list));
+        records.clear();
         records.add(record);
-        record = parser.parse();
       }
-    } catch (DataParserException | IOException e) {
-      Record record = getContext().createRecord(messageId);
-      record.set(Field.create(payload));
-      errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_37, messageId, e.toString(), e));
-    }
-
-    // Add the Kafka offset to be committed
-    offsetsMap.put(new TopicPartition(topic, partition), new OffsetAndMetadata(offset + 1));
-
-    if (conf.produceSingleRecordPerMessage) {
-      List<Field> list = new ArrayList<>();
-      for (Record record : records) {
-        list.add(record.get());
-      }
-      Record record = records.get(0);
-      record.set(Field.create(list));
-      records.clear();
-      records.add(record);
     }
 
     return records;

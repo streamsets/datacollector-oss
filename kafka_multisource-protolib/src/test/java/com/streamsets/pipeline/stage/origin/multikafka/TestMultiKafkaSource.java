@@ -384,4 +384,47 @@ public class TestMultiKafkaSource {
     sourceRunner.runDestroy();
 
   }
+
+  @Test
+  public void testNullPayload() throws InterruptedException, StageException, ExecutionException {
+    String topic = "compacted_topic";
+
+    MultiKafkaBeanConfig conf = getConfig();
+    conf.topicList = Collections.singletonList(topic);
+    conf.numberOfThreads = 1;
+
+    List<ConsumerRecord<String, byte[]>> consumerRecordsList = new ArrayList<>();
+    consumerRecordsList.add(new ConsumerRecord<>(topic, 0, 0, "key1", ("value1").getBytes()));
+    consumerRecordsList.add(new ConsumerRecord<>(topic, 0, 1, "key1", null));
+    consumerRecordsList.add(new ConsumerRecord<>(topic, 0, 0, "key2", ("value2").getBytes()));
+
+    Map<TopicPartition, List<ConsumerRecord<String, byte[]>>> recordsMap = new HashMap<>();
+    recordsMap.put(new TopicPartition(topic, 0), consumerRecordsList);
+    ConsumerRecords<String, byte[]> consumerRecords = new ConsumerRecords<>(recordsMap);
+
+    Consumer mockConsumer = Mockito.mock(Consumer.class);
+    List<Consumer> consumerList = Collections.singletonList(mockConsumer);
+    Mockito.when(mockConsumer.poll(Mockito.anyInt())).thenReturn(consumerRecords).thenReturn(consumerRecords);
+
+    conf.connectionConfig.connection.securityConfig.userKeytab = Mockito.mock(CredentialValue.class);
+    Mockito.when(conf.connectionConfig.connection.securityConfig.userKeytab.get()).thenReturn("");
+
+    MockKafkaConsumerLoader.consumers = consumerList.iterator();
+    MultiKafkaSource source = new MultiKafkaSource(conf);
+    PushSourceRunner sourceRunner = new PushSourceRunner.Builder(MultiKafkaDSource.class, source).addOutputLane("lane")
+        .build();
+    sourceRunner.runInit();
+
+    MultiKafkaPushSourceTestCallback callback = new MultiKafkaPushSourceTestCallback(sourceRunner, 1);
+
+    sourceRunner.runProduce(new HashMap<>(), 3, callback);
+    try {
+      sourceRunner.waitOnProduce();
+    } catch (Exception e) {
+      Throwable except = e.getCause().getCause();
+      throw e;
+    } finally {
+      sourceRunner.runDestroy();
+    }
+  }
 }
