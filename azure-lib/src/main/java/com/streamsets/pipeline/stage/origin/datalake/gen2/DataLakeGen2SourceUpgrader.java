@@ -35,7 +35,9 @@ public class DataLakeGen2SourceUpgrader implements StageUpgrader {
     switch(fromVersion) {
       case 1:
         upgradeV1toV2(configs);
-        break;
+        if(context.getToVersion() == 2) {
+          break;
+        }
       case 2:
         // Call helper util function for upgrading when adding connections.
         AzureUtils.updateConfigsForConnections(configs, prefix);
