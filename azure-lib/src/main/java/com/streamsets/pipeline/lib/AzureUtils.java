@@ -214,7 +214,7 @@ public class AzureUtils {
             tenantId = path.split("/oauth2/token")[0].substring(1);
           }
           configsToAdd.add(new Config(prefix+"dataLakeConfig.connection.tenantId", tenantId));
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
           configsToAdd.add(new Config(prefix+"dataLakeConfig.connection.tenantId", ""));
         }
       }
