@@ -171,62 +171,54 @@ public class AzureUtils {
    * multiple upgraders in different stages.
    *
    */
-  public static List<Config> updateConfigsForConnections(List<Config> configs) {
+  public static List<Config> updateConfigsForConnections(List<Config> configs, String prefix) {
     List<Config> configsToRemove = new ArrayList<>();
     List<Config> configsToAdd = new ArrayList<>();
 
     for (Config config : configs) {
-      switch (config.getName()) {
-        case "dataLakeConfig.accountFQDN":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.accountFQDN", config.getValue()));
-          break;
-        case "dataLakeConfig.storageContainer":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.storageContainer", config.getValue()));
-          break;
-        case "dataLakeConfig.authMethod":
-          // The Auth method has been moved to a new enum so we also need to convert the value.
-          // Note that the MSI config is new with the updated enum so it will not arise when upgrading.
-          String targetConfig = config.getValue().equals("OAUTH") ? "CLIENT" : "SHARED_KEY";
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.authMethod", targetConfig));
-          break;
-        case "dataLakeConfig.clientId":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.clientId", config.getValue()));
-          break;
-        case "dataLakeConfig.clientKey":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.clientKey", config.getValue()));
-          break;
-        case "dataLakeConfig.accountKey":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.accountKey",config.getValue()));
-          break;
-        case "dataLakeConfig.secureConnection":
-          configsToRemove.add(config);
-          configsToAdd.add(new Config("dataLakeConfig.connection.secureConnection", config.getValue()));
-          break;
-        // In the case where auth token endpoint is specified, we strip the tenant ID and remove the endpoint config.
-        // If the auth token endpoint is not set, take the default value for tenant ID (no upgrade needed).
-        case "dataLakeConfig.authTokenEndpoint":
-          String tenantId = "";
-          configsToRemove.add(config);
-          try {
-            URI msftUrl = new URI(config.getValue().toString());
-            String path = msftUrl.getPath();
-            if (path.contains("/oauth2/token")) {
-              tenantId = path.split("/oauth2/token")[0].substring(1);
-            }
-            configsToAdd.add(new Config("dataLakeConfig.connection.tenantId", tenantId));
-          } catch (URISyntaxException e) {
-            configsToAdd.add(new Config("dataLakeConfig.connection.tenantId", ""));
-          }
-          break;
-        default:
-          break;
+      if (config.getName().equals(prefix + "dataLakeConfig.accountFQDN")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.accountFQDN", config.getValue()));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.storageContainer")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.storageContainer", config.getValue()));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.authMethod")) {
+        // The Auth method has been moved to a new enum so we also need to convert the value.
+        // Note that the MSI config is new with the updated enum so it will not arise when upgrading.
+        String targetConfig = config.getValue().equals("OAUTH") ? "CLIENT" : "SHARED_KEY";
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.authMethod", targetConfig));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.clientId")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.clientId", config.getValue()));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.clientKey")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.clientKey", config.getValue()));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.accountKey")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.accountKey", config.getValue()));
+      } else if (config.getName().equals(prefix + "dataLakeConfig.secureConnection")) {
+        configsToRemove.add(config);
+        configsToAdd.add(new Config(prefix + "dataLakeConfig.connection.secureConnection", config.getValue()));
       }
+
+      // In the case where auth token endpoint is specified, we strip the tenant ID and remove the endpoint config.
+      // If the auth token endpoint is not set, take the default value for tenant ID (no upgrade needed).
+      else if (config.getName().equals(prefix + "dataLakeConfig.authTokenEndpoint")) {
+        String tenantId = "";
+        configsToRemove.add(config);
+        try {
+          URI msftUrl = new URI(config.getValue().toString());
+          String path = msftUrl.getPath();
+          if (path.contains("/oauth2/token")) {
+            tenantId = path.split("/oauth2/token")[0].substring(1);
+          }
+          configsToAdd.add(new Config(prefix+"dataLakeConfig.connection.tenantId", tenantId));
+        } catch (URISyntaxException e) {
+          configsToAdd.add(new Config(prefix+"dataLakeConfig.connection.tenantId", ""));
+        }
+      }
+
     }
 
     configs.removeAll(configsToRemove);
