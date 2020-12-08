@@ -1,1 +1,0 @@
-define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/AmazonS3.html#concept_dqk_3fx_gjb","attributes": {"data-id":"concept_dqk_3fx_gjb",},"menu": {"hasChildren":false,},"tocID":"concept_dqk_3fx_gjb-d46e164011","topics":[]}]});
