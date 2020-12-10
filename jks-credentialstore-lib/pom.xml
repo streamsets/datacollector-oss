@@ -23,11 +23,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-    <version>3.20.0</version>
+    <version>3.20.1-SNAPSHOT</version>
     <relativePath>../stage-lib-parent</relativePath>
   </parent>
   <artifactId>streamsets-datacollector-jks-credentialstore-lib</artifactId>
-  <version>3.20.0</version>
+  <version>3.20.1-SNAPSHOT</version>
   <description>StreamSets Data Collector JKS Credential Store Lib</description>
   <name>StreamSets Data Collector JKS Credential Store Lib</name>
   <packaging>jar</packaging>

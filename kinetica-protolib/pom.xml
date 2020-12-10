@@ -22,12 +22,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.20.0</version>
+    <version>3.20.1-SNAPSHOT</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-kinetica-protolib</artifactId>
-  <version>3.20.0</version>
+  <version>3.20.1-SNAPSHOT</version>
   <description>StreamSets Data Collector Kinetica ProtoLib</description>
   <name>StreamSets Data Collector Kinetica ProtoLib</name>
   <packaging>jar</packaging>
