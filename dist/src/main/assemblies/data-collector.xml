@@ -31,6 +31,14 @@
       <filtered>true</filtered>
       <fileMode>0644</fileMode>
     </file>
+
+    <file>
+      <source>${basedir}/src/main/engines/3.x.properties</source>
+      <outputDirectory>etc</outputDirectory>
+      <destName>engine.properties</destName>
+      <filtered>true</filtered>
+      <fileMode>0644</fileMode>
+    </file>
   </files>
 
   <fileSets>

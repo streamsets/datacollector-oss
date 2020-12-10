@@ -23,6 +23,15 @@
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
 
+  <files>
+    <file>
+      <source>${basedir}/../dist/src/main/engines/next.properties</source>
+      <outputDirectory>/streamsets-datacollector-${project.version}/etc</outputDirectory>
+      <destName>engine.properties</destName>
+      <filtered>true</filtered>
+      <fileMode>0644</fileMode>
+    </file>
+  </files>
 
   <fileSets>
     <!-- LICENSE, NOTICE, README, etc -->
