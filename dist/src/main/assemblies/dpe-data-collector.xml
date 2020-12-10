@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2017 StreamSets Inc.
+    Copyright 2020 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 -->
 <assembly>
-  <id>dist-sdc</id>
+  <id>dist-dpe</id>
   <formats>
     <format>dir</format>
   </formats>
@@ -213,12 +213,6 @@
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
-    <!-- omniture-lib -->
-    <fileSet>
-      <directory>${basedir}/../omniture-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
     <!-- jks-credentialstore-lib -->
     <fileSet>
       <directory>${basedir}/../jks-credentialstore-lib/target/streamsets-libs/</directory>
@@ -321,45 +315,11 @@
 
     <!-- MapR Libs -->
     <fileSet>
-      <directory>${basedir}/../${mapr_6_0-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${mapr_6_0-mep4-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${mapr_6_0-mep5-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
       <directory>${basedir}/../${mapr_6_1-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
     <fileSet>
       <directory>${basedir}/../${mapr_6_1-mep6-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
-    <!-- Apache Kudu libs -->
-    <fileSet>
-      <directory>${basedir}/../${apache-kudu_1_3-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kudu_1_4-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kudu_1_5-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kudu_1_6-lib}/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-    <fileSet>
-      <directory>${basedir}/../${apache-kudu_1_7-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
@@ -443,13 +403,6 @@
       <directory>${basedir}/../redis-lib/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
-
-    <!-- Aerospike -->
-    <fileSet>
-        <directory>${basedir}/../aerospike-lib/target/streamsets-libs/</directory>
-        <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
 
     <!-- CDH5 Kafka libs -->
     <fileSet>
@@ -570,12 +523,6 @@
     <!-- SAP HANA -->
     <fileSet>
       <directory>${basedir}/../sap_hana-lib/target/streamsets-libs/</directory>
-      <outputDirectory>/streamsets-libs/</outputDirectory>
-    </fileSet>
-
-    <!-- Databricks ML libs -->
-    <fileSet>
-      <directory>${basedir}/../${databricks-ml_2-lib}/target/streamsets-libs/</directory>
       <outputDirectory>/streamsets-libs/</outputDirectory>
     </fileSet>
 
@@ -726,7 +673,6 @@
         <include>com.streamsets:streamsets-datacollector-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-mapr-cluster-bootstrap_2_2</include>
-        <include>com.streamsets:streamsets-datacollector-mesos-bootstrap</include>
         <include>com.streamsets:streamsets-datacollector-spark-api</include>
       </includes>
     </dependencySet>
