@@ -49,6 +49,9 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
   static final String KEYSTORE_TYPE_KEY = "keystore.type";
   static final String KEYSTORE_FILE_KEY = "keystore.file";
   static final String KEYSTORE_PASSWORD_KEY = "keystore.storePassword"; // NOSONAR
+  static final String KEYSTORE_REFRESH_WAIT_MILLIS = "keystore.file.min.refresh.millis";
+  static final long KEYSTORE_REFRESH_WAIT_MILLIS_DEFAULT = 10000;
+
 
   public static final String DEFAULT_SDC_GROUP = "all";
   public static final List<String> DEFAULT_SDC_GROUP_AS_LIST = Collections.singletonList(DEFAULT_SDC_GROUP);
@@ -62,6 +65,7 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
   private String keystoreType;
   private String keystorePassword;
   private File keyStoreFile;
+  private long keystoreRefreshWaitMillis;
 
   protected JKSManager manager;
 
@@ -94,6 +98,9 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
     if (keystorePassword == null) {
       issues.add(context.createConfigIssue(Errors.JKS_CRED_STORE_000, KEYSTORE_PASSWORD_KEY));
     }
+
+    keystoreRefreshWaitMillis = (context.getConfig(KEYSTORE_REFRESH_WAIT_MILLIS) == null)?
+        KEYSTORE_REFRESH_WAIT_MILLIS_DEFAULT: Long.parseLong(context.getConfig(KEYSTORE_REFRESH_WAIT_MILLIS));
 
     try {
       manager.initOrCreateKeyStore();
@@ -224,6 +231,7 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
     //Lock to manage concurrent access to JKS
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
+
     @VisibleForTesting
     long getKeystoreTimestamp() {
       return keystoreTimestamp;
@@ -260,7 +268,7 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
       lock.readLock().lock();
       try {
         return (keyStore == null) || (getKeyStoreFile().lastModified() > getKeystoreTimestamp() &&
-            (now() - getKeyStoreFile().lastModified() > 10000));
+            (now() - getKeyStoreFile().lastModified() > AbstractJavaKeyStoreCredentialStore.this.keystoreRefreshWaitMillis));
       } finally {
         lock.readLock().unlock();
       }
@@ -346,7 +354,7 @@ public abstract class AbstractJavaKeyStoreCredentialStore implements ManagedCred
         if (keyStore == null) {
           return null;
         }
-        return (KeyStore.SecretKeyEntry) keyStore.getEntry(
+        return (KeyStore.SecretKeyEntry) getKeyStore().getEntry(
             name,
             new KeyStore.PasswordProtection(getKeystorePassword().toCharArray())
         );

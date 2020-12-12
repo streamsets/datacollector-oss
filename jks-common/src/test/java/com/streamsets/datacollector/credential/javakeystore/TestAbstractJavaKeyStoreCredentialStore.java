@@ -17,6 +17,8 @@ package com.streamsets.datacollector.credential.javakeystore;
 
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialStore;
+import com.streamsets.pipeline.api.impl.Utils;
+import org.awaitility.Awaitility;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,12 +26,18 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.util.reflection.Whitebox;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public abstract class TestAbstractJavaKeyStoreCredentialStore<T extends AbstractJavaKeyStoreCredentialStore> {
   private File testDir;
@@ -200,6 +208,78 @@ public abstract class TestAbstractJavaKeyStoreCredentialStore<T extends Abstract
     Mockito.when(file.lastModified()).thenReturn(10001L);
     Mockito.doReturn(20002L).when(store).now();
     Assert.assertTrue(jksManager.needsToReloadKeyStore());
+  }
+
+  @Test
+  public void testKeystoreRefreshMillisNotConfigured() throws Exception {
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getId()).thenReturn("id");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+
+    Assert.assertTrue(store.init(context).isEmpty());
+    Assert.assertNotNull(Whitebox.getInternalState(store, "keystoreRefreshWaitMillis"));
+    Assert.assertEquals(AbstractJavaKeyStoreCredentialStore.KEYSTORE_REFRESH_WAIT_MILLIS_DEFAULT, Whitebox.getInternalState(store, "keystoreRefreshWaitMillis"));
+
+  }
+
+  @Test
+  public void testKeystoreRefreshMillisConfigured() throws Exception {
+    CredentialStore.Context context = Mockito.mock(CredentialStore.Context.class);
+    Mockito.when(context.getId()).thenReturn("id");
+    Mockito.when(context.getStreamSetsConfigDir()).thenReturn(System.getProperty("sdc.conf.dir"));
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_TYPE_KEY))).thenReturn("PKCS12");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_FILE_KEY))).thenReturn("file");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_PASSWORD_KEY))).thenReturn("password");
+    Mockito.when(context.getConfig(Mockito.eq(AbstractJavaKeyStoreCredentialStore.KEYSTORE_REFRESH_WAIT_MILLIS))).thenReturn("5000");
+
+    Assert.assertTrue(store.init(context).isEmpty());
+    Assert.assertEquals(5000L, Whitebox.getInternalState(store, "keystoreRefreshWaitMillis"));
+    store.store(Collections.singletonList(AbstractJavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP), "abc", "def");
+
+    File keyStoreFile =  store.getKeyStoreFile();
+
+    AbstractJavaKeyStoreCredentialStore.JKSManager manager =
+        (AbstractJavaKeyStoreCredentialStore.JKSManager) Whitebox.getInternalState(store, "manager");
+
+    //Check 1 secret is in the store
+    Assert.assertEquals(1, store.getNames().size());
+    Assert.assertEquals("def", store.get(AbstractJavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP, "abc", "").get());
+
+    // Write a new secret outside of the Credential Store implementation
+    KeyStore ks = null;
+
+    try (InputStream is = new FileInputStream(keyStoreFile)) {
+      ks = KeyStore.getInstance(store.getKeystoreType());
+      ks.load(is, store.getKeystorePassword().toCharArray());
+    } catch (Exception ex) {
+      Assert.fail(Utils.format("Failed to load keystore '{}': {}", keyStoreFile, ex));
+    }
+
+    ks.setEntry(
+        "ghi",
+        new KeyStore.SecretKeyEntry(new SecretKeySpec("jkl".getBytes(StandardCharsets.UTF_8), "AES")),
+        new KeyStore.PasswordProtection(store.getKeystorePassword().toCharArray())
+    );
+
+    try (OutputStream os = new FileOutputStream(keyStoreFile)) {
+      ks.store(os, store.getKeystorePassword().toCharArray());
+    }
+
+    // Check file is not reloaded by credential store until refresh millis expired
+    Assert.assertFalse(manager.needsToReloadKeyStore());
+    Assert.assertEquals(1, store.getNames().size());
+
+    //Check reload need is detected by the credential store impl after refresh millis expired
+    Awaitility.await()
+        .atMost(5000, TimeUnit.MILLISECONDS)
+        .until(manager::needsToReloadKeyStore);
+
+    // Check 2 secrets are available in the credential store
+    Assert.assertEquals(2, store.getNames().size());
+    Assert.assertEquals("def", store.get(AbstractJavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP, "abc", "").get());
+    Assert.assertEquals("jkl", store.get(AbstractJavaKeyStoreCredentialStore.DEFAULT_SDC_GROUP, "ghi", "").get());
   }
 
 }
