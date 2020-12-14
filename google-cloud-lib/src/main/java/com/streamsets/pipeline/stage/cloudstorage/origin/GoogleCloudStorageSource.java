@@ -138,11 +138,13 @@ public class GoogleCloudStorageSource extends BaseSource {
       blobGeneratedId = getBlobIdFromOffset(lastSourceOffset);
     }
 
-    if (minMaxPriorityQueue.isEmpty()) {
-      poolForFiles(minTimestamp, blobGeneratedId, fileOffset);
-    }
     // Process Blob
     if (parser == null) {
+
+      if (minMaxPriorityQueue.isEmpty()) {
+        poolForFiles(minTimestamp, blobGeneratedId, fileOffset);
+      }
+
       //Get next eligible blob to read, if none throw no more data event
       do {
         blob = minMaxPriorityQueue.pollFirst();
@@ -290,7 +292,8 @@ public class GoogleCloudStorageSource extends BaseSource {
   }
 
   private String getBlobIdFromOffset(String offset) {
-    return offset.split(OFFSET_DELIMITER, 3)[2];
+    String[] splitOffset = offset.split(OFFSET_DELIMITER);
+    return splitOffset[splitOffset.length-1];
   }
 
   @Override
