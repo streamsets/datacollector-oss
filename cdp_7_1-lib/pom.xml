@@ -49,6 +49,8 @@
 
       <netty.version>4.1.17.Final</netty.version>
 
+        <solr.jetty.version>9.4.35.v20201120</solr.jetty.version>
+
       <jackson.version>2.8.9</jackson.version>
       <parquet.version>1.10.99.7.0.3.0-79</parquet.version>
 
@@ -888,10 +890,25 @@
         </dependency>
 
         <!-- Solr related -->
+
         <dependency>
             <groupId>org.apache.solr</groupId>
             <artifactId>solr-solrj</artifactId>
             <version>${solr.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- Needed for HttpClientUtil -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-client</artifactId>
+            <version>${solr.jetty.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -925,6 +942,10 @@
                     <groupId>org.ow2.asm</groupId>
                     <artifactId>asm-commons</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.eclipse.jetty</groupId>
+                    <artifactId>jetty-client</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
 
@@ -936,7 +957,7 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-sdc-solr_7</artifactId>
+            <artifactId>streamsets-datacollector-sdc-solr_8</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
             <exclusions>
@@ -968,7 +989,7 @@
         </dependency>
         <dependency>
             <groupId>com.streamsets</groupId>
-            <artifactId>streamsets-datacollector-sdc-solr_7</artifactId>
+            <artifactId>streamsets-datacollector-sdc-solr_8</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
             <type>test-jar</type>
