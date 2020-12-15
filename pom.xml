@@ -209,6 +209,8 @@
     <module>kinetica-6_2-protolib</module>
     <module>couchbase-protolib</module>
 
+    <module>snowflake-connection</module>
+
     <module>elasticsearch-protolib</module>
 
     <module>solr-protolib</module>
