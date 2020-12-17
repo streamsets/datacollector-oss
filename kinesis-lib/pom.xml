@@ -34,7 +34,7 @@
 
   <properties>
     <kinesis.client.version>1.14.0</kinesis.client.version>
-    <kpl.version>0.14.1</kpl.version>
+    <kpl.version>0.14.2</kpl.version>
     <kinesis.protobuf.version>3.11.4</kinesis.protobuf.version>
     <commons-math3.version>3.5</commons-math3.version>
   </properties>
