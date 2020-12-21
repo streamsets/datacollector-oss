@@ -15,9 +15,9 @@
  */
 package com.streamsets.pipeline.lib.jdbc.parser.sql;
 
-import com.amazonaws.util.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
+import org.apache.commons.lang3.StringUtils;
 import org.parboiled.Node;
 import org.parboiled.Rule;
 import org.parboiled.parserunners.BasicParseRunner;
@@ -52,7 +52,7 @@ public class SQLParserUtils {
       boolean caseSensitive,
       Set<String> columnsExpected
   ) throws UnparseableSQLException {
-    if (StringUtils.isNullOrEmpty(sql)) {
+    if (StringUtils.isEmpty(sql)) {
       throw new UnparseableEmptySQLException(sql);
     }
     Rule parseRule;
