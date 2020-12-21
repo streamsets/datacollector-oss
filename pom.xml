@@ -722,29 +722,17 @@
              for all the sample dev stage libraries here with the directory name as value
         -->
         <apache-kafka_2_6-lib>apache-kafka_2_6-lib</apache-kafka_2_6-lib>
-        <apache-kudu_1_7-lib>apache-kudu_1_7-lib</apache-kudu_1_7-lib>
         <apache-pulsar_2-lib>apache-pulsar_2-lib</apache-pulsar_2-lib>
         <apache-solr_6_1_0-lib>apache-solr_6_1_0-lib</apache-solr_6_1_0-lib>
         <cassandra_3-lib>cassandra_3-lib</cassandra_3-lib>
-        <cdh-spark_2_3-lib>cdh-spark_2_3-lib</cdh-spark_2_3-lib>
-        <cdh_5_16-lib>cdh_5_16-lib</cdh_5_16-lib>
-        <cdh_6_3-lib>cdh_6_3-lib</cdh_6_3-lib>
         <cdp_7_1-lib>cdp_7_1-lib</cdp_7_1-lib>
-        <cdh_kafka_4_1-lib>cdh_kafka_4_1-lib</cdh_kafka_4_1-lib>
-        <cdh_spark_2_1_r1-lib>cdh_spark_2_1_r1-lib</cdh_spark_2_1_r1-lib>
         <couchbase_5-lib>couchbase_5-lib</couchbase_5-lib>
         <elasticsearch_7-lib>elasticsearch_7-lib</elasticsearch_7-lib>
         <emr_hadoop_2_8_3-lib>emr_hadoop_2_8_3-lib</emr_hadoop_2_8_3-lib>
         <groovy_2_4-lib>groovy_2_4-lib</groovy_2_4-lib>
-        <hdp_2_6-lib>hdp_2_6-lib</hdp_2_6-lib>
-        <hdp_2_6_2-hive1-lib>hdp_2_6_2-hive1-lib</hdp_2_6_2-hive1-lib>
-        <hdp_2_6-hive2-lib>hdp_2_6-hive2-lib</hdp_2_6-hive2-lib>
-        <hdp_2_6-flume-lib>hdp_2_6-flume-lib</hdp_2_6-flume-lib>
         <hdp_3_1-lib>hdp_3_1-lib</hdp_3_1-lib>
         <jython_2_7-lib>jython_2_7-lib</jython_2_7-lib>
         <kinetica_7_0-lib>kinetica_7_0-lib</kinetica_7_0-lib>
-        <mapr_6_1-lib>mapr_6_1-lib</mapr_6_1-lib>
-        <mapr_6_1-mep6-lib>mapr_6_1-mep6-lib</mapr_6_1-mep6-lib>
         <mongodb_4-lib>mongodb_4-lib</mongodb_4-lib>
         <azure-lib>azure_lib</azure-lib>
         <databricks-ml_2-lib>databricks-ml_2-lib</databricks-ml_2-lib>
@@ -758,29 +746,17 @@
              IMPORTANT: the modules for the sample dev stage libraries
         -->
         <module>apache-kafka_2_6-lib</module>
-        <module>apache-kudu_1_7-lib</module>
         <module>apache-pulsar_2-lib</module>
         <module>apache-solr_6_1_0-lib</module>
         <module>cassandra_3-lib</module>
-        <module>cdh-spark_2_1-lib</module>
-        <module>cdh_5_16-lib</module>
-        <module>cdh_6_3-lib</module>
         <module>cdp_7_1-lib</module>
-        <module>cdh_kafka_4_1-lib</module>
-        <module>cdh-spark_2_3-lib</module>
         <module>couchbase_5-lib</module>
         <module>elasticsearch_7-lib</module>
         <module>emr_hadoop_2_8_3-lib</module>
         <module>groovy_2_4-lib</module>
         <module>kinetica_7_0-lib</module>
-        <module>hdp_2_6-lib</module>
-        <module>hdp_2_6_2-hive1-lib</module>
-        <module>hdp_2_6-hive2-lib</module>
-        <module>hdp_2_6-flume-lib</module>
         <module>hdp_3_1-lib</module>
         <module>jython_2_7-lib</module>
-        <module>mapr_6_1-lib</module>
-        <module>mapr_6_1-mep6-lib</module>
         <module>mongodb_4-lib</module>
         <module>databricks-ml_2-lib</module>
       </modules>
