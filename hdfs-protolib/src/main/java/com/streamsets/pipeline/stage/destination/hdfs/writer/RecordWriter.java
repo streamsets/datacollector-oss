@@ -48,7 +48,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class RecordWriter {
   private final static Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
   private final static boolean IS_TRACE_ENABLED = LOG.isTraceEnabled();
-  private final long expires;
+  private volatile long expires;
   private long idleTimeout;
   private final Path path;
   private final DataGeneratorFactory generatorFactory;
@@ -235,6 +235,12 @@ public class RecordWriter {
     } finally {
       generator = null;
       seqWriter = null;
+      // Set output stream to null as we already closed the generator/sequence writer
+      // and this can be garbage collected.
+      textOutputStream = null;
+      // Set expires to current time, so DelayedQueue
+      // can purge Writer entries
+      expires = System.currentTimeMillis();
       closeLock.writeLock().unlock();
       //Gracefully Shutdown the thread, so rename goes through without glitch.
       idleCloseExecutor.shutdown();
