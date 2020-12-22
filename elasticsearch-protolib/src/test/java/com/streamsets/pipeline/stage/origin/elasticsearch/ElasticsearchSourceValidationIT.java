@@ -22,7 +22,7 @@ import org.junit.Test;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_34;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_41;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_49;
-import static com.streamsets.pipeline.stage.config.elasticsearch.Groups.ELASTIC_SEARCH;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups.ELASTIC_SEARCH;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.eclipse.jetty.http.HttpStatus.OK_200;
@@ -74,7 +74,7 @@ public class ElasticsearchSourceValidationIT extends BaseElasticsearchValidation
     ElasticsearchSourceConfig conf = createConf(true);
     conf.query = "{}";
 
-    testErrorHandling(conf, ELASTIC_SEARCH, "conf", "httpUris", ELASTICSEARCH_49);
+    testErrorHandling(conf, ELASTIC_SEARCH, "conf", "connection.serverUrl", ELASTICSEARCH_49);
   }
 
   @Test
@@ -92,7 +92,7 @@ public class ElasticsearchSourceValidationIT extends BaseElasticsearchValidation
     ElasticsearchSourceConfig conf = createConf(true);
     conf.query = "{}";
 
-    testErrorHandling(conf, ELASTIC_SEARCH, "conf", "httpUris", ELASTICSEARCH_49);
+    testErrorHandling(conf, ELASTIC_SEARCH, "conf", "connection.serverUrl", ELASTICSEARCH_49);
   }
 }
 

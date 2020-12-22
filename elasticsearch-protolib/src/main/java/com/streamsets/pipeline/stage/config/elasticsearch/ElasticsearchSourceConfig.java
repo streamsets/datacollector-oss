@@ -18,8 +18,13 @@ package com.streamsets.pipeline.stage.config.elasticsearch;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.lib.el.OffsetEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection;
 
 public class ElasticsearchSourceConfig extends ElasticsearchConfig {
+
+  private static final String QUERY_CONFIG_NAME = "query";
+
+  public static final String QUERY_CONFIG_PATH = QUERY_CONFIG_NAME;
 
   @ConfigDef(
       required = false,

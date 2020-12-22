@@ -41,7 +41,7 @@ import com.streamsets.pipeline.lib.parser.DataParserFormat;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -105,7 +105,7 @@ public class ElasticsearchSource extends BasePushSource {
 
     if (conf.isIncrementalMode && !conf.query.contains(OffsetEL.OFFSET)) {
       issues.add(getContext().createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
           "conf.query",
           Errors.ELASTICSEARCH_25
       ));
@@ -152,7 +152,7 @@ public class ElasticsearchSource extends BasePushSource {
       result = pathEscape.escape(path);
     } catch (final URISyntaxException ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
           prefix + "." + conf,
           Errors.ELASTICSEARCH_50,
           path,
@@ -421,8 +421,8 @@ public class ElasticsearchSource extends BasePushSource {
           endpoint,
           params,
           entity,
-          delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get(),
-              conf.securityConfig.securityPassword.get())
+          delegate.getAuthenticationHeader(conf.connection.securityConfig.securityUser.get(),
+              conf.connection.securityConfig.securityPassword.get())
       );
 
       Reader reader = new InputStreamReader(response.getEntity().getContent());
@@ -440,8 +440,8 @@ public class ElasticsearchSource extends BasePushSource {
             "/_search/scroll",
             conf.params,
             entity,
-            delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get(),
-                conf.securityConfig.securityPassword.get())
+            delegate.getAuthenticationHeader(conf.connection.securityConfig.securityUser.get(),
+                conf.connection.securityConfig.securityPassword.get())
         );
 
         return parseEntity(response.getEntity());
@@ -466,7 +466,7 @@ public class ElasticsearchSource extends BasePushSource {
         "/_search/scroll",
         conf.params,
         entity,
-        delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get(), conf.securityConfig.securityPassword.get())
+        delegate.getAuthenticationHeader(conf.connection.securityConfig.securityUser.get(), conf.connection.securityConfig.securityPassword.get())
       );
     }
 

@@ -17,9 +17,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.config.elasticsearch;
-
-import com.streamsets.pipeline.api.ChooserValues;
+package com.streamsets.pipeline.stage.connection.elasticsearch;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 

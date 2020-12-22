@@ -29,8 +29,8 @@ import com.streamsets.pipeline.sdk.RecordCreator;
 import com.streamsets.pipeline.sdk.TargetRunner;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
+import com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig;
+import com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode;
 import com.streamsets.pipeline.stage.elasticsearch.common.ElasticsearchBaseIT;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
@@ -68,7 +68,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testValidations() throws Exception {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.emptyList();
+    conf.connection.serverUrl = "";
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')x}";
@@ -78,8 +78,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity= false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity= false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     Target target = new ElasticsearchTarget(conf);
@@ -90,7 +90,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_03.name()));
     Assert.assertTrue(issues.get(2).toString().contains(Errors.ELASTICSEARCH_06.name()));
 
-    conf.httpUris = Collections.singletonList("x");
+    conf.connection.serverUrl = "x:";
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
@@ -100,8 +100,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
@@ -110,7 +110,7 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
-    conf.httpUris = Collections.singletonList("localhost:0");
+    conf.connection.serverUrl = "localhost";
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
@@ -120,8 +120,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
@@ -130,7 +130,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertEquals(1, issues.size());
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_43.name()));
 
-    conf.httpUris = Arrays.asList("localhost:9200");
+    conf.connection.serverUrl = "localhost";
+    conf.connection.port = "9200";
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "x";
@@ -140,8 +141,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "${record:nonExistentFunction()}";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity = false;
-    conf.securityConfig= new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig= new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     target = new ElasticsearchTarget(conf);
@@ -151,7 +152,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_27.name()));
     Assert.assertTrue(issues.get(1).toString().contains(Errors.ELASTICSEARCH_30.name()));
 
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')}";
@@ -161,8 +163,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.UPDATE;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n\"_retry_on_conflict\"}";
 
     target = new ElasticsearchTarget(conf);
@@ -191,7 +193,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testAdditionalPropertiesValidationWithRecordLabel() throws Exception {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')}";
@@ -201,8 +204,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.UPDATE;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{}";
 
     Target target = new ElasticsearchTarget(conf);
@@ -238,7 +241,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testAdditionalPropertiesValidationWithoutRecordLabel() throws Exception {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${record:value('/index')}";
@@ -248,8 +252,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.UPDATE;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{}";
 
     Target target = new ElasticsearchTarget(conf);
@@ -277,7 +281,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testCredentialValue() {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
@@ -286,11 +291,11 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
     conf.rawAdditionalProperties =  "{\n}";
-    conf.useSecurity = true;
-    conf.securityConfig.securityMode = SecurityMode.BASIC;
+    conf.connection.useSecurity = true;
+    conf.connection.securityConfig.securityMode = SecurityMode.BASIC;
     // Test for blank credentials using security
-    conf.securityConfig.securityUser = () -> "";
-    conf.securityConfig.securityPassword = () -> "";
+    conf.connection.securityConfig.securityUser = () -> "";
+    conf.connection.securityConfig.securityPassword = () -> "";
 
     Target target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -299,8 +304,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_20.name()));
 
     // Test for null user name using security
-    conf.securityConfig.securityUser = () -> null;
-    conf.securityConfig.securityPassword = () -> "";
+    conf.connection.securityConfig.securityUser = () -> null;
+    conf.connection.securityConfig.securityPassword = () -> "";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -309,8 +314,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_40.name()));
 
     // Test for null password and invalid user name using security
-    conf.securityConfig.securityUser = () -> "";
-    conf.securityConfig.securityPassword = () -> null;
+    conf.connection.securityConfig.securityUser = () -> "";
+    conf.connection.securityConfig.securityPassword = () -> null;
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -319,8 +324,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_40.name()));
 
     // Test for user name without password format and blank password field
-    conf.securityConfig.securityUser = () -> "elastic";
-    conf.securityConfig.securityPassword = () -> "";
+    conf.connection.securityConfig.securityUser = () -> "elastic";
+    conf.connection.securityConfig.securityPassword = () -> "";
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -346,7 +351,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   private ElasticsearchTarget createTarget(String timeDriver, String indexEL, String docIdEL, ElasticsearchOperationType op,
                                            String parent, String routing) {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = timeDriver;
     conf.timeZoneID = "UTC";
     conf.indexTemplate = indexEL;
@@ -356,8 +362,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.routingTemplate = routing;
     conf.charset = "UTF-8";
     conf.defaultOperation = op;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n\"_retry_on_conflict\":1\n}";
 
     return new ElasticsearchTarget(conf);
@@ -538,7 +544,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testTimeDriverNow() throws Exception {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
@@ -546,8 +553,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     ElasticsearchTarget target = new ElasticsearchTarget(conf);
@@ -662,12 +669,12 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.docIdTemplate = "";
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.INDEX;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties = "{}";
 
     // Invalid url
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + "NOT_A_NUMBER");
+    conf.connection.serverUrl = "127.0.0.1:NOT_A_NUMBER";
 
     ElasticsearchTarget target = new ElasticsearchTarget(conf);
     TargetRunner runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -676,7 +683,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     Assert.assertTrue(issues.get(0).toString().contains(Errors.ELASTICSEARCH_07.name()));
 
     // Invalid port number
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + Integer.MAX_VALUE);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + Integer.MAX_VALUE;
 
     target = new ElasticsearchTarget(conf);
     runner = new TargetRunner.Builder(ElasticSearchDTarget.class, target).build();
@@ -689,7 +697,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
   @Test
   public void testNonIndexOperationWithoutDocId() throws Exception {
     ElasticsearchTargetConfig conf = new ElasticsearchTargetConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
     conf.timeDriver = "${time:now()}";
     conf.timeZoneID = "UTC";
     conf.indexTemplate = "${YYYY()}";
@@ -697,8 +706,8 @@ public class ElasticSearchTargetIT extends ElasticsearchBaseIT {
     conf.docIdTemplate = ""; // empty document ID expression
     conf.charset = "UTF-8";
     conf.defaultOperation = ElasticsearchOperationType.CREATE;
-    conf.useSecurity = false;
-    conf.securityConfig = new SecurityConfig();
+    conf.connection.useSecurity = false;
+    conf.connection.securityConfig = new SecurityConfig();
     conf.rawAdditionalProperties =  "{\n}";
 
     ElasticsearchTarget target = new ElasticsearchTarget(conf);

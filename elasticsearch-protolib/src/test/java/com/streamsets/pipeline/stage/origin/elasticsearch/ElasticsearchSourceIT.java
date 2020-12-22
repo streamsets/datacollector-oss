@@ -129,7 +129,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testBatchModeSingleBatch() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -155,7 +157,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testBatchModeToCompletion() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -190,7 +194,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testCursorExpiredNoDelete() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -235,7 +241,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testCursorExpiredDefault() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -280,7 +288,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testInvalidIncrementalQuery() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -302,7 +312,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testIncrementalMode() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -347,7 +359,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testIncrementalModeWithQueryInterval() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";
@@ -399,7 +413,9 @@ public class ElasticsearchSourceIT extends ElasticsearchBaseIT {
   @Test
   public void testParallelismChanged() throws Exception {
     ElasticsearchSourceConfig conf = new ElasticsearchSourceConfig();
-    conf.httpUris = Collections.singletonList("127.0.0.1:" + esHttpPort);
+    conf.connection.useSecurity = false;
+    conf.connection.serverUrl = "127.0.0.1";
+    conf.connection.port = "" + esHttpPort;
 
     conf.index = "twitter";
     conf.mapping = "tweet";

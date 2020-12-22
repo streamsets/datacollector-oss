@@ -34,7 +34,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.config.elasticsearch;
+package com.streamsets.pipeline.stage.connection.elasticsearch;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;

@@ -28,3 +28,24 @@ upgrades:
       - setConfig:
           name: elasticSearchConfig.securityConfig.securityPassword
           value: ""
+  - toVersion: 12
+    actions:
+      - setConfigFromJoinedConfigList:
+          listName: elasticSearchConfig.httpUris
+          name: elasticSearchConfig.connection.serverUrl
+          delimiter: ","
+      - removeConfigs:
+          namePattern: elasticSearchConfig.httpUris
+      - renameConfig:
+          oldNamePattern: elasticSearchConfig.useSecurity
+          newNamePattern: elasticSearchConfig.connection.useSecurity
+      - setConfig:
+          name: elasticSearchConfig.connection.port
+          value: "9200"
+      - renameConfig:
+          oldNamePattern: elasticSearchConfig.securityConfig.(.*$)
+          newNamePattern: elasticSearchConfig.connection.securityConfig.(0)
+      - setConfig:
+          lookForName: elasticSearchConfig.connection.securityConfig.sslTrustStorePath
+          name: elasticSearchConfig.connection.securityConfig.enableSSL
+          value: true

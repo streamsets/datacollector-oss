@@ -27,7 +27,7 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_04("Could not parse the docId template expression: {}"),
   ELASTICSEARCH_05("Could not evaluate the docId template expression: {}"),
   ELASTICSEARCH_06("HTTP URI cannot be empty"),
-  ELASTICSEARCH_07("Invalid URI, it must be <HOSTNAME>:<PORT>: '{}'"),
+  ELASTICSEARCH_07("Invalid URI, it must be (http(s)://)<HOSTNAME>(:<PORT>) but was: '{}'"),
   ELASTICSEARCH_08("Port value out of range: '{}'"),
   ELASTICSEARCH_09("Unable to authenticate user [{}] for REST request [{}]"),
   ELASTICSEARCH_10("TrustStore path is provided but not TrustStore password"),
@@ -73,7 +73,8 @@ public enum Errors implements ErrorCode {
   ELASTICSEARCH_49("Unexpected JSON response [{}]"),
   ELASTICSEARCH_50("Invalid path [{}] ({})"),
   ELASTICSEARCH_51("No PathEscape implementation found"),
-  ELASTICSEARCH_52("There should be only one implementation of PathEscape");
+  ELASTICSEARCH_52("There should be only one implementation of PathEscape"),
+  ELASTICSEARCH_53("Port value should be a number: '{}'");
 
   private final String msg;
 

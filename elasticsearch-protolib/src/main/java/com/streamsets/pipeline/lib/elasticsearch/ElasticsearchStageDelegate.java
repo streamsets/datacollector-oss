@@ -27,9 +27,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.aws.AwsUtil;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityConfig;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -71,31 +69,35 @@ import java.util.Optional;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.ACCESS_KEY_ID_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.ENDPOINT_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.PORT_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.SERVER_URL_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.SECURITY_PASSWORD_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.SECURITY_USER_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.SSL_TRUSTSTORE_PASSWORD_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.SSL_TRUSTSTORE_PATH_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig.USE_SECURITY_CONFIG_PATH;
+import static com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig.QUERY_CONFIG_PATH;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_09;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_46;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_47;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_48;
-import static com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode.BASIC;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode.AWSSIGV4;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode.BASIC;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 
 public class ElasticsearchStageDelegate {
   private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchStageDelegate.class);
-  private static final Pattern URI_PATTERN = Pattern.compile("\\S+:(\\d+)");
+  private static final Pattern URI_PATTERN = Pattern.compile("(https?://)?[^\\r\\n\\v\\f\\t :]+(:(\\d+))?");
   private static final String AWS_SERVICE_NAME = "es";
   private static final JsonParser JSON_PARSER = new JsonParser();
   private static final Gson GSON = new GsonBuilder().setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES).create();
   private static final String VALID_PROPERTY_NAME = "valid";
   private static final String QUERY_PROPERTY_NAME = "query";
   private static final String VALIDATE_QUERY_PATH = "/_validate/query";
-  private static final String HTTP_URIS_CONFIG_NAME = "httpUris";
-  private static final String QUERY_CONFIG_NAME = "query";
-  private static final String SECURITY_CONFIG_NAME = "securityConfig";
-  private static final String USER_CONFIG_NAME = "securityUser";
-  private static final String USE_SECURITY_CONFIG_NAME = "useSecurity";
-  private static final String ACCESS_KEY_ID_CONFIG_NAME = "awsAccessKeyId";
 
   private final Stage.Context context;
   private final ElasticsearchConfig conf;
@@ -110,41 +112,58 @@ public class ElasticsearchStageDelegate {
   }
 
   public List<Stage.ConfigIssue> init(String prefix, List<Stage.ConfigIssue> issues) {
-    if (conf.httpUris.isEmpty()) {
+    if (!conf.connection.port.trim().isEmpty()) {
+      try {
+        Integer.parseInt(conf.connection.port);
+      } catch (final NumberFormatException ex) {
+        issues.add(
+            getContext().createConfigIssue(
+                ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+                prefix + "." + PORT_CONFIG_PATH,
+                Errors.ELASTICSEARCH_53,
+                conf.connection.port
+            )
+        );
+      }
+    }
+
+    List<String> serverURL = conf.connection.getServerURL();
+
+    if (conf.connection.serverUrl.isEmpty()) {
       issues.add(
           context.createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
-              prefix + ".httpUris",
+              ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+              prefix + "." + SERVER_URL_CONFIG_PATH,
               Errors.ELASTICSEARCH_06
           )
       );
     } else {
-      for (String uri : conf.httpUris) {
-        validateUri(uri, issues, prefix + ".httpUris");
+      for (String uri : serverURL) {
+        validateUri(uri, issues, prefix + "." + SERVER_URL_CONFIG_PATH);
       }
     }
 
     String securityUser = null;
     String securityPassword = null;
 
-    if (conf.useSecurity && SecurityMode.BASIC.equals(conf.securityConfig.securityMode)) {
+    if (conf.connection.useSecurity && BASIC.equals(conf.connection.securityConfig.securityMode)) {
       try {
-        securityUser = conf.securityConfig.securityUser.get();
+        securityUser = conf.connection.securityConfig.securityUser.get();
       } catch (StageException e) {
          issues.add(context.createConfigIssue(
-             Groups.SECURITY.name(),
-             prefix + "." + SecurityConfig.NAME + ".securityUser",
+             ElasticsearchConnectionGroups.SECURITY.name(),
+             prefix + "." + SECURITY_USER_CONFIG_PATH,
              Errors.ELASTICSEARCH_32,
              e.getMessage(),
              e
         ));
       }
       try {
-        securityPassword = conf.securityConfig.securityPassword.get();
+        securityPassword = conf.connection.securityConfig.securityPassword.get();
       } catch (StageException e) {
         issues.add(context.createConfigIssue(
-            Groups.SECURITY.name(),
-            prefix + "." + SecurityConfig.NAME + ".securityPassword",
+            ElasticsearchConnectionGroups.SECURITY.name(),
+            prefix + "." + SECURITY_PASSWORD_CONFIG_PATH,
             Errors.ELASTICSEARCH_38,
             e.getMessage(),
             e
@@ -153,8 +172,8 @@ public class ElasticsearchStageDelegate {
       if (securityUser == null || securityPassword == null) {
         issues.add(
             context.createConfigIssue(
-                Groups.SECURITY.name(),
-                prefix + "." + SecurityConfig.NAME + ".securityUser",
+                ElasticsearchConnectionGroups.SECURITY.name(),
+                prefix + "." + SECURITY_USER_CONFIG_PATH,
                 Errors.ELASTICSEARCH_40
             )
         );
@@ -162,16 +181,16 @@ public class ElasticsearchStageDelegate {
         if (securityUser.isEmpty()) {
           issues.add(
               context.createConfigIssue(
-                  Groups.SECURITY.name(),
-                  prefix + "." + SecurityConfig.NAME + ".securityUser",
+                  ElasticsearchConnectionGroups.SECURITY.name(),
+                  prefix + "." + SECURITY_USER_CONFIG_PATH,
                   Errors.ELASTICSEARCH_20
               )
           );
         } else if (!securityUser.contains(":") && securityPassword.isEmpty()) {
           issues.add(
               context.createConfigIssue(
-                  Groups.SECURITY.name(),
-                  prefix + "." + SecurityConfig.NAME + ".securityPassword",
+                  ElasticsearchConnectionGroups.SECURITY.name(),
+                  prefix + "." + SECURITY_PASSWORD_CONFIG_PATH,
                   Errors.ELASTICSEARCH_39
               )
           );
@@ -183,31 +202,42 @@ public class ElasticsearchStageDelegate {
       return issues;
     }
 
-    int numHosts = conf.httpUris.size();
+    int numHosts = serverURL.size();
     HttpHost[] hosts = new HttpHost[numHosts];
     for (int i = 0; i < numHosts; i++) {
-      hosts[i] = HttpHost.create(conf.httpUris.get(i));
+      hosts[i] = HttpHost.create(serverURL.get(i));
     }
     RestClientBuilder restClientBuilder = RestClient.builder(hosts);
 
     try {
       Response response = null;
 
-      if (conf.useSecurity) {
-        buildSSLContext(prefix, issues, restClientBuilder);
+      if (conf.connection.useSecurity) {
+        SSLContext sslContext = buildSSLContext(prefix, issues, restClientBuilder);
         if (!issues.isEmpty()) {
           return issues;
         }
 
-        switch (conf.securityConfig.securityMode) {
+        switch (conf.connection.securityConfig.securityMode) {
           case BASIC:
-            restClient = restClientBuilder.build();
+            restClient = restClientBuilder.setHttpClientConfigCallback(
+                new RestClientBuilder.HttpClientConfigCallback() {
+                  @Override
+                  public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
+                    return httpClientBuilder.setSSLContext(sslContext);
+                  }
+                }
+            ).build();
             break;
           case AWSSIGV4:
-            AwsRegion awsRegion = conf.securityConfig.awsRegion;
+            AwsRegion awsRegion = conf.connection.securityConfig.awsRegion;
             if (awsRegion == AwsRegion.OTHER) {
-              if (conf.securityConfig.endpoint == null || conf.securityConfig.endpoint.isEmpty()) {
-                issues.add(context.createConfigIssue(Groups.SECURITY.name(), prefix + "." + SecurityConfig.NAME + ".endpoint", Errors.ELASTICSEARCH_33));
+              if (conf.connection.securityConfig.endpoint == null || conf.connection.securityConfig.endpoint.isEmpty()) {
+                issues.add(context.createConfigIssue(
+                    ElasticsearchConnectionGroups.SECURITY.name(),
+                    prefix + "." + ENDPOINT_CONFIG_PATH,
+                    Errors.ELASTICSEARCH_33
+                ));
                 return issues;
               }
             }
@@ -215,10 +245,12 @@ public class ElasticsearchStageDelegate {
             HttpRequestInterceptor interceptor = AwsUtil.getAwsSigV4Interceptor(
                 AWS_SERVICE_NAME,
                 awsRegion,
-                conf.securityConfig.endpoint,
-                conf.securityConfig.awsAccessKeyId,
-                conf.securityConfig.awsSecretAccessKey);
-            restClient = RestClient.builder(hosts).setHttpClientConfigCallback(hacb -> hacb.addInterceptorLast(interceptor)).build();
+                conf.connection.securityConfig.endpoint,
+                conf.connection.securityConfig.awsAccessKeyId,
+                conf.connection.securityConfig.awsSecretAccessKey);
+            restClient = restClientBuilder.setHttpClientConfigCallback(hacb ->
+                hacb.setSSLContext(sslContext).addInterceptorLast(interceptor)
+            ).build();
             break;
         }
 
@@ -245,13 +277,13 @@ public class ElasticsearchStageDelegate {
         LOG.debug("Response from server: {}", responseBody);
       }
     } catch (final ResponseException ex) {
-      addHTTPResponseError(prefix, "httpUris", "/", ex.getResponse(), issues);
+      addHTTPResponseError(prefix, SERVER_URL_CONFIG_PATH, "/", ex.getResponse(), issues);
     } catch (final Exception e) {
       issues.add(context.createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
-          prefix + "." + HTTP_URIS_CONFIG_NAME,
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+          prefix + "." + SERVER_URL_CONFIG_PATH,
           Errors.ELASTICSEARCH_43,
-          createHostsString(),
+          conf.createHostsString(),
           e.getMessage(),
           e
       ));
@@ -279,13 +311,6 @@ public class ElasticsearchStageDelegate {
     }
   }
 
-  private String createHostsString() {
-    return conf.httpUris.stream()
-        .map(HttpHost::create)
-        .map(HttpHost::toHostString)
-        .collect(Collectors.joining(","));
-  }
-
   private boolean addHTTPResponseError(
       final String configPrefix,
       final String failedConfig,
@@ -295,7 +320,7 @@ public class ElasticsearchStageDelegate {
   ) {
     int statusCode = response.getStatusLine().getStatusCode();
     if (statusCode == HttpStatus.SC_BAD_REQUEST) {
-      issues.add(context.createConfigIssue(Groups.ELASTIC_SEARCH.name(),
+      issues.add(context.createConfigIssue(ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
           configPrefix + "." + failedConfig,
           Errors.ELASTICSEARCH_44,
           endpoint
@@ -305,8 +330,8 @@ public class ElasticsearchStageDelegate {
     } else if (statusCode == HttpStatus.SC_FORBIDDEN) {
       addAuthError(configPrefix, endpoint, issues, ELASTICSEARCH_46, ELASTICSEARCH_48);
     } else {
-      issues.add(context.createConfigIssue(Groups.ELASTIC_SEARCH.name(),
-          configPrefix + "." + HTTP_URIS_CONFIG_NAME,
+      issues.add(context.createConfigIssue(ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+          configPrefix + "." + SERVER_URL_CONFIG_PATH,
           Errors.ELASTICSEARCH_45,
           endpoint,
           statusCode,
@@ -324,27 +349,27 @@ public class ElasticsearchStageDelegate {
       final Errors error,
       final Errors anonymousError
   ) {
-    if (conf.useSecurity) {
-      if (conf.securityConfig.securityMode == BASIC) {
+    if (conf.connection.useSecurity) {
+      if (conf.connection.securityConfig.securityMode == BASIC) {
         issues.add(context.createConfigIssue(
-            Groups.SECURITY.name(),
-            configPrefix + "." + SECURITY_CONFIG_NAME + "." + USER_CONFIG_NAME,
+            ElasticsearchConnectionGroups.SECURITY.name(),
+            configPrefix + "." + SECURITY_USER_CONFIG_PATH,
             error,
-            conf.securityConfig.securityUser.get(),
+            conf.connection.securityConfig.securityUser.get(),
             endpoint
         ));
       } else {
         issues.add(context.createConfigIssue(
-            Groups.SECURITY.name(),
-            configPrefix + "." + SECURITY_CONFIG_NAME + "." + ACCESS_KEY_ID_CONFIG_NAME,
+            ElasticsearchConnectionGroups.SECURITY.name(),
+            configPrefix + "." + ACCESS_KEY_ID_CONFIG_PATH,
             anonymousError,
             endpoint
         ));
       }
     } else {
         issues.add(context.createConfigIssue(
-            Groups.ELASTIC_SEARCH.name(),
-            configPrefix + "." + USE_SECURITY_CONFIG_NAME,
+            ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+            configPrefix + "." + USE_SECURITY_CONFIG_PATH,
             anonymousError,
             endpoint
         ));
@@ -376,9 +401,9 @@ public class ElasticsearchStageDelegate {
       return;
     }
 
-    Header[] headers = conf.useSecurity ? getAuthenticationHeader(
-        conf.securityConfig.securityUser.get(),
-        conf.securityConfig.securityPassword.get()
+    Header[] headers = conf.connection.useSecurity ? getAuthenticationHeader(
+        conf.connection.securityConfig.securityUser.get(),
+        conf.connection.securityConfig.securityPassword.get()
     ) : new Header[]{};
 
     String requestBody = prepareRequestBody(prefix, query, isIncrementalMode, offsetPlaceholder, timeOffset, issues);
@@ -412,7 +437,7 @@ public class ElasticsearchStageDelegate {
       json = JSON_PARSER.parse(body).getAsJsonObject();
     } catch (final JsonSyntaxException | IllegalStateException ex) {
       issues.add(context.createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(), configPrefix + "." + QUERY_CONFIG_NAME,
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), configPrefix + "." + QUERY_CONFIG_PATH,
           Errors.ELASTICSEARCH_34,
           body,
           ex.getMessage(),
@@ -458,13 +483,13 @@ public class ElasticsearchStageDelegate {
           headers
       );
     } catch (final ResponseException ex) {
-      addHTTPResponseError(configPrefix, "query", endpoint, ex.getResponse(), issues);
+      addHTTPResponseError(configPrefix, QUERY_CONFIG_PATH, endpoint, ex.getResponse(), issues);
     } catch (final IOException ex) {
       issues.add(context.createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
-          configPrefix + "." + HTTP_URIS_CONFIG_NAME,
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+          configPrefix + "." + SERVER_URL_CONFIG_PATH,
           Errors.ELASTICSEARCH_43,
-          createHostsString(),
+          conf.createHostsString(),
           ex.getMessage(),
           ex
       ));
@@ -496,8 +521,8 @@ public class ElasticsearchStageDelegate {
       responseBody = scanner.hasNext() ? scanner.next() : "";
     } catch (final IOException ex) {
       issues.add(context.createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
-          configPrefix + "." + HTTP_URIS_CONFIG_NAME,
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
+          configPrefix + "." + SERVER_URL_CONFIG_PATH,
           Errors.ELASTICSEARCH_42,
           ex
       ));
@@ -520,13 +545,13 @@ public class ElasticsearchStageDelegate {
       Boolean valid = extractValidPropertyValue(json);
       if (valid == null) {
         issues.add(context.createConfigIssue(
-            Groups.ELASTIC_SEARCH.name(), configPrefix + "." + HTTP_URIS_CONFIG_NAME,
+            ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), configPrefix + "." + SERVER_URL_CONFIG_PATH,
             Errors.ELASTICSEARCH_49,
             responseBody
         ));
       } else if (!valid) {
         issues.add(context.createConfigIssue(
-            Groups.ELASTIC_SEARCH.name(), configPrefix + "." + QUERY_CONFIG_NAME,
+            ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), configPrefix + "." + QUERY_CONFIG_PATH,
             Errors.ELASTICSEARCH_41,
             requestBody
         ));
@@ -544,7 +569,7 @@ public class ElasticsearchStageDelegate {
       json = JSON_PARSER.parse(responseBody);
     } catch (final JsonSyntaxException ex) {
       issues.add(context.createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(), configPrefix + "." + HTTP_URIS_CONFIG_NAME,
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), configPrefix + "." + SERVER_URL_CONFIG_PATH,
           Errors.ELASTICSEARCH_49,
           responseBody,
           ex
@@ -602,21 +627,23 @@ public class ElasticsearchStageDelegate {
     }
   }
 
-  private void buildSSLContext(String prefix, List<Stage.ConfigIssue> issues, RestClientBuilder restClientBuilder) throws IOException {
+  private SSLContext buildSSLContext(
+      final String prefix, List<Stage.ConfigIssue> issues,
+      final RestClientBuilder restClientBuilder
+  ) throws IOException {
+    SSLContext sslContext = null;
+
     try {
-      final SSLContext sslcontext;
-      final String trustStorePath = conf.securityConfig.sslTrustStorePath;
-      if (StringUtils.isEmpty(trustStorePath)) {
-        sslcontext = SSLContext.getDefault();
-      } else {
+      final String trustStorePath = conf.connection.securityConfig.sslTrustStorePath;
+      if (conf.connection.securityConfig.enableSSL) {
         String trustStorePass = null;
         try {
-          trustStorePass = conf.securityConfig.sslTrustStorePassword.get();
+          trustStorePass = conf.connection.securityConfig.sslTrustStorePassword.get();
         } catch (StageException e) {
            issues.add(
               context.createConfigIssue(
-                  Groups.SECURITY.name(),
-                  prefix + "." + SecurityConfig.NAME + ".sslTrustStorePassword",
+                  ElasticsearchConnectionGroups.SECURITY.name(),
+                  prefix + "." + SSL_TRUSTSTORE_PASSWORD_CONFIG_PATH,
                   Errors.ELASTICSEARCH_31,
                   e.getMessage(),
                   e
@@ -628,8 +655,8 @@ public class ElasticsearchStageDelegate {
           trustStorePass = null;
           issues.add(
               context.createConfigIssue(
-                  Groups.SECURITY.name(),
-                  prefix + "." + SecurityConfig.NAME + ".sslTrustStorePassword",
+                  ElasticsearchConnectionGroups.SECURITY.name(),
+                  prefix + "." + SSL_TRUSTSTORE_PASSWORD_CONFIG_PATH,
                   Errors.ELASTICSEARCH_10
               )
           );
@@ -640,8 +667,8 @@ public class ElasticsearchStageDelegate {
           path = null;
           issues.add(
               context.createConfigIssue(
-                  Groups.SECURITY.name(),
-                  prefix + "." + SecurityConfig.NAME + ".sslTrustStorePath",
+                  ElasticsearchConnectionGroups.SECURITY.name(),
+                  prefix + "." + SSL_TRUSTSTORE_PATH_CONFIG_PATH,
                   Errors.ELASTICSEARCH_11,
                   trustStorePath
               )
@@ -653,31 +680,26 @@ public class ElasticsearchStageDelegate {
           try (InputStream is = Files.newInputStream(path)) {
             keyStore.load(is, trustStorePass.toCharArray());
           }
-          sslcontext = SSLContexts.custom().loadTrustMaterial(keyStore, null).build();
+          sslContext = SSLContexts.custom().loadTrustMaterial(keyStore, null).build();
         } else {
-          sslcontext = null;
+          sslContext = null;
         }
+      } else {
+        sslContext = SSLContext.getDefault();
       }
-
-      restClientBuilder.setHttpClientConfigCallback(
-          new RestClientBuilder.HttpClientConfigCallback() {
-            @Override
-            public HttpAsyncClientBuilder customizeHttpClient(HttpAsyncClientBuilder httpClientBuilder) {
-              return httpClientBuilder.setSSLContext(sslcontext);
-            }
-          }
-      );
     } catch (IOException | KeyStoreException | NoSuchAlgorithmException | KeyManagementException | CertificateException e) {
       issues.add(
           context.createConfigIssue(
-              Groups.SECURITY.name(),
-              prefix + "." + SecurityConfig.NAME + ".sslTrustStorePath",
+              ElasticsearchConnectionGroups.SECURITY.name(),
+              prefix + "." + SSL_TRUSTSTORE_PATH_CONFIG_PATH,
               Errors.ELASTICSEARCH_12,
               Optional.ofNullable(e.getMessage()).orElse("no details provided"),
               e
           )
       );
     }
+
+    return sslContext;
   }
 
   private void validateUri(String uri, List<Stage.ConfigIssue> issues, String configName) {
@@ -685,18 +707,18 @@ public class ElasticsearchStageDelegate {
     if (!matcher.matches()) {
       issues.add(
           getContext().createConfigIssue(
-              Groups.ELASTIC_SEARCH.name(),
+              ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
               configName,
               Errors.ELASTICSEARCH_07,
               uri
           )
       );
-    } else {
-      int port = Integer.parseInt(matcher.group(1));
+    } else if (matcher.group(3) != null) {
+      int port = Integer.parseInt(matcher.group(3));
       if (port < 0 || port > 65535) {
         issues.add(
             getContext().createConfigIssue(
-                Groups.ELASTIC_SEARCH.name(),
+                ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
                 configName,
                 Errors.ELASTICSEARCH_08,
                 port
@@ -707,7 +729,7 @@ public class ElasticsearchStageDelegate {
   }
 
   public Header[] getAuthenticationHeader(String securityUser, String securityPassword) {
-    if (!conf.useSecurity || conf.securityConfig.securityMode.equals(SecurityMode.AWSSIGV4)) {
+    if (!conf.connection.useSecurity || conf.connection.securityConfig.securityMode.equals(AWSSIGV4)) {
       return new Header[0];
     }
 

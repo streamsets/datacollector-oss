@@ -23,6 +23,7 @@ import com.streamsets.pipeline.lib.el.DataUtilEL;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection;
 import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticsearchOperationChooserValues;
 import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticsearchOperationType;
 import com.streamsets.pipeline.stage.destination.elasticsearch.UnsupportedOperationAction;

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.config.elasticsearch;
+package com.streamsets.pipeline.stage.connection.elasticsearch;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.Dependency;
@@ -24,7 +24,12 @@ import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 
 public class SecurityConfig {
 
-  public static final String NAME = "securityConfig";
+  public static final String ENDPOINT_CONFIG_NAME = "endpoint";
+  public static final String SECURITY_USER_CONFIG_NAME = "securityUser";
+  public static final String SECURITY_PASSWORD_CONFIG_NAME = "securityPassword";
+  public static final String ACCESS_KEY_ID_CONFIG_NAME = "awsAccessKeyId";
+  public static final String SSL_TRUSTSTORE_PATH_CONFIG_NAME = "sslTrustStorePath";
+  public static final String SSL_TRUSTSTORE_PASSWORD_CONFIG_NAME = "sslTrustStorePassword";
 
   @ConfigDef(
       required = true,
@@ -36,10 +41,10 @@ public class SecurityConfig {
       defaultValue = "BASIC",
       displayPosition = 37,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   @ValueChooserModel(SecurityModeChooserValues.class)
-  public SecurityMode securityMode;
+  public SecurityMode securityMode = SecurityMode.BASIC;
 
   @ConfigDef(
       required = true,
@@ -52,7 +57,7 @@ public class SecurityConfig {
       },
       displayPosition = 38,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   @ValueChooserModel(AwsRegionChooserValues.class)
   public AwsRegion awsRegion;
@@ -67,7 +72,7 @@ public class SecurityConfig {
       displayMode = ConfigDef.DisplayMode.BASIC,
       dependsOn = "awsRegion",
       triggeredByValue = "OTHER",
-      group = "SECURITY"
+      group = "#0"
   )
   public String endpoint;
 
@@ -82,7 +87,7 @@ public class SecurityConfig {
       },
       displayPosition = 40,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public CredentialValue awsAccessKeyId = () -> "";
 
@@ -97,7 +102,7 @@ public class SecurityConfig {
       },
       displayPosition = 41,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public CredentialValue awsSecretAccessKey = () -> "";
 
@@ -115,7 +120,7 @@ public class SecurityConfig {
       },
       displayPosition = 42,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public CredentialValue securityUser = () -> "";
 
@@ -130,9 +135,24 @@ public class SecurityConfig {
       },
       displayPosition = 43,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public CredentialValue securityPassword = () -> "";
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Enable SSL",
+      defaultValue = "false",
+      description = "Enables SSL usage",
+      dependencies = {
+          @Dependency(configName = "useSecurity^", triggeredByValues = "true")
+      },
+      displayPosition = 44,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
+  )
+  public boolean enableSSL = false;
 
   @ConfigDef(
       required = false,
@@ -140,11 +160,14 @@ public class SecurityConfig {
       defaultValue = "",
       label = "SSL TrustStore Path",
       description = "",
-      dependsOn = "useSecurity^",
+      dependencies = {
+          @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
+          @Dependency(configName = "enableSSL", triggeredByValues = "true")
+      },
       triggeredByValue = "true",
-      displayPosition = 44,
+      displayPosition = 45,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public String sslTrustStorePath;
 
@@ -152,11 +175,14 @@ public class SecurityConfig {
       required = false,
       type = ConfigDef.Type.CREDENTIAL,
       label = "SSL TrustStore Password",
-      dependsOn = "useSecurity^",
+      dependencies = {
+          @Dependency(configName = "useSecurity^", triggeredByValues = "true"),
+          @Dependency(configName = "enableSSL", triggeredByValues = "true")
+      },
       triggeredByValue = "true",
-      displayPosition = 45,
+      displayPosition = 46,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "SECURITY"
+      group = "#0"
   )
   public CredentialValue sslTrustStorePassword = () -> "";
 }

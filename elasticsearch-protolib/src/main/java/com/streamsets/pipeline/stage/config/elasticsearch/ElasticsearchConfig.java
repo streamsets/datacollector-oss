@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2020 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,65 @@ package com.streamsets.pipeline.stage.config.elasticsearch;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection;
+import org.apache.http.HttpHost;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class ElasticsearchConfig {
-  public static final String DEFAULT_HTTP_URI = "hostname:port";
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection.PORT_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection.SERVER_URL_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection.SECURITY_CONFIG_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection.TYPE;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection.USE_SECURITY_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.ACCESS_KEY_ID_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.ENDPOINT_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.SECURITY_PASSWORD_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.SECURITY_USER_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.SSL_TRUSTSTORE_PASSWORD_CONFIG_NAME;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityConfig.SSL_TRUSTSTORE_PATH_CONFIG_NAME;
 
-  @ConfigDefBean
-  public SecurityConfig securityConfig = new SecurityConfig();
+public abstract class ElasticsearchConfig {
+  private static final String CONNECTION_CONFIG_NAME = "connection";
+
+  public static final String SERVER_URL_CONFIG_PATH = CONNECTION_CONFIG_NAME + "." + SERVER_URL_CONFIG_NAME;
+  public static final String PORT_CONFIG_PATH = CONNECTION_CONFIG_NAME + "." + PORT_CONFIG_NAME;
+  public static final String USE_SECURITY_CONFIG_PATH = CONNECTION_CONFIG_NAME + "." + USE_SECURITY_CONFIG_NAME;
+
+  private static final String SECURITY_CONFIG_PATH = CONNECTION_CONFIG_NAME + "." + SECURITY_CONFIG_CONFIG_NAME;
+
+  public static final String ENDPOINT_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + ENDPOINT_CONFIG_NAME;
+  public static final String SECURITY_USER_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + SECURITY_USER_CONFIG_NAME;
+  public static final String SECURITY_PASSWORD_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + SECURITY_PASSWORD_CONFIG_NAME;
+  public static final String ACCESS_KEY_ID_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + ACCESS_KEY_ID_CONFIG_NAME;
+  public static final String SSL_TRUSTSTORE_PASSWORD_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + SSL_TRUSTSTORE_PASSWORD_CONFIG_NAME;
+  public static final String SSL_TRUSTSTORE_PATH_CONFIG_PATH = SECURITY_CONFIG_PATH + "." + SSL_TRUSTSTORE_PATH_CONFIG_NAME;
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.LIST,
-      label = "Cluster HTTP URIs",
-      defaultValue = "[\"" + DEFAULT_HTTP_URI + "\"]",
-      description = "Elasticsearch HTTP Endpoints.",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "ELASTIC_SEARCH"
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    connectionType = TYPE,
+    defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+    label = "Connection",
+    group = "#0",
+    displayPosition = -500
   )
-  public List<String> httpUris;
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
+  public ElasticsearchConnection connection = new ElasticsearchConnection();
 
   @ConfigDef(
       required = false,
@@ -47,7 +84,7 @@ public class ElasticsearchConfig {
       description = "Additional HTTP Params.",
       displayPosition = 20,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ELASTIC_SEARCH"
+      group = "#0"
   )
   public Map<String, String> params = new HashMap<>();
 
@@ -60,22 +97,14 @@ public class ElasticsearchConfig {
           "Do not use if the Data Collector is on a different network from the cluster.",
       displayPosition = 30,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "ELASTIC_SEARCH"
+      group = "#0"
   )
   public boolean clientSniff = false;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      label = "Use Security",
-      defaultValue = "false",
-      description = "Use Security",
-      displayPosition = 40,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "ELASTIC_SEARCH"
-  )
-  public boolean useSecurity = false;
-
-  // Display position in SecurityConfig starts where this stops. This is because this config is also available
-  // on error stage where there is only one tab an hence all configs are sequential.
+  public String createHostsString() {
+    return connection.getServerURL().stream()
+        .map(HttpHost::create)
+        .map(HttpHost::toHostString)
+        .collect(Collectors.joining(","));
+  }
 }

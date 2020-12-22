@@ -30,6 +30,7 @@ public class ElasticSearchDSourceUpgrader implements StageUpgrader {
   ) throws StageException {
     switch (fromVersion) {
       case 1:
+      case 2:
         // handled by YAML upgrader
         break;
       default:

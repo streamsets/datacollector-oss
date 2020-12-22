@@ -24,8 +24,8 @@ import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode;
 import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticSearchDTarget;
 import com.streamsets.pipeline.stage.destination.elasticsearch.ElasticsearchTarget;
 import com.streamsets.pipeline.stage.origin.elasticsearch.ElasticsearchDSource;
@@ -34,9 +34,9 @@ import org.junit.Rule;
 import org.mockserver.client.server.MockServerClient;
 import org.mockserver.junit.MockServerRule;
 
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import static com.streamsets.pipeline.stage.lib.aws.AwsRegion.US_WEST_2;
 import static java.util.UUID.randomUUID;
@@ -62,8 +62,10 @@ public abstract class BaseElasticsearchValidationIT {
     ElasticsearchConfig conf = null;
     if (source) {
       conf = new ElasticsearchSourceConfig();
+      conf.connection.useSecurity = false;
     } else {
       ElasticsearchTargetConfig targetConf = new ElasticsearchTargetConfig();
+      targetConf.connection.useSecurity = false;
       targetConf.timeZoneID = "UTC";
       targetConf.timeDriver = "${time:now()}";
       targetConf.indexTemplate = "index";
@@ -74,7 +76,8 @@ public abstract class BaseElasticsearchValidationIT {
 
       conf = targetConf;
     }
-    conf.httpUris = Collections.singletonList(HOST_ADDRESS + ":" + mockServerRule.getPort());
+    conf.connection.serverUrl = HOST_ADDRESS;
+    conf.connection.port = Optional.ofNullable(mockServerRule.getPort()).map(Object::toString).orElse(null);
 
     return (T) conf;
   }
@@ -90,7 +93,7 @@ public abstract class BaseElasticsearchValidationIT {
   }
 
   protected String expectedIssue(
-      final Groups group,
+      final ElasticsearchConnectionGroups group,
       final String prefix,
       final String conf,
       final ErrorCode errorCode
@@ -122,7 +125,7 @@ public abstract class BaseElasticsearchValidationIT {
 
       assertThat(issues, hasSize(params.length / 4));
       for (int i = 0; i < params.length / 4; i+= 1) {
-        Groups group = (Groups) params[4 * i + 0];
+        ElasticsearchConnectionGroups group = (ElasticsearchConnectionGroups) params[4 * i + 0];
         String prefix = (String) params[4 * i + 1];
         String confName = (String) params[4 * i + 2];
         Errors errorCode = (Errors) params[4 * i + 3];
@@ -142,20 +145,21 @@ public abstract class BaseElasticsearchValidationIT {
   protected void testHTTPErrorHandling(
       final boolean source,
       final SecurityMode securityMode,
-      final Groups group,
+      final ElasticsearchConnectionGroups group,
       final String prefix,
       final String expectedConf,
       final Errors expectedErrorCode
   ) {
     ElasticsearchConfig conf = createConf(source);
-    conf.httpUris = Collections.singletonList(HOST_ADDRESS + ":" + mockServerRule.getPort());
-    conf.useSecurity = securityMode != null;
-    conf.securityConfig.securityMode = securityMode;
-    conf.securityConfig.securityUser = () -> randomUUID().toString();
-    conf.securityConfig.securityPassword = () -> randomUUID().toString();
-    conf.securityConfig.awsAccessKeyId = () -> randomUUID().toString();
-    conf.securityConfig.awsSecretAccessKey = () -> randomUUID().toString();
-    conf.securityConfig.awsRegion = US_WEST_2;
+    conf.connection.serverUrl = HOST_ADDRESS;
+    conf.connection.port = Optional.ofNullable(mockServerRule.getPort()).map(Object::toString).orElse(null);;
+    conf.connection.useSecurity = securityMode != null;
+    conf.connection.securityConfig.securityMode = securityMode;
+    conf.connection.securityConfig.securityUser = () -> randomUUID().toString();
+    conf.connection.securityConfig.securityPassword = () -> randomUUID().toString();
+    conf.connection.securityConfig.awsAccessKeyId = () -> randomUUID().toString();
+    conf.connection.securityConfig.awsSecretAccessKey = () -> randomUUID().toString();
+    conf.connection.securityConfig.awsRegion = US_WEST_2;
 
     testErrorHandling(conf, group, prefix, expectedConf, expectedErrorCode);
   }

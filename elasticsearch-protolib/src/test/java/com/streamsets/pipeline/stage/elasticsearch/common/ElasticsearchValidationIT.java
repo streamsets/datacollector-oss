@@ -17,7 +17,6 @@ package com.streamsets.pipeline.stage.elasticsearch.common;
 
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig;
-import com.streamsets.pipeline.stage.elasticsearch.common.BaseElasticsearchValidationIT;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -25,7 +24,6 @@ import org.junit.runners.Parameterized;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.util.Collections;
 import java.util.UUID;
 
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_10;
@@ -33,8 +31,8 @@ import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICS
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_12;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_43;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_49;
-import static com.streamsets.pipeline.stage.config.elasticsearch.Groups.ELASTIC_SEARCH;
-import static com.streamsets.pipeline.stage.config.elasticsearch.Groups.SECURITY;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups.ELASTIC_SEARCH;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups.SECURITY;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;
 import static org.apache.http.entity.ContentType.APPLICATION_JSON;
 import static org.eclipse.jetty.http.HttpStatus.OK_200;
@@ -66,9 +64,10 @@ public class ElasticsearchValidationIT extends BaseElasticsearchValidationIT {
   @Test
   public void testConnectionFailure() {
     ElasticsearchConfig conf = createConf(source);
-    conf.httpUris = Collections.singletonList(HOST_ADDRESS + ":" + findFreePort());
+    conf.connection.serverUrl = HOST_ADDRESS;
+    conf.connection.port = "" + findFreePort();
 
-    testErrorHandling(conf, ELASTIC_SEARCH, prefix, "httpUris", ELASTICSEARCH_43);
+    testErrorHandling(conf, ELASTIC_SEARCH, prefix, "connection.serverUrl", ELASTICSEARCH_43);
   }
 
   @Test
@@ -87,21 +86,22 @@ public class ElasticsearchValidationIT extends BaseElasticsearchValidationIT {
       ((ElasticsearchSourceConfig) conf).query = "{}";
     }
 
-    testErrorHandling(conf, ELASTIC_SEARCH, prefix, "httpUris", ELASTICSEARCH_49);
+    testErrorHandling(conf, ELASTIC_SEARCH, prefix, "connection.serverUrl", ELASTICSEARCH_49);
   }
 
   @Test
   public void testInvalidTruststoreCredentials() {
     ElasticsearchConfig conf = createConf(source);
-    conf.useSecurity = true;
-    conf.securityConfig.securityUser = () -> UUID.randomUUID().toString();
-    conf.securityConfig.securityPassword = () -> UUID.randomUUID().toString();
-    conf.securityConfig.sslTrustStorePath = UUID.randomUUID().toString();
+    conf.connection.useSecurity = true;
+    conf.connection.securityConfig.enableSSL = true;
+    conf.connection.securityConfig.securityUser = () -> UUID.randomUUID().toString();
+    conf.connection.securityConfig.securityPassword = () -> UUID.randomUUID().toString();
+    conf.connection.securityConfig.sslTrustStorePath = UUID.randomUUID().toString();
 
     testErrorHandling(
         conf,
-        SECURITY, prefix, "securityConfig.sslTrustStorePassword", ELASTICSEARCH_10,
-        SECURITY, prefix, "securityConfig.sslTrustStorePath", ELASTICSEARCH_11
+        SECURITY, prefix, "connection.securityConfig.sslTrustStorePassword", ELASTICSEARCH_10,
+        SECURITY, prefix, "connection.securityConfig.sslTrustStorePath", ELASTICSEARCH_11
     );
   }
 
@@ -114,13 +114,14 @@ public class ElasticsearchValidationIT extends BaseElasticsearchValidationIT {
     try (OutputStream os = new FileOutputStream(truststorePath)) {}
 
     ElasticsearchConfig conf = createConf(source);
-    conf.useSecurity = true;
-    conf.securityConfig.securityUser = () -> UUID.randomUUID().toString();
-    conf.securityConfig.securityPassword = () -> UUID.randomUUID().toString();
-    conf.securityConfig.sslTrustStorePassword = () -> UUID.randomUUID().toString();
-    conf.securityConfig.sslTrustStorePath = truststorePath;
+    conf.connection.useSecurity = true;
+    conf.connection.securityConfig.enableSSL = true;
+    conf.connection.securityConfig.securityUser = () -> UUID.randomUUID().toString();
+    conf.connection.securityConfig.securityPassword = () -> UUID.randomUUID().toString();
+    conf.connection.securityConfig.sslTrustStorePassword = () -> UUID.randomUUID().toString();
+    conf.connection.securityConfig.sslTrustStorePath = truststorePath;
 
-    testErrorHandling(conf, SECURITY, prefix, "securityConfig.sslTrustStorePath", ELASTICSEARCH_12);
+    testErrorHandling(conf, SECURITY, prefix, "connection.securityConfig.sslTrustStorePath", ELASTICSEARCH_12);
   }
 }
 

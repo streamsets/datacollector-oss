@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchConfig;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +29,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ElasticsearchDTargetUpgrader implements StageUpgrader {
+  private static final String DEFAULT_HTTP_URI = "hostname";
+
   static final String OLD_CONFIG_PREFIX = "elasticSearchConfigBean.";
   static final String OLD_SECURITY_PREFIX = "elasticSearchConfigBean.securityConfigBean.";
 
@@ -94,6 +96,7 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
           break;
         }
       case 10:
+      case 11:
         // handled by YAML upgrader
         break;
       default:
@@ -153,7 +156,7 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
   }
 
   private static void upgradeV3ToV4(List<Config> configs) {
-    configs.add(new Config(OLD_CONFIG_PREFIX + "httpUri", ElasticsearchConfig.DEFAULT_HTTP_URI));
+    configs.add(new Config(OLD_CONFIG_PREFIX + "httpUri", DEFAULT_HTTP_URI));
   }
 
   private static void upgradeV4ToV5(List<Config> configs) {
@@ -216,8 +219,8 @@ public class ElasticsearchDTargetUpgrader implements StageUpgrader {
       // Rename httpUri to httpUris.
       if (config.getName().equals(OLD_CONFIG_PREFIX + "httpUri")) {
         String configValue = Optional.ofNullable((String) config.getValue())
-            .orElse(ElasticsearchConfig.DEFAULT_HTTP_URI);
-        if (!configValue.isEmpty() && !configValue.equals(ElasticsearchConfig.DEFAULT_HTTP_URI)) {
+            .orElse(DEFAULT_HTTP_URI);
+        if (!configValue.isEmpty() && !configValue.equals(DEFAULT_HTTP_URI)) {
           configsToAdd.add(new Config(OLD_CONFIG_PREFIX + "httpUris", Arrays.asList(configValue)));
         }
         configsToRemove.add(config);

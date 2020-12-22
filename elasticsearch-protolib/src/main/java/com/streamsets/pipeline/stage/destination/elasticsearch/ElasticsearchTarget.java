@@ -45,7 +45,7 @@ import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.ContentType;
@@ -103,13 +103,13 @@ public class ElasticsearchTarget extends BaseTarget {
     try {
       getContext().parseEL(elStr);
     } catch (ELEvalException ex) {
-      issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, parseError, ex.toString(), ex));
+      issues.add(getContext().createConfigIssue(ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), config, parseError, ex.toString(), ex));
       return;
     }
     try {
       elEval.eval(vars, elStr, String.class);
     } catch (ELEvalException ex) {
-      issues.add(getContext().createConfigIssue(Groups.ELASTIC_SEARCH.name(), config, evalError, ex.toString(), ex));
+      issues.add(getContext().createConfigIssue(ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(), config, evalError, ex.toString(), ex));
     }
   }
 
@@ -140,7 +140,7 @@ public class ElasticsearchTarget extends BaseTarget {
       getRecordTime(getContext().createRecord("validateTimeDriver"));
     } catch (ELEvalException ex) {
       issues.add(getContext().createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
           "timeDriverEval",
           Errors.ELASTICSEARCH_18,
           ex.getMessage(),
@@ -177,7 +177,7 @@ public class ElasticsearchTarget extends BaseTarget {
       if (conf.defaultOperation != ElasticsearchOperationType.INDEX) {
         issues.add(
             getContext().createConfigIssue(
-                Groups.ELASTIC_SEARCH.name(),
+                ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
                 "elasticSearchConfig.docIdTemplate",
                 Errors.ELASTICSEARCH_19,
                 conf.defaultOperation.getLabel()
@@ -225,7 +225,7 @@ public class ElasticsearchTarget extends BaseTarget {
       parser.parse(additionalProperties).getAsJsonObject();
     }catch (Exception e){
       issues.add(getContext().createConfigIssue(
-          Groups.ELASTIC_SEARCH.name(),
+          ElasticsearchConnectionGroups.ELASTIC_SEARCH.name(),
           "rawAdditionalProperties",
           Errors.ELASTICSEARCH_34,
           additionalProperties,
@@ -372,8 +372,8 @@ public class ElasticsearchTarget extends BaseTarget {
             "/_bulk",
             conf.params,
             entity,
-            delegate.getAuthenticationHeader(conf.securityConfig.securityUser.get(),
-                conf.securityConfig.securityPassword.get())
+            delegate.getAuthenticationHeader(conf.connection.securityConfig.securityUser.get(),
+                conf.connection.securityConfig.securityPassword.get())
         );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         response.getEntity().writeTo(baos);

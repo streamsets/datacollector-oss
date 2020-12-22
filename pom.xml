@@ -152,6 +152,7 @@
     <module>aws-sqs-connection</module>
     <module>salesforce-connection</module>
     <module>kafka-connection</module>
+    <module>elasticsearch-connection</module>
     <module>aws-shared</module>
 
     <!-- cluster connections -->

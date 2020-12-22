@@ -16,8 +16,8 @@
 package com.streamsets.pipeline.stage.origin.elasticsearch;
 
 import com.streamsets.pipeline.stage.config.elasticsearch.Errors;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
-import com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode;
 import com.streamsets.pipeline.stage.elasticsearch.common.BaseElasticsearchValidationIT;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,10 +29,10 @@ import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICS
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_46;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_47;
 import static com.streamsets.pipeline.stage.config.elasticsearch.Errors.ELASTICSEARCH_48;
-import static com.streamsets.pipeline.stage.config.elasticsearch.Groups.ELASTIC_SEARCH;
-import static com.streamsets.pipeline.stage.config.elasticsearch.Groups.SECURITY;
-import static com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode.AWSSIGV4;
-import static com.streamsets.pipeline.stage.config.elasticsearch.SecurityMode.BASIC;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups.ELASTIC_SEARCH;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups.SECURITY;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode.AWSSIGV4;
+import static com.streamsets.pipeline.stage.connection.elasticsearch.SecurityMode.BASIC;
 import static org.eclipse.jetty.http.HttpStatus.BAD_REQUEST_400;
 import static org.eclipse.jetty.http.HttpStatus.FORBIDDEN_403;
 import static org.eclipse.jetty.http.HttpStatus.INTERNAL_SERVER_ERROR_500;
@@ -48,36 +48,36 @@ public class ElasticsearchSourceValidationHttpIT extends BaseElasticsearchValida
   public static Object[][] createTestPathNotFoundFailureParams() {
     return new Object[][] {
         {BAD_REQUEST_400, null, ELASTICSEARCH_44, ELASTIC_SEARCH, "query"},
-        {UNAUTHORIZED_401, null, ELASTICSEARCH_47, ELASTIC_SEARCH, "useSecurity"},
-        {FORBIDDEN_403, null, ELASTICSEARCH_48, ELASTIC_SEARCH, "useSecurity"},
-        {NOT_FOUND_404, null, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
-        {INTERNAL_SERVER_ERROR_500, null, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
+        {UNAUTHORIZED_401, null, ELASTICSEARCH_47, ELASTIC_SEARCH, "connection.useSecurity"},
+        {FORBIDDEN_403, null, ELASTICSEARCH_48, ELASTIC_SEARCH, "connection.useSecurity"},
+        {NOT_FOUND_404, null, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
+        {INTERNAL_SERVER_ERROR_500, null, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
 
         {BAD_REQUEST_400, BASIC, ELASTICSEARCH_44, ELASTIC_SEARCH, "query"},
-        {UNAUTHORIZED_401, BASIC, ELASTICSEARCH_09, SECURITY, "securityConfig.securityUser"},
-        {FORBIDDEN_403, BASIC, ELASTICSEARCH_46, SECURITY, "securityConfig.securityUser"},
-        {NOT_FOUND_404, BASIC, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
-        {INTERNAL_SERVER_ERROR_500, BASIC, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
+        {UNAUTHORIZED_401, BASIC, ELASTICSEARCH_09, SECURITY, "connection.securityConfig.securityUser"},
+        {FORBIDDEN_403, BASIC, ELASTICSEARCH_46, SECURITY, "connection.securityConfig.securityUser"},
+        {NOT_FOUND_404, BASIC, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
+        {INTERNAL_SERVER_ERROR_500, BASIC, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
 
         {BAD_REQUEST_400, AWSSIGV4, ELASTICSEARCH_44, ELASTIC_SEARCH, "query"},
-        {UNAUTHORIZED_401, AWSSIGV4, ELASTICSEARCH_47, SECURITY, "securityConfig.awsAccessKeyId"},
-        {FORBIDDEN_403, AWSSIGV4, ELASTICSEARCH_48, SECURITY, "securityConfig.awsAccessKeyId"},
-        {NOT_FOUND_404, AWSSIGV4, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
-        {INTERNAL_SERVER_ERROR_500, AWSSIGV4, ELASTICSEARCH_45, ELASTIC_SEARCH, "httpUris"},
+        {UNAUTHORIZED_401, AWSSIGV4, ELASTICSEARCH_47, SECURITY, "connection.securityConfig.awsAccessKeyId"},
+        {FORBIDDEN_403, AWSSIGV4, ELASTICSEARCH_48, SECURITY, "connection.securityConfig.awsAccessKeyId"},
+        {NOT_FOUND_404, AWSSIGV4, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
+        {INTERNAL_SERVER_ERROR_500, AWSSIGV4, ELASTICSEARCH_45, ELASTIC_SEARCH, "connection.serverUrl"},
     };
   }
 
   private final int httpStatusCode;
   private final SecurityMode securityMode;
   private final Errors expectedErrorCode;
-  private final Groups group;
+  private final ElasticsearchConnectionGroups group;
   private final String conf;
 
   public ElasticsearchSourceValidationHttpIT(
       final int httpStatusCode,
       final SecurityMode securityMode,
       final Errors expectedErrorCode,
-      final Groups group,
+      final ElasticsearchConnectionGroups group,
       final String conf
   ) {
     this.httpStatusCode = httpStatusCode;

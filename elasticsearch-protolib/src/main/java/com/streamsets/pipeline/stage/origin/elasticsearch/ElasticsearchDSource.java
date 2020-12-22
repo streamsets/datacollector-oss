@@ -22,11 +22,11 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchSourceConfig;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Elasticsearch",
     description = "Read data from an Elasticsearch cluster",
     icon = "elasticsearch_multithreaded.png",
@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     upgraderDef = "upgrader/ElasticsearchDSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_pmh_xpm_2z"
 )
-@ConfigGroups(Groups.class)
+@ConfigGroups(ElasticsearchConnectionGroups.class)
 public class ElasticsearchDSource extends DPushSource {
 
   @ConfigDefBean

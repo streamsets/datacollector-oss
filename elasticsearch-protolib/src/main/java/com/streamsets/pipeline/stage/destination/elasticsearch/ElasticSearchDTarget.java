@@ -22,13 +22,13 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.stage.config.elasticsearch.ElasticsearchTargetConfig;
-import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
+import com.streamsets.pipeline.stage.connection.elasticsearch.ElasticsearchConnectionGroups;
 
 @GenerateResourceBundle
 @StageDef(
     // We're reusing upgrader for both ToErrorElasticSearchDTarget and ElasticsearchDTargetUpgrader, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 11,
+    version = 12,
     label = "Elasticsearch",
     description = "Upload data to an Elasticsearch cluster",
     icon = "elasticsearch.png",
@@ -36,7 +36,7 @@ import com.streamsets.pipeline.stage.config.elasticsearch.Groups;
     upgrader = ElasticsearchDTargetUpgrader.class,
     upgraderDef = "upgrader/ElasticSearchDTarget.yaml"
 )
-@ConfigGroups(Groups.class)
+@ConfigGroups(ElasticsearchConnectionGroups.class)
 public class ElasticSearchDTarget extends DTarget {
 
   @ConfigDefBean
