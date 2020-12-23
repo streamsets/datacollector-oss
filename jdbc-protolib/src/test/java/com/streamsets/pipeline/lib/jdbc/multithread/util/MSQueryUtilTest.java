@@ -62,9 +62,9 @@ public class MSQueryUtilTest {
     fetchSize = 1000;
 
     String result = MSQueryUtil.buildQuery(offsetMap, fetchSize, tableName, offsetColumns, includeJoin, offset);
-    String expected = "SELECT * FROM CHANGETABLE(CHANGES foo, 69) AS CT WHERE (CT.id > '3'  AND CT.SYS_CHANGE_VERSION" +
+    String expected = "SELECT * FROM CHANGETABLE(CHANGES foo, 69) AS CT WHERE (CT.[id] > '3'  AND CT.SYS_CHANGE_VERSION" +
         " " +
-        "= 69 ) OR (CT.SYS_CHANGE_VERSION > '69' ) ORDER BY SYS_CHANGE_VERSION, CT.id";
+        "= 69 ) OR (CT.SYS_CHANGE_VERSION > '69' ) ORDER BY SYS_CHANGE_VERSION, CT.[id]";
     Assert.assertEquals(expected, result);
   }
 
