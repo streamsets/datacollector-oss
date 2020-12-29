@@ -204,7 +204,7 @@ public class TestTableJdbcSource {
     columnsToTypes.put(timeCol, DataType.USE_COLUMN_TYPE);
 
     LinkedHashMap<String, Field> fields = UtilsProvider.getJdbcUtil().resultSetToFields(rs, 0, 0,
-        columnsToTypes, new FailTestErrorRecordHandler(), UnknownTypeAction.CONVERT_TO_STRING);
+        columnsToTypes, new FailTestErrorRecordHandler(), UnknownTypeAction.CONVERT_TO_STRING, DatabaseVendor.UNKNOWN);
 
     assertThat(fields, hasKey(timestampColWithNanos));
     assertThat(fields.get(timestampColWithNanos).getAttributeNames(), contains(JdbcUtil.FIELD_ATTRIBUTE_NANOSECONDS));

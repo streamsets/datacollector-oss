@@ -831,7 +831,8 @@ public class JdbcUtil {
       int maxBlobSize,
       Map<String, DataType> columnsToTypes,
       ErrorRecordHandler errorRecordHandler,
-      UnknownTypeAction unknownTypeAction
+      UnknownTypeAction unknownTypeAction,
+      DatabaseVendor vendor
   ) throws SQLException, StageException {
     return resultSetToFields(
         rs,
@@ -842,7 +843,7 @@ public class JdbcUtil {
         unknownTypeAction,
         null,
         false,
-        DatabaseVendor.UNKNOWN
+        vendor
     );
   }
 

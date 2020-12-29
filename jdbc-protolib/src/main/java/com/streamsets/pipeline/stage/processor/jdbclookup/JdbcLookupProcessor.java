@@ -435,7 +435,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       columnsToTypes,
       maxClobSize,
       maxBlobSize,
-      errorRecordHandler
+      errorRecordHandler,
+      hikariConfigBean.getVendor()
     );
     return LookupUtils.buildCache(loader, cacheConfig, defaultValue);
   }
