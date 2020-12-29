@@ -37,6 +37,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
@@ -95,6 +96,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private Optional<List<Map<String, Field>>> defaultValue;
   private CacheCleaner cacheCleaner;
   private final MissingValuesBehavior missingValuesBehavior;
+  private final UnknownTypeAction unknownTypeAction;
 
   private ExecutorService generationExecutor;
   private int preprocessThreads = 0;
@@ -105,6 +107,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       List<JdbcFieldColumnMapping> columnMappings,
       MultipleValuesBehavior multipleValuesBehavior,
       MissingValuesBehavior missingValuesBehavior,
+      UnknownTypeAction unknownTypeAction,
       int maxClobSize,
       int maxBlobSize,
       HikariPoolConfigBean hikariConfigBean,
@@ -114,6 +117,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     this.columnMappings = columnMappings;
     this.multipleValuesBehavior = multipleValuesBehavior;
     this.missingValuesBehavior = missingValuesBehavior;
+    this.unknownTypeAction = unknownTypeAction;
     this.maxClobSize = maxClobSize;
     this.maxBlobSize = maxBlobSize;
     this.hikariConfigBean = hikariConfigBean;
@@ -436,7 +440,8 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       maxClobSize,
       maxBlobSize,
       errorRecordHandler,
-      hikariConfigBean.getVendor()
+      hikariConfigBean.getVendor(),
+      unknownTypeAction
     );
     return LookupUtils.buildCache(loader, cacheConfig, defaultValue);
   }

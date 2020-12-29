@@ -28,6 +28,8 @@ import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcFieldColumnMapping;
 import com.streamsets.pipeline.lib.jdbc.JdbcHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
+import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 import com.streamsets.pipeline.stage.common.MissingValuesBehavior;
 import com.streamsets.pipeline.stage.common.MissingValuesBehaviorChooserValues;
 import com.streamsets.pipeline.stage.common.MultipleValuesBehavior;
@@ -38,7 +40,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
@@ -122,6 +124,19 @@ public class JdbcLookupDProcessor extends DProcessor {
   @ConfigDefBean()
   public JdbcHikariPoolConfigBean hikariConfigBean;
 
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = false,
+      type = ConfigDef.Type.MODEL,
+      label = "On Unknown Type",
+      description = "Action that should be performed when an unknown type is detected in the result set.",
+      defaultValue = "STOP_PIPELINE",
+      displayPosition = 230,
+      group = "ADVANCED"
+  )
+  @ValueChooserModel(UnknownTypeActionChooserValues.class)
+  public UnknownTypeAction unknownTypeAction = UnknownTypeAction.STOP_PIPELINE;
+
   /**
    * Returns the Hikari config bean.
    * <p/>
@@ -147,6 +162,7 @@ public class JdbcLookupDProcessor extends DProcessor {
       columnMappings,
       multipleValuesBehavior,
       missingValuesBehavior,
+      unknownTypeAction,
       maxClobSize,
       maxBlobSize,
       getHikariConfigBean(),

@@ -31,3 +31,8 @@ upgrades:
       - renameConfig:
           oldNamePattern: hikariConfigBean.password
           newNamePattern: hikariConfigBean.connection.password
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: unknownTypeAction
+          value: STOP_PIPELINE
