@@ -34,6 +34,7 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.JdbcBaseRunnable;
 import com.streamsets.pipeline.lib.jdbc.multithread.JdbcRunnableBuilder;
 import com.streamsets.pipeline.lib.jdbc.multithread.MultithreadedTableProvider;
@@ -166,7 +167,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
     issues = hikariConfigBean.validateConfigs(context, issues);
     issues = commonSourceConfigBean.validateConfigs(context, issues);
 
-    validateTableJdbcConfigBean(context, issues);
+    validateTableJdbcConfigBean(context, hikariConfigBean.getVendor(), issues);
 
     if (issues.isEmpty()) {
       checkConnectionAndBootstrap(context, issues);
@@ -608,7 +609,7 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
 
   protected abstract void handleLastOffset(Map<String, String> lastOffsets) throws StageException;
 
-  protected abstract void validateTableJdbcConfigBean(PushSource.Context context, List<Stage.ConfigIssue> issues);
+  protected abstract void validateTableJdbcConfigBean(PushSource.Context context, DatabaseVendor vendor, List<ConfigIssue> issues);
 
   protected abstract Map<String, TableContext> listTablesForConfig(
       PushSource.Context context,

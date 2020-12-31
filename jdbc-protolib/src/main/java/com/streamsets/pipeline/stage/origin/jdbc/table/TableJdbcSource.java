@@ -26,6 +26,7 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
@@ -73,8 +74,8 @@ public class TableJdbcSource extends AbstractTableJdbcSource {
   }
 
   @Override
-  public void validateTableJdbcConfigBean(PushSource.Context context, List<Stage.ConfigIssue> issues) {
-    issues = tableJdbcConfigBean.validateConfigs(context, issues);
+  public void validateTableJdbcConfigBean(PushSource.Context context, DatabaseVendor vendor, List<ConfigIssue> issues) {
+    issues = tableJdbcConfigBean.validateConfigs(context, vendor, issues);
 
     //Max pool size should be equal to number of threads
     //The main thread will use one connection to list threads and close (return to hikari pool) the connection

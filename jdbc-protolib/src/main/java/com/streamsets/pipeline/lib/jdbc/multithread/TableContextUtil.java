@@ -193,19 +193,21 @@ public class TableContextUtil {
    * Returns quoted qualified table name (schema.table name) based on quoteChar
    * @param schema schema name, can be null
    * @param tableName table name
-   * @param qC quote character to be attached before and after table and schema name.
+   * @param quoteCharacter quote character to be attached before and after table and schema name.
    * @return qualified table name if schema is not null and tableName alone if schema is null.
    */
-  public static String getQuotedQualifiedTableName(String schema, String tableName, String qC) {
-    String quotedTableName = getQuotedObjectName(tableName, qC);
-    return StringUtils.isEmpty(schema) ? quotedTableName : getQuotedObjectName(schema, qC) + "." + quotedTableName;
+  public static String getQuotedQualifiedTableName(String schema, String tableName, String quoteCharacter) {
+    String quoteCharacterLeft = quoteCharacter;
+    String quoteCharacterRight = quoteCharacter.equals("[") ? "]" : quoteCharacter;
+    String quotedTableName = getQuotedObjectName(tableName, quoteCharacterLeft, quoteCharacterRight);
+    return StringUtils.isEmpty(schema) ? quotedTableName : getQuotedObjectName(schema, quoteCharacterLeft, quoteCharacterRight) + "." + quotedTableName;
   }
 
   /**
    * Quote given object name (column, table name)
    */
-  public static String getQuotedObjectName(String objectName, String qC) {
-    return String.format(OffsetQueryUtil.QUOTED_NAME, qC, objectName, qC);
+  public static String getQuotedObjectName(String objectName, String qLeft, String qRight) {
+    return String.format(OffsetQueryUtil.QUOTED_NAME, qLeft, objectName, qRight);
   }
 
   private TableContext createTableContext(

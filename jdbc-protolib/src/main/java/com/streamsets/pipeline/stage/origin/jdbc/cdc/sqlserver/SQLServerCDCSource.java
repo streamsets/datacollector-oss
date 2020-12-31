@@ -24,6 +24,7 @@ import com.streamsets.pipeline.lib.jdbc.DataType;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.ConnectionManager;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
@@ -119,7 +120,7 @@ public class SQLServerCDCSource extends AbstractTableJdbcSource {
   }
 
   @Override
-  protected void validateTableJdbcConfigBean(PushSource.Context context, List<Stage.ConfigIssue> issues) {
+  protected void validateTableJdbcConfigBean(PushSource.Context context, DatabaseVendor vendor, List<Stage.ConfigIssue> issues) {
     //no-op
   }
 

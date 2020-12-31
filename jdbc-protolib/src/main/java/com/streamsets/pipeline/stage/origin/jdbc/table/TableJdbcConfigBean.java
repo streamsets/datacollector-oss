@@ -21,11 +21,13 @@ import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.config.TimeZoneChooserValues;
+import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeAction;
 import com.streamsets.pipeline.lib.jdbc.UnknownTypeActionChooserValues;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategyChooserValues;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategyChooserValues;
 
@@ -184,7 +186,7 @@ public class TableJdbcConfigBean {
   public static final String NUMBER_OF_THREADS = "numberOfThreads";
   public static final String QUOTE_CHAR = "quoteChar";
 
-  public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, List<Stage.ConfigIssue> issues) {
+  public List<Stage.ConfigIssue> validateConfigs(PushSource.Context context, DatabaseVendor vendor, List<Stage.ConfigIssue> issues) {
     if (getTableConfigs().isEmpty()) {
       issues.add(context.createConfigIssue(Groups.TABLE.name(), TABLE_CONFIG, JdbcErrors.JDBC_66));
     }
@@ -197,6 +199,18 @@ public class TableJdbcConfigBean {
           )
       );
     }
+
+    if (!vendor.validQuoteCharacter(quoteChar.getLabel())) {
+      issues.add(
+          context.createConfigIssue(
+              Groups.JDBC.name(),
+              TABLE_JDBC_CONFIG_BEAN_PREFIX + "quoteChar",
+              JdbcErrors.JDBC_414,
+              quoteChar.getLabel()
+          )
+      );
+    }
+
     return issues;
   }
 

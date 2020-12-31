@@ -21,6 +21,7 @@ public enum QuoteChar implements Label {
   NONE("NONE",""),
   BACKTICK("BACKTICK","`"),
   DOUBLE_QUOTES("DOUBLE QUOTES","\""),
+  SQUARE_BRACKETS("SQUARE BRACKETS", "[")
   ;
 
   private final String label;

@@ -417,7 +417,9 @@ public class JdbcUtil {
         quoteChar.getQuoteCharacter()
     );
     for (String offsetColumn : offsetColumnNames) {
-      final String qualifiedOffsetColumn = TableContextUtil.getQuotedObjectName(offsetColumn, quoteChar.getQuoteCharacter());
+      String quoteCharLeft = quoteChar.getQuoteCharacter();
+      String quoteCharRight = quoteChar.getQuoteCharacter().equals("[") ? "]" : quoteChar.getQuoteCharacter();
+      final String qualifiedOffsetColumn = TableContextUtil.getQuotedObjectName(offsetColumn, quoteCharLeft, quoteCharRight);
       final String minMaxOffsetQuery = String.format(minMaxQuery, qualifiedOffsetColumn, qualifiedTableName);
       LOG.debug("Issuing {} offset query: {}",
             minMaxQuery.equals(MIN_OFFSET_VALUE_QUERY) ? "MINIMUM" : "MAXIMUM", minMaxOffsetQuery);

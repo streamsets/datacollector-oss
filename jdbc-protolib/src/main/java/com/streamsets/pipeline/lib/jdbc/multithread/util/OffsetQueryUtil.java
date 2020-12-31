@@ -280,9 +280,11 @@ public final class OffsetQueryUtil {
       queryBuilder.append(String.format(WHERE_CLAUSE, AND_JOINER.join(finalAndConditions)));
     }
 
+    String quoteCharLeft = quoteChar;
+    String quoteCharRight = (quoteChar.equals("[")) ? "]" : quoteChar;
     Collection<String> quotedOffsetColumns =
         tableContext.getOffsetColumns().stream().map(
-            offsetCol -> String.format(QUOTED_NAME, quoteChar, offsetCol, quoteChar)
+            offsetCol -> String.format(QUOTED_NAME, quoteCharLeft, offsetCol, quoteCharRight)
         ).collect(Collectors.toList());
 
     queryBuilder.append(String.format(ORDER_BY_CLAUSE, COMMA_SPACE_JOINER.join(quotedOffsetColumns)));
@@ -308,10 +310,12 @@ public final class OffsetQueryUtil {
   ) {
     String conditionTemplate = comparison.getQueryCondition();
     List<String> finalConditions = new ArrayList<>(preconditions);
+    String quoteCharLeft = quoteChar;
+    String quoteCharRight = quoteChar.equals("[") ? "]" : quoteChar;
     finalConditions.add(
         String.format(
             conditionTemplate,
-            String.format(QUOTED_NAME, quoteChar, partitionColumn, quoteChar),
+            String.format(QUOTED_NAME, quoteCharLeft, partitionColumn, quoteCharRight),
             PREPARED_STATEMENT_POSITIONAL_PARAMETER
         )
     );
