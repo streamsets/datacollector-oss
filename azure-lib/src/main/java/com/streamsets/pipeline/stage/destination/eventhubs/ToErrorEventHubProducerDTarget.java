@@ -26,7 +26,7 @@ import com.streamsets.pipeline.config.DataFormat;
 @StageDef(
     // We're reusing upgrader for both ToErrorEventHubProducerDTarget and EventHubProducerDTarget, make sure that you
     // upgrade both versions at the same time when changing.
-    version = 1,
+    version = 2,
     label = "Write to Azure Event Hub",
     description = "",
     icon = "",

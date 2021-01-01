@@ -19,6 +19,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.microsoft.azure.eventhubs.ConnectionStringBuilder;
 import com.microsoft.azure.eventhubs.EventHubClient;
 import com.microsoft.azure.eventhubs.EventHubException;
+import com.microsoft.azure.eventhubs.TransportType;
 
 import java.io.IOException;
 import java.util.concurrent.Executors;
@@ -40,6 +41,9 @@ public class EventHubCommon {
         .setSasKey(commonConf.sasKey.get())
         .setSasKeyName(commonConf.sasKeyName);
 
+    if(commonConf.useWebSockets){
+      connStr.setTransportType(TransportType.AMQP_WEB_SOCKETS);
+    }
 
     final ScheduledExecutorService scheduledExecutorService = Executors.newSingleThreadScheduledExecutor(
         new ThreadFactoryBuilder().setNameFormat(threadNamePattern).build()

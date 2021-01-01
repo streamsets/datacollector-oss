@@ -16,5 +16,9 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      - setConfig:
+          name: commonConf.useWebSockets
+          value: false

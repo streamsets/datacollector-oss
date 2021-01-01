@@ -63,4 +63,16 @@ public class EventHubConfigBean {
       group = "EVENT_HUB"
   )
   public CredentialValue sasKey = () -> "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Use AMQP over WebSockets",
+      defaultValue = "false",
+      description = "Enable AMQP over WebSockets for proxy support ",
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "EVENT_HUB"
+  )
+  public boolean useWebSockets = false;
 }

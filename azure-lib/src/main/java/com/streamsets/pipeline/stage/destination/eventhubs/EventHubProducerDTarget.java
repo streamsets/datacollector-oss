@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.eventhubs.EventHubConfigBean;
 import com.streamsets.pipeline.lib.eventhubs.Groups;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "Azure Event Hub Producer",
     description = "Writes data to Azure Event Hub",
     icon = "event-hubs.png",

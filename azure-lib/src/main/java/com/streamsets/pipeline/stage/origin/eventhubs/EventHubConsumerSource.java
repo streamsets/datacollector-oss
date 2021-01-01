@@ -18,6 +18,7 @@ package com.streamsets.pipeline.stage.origin.eventhubs;
 import com.microsoft.azure.eventhubs.ConnectionStringBuilder;
 import com.microsoft.azure.eventhubs.EventHubClient;
 import com.microsoft.azure.eventhubs.EventHubRuntimeInformation;
+import com.microsoft.azure.eventhubs.TransportType;
 import com.microsoft.azure.eventprocessorhost.EventProcessorHost;
 import com.microsoft.azure.eventprocessorhost.EventProcessorOptions;
 import com.microsoft.azure.eventprocessorhost.ExceptionReceivedEventArgs;
@@ -115,6 +116,10 @@ public class EventHubConsumerSource implements PushSource, IEventProcessorFactor
           .setEventHubName(commonConf.eventHubName)
           .setSasKey(commonConf.sasKey.get())
           .setSasKeyName(commonConf.sasKeyName);
+
+      if(commonConf.useWebSockets){
+        eventHubConnectionString.setTransportType(TransportType.AMQP_WEB_SOCKETS);
+      }
 
       String storageConnectionString = "DefaultEndpointsProtocol=https;AccountName=" +
           consumerConfigBean.storageAccountName + ";AccountKey=" + consumerConfigBean.storageAccountKey.get();

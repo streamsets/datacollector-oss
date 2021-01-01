@@ -22,3 +22,8 @@ upgrades:
       - setConfig:
           name: consumerConfigBean.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: commonConf.useWebSockets
+          value: false
