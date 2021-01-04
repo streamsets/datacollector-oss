@@ -51,6 +51,7 @@ public class StreamingXmlParser {
   private static final Logger LOG = LoggerFactory.getLogger(StreamingXmlParser.class);
 
   public static final String USE_JAVA_INTERNAL_XML_INPUT_FACTORY = "com.streamsets.pipeline.lib.xml.StreamingXmlParser.useJvmInternalInputFactoryImpl";
+  private static final String JAVA_INTERNAL_XML_INPUT_FACTORY = "com.sun.xml.internal.stream.XMLInputFactoryImpl";
 
   public static final String VALUE_KEY = "value";
   public static final String ATTR_PREFIX_KEY = "attr|";
@@ -93,11 +94,19 @@ public class StreamingXmlParser {
     // The XMLInputFactory.newFactory() uses internally ServiceLoader which is fine under most of the circumstances.
     // The notable exception is cluster mode where Hadoop jars might "confuse" ServiceLoader since some of the
     // JVM-wide pieces of functionality aren't as "clear" as in standalone data collector.
-    XMLInputFactory factory;
+    XMLInputFactory factory = null;
+
     if(Boolean.getBoolean(USE_JAVA_INTERNAL_XML_INPUT_FACTORY)) {
-      LOG.debug("Using Java internal XmlInputFactoryImpl");
-      factory = new com.sun.xml.internal.stream.XMLInputFactoryImpl();
-    } else {
+      try {
+        LOG.debug("Using Java internal XmlInputFactoryImpl");
+        Class factoryClass = Thread.currentThread().getContextClassLoader().loadClass(JAVA_INTERNAL_XML_INPUT_FACTORY);
+        factory = (XMLInputFactory)factoryClass.newInstance();
+      } catch (ClassNotFoundException|IllegalAccessException|InstantiationException e) {
+        LOG.debug("Can't load Java Internal Factory: {}", JAVA_INTERNAL_XML_INPUT_FACTORY, e);
+      }
+    }
+
+    if(factory == null) {
       factory = XMLInputFactory.newFactory();
     }
     LOG.debug("Loaded XMLInputFactory: {}", factory.getClass());
