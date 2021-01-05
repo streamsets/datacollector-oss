@@ -17,7 +17,7 @@
 
 -->
 <assembly>
-  <id>dist-sdc</id>
+  <id>dist</id>
   <formats>
     <format>dir</format>
   </formats>

@@ -254,7 +254,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <executions>
           <execution>
-            <id>dist-sdc</id>
+            <id>dist</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
@@ -265,21 +265,6 @@
               <finalName>streamsets-datacollector-${project.version}</finalName>
               <descriptors>
                 <descriptor>src/main/assemblies/data-collector.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>dist-dpe</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <finalName>streamsets-dpe-datacollector-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/dpe-data-collector.xml</descriptor>
               </descriptors>
             </configuration>
           </execution>

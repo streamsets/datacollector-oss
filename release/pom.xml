@@ -160,54 +160,6 @@
               </descriptors>
             </configuration>
           </execution>
-          <execution>
-            <id>dpe-sdc-all</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <tarLongFileMode>gnu</tarLongFileMode>
-              <finalName>streamsets-dpe-datacollector-all-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/dpe-data-collector-sdc-all.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>dpe-sdc-core</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <tarLongFileMode>gnu</tarLongFileMode>
-              <finalName>streamsets-dpe-datacollector-core-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/dpe-data-collector-sdc-core.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-          <execution>
-            <id>dpe-sdc-common</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <appendAssemblyId>false</appendAssemblyId>
-              <attach>false</attach>
-              <tarLongFileMode>gnu</tarLongFileMode>
-              <finalName>streamsets-dpe-datacollector-common-${project.version}</finalName>
-              <descriptors>
-                <descriptor>src/main/assemblies/dpe-data-collector-sdc-common.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
 
         </executions>
       </plugin>
@@ -226,9 +178,6 @@
               <target>
                 <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
                   <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version} ${project.build.directory}"/>
-                </exec>
-                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
-                  <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-dpe-datacollector-${project.version} ${project.build.directory}"/>
                 </exec>
                 <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
                   <arg line="src/main/bin/create-legacy-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version}-legacy ${project.build.directory}/legacy/"/>
