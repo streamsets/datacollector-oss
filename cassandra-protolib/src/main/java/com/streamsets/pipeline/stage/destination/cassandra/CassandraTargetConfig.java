@@ -191,8 +191,8 @@ public class CassandraTargetConfig {
       defaultValue = "5000", // from SocketOptions.DEFAULT_CONNECT_TIMEOUT_MILLIS
       min = 1,
       max = Integer.MAX_VALUE,
-      label = "Read Timeout",
-      description = "The per-host read timeout (in milliseconds)",
+      label = "Write Timeout",
+      description = "The per-host write timeout (in milliseconds)",
       displayPosition = 110,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "CASSANDRA"
