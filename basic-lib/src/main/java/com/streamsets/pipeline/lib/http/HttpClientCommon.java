@@ -171,6 +171,10 @@ public class HttpClientCommon {
 
       JerseyClientUtil.configureSslContext(jerseyClientConfig.tlsConfig, clientBuilder);
 
+      // Force Jersey to not do validation of what methods are allowed in the body and which are not
+      // Something that Jersey is sadly too opiniated about - even above the HTTP spec.
+      clientBuilder.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
+
       configureAuthAndBuildClient(clientBuilder, issues);
 
 
