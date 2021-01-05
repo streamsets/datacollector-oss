@@ -228,6 +228,9 @@
                   <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version} ${project.build.directory}"/>
                 </exec>
                 <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
+                  <arg line="src/main/bin/create-lib-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-dpe-datacollector-${project.version} ${project.build.directory}"/>
+                </exec>
+                <exec executable="/bin/bash" dir="${basedir}" failonerror="true">
                   <arg line="src/main/bin/create-legacy-tars.sh ${project.version} ${basedir}/../dist/target/streamsets-datacollector-${project.version}-legacy ${project.build.directory}/legacy/"/>
                 </exec>
               </target>
