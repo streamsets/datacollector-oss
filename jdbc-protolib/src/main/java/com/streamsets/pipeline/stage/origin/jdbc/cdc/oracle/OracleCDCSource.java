@@ -1108,9 +1108,10 @@ public class OracleCDCSource extends BaseSource {
             }
         ).collect(Collectors.toList());
       }
+
       if (!fieldTypeExceptions.isEmpty() || emptySQL) {
         String errorString = fieldTypeExceptions.isEmpty() ? "LogMiner returned empty SQL Redo statement." : errorStringJoiner.join(errorColumns);
-        boolean add = handleUnsupportedFieldTypes(record, errorString);
+        boolean add = handleUnsupportedFieldTypes(record, errorString, emptySQL);
         if (add) {
           return record;
         } else {
@@ -1129,13 +1130,13 @@ public class OracleCDCSource extends BaseSource {
 
   }
 
-  private boolean handleUnsupportedFieldTypes(Record r, String error) {
+  private boolean handleUnsupportedFieldTypes(Record r, String error, boolean emptySQL) {
     switch (configBean.unsupportedFieldOp) {
       case SEND_TO_PIPELINE:
         if (LOG.isDebugEnabled()) {
           LOG.debug(UNSUPPORTED_SEND_TO_PIPELINE, error, r.getHeader().getAttribute(TABLE));
         }
-        return true;
+        return !emptySQL;
       case TO_ERROR:
         if (LOG.isDebugEnabled()) {
           LOG.debug(UNSUPPORTED_TO_ERR, error, r.getHeader().getAttribute(TABLE));
