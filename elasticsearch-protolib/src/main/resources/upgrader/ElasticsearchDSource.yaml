@@ -47,5 +47,8 @@ upgrades:
           newNamePattern: conf.connection.securityConfig.(0)
       - setConfig:
           lookForName: conf.connection.securityConfig.sslTrustStorePath
+          ifValueMatches: ".+"
           name: conf.connection.securityConfig.enableSSL
           value: true
+          elseName: conf.connection.securityConfig.enableSSL
+          elseValue: false

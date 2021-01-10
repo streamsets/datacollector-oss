@@ -47,5 +47,8 @@ upgrades:
           newNamePattern: elasticSearchConfig.connection.securityConfig.(0)
       - setConfig:
           lookForName: elasticSearchConfig.connection.securityConfig.sslTrustStorePath
+          ifValueMatches: ".+"
           name: elasticSearchConfig.connection.securityConfig.enableSSL
           value: true
+          elseName: elasticSearchConfig.connection.securityConfig.enableSSL
+          elseValue: false
