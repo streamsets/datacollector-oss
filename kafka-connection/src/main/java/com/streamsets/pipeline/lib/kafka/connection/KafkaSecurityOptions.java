@@ -23,6 +23,7 @@ public enum KafkaSecurityOptions implements Label {
   SSL_AUTH("SSL/TLS Encryption and Authentication (Security Protocol=SSL)", "SSL"),
   SASL_PLAINTEXT("Kerberos Authentication (Security Protocol=SASL_PLAINTEXT)", "SASL_PLAINTEXT"),
   SASL_SSL("Kerberos Authentication on SSL/TLS (Security Protocol=SASL_SSL)", "SASL_SSL"),
+  SASL_PLAIN("Security Protocol=SASL_PLAIN", "SASL_PLAIN")
   ;
 
   private final String label;

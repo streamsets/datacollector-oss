@@ -29,7 +29,7 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 
 @StageDef(
-  version = 12,
+  version = 13,
   label = "Kafka Consumer",
   description = "Reads data from Kafka",
   execution = {ExecutionMode.CLUSTER_YARN_STREAMING, ExecutionMode.CLUSTER_MESOS_STREAMING, ExecutionMode.STANDALONE},
