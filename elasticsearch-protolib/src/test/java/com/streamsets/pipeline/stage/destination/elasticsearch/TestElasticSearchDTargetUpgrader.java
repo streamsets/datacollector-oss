@@ -26,6 +26,7 @@ import org.mockito.Mockito;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -120,5 +121,77 @@ public class TestElasticSearchDTargetUpgrader {
 
     UpgraderTestUtils.assertExists(configs, securityPrefix + ".securityUser", "username:password");
     UpgraderTestUtils.assertExists(configs, securityPrefix + ".securityPassword", "");
+  }
+
+  @Test
+  public void testV11ToV12WithSSL() throws StageException {
+    Mockito.doReturn(11).when(context).getFromVersion();
+    Mockito.doReturn(12).when(context).getToVersion();
+
+    configs.add(new Config("elasticSearchConfig.httpUris", Arrays.asList(
+        "localhost:80",
+        "https://localhost:443"
+    )));
+    configs.add(new Config("elasticSearchConfig.useSecurity", true));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityMode", "param1"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsRegion", "param2"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.endpoint", "param3"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsAccessKeyId", "param4"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsSecretAccessKey", "param5"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityUser", "param6"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityPassword", "param7"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.sslTrustStorePath", "param8"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.sslTrustStorePassword", "param9"));
+    configs = elasticSearchTargetUpgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.serverUrl", "localhost:80,https://localhost:443");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.port", "9200");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.useSecurity", true);
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityMode", "param1");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsRegion", "param2");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.endpoint", "param3");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsAccessKeyId", "param4");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsSecretAccessKey", "param5");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityUser", "param6");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityPassword", "param7");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.enableSSL", true);
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.sslTrustStorePath", "param8");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.sslTrustStorePassword", "param9");
+  }
+
+  @Test
+  public void testV11ToV12WithoutSSL() throws StageException {
+    Mockito.doReturn(11).when(context).getFromVersion();
+    Mockito.doReturn(12).when(context).getToVersion();
+
+    configs.add(new Config("elasticSearchConfig.httpUris", Arrays.asList(
+        "localhost:80",
+        "https://localhost:443"
+    )));
+    configs.add(new Config("elasticSearchConfig.useSecurity", true));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityMode", "param1"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsRegion", "param2"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.endpoint", "param3"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsAccessKeyId", "param4"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.awsSecretAccessKey", "param5"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityUser", "param6"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.securityPassword", "param7"));
+    configs.add(new Config("elasticSearchConfig.securityConfig.sslTrustStorePath", ""));
+    configs.add(new Config("elasticSearchConfig.securityConfig.sslTrustStorePassword", ""));
+    configs = elasticSearchTargetUpgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.serverUrl", "localhost:80,https://localhost:443");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.port", "9200");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.useSecurity", true);
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityMode", "param1");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsRegion", "param2");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.endpoint", "param3");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsAccessKeyId", "param4");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.awsSecretAccessKey", "param5");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityUser", "param6");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.securityPassword", "param7");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.enableSSL", false);
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.sslTrustStorePath", "");
+    UpgraderTestUtils.assertExists(configs, "elasticSearchConfig.connection.securityConfig.sslTrustStorePassword", "");
   }
 }
