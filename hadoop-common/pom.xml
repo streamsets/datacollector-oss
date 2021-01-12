@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.21.0-SNAPSHOT</version>
+    <version>3.21.0</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-hadoop-common</artifactId>
-  <version>3.21.0-SNAPSHOT</version>
+  <version>3.21.0</version>
   <description>StreamSets Data Collector Hadoop Common</description>
   <name>StreamSets Data Collector Hadoop Common</name>
   <packaging>jar</packaging>
