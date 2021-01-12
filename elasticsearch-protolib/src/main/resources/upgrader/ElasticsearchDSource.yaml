@@ -30,6 +30,10 @@ upgrades:
           value: ""
   - toVersion: 3
     actions:
+      - setConfig:
+          lookForName: conf.httpUris
+          elseName: conf.httpUris
+          elseValue: []
       - setConfigFromJoinedConfigList:
           listName: conf.httpUris
           name: conf.connection.serverUrl

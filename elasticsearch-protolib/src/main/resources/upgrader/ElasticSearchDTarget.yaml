@@ -30,6 +30,10 @@ upgrades:
           value: ""
   - toVersion: 12
     actions:
+      - setConfig:
+          lookForName: elasticSearchConfig.httpUris
+          elseName: elasticSearchConfig.httpUris
+          elseValue: []
       - setConfigFromJoinedConfigList:
           listName: elasticSearchConfig.httpUris
           name: elasticSearchConfig.connection.serverUrl
