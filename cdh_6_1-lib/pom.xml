@@ -23,12 +23,12 @@
     <parent>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-cdh_6-stagelib-base</artifactId>
-        <version>3.21.0-SNAPSHOT</version>
+        <version>3.22-0-SNAPSHOT</version>
         <relativePath>../cdh_6-stagelib-base</relativePath>
     </parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-cdh_6_1-lib</artifactId>
-    <version>3.21.0-SNAPSHOT</version>
+    <version>3.22-0-SNAPSHOT</version>
     <description>StreamSets Data Collector CDH 6.1 Lib</description>
     <name>StreamSets Data Collector CDH 6.1 Lib</name>
     <packaging>jar</packaging>
