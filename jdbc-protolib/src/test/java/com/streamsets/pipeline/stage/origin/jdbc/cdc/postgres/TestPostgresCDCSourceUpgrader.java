@@ -35,7 +35,7 @@ public class TestPostgresCDCSourceUpgrader {
   @Before
   public void setUp() {
     URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/PostgresCDCSource.yaml");
-    postgresCDCSourceUpgrader = new SelectorStageUpgrader("stage", new StageUpgrader() {}, yamlResource);
+    postgresCDCSourceUpgrader = new SelectorStageUpgrader("stage", new PostgresCDCSourceUpgrader(), yamlResource);
   }
 
   @Test
@@ -72,7 +72,7 @@ public class TestPostgresCDCSourceUpgrader {
           Assert.assertEquals(500, config.getValue());
           break;
         case "postgresCDCConfigBean.generatorQueueMaxSize":
-          Assert.assertEquals("2500", config.getValue());
+          Assert.assertEquals(2500, config.getValue());
           break;
         case "postgresCDCConfigBean.statusInterval":
           Assert.assertEquals(30, config.getValue());
