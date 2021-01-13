@@ -28,14 +28,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
+
 public class TestPostgresCDCSourceUpgrader {
 
   private StageUpgrader postgresCDCSourceUpgrader;
+  JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
 
   @Before
   public void setUp() {
     URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/PostgresCDCSource.yaml");
     postgresCDCSourceUpgrader = new SelectorStageUpgrader("stage", new PostgresCDCSourceUpgrader(), yamlResource);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
   }
 
   @Test
@@ -82,6 +86,23 @@ public class TestPostgresCDCSourceUpgrader {
           break;
       }
     }
+  }
+
+  @Test
+  public void testV3ToV4() {
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    List<Config> configs = new ArrayList<>();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        postgresCDCSourceUpgrader,
+        context,
+        "hikariConf.",
+        "connection."
+    );
   }
 
 }

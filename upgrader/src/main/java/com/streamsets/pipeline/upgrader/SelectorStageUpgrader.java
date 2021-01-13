@@ -41,7 +41,8 @@ public class SelectorStageUpgrader implements StageUpgrader {
 
   public List<Config> upgrade(List<Config> configs, Context context) throws StageException {
     boolean hasYamlUpgrades = yamlUpgrader != null && yamlUpgrader.getMinimumConfigVersionHandled()
-        != YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED;
+        != YamlStageUpgrader.NO_CONFIG_VERSIONS_HANDLED
+        && yamlUpgrader.getMinimumConfigVersionHandled() < context.getToVersion();
 
     if (legacyUpgrader != null) {
       int toLegacyVersion = (hasYamlUpgrades) ? yamlUpgrader.getMinimumConfigVersionHandled()

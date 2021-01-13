@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,16 +27,16 @@ import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 @ConnectionDef(
-    label = "JDBC",
-    type = JdbcConnection.TYPE,
-    description = "Connects to JDBC",
+    label = "Postgres",
+    type = PostgresConnection.TYPE,
+    description = "Connects to PostgreSQL",
     version = 1,
-    upgraderDef = "upgrader/JdbcConnectionUpgrader.yaml",
+    upgraderDef = "upgrader/PostgresConnectionUpgrader.yaml",
     supportedEngines = { ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER }
 )
 @ConfigGroups(JdbcConnectionGroups.class)
-public class JdbcConnection extends AbstractJdbcConnection {
+public class PostgresConnection extends AbstractJdbcConnection {
 
-  public static final String TYPE = "STREAMSETS_JDBC";
+  public static final String TYPE = "STREAMSETS_POSTGRES";
 
 }

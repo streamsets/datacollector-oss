@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.lib.jdbc;
 
 import com.streamsets.pipeline.api.ConfigDef;
@@ -20,15 +21,15 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.lib.jdbc.connection.JdbcConnection;
+import com.streamsets.pipeline.lib.jdbc.connection.PostgresConnection;
 import com.streamsets.pipeline.lib.jdbc.connection.common.AbstractJdbcConnection;
 
-public class JdbcHikariPoolConfigBean extends AbstractJdbcHikariPoolConfigBean {
+public class PostgresHikariPoolConfigBean extends AbstractJdbcHikariPoolConfigBean {
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      connectionType = JdbcConnection.TYPE,
+      connectionType = PostgresConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection",
       group = "#0",
@@ -46,7 +47,7 @@ public class JdbcHikariPoolConfigBean extends AbstractJdbcHikariPoolConfigBean {
           )
       }
   )
-  public JdbcConnection connection;
+  public PostgresConnection connection;
 
   protected AbstractJdbcConnection getConnection() {
     return connection;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,17 @@
 
 package com.streamsets.pipeline.lib.jdbc.connection;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.StageDef;
+import org.junit.Assert;
+import org.junit.Test;
 
-@GenerateResourceBundle
-public enum JdbcConnectionGroups implements Label {
-  JDBC("JDBC"),
-  CREDENTIALS("Credentials"),
-  ;
+public class TestPostgresConnectionVerifier {
 
-  private final String label;
-
-  JdbcConnectionGroups(String label) {
-    this.label = label;
-  }
-
-  @Override
-  public String getLabel() {
-    return this.label;
+  @Test
+  public void testVerifierAndConnectionVersion() {
+    StageDef stageDef = PostgresConnectionVerifier.class.getAnnotation(StageDef.class);
+    ConnectionDef connectionDef = PostgresConnection.class.getAnnotation(ConnectionDef.class);
+    Assert.assertEquals(stageDef.version(), connectionDef.version());
   }
 }

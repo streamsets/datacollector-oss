@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
 import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,26 +40,26 @@ import java.util.Properties;
 
 @StageDef(
     version = 1,
-    label = "JDBC Connection Verifier",
-    description = "Verifies connections for JDBC",
-    upgraderDef = "upgrader/JdbcConnectionVerifierUpgrader.yaml",
+    label = "Postgres Connection Verifier",
+    description = "Verifies connections for Postgres",
+    upgraderDef = "upgrader/PostgresConnectionVerifierUpgrader.yaml",
     onlineHelpRefUrl = ""
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
 @ConfigGroups(JdbcConnectionGroups.class)
 @ConnectionVerifierDef(
-    verifierType = JdbcConnection.TYPE,
+    verifierType = PostgresConnection.TYPE,
     connectionFieldName = "connection",
     connectionSelectionFieldName = "connectionSelection"
 )
-public class JdbcConnectionVerifier extends ConnectionVerifier {
+public class PostgresConnectionVerifier extends ConnectionVerifier {
 
-  private static final Logger LOG = LoggerFactory.getLogger(JdbcConnection.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PostgresConnection.class);
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      connectionType = JdbcConnection.TYPE,
+      connectionType = PostgresConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
@@ -73,23 +74,28 @@ public class JdbcConnectionVerifier extends ConnectionVerifier {
           )
       }
   )
-  public JdbcConnection connection;
+  public PostgresConnection connection;
 
   @Override
   protected List<ConfigIssue> initConnection() {
     List<ConfigIssue> issues = new ArrayList<>();
 
-    Properties connectionProps = new Properties();
-    if (connection.useCredentials) {
-      connectionProps.put("user", connection.username.get());
-      connectionProps.put("password", connection.password.get());
-    }
+    if (!DatabaseVendor.forUrl(connection.connectionString).equals(DatabaseVendor.POSTGRESQL)) {
+      LOG.debug(JdbcErrors.JDBC_503.getMessage(), PostgresConnection.TYPE);
+      issues.add(getContext().createConfigIssue("JDBC", "connection", JdbcErrors.JDBC_503, PostgresConnection.TYPE));
+    } else {
+      Properties connectionProps = new Properties();
+      if (connection.useCredentials) {
+        connectionProps.put("user", connection.username.get());
+        connectionProps.put("password", connection.password.get());
+      }
 
-    try (Connection conn = DriverManager.getConnection(connection.connectionString, connectionProps)) {
-      LOG.debug("Successfully connected to the database at {}", connection.connectionString);
-    } catch (Exception e) {
-      LOG.debug(JdbcErrors.JDBC_00.getMessage(), connection.connectionString, e.getMessage(), e);
-      issues.add(getContext().createConfigIssue("JDBC", "connection", JdbcErrors.JDBC_00, e.toString(), e));
+      try (Connection conn = DriverManager.getConnection(connection.connectionString, connectionProps)) {
+        LOG.debug("Successfully connected to the database at {}", connection.connectionString);
+      } catch (Exception e) {
+        LOG.debug(JdbcErrors.JDBC_00.getMessage(), connection.connectionString, e.getMessage(), e);
+        issues.add(getContext().createConfigIssue("JDBC", "connection", JdbcErrors.JDBC_00, e.toString(), e));
+      }
     }
     return issues;
   }
