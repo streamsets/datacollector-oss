@@ -20,12 +20,11 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
+import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.eclipse.jetty.util.security.Credential;
 import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.joda.time.format.DateTimeFormat;
@@ -95,8 +94,8 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldFailWhenUserIsNotSuper() throws Exception {
-    MysqlSourceConfig config = createConfig("test");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("test");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -106,9 +105,9 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldFailWhenUCannotConnect() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    config.port = "1";
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    def.connection.port = "1";
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -118,8 +117,8 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldConvertAllMysqlTypes() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -216,9 +215,9 @@ public abstract class AbstractMysqlSource {
   public void shouldStartFromBeginning() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
 
-    MysqlSourceConfig config = createConfig("root");
-    config.startFromBeginning = true;
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    def.config.startFromBeginning = true;
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -247,9 +246,9 @@ public abstract class AbstractMysqlSource {
   public void shouldStartFromCurrent() throws Exception {
     execute(ds, "INSERT INTO foo (bar) VALUES (1)");
 
-    MysqlSourceConfig config = createConfig("root");
-    config.startFromBeginning = false;
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    def.config.startFromBeginning = false;
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -288,8 +287,8 @@ public abstract class AbstractMysqlSource {
       execute(ds, String.format("INSERT INTO foo (bar) VALUES (%d)", i));
     }
 
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -334,8 +333,8 @@ public abstract class AbstractMysqlSource {
       execute(ds, String.format("INSERT INTO foo (bar) VALUES (%d)", i));
     }
 
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -357,8 +356,8 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldHandlePartialUpdates() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -396,10 +395,10 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldIncludeAndIgnoreTables() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
-    config.includeTables = "test.foo,t%.foo2";
-    config.ignoreTables = "test.foo";
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
+    def.config.includeTables = "test.foo,t%.foo2";
+    def.config.ignoreTables = "test.foo";
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -422,10 +421,10 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldIgnoreEmptyFilters() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
-    config.includeTables = "";
-    config.ignoreTables = "";
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
+    def.config.includeTables = "";
+    def.config.ignoreTables = "";
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -445,9 +444,9 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldReturnCorrectOffsetForFilteredOutEvents() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
-    config.ignoreTables = "test.foo";
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
+    def.config.ignoreTables = "test.foo";
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -467,8 +466,8 @@ public abstract class AbstractMysqlSource {
 
   @Test
   public void shouldCreateRecordWithoutColumnNamesWhenMetadataNotFound() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .setOnRecordError(OnRecordError.TO_ERROR)
@@ -567,9 +566,9 @@ public abstract class AbstractMysqlSource {
   @Test
   public void shouldSetClientServerId() throws Exception {
     // get current offset
-    MysqlSourceConfig tconfig = createConfig("root");
-    tconfig.startFromBeginning = true;
-    MysqlSource tsource = createMysqlSource(tconfig);
+    MysqlDSource rootDef = createConfig("root");
+    rootDef.config.startFromBeginning = true;
+    MysqlSource tsource = createMysqlSource(rootDef.connection, rootDef.config);
     SourceRunner trunner = new SourceRunner.Builder(MysqlDSource.class, tsource)
         .addOutputLane(LANE)
         .build();
@@ -594,10 +593,10 @@ public abstract class AbstractMysqlSource {
     List<SourceRunner> runners = new ArrayList<>();
 
     for (String serverId: serverIds) {
-      MysqlSourceConfig config = createConfig("root");
-      config.startFromBeginning = false;
-      config.serverId = serverId;
-      MysqlSource source = createMysqlSource(config);
+      MysqlDSource def = createConfig("root");
+      def.config.startFromBeginning = false;
+      def.config.serverId = serverId;
+      MysqlSource source = createMysqlSource(def.connection, def.config);
       runner = new SourceRunner.Builder(MysqlDSource.class, source)
           .addOutputLane(LANE)
           .build();
@@ -675,28 +674,40 @@ public abstract class AbstractMysqlSource {
   }
 
   private int nextServerId = 1;
-  protected MysqlSourceConfig createConfig(String username) {
-    MysqlSourceConfig config = new MysqlSourceConfig();
-    config.username = () -> username;
-    config.password = () -> MYSQL_PASSWORD;
+  protected MysqlDSource createConfig(String username) {
+    MySQLBinLogConnection connection = new MySQLBinLogConnection();
+    connection.username = () -> username;
+    connection.password = () -> MYSQL_PASSWORD;
     Matcher matcher = Pattern.compile("jdbc:mysql://(.*):(\\d+)/test")
         .matcher(getJdbcUrl());
     matcher.find();
-    config.port = matcher.group(2);
-    config.hostname = matcher.group(1);
+    connection.port = matcher.group(2);
+    connection.hostname = matcher.group(1);
+
+    MySQLBinLogConfig config = new MySQLBinLogConfig();
     config.serverId = String.valueOf(SERVER_ID);
     config.maxWaitTime = 1000;
     config.maxBatchSize = 1000;
     config.connectTimeout = 5000;
     config.startFromBeginning = false;
-    return config;
+
+    MysqlDSource source = new MysqlDSource();
+    source.connection = connection;
+    source.config = config;
+
+    return source;
   }
 
-  protected MysqlSource createMysqlSource(final MysqlSourceConfig config) {
+  protected MysqlSource createMysqlSource(final MySQLBinLogConnection conn, final MySQLBinLogConfig config) {
     return new MysqlSource() {
       @Override
-      public MysqlSourceConfig getConfig() {
+      public MySQLBinLogConfig getConfig() {
         return config;
+      }
+
+      @Override
+      public MySQLBinLogConnection getConnection() {
+        return conn;
       }
     };
   }

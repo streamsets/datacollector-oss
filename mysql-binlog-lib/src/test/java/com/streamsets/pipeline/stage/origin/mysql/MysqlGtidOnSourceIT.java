@@ -63,8 +63,8 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
   @Test
   public void shouldWriteGtidAndSeqNoAndIncompleteTx() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -134,8 +134,8 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
   @Test
   public void shouldSkipIncompleteTransactions() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -159,7 +159,7 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
     // reconnect
     runner.runDestroy();
-    source = createMysqlSource(config);
+    source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -198,9 +198,9 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
     execute(ds, "INSERT INTO foo (bar) VALUES (2)");
 
-    MysqlSourceConfig config = createConfig("root");
-    config.initialOffset = offset;
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    def.config.initialOffset = offset;
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();
@@ -233,8 +233,8 @@ public class MysqlGtidOnSourceIT extends AbstractMysqlSource {
 
   @Test
   public void testMultipleOperations() throws Exception {
-    MysqlSourceConfig config = createConfig("root");
-    MysqlSource source = createMysqlSource(config);
+    MysqlDSource def = createConfig("root");
+    MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
         .build();

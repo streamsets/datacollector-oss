@@ -15,6 +15,20 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
+import com.github.shyiko.mysql.binlog.BinaryLogClient;
+import com.github.shyiko.mysql.binlog.GtidSet;
+import com.github.shyiko.mysql.binlog.network.SSLMode;
+import com.github.shyiko.mysql.binlog.network.ServerException;
+import com.google.common.base.Throwables;
+import com.streamsets.pipeline.api.BatchMaker;
+import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
+import com.streamsets.pipeline.stage.origin.mysql.filters.Filter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -28,49 +42,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import com.github.shyiko.mysql.binlog.BinaryLogClient;
-import com.github.shyiko.mysql.binlog.GtidSet;
-import com.github.shyiko.mysql.binlog.network.SSLMode;
-import com.github.shyiko.mysql.binlog.network.ServerException;
-import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableList;
-import com.streamsets.pipeline.api.BatchMaker;
-import com.streamsets.pipeline.api.Record;
-import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.stage.origin.mysql.filters.Filter;
-import com.streamsets.pipeline.stage.origin.mysql.filters.Filters;
-import com.streamsets.pipeline.stage.origin.mysql.filters.IgnoreTableFilter;
-import com.streamsets.pipeline.stage.origin.mysql.filters.IncludeTableFilter;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
-import com.zaxxer.hikari.pool.HikariPool;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.streamsets.pipeline.stage.origin.mysql.MysqlDSource.CONFIG_PREFIX;
+import static com.streamsets.pipeline.stage.origin.mysql.MysqlDSource.CONNECTION_PREFIX;
 
 public abstract class MysqlSource extends BaseSource {
   private static final Logger LOG = LoggerFactory.getLogger(MysqlSource.class);
 
-  /**
-   * Known MySQL Drivers, we load them explicitly.
-   */
-  List<String> MYSQL_DRIVERS  = ImmutableList.of("com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver");
+  private DataSourceInitializer dataSourceInitializer;
 
-  private static final String CONFIG_PREFIX = "config.";
   private BinaryLogConsumer consumer;
 
   private BinaryLogClient client;
 
   private EventBuffer eventBuffer;
-
-  private HikariDataSource dataSource;
-
-  private SourceOffsetFactory offsetFactory;
-
-  private Filter eventFilter;
-
-  private int port;
-  private long serverId;
 
   private boolean checkBatchSize = true;
 
@@ -83,114 +67,39 @@ public abstract class MysqlSource extends BaseSource {
     }
   });
 
-  public abstract MysqlSourceConfig getConfig();
+  public abstract MySQLBinLogConfig getConfig();
+  public abstract MySQLBinLogConnection getConnection();
 
   @Override
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    // Validate the port number
-    try {
-      port = Integer.valueOf(getConfig().port);
-    } catch (NumberFormatException e) {
-      throw new NumberFormatException("Port number must be numeric");
-    }
-    // ServerId can be empty. Validate if provided.
-    try {
-      if (getConfig().serverId != null && !getConfig().serverId.isEmpty())
-        serverId = Integer.valueOf(getConfig().serverId);
-    } catch (NumberFormatException e) {
-      throw new NumberFormatException("Server ID must be numeric");
-    }
-    // check if binlog client connection is possible
-    // we don't reuse this client later on, it is used just to check that client can connect, it
-    // is immediately closed after connection.
-    BinaryLogClient tmpClient = createBinaryLogClient();
-    try {
-      tmpClient.setKeepAlive(false);
-      tmpClient.connect(getConfig().connectTimeout);
-    } catch (IOException | TimeoutException e) {
-      LOG.error("Error connecting to MySql binlog: {}", e.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), CONFIG_PREFIX + "hostname", Errors.MYSQL_003, e.getMessage(), e
-      ));
-    } finally {
-      try {
-        tmpClient.disconnect();
-      } catch (IOException e) {
-        LOG.warn("Error disconnecting from MySql: {}", e.getMessage(), e);
-      }
-    }
+    dataSourceInitializer = new DataSourceInitializer(
+        CONNECTION_PREFIX,
+        getConnection(),
+        CONFIG_PREFIX,
+        getConfig(),
+        new ConfigIssueFactory(getContext())
+    );
 
-    // create include/ignore filters
-    Filter includeFilter = null;
-    try {
-      includeFilter = createIncludeFilter();
-    } catch (IllegalArgumentException e) {
-      LOG.error("Error creating include tables filter: {}", e.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.ADVANCED.name(), CONFIG_PREFIX  + "includeTables", Errors.MYSQL_008, e.getMessage(), e
-      ));
-    }
+    issues.addAll(dataSourceInitializer.issues);
 
-    Filter ignoreFilter = null;
-    try {
-      ignoreFilter = createIgnoreFilter();
-    } catch (IllegalArgumentException e) {
-      LOG.error("Error creating ignore tables filter: {}", e.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.ADVANCED.name(), CONFIG_PREFIX + "ignoreTables", Errors.MYSQL_007, e.getMessage(), e
-      ));
-    }
-
-    if (ignoreFilter != null && includeFilter != null) {
-      eventFilter = includeFilter.and(ignoreFilter);
-    }
-
-    for(String driverName : MYSQL_DRIVERS) {
-      try {
-        LOG.info("Loading driver: {}", driverName);
-        Class.forName(driverName);
-        LOG.info("Loaded driver: {}", driverName);
-      } catch (ClassNotFoundException e) {
-        LOG.error("Can't load driver: {}", driverName, e);
-      }
-    }
-
-    // connect to mysql
-    HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", getConfig().hostname, port));
-    hikariConfig.setUsername(getConfig().username.get());
-    hikariConfig.setPassword(getConfig().password.get());
-    hikariConfig.setReadOnly(true);
-    hikariConfig.addDataSourceProperty("useSSL", getConfig().useSsl);
-    try {
-      dataSource = new HikariDataSource(hikariConfig);
-      offsetFactory = isGtidEnabled()
-          ? new GtidSourceOffsetFactory()
-          : new BinLogPositionOffsetFactory();
-    } catch (HikariPool.PoolInitializationException e) {
-      LOG.error("Error connecting to MySql: {}", e.getMessage(), e);
-      issues.add(getContext().createConfigIssue(
-          Groups.MYSQL.name(), null, Errors.MYSQL_003, e.getMessage(), e
-      ));
-    }
     return issues;
   }
 
   private BinaryLogClient createBinaryLogClient() {
     BinaryLogClient binLogClient = new BinaryLogClient(
-        getConfig().hostname,
-        port,
-        getConfig().username.get(),
-        getConfig().password.get()
+        getConnection().hostname,
+        dataSourceInitializer.port,
+        getConnection().username.get(),
+        getConnection().password.get()
     );
-    if (getConfig().useSsl) {
+    if (getConnection().useSsl) {
       binLogClient.setSSLMode(SSLMode.REQUIRED);
     } else {
       binLogClient.setSSLMode(SSLMode.DISABLED);
     }
-    binLogClient.setServerId(serverId);
+    binLogClient.setServerId(dataSourceInitializer.serverId);
     return binLogClient;
   }
 
@@ -204,8 +113,8 @@ public abstract class MysqlSource extends BaseSource {
       }
     }
 
-    if (dataSource != null) {
-      dataSource.close();
+    if (dataSourceInitializer != null) {
+      dataSourceInitializer.destroy();
     }
 
     super.destroy();
@@ -217,7 +126,7 @@ public abstract class MysqlSource extends BaseSource {
     // invocation of this produce(), as we need to advance it to specific offset
     if (client == null) {
       // connect consumer handling all events to client
-      MysqlSchemaRepository schemaRepository = new MysqlSchemaRepository(dataSource);
+      MysqlSchemaRepository schemaRepository = new MysqlSchemaRepository(dataSourceInitializer.dataSource);
       eventBuffer = new EventBuffer(getConfig().maxBatchSize);
       client = createBinaryLogClient();
       consumer = new BinaryLogConsumer(schemaRepository, eventBuffer, client);
@@ -259,7 +168,7 @@ public abstract class MysqlSource extends BaseSource {
         lastSourceOffset = event.getOffset().format();
 
         // check if event should be filtered out
-        if (eventFilter.apply(event) == Filter.Result.PASS) {
+        if (dataSourceInitializer.eventFilter.apply(event) == Filter.Result.PASS) {
           List<Record> records = recordConverter.toRecords(event);
           // If we are in preview mode, make sure we don't send a huge number of messages.
           if (getContext().isPreview() && recordCounter + records.size() > batchSize) {
@@ -290,7 +199,7 @@ public abstract class MysqlSource extends BaseSource {
         // first start
         if (getConfig().initialOffset != null && !getConfig().initialOffset.isEmpty()) {
           // start from config offset
-          SourceOffset offset = offsetFactory.create(getConfig().initialOffset);
+          SourceOffset offset = dataSourceInitializer.offsetFactory.create(getConfig().initialOffset);
           LOG.info("Moving client to offset {}", offset);
           offset.positionClient(client);
           consumer.setOffset(offset);
@@ -298,7 +207,7 @@ public abstract class MysqlSource extends BaseSource {
           if (isGtidEnabled()) {
             // when starting from beginning with GTID - skip GTIDs that have been removed
             // from server logs already
-            GtidSet purged = new GtidSet(Util.getServerGtidPurged(dataSource));
+            GtidSet purged = new GtidSet(Util.getServerGtidPurged(dataSourceInitializer.dataSource));
             // client's gtidset includes first event of purged, skip latest tx of purged
             for (GtidSet.UUIDSet uuidSet : purged.getUUIDSets()) {
               GtidSet.Interval last = null;
@@ -317,10 +226,10 @@ public abstract class MysqlSource extends BaseSource {
           // read from current position
           if (isGtidEnabled()) {
             // set client gtidset to master executed gtidset
-            String executed = Util.getServerGtidExecuted(dataSource);
+            String executed = Util.getServerGtidExecuted(dataSourceInitializer.dataSource);
             // if position client to 'executed' - it will fetch last transaction
             // so - advance client to +1 transaction
-            String serverUUID = Util.getGlobalVariable(dataSource, "server_uuid");
+            String serverUUID = Util.getGlobalVariable(dataSourceInitializer.dataSource, "server_uuid");
             GtidSet ex = new GtidSet(executed);
             for (GtidSet.UUIDSet uuidSet : ex.getUUIDSets()) {
               if (uuidSet.getUUID().equals(serverUUID)) {
@@ -336,7 +245,7 @@ public abstract class MysqlSource extends BaseSource {
       } else {
         // resume work from previous position
         if (!"".equals(lastSourceOffset)) {
-          SourceOffset offset = offsetFactory.create(lastSourceOffset);
+          SourceOffset offset = dataSourceInitializer.offsetFactory.create(lastSourceOffset);
           LOG.info("Moving client to offset {}", offset);
           offset.positionClient(client);
           consumer.setOffset(offset);
@@ -354,36 +263,6 @@ public abstract class MysqlSource extends BaseSource {
       LOG.error(Errors.MYSQL_003.getMessage(), e.toString(), e);
       throw new StageException(Errors.MYSQL_003, e.toString(), e);
     }
-  }
-
-  private Filter createIgnoreFilter() {
-    Filter filter = Filters.PASS;
-    if (getConfig().ignoreTables != null && !getConfig().ignoreTables.isEmpty()) {
-      for (String table : getConfig().ignoreTables.split(",")) {
-        if (!table.isEmpty()) {
-          filter = filter.and(new IgnoreTableFilter(table));
-        }
-      }
-    }
-    return filter;
-  }
-
-  private Filter createIncludeFilter() {
-    // if there are no include filters - pass
-    Filter filter = Filters.PASS;
-    if (getConfig().includeTables != null && !getConfig().includeTables.isEmpty()) {
-      String[] includeTables = getConfig().includeTables.split(",");
-      if (includeTables.length > 0) {
-        // ignore all that is not explicitly included
-        filter = Filters.DISCARD;
-        for (String table : includeTables) {
-          if (!table.isEmpty()) {
-            filter = filter.or(new IncludeTableFilter(table));
-          }
-        }
-      }
-    }
-    return filter;
   }
 
   private void registerClientLifecycleListener() {
@@ -434,7 +313,7 @@ public abstract class MysqlSource extends BaseSource {
 
   private boolean isGtidEnabled() {
     try {
-      return "ON".equals(Util.getGlobalVariable(dataSource, "gtid_mode"));
+      return "ON".equals(Util.getGlobalVariable(dataSourceInitializer.dataSource, "gtid_mode"));
     } catch (SQLException e) {
       throw Throwables.propagate(e);
     }
@@ -472,7 +351,7 @@ public abstract class MysqlSource extends BaseSource {
    */
   private void dumpQueryToLogs(String query) {
     try (
-      Connection connection = dataSource.getConnection();
+      Connection connection = dataSourceInitializer.dataSource.getConnection();
       Statement statement = connection.createStatement();
       ResultSet rs = statement.executeQuery(query)
     ) {

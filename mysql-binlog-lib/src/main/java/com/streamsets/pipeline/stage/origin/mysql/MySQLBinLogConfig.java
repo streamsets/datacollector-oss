@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,55 +16,8 @@
 package com.streamsets.pipeline.stage.origin.mysql;
 
 import com.streamsets.pipeline.api.ConfigDef;
-import com.streamsets.pipeline.api.ConfigDef.Type;
-import com.streamsets.pipeline.api.credential.CredentialValue;
 
-public class MysqlSourceConfig {
-
-  public static final String CONFIG_PREFIX = "config.";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "localhost",
-      label = "Hostname",
-      description = "MySql server hostname",
-      displayPosition = 10,
-      group = "MYSQL"
-  )
-  public String hostname;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "3306",
-      label = "Port",
-      description = "MySql server port",
-      displayPosition = 20,
-      group = "MYSQL"
-  )
-  public String port;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Username",
-      description = "MySql username. User must have REPLICATION SLAVE privilege",
-      displayPosition = 30,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
-      description = "MySql user password.",
-      displayPosition = 40,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue password;
-
+public class MySQLBinLogConfig {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.STRING,
@@ -73,7 +26,7 @@ public class MysqlSourceConfig {
       description = "ServerId used by binlog client. Must be unique among all replication slaves " +
           "(origin acts as a replication slave itself).",
       displayPosition = 50,
-      group = "MYSQL"
+      group = "#0"
   )
   public String serverId;
 
@@ -84,10 +37,9 @@ public class MysqlSourceConfig {
       label = "Max Batch Size (records)",
       description = "Maximum number of records in a batch.",
       displayPosition = 60,
-      group = "ADVANCED"
+      group = "#2"
   )
   public int maxBatchSize;
-
 
   @ConfigDef(
       required = true,
@@ -97,7 +49,7 @@ public class MysqlSourceConfig {
       description = "Maximum timeout millis to wait for batch records before returning " +
           "incomplete or empty batch.",
       displayPosition = 50,
-      group = "ADVANCED"
+      group = "#2"
   )
   public int maxWaitTime;
 
@@ -108,7 +60,7 @@ public class MysqlSourceConfig {
       label = "Connect Timeout (ms)",
       description = "MySql connection timeout millis.",
       displayPosition = 60,
-      group = "ADVANCED"
+      group = "#2"
   )
   public long connectTimeout;
 
@@ -119,7 +71,7 @@ public class MysqlSourceConfig {
       label = "Enable KeepAlive Thread",
       description = "Whether keepAlive thread should be automatically started",
       displayPosition = 65,
-      group = "ADVANCED"
+      group = "#2"
   )
   public boolean enableKeepAlive;
 
@@ -132,20 +84,9 @@ public class MysqlSourceConfig {
       dependsOn = "enableKeepAlive",
       triggeredByValue = "true",
       displayPosition = 70,
-      group = "ADVANCED"
+      group = "#2"
   )
   public long keepAliveInterval;
-
-  @ConfigDef(
-      required = true,
-      type = Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use SSL",
-      description = "Whether to use SSL for the MySQL connection",
-      displayPosition = 80,
-      group = "ADVANCED"
-  )
-  public boolean useSsl;
 
   @ConfigDef(
       required = true,
@@ -156,7 +97,7 @@ public class MysqlSourceConfig {
           "When 'false' - start from current binlog position. " +
           "In case when GTID-enabled this records all server executed gtids as applied.",
       displayPosition = 70,
-      group = "MYSQL"
+      group = "#0"
   )
   public boolean startFromBeginning;
 
@@ -171,7 +112,7 @@ public class MysqlSourceConfig {
           "Note - this setting conflicts with 'Start from beginning' setting, " +
           "if both are set - this takes precedence.",
       displayPosition = 80,
-      group = "MYSQL"
+      group = "#0"
   )
   public String initialOffset;
 
@@ -184,7 +125,7 @@ public class MysqlSourceConfig {
           "DB and table name are delimited by dot. Example - 'db%sales.sales_%_dep,db2.orders'. " +
           "All tables that are not included are ignored.",
       displayPosition = 90,
-      group = "ADVANCED"
+      group = "#2"
   )
   public String includeTables;
 
@@ -198,22 +139,8 @@ public class MysqlSourceConfig {
           "Ignore tables have precedence over include tables - if some table is both included " +
           "and ignored - it will be ignored.",
       displayPosition = 100,
-      group = "ADVANCED"
+      group = "#2"
   )
   public String ignoreTables;
 
-  @Override
-  public String toString() {
-    return "MysqlSourceConfig{" +
-        "hostname='" + hostname + '\'' +
-        ", port=" + port +
-        ", username='" + username + '\'' +
-        ", password='**********'" +
-        ", serverId=" + serverId +
-        ", maxBatchSize=" + maxBatchSize +
-        ", maxWaitTime=" + maxWaitTime +
-        ", startFromBeginning=" + startFromBeginning +
-        ", offset=" + initialOffset +
-        '}';
-  }
 }

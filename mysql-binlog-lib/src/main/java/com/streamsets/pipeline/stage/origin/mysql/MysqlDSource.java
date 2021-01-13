@@ -15,14 +15,22 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
+import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
+import com.streamsets.pipeline.api.ConnectionDef;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
+import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
+import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnectionGroups;
+
+import static com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection.TYPE;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "MySQL Binary Log",
     description = "Reads MySQL binary log from MySQL server.",
     icon = "mysql.png",
@@ -33,14 +41,45 @@ import com.streamsets.pipeline.api.StageDef;
     upgraderDef = "upgrader/MysqlDSource.yaml",
     onlineHelpRefUrl = "index.html?contextID=task_qbt_kyh_xx"
 )
-@ConfigGroups(value = Groups.class)
+@ConfigGroups(value = MySQLBinLogConnectionGroups.class)
 @GenerateResourceBundle
 public class MysqlDSource extends MysqlSource {
+
+  public static final String CONFIG_PREFIX = "config.";
+  public static final String CONNECTION_PREFIX = "connection.";
+
+  @ConfigDef(
+    required = true,
+    type = ConfigDef.Type.MODEL,
+    connectionType = TYPE,
+    defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+    label = "Connection",
+    group = "#0",
+    displayPosition = -500
+  )
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
+  public MySQLBinLogConnection connection = new MySQLBinLogConnection();
+
   @ConfigDefBean
-  public MysqlSourceConfig config;
+  public MySQLBinLogConfig config = new MySQLBinLogConfig();
 
   @Override
-  public MysqlSourceConfig getConfig() {
+  public MySQLBinLogConnection getConnection() {
+    return connection;
+  }
+
+  @Override
+  public MySQLBinLogConfig getConfig() {
     return config;
   }
 }

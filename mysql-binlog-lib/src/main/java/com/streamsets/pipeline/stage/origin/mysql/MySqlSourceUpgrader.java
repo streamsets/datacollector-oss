@@ -37,6 +37,8 @@ public class MySqlSourceUpgrader implements StageUpgrader {
       case 1:
         upgradeV1ToV2(configs);
         break;
+      case 2:
+        break;
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", fromVersion));
     }
@@ -44,7 +46,7 @@ public class MySqlSourceUpgrader implements StageUpgrader {
   }
 
   private void upgradeV1ToV2(List<Config> configs) {
-    configs.add(new Config(MysqlSourceConfig.CONFIG_PREFIX + "enableKeepAlive", true));
-    configs.add(new Config(MysqlSourceConfig.CONFIG_PREFIX + "keepAliveInterval", 60000));
+    configs.add(new Config(MysqlDSource.CONFIG_PREFIX + "enableKeepAlive", true));
+    configs.add(new Config(MysqlDSource.CONFIG_PREFIX + "keepAliveInterval", 60000));
   }
 }

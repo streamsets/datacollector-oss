@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,23 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import com.streamsets.pipeline.api.GenerateResourceBundle;
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigIssue;
+import com.streamsets.pipeline.api.Source.Context;
 
-@GenerateResourceBundle
-public enum Groups implements Label {
-  MYSQL("MySQL Binary Log"),
-  CREDENTIALS("Credentials"),
-  ADVANCED("Advanced"),;
+public class ConfigIssueFactory {
+  private final Context context;
 
-  private final String label;
-
-  private Groups(String label) {
-    this.label = label;
+  public ConfigIssueFactory(final Context context) {
+    this.context = context;
   }
 
-  @Override
-  public String getLabel() {
-    return this.label;
+  public ConfigIssue create(
+      final String name,
+      final String config,
+      final Errors error,
+      final String message,
+      final Exception exception
+  ) {
+    return context.createConfigIssue(name, config, error, message, exception);
   }
 }

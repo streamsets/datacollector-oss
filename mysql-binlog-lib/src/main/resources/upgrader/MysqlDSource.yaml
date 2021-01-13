@@ -16,5 +16,21 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 3
+    actions:
+      - renameConfig:
+          oldNamePattern: config.hostname
+          newNamePattern: connection.hostname
+      - renameConfig:
+          oldNamePattern: config.port
+          newNamePattern: connection.port
+      - renameConfig:
+          oldNamePattern: config.username
+          newNamePattern: connection.username
+      - renameConfig:
+          oldNamePattern: config.password
+          newNamePattern: connection.password
+      - renameConfig:
+          oldNamePattern: config.useSsl
+          newNamePattern: connection.useSsl

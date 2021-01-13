@@ -153,6 +153,7 @@
     <module>salesforce-connection</module>
     <module>kafka-connection</module>
     <module>elasticsearch-connection</module>
+    <module>mysql-binlog-connection</module>
     <module>aws-shared</module>
 
     <!-- cluster connections -->

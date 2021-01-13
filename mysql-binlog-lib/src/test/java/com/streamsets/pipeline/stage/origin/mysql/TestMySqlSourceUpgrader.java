@@ -18,14 +18,32 @@ package com.streamsets.pipeline.stage.origin.mysql;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.streamsets.pipeline.config.upgrade.UpgraderTestUtils.assertExists;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+
 public class TestMySqlSourceUpgrader {
+  private StageUpgrader mySQLBinLogSourceUpgrader;
+  private List<Config> configs;
+  private StageUpgrader.Context context;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/MysqlDSource.yaml");
+    mySQLBinLogSourceUpgrader = new SelectorStageUpgrader("stage", new MySqlSourceUpgrader(), yamlResource);
+    configs = new ArrayList<>();
+    context = mock(StageUpgrader.Context.class);
+  }
 
   @Test
   public void testUpgradeFromV1toV2() {
@@ -43,7 +61,26 @@ public class TestMySqlSourceUpgrader {
     for (Config c : configs) {
       upgraded.put(c.getName(), c.getValue());
     }
-    Assert.assertEquals(upgraded.get(MysqlSourceConfig.CONFIG_PREFIX + "enableKeepAlive"), true);
-    Assert.assertEquals(upgraded.get(MysqlSourceConfig.CONFIG_PREFIX + "keepAliveInterval"), 60000);
+    Assert.assertEquals(upgraded.get(MysqlDSource.CONFIG_PREFIX + "enableKeepAlive"), true);
+    Assert.assertEquals(upgraded.get(MysqlDSource.CONFIG_PREFIX + "keepAliveInterval"), 60000);
+  }
+
+  @Test
+  public void testUpgradeFromV2toV3() {
+    doReturn(2).when(context).getFromVersion();
+    doReturn(3).when(context).getToVersion();
+
+    configs.add(new Config("config.hostname", "localhost"));
+    configs.add(new Config("config.port", "1234"));
+    configs.add(new Config("config.username", "user"));
+    configs.add(new Config("config.password", "secret"));
+    configs.add(new Config("config.useSsl", true));
+    configs = mySQLBinLogSourceUpgrader.upgrade(configs, context);
+
+    assertExists(configs, "connection.hostname", "localhost");
+    assertExists(configs, "connection.port", "1234");
+    assertExists(configs, "connection.username", "user");
+    assertExists(configs, "connection.password", "secret");
+    assertExists(configs, "connection.useSsl", true);
   }
 }
