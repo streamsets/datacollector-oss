@@ -151,22 +151,20 @@ public class GoogleCloudStorageSource extends BaseSource {
         //We don't have any spooled files to read from and we don't have anything available from the existing parser
         //(in case of sdc restart with stored offset, we still want some blob to be available for us to start reading)
         if (blob == null) {
-          //No more data available
-          if (noMoreDataRecordCount > 0 || noMoreDataErrorCount > 0) {
-            LOG.info("sending no-more-data event.  records {} errors {} files {} ",
-                noMoreDataRecordCount,
-                noMoreDataErrorCount,
-                noMoreDataFileCount
-            );
-            NoMoreDataEvent.EVENT_CREATOR.create(getContext())
-                .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
-                .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
-                .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
-                .createAndSend();
-            noMoreDataRecordCount = 0;
-            noMoreDataErrorCount = 0;
-            noMoreDataFileCount = 0;
-          }
+        //No more data available
+          LOG.info("sending no-more-data event.  records {} errors {} files {} ",
+              noMoreDataRecordCount,
+              noMoreDataErrorCount,
+              noMoreDataFileCount
+          );
+          NoMoreDataEvent.EVENT_CREATOR.create(getContext())
+              .with(NoMoreDataEvent.RECORD_COUNT, noMoreDataRecordCount)
+              .with(NoMoreDataEvent.ERROR_COUNT, noMoreDataErrorCount)
+              .with(NoMoreDataEvent.FILE_COUNT, noMoreDataFileCount)
+              .createAndSend();
+          noMoreDataRecordCount = 0;
+          noMoreDataErrorCount = 0;
+          noMoreDataFileCount = 0;
           // Backoff so that we don't query GCS many times per second when no files are available
           try {
             LOG.debug("No new files available, waiting {} ms.", gcsOriginConfig.basicConfig.maxWaitTime);
