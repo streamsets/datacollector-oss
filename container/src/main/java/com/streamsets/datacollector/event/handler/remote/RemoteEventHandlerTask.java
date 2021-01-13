@@ -188,6 +188,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   public static final String PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP = AbstractSSOService.CONFIG_PREFIX +
       "percent.wait.interval.before.skip";
   public static final int DEFAULT_PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP = 70;
+  private WebSocketToRestDispatcher webSocketToRestDispatcher;
 
   public RemoteEventHandlerTask(
       DataCollector remoteDataCollector,
@@ -297,6 +298,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     jobRunnerSdcProcessMetricsEventUrl = remoteBaseURL + REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT;
     jobRunnerSdcHeartBeatUrl = remoteBaseURL + REMOTE_URL_SDC_HEARTBEAT_ENDPOINT;
 
+    // Control Hub WebSocket Tunneling for Control Hub UI to Data Collector Communication
+    webSocketToRestDispatcher = new WebSocketToRestDispatcher(conf, runtimeInfo, executorService);
   }
 
   @VisibleForTesting
@@ -362,6 +365,8 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           percentOfWaitIntervalBeforeSkip
       ));
     }
+
+    webSocketToRestDispatcher.runTask();
   }
 
   private ClientEvent getStartupReportEvent() {
@@ -399,6 +404,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
   @Override
   public void stopTask() {
+    webSocketToRestDispatcher.stopTask();
     executorService.shutdownNow();
   }
 
