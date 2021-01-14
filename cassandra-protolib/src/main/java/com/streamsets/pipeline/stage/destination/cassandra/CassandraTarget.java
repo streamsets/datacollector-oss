@@ -174,7 +174,7 @@ public class CassandraTarget extends BaseTarget {
       } else {
         if (checkCassandraReachable(issues)) {
           try {
-            List<String> invalidColumns = checkColumnMappings();
+            List<String> invalidColumns = checkColumnMappings(issues);
             if (!invalidColumns.isEmpty()) {
               issues.add(
                   context.createConfigIssue(
@@ -244,7 +244,7 @@ public class CassandraTarget extends BaseTarget {
     super.destroy();
   }
 
-  private List<String> checkColumnMappings() throws StageException {
+  private List<String> checkColumnMappings(List<ConfigIssue> issues) throws StageException {
     List<String> invalidColumnMappings = new ArrayList<>();
 
     columnMappings = new TreeMap<>();
@@ -258,25 +258,35 @@ public class CassandraTarget extends BaseTarget {
 
     try (Cluster validationCluster = getCluster()) {
       final KeyspaceMetadata keyspaceMetadata = validationCluster.getMetadata().getKeyspace(keyspace);
-      final TableMetadata tableMetadata = keyspaceMetadata.getTable(table);
-      final List<String> columns = Lists.transform(
-          tableMetadata.getColumns(),
-          new Function<ColumnMetadata, String>() {
+      if (keyspaceMetadata == null) {
+        Target.Context context = getContext();
+        issues.add(
+            context.createConfigIssue(
+            Groups.CASSANDRA.name(),
+            "qualifiedTableName",
+            Errors.CASSANDRA_12,
+            conf.qualifiedTableName
+        ));
+      } else {
+          final TableMetadata tableMetadata = keyspaceMetadata.getTable(table);
+          final List<String> columns = Lists.transform(
+              tableMetadata.getColumns(),
+              new Function<ColumnMetadata, String>() {
             @Nullable
             @Override
             public String apply(ColumnMetadata columnMetadata) {
               return columnMetadata.getName();
             }
           }
-      );
+        );
 
-      invalidColumnMappings.addAll(columnMappings.keySet()
-          .stream()
-          .filter(columnName -> !columns.contains(columnName))
-          .collect(Collectors.toList())
-      );
+        invalidColumnMappings.addAll(columnMappings.keySet()
+            .stream()
+            .filter(columnName -> !columns.contains(columnName))
+            .collect(Collectors.toList())
+        );
+      }
     }
-
     return invalidColumnMappings;
   }
 

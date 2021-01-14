@@ -34,6 +34,7 @@ public enum Errors implements ErrorCode {
   CASSANDRA_09("Could not insert batch which included record: '{}': {}"),
   CASSANDRA_10("Requested Auth Provider '{}' not available. Please ensure you have the DSE driver jar installed."),
   CASSANDRA_11("Request timeout: Request didn't finish after {} milliseconds"),
+  CASSANDRA_12("Fully Qualified Table Name '{}' does not exist"),
   ;
   private final String msg;
 
