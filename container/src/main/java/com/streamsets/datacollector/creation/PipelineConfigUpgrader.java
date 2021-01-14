@@ -488,6 +488,10 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         ENABLE_EMR_DEBUGGING_CONFIG_FIELD
     );
 
+    // SDC have a hardcoded version of EMR 5.14 before this change, now it's an explicit config
+    // We do hardcode 5.20.0 instead as we know of issues on EMR <5.20.
+    configs.add(new Config("sdcEmrConnection.emrVersion", "5.20.0"));
+
     // Transformer EMR configs
     // the useIAMRoles config needs translation
     final Config useIAMRolesConfig = UpgraderUtils.getAndRemoveConfigWithName(
