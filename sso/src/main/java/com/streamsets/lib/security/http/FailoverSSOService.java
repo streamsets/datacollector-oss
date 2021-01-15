@@ -20,6 +20,8 @@ import com.streamsets.datacollector.util.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class FailoverSSOService implements SSOService {
@@ -128,9 +130,17 @@ public class FailoverSSOService implements SSOService {
   }
 
   @Override
-  public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
+  public String createRedirectToLoginUrl(
+      String requestUrl, boolean duplicateRedirect, HttpServletRequest req, HttpServletResponse res
+  ) {
     failoverIfRemoteNotActive(true);
-    return getActiveService().createRedirectToLoginUrl(requestUrl, duplicateRedirect);
+    return getActiveService().createRedirectToLoginUrl(requestUrl, duplicateRedirect, req, res);
+  }
+
+  @Override
+  public String getLoginPageUrl() {
+    failoverIfRemoteNotActive(false);
+    return getActiveService().getLoginPageUrl();
   }
 
   @Override

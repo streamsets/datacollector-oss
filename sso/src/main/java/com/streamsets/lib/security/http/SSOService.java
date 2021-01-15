@@ -17,6 +17,8 @@ package com.streamsets.lib.security.http;
 
 import com.streamsets.datacollector.util.Configuration;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +39,14 @@ public interface SSOService {
 
   void register(Map<String, String> attributes);
 
-  String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect);
+  String createRedirectToLoginUrl(
+      String requestUrl,
+      boolean duplicateRedirect,
+      HttpServletRequest req,
+      HttpServletResponse res
+  );
+
+  String getLoginPageUrl();
 
   String getLogoutUrl();
 

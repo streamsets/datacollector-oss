@@ -51,10 +51,13 @@ public class TestFailoverSSOService {
     SSOService active = Mockito.mock(SSOService.class);
     Mockito.doReturn(active).when(failover).getActiveService();
 
-    failover.createRedirectToLoginUrl("url", true);
+    failover.createRedirectToLoginUrl("url", true, null, null);
     Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(false));
     Mockito.verify(failover, Mockito.times(1)).failoverIfRemoteNotActive(Mockito.eq(true));
-    Mockito.verify(failover, Mockito.times(1)).createRedirectToLoginUrl(Mockito.eq("url"), Mockito.eq(true));
+    Mockito.verify(failover, Mockito.times(1)).createRedirectToLoginUrl(Mockito.eq("url"), Mockito.eq(true),
+        Mockito.any(),
+        Mockito.any()
+    );
 
     failover.getLogoutUrl();
     Mockito.verify(failover, Mockito.times(2)).failoverIfRemoteNotActive(Mockito.eq(false));

@@ -30,7 +30,6 @@ import com.streamsets.lib.security.http.RegistrationResponseDelegate;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOPrincipal;
 import com.streamsets.lib.security.http.SSOService;
-import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.testing.NetworkUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -458,7 +457,17 @@ public class TestWebServerTaskHttpHttps {
     }
 
     @Override
-    public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
+    public String createRedirectToLoginUrl(
+        String requestUrl,
+        boolean duplicateRedirect,
+        HttpServletRequest req,
+        HttpServletResponse res
+    ) {
+      return null;
+    }
+
+    @Override
+    public String getLoginPageUrl() {
       return null;
     }
 

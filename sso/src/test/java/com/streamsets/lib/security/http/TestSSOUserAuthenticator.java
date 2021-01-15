@@ -100,12 +100,12 @@ public class TestSSOUserAuthenticator {
     Assert.assertEquals(
         "http://localhost:18631/security/login?" + SSOConstants.REQUESTED_URL_PARAM + "=" + URLEncoder.encode
             ("http://foo/bar", "UTF-8"),
-        authenticator.getLoginUrl(req, false)
+        authenticator.getLoginUrl(req, false, null, null)
     );
     Assert.assertEquals(
         "http://localhost:18631/security/login?" + SSOConstants.REQUESTED_URL_PARAM + "=" + URLEncoder.encode
             ("http://foo/bar", "UTF-8") + "&" + SSOConstants.REPEATED_REDIRECT_PARAM + "=",
-        authenticator.getLoginUrl(req, true)
+        authenticator.getLoginUrl(req, true, null, null)
     );
   }
 
@@ -191,7 +191,7 @@ public class TestSSOUserAuthenticator {
     printWriter.flush();
     Assert.assertEquals(String.format(
         SSOUserAuthenticator.HTML_META_REDIRECT,
-        authenticator.getLoginUrl(req, false)),
+        authenticator.getLoginUrl(req, false, null, null)),
         output.toString().trim()
     );
   }
@@ -216,7 +216,7 @@ public class TestSSOUserAuthenticator {
     Mockito
         .doReturn("http://foo")
         .when(authenticator)
-        .getLoginUrl(Mockito.any(HttpServletRequest.class), Mockito.anyBoolean());
+        .getLoginUrl(Mockito.any(HttpServletRequest.class), Mockito.anyBoolean(), Mockito.any(), Mockito.any());
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getServerPort()).thenReturn(1000);
@@ -240,7 +240,7 @@ public class TestSSOUserAuthenticator {
     Mockito
         .doReturn("http://foo")
         .when(authenticator)
-        .getLoginUrl(Mockito.any(HttpServletRequest.class), Mockito.anyBoolean());
+        .getLoginUrl(Mockito.any(HttpServletRequest.class), Mockito.anyBoolean(), Mockito.any(), Mockito.any());
 
     HttpServletRequest req = Mockito.mock(HttpServletRequest.class);
     Mockito.when(req.getHeader(Mockito.eq(SSOConstants.X_REST_CALL))).thenReturn("foo");

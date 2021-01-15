@@ -27,6 +27,11 @@ public interface  SSOConstants {
   String AUTHENTICATION_COOKIE_PREFIX = "SS-SSO-";
 
   /**
+   * Name for cookie that stores requested URL when login is required.
+   */
+  String REQUESTED_URL_COOKIE = AUTHENTICATION_COOKIE_PREFIX + "REQUESTED-URL";
+
+  /**
    * Header to indicate the requester is making a REST call (as opposed to a page view).
    */
   String X_REST_CALL = "X-Requested-By";

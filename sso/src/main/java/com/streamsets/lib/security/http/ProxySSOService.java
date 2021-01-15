@@ -17,6 +17,8 @@ package com.streamsets.lib.security.http;
 
 import com.streamsets.datacollector.util.Configuration;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 public class ProxySSOService implements SSOService {
@@ -47,8 +49,15 @@ public class ProxySSOService implements SSOService {
   }
 
   @Override
-  public String createRedirectToLoginUrl(String requestUrl, boolean duplicateRedirect) {
-    return ssoService.createRedirectToLoginUrl(requestUrl, duplicateRedirect);
+  public String createRedirectToLoginUrl(
+      String requestUrl, boolean duplicateRedirect, HttpServletRequest req, HttpServletResponse res
+  ) {
+    return ssoService.createRedirectToLoginUrl(requestUrl, duplicateRedirect, req, res);
+  }
+
+  @Override
+  public String getLoginPageUrl() {
+    return ssoService.getLoginPageUrl();
   }
 
   @Override

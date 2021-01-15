@@ -21,7 +21,12 @@ import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,11 +45,18 @@ public abstract class AbstractSSOService implements SSOService {
 
   public static final long SECURITY_SERVICE_VALIDATE_AUTH_TOKEN_FREQ_DEFAULT = 60;
 
+  public static final String DOMAIN_FOR_REQUESTED_URL_COOKIE = CONFIG_PREFIX + "domainForRequestedUrlCookie";
+
+  public static final String USE_QUERY_STRING_FOR_REQUESTED_URL = CONFIG_PREFIX + "useQueryStringForRequestedUrl";
+  public static final boolean USE_QUERY_STRING_FOR_REQUESTED_URL_DEFAULT = true;
+
   private String loginPageUrl;
   private String logoutUrl;
   private PrincipalCache userPrincipalCache;
   private PrincipalCache appPrincipalCache;
   private long connectionTimeout;
+  private boolean useQueryStringForRequestedUrl;
+  private String domainForRequestedUrlCookie;
 
   protected RegistrationResponseDelegate registrationResponseDelegate;
 
@@ -70,6 +82,11 @@ public abstract class AbstractSSOService implements SSOService {
     ));
     connectionTimeout = conf.get(RemoteSSOService.SECURITY_SERVICE_CONNECTION_TIMEOUT_CONFIG,
         RemoteSSOService.DEFAULT_SECURITY_SERVICE_CONNECTION_TIMEOUT);
+    useQueryStringForRequestedUrl = conf.get(
+        USE_QUERY_STRING_FOR_REQUESTED_URL,
+        USE_QUERY_STRING_FOR_REQUESTED_URL_DEFAULT);
+    domainForRequestedUrlCookie = conf.get(DOMAIN_FOR_REQUESTED_URL_COOKIE, null);
+
     initializePrincipalCaches(TimeUnit.SECONDS.toMillis(validateAuthTokenFrequencySecs));
   }
 
@@ -98,8 +115,57 @@ public abstract class AbstractSSOService implements SSOService {
     return appPrincipalCache;
   }
 
-  @Override
-  public String createRedirectToLoginUrl(String requestUrl, boolean repeatedRedirect) {
+  @VisibleForTesting
+  String getRequestedFullPath(String requestUrl) {
+    try {
+      URL url = new URL(requestUrl);
+      String requestFullPath = url.getPath();
+      if (url.getQuery() != null) {
+        requestFullPath += "?" + url.getQuery();
+      }
+      if (url.getRef() != null) {
+        requestFullPath += "#" + url.getRef();
+      }
+      return requestFullPath.isEmpty() ? "/" : requestFullPath;
+    } catch (MalformedURLException ex) {
+      throw new RuntimeException(Utils.format("Should not happen: {}", ex.toString()), ex);
+    }
+  }
+
+  @VisibleForTesting
+  String createRedirectToLoginUrlInCookie(
+      String requestUrl,
+      boolean repeatedRedirect,
+      HttpServletRequest req,
+      HttpServletResponse res
+  ) {
+    try {
+      requestUrl = getRequestedFullPath(requestUrl);
+      Cookie cookie = new Cookie(SSOConstants.REQUESTED_URL_COOKIE, URLEncoder.encode(requestUrl, "UTF-8"));
+      cookie.setMaxAge(60);
+      cookie.setPath("/");
+      if (domainForRequestedUrlCookie != null) {
+        cookie.setDomain(domainForRequestedUrlCookie);
+      }
+      res.addCookie(cookie);
+
+      String loginUrl = getLoginPageUrl();
+      if (repeatedRedirect) {
+        loginUrl += "?" + SSOConstants.REPEATED_REDIRECT_PARAM + "=";
+      }
+      return loginUrl;
+    } catch (UnsupportedEncodingException ex) {
+      throw new RuntimeException(Utils.format("Should not happen: {}", ex.toString()), ex);
+    }
+  }
+
+  @VisibleForTesting
+  String createRedirectToLoginUrlInQueryString(
+      String requestUrl,
+      boolean repeatedRedirect,
+      HttpServletRequest req,
+      HttpServletResponse res
+  ) {
     try {
       String url = loginPageUrl + "?" + SSOConstants.REQUESTED_URL_PARAM + "=" + URLEncoder.encode(requestUrl, "UTF-8");
       if (repeatedRedirect) {
@@ -111,7 +177,20 @@ public abstract class AbstractSSOService implements SSOService {
     }
   }
 
-  String getLoginPageUrl() {
+  @Override
+  public String createRedirectToLoginUrl(
+      String requestUrl,
+      boolean duplicateRedirect,
+      HttpServletRequest req,
+      HttpServletResponse res
+  ) {
+    return (useQueryStringForRequestedUrl)
+        ? createRedirectToLoginUrlInQueryString(requestUrl, duplicateRedirect, req, res)
+        : createRedirectToLoginUrlInCookie(requestUrl, duplicateRedirect, req, res);
+  }
+
+  @Override
+  public String getLoginPageUrl() {
     return loginPageUrl;
   }
 

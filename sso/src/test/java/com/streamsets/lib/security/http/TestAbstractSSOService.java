@@ -18,8 +18,10 @@ package com.streamsets.lib.security.http;
 import com.streamsets.datacollector.util.Configuration;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
@@ -29,6 +31,9 @@ import java.util.concurrent.CountDownLatch;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 public class TestAbstractSSOService {
 
@@ -75,7 +80,14 @@ public class TestAbstractSSOService {
   }
 
   @Test
-  public void testCreateRedirectToLoginUrl() throws Exception {
+  public void testGetRequestedFullPath() {
+    ForTestSSOService service = new ForTestSSOService();
+    Assert.assertEquals("/", service.getRequestedFullPath("http://bar"));
+    Assert.assertEquals("/path?query=string#anchor", service.getRequestedFullPath("http://bar/path?query=string#anchor"));
+  }
+
+  @Test
+  public void testCreateRedirectToLoginUrlQueryString() throws Exception {
     ForTestSSOService service = new ForTestSSOService();
     service.setConfiguration(new Configuration());
     service.setLoginPageUrl("http://foo");
@@ -90,8 +102,49 @@ public class TestAbstractSSOService {
         "&" +
         SSOConstants.REPEATED_REDIRECT_PARAM +
         "=";
-    Assert.assertEquals(initialRedirUrl, service.createRedirectToLoginUrl("http://bar", false));
-    Assert.assertEquals(repeatedRedirUrl, service.createRedirectToLoginUrl("http://bar", true));
+    Assert.assertEquals(initialRedirUrl, service.createRedirectToLoginUrl("http://bar", false, null, null));
+    Assert.assertEquals(repeatedRedirUrl, service.createRedirectToLoginUrl("http://bar", true, null, null));
+  }
+
+  @Test
+  public void testCreateRedirectToLoginUrlCookie() throws Exception {
+    ForTestSSOService service = new ForTestSSOService();
+    Configuration conf = new Configuration();
+    conf.set(AbstractSSOService.USE_QUERY_STRING_FOR_REQUESTED_URL, false);
+    conf.set(AbstractSSOService.DOMAIN_FOR_REQUESTED_URL_COOKIE, ".foo.com");
+    service.setConfiguration(conf);
+    service.setLoginPageUrl("http://foo");
+
+    String initialRedirUrl = "http://foo";
+    String repeatedRedirUrl = "http://foo" + "?" + SSOConstants.REPEATED_REDIRECT_PARAM + "=";
+
+    HttpServletResponse res = Mockito.mock(HttpServletResponse.class);
+
+    Assert.assertEquals(initialRedirUrl, service.createRedirectToLoginUrl("http://bar/path?query=string#anchor", false, null, res));
+    ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+    Mockito.verify(res, Mockito.times(1)).addCookie(cookieCaptor.capture());
+    Assert.assertEquals("SS-SSO-REQUESTED-URL", cookieCaptor.getValue().getName());
+    Assert.assertEquals(
+        "/path?query=string#anchor",
+        URLDecoder.decode(cookieCaptor.getValue().getValue(), "UTF-8")
+    );
+    Assert.assertEquals(".foo.com", cookieCaptor.getValue().getDomain());
+    Assert.assertEquals(60, cookieCaptor.getValue().getMaxAge());
+    Assert.assertEquals("/", cookieCaptor.getValue().getPath());
+
+
+    res = Mockito.mock(HttpServletResponse.class);
+    Assert.assertEquals(repeatedRedirUrl, service.createRedirectToLoginUrl("http://bar/path?query=string#anchor", true, null, res));
+    cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
+    Mockito.verify(res, Mockito.times(1)).addCookie(cookieCaptor.capture());
+    Assert.assertEquals("SS-SSO-REQUESTED-URL", cookieCaptor.getValue().getName());
+    Assert.assertEquals(
+        "/path?query=string#anchor",
+        URLDecoder.decode(cookieCaptor.getValue().getValue(), "UTF-8")
+    );
+    Assert.assertEquals(".foo.com", cookieCaptor.getValue().getDomain());
+    Assert.assertEquals(60, cookieCaptor.getValue().getMaxAge());
+    Assert.assertEquals("/", cookieCaptor.getValue().getPath());
   }
 
   @Test

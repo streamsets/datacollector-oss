@@ -121,9 +121,14 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
   /*
    * Creates Login url with request URL as parameter for a callback redirection on a successful login.
    */
-  String getLoginUrl(HttpServletRequest request, boolean repeatedRedirect) {
+  String getLoginUrl(
+      HttpServletRequest request,
+      boolean repeatedRedirect,
+      HttpServletRequest httpReq,
+      HttpServletResponse httpRes
+  ) {
     String requestUrl = getRequestUrl(request, TOKEN_PARAM_SET).toString();
-    return getSsoService().createRedirectToLoginUrl(requestUrl, repeatedRedirect);
+    return getSsoService().createRedirectToLoginUrl(requestUrl, repeatedRedirect, httpReq, httpRes);
   }
 
   /*
@@ -148,7 +153,7 @@ public class SSOUserAuthenticator extends AbstractSSOAuthenticator {
 
   Authentication redirectToLogin(HttpServletRequest httpReq, HttpServletResponse httpRes) throws ServerAuthException {
     boolean repeatedRedirect = httpReq.getParameter(SSOConstants.REPEATED_REDIRECT_PARAM) != null;
-    String urlToLogin = getLoginUrl(httpReq, repeatedRedirect);
+    String urlToLogin = getLoginUrl(httpReq, repeatedRedirect, httpReq, httpRes);
     try {
       LOG.debug("Redirecting to login '{}'", urlToLogin);
       if (doMetaRedirectToSso) {
