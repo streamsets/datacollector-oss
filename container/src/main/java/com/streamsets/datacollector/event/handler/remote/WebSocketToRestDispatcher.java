@@ -99,6 +99,9 @@ public class WebSocketToRestDispatcher {
           // Keep the WebSocket Connection open by sending a ping message every two minutes.
           long interval = conf.get(TUNNELING_PING_INTERVAL_CONFIG, TUNNELING_PING_INTERVAL_CONFIG_DEFAULT);
           executorService.scheduleAtFixedRate(this::sendPing, 120, interval, TimeUnit.SECONDS);
+
+          // Disable static web content when connected to the latest Control Hub instance
+          runtimeInfo.setStaticWebDisabled(true);
         }
       } catch (Exception e) {
         LOG.error(e.getMessage(), e);

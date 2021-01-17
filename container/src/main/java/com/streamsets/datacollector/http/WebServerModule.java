@@ -102,12 +102,12 @@ public class WebServerModule {
   }
 
   @Provides(type = Type.SET)
-  ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo) {
+  ContextConfigurator provideStaticWeb(final RuntimeInfo runtimeInfo, final Configuration conf) {
     return new ContextConfigurator() {
 
       @Override
       public void init(ServletContextHandler context) {
-        ServletHolder servlet = new ServletHolder(new DefaultServlet());
+        ServletHolder servlet = new ServletHolder(new StaticWebServlet(runtimeInfo, conf));
         servlet.setInitParameter("dirAllowed", "false");
         servlet.setInitParameter("resourceBase", runtimeInfo.getStaticWebDir());
         servlet.setInitParameter("cacheControl","max-age=0,public");

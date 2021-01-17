@@ -105,6 +105,7 @@ public abstract class RuntimeInfo {
   private SSLContext sslContext;
   private boolean remoteRegistrationSuccessful;
   private final Map<String, GatewayInfo> apiGatewayInfoMap = new HashMap<>();
+  private boolean staticWebDisabled = false;
 
   public RuntimeInfo(
       String productName,
@@ -520,4 +521,11 @@ public abstract class RuntimeInfo {
     return hasAttribute(EMBEDDED_FLAG) && this.<Boolean>getAttribute(EMBEDDED_FLAG);
   }
 
+  public boolean isStaticWebDisabled() {
+    return staticWebDisabled;
+  }
+
+  public void setStaticWebDisabled(boolean staticWebDisabled) {
+    this.staticWebDisabled = staticWebDisabled;
+  }
 }
