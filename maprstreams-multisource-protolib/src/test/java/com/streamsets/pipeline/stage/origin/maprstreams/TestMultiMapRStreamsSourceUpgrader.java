@@ -27,6 +27,10 @@ import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedList;
 
 public class TestMultiMapRStreamsSourceUpgrader {
 
@@ -94,5 +98,30 @@ public class TestMultiMapRStreamsSourceUpgrader {
         "kafkaOptions",
         "brokerURI"
     );
+  }
+
+  @Test
+  public void testV7toV8() {
+    Mockito.doReturn(7).when(context).getFromVersion();
+    Mockito.doReturn(8).when(context).getToVersion();
+
+    final List<Map<String, String>> kafkaClientConfigs = new LinkedList<>();
+    Map<String, String> configMap = new HashMap<>();
+    configMap.put("key", "sasl.mechanism");
+    configMap.put("value","PLAIN");
+    kafkaClientConfigs.add(configMap);
+
+    String stageConfigPath = "conf";
+    String kafkaConfigsPath = stageConfigPath + ".kafkaConsumerConfigs";
+    String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
+    String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
+
+    configs.add(new Config(kafkaConfigsPath, Collections.unmodifiableList(kafkaClientConfigs)));
+    configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
   }
 }

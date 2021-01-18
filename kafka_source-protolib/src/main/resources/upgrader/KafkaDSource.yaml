@@ -178,8 +178,8 @@ upgrades:
       - setConfig:
           lookForName: temp.upgrade.kafka-security.mechanism
           ifValueMatches: "PLAIN"
-          name: kafkaConfigBean.connectionConfig.connection.securityConfig.securityOption
-          value: "SASL_PLAIN"
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.saslMechanism
+          value: true
       # remove the temp configs we created
       - removeConfigs:
           namePattern: temp.upgrade.kafka-security.mechanism

@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
+import java.util.LinkedList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -282,5 +284,38 @@ public class TestKafkaTargetUpgrader {
         "kafkaProducerConfigs",
         "metadataBrokerList"
     );
+  }
+
+  @Test
+  public void testV8toV9() {
+    final URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/KafkaDTarget.yaml");
+    final SelectorStageUpgrader upgrader = new SelectorStageUpgrader(
+        "stage",
+        new KafkaTargetUpgrader(),
+        yamlResource
+    );
+    List<Config> configs = new ArrayList<>();
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(8).when(context).getFromVersion();
+    Mockito.doReturn(9).when(context).getToVersion();
+
+    final List<Map<String, String>> kafkaClientConfigs = new LinkedList<>();
+    Map<String, String> configMap = new HashMap<>();
+    configMap.put("key", "sasl.mechanism");
+    configMap.put("value","PLAIN");
+    kafkaClientConfigs.add(configMap);
+
+    String stageConfigPath = "conf";
+    String kafkaConfigsPath = stageConfigPath + ".kafkaConsumerConfigs";
+    String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
+    String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
+
+    configs.add(new Config(kafkaConfigsPath, Collections.unmodifiableList(kafkaClientConfigs)));
+    configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
   }
 }

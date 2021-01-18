@@ -67,10 +67,11 @@ public class KafkaSecurityUtil {
 
       // Kerberos Options
       if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
-        configMap.put(KRB_SERVICE_NAME, securityConfig.kerberosServiceName);
-      }
-      else if (securityConfig.securityOption.equals(KafkaSecurityOptions.SASL_PLAIN)) {
-        configMap.put(SASL_MECHANISM, "PLAIN");
+        if (securityConfig.saslMechanism) {
+          configMap.put(SASL_MECHANISM, "PLAIN");
+        } else {
+          configMap.put(KRB_SERVICE_NAME, securityConfig.kerberosServiceName);
+        }
       }
     }
   }
@@ -98,6 +99,7 @@ public class KafkaSecurityUtil {
       // Kerberos Options
       if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
         forbiddenProperties.add(KRB_SERVICE_NAME);
+        forbiddenProperties.add(SASL_MECHANISM);
       }
 
       if (!Collections.disjoint(additionalProperties.keySet(), forbiddenProperties)) {
