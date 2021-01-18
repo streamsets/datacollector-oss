@@ -212,12 +212,14 @@ public class TestKafkaSourceUpgrader {
     String stageConfigPath = "kafkaConfigBean";
     String kafkaConfigsPath = stageConfigPath + ".kafkaConsumerConfigs";
     String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
+    String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
 
     configs.add(new Config(kafkaConfigsPath, Collections.unmodifiableList(kafkaClientConfigs)));
     configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
 
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAIN");
+    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
   }
 }

@@ -163,3 +163,21 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf.brokerURI
           newNamePattern: conf.connectionConfig.connection.metadataBrokerList
+  - toVersion: 8
+    actions:
+      - setConfigFromStringMap:
+          name: temp.upgrade.kafka-security.mechanism
+          mapName: conf.kafkaConsumerConfigs
+          key: sasl.mechanism
+      - setConfig:
+          lookForName: temp.upgrade.kafka-security.mechanism
+          ifValueMatches: "PLAIN"
+          name: conf.connectionConfig.connection.securityConfig.saslMechanism
+          value: true
+      # remove the temp configs we created
+      - removeConfigs:
+          namePattern: temp.upgrade.kafka-security.mechanism
+      # remove the legacy protocol from the consumer options
+      - configStringMapRemove:
+          name: conf.kafkaConsumerConfigs
+          key: sasl.mechanism
