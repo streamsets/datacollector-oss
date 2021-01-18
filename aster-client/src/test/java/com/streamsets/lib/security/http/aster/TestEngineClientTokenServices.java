@@ -78,7 +78,7 @@ public class TestEngineClientTokenServices {
     Assert.assertNotNull(token);
     Assert.assertEquals(AT0b, token.getValue());
     Assert.assertEquals("RTX", token.getRefreshToken().getValue());
-    Assert.assertTrue(token.getExpiresIn() > 98 && token.getExpiresIn() <= 100);
+    Assert.assertTrue(token.getExpiresIn() > 80 && token.getExpiresIn() <= 100);
     Assert.assertEquals("Bearer", token.getTokenType());
 
     // remove tokens
