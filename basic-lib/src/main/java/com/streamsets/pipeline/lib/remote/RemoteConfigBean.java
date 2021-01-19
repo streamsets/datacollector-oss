@@ -42,6 +42,19 @@ public class RemoteConfigBean {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "SFTP",
+      label = "Security Mode",
+      description = "Security Mode to connect to the server.",
+      displayPosition = 20,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#0"
+  )
+  @ValueChooserModel(SecurityModeChooserValues.class)
+  public SecurityMode securityMode = SecurityMode.SFTP;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Path Relative to User Home Directory",
@@ -69,12 +82,14 @@ public class RemoteConfigBean {
       type = ConfigDef.Type.MODEL,
       defaultValue = "EXPLICIT",
       label = "FTPS Mode",
-      description = "Sets the FTPS encryption negotiation mode to either \"Explicit\" (also called FTPES) or " +
-          "\"Implicit\". \"Implicit\" assumes that encryption will be used immediately, while \"Explicit\" means that " +
-          "plain FTP will be used to connect and then encryption will be negotiated.",
+      description = "FTP encryption negotiation mode. \"Implicit\" mode assumes that encryption will be used " +
+          "immediately. \"Explicit\" mode (also called FTPES) means that plain FTP will be used to connect and " +
+          "then encryption will be negotiated.",
       displayPosition = 60,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0"
+      group = "#0",
+      dependsOn = "securityMode",
+      triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSModeChooserValues.class)
   public FTPSMode ftpsMode = FTPSMode.EXPLICIT;
@@ -89,7 +104,9 @@ public class RemoteConfigBean {
           "encrypted, while \"Clear\" means that only the communication is encrypted.",
       displayPosition = 65,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0"
+      group = "#0",
+      dependsOn = "securityMode",
+      triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSDataChannelProtectionLevelChooserValues.class)
   public FTPSDataChannelProtectionLevel ftpsDataChannelProtectionLevel = FTPSDataChannelProtectionLevel.PRIVATE;
@@ -194,7 +211,7 @@ public class RemoteConfigBean {
       label = "Strict Host Checking",
       description = "If enabled, will only connect to the host if the host is in the known hosts file.",
       displayPosition = 50,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1"
   )
   public boolean strictHostChecking;
@@ -222,7 +239,9 @@ public class RemoteConfigBean {
           "a keystore file containing the client certificate.",
       displayPosition = 70,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1"
+      group = "#1",
+      dependsOn = "securityMode",
+      triggeredByValue = "FTPS"
   )
   public boolean useFTPSClientCert;
 
@@ -328,7 +347,9 @@ public class RemoteConfigBean {
           "\"JVM Default\" will use the JVM's default truststore.",
       displayPosition = 80,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1"
+      group = "#1",
+      dependsOn = "securityMode",
+      triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSTrustStoreChooserValues.class)
   public FTPSTrustStore ftpsTrustStoreProvider = FTPSTrustStore.ALLOW_ALL;

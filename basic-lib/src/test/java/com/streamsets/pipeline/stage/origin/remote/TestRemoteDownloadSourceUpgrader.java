@@ -132,4 +132,28 @@ public class TestRemoteDownloadSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsCertificateChain", new ArrayList<>());
     UpgraderTestUtils.assertExists(configs, remoteConfigPrefix + "ftpsTrustedCertificates", new ArrayList<>());
   }
+
+  @Test
+  public void testV6toV7() {
+    Mockito.doReturn(6).when(context).getFromVersion();
+    Mockito.doReturn(7).when(context).getToVersion();
+
+    String dataFormatPrefix = "conf.remoteConfig.";
+    configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftp://host:port"));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "FTP");
+
+    configs.clear();
+    configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftps://host:port"));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "FTPS");
+
+    configs.clear();
+    configs.add(new Config(dataFormatPrefix + "remoteAddress", "sftp://host:port"));
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "SFTP");
+  }
 }

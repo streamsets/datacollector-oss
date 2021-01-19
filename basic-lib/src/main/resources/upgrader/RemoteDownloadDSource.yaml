@@ -36,3 +36,20 @@ upgrades:
       - setConfig:
           name: conf.remoteConfig.ftpsTrustedCertificates
           value: []
+  - toVersion: 7
+    actions:
+      - setConfig:
+          lookForName: conf.remoteConfig.remoteAddress
+          ifValueMatches: "^ftp:.*"
+          name: conf.remoteConfig.securityMode
+          value: "FTP"
+      - setConfig:
+          lookForName: conf.remoteConfig.remoteAddress
+          ifValueMatches: "^ftps:.*"
+          name: conf.remoteConfig.securityMode
+          value: "FTPS"
+      - setConfig:
+          lookForName: conf.remoteConfig.remoteAddress
+          ifValueMatches: "^sftp:.*"
+          name: conf.remoteConfig.securityMode
+          value: "SFTP"
