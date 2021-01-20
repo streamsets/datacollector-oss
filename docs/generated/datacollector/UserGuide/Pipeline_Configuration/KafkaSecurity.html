@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="You can configure Kafka stages – Kafka Consumer, Kafka Multitopic Consumer, and Kafka Producer – to use one of the following options to connect securely to Kafka: SSL/TLS encryption SSL/TLS encryption ..." /><meta name="copyright" content="(C) Copyright 2020" /><meta name="DC.rights.owner" content="(C) Copyright 2020" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Security in Kafka Stages" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/GoogleCloud-Credentials.html#concept_vl2_bbx_q1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jpy_ln5_klb" /><title>Security in Kafka Stages</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_jpy_ln5_klb-d46e38659" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="You can configure Kafka stages – Kafka Consumer, Kafka Multitopic Consumer, and Kafka Producer – to use one of the following options to connect securely to Kafka: SSL/TLS encryption SSL/TLS encryption ..." /><meta name="copyright" content="(C) Copyright 2021" /><meta name="DC.rights.owner" content="(C) Copyright 2021" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="Security in Kafka Stages" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/GoogleCloud-Credentials.html#concept_vl2_bbx_q1b" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_jpy_ln5_klb" /><title>Security in Kafka Stages</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_jpy_ln5_klb-d46e40247" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -103,30 +103,30 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e12567" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e15343" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e25521" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e34260" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e36132" class="topicref" data-id="concept_qn1_wn4_kq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_izr_f2p_rq-d46e36154" class="topicref" data-id="concept_izr_f2p_rq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e13055" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e15831" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e26009" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e35847" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e37719" class="topicref" data-id="concept_qn1_wn4_kq" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_izr_f2p_rq-d46e37741" class="topicref" data-id="concept_izr_f2p_rq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/DataCollectorUI-Config.html#concept_izr_f2p_rq">Data Collector UI - Edit Mode</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_mjg_ly5_pgb-d46e36178" class="topicref" data-id="concept_mjg_ly5_pgb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ProductIcons_Doc.html">Pipeline Types and Icons in Documentation</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_mjg_ly5_pgb-d46e37765" class="topicref" data-id="concept_mjg_ly5_pgb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ProductIcons_Doc.html">Pipeline Types and Icons in Documentation</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">In <span class="ph">Data Collector</span>, you can configure pipelines that are run by <span class="ph">Data Collector</span> and         pipelines that are run by <span class="ph">Data Collector Edge</span>.
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_cgm_ktz_2t-d46e36212" class="topicref" data-id="concept_cgm_ktz_2t" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_cgm_ktz_2t-d46e37799" class="topicref" data-id="concept_cgm_ktz_2t" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Retry.html#concept_cgm_ktz_2t">Retrying the Pipeline</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_erj_qg4_qv-d46e36236" class="topicref" data-id="concept_erj_qg4_qv" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_erj_qg4_qv-d46e37823" class="topicref" data-id="concept_erj_qg4_qv" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineRateLimit.html#concept_erj_qg4_qv">Rate Limit</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ddf_hr1_rmb-d46e36260" class="topicref" data-id="concept_ddf_hr1_rmb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AdvancedOptions.html">Advanced Options</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ddf_hr1_rmb-d46e37847" class="topicref" data-id="concept_ddf_hr1_rmb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AdvancedOptions.html">Advanced Options</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Pipelines and most pipeline stages include advanced options with default values that         should work in most cases. By
                         default, each pipeline and stage hides the advanced options.         Advanced options can include individual properties or
@@ -134,48 +134,48 @@
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_alb_b3y_cbb-d46e36285" class="topicref" data-id="concept_alb_b3y_cbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_alb_b3y_cbb-d46e37872" class="topicref" data-id="concept_alb_b3y_cbb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SimpleBulkEdit.html#concept_alb_b3y_cbb">Simple and Bulk Edit Mode</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_h5b_kcr_kz-d46e36309" class="topicref" data-id="concept_h5b_kcr_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_h5b_kcr_kz-d46e37896" class="topicref" data-id="concept_h5b_kcr_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/RuntimeValues.html#concept_h5b_kcr_kz">Runtime Values</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Runtime values are values that you define outside of the pipeline and use for stage         and pipeline properties. You can
                         change the values for each pipeline run without having to         edit the pipeline. 
                         
                      </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_jcw_n4t_51b-d46e37744" class="topicref" data-id="concept_jcw_n4t_51b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
-         <li><span data-tocid="concept_mp1_t3l_rz-d46e37798" class="topicref" data-id="concept_mp1_t3l_rz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
-         <li><span data-tocid="concept_mtn_k4j_rz-d46e37946" class="topicref" data-id="concept_mtn_k4j_rz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_jcw_n4t_51b-d46e39331" class="topicref" data-id="concept_jcw_n4t_51b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/EventGeneration.html#concept_jcw_n4t_51b">Event Generation</a></span></span></li>
+         <li><span data-tocid="concept_mp1_t3l_rz-d46e39385" class="topicref" data-id="concept_mp1_t3l_rz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Webhooks.html#concept_mp1_t3l_rz">Webhooks</a></span></span></li>
+         <li><span data-tocid="concept_mtn_k4j_rz-d46e39533" class="topicref" data-id="concept_mtn_k4j_rz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Notifications.html#concept_mtn_k4j_rz">Notifications</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_dd1_n3f_5z-d46e37971" class="topicref" data-id="concept_dd1_n3f_5z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Encryption</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_dd1_n3f_5z-d46e39558" class="topicref" data-id="concept_dd1_n3f_5z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/SSL-TLS.html#concept_dd1_n3f_5z">SSL/TLS Encryption</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">Many stages can use SSL/TLS encryption to securely connect to the external system. </p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ypw_hbj_3nb-d46e38354" class="topicref" data-id="concept_ypw_hbj_3nb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AmazonSecurity.html#concept_ypw_hbj_3nb">Security in Amazon Stages</a></span></span></li>
-         <li><span data-tocid="concept_vl2_bbx_q1b-d46e38511" class="topicref" data-id="concept_vl2_bbx_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/GoogleCloud-Credentials.html#concept_vl2_bbx_q1b">Security in Google Cloud Stages</a></span></span></li>
-         <li class="active"><span data-tocid="concept_jpy_ln5_klb-d46e38659" class="topicref" data-id="concept_jpy_ln5_klb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb">Security in Kafka Stages</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_ktc_mmb_llb-d46e38752" class="topicref" data-id="concept_ktc_mmb_llb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_ktc_mmb_llb">Prerequisite Tasks</a></span></span></li>
-               <li><span data-tocid="concept_vwr_v2v_klb-d46e38774" class="topicref" data-id="concept_vwr_v2v_klb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_vwr_v2v_klb">Providing Kerberos Credentials</a></span></span></li>
-               <li><span data-tocid="task_h5b_c24_ymb-d46e38851" class="topicref" data-id="task_h5b_c24_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_h5b_c24_ymb">Enabling SSL/TLS Encryption</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ypw_hbj_3nb-d46e39942" class="topicref" data-id="concept_ypw_hbj_3nb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/AmazonSecurity.html#concept_ypw_hbj_3nb">Security in Amazon Stages</a></span></span></li>
+         <li><span data-tocid="concept_vl2_bbx_q1b-d46e40099" class="topicref" data-id="concept_vl2_bbx_q1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/GoogleCloud-Credentials.html#concept_vl2_bbx_q1b">Security in Google Cloud Stages</a></span></span></li>
+         <li class="active"><span data-tocid="concept_jpy_ln5_klb-d46e40247" class="topicref" data-id="concept_jpy_ln5_klb" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_jpy_ln5_klb">Security in Kafka Stages</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_ktc_mmb_llb-d46e40340" class="topicref" data-id="concept_ktc_mmb_llb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_ktc_mmb_llb">Prerequisite Tasks</a></span></span></li>
+               <li><span data-tocid="concept_vwr_v2v_klb-d46e40362" class="topicref" data-id="concept_vwr_v2v_klb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#concept_vwr_v2v_klb">Providing Kerberos Credentials</a></span></span></li>
+               <li><span data-tocid="task_h5b_c24_ymb-d46e40439" class="topicref" data-id="task_h5b_c24_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_h5b_c24_ymb">Enabling SSL/TLS Encryption</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When the Kafka cluster uses the Kafka SSL security protocol, enable the Kafka stage         to use SSL/TLS encryption.</p>
                            </span></span></span></li>
-               <li><span data-tocid="task_ixm_z24_ymb-d46e38906" class="topicref" data-id="task_ixm_z24_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_ixm_z24_ymb">Enabling SSL/TLS Encryption and Authentication</a><span class="wh-tooltip">
+               <li><span data-tocid="task_ixm_z24_ymb-d46e40494" class="topicref" data-id="task_ixm_z24_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_ixm_z24_ymb">Enabling SSL/TLS Encryption and Authentication</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When the Kafka cluster uses the Kafka SSL security protocol and requires client         authentication, enable the Kafka stage
                               to use SSL/TLS encryption and         authentication.
                               
                            </p>
                            </span></span></span></li>
-               <li><span data-tocid="task_hpc_2f4_ymb-d46e38972" class="topicref" data-id="task_hpc_2f4_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_hpc_2f4_ymb">Enabling Kerberos Authentication</a><span class="wh-tooltip">
+               <li><span data-tocid="task_hpc_2f4_ymb-d46e40560" class="topicref" data-id="task_hpc_2f4_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_hpc_2f4_ymb">Enabling Kerberos Authentication</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When the Kafka cluster uses the Kafka SASL_PLAINTEXT security protocol, enable the         Kafka stage to use Kerberos authentication.</p>
                            </span></span></span></li>
-               <li><span data-tocid="task_izg_hf4_ymb-d46e39048" class="topicref" data-id="task_izg_hf4_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_izg_hf4_ymb">Enabling Kerberos Authentication on SSL/TLS</a><span class="wh-tooltip">
+               <li><span data-tocid="task_izg_hf4_ymb-d46e40636" class="topicref" data-id="task_izg_hf4_ymb" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KafkaSecurity.html#task_izg_hf4_ymb">Enabling Kerberos Authentication on SSL/TLS</a><span class="wh-tooltip">
                            
                            <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc">When the Kafka cluster uses the Kafka SASL_SSL security protocol, enable the Kafka         stage to use Kerberos authentication
                               on SSL/TLS.
@@ -184,71 +184,71 @@
                            </span></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_ujc_cml_smb-d46e39134" class="topicref" data-id="concept_ujc_cml_smb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb">Kafka Message Keys</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ujc_cml_smb-d46e40722" class="topicref" data-id="concept_ujc_cml_smb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/KMessageKey.html#concept_ujc_cml_smb">Kafka Message Keys</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_azs_swf_jr-d46e39513" class="topicref" data-id="concept_azs_swf_jr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_azs_swf_jr-d46e41101" class="topicref" data-id="concept_azs_swf_jr" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Validation.html#concept_azs_swf_jr">Implicit and Explicit Validation</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_ofb_1cm_xq-d46e39537" class="topicref" data-id="concept_ofb_1cm_xq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
-         <li><span data-tocid="task_xlv_jdw_kq-d46e40235" class="topicref" data-id="task_xlv_jdw_kq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_ofb_1cm_xq-d46e41125" class="topicref" data-id="concept_ofb_1cm_xq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/Expressions.html#concept_ofb_1cm_xq">Expression Configuration</a></span></span></li>
+         <li><span data-tocid="task_xlv_jdw_kq-d46e41823" class="topicref" data-id="task_xlv_jdw_kq" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/ConfiguringAPipeline.html">Configuring a Pipeline</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e40260" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e41848" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e42520" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e112099" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e133027" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e160957" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e170609" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e173212" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e176746" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e44108" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e114597" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e135525" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e163456" class="topicref" data-id="concept_umc_1lk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span></li>
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e173108" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e178937" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e183096" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e175299" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e179459" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e182992" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e185595" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e183678" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e184050" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e184342" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e184824" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e185969" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e186925" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e186177" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e186549" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e186841" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e187323" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e188423" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e189379" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e189553" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e192007" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e190810" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e192640" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e197490" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e198695" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e193264" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e195094" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e200589" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e201794" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e204138" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e204193" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e207921" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e207976" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e204415" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e208086" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e208198" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e211869" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e208309" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e212092" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -481,26 +481,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_h5b_c24_ymb__table_zkw_tm2_4hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d575516e526">Security Property</th>
+                                    <th class="entry cellrowborder" id="d576284e526">Security Property</th>
 
-                                    <th class="entry cellrowborder" id="d575516e529">Description</th>
+                                    <th class="entry cellrowborder" id="d576284e529">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d575516e526 ">Security Option</td>
+                                    <td class="entry cellrowborder" headers="d576284e526 ">Security Option</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e529 ">Set to <kbd class="ph userinput">SSL/TLS Encryption (Security
+                                    <td class="entry cellrowborder" headers="d576284e529 ">Set to <kbd class="ph userinput">SSL/TLS Encryption (Security
                                             Protocol=SSL)</kbd>.</td>
 
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e526 ">Truststore Type</td>
+                        <td class="entry cellrowborder" headers="d576284e526 ">Truststore Type</td>
 
-                        <td class="entry cellrowborder" headers="d575516e529 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_h5b_c24_ymb__d789e118">
+                        <td class="entry cellrowborder" headers="d576284e529 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_h5b_c24_ymb__d795e118">
                                 <li class="li">Java Keystore File (JKS)</li>
 
                                 <li class="li">PKCS #12 (p12 file)</li>
@@ -512,18 +512,18 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e526 ">Truststore File</td>
+                        <td class="entry cellrowborder" headers="d576284e526 ">Truststore File</td>
 
-                        <td class="entry cellrowborder" headers="d575516e529 ">Path to the truststore file. Enter an absolute path to the file or a
+                        <td class="entry cellrowborder" headers="d576284e529 ">Path to the truststore file. Enter an absolute path to the file or a
                             path relative to the <span class="ph">Data Collector</span> resources
                             directory: <code class="ph codeph">$SDC_RESOURCES</code>.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e526 ">Truststore Password</td>
+                        <td class="entry cellrowborder" headers="d576284e526 ">Truststore Password</td>
 
-                        <td class="entry cellrowborder" headers="d575516e529 ">Password to the truststore file.
+                        <td class="entry cellrowborder" headers="d576284e529 ">Password to the truststore file.
                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
 </td>
@@ -531,9 +531,9 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e526 ">Enabled Protocols</td>
+                        <td class="entry cellrowborder" headers="d576284e526 ">Enabled Protocols</td>
 
-                        <td class="entry cellrowborder" headers="d575516e529 ">Comma-separated list of protocols used to connect to the Kafka
+                        <td class="entry cellrowborder" headers="d576284e529 ">Comma-separated list of protocols used to connect to the Kafka
                             brokers. Ensure that at least one of these protocols is enabled in the
                             Kafka brokers.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as
                             TLSv1.2.</div>
@@ -545,7 +545,7 @@
 </table>
 </div>
 
-                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><img class="image" id="task_h5b_c24_ymb__d148e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path
+                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><img class="image" id="task_h5b_c24_ymb__d151e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path
                         for the truststore file that uses the PEM format. </div>
 
                 </div>
@@ -596,26 +596,26 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_ixm_z24_ymb__table_zkw_tm2_4hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d575516e716">Security Property</th>
+                                    <th class="entry cellrowborder" id="d576284e716">Security Property</th>
 
-                                    <th class="entry cellrowborder" id="d575516e719">Description</th>
+                                    <th class="entry cellrowborder" id="d576284e719">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d575516e716 ">Security Option</td>
+                                    <td class="entry cellrowborder" headers="d576284e716 ">Security Option</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e719 ">Set to <kbd class="ph userinput">SSL/TLS Encryption and Authentication
+                                    <td class="entry cellrowborder" headers="d576284e719 ">Set to <kbd class="ph userinput">SSL/TLS Encryption and Authentication
                                             (Security Protocol=SSL)</kbd>.</td>
 
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Truststore Type</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Truststore Type</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_ixm_z24_ymb__d789e118">
+                        <td class="entry cellrowborder" headers="d576284e719 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_ixm_z24_ymb__d795e118">
                                 <li class="li">Java Keystore File (JKS)</li>
 
                                 <li class="li">PKCS #12 (p12 file)</li>
@@ -627,18 +627,18 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Truststore File</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Truststore File</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Path to the truststore file. Enter an absolute path to the file or a
+                        <td class="entry cellrowborder" headers="d576284e719 ">Path to the truststore file. Enter an absolute path to the file or a
                             path relative to the <span class="ph">Data Collector</span> resources
                             directory: <code class="ph codeph">$SDC_RESOURCES</code>.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Truststore Password</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Truststore Password</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Password to the truststore file.
+                        <td class="entry cellrowborder" headers="d576284e719 ">Password to the truststore file.
                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
 </td>
@@ -646,9 +646,9 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Keystore Type</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Keystore Type</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Type of keystore to use. Use one of the following types:<ul class="ul" id="task_ixm_z24_ymb__ul_sd5_yyb_zmb">
+                        <td class="entry cellrowborder" headers="d576284e719 ">Type of keystore to use. Use one of the following types:<ul class="ul" id="task_ixm_z24_ymb__ul_sd5_yyb_zmb">
                                 <li class="li">Java Keystore File (JKS)</li>
 
                                 <li class="li">PKCS #12 (p12 file)</li>
@@ -660,34 +660,34 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Keystore File</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Keystore File</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Path to the keystore file. Enter an absolute path to the
+                        <td class="entry cellrowborder" headers="d576284e719 ">Path to the keystore file. Enter an absolute path to the
                             file or a path relative to the <span class="ph">Data Collector</span> resources directory:
                             <code class="ph codeph">$SDC_RESOURCES</code>.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Keystore Password</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Keystore Password</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Password to the keystore file.</td>
+                        <td class="entry cellrowborder" headers="d576284e719 ">Password to the keystore file.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Key Password</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Key Password</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Password for the key in the keystore file. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
+                        <td class="entry cellrowborder" headers="d576284e719 ">Password for the key in the keystore file. <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
 </td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e716 ">Enabled Protocols</td>
+                        <td class="entry cellrowborder" headers="d576284e716 ">Enabled Protocols</td>
 
-                        <td class="entry cellrowborder" headers="d575516e719 ">Comma-separated list of protocols used to connect to the Kafka
+                        <td class="entry cellrowborder" headers="d576284e719 ">Comma-separated list of protocols used to connect to the Kafka
                             brokers. Ensure that at least one of these protocols is enabled in the
                             Kafka brokers.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as
                             TLSv1.2.</div>
@@ -699,7 +699,7 @@
 </table>
 </div>
 
-                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><img class="image" id="task_ixm_z24_ymb__d148e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path
+                    <div class="note note"><span class="notetitle">Note:</span> <span class="ph"><img class="image" id="task_ixm_z24_ymb__d151e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path
                         for the truststore and keystore files that use the PEM format. </div>
 
                 </div>
@@ -857,18 +857,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_hpc_2f4_ymb__table_zkw_tm2_4hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d575516e1100">Security Property</th>
+                                    <th class="entry cellrowborder" id="d576284e1100">Security Property</th>
 
-                                    <th class="entry cellrowborder" id="d575516e1103">Description</th>
+                                    <th class="entry cellrowborder" id="d576284e1103">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d575516e1100 ">Security Option</td>
+                                    <td class="entry cellrowborder" headers="d576284e1100 ">Security Option</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e1103 ">Set to <kbd class="ph userinput">Kerberos Authentication (Security
+                                    <td class="entry cellrowborder" headers="d576284e1103 ">Set to <kbd class="ph userinput">Kerberos Authentication (Security
                                             Protocol=SASL_PLAINTEXT)</kbd>.<p class="p">When selected,
                                                 <span class="ph">Data Collector</span> sets the Kafka SASL mechanism to GSSAPI. <span class="ph">Data Collector</span> does not support PLAIN (username/password) for the
                                             SASL mechanism.</p>
@@ -877,17 +877,17 @@
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1100 ">Kerberos Service Name</td>
+                        <td class="entry cellrowborder" headers="d576284e1100 ">Kerberos Service Name</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1103 ">Kerberos service principal name that the Kafka brokers run
+                        <td class="entry cellrowborder" headers="d576284e1103 ">Kerberos service principal name that the Kafka brokers run
                             as.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1100 ">Provide Keytab at Runtime</td>
+                        <td class="entry cellrowborder" headers="d576284e1100 ">Provide Keytab at Runtime</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1103 ">Enables providing Kerberos credentials in the connection
+                        <td class="entry cellrowborder" headers="d576284e1103 ">Enables providing Kerberos credentials in the connection
                                 properties.<div class="note note"><span class="notetitle">Note:</span> Configuring Kerberos credentials in connection
                                 properties is not supported in <span class="ph">Data Collector</span> cluster pipelines at this time.</div>
 </td>
@@ -895,9 +895,9 @@
                     </tr>
 
                                 <tr id="task_hpc_2f4_ymb__row_KafkaKerberosKeytab">
-                                    <td class="entry cellrowborder" headers="d575516e1100 ">Runtime Keytab</td>
+                                    <td class="entry cellrowborder" headers="d576284e1100 ">Runtime Keytab</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e1103 "><span class="ph">Kerberos keytab to use for the connection,
+                                    <td class="entry cellrowborder" headers="d576284e1103 "><span class="ph">Kerberos keytab to use for the connection,
                                 specified in one of the following ways:</span><ul class="ul" id="task_hpc_2f4_ymb__ul_msh_qdq_pnb">
                                 <li class="li">Enter a Base64-encoded keytab.<p class="p">Be sure to remove unnecessary
                                         characters, such as newline characters, before encoding the
@@ -921,9 +921,9 @@
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1100 ">Runtime Principal</td>
+                        <td class="entry cellrowborder" headers="d576284e1100 ">Runtime Principal</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1103 ">Kerberos principal to use for the connection, specified in the
+                        <td class="entry cellrowborder" headers="d576284e1103 ">Kerberos principal to use for the connection, specified in the
                             following format: <code class="ph codeph">&lt;principal name&gt;/&lt;host
                                 name&gt;@&lt;realm&gt;</code>.</td>
 
@@ -1089,34 +1089,34 @@
                 <div class="itemgroup info">
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_izg_hf4_ymb__table_zkw_tm2_4hb" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d575516e1426">Security Property</th>
+                                    <th class="entry cellrowborder" id="d576284e1426">Security Property</th>
 
-                                    <th class="entry cellrowborder" id="d575516e1429">Description</th>
+                                    <th class="entry cellrowborder" id="d576284e1429">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d575516e1426 ">Security Option</td>
+                                    <td class="entry cellrowborder" headers="d576284e1426 ">Security Option</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e1429 ">Set to <kbd class="ph userinput">Kerberos Authentication on SSL/TLS
+                                    <td class="entry cellrowborder" headers="d576284e1429 ">Set to <kbd class="ph userinput">Kerberos Authentication on SSL/TLS
                                             (Security Protocol=SASL_SSL)</kbd>.</td>
 
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Kerberos Service Name</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Kerberos Service Name</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Kerberos service principal name that the Kafka brokers run
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Kerberos service principal name that the Kafka brokers run
                             as.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Provide Keytab at Runtime</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Provide Keytab at Runtime</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Enables providing Kerberos credentials in the connection
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Enables providing Kerberos credentials in the connection
                                 properties.<div class="note note"><span class="notetitle">Note:</span> Configuring Kerberos credentials in connection
                                 properties is not supported in <span class="ph">Data Collector</span> cluster pipelines at this time.</div>
 </td>
@@ -1124,9 +1124,9 @@
                     </tr>
 
                                 <tr id="task_izg_hf4_ymb__row_KafkaKerberosKeytab">
-                                    <td class="entry cellrowborder" headers="d575516e1426 ">Runtime Keytab</td>
+                                    <td class="entry cellrowborder" headers="d576284e1426 ">Runtime Keytab</td>
 
-                                    <td class="entry cellrowborder" headers="d575516e1429 "><span class="ph">Kerberos keytab to use for the connection,
+                                    <td class="entry cellrowborder" headers="d576284e1429 "><span class="ph">Kerberos keytab to use for the connection,
                                 specified in one of the following ways:</span><ul class="ul" id="task_izg_hf4_ymb__ul_msh_qdq_pnb">
                                 <li class="li">Enter a Base64-encoded keytab.<p class="p">Be sure to remove unnecessary
                                         characters, such as newline characters, before encoding the
@@ -1150,27 +1150,27 @@
                                 </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Runtime Principal</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Runtime Principal</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Kerberos principal to use for the connection, specified in the
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Kerberos principal to use for the connection, specified in the
                             following format: <code class="ph codeph">&lt;principal name&gt;/&lt;host
                                 name&gt;@&lt;realm&gt;</code>.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Truststore File</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Truststore File</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Path to the truststore file. Enter an absolute path to the file or a
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Path to the truststore file. Enter an absolute path to the file or a
                             path relative to the <span class="ph">Data Collector</span> resources
                             directory: <code class="ph codeph">$SDC_RESOURCES</code>.</td>
 
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Truststore Password</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Truststore Password</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Password to the truststore file.
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Password to the truststore file.
                             <div class="note tip"><span class="tiptitle">Tip:</span> To secure sensitive information such as
                   passwords, you can use <a class="xref" href="RuntimeValues.html#concept_bs4_5nm_2s" title="Similar to runtime properties, runtime resources are values that you define in a file local to the Data Collector and call from within a pipeline. But with runtime resources, you can restrict the permissions for the files to secure information.">runtime resources</a> or <span class="ph"><a class="xref" href="../Configuration/CredentialStores.html#concept_bt1_bpj_r1b">credential stores.</a></span></div>
 </td>
@@ -1178,9 +1178,9 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Enabled Protocols</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Enabled Protocols</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Comma-separated list of protocols used to connect to the Kafka
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Comma-separated list of protocols used to connect to the Kafka
                             brokers. Ensure that at least one of these protocols is enabled in the
                             Kafka brokers.<div class="note note"><span class="notetitle">Note:</span> Older protocols are not as secure as
                             TLSv1.2.</div>
@@ -1189,9 +1189,9 @@
                     </tr>
 
                                 <tr>
-                        <td class="entry cellrowborder" headers="d575516e1426 ">Truststore Type</td>
+                        <td class="entry cellrowborder" headers="d576284e1426 ">Truststore Type</td>
 
-                        <td class="entry cellrowborder" headers="d575516e1429 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_izg_hf4_ymb__d789e118">
+                        <td class="entry cellrowborder" headers="d576284e1429 ">Type of truststore to use. Use one of the following types:<ul class="ul" id="task_izg_hf4_ymb__d795e118">
                                 <li class="li">Java Keystore File (JKS)</li>
 
                                 <li class="li">PKCS #12 (p12 file)</li>
@@ -1205,8 +1205,9 @@
                             </tbody>
 </table>
 </div>
-<span class="ph"><img class="image" id="task_izg_hf4_ymb__d148e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path for
-                    the truststore file that uses the PEM format. </div>
+<p class="p"><span class="ph"><img class="image" id="task_izg_hf4_ymb__d151e181" src="../../../reusable-content/shared-graphics/icon-Edge.png" height="19" width="19" /> In <span class="ph">Data Collector Edge</span> pipelines,</span> when you configure a Kafka Producer destination, enter an absolute path for
+                        the truststore file that uses the PEM format.</p>
+</div>
             </li>
 </ol>
 
