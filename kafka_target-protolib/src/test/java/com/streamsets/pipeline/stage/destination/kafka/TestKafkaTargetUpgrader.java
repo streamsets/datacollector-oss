@@ -306,7 +306,7 @@ public class TestKafkaTargetUpgrader {
     kafkaClientConfigs.add(configMap);
 
     String stageConfigPath = "conf";
-    String kafkaConfigsPath = stageConfigPath + ".kafkaConsumerConfigs";
+    String kafkaConfigsPath = stageConfigPath + ".kafkaProducerConfigs";
     String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
     String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
 
