@@ -165,7 +165,7 @@ upgrades:
     actions:
       - setConfigFromStringMap:
           name: temp.upgrade.kafka-security.mechanism
-          mapName: conf.kafkaConsumerConfigs
+          mapName: conf.kafkaProducerConfigs
           key: sasl.mechanism
       - setConfig:
           lookForName: temp.upgrade.kafka-security.mechanism
@@ -177,5 +177,5 @@ upgrades:
           namePattern: temp.upgrade.kafka-security.mechanism
       # remove the legacy protocol from the consumer options
       - configStringMapRemove:
-          name: conf.kafkaConsumerConfigs
+          name: conf.kafkaProducerConfigs
           key: sasl.mechanism

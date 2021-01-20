@@ -112,7 +112,7 @@ public class TestMultiMapRStreamsSourceUpgrader {
     kafkaClientConfigs.add(configMap);
 
     String stageConfigPath = "conf";
-    String kafkaConfigsPath = stageConfigPath + ".kafkaConsumerConfigs";
+    String kafkaConfigsPath = stageConfigPath + ".kafkaOptions";
     String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
     String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
 
