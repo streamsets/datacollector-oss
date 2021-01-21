@@ -20,7 +20,7 @@ public class EmailConstants {
   public static final String CURRENT_VALUE = "currentValue";
   public static final String EXCEPTION_MESSAGE = "exceptionMessage";
   public static final String TIMESTAMP = "timestamp";
-  public static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamsSets Data Collector Alert - ";
+  public static final String STREAMSETS_DATA_COLLECTOR_ALERT = "StreamSets Data Collector Alert - ";
   public static final String ALERT_ERROR_EMAIL_TEMPLATE = "email-template-error-alert.txt";
   public static final String NOTIFY_ERROR_EMAIL_TEMPLATE = "email-template-error-notify.txt";
   public static final String METRIC_EMAIL_TEMPLATE = "email-template-metric.txt";

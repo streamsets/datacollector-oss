@@ -712,7 +712,7 @@ public class TestStandaloneRunner {
     }
     String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " +
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - " +
         TestUtil.PIPELINE_TITLE_WITH_EMAIL + " - STOPPED"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(mailServer.getReceivedMessages()[0]));
@@ -736,7 +736,7 @@ public class TestStandaloneRunner {
     }
     String headers = GreenMailUtil.getHeaders(mailServer.getReceivedMessages()[0]);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - " +
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - " +
         TestUtil.PIPELINE_TITLE_WITH_EMAIL + " - FINISHED"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(mailServer.getReceivedMessages()[0]));

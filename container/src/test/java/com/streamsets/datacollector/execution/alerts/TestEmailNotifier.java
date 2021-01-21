@@ -93,7 +93,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - ERROR"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - ERROR"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
@@ -113,7 +113,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - ERROR"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - ERROR"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
@@ -133,7 +133,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - FINISHED"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - FINISHED"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
@@ -153,7 +153,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - STOPPED"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - STOPPED"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
@@ -173,7 +173,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - DISCONNECTED"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - DISCONNECTED"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
@@ -193,7 +193,7 @@ public class TestEmailNotifier {
     String headers = GreenMailUtil.getHeaders(server.getReceivedMessages()[0]);
     Assert.assertTrue(headers != null);
     Assert.assertTrue(headers.contains("To: foo, bar"));
-    Assert.assertTrue(headers.contains("Subject: StreamsSets Data Collector Alert - x - CONNECTING"));
+    Assert.assertTrue(headers.contains("Subject: StreamSets Data Collector Alert - x - CONNECTING"));
     Assert.assertTrue(headers.contains("From: sdc@localhost"));
     Assert.assertNotNull(GreenMailUtil.getBody(server.getReceivedMessages()[0]));
   }
