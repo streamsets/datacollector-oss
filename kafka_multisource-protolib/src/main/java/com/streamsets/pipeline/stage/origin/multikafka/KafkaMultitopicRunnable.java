@@ -235,10 +235,24 @@ public class KafkaMultitopicRunnable implements Callable<Long> {
           records.add(record);
           record = parser.parse();
         }
-      } catch (DataParserException | IOException e) {
+      } catch (DataParserException | IOException ex) {
         Record record = getContext().createRecord(messageId);
         record.set(Field.create(payload));
-        errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_37, messageId, e.toString(), e));
+        String exMessage = ex.toString();
+        if (ex.getClass().toString().equals("class com.fasterxml.jackson.core.JsonParseException")) {
+          // SDC-15723. Trying to catch this exception is hard, as its behaviour is not expected.
+          // This workaround using its String seems to be the best way to do it.
+          exMessage = "Cannot parse JSON from record";
+        }
+        errorRecordHandler.onError(
+            new OnRecordErrorException(
+                record,
+                KafkaErrors.KAFKA_37,
+                messageId,
+                exMessage,
+                ex
+            )
+        );
       }
 
       // Add the Kafka offset to be committed
