@@ -165,7 +165,7 @@ public class WebSocketToRestDispatcher {
         try {
           response = proxyRequest(tRequest);
           if (response != null) {
-            String data = response.readEntity(String.class);
+            Object data = response.readEntity(Object.class);
 
             Map<String, List<Object>> responseHeaders = new HashMap<>();
             for (String headerName : response.getHeaders().keySet()) {
