@@ -30,6 +30,7 @@ import com.streamsets.datacollector.config.StageLibraryDelegateDefinitition;
 import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionMinimalJson;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.pipeline.api.impl.annotationsprocessor.PipelineAnnotationsProcessor;
 
@@ -107,4 +108,6 @@ public interface StageLibraryTask extends Task, ClassLoaderReleaser {
   ConnectionDefinition getConnection(String type);
 
   Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type);
+
+  List<StageDefinitionMinimalJson> getStageDefinitionMinimalList();
 }

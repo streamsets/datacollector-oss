@@ -46,6 +46,7 @@ import com.streamsets.datacollector.el.ElConstantDefinition;
 import com.streamsets.datacollector.el.ElFunctionDefinition;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionMinimalJson;
 import com.streamsets.datacollector.runner.preview.StageConfigurationBuilder;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineInfo;
@@ -807,6 +808,11 @@ public class MockStages {
     @Override
     public Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type) {
       return Collections.emptySet();
+    }
+
+    @Override
+    public List<StageDefinitionMinimalJson> getStageDefinitionMinimalList() {
+      return null;
     }
 
     @Override

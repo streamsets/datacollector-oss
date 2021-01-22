@@ -17,12 +17,15 @@ package com.streamsets.datacollector.restapi;
 
 import com.google.common.collect.Lists;
 import com.streamsets.datacollector.config.ConnectionDefinition;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.el.RuleELRegistry;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionsJson;
+import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionMinimalJson;
 import com.streamsets.datacollector.restapi.configuration.JsonConfigurator;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
@@ -154,5 +157,73 @@ public class TestStageLibraryResource extends JerseyTest {
     Assert.assertEquals("type3", json3.getType());
     Assert.assertEquals(0, json3.getVerifierDefinitions().size());
 
+  }
+
+  @Test
+  public void testGetDefinitions() {
+    StageLibraryTask stageLibraryTask = Mockito.mock(StageLibraryTask.class);
+    BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
+    Mockito.when(buildInfo.getVersion()).thenReturn("3.22.0");
+    StageLibraryResource resource = new StageLibraryResource(
+        stageLibraryTask,
+        buildInfo,
+        Mockito.mock(RuntimeInfo.class)
+    );
+
+    StageDefinition stageDefinition1 = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageDefinition1.getName()).thenReturn("com_streamsets_pipeline_stage_destination_hdfs_HdfsDTarget");
+    Mockito.when(stageDefinition1.getVersion()).thenReturn(10);
+    Mockito.when(stageDefinition1.getLibrary()).thenReturn("streamsets-datacollector-azure-lib");
+    Mockito.when(stageDefinition1.getLibraryLabel()).thenReturn("Azure");
+
+    StageDefinition stageDefinition2 = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageDefinition2.getName()).thenReturn("com_streamsets_pipeline_stage_destination_hdfs_HdfsDTarget");
+    Mockito.when(stageDefinition2.getVersion()).thenReturn(10);
+    Mockito.when(stageDefinition2.getLibrary()).thenReturn("streamsets-datacollector-hdp_3_1-lib");
+    Mockito.when(stageDefinition2.getLibraryLabel()).thenReturn("HDP 3.1.0");
+
+    Mockito.when(stageLibraryTask.getStages()).thenReturn(Lists.newArrayList(stageDefinition1, stageDefinition2));
+
+
+    StageDefinitionMinimalJson stageDefinitionMinimalJson1 = new StageDefinitionMinimalJson(
+        stageDefinition1.getName(),
+        String.valueOf(stageDefinition1.getVersion()),
+        stageDefinition1.getLibrary(),
+        stageDefinition1.getLibraryLabel()
+    );
+    StageDefinitionMinimalJson stageDefinitionMinimalJson2 = new StageDefinitionMinimalJson(
+        stageDefinition2.getName(),
+        String.valueOf(stageDefinition2.getVersion()),
+        stageDefinition2.getLibrary(),
+        stageDefinition2.getLibraryLabel()
+    );
+
+    Mockito.when(stageLibraryTask.getStageDefinitionMinimalList())
+        .thenReturn(Lists.newArrayList(stageDefinitionMinimalJson1, stageDefinitionMinimalJson2));
+
+
+    Response response = resource.getDefinitions(null, null);
+    Assert.assertNotNull(response.getEntity());
+    DefinitionsJson definitionsJson = (DefinitionsJson) response.getEntity();
+    Assert.assertNotNull(definitionsJson);
+    Assert.assertEquals("1", definitionsJson.getSchemaVersion());
+    Assert.assertNotNull(definitionsJson.getStages());
+    Assert.assertEquals(2, definitionsJson.getStages().size());
+    Assert.assertNull(definitionsJson.getStageDefinitionMinimalList());
+    Assert.assertNull(definitionsJson.getStageDefinitionMap());
+
+    response = resource.getDefinitions(null, "2");
+    Assert.assertNotNull(response.getEntity());
+    definitionsJson = (DefinitionsJson) response.getEntity();
+    Assert.assertNotNull(definitionsJson);
+    Assert.assertEquals("2", definitionsJson.getSchemaVersion());
+    Assert.assertNotNull(definitionsJson.getStages());
+    Assert.assertEquals(0, definitionsJson.getStages().size());
+    Assert.assertNotNull(definitionsJson.getStageDefinitionMinimalList());
+    Assert.assertEquals(2, definitionsJson.getStageDefinitionMinimalList().size());
+    Assert.assertNotNull(definitionsJson.getStageDefinitionMap());
+    Assert.assertEquals(1, definitionsJson.getStageDefinitionMap().keySet().size());
+    Assert.assertTrue(definitionsJson.getStageDefinitionMap()
+        .containsKey(stageDefinition1.getName() + "::" + stageDefinition1.getVersion()));
   }
 }

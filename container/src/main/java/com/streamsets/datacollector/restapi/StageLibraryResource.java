@@ -23,7 +23,6 @@ import com.streamsets.datacollector.config.ServiceDefinition;
 import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.StageLibraryDefinition;
 import com.streamsets.datacollector.definition.ConcreteELDefinitionExtractor;
-import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.el.RuntimeEL;
 import com.streamsets.datacollector.execution.alerts.DataRuleEvaluator;
 import com.streamsets.datacollector.main.BuildInfo;
@@ -140,9 +139,18 @@ public class StageLibraryResource {
   @Produces(MediaType.APPLICATION_JSON)
   @PermitAll
   public Response getDefinitions(
-      @QueryParam("hideStage") final HideStage.Type hideStage
+      @QueryParam("hideStage") final HideStage.Type hideStage,
+      @QueryParam("schemaVersion") final String schemaVersion
   ) {
-    // The definitions to be returned
+    DefinitionsJson definitions = getDefinitionsJson(stageLibrary, hideStage, schemaVersion);
+    return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
+  }
+
+  public static DefinitionsJson getDefinitionsJson(
+      StageLibraryTask stageLibrary,
+      HideStage.Type hideStage,
+      String schemaVersion
+  ) {
     DefinitionsJson definitions = new DefinitionsJson();
 
     // Populate the definitions with all the stage definitions
@@ -194,7 +202,32 @@ public class StageLibraryResource {
 
     definitions.setEventDefinitions(stageLibrary.getEventDefinitions());
 
-    return Response.ok().type(MediaType.APPLICATION_JSON).entity(definitions).build();
+    if (schemaVersion != null && schemaVersion.equals("2")) {
+      // We package the same stage in multiple libraries like the “Hadoop FS” stage is packaged in stage
+      // library “Azure,” “HDP 3.1.0” and “CDP 7.1” in the case local dist build and packaged ten times
+      // inside the “streamsets-datacollector-all-3.22.0-SNAPSHOT.tgz”.
+      // By moving data structure from List<StageConfiguration> to List<StageDefinitionMinimalJson> and
+      // Map<String, StageConfiguration>, we can reduce payload size
+      definitions.setSchemaVersion(schemaVersion);
+      definitions.setStageDefinitionMinimalList(stageLibrary.getStageDefinitionMinimalList());
+      definitions.setStageDefinitionMap(generateStageDefinitionMap(definitions.getStages()));
+      definitions.setStages(Collections.emptyList());
+    }
+
+    return definitions;
+  }
+
+  private static Map<String, StageDefinitionJson> generateStageDefinitionMap(
+      List<StageDefinitionJson> stageDefinitionJsonList
+  ) {
+    Map<String, StageDefinitionJson> stageDefinitionMap = new HashMap<>();
+    for (StageDefinitionJson stageDefinitionJson: stageDefinitionJsonList) {
+      String key = stageDefinitionJson.getName() + "::" + stageDefinitionJson.getVersion();
+      if (!stageDefinitionMap.containsKey(key)) {
+        stageDefinitionMap.put(key, stageDefinitionJson);
+      }
+    }
+    return stageDefinitionMap;
   }
 
   @GET

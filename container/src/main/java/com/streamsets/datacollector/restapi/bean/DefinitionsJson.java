@@ -40,8 +40,15 @@ public class DefinitionsJson {
   private String category;
   private String categoryLabel;
 
+  private Map<String, StageDefinitionJson> stageDefinitionMap;
+  private List<StageDefinitionMinimalJson> stageDefinitionMinimalList;
+
   public String getSchemaVersion() {
     return schemaVersion;
+  }
+
+  public void setSchemaVersion(String schemaVersion) {
+    this.schemaVersion = schemaVersion;
   }
 
   public List<PipelineDefinitionJson> getPipeline() {
@@ -168,4 +175,19 @@ public class DefinitionsJson {
     return this;
   }
 
+  public Map<String, StageDefinitionJson> getStageDefinitionMap() {
+    return stageDefinitionMap;
+  }
+
+  public void setStageDefinitionMap(Map<String, StageDefinitionJson> stageDefinitionMap) {
+    this.stageDefinitionMap = stageDefinitionMap;
+  }
+
+  public List<StageDefinitionMinimalJson> getStageDefinitionMinimalList() {
+    return stageDefinitionMinimalList;
+  }
+
+  public void setStageDefinitionMinimalList(List<StageDefinitionMinimalJson> stageDefinitionMinimalList) {
+    this.stageDefinitionMinimalList = stageDefinitionMinimalList;
+  }
 }

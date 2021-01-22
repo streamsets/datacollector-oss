@@ -63,6 +63,7 @@ import com.streamsets.datacollector.main.SdcConfiguration;
 import com.streamsets.datacollector.metrics.MetricsConfigurator;
 import com.streamsets.datacollector.restapi.bean.EventDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
+import com.streamsets.datacollector.restapi.bean.StageDefinitionMinimalJson;
 import com.streamsets.datacollector.restapi.bean.StageInfoJson;
 import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
@@ -193,6 +194,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   private Map<String, Object> gaugeMap;
   private final Map<String, EventDefinitionJson> eventDefinitionMap = new HashMap<>();
   private volatile List<RepositoryManifestJson> repositoryManifestList = null;
+  private List<StageDefinitionMinimalJson> stageDefinitionMinimalList;
 
   @Inject
   public ClassLoaderStageLibraryTask(RuntimeInfo runtimeInfo, BuildInfo buildInfo, Configuration configuration) {
@@ -1281,5 +1283,21 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public Set<ConnectionVerifierDefinition> getConnectionVerifiers(String type) {
     return connectionVerifierMap.getOrDefault(type, Collections.emptySet());
+  }
+
+  @Override
+  public synchronized List<StageDefinitionMinimalJson> getStageDefinitionMinimalList() {
+    if (stageDefinitionMinimalList == null) {
+      stageDefinitionMinimalList = new ArrayList<>();
+      for (StageDefinition stageDefinition: getStages()) {
+        stageDefinitionMinimalList.add(new StageDefinitionMinimalJson(
+            stageDefinition.getName(),
+            String.valueOf(stageDefinition.getVersion()),
+            stageDefinition.getLibrary(),
+            stageDefinition.getLibraryLabel()
+        ));
+      }
+    }
+    return stageDefinitionMinimalList;
   }
 }
