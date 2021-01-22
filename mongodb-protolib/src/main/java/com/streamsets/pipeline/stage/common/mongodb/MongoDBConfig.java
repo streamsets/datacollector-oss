@@ -144,8 +144,21 @@ public class MongoDBConfig {
   )
   public String authSource = "";
 
-  // Advanced configs
+  @ConfigDef(
+      type = ConfigDef.Type.MODEL,
+      label = "Authentication Mechanism",
+      defaultValue = "DEFAULT",
+      required = true,
+      group = "CREDENTIALS",
+      displayPosition = 41,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      dependsOn = "authenticationType",
+      triggeredByValue = "LDAP"
+  )
+  @ValueChooserModel(AuthenticationMechanismChooserValues.class)
+  public AuthenticationMechanism authenticationMechanism = AuthenticationMechanism.DEFAULT;
 
+  // Advanced configs
   @ConfigDef(
       type = ConfigDef.Type.NUMBER,
       label = "Connections Per Host",
@@ -549,7 +562,7 @@ public class MongoDBConfig {
     return mongoCollection;
   }
 
-  private List<MongoCredential> createCredentials() throws StageException {
+  private List<MongoCredential> createCredentials() {
     MongoCredential credential = null;
     List<MongoCredential> credentials = new ArrayList<>(1);
     String authdb = (authSource.isEmpty() ? database : authSource);
@@ -558,7 +571,14 @@ public class MongoDBConfig {
         credential = MongoCredential.createCredential(username.get(), authdb, password.get().toCharArray());
         break;
       case LDAP:
-        credential = MongoCredential.createCredential(username.get(), "$external", password.get().toCharArray());
+        switch (authenticationMechanism) {
+          case PLAIN:
+            credential = MongoCredential.createPlainCredential(username.get(), "$external", password.get().toCharArray());
+            break;
+          case DEFAULT:
+          default:
+            credential = MongoCredential.createCredential(username.get(), "$external", password.get().toCharArray());
+        }
         break;
       case NONE:
       default:

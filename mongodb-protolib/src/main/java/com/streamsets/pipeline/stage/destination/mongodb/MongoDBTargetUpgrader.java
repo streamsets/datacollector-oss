@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MongoDBTargetUpgrader implements StageUpgrader {
+
   @Override
   public List<Config> upgrade(
       String library,
@@ -47,9 +48,15 @@ public class MongoDBTargetUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2toV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3toV4(configs);
+        if (toVersion == 4) {
+          break;
+        }
         // fall through
       case 4:
         upgradeV4toV5(configs);

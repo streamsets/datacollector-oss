@@ -43,6 +43,9 @@ public class MongoDBSourceUpgrader implements StageUpgrader {
         // fall through
       case 2:
         upgradeV2ToV3(configs);
+        if (toVersion == 3) {
+          break;
+        }
         // fall through
       case 3:
         upgradeV3toV4(configs);

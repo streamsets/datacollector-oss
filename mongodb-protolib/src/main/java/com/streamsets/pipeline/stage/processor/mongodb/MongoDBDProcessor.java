@@ -26,12 +26,12 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 
 @StageDef(
-        version = 1,
+        version = 2,
         label = "MongoDB Lookup",
         description = "Performs KV lookups to enrich records",
         icon = "mongodb.png",
         privateClassLoader = true,
-        upgraderDef = "upgrader</MongoDBDProcessor.yaml",
+        upgraderDef = "upgrader/MongoDBDProcessor.yaml",
         onlineHelpRefUrl ="index.html?contextID=task_yt1_w4w_2fb"
 )
 @ConfigGroups(Groups.class)

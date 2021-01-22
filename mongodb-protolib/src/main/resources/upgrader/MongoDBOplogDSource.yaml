@@ -16,5 +16,9 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: configBean.mongoConfig.authenticationMechanism
+          value: DEFAULT

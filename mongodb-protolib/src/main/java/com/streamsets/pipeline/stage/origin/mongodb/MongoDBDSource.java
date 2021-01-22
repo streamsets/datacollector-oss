@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.stage.common.mongodb.Groups;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "MongoDB",
     description = "Reads records from a MongoDB collection",
     icon="mongodb.png",

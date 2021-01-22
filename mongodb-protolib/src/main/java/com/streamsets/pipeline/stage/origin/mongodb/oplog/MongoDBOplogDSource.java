@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.stage.origin.mongodb.MongoDBDSource;
 
 @StageDef(
-    version = 1,
+    version = 3,
     label = "MongoDB Oplog",
     description = "Reads OpLog records from MongoDB",
     icon="mongodb.png",
