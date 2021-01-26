@@ -23,11 +23,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.21.0</version>
+    <version>3.21.1-SNAPSHOT</version>
     <relativePath>../../root-lib</relativePath>
   </parent>
   <artifactId>streamsets-emr-cluster-connection</artifactId>
-  <version>3.21.0</version>
+  <version>3.21.1-SNAPSHOT</version>
   <description>StreamSets EMR Cluster Connection</description>
   <name>StreamSets EMR Cluster Connection</name>
   <packaging>jar</packaging>
