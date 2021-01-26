@@ -42,6 +42,8 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -165,7 +167,14 @@ public class WebSocketToRestDispatcher {
         try {
           response = proxyRequest(tRequest);
           if (response != null) {
-            Object data = response.readEntity(Object.class);
+            Object data;
+
+            String contentType = response.getHeaderString(HttpHeaders.CONTENT_TYPE);
+            if (contentType != null && contentType.contains(MediaType.TEXT_PLAIN)) {
+              data = response.readEntity(String.class);
+            } else {
+              data = response.readEntity(Object.class);
+            }
 
             Map<String, List<Object>> responseHeaders = new HashMap<>();
             for (String headerName : response.getHeaders().keySet()) {

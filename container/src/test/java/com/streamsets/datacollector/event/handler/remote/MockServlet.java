@@ -22,21 +22,22 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 public class MockServlet extends HttpServlet {
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-    resp.setContentType("application/json");
     if (req.getRequestURI().contains("availableApps")) {
+      resp.setContentType("application/json");
       resp.setStatus(HttpServletResponse.SC_OK);
       resp.getWriter().write(ObjectMapperFactory.get().writeValueAsString(
           ImmutableList.of(WebSocketToRestDispatcher.TUNNELING_APP_NAME))
       );
     } else if (req.getHeader("mockHeader") != null) {
+      resp.setContentType(MediaType.TEXT_PLAIN);
       resp.setStatus(HttpServletResponse.SC_OK);
-      resp.getWriter()
-          .write(ObjectMapperFactory.get().writeValueAsString(ImmutableMap.of("k1", "v1")));
+      resp.getWriter().write("Plain text output payload");
     } else {
       resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     }
