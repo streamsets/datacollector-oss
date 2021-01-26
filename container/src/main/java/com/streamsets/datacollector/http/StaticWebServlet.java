@@ -18,6 +18,7 @@ package com.streamsets.datacollector.http;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.servlet.DefaultServlet;
 
 import javax.servlet.ServletException;
@@ -27,22 +28,30 @@ import java.io.IOException;
 
 public class StaticWebServlet extends DefaultServlet {
 
+  private final static String HEADLESS_URL = "/headless.html";
+  private final static String HEADLESS_URL_TEMPLATE = HEADLESS_URL + "?url={}";
+  private final static String ASSETS_FOLDER = "/assets/";
   private final RuntimeInfo runtimeInfo;
-  private final String controlHubUrl;
+  private final String headlessHelperUrl;
 
   public StaticWebServlet(RuntimeInfo runtimeInfo, Configuration conf) {
-    this.controlHubUrl = RemoteSSOService.getValidURL(conf.get(
+    String controlHubUrl = RemoteSSOService.getValidURL(conf.get(
         RemoteSSOService.DPM_BASE_URL_CONFIG,
         RemoteSSOService.DPM_BASE_URL_DEFAULT
     ));
+    this.headlessHelperUrl = Utils.format(HEADLESS_URL_TEMPLATE, controlHubUrl);
     this.runtimeInfo = runtimeInfo;
   }
 
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    if (runtimeInfo.isDPMEnabled() && runtimeInfo.isStaticWebDisabled()) {
-      // Redirect to Control Hub URL
-      response.sendRedirect(this.controlHubUrl);
+    if (runtimeInfo.isDPMEnabled() &&
+        runtimeInfo.isStaticWebDisabled() &&
+        !request.getPathInfo().contains(HEADLESS_URL) &&
+        !request.getPathInfo().contains(ASSETS_FOLDER)
+    ) {
+      // When connected to the latest Control Hub instance, Data Collector functions as a headless engine without a UI.
+      response.sendRedirect(headlessHelperUrl);
     } else {
       super.doGet(request, response);
     }
