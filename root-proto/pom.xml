@@ -82,10 +82,10 @@
 
     <hive-storage-api.version>2.2.1</hive-storage-api.version>
     <streamsets-datacollector-rbgen-maven-plugin.version>3.22.0-SNAPSHOT</streamsets-datacollector-rbgen-maven-plugin.version>
-    <gcp-gcs.version>1.113.6</gcp-gcs.version>
-    <gcp-ps.version>1.110.1</gcp-ps.version>
-    <gcp-bigquery.version>1.126.3</gcp-bigquery.version>
-    <google.cloud.version>16.2.0</google.cloud.version>
+    <gcp-gcs.version>1.113.9</gcp-gcs.version>
+    <gcp-ps.version>1.110.3</gcp-ps.version>
+    <gcp-bigquery.version>1.126.6</gcp-bigquery.version>
+    <google.cloud.version>16.3.0</google.cloud.version>
 
     <commons-lang3.version>3.4</commons-lang3.version>
   </properties>
