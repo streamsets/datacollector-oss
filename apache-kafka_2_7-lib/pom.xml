@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-
-    Copyright 2020 StreamSets Inc.
+    Copyright 2021 StreamSets Inc.
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -27,15 +26,15 @@
         <relativePath>../stage-lib-parent</relativePath>
     </parent>
     <groupId>com.streamsets</groupId>
-    <artifactId>streamsets-datacollector-apache-kafka_2_6-lib</artifactId>
+    <artifactId>streamsets-datacollector-apache-kafka_2_7-lib</artifactId>
     <version>3.22.0-SNAPSHOT</version>
-    <description>StreamSets Data Collector Apache Kafka 2.6 Lib</description>
-    <name>StreamSets Data Collector Apache Kafka 2.6 Lib</name>
+    <description>StreamSets Data Collector Apache Kafka 2.7 Lib</description>
+    <name>StreamSets Data Collector Apache Kafka 2.7 Lib</name>
     <packaging>jar</packaging>
 
     <properties>
         <avro.version>1.8.1</avro.version>
-        <kafka.version>2.6.1</kafka.version>
+        <kafka.version>2.7.0</kafka.version>
         <h2.version>1.4.187</h2.version>
         <tec.version>0.7</tec.version>
         <confluent.version>5.0.3</confluent.version>
