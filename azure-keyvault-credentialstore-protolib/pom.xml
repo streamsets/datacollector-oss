@@ -35,7 +35,7 @@
 
   <properties>
     <azure-keyvault.version>1.2.4</azure-keyvault.version>
-    <azure.version>1.38.0</azure.version>
+    <azure.version>1.38.1</azure.version>
   </properties>
 
   <dependencies>
