@@ -48,6 +48,11 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import com.streamsets.pipeline.stage.processor.kv.LookupUtils;
 import com.zaxxer.hikari.HikariDataSource;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.ExecutorService;
@@ -157,6 +162,30 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
     if(issues.isEmpty()) {
       this.defaultValue = calculateDefault(context, issues);
+    }
+
+    if(issues.isEmpty()) {
+      try (Connection validationConnection = dataSource.getConnection();
+           Statement statement = validationConnection.createStatement()) {
+        String preparedQuery = prepareQuery(query);
+        statement.setFetchSize(1);
+        statement.setMaxRows(1);
+        List<String> columnNamesFromDb = getColumnsFromValidationQuery(issues, context, statement, preparedQuery);
+        if (issues.isEmpty()) {
+          for (String columnName : columnsToFields.keySet()) {
+            if (!columnNamesFromDb.contains(columnName)) {
+              issues.add(context.createConfigIssue(Groups.JDBC.name(), COLUMN_MAPPINGS, JdbcErrors.JDBC_95, columnName));
+            }
+          }
+        }
+      } catch (SQLException e) {
+        issues.add(context.createConfigIssue(
+            Groups.JDBC.name(),
+            CONNECTION_STRING,
+            JdbcErrors.JDBC_00,
+            jdbcUtil.formatSqlException(e)
+        ));
+      }
     }
 
     if (issues.isEmpty()) {
@@ -399,6 +428,35 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
     } catch (OnRecordErrorException error) { // NOSONAR
       errorRecordHandler.onError(new OnRecordErrorException(record, error.getErrorCode(), error.getParams()));
     }
+  }
+
+  private String prepareQuery(String query) {
+    String preparedQuery = query.replaceAll("(\\$\\{)(.*?)(\\})", "0");
+    return preparedQuery;
+  }
+
+  private List<String> getColumnsFromValidationQuery(
+      List<ConfigIssue> issues, Processor.Context context, Statement statement, String preparedQuery
+  ) {
+    List<String> columnNamesFromDb = new ArrayList<>();
+      try {
+        ResultSet rs = statement.executeQuery(preparedQuery);
+        ResultSetMetaData rsmd = rs.getMetaData();
+        for (int i = 1; i <= rsmd.getColumnCount(); i++){
+          columnNamesFromDb.add(rsmd.getColumnLabel(i));
+        }
+      } catch (SQLException e) {
+        String formattedError = jdbcUtil.formatSqlException(e);
+        LOG.error(formattedError);
+        LOG.debug(formattedError, e);
+        issues.add(context.createConfigIssue(Groups.JDBC.name(),
+            preparedQuery,
+            JdbcErrors.JDBC_34,
+            preparedQuery,
+            formattedError
+        ));
+      }
+    return columnNamesFromDb;
   }
 
   private void setFieldsInRecord(Record record, Map<String, Field>fields) {
