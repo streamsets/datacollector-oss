@@ -335,6 +335,7 @@ public class DataFormatParser {
         builder.setMaxDataLen(dataFormatConfig.csvMaxObjectLen)
           .setMode(dataFormatConfig.csvFileFormat).setMode(dataFormatConfig.csvHeader)
           .setMode(dataFormatConfig.csvRecordType)
+          .setConfig(DelimitedDataConstants.PARSER, dataFormatConfig.csvParser.name())
           .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, dataFormatConfig.csvCustomDelimiter)
           .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, dataFormatConfig.csvCustomEscape)
           .setConfig(DelimitedDataConstants.QUOTE_CONFIG, dataFormatConfig.csvCustomQuote)
@@ -345,6 +346,14 @@ public class DataFormatParser {
           .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, dataFormatConfig.csvIgnoreEmptyLines)
           .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, dataFormatConfig.csvAllowExtraColumns)
           .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, dataFormatConfig.csvExtraColumnPrefix)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_FIELD_SEPARATOR, dataFormatConfig.csvUnivocityFieldSeparator)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_QUOTE, dataFormatConfig.csvUnivocityQuote)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_ESCAPE, dataFormatConfig.csvUnivocityEscape)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_MAX_COLUMNS, dataFormatConfig.csvUnivocityMaxColumns)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_MAX_CHARS_PER_COLUMN, dataFormatConfig.csvUnivocityMaxCharsPerColumn)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_SKIP_EMPTY_LINES, dataFormatConfig.csvUnivocitySkipEmptyLines)
+          .setConfig(DelimitedDataConstants.UNIVOCITY_COMMENT_CHAR, dataFormatConfig.csvUnivocityAllowComments ? dataFormatConfig.csvUnivocityCommentMarker : '\0')
+          .setConfig(DelimitedDataConstants.UNIVOCITY_LINE_SEPARATOR, dataFormatConfig.csvUnivocityLineSeparator)
           .setConfig(
               DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG,
               dataFormatConfig.multiCharacterFieldDelimiter

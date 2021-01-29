@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.util;
 
 public class DelimitedDataConstants {
+  public static final String PARSER = "parser";
 
   public static final String DELIMITER_CONFIG = "delimiterChar";
   public static final String ESCAPE_CONFIG = "escapeChar";
@@ -31,6 +32,16 @@ public class DelimitedDataConstants {
   public static final String EXTRA_COLUMN_PREFIX = "extraColumnPrefix";
   public static final String MULTI_CHARACTER_FIELD_DELIMITER_CONFIG = "multiCharacterFieldDelimiter";
   public static final String MULTI_CHARACTER_LINE_DELIMITER_CONFIG = "multiCharacterLineDelimiter";
+
+  // Univocity Parser Configs
+  public static final String UNIVOCITY_FIELD_SEPARATOR = "univocityFieldSeparator";
+  public static final String UNIVOCITY_QUOTE = "univocityQuote";
+  public static final String UNIVOCITY_ESCAPE = "univocityEscape";
+  public static final String UNIVOCITY_MAX_COLUMNS = "univocityMaxColumns";
+  public static final String UNIVOCITY_MAX_CHARS_PER_COLUMN = "univocityMaxCharsPerColumn";
+  public static final String UNIVOCITY_SKIP_EMPTY_LINES = "univocitySkipEmptyLines";
+  public static final String UNIVOCITY_COMMENT_CHAR = "univocityCommentChar";
+  public static final String UNIVOCITY_LINE_SEPARATOR = "univocityLineSeparator";
 
   public static final String DEFAULT_EXTRA_COLUMN_PREFIX = "_extra_";
 

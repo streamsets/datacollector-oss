@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserFactory;
@@ -39,8 +40,9 @@ public class TestDelimitedDataParserFactory {
     Stage.Context context = ContextInfoCreator.createSourceContext("", false, OnRecordError.DISCARD,
                                                                    Collections.<String>emptyList());
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
-    DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER).
-      setMode(CsvRecordType.LIST).build();
+    DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER)
+      .setConfig(DelimitedDataConstants.PARSER, CsvParser.LEGACY_PARSER.name())
+      .setMode(CsvRecordType.LIST).build();
     DataParser parser = factory.getParser("id", "A|\"B\"|\\|");
     Record record = parser.parse();
     Assert.assertNotNull(record);
@@ -58,6 +60,7 @@ public class TestDelimitedDataParserFactory {
                                                                    Collections.<String>emptyList());
     DataParserFactoryBuilder builder = new DataParserFactoryBuilder(context, DataParserFormat.DELIMITED);
     DataParserFactory factory = builder.setMaxDataLen(100).setMode(CsvMode.CUSTOM).setMode(CsvHeader.NO_HEADER)
+                                       .setConfig(DelimitedDataConstants.PARSER, CsvParser.LEGACY_PARSER.name())
                                        .setMode(CsvRecordType.LIST)
                                        .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
                                        .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
@@ -82,6 +85,7 @@ public class TestDelimitedDataParserFactory {
       .setMode(CsvMode.CSV)
       .setMode(CsvHeader.WITH_HEADER)
       .setMode(CsvRecordType.LIST_MAP)
+        .setConfig(DelimitedDataConstants.PARSER, CsvParser.LEGACY_PARSER.name())
       .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
       .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
       .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')
@@ -126,6 +130,7 @@ public class TestDelimitedDataParserFactory {
         .setMode(CsvMode.CSV)
         .setMode(CsvHeader.NO_HEADER)
         .setMode(CsvRecordType.LIST)
+        .setConfig(DelimitedDataConstants.PARSER, CsvParser.LEGACY_PARSER.name())
         .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, '^')
         .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, '!')
         .setConfig(DelimitedDataConstants.QUOTE_CONFIG, '\'')

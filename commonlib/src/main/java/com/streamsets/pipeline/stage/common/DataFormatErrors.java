@@ -48,6 +48,7 @@ public enum DataFormatErrors implements ErrorCode {
   DATA_FORMAT_400("collectd Types DB '{}' not found"),
   DATA_FORMAT_401("collectd Auth File '{}' not found"),
 
+  DATA_FORMAT_500("Line separator can only be either 1 or two characters, given '{}' ({} characters)"),
   ;
   private final String msg;
 

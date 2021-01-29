@@ -16,10 +16,12 @@
 package com.streamsets.pipeline.lib.parser.delimited;
 
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.CsvRecordType;
 import org.apache.commons.csv.CSVFormat;
 
 public class DelimitedDataParserSettings {
+  private CsvParser parser;
   private int skipStartLines;
   private CSVFormat format;
   private CsvHeader header;
@@ -34,8 +36,22 @@ public class DelimitedDataParserSettings {
   private String multiCharacterFieldDelimiter;
   private String multiCharacterLineDelimiter;
 
+  // Univocity Parser configs
+  private String univocityFieldSeparator;
+  private char univocityEscape;
+  private char univocityQuote;
+  private int univocityMaxColumns;
+  private int univocityMaxCharsPerColumn;
+  private boolean univocitySkipEmptyLines;
+  private char univocityCommentChar;
+  private String univocityLineSeparator;
+
   public int getSkipStartLines() {
     return skipStartLines;
+  }
+
+  public CsvParser getParser() {
+    return parser;
   }
 
   public CSVFormat getFormat() {
@@ -90,11 +106,44 @@ public class DelimitedDataParserSettings {
     return multiCharacterLineDelimiter;
   }
 
+  public String getUnivocityFieldSeparator() {
+    return univocityFieldSeparator;
+  }
+
+  public char getUnivocityEscape() {
+    return univocityEscape;
+  }
+
+  public char getUnivocityQuote() {
+    return univocityQuote;
+  }
+
+  public int getUnivocityMaxColumns() {
+    return univocityMaxColumns;
+  }
+
+  public int getUnivocityMaxCharsPerColumn() {
+    return univocityMaxCharsPerColumn;
+  }
+
+  public boolean getUnivocitySkipEmptyLines() {
+    return univocitySkipEmptyLines;
+  }
+
+  public char getUnivocityCommentChar() {
+    return univocityCommentChar;
+  }
+
+  public String getUnivocityLineSeparator() {
+    return univocityLineSeparator;
+  }
+
   public static Builder builder() {
     return new Builder();
   }
 
   public static final class Builder {
+    private CsvParser parser;
     private int skipStartLines;
     private CSVFormat format;
     private CsvHeader header;
@@ -110,7 +159,22 @@ public class DelimitedDataParserSettings {
     private String multiCharacterFieldDelimiter;
     private String multiCharacterLineDelimiter;
 
+    // Univocity Parser configs
+    private String univocityFieldSeparator;
+    private char univocityEscape;
+    private char univocityQuote;
+    private int univocityMaxColumns;
+    private int univocityMaxCharsPerColumn;
+    private boolean univocitySkipEmptyLines;
+    private char univocityCommentChar;
+    private String univocityLineSeparator;
+
     private Builder() {
+    }
+
+    public Builder withParser(CsvParser parser) {
+      this.parser = parser;
+      return this;
     }
 
     public Builder withSkipStartLines(int skipStartLines) {
@@ -178,8 +242,49 @@ public class DelimitedDataParserSettings {
       return this;
     }
 
+    public Builder withUnivocityFieldSeparator(String separator) {
+      this.univocityFieldSeparator = separator;
+      return this;
+    }
+
+    public Builder withUnivocityMaxColumns(int max) {
+      this.univocityMaxColumns = max;
+      return this;
+    }
+
+    public Builder withUnivocityMaxCharsPerColumn(int max) {
+      this.univocityMaxCharsPerColumn = max;
+      return this;
+    }
+
+    public Builder withUnivocityEscape(char character) {
+      this.univocityEscape = character;
+      return this;
+    }
+
+    public Builder withUnivocityQuote(char character) {
+      this.univocityQuote = character;
+      return this;
+    }
+
+    public Builder withUnivocitySkipEmptyLines(boolean skip) {
+      this.univocitySkipEmptyLines = skip;
+      return this;
+    }
+
+    public Builder withUnivocityCommentChar(char comment) {
+      this.univocityCommentChar = comment;
+      return this;
+    }
+
+    public Builder withUnivocityLineSeparator(String lineSeparator) {
+      this.univocityLineSeparator = lineSeparator;
+      return this;
+    }
+
     public DelimitedDataParserSettings build() {
       DelimitedDataParserSettings delimitedDataParserSettings = new DelimitedDataParserSettings();
+      delimitedDataParserSettings.parser = this.parser;
       delimitedDataParserSettings.header = this.header;
       delimitedDataParserSettings.allowExtraColumns = this.allowExtraColumns;
       delimitedDataParserSettings.maxObjectLen = this.maxObjectLen;
@@ -193,6 +298,14 @@ public class DelimitedDataParserSettings {
       delimitedDataParserSettings.multiCharacterLineDelimiter = this.multiCharacterLineDelimiter;
       delimitedDataParserSettings.multiCharacterQuoteChar = this.multiCharacterQuoteChar;
       delimitedDataParserSettings.multiCharacterEscapeChar = this.multiCharacterEscapeChar;
+      delimitedDataParserSettings.univocityFieldSeparator = this.univocityFieldSeparator;
+      delimitedDataParserSettings.univocityQuote = this.univocityQuote;
+      delimitedDataParserSettings.univocityEscape = this.univocityEscape;
+      delimitedDataParserSettings.univocityMaxColumns = this.univocityMaxColumns;
+      delimitedDataParserSettings.univocityMaxCharsPerColumn = this.univocityMaxCharsPerColumn;
+      delimitedDataParserSettings.univocitySkipEmptyLines = this.univocitySkipEmptyLines;
+      delimitedDataParserSettings.univocityCommentChar = this.univocityCommentChar;
+      delimitedDataParserSettings.univocityLineSeparator = this.univocityLineSeparator;
       return delimitedDataParserSettings;
     }
   }

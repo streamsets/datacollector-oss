@@ -33,6 +33,8 @@ import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvHeaderChooserValues;
 import com.streamsets.pipeline.config.CsvMode;
 import com.streamsets.pipeline.config.CsvModeChooserValues;
+import com.streamsets.pipeline.config.CsvParser;
+import com.streamsets.pipeline.config.CsvParserChooserValues;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.CsvRecordTypeChooserValues;
 import com.streamsets.pipeline.config.DataFormat;
@@ -258,6 +260,36 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public int jsonMaxObjectLen = 4096;
 
+  // CSV (Delimited configuration)
+
+  // The way to think about CSV configs
+  // There are few categorise of configs
+  // 1) Reader specific (maximal size of line, how many lines to skip, ...)
+  // 2) Record specific (parse NULLs, root field type, ...)
+  // 3) Parser specific (what is field or line separator, ...)
+  //
+  // All groups are pretty much independent on the other groups. Groups 1) and 2) are applicable
+  // for all parsers, but since we have different parsers now (modern, fast, feature rich) and our
+  // older parser that is kept for backward compatibility, we have two sets of parser configs. You
+  // correctly guessed that some parser configs are logically equivalent (all parsers wants to know
+  // the field separator), but since we don't have concept of "OR" in our config dependencies, the
+  // parser configs are different sets with no overlap.
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "LEGACY_PARSER", // TODO: Should be UNIVOCITY, but that requires fixing upgraders in all stages first
+      label = "CSV Parser",
+      description = "Choose which underlying parser should be used. For all new pipelines, use the default one and don't bother with the old one.",
+      displayPosition = 369,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
+  )
+  @ValueChooserModel(CsvParserChooserValues.class)
+  public CsvParser csvParser = CsvParser.LEGACY_PARSER;
+
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
@@ -267,8 +299,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 370,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
-      dependsOn = "dataFormat^",
-      triggeredByValue = "DELIMITED"
+      dependsOn = "csvParser",
+      triggeredByValue = "LEGACY_PARSER"
   )
   @ValueChooserModel(CsvModeChooserValues.class)
   public CsvMode csvFileFormat = CsvMode.CSV;
@@ -329,8 +361,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       displayPosition = 390,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
-      dependsOn = "dataFormat^",
-      triggeredByValue = "DELIMITED",
+      dependsOn = "csvParser",
+      triggeredByValue = "LEGACY_PARSER",
       min = 1,
       max = Integer.MAX_VALUE
   )
@@ -409,6 +441,130 @@ public class DataParserFormatConfig implements DataFormatConfig {
       triggeredByValue = {"CUSTOM", "MULTI_CHARACTER"}
   )
   public char csvCustomQuote = '\"';
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.STRING,
+      defaultValue = ",",
+      label = "Field Separator",
+      description = "Separator between fields - can be one or more characters..",
+      displayPosition = 405,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public String csvUnivocityFieldSeparator = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\\",
+      label = "Escape Character", // TODO: Problem with a name collision
+      description = "Character used to escape quote and delimiter characters. To disable select Other and enter " +
+          "\\u0000 (unicode codepoint for the NULL character).",
+      displayPosition = 410,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public char csvUnivocityEscape = '\\';
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "\"",
+      label = "Quote Character", // TODO: Problem with a name collision?
+      description = "Character used to quote string fields. To disable select Other and enter" +
+          " \\u0000 (unicode codepoint for the NULL character).",
+      displayPosition = 420,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public char csvUnivocityQuote = '\"';
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL,
+      label = "Line Separator",
+      displayPosition = 421,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public String csvUnivocityLineSeparator = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Columns",
+      description = "Maximal number of columns to parse per line.",
+      displayPosition = 340,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public int csvUnivocityMaxColumns = 1000;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1000",
+      label = "Max Characters Per Column",
+      description = "Maximal number of character that will be read per single column.",
+      displayPosition = 341,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public int csvUnivocityMaxCharsPerColumn = 1000;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Skip Empty Lines",
+      displayPosition = 342,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public boolean csvUnivocitySkipEmptyLines = true;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Allow Comments",
+      displayPosition = 343,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "UNIVOCITY"
+  )
+  public boolean csvUnivocityAllowComments = false;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CHARACTER,
+      defaultValue = "#",
+      label = "Comment Character",
+      displayPosition = 343,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "DATA_FORMAT",
+      dependsOn = "csvUnivocityAllowComments",
+      triggeredByValue = "true"
+  )
+  public char csvUnivocityCommentMarker = '#';
 
   @ConfigDef(
     required = false,
@@ -1458,6 +1614,21 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   private boolean validateDelimited(ProtoConfigurableEntity.Context context, String configPrefix, List<Stage.ConfigIssue> issues) {
     boolean valid = true;
+    if(csvParser == CsvParser.UNIVOCITY) {
+      if(csvUnivocityLineSeparator.length() > 2) {
+        issues.add(
+            context.createConfigIssue(
+                DataFormatGroups.DATA_FORMAT.name(),
+                configPrefix + "csvUnivocityLineSeparator",
+                DataFormatErrors.DATA_FORMAT_500,
+                csvUnivocityLineSeparator,
+                csvUnivocityLineSeparator.length()
+            )
+        );
+        valid = false;
+      }
+    }
+
     if (csvMaxObjectLen < 1) {
       issues.add(
           context.createConfigIssue(
@@ -1738,6 +1909,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setMaxDataLen(csvMaxObjectLen)
         .setMode(csvFileFormat).setMode(csvHeader)
         .setMode(csvRecordType)
+        .setConfig(DelimitedDataConstants.PARSER, csvParser.name())
         .setConfig(DelimitedDataConstants.SKIP_START_LINES, csvSkipStartLines)
         .setConfig(DelimitedDataConstants.DELIMITER_CONFIG, csvCustomDelimiter)
         .setConfig(DelimitedDataConstants.ESCAPE_CONFIG, csvCustomEscape)
@@ -1749,6 +1921,14 @@ public class DataParserFormatConfig implements DataFormatConfig {
         .setConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG, csvIgnoreEmptyLines)
         .setConfig(DelimitedDataConstants.ALLOW_EXTRA_COLUMNS, csvAllowExtraColumns)
         .setConfig(DelimitedDataConstants.EXTRA_COLUMN_PREFIX, csvExtraColumnPrefix)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_FIELD_SEPARATOR, csvUnivocityFieldSeparator)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_QUOTE, csvUnivocityQuote)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_ESCAPE, csvUnivocityEscape)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_MAX_COLUMNS, csvUnivocityMaxColumns)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_MAX_CHARS_PER_COLUMN, csvUnivocityMaxCharsPerColumn)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_SKIP_EMPTY_LINES, csvUnivocitySkipEmptyLines)
+        .setConfig(DelimitedDataConstants.UNIVOCITY_COMMENT_CHAR, csvUnivocityAllowComments ? csvUnivocityCommentMarker : '\0')
+        .setConfig(DelimitedDataConstants.UNIVOCITY_LINE_SEPARATOR, csvUnivocityLineSeparator)
         .setConfig(
             DelimitedDataConstants.MULTI_CHARACTER_FIELD_DELIMITER_CONFIG,
             multiCharacterFieldDelimiter

@@ -35,6 +35,7 @@
   <properties>
     <commons-csv.version>1.8</commons-csv.version>
     <jparsec.version>3.0</jparsec.version>
+    <univocity.version>2.9.1</univocity.version>
   </properties>
 
   <dependencies>
@@ -105,6 +106,12 @@
       <groupId>org.jparsec</groupId>
       <artifactId>jparsec</artifactId>
       <version>${jparsec.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.univocity</groupId>
+      <artifactId>univocity-parsers</artifactId>
+      <version>${univocity.version}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

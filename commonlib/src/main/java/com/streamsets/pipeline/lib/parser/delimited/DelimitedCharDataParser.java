@@ -26,13 +26,13 @@ import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.csv.CsvMultiCharDelimitedParser;
+import com.streamsets.pipeline.lib.csv.CsvUnivocityDelimitedParser;
 import com.streamsets.pipeline.lib.csv.DelimitedDataParser;
 import com.streamsets.pipeline.lib.csv.OverrunCsvParser;
 import com.streamsets.pipeline.lib.parser.AbstractDataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.ParserRuntimeException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
-import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -65,20 +65,59 @@ public class DelimitedCharDataParser extends AbstractDataParser {
     this.context = context;
     this.readerId = readerId;
     this.settings = settings;
-
     final CsvHeader header = settings.getHeader();
+
+    switch(settings.getParser()) {
+      case UNIVOCITY:
+        parser = new CsvUnivocityDelimitedParser(
+            reader,
+            settings.getUnivocityQuote(),
+            settings.getUnivocityEscape(),
+            settings.getUnivocityFieldSeparator(),
+            settings.getUnivocityCommentChar(),
+            settings.getUnivocityLineSeparator(),
+            EnumSet.of(CsvHeader.WITH_HEADER, CsvHeader.IGNORE_HEADER).contains(header),
+            settings.getSkipStartLines(),
+            settings.getUnivocityMaxColumns(),
+            settings.getUnivocityMaxCharsPerColumn(),
+            settings.getUnivocitySkipEmptyLines(),
+            readerOffset
+        );
+        break;
+      case LEGACY_PARSER:
+        parser = getLegacyParser(reader, readerOffset, settings, header);
+        break;
+      default:
+        throw new IOException(Utils.format("Unknown parser {}", settings.getParser()));
+    }
+
+    String[] hs = parser.getHeaders();
+    if (header != CsvHeader.IGNORE_HEADER && hs != null) {
+      headers = new ArrayList<>();
+      for (String h : hs) {
+        headers.add(Field.create(h));
+      }
+    }
+  }
+
+  private DelimitedDataParser getLegacyParser(
+      OverrunReader reader,
+      long readerOffset,
+      DelimitedDataParserSettings settings,
+      CsvHeader header
+  ) throws IOException {
+    // Resolving the legacy "parser" isn't as easy as it's two different underlying parsers that are selected per
+    // config combination...
     if (!Strings.isNullOrEmpty(settings.getMultiCharacterFieldDelimiter())) {
       // use multi-character delimiter parser
-      parser = new CsvMultiCharDelimitedParser(
-          reader,
+      return new CsvMultiCharDelimitedParser(reader,
           settings.getMultiCharacterQuoteChar(),
           settings.getMultiCharacterEscapeChar(),
           settings.getMultiCharacterFieldDelimiter(),
           // we will make maxInputBufferSize equal to max record size, since that seems sensible
           settings.getMaxObjectLen(),
           settings.getMaxObjectLen(),
-          EnumSet.of(CsvHeader.WITH_HEADER, CsvHeader.IGNORE_HEADER).contains(header),
-          readerOffset,
+          EnumSet.of(CsvHeader.WITH_HEADER, CsvHeader.IGNORE_HEADER).contains(header), readerOffset,
           settings.getSkipStartLines(),
           settings.getMultiCharacterLineDelimiter()
       );
@@ -94,20 +133,11 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         default:
           throw new ParserRuntimeException(Utils.format("Unknown header error: {}", header));
       }
-      parser = new OverrunCsvParser(
-          reader,
-          settings.getFormat(),
-          readerOffset,
+      return new OverrunCsvParser(reader,
+          settings.getFormat(), readerOffset,
           settings.getSkipStartLines(),
           settings.getMaxObjectLen()
       );
-    }
-    String[] hs = parser.getHeaders();
-    if (header != CsvHeader.IGNORE_HEADER && hs != null) {
-      headers = new ArrayList<>();
-      for (String h : hs) {
-        headers.add(Field.create(h));
-      }
     }
   }
 

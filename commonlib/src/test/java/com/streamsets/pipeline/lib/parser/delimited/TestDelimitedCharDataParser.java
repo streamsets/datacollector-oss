@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ext.io.OverrunReader;
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
@@ -51,6 +52,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -89,6 +91,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -123,6 +126,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
@@ -153,6 +157,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
@@ -181,6 +186,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeader() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -211,6 +217,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeaderWithListMap() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -239,6 +246,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNoHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -269,6 +277,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
@@ -299,6 +308,7 @@ public class TestDelimitedCharDataParser {
   public void testParseIgnoreHeaderWithOffset2() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
@@ -329,6 +339,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithHeaderWithOffset() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b\ne,f"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -360,6 +371,7 @@ public class TestDelimitedCharDataParser {
   public void testClose() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.IGNORE_HEADER)
@@ -379,6 +391,7 @@ public class TestDelimitedCharDataParser {
   public void testParseNullConstant() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,null\nnull,B"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -408,6 +421,7 @@ public class TestDelimitedCharDataParser {
   public void testClRfEndOfLines() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\r\na,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -446,6 +460,7 @@ public class TestDelimitedCharDataParser {
   public void testCrEndOfLines() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\ra,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.NO_HEADER)
@@ -484,6 +499,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithExtraColumnsAllowed() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("a,b,c\n1,2,3,4"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -507,6 +523,7 @@ public class TestDelimitedCharDataParser {
   public void testParseWithExtraColumnsNotAllowed() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\na,b,c"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withFormat(CSVFormat.DEFAULT)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -571,6 +588,7 @@ public class TestDelimitedCharDataParser {
 
     final OverrunReader reader = new OverrunReader(new StringReader(inputData), 1000, true, false);
     final DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
         .withSkipStartLines(0)
         .withMultiCharacterFieldDelimiter(multiCharFieldDelimiter)
         .withHeader(CsvHeader.WITH_HEADER)
@@ -621,6 +639,7 @@ public class TestDelimitedCharDataParser {
   public void testParserNull() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\r\nnull,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
       .withSkipStartLines(0)
       .withFormat(CSVFormat.DEFAULT)
       .withHeader(CsvHeader.WITH_HEADER)
@@ -648,6 +667,7 @@ public class TestDelimitedCharDataParser {
   public void testParserNullSetToFalseWithNullConstant() throws Exception {
     OverrunReader reader = new OverrunReader(new StringReader("A,B\r\nnull,b"), 1000, true, false);
     DelimitedDataParserSettings settings = DelimitedDataParserSettings.builder()
+        .withParser(CsvParser.LEGACY_PARSER)
       .withSkipStartLines(0)
       .withFormat(CSVFormat.DEFAULT)
       .withHeader(CsvHeader.WITH_HEADER)
