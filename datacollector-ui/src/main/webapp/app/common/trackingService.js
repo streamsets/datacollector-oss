@@ -70,10 +70,13 @@ angular.module('dataCollectorApp.common')
     PIPELINE_SETUP_VIEW: 'Pipeline Setup View',
     RULE_CREATED: 'Rule Created',
     METRIC_RULE_CREATED: 'Metric Rule Created',
+    SAMPLE_PIPELINE_MODAL_VIEW: 'Sample Pipeline List Modal Viewed',
+    SAMPLE_PIPELINE_LIST_VIEW: 'Sample Pipeline List Viewed',
     SAMPLE_PIPELINE_VIEW: 'Sample Pipeline View',
+    SAMPLE_PIPELINE_TUTORIAL: 'Sample Pipeline Tutorial Link Clicked',
     SAMPLE_PIPELINE_DUPLICATED: 'Sample Pipeline Duplicated'
   })
-  .factory('tracking', function($timeout, Analytics) {
+  .factory('tracking', function($timeout, Analytics, trackingEvent) {
     var tracking = {
       FS: {},
       mixpanel: {
@@ -250,6 +253,14 @@ angular.module('dataCollectorApp.common')
           }
         }
       }
+    };
+
+    tracking.trackTutorialLinkClicked = function(pipeline) {
+      console.log(pipeline);
+      tracking.mixpanel.track(trackingEvent.SAMPLE_PIPELINE_TUTORIAL, {
+        'Sample Pipeline ID': pipeline.pipelineId,
+        'Sample Pipeline Title': pipeline.title
+      });
     };
 
     return tracking;

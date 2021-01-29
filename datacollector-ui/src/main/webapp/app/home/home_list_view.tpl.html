@@ -147,7 +147,8 @@
         <span class="pipeline-tutorial" ng-if="selectedPipelineLabel === 'system:samplePipelines'">
           <a
             ng-if="pipeline.tutorialLink"
-            ng-href="{{pipeline.tutorialLink}}" target="_blank">Click to View</a>
+            ng-href="{{pipeline.tutorialLink}}" target="_blank"
+            ng-click="trackTutorialLinkClicked(pipeline)">Click to View</a>
         </span>
 
         <span class="pipeline-origins"

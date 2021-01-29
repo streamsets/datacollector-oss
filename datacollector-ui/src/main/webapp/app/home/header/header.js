@@ -564,6 +564,10 @@ angular
             '/collector/logs/' + $scope.pipelineConfig.info.title + '/' + $scope.pipelineConfig.info.pipelineId
           );
         }
+      },
+
+      trackTutorialLinkClicked: function(pipeline) {
+        tracking.trackTutorialLinkClicked(pipeline);
       }
     });
 

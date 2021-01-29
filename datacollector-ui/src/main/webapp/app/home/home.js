@@ -873,6 +873,10 @@ angular
        */
       onLabelsLoaded: function(callback) {
         $scope.onLabelsLoadedCallback = callback;
+      },
+
+      trackTutorialLinkClicked: function(pipeline) {
+        tracking.trackTutorialLinkClicked(pipeline);
       }
 
     });

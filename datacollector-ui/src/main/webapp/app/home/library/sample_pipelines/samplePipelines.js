@@ -39,6 +39,10 @@ angular
 
       close : function () {
         $modalInstance.close();
+      },
+
+      trackTutorialLinkClicked: function(pipeline) {
+        tracking.trackTutorialLinkClicked(pipeline);
       }
     });
 

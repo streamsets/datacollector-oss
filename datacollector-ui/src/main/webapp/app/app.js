@@ -564,6 +564,7 @@ angular.module('dataCollectorApp')
           backdrop: 'static',
           size: 'lg'
         });
+        tracking.mixpanel.track(trackingEvent.SAMPLE_PIPELINE_MODAL_VIEW);
       },
     };
 

@@ -28,7 +28,8 @@
         <td>
           <a
             ng-if="samplePipeline.tutorialLink"
-            ng-href="{{samplePipeline.tutorialLink}}" target="_blank">Click to View</a>
+            ng-href="{{samplePipeline.tutorialLink}}" target="_blank"
+            ng-click="trackTutorialLinkClicked(samplePipeline)">Click to View</a>
         </td>
         <td>{{samplePipeline.origins}}</td>
         <td>{{samplePipeline.destinations}}</td>

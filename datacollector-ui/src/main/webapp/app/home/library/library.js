@@ -21,7 +21,7 @@
  */
 angular
   .module('dataCollectorApp.home')
-  .controller('LibraryController', function ($scope, $timeout) {
+  .controller('LibraryController', function ($scope, $timeout, tracking, trackingEvent) {
     var DEBOUNCE_LIMIT = 300; // Meaning for +300 raw pipeline labels,
     var DEBOUNCE_TIME = 500; // debounce label filter for 500ms
 
@@ -56,6 +56,9 @@ angular
       onSelectLabel : function(label) {
         $scope.$storage.pipelineListState.selectedLabel = label;
         $scope.selectPipelineLabel(label);
+        if (label === 'system:samplePipelines') {
+          tracking.mixpanel.track(trackingEvent.SAMPLE_PIPELINE_LIST_VIEW);
+        }
       },
 
       /**

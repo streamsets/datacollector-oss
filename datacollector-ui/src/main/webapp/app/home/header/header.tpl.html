@@ -412,7 +412,8 @@
     <div class="pull-right sample-pipeline-duplicate" ng-if="pipelineConfig && isSamplePipeline">
 
       <a ng-if="tutorialLink" class="btn"
-         ng-href="{{tutorialLink}}" target="_blank">
+         ng-href="{{tutorialLink}}" target="_blank"
+         ng-click="trackTutorialLinkClicked(pipelineConfig)">
         <i class="fa fa-book"></i>
         <span>Tutorial</span>
       </a>
