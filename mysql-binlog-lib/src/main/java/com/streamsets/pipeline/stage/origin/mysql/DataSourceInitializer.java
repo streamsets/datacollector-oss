@@ -21,8 +21,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.pipeline.api.ConfigIssue;
 import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnectionGroups;
+import com.streamsets.pipeline.lib.jdbc.connection.MySQLConnection;
 import com.streamsets.pipeline.stage.origin.mysql.filters.Filter;
 import com.streamsets.pipeline.stage.origin.mysql.filters.Filters;
 import com.streamsets.pipeline.stage.origin.mysql.filters.IgnoreTableFilter;
@@ -34,65 +33,112 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeoutException;
 
 public class DataSourceInitializer {
 
   private static final Logger LOG = LoggerFactory.getLogger(MysqlSource.class);
 
+  private static final String PROTO_PREFIX = "jdbc:";
+  private static final int MYSQL_DEFAULT_PORT = 3306;
   private static final List<String> MYSQL_DRIVERS  = ImmutableList.of(
       "com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver"
   );
 
-  public final List<Stage.ConfigIssue> issues;
-  public final Integer port;
-  public final Integer serverId;
+  public final DataSourceConfig dataSourceConfig;
   public final HikariDataSource dataSource;
   public final Filter eventFilter;
   public final SourceOffsetFactory offsetFactory;
+  public final List<Stage.ConfigIssue> issues;
 
   public DataSourceInitializer(
       final String connectionPrefix,
-      final MySQLBinLogConnection connection,
+      final MySQLConnection connection,
       final String configPrefix,
       final MySQLBinLogConfig config,
       final ConfigIssueFactory configIssueFactory
   ) {
     List<ConfigIssue> issues = new ArrayList<>();
 
-    port = getPort(connection);
+    this.dataSourceConfig = createDataSourceConfig(configPrefix, connection, config, configIssueFactory, issues);
 
-    // ServerId can be empty. Validate if provided.
-    serverId = getServerId(config);
-
-    checkConnection(port, serverId, connectionPrefix, connection, config, configIssueFactory, issues);
+    checkConnection(connectionPrefix, config, configIssueFactory, issues);
 
     eventFilter = createEventFilter(configPrefix, config, configIssueFactory, issues);
 
     loadDrivers();
 
     // connect to mysql
-    dataSource = createDataSource(connection, configIssueFactory, issues);
+    dataSource = createDataSource(configIssueFactory, issues);
     offsetFactory = createOffsetFactory(configIssueFactory, issues);
 
     this.issues = Collections.unmodifiableList(issues);
   }
 
-  private Integer getPort(final MySQLBinLogConnection connection) {
-    Integer result = null;
+  private DataSourceConfig createDataSourceConfig(
+      final String configPrefix,
+      final MySQLConnection connection,
+      final MySQLBinLogConfig config,
+      final ConfigIssueFactory configIssueFactory,
+      final List<ConfigIssue> issues
+  ) {
+    DataSourceConfig dsc = new DataSourceConfig(null, null, null, 0, false, 0);
 
-    // Validate the port number
-    try {
-      result = Integer.valueOf(connection.port);
-    } catch (final NumberFormatException ex) {
-      throw new NumberFormatException("Port number must be numeric");
+    URI url = createURI(configPrefix, connection, configIssueFactory, issues);
+    if (url != null) {
+      dsc = new DataSourceConfig(
+          url.getHost(),
+          connection.username.get(),
+          connection.password.get(),
+          url.getPort() == -1 ? MYSQL_DEFAULT_PORT : url.getPort(),
+          isSSLEnabled(url.getQuery()),
+          getServerId(config)
+      );
     }
 
-    return result;
+    return dsc;
+  }
+
+  private URI createURI(
+      final String configPrefix,
+      final MySQLConnection connection,
+      final ConfigIssueFactory configIssueFactory,
+      final List<ConfigIssue> issues
+  ) {
+    URI url = null;
+    if (connection.connectionString.startsWith(PROTO_PREFIX)) {
+      try {
+        url = new URI(connection.connectionString.substring(PROTO_PREFIX.length()));
+      } catch (final URISyntaxException ex) {
+        issues.add(configIssueFactory.create(
+            MySQLBinLogConnectionGroups.MYSQL.name(), configPrefix + "connectionString", Errors.MYSQL_011, ex.getMessage(), ex
+        ));
+      }
+    } else {
+      issues.add(configIssueFactory.create(
+          MySQLBinLogConnectionGroups.MYSQL.name(), configPrefix + "connectionString", Errors.MYSQL_011, connection.connectionString
+      ));
+    }
+    return url;
+  }
+
+  private boolean isSSLEnabled(final String query) {
+    String q = Optional.ofNullable(query).orElse("");
+    q = q.startsWith("?") ? q.substring(1) : q;
+    return Arrays.stream(q.split("&", -1))
+        .anyMatch(p -> {
+          String s = p.toLowerCase();
+          return s.equals("usessl") || s.equals("requiressl")
+              || s.equals("usessl=true") || s.equals("requiressl=true");
+        });
   }
 
   private Integer getServerId(final MySQLBinLogConfig config) {
@@ -186,18 +232,17 @@ public class DataSourceInitializer {
   }
 
   private HikariDataSource createDataSource(
-      final MySQLBinLogConnection connection,
       final ConfigIssueFactory configIssueFactory,
       final List<ConfigIssue> issues
   ) {
     HikariDataSource result = null;
 
     HikariConfig hikariConfig = new HikariConfig();
-    hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", connection.hostname, port));
-    hikariConfig.setUsername(connection.username.get());
-    hikariConfig.setPassword(connection.password.get());
+    hikariConfig.setJdbcUrl(String.format("jdbc:mysql://%s:%d", dataSourceConfig.hostname, dataSourceConfig.port));
+    hikariConfig.setUsername(dataSourceConfig.username);
+    hikariConfig.setPassword(dataSourceConfig.password);
     hikariConfig.setReadOnly(true);
-    hikariConfig.addDataSourceProperty("useSSL", connection.useSsl);
+    hikariConfig.addDataSourceProperty("useSSL", dataSourceConfig.useSSL);
     try {
       result = new HikariDataSource(hikariConfig);
     } catch (final HikariPool.PoolInitializationException e) {
@@ -235,10 +280,7 @@ public class DataSourceInitializer {
   }
 
   private void checkConnection(
-      final int port,
-      final int serverId,
       final String connectionPrefix,
-      final MySQLBinLogConnection connection,
       final MySQLBinLogConfig config,
       final ConfigIssueFactory configIssueFactory,
       final List<ConfigIssue> issues
@@ -246,14 +288,14 @@ public class DataSourceInitializer {
     // check if binlog client connection is possible
     // we don't reuse this client later on, it is used just to check that client can connect, it
     // is immediately closed after connection.
-    BinaryLogClient client = createBinaryLogClient(connection, port, serverId);
+    BinaryLogClient client = createBinaryLogClient();
     try {
       client.setKeepAlive(false);
       client.connect(config.connectTimeout);
     } catch (final IOException | TimeoutException ex) {
       LOG.error("Error connecting to MySql binlog: {}", ex.getMessage(), ex);
       issues.add(configIssueFactory.create(
-          MySQLBinLogConnectionGroups.MYSQL.name(), connectionPrefix + "hostname", Errors.MYSQL_003, ex.getMessage(), ex
+          MySQLBinLogConnectionGroups.MYSQL.name(), connectionPrefix + "connectionString", Errors.MYSQL_003, ex.getMessage(), ex
       ));
     } finally {
       try {
@@ -264,23 +306,20 @@ public class DataSourceInitializer {
     }
   }
 
-  private BinaryLogClient createBinaryLogClient(
-      final MySQLBinLogConnection connection,
-      final int port,
-      final int serverId
+  public BinaryLogClient createBinaryLogClient(
   ) {
     BinaryLogClient binLogClient = new BinaryLogClient(
-        connection.hostname,
-        port,
-        connection.username.get(),
-        connection.password.get()
+        dataSourceConfig.hostname,
+        dataSourceConfig.port,
+        dataSourceConfig.username,
+        dataSourceConfig.password
     );
-    if (connection.useSsl) {
+    if (dataSourceConfig.useSSL) {
       binLogClient.setSSLMode(SSLMode.REQUIRED);
     } else {
       binLogClient.setSSLMode(SSLMode.DISABLED);
     }
-    binLogClient.setServerId(serverId);
+    binLogClient.setServerId(dataSourceConfig.serverId);
     return binLogClient;
   }
 

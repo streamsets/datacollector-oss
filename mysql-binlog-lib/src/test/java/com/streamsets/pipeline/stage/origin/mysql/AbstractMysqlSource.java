@@ -20,9 +20,9 @@ import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.lib.jdbc.connection.MySQLConnection;
 import com.streamsets.pipeline.sdk.SourceRunner;
 import com.streamsets.pipeline.sdk.StageRunner;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.hamcrest.Matchers;
@@ -49,8 +49,6 @@ import java.util.Vector;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static com.streamsets.pipeline.api.Field.create;
 import static com.streamsets.pipeline.api.Field.createDate;
@@ -106,7 +104,7 @@ public abstract class AbstractMysqlSource {
   @Test
   public void shouldFailWhenUCannotConnect() throws Exception {
     MysqlDSource def = createConfig("root");
-    def.connection.port = "1";
+    def.connection.connectionString = "jdbc:mysql://" + mysql.getContainerIpAddress() +  ":1";
     MysqlSource source = createMysqlSource(def.connection, def.config);
     runner = new SourceRunner.Builder(MysqlDSource.class, source)
         .addOutputLane(LANE)
@@ -675,14 +673,10 @@ public abstract class AbstractMysqlSource {
 
   private int nextServerId = 1;
   protected MysqlDSource createConfig(String username) {
-    MySQLBinLogConnection connection = new MySQLBinLogConnection();
+    MySQLConnection connection = new MySQLConnection();
     connection.username = () -> username;
     connection.password = () -> MYSQL_PASSWORD;
-    Matcher matcher = Pattern.compile("jdbc:mysql://(.*):(\\d+)/test")
-        .matcher(getJdbcUrl());
-    matcher.find();
-    connection.port = matcher.group(2);
-    connection.hostname = matcher.group(1);
+    connection.connectionString = getJdbcUrl();
 
     MySQLBinLogConfig config = new MySQLBinLogConfig();
     config.serverId = String.valueOf(SERVER_ID);
@@ -698,7 +692,7 @@ public abstract class AbstractMysqlSource {
     return source;
   }
 
-  protected MysqlSource createMysqlSource(final MySQLBinLogConnection conn, final MySQLBinLogConfig config) {
+  protected MysqlSource createMysqlSource(final MySQLConnection conn, final MySQLBinLogConfig config) {
     return new MysqlSource() {
       @Override
       public MySQLBinLogConfig getConfig() {
@@ -706,7 +700,7 @@ public abstract class AbstractMysqlSource {
       }
 
       @Override
-      public MySQLBinLogConnection getConnection() {
+      public MySQLConnection getConnection() {
         return conn;
       }
     };

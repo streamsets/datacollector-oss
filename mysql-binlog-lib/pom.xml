@@ -90,7 +90,7 @@
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-mysql-binlog-connection</artifactId>
+      <artifactId>streamsets-datacollector-jdbc-connection</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

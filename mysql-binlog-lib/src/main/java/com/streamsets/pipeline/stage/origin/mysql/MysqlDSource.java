@@ -24,10 +24,9 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnectionGroups;
+import com.streamsets.pipeline.lib.jdbc.connection.MySQLConnection;
 
-import static com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection.TYPE;
+import static com.streamsets.pipeline.lib.jdbc.connection.MySQLConnection.TYPE;
 
 @StageDef(
     version = 3,
@@ -68,13 +67,13 @@ public class MysqlDSource extends MysqlSource {
           )
       }
   )
-  public MySQLBinLogConnection connection = new MySQLBinLogConnection();
+  public MySQLConnection connection = new MySQLConnection();
 
   @ConfigDefBean
   public MySQLBinLogConfig config = new MySQLBinLogConfig();
 
   @Override
-  public MySQLBinLogConnection getConnection() {
+  public MySQLConnection getConnection() {
     return connection;
   }
 

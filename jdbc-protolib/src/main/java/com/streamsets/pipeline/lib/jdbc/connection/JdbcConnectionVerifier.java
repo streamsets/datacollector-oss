@@ -20,22 +20,13 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
-import com.streamsets.pipeline.api.ConnectionVerifier;
 import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
+import com.streamsets.pipeline.lib.jdbc.connection.common.AbstractJdbcConnection;
 import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
 
 @StageDef(
     version = 1,
@@ -51,9 +42,7 @@ import java.util.Properties;
     connectionFieldName = "connection",
     connectionSelectionFieldName = "connectionSelection"
 )
-public class JdbcConnectionVerifier extends ConnectionVerifier {
-
-  private static final Logger LOG = LoggerFactory.getLogger(JdbcConnection.class);
+public class JdbcConnectionVerifier extends AbstractConnectionVerifier {
 
   @ConfigDef(
       required = true,
@@ -76,21 +65,7 @@ public class JdbcConnectionVerifier extends ConnectionVerifier {
   public JdbcConnection connection;
 
   @Override
-  protected List<ConfigIssue> initConnection() {
-    List<ConfigIssue> issues = new ArrayList<>();
-
-    Properties connectionProps = new Properties();
-    if (connection.useCredentials) {
-      connectionProps.put("user", connection.username.get());
-      connectionProps.put("password", connection.password.get());
-    }
-
-    try (Connection conn = DriverManager.getConnection(connection.connectionString, connectionProps)) {
-      LOG.debug("Successfully connected to the database at {}", connection.connectionString);
-    } catch (Exception e) {
-      LOG.debug(JdbcErrors.JDBC_00.getMessage(), connection.connectionString, e.getMessage(), e);
-      issues.add(getContext().createConfigIssue("JDBC", "connection", JdbcErrors.JDBC_00, e.toString(), e));
-    }
-    return issues;
+  protected JdbcConnection getConnection() {
+    return connection;
   }
 }

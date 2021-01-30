@@ -29,6 +29,7 @@ public enum Errors implements ErrorCode {
   MYSQL_008("Include tables format error: {}"),
   MYSQL_009("Couldn't parse JSON column value: {}"),
   MYSQL_010("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
+  MYSQL_011("Connection string should be a valid URL {}, e.g. jdbc:mysql://<host>:<port>(/path)(?param1=value1&param2=value2...)"),
   ;
   private final String msg;
 

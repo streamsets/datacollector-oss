@@ -17,14 +17,13 @@ package com.streamsets.pipeline.stage.origin.mysql;
 
 import com.github.shyiko.mysql.binlog.BinaryLogClient;
 import com.github.shyiko.mysql.binlog.GtidSet;
-import com.github.shyiko.mysql.binlog.network.SSLMode;
 import com.github.shyiko.mysql.binlog.network.ServerException;
 import com.google.common.base.Throwables;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
+import com.streamsets.pipeline.lib.jdbc.connection.MySQLConnection;
 import com.streamsets.pipeline.stage.origin.mysql.filters.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,7 +67,7 @@ public abstract class MysqlSource extends BaseSource {
   });
 
   public abstract MySQLBinLogConfig getConfig();
-  public abstract MySQLBinLogConnection getConnection();
+  public abstract MySQLConnection getConnection();
 
   @Override
   protected List<ConfigIssue> init() {
@@ -85,22 +84,6 @@ public abstract class MysqlSource extends BaseSource {
     issues.addAll(dataSourceInitializer.issues);
 
     return issues;
-  }
-
-  private BinaryLogClient createBinaryLogClient() {
-    BinaryLogClient binLogClient = new BinaryLogClient(
-        getConnection().hostname,
-        dataSourceInitializer.port,
-        getConnection().username.get(),
-        getConnection().password.get()
-    );
-    if (getConnection().useSsl) {
-      binLogClient.setSSLMode(SSLMode.REQUIRED);
-    } else {
-      binLogClient.setSSLMode(SSLMode.DISABLED);
-    }
-    binLogClient.setServerId(dataSourceInitializer.serverId);
-    return binLogClient;
   }
 
   @Override
@@ -128,7 +111,7 @@ public abstract class MysqlSource extends BaseSource {
       // connect consumer handling all events to client
       MysqlSchemaRepository schemaRepository = new MysqlSchemaRepository(dataSourceInitializer.dataSource);
       eventBuffer = new EventBuffer(getConfig().maxBatchSize);
-      client = createBinaryLogClient();
+      client = dataSourceInitializer.createBinaryLogClient();
       consumer = new BinaryLogConsumer(schemaRepository, eventBuffer, client);
 
       connectClient(client, lastSourceOffset);

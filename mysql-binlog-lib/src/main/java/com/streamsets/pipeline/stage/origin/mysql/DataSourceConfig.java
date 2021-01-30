@@ -15,22 +15,27 @@
  */
 package com.streamsets.pipeline.stage.origin.mysql;
 
-import com.streamsets.pipeline.api.ConfigIssue;
-import com.streamsets.pipeline.api.Source.Context;
+public class DataSourceConfig {
+  public final String hostname;
+  public final String username;
+  public final String password;
+  public final int port;
+  public final boolean useSSL;
+  public final int serverId;
 
-public class ConfigIssueFactory {
-  private final Context context;
-
-  public ConfigIssueFactory(final Context context) {
-    this.context = context;
-  }
-
-  public ConfigIssue create(
-      final String name,
-      final String config,
-      final Errors error,
-      final Object... args
+  public DataSourceConfig(
+      final String hostname,
+      final String username,
+      final String password,
+      final int port,
+      final boolean useSSL,
+      final int serverId
   ) {
-    return context.createConfigIssue(name, config, error, args);
+    this.hostname = hostname;
+    this.username = username;
+    this.password = password;
+    this.port = port;
+    this.useSSL = useSSL;
+    this.serverId = serverId;
   }
 }

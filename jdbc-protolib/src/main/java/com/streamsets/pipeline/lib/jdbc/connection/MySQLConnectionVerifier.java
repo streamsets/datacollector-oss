@@ -13,42 +13,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.stage.origin.mysql;
+package com.streamsets.pipeline.lib.jdbc.connection;
 
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
 import com.streamsets.pipeline.api.ConnectionDef;
-import com.streamsets.pipeline.api.ConnectionVerifier;
 import com.streamsets.pipeline.api.ConnectionVerifierDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnection;
-import com.streamsets.pipeline.stage.connection.mysqlbinlog.MySQLBinLogConnectionGroups;
-
-import java.util.List;
+import com.streamsets.pipeline.lib.jdbc.connection.common.AbstractJdbcConnection;
+import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
+import com.streamsets.pipeline.lib.jdbc.multithread.DatabaseVendor;
 
 @StageDef(
     version = 1,
-    label = "MySQL Binary Log Connection Verifier",
+    label = "MySQL Connection Verifier",
     description = "Verifies a connection to a MySQL server",
-    upgraderDef = "upgrader/MySQLBinLogConnectionVerifier.yaml",
+    upgraderDef = "upgrader/MySQLConnectionVerifierUpgrader.yaml",
     onlineHelpRefUrl = ""
 )
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
-@ConfigGroups(MySQLBinLogConnectionGroups.class)
+@ConfigGroups(JdbcConnectionGroups.class)
 @ConnectionVerifierDef(
-    verifierType = MySQLBinLogConnection.TYPE,
+    verifierType = MySQLConnection.TYPE,
     connectionFieldName = "connection",
     connectionSelectionFieldName = "connectionSelection"
 )
-public class MySQLBinLogConnectionVerifier extends ConnectionVerifier {
+public class MySQLConnectionVerifier extends AbstractConnectionVerifier {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      connectionType = MySQLBinLogConnection.TYPE,
+      connectionType = MySQLConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
       label = "Connection"
   )
@@ -63,31 +61,20 @@ public class MySQLBinLogConnectionVerifier extends ConnectionVerifier {
           )
       }
   )
-  public MySQLBinLogConnection connection;
-
-  private DataSourceInitializer initializer;
+  public MySQLConnection connection;
 
   @Override
-  protected List<ConfigIssue> initConnection() {
-    // We will just use default values for some parameters which are not included in the connection itself.
-    MySQLBinLogConfig config = new MySQLBinLogConfig();
-    config.connectTimeout = 5000;
-    config.serverId = "999";
-
-    initializer = new DataSourceInitializer(
-        "",
-        connection,
-        "",
-        config,
-        new ConfigIssueFactory(getContext())
-    );
-    return initializer.issues;
+  protected MySQLConnection getConnection() {
+    return connection;
   }
 
   @Override
-  protected void destroyConnection() {
-    if (initializer != null) {
-      initializer.destroy();
-    }
+  protected String getType() {
+    return MySQLConnection.TYPE;
+  }
+
+  @Override
+  protected DatabaseVendor getDatabaseVendor() {
+    return DatabaseVendor.MYSQL;
   }
 }
