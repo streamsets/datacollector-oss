@@ -220,6 +220,6 @@ public class TestKafkaSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
-    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, "PLAIN");
   }
 }

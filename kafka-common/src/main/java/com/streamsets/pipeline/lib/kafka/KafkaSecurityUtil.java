@@ -18,6 +18,7 @@ package com.streamsets.pipeline.lib.kafka;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityConfig;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityOptions;
+import com.streamsets.pipeline.lib.kafka.connection.SaslMechanisms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,9 +68,8 @@ public class KafkaSecurityUtil {
 
       // Kerberos Options
       if (securityConfig.securityOption.isOneOf(KafkaSecurityOptions.SASL_PLAINTEXT, KafkaSecurityOptions.SASL_SSL)) {
-        if (securityConfig.saslMechanism) {
-          configMap.put(SASL_MECHANISM, "PLAIN");
-        } else {
+        configMap.put(SASL_MECHANISM, securityConfig.saslMechanism.getMechanism());
+        if (securityConfig.saslMechanism.isOneOf(SaslMechanisms.GSSAPI)) {
           configMap.put(KRB_SERVICE_NAME, securityConfig.kerberosServiceName);
         }
       }

@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.KafkaSecurityUpgradeHelper;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
+import com.streamsets.pipeline.lib.kafka.connection.SaslMechanisms;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -137,6 +138,6 @@ public class TestMultiKafkaSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
-    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, "PLAIN");
   }
 }

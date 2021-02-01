@@ -171,7 +171,7 @@ upgrades:
           lookForName: temp.upgrade.kafka-security.mechanism
           ifValueMatches: "PLAIN"
           name: conf.connectionConfig.connection.securityConfig.saslMechanism
-          value: true
+          value: PLAIN
       # remove the temp configs we created
       - removeConfigs:
           namePattern: temp.upgrade.kafka-security.mechanism

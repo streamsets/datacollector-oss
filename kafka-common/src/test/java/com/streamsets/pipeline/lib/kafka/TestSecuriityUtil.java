@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityConfig;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaSecurityOptions;
 import com.streamsets.pipeline.lib.kafka.connection.KeystoreTypes;
+import com.streamsets.pipeline.lib.kafka.connection.SaslMechanisms;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,6 +53,8 @@ public class TestSecuriityUtil {
   private static final String ENABLED_PROTOCOLS_TEST = "ssl.enabled.protocols.test";
   private static final String SECURITY_PROTOCOL = "security.protocol";
   private static final String SECURITY_PROTOCOL_TEST = "security.protocol.test";
+  private static final String SASL_MECHANISM = "sasl.mechanism";
+  private static final String GSSAPI = "GSSAPI";
 
   private KafkaSecurityConfig securityConfig;
   private Map<String, String> configMap;
@@ -131,19 +134,23 @@ public class TestSecuriityUtil {
   @Test
   public void testAddSecurityConfigsSaslPlaintext() {
     securityConfig.securityOption = KafkaSecurityOptions.SASL_PLAINTEXT;
+    securityConfig.saslMechanism = SaslMechanisms.GSSAPI;
     KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
-    Assert.assertEquals(2, configMap.size());
+    Assert.assertEquals(3, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SASL_PLAINTEXT.getProtocol(), configMap.get(SECURITY_PROTOCOL));
     Assert.assertNotNull(configMap.get(KRB_SERVICE_NAME));
-    Assert.assertEquals(configMap.get(KRB_SERVICE_NAME), KRB_SERVICE_NAME_TEST);
+    Assert.assertEquals(KRB_SERVICE_NAME_TEST, configMap.get(KRB_SERVICE_NAME));
+    Assert.assertNotNull(configMap.get(SASL_MECHANISM));
+    Assert.assertEquals(GSSAPI, configMap.get(SASL_MECHANISM));
   }
 
   @Test
   public void testAddSecurityConfigsSaslSsl() {
     securityConfig.securityOption = KafkaSecurityOptions.SASL_SSL;
+    securityConfig.saslMechanism = SaslMechanisms.GSSAPI;
     KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
-    Assert.assertEquals(6, configMap.size());
+    Assert.assertEquals(7, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SASL_SSL.getProtocol(), configMap.get(SECURITY_PROTOCOL));
     Assert.assertNotNull(configMap.get(ENABLED_PROTOCOLS));
@@ -156,6 +163,8 @@ public class TestSecuriityUtil {
     Assert.assertEquals(configMap.get(TRUSTSTORE_TYPE), TRUSTSTORE_TYPE_TEST.name());
     Assert.assertNotNull(configMap.get(KRB_SERVICE_NAME));
     Assert.assertEquals(configMap.get(KRB_SERVICE_NAME), KRB_SERVICE_NAME_TEST);
+    Assert.assertNotNull(configMap.get(SASL_MECHANISM));
+    Assert.assertEquals(GSSAPI, configMap.get(SASL_MECHANISM));
   }
 
   @Test

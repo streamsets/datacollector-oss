@@ -37,17 +37,18 @@ public class KafkaSecurityConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use SASL Mechanism as PLAIN",
-      description = "SASL configuration allows between GSSAPI and PLAIN mechisnms. GSSAPI by default.",
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "GSSAPI",
+      label = "SASL Mechanism",
+      description = "SASL mechanism to use",
       displayPosition = 15,
       dependencies = {
           @Dependency(configName = "securityOption", triggeredByValues = {"SASL_PLAINTEXT", "SASL_SSL"})
       },
       group = "#0"
   )
-  public boolean saslMechanism;
+  @ValueChooserModel(SaslMechanismsChooserValues.class)
+  public SaslMechanisms saslMechanism;
 
   @ConfigDef(
       required = true,
@@ -58,7 +59,7 @@ public class KafkaSecurityConfig {
       displayPosition = 20,
       dependencies = {
           @Dependency(configName = "securityOption", triggeredByValues = {"SASL_PLAINTEXT", "SASL_SSL"}),
-          @Dependency(configName = "saslMechanism", triggeredByValues = {"false"})
+          @Dependency(configName = "saslMechanism", triggeredByValues = {"GSSAPI"})
       },
       group = "#0"
   )
@@ -74,7 +75,7 @@ public class KafkaSecurityConfig {
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "securityOption", triggeredByValues = {"SASL_PLAINTEXT", "SASL_SSL"}),
-          @Dependency(configName = "saslMechanism", triggeredByValues = {"false"})
+          @Dependency(configName = "saslMechanism", triggeredByValues = {"GSSAPI"})
       },
       group = "#0"
   )
@@ -90,8 +91,7 @@ public class KafkaSecurityConfig {
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "securityOption", triggeredByValues = {"SASL_PLAINTEXT", "SASL_SSL"}),
-          @Dependency(configName = "provideKeytab", triggeredByValues = {"true"}),
-          @Dependency(configName = "saslMechanism", triggeredByValues = {"false"})
+          @Dependency(configName = "provideKeytab", triggeredByValues = {"true"})
       },
       group = "#0",
       upload = ConfigDef.Upload.BASE64
@@ -108,8 +108,7 @@ public class KafkaSecurityConfig {
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       dependencies = {
           @Dependency(configName = "securityOption", triggeredByValues = {"SASL_PLAINTEXT", "SASL_SSL"}),
-          @Dependency(configName = "provideKeytab", triggeredByValues = {"true"}),
-          @Dependency(configName = "saslMechanism", triggeredByValues = {"false"})
+          @Dependency(configName = "provideKeytab", triggeredByValues = {"true"})
       },
       group = "#0"
   )
