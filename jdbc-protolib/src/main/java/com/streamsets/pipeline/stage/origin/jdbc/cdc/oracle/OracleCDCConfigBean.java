@@ -249,7 +249,7 @@ public class OracleCDCConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
-      label = "Use PEG Parser (beta)",
+      label = "Use PEG Parser",
       description = "Optionally use the alternate parser to enhance performance",
       displayPosition = 8,
       group = "ADVANCED",
