@@ -23,12 +23,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.19.1</version>
+    <version>3.19.1-0028</version>
     <relativePath>../root</relativePath>
   </parent>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector-sdc-kafka-api</artifactId>
-  <version>3.19.1</version>
+  <version>3.19.1-0028</version>
   <description>StreamSets Data Collector SDC Kafka API</description>
   <name>StreamSets Data Collector SDC kafka API</name>
   <packaging>jar</packaging>
