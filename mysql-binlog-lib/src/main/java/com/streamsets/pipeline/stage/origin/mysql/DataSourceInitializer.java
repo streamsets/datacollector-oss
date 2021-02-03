@@ -33,8 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,12 +42,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeoutException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataSourceInitializer {
 
   private static final Logger LOG = LoggerFactory.getLogger(MysqlSource.class);
 
-  private static final String PROTO_PREFIX = "jdbc:";
+  private static final Pattern MYSQL_PROTO_PREFIX_PATTERN = Pattern.compile("^jdbc:mysql://");
+  private static final String FILE_PROTO_PREFIX = "file://";
   private static final int MYSQL_DEFAULT_PORT = 3306;
   private static final List<String> MYSQL_DRIVERS  = ImmutableList.of(
       "com.mysql.cj.jdbc.Driver", "com.mysql.jdbc.Driver"
@@ -92,7 +95,7 @@ public class DataSourceInitializer {
   ) {
     DataSourceConfig dsc = new DataSourceConfig(null, null, null, 0, false, 0);
 
-    URI url = createURI(configPrefix, connection, configIssueFactory, issues);
+    URL url = createURL(configPrefix, connection, configIssueFactory, issues);
     if (url != null) {
       dsc = new DataSourceConfig(
           url.getHost(),
@@ -107,17 +110,23 @@ public class DataSourceInitializer {
     return dsc;
   }
 
-  private URI createURI(
+  private URL createURL(
       final String configPrefix,
       final MySQLConnection connection,
       final ConfigIssueFactory configIssueFactory,
       final List<ConfigIssue> issues
   ) {
-    URI url = null;
-    if (connection.connectionString.startsWith(PROTO_PREFIX)) {
+    URL url = null;
+
+    Matcher matcher = MYSQL_PROTO_PREFIX_PATTERN.matcher(connection.connectionString);
+    if (matcher.find()) {
       try {
-        url = new URI(connection.connectionString.substring(PROTO_PREFIX.length()));
-      } catch (final URISyntaxException ex) {
+        // We cannot use the connection string as is,
+        // since jdbc:mysql protocol URL handler is highly impossible to be installed (if exists at all)
+        // So we will replace jdbc:mysql: with file: (which is available by default)
+        // to parse the connection string and to extract later URL elements.
+        url = new URL(matcher.replaceFirst(FILE_PROTO_PREFIX));
+      } catch (final MalformedURLException ex) {
         issues.add(configIssueFactory.create(
             MySQLBinLogConnectionGroups.MYSQL.name(), configPrefix + "connectionString", Errors.MYSQL_011, ex.getMessage(), ex
         ));
