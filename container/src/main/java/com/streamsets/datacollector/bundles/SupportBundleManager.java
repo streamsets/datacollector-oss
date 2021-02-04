@@ -161,6 +161,15 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
           continue;
         }
 
+        // Initialize the generator
+        try {
+          LOG.debug("Initializing generator {}", bundleClass.getName());
+          generator.init(this);
+        } catch (Throwable t) {
+          LOG.error("Can't initialize generator {}", bundleClass.getName(), t);
+          continue;
+        }
+
         // We have all the metadata and an instance of the actual generator
         BundleContentGeneratorDefinition definition = new BundleContentGeneratorDefinition(
           bundleClass,
@@ -189,6 +198,21 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     } catch (IOException e) {
       LOG.error("Can't load redactor configuration, bundles will not be redacted", e);
       redactor = StringRedactor.createEmpty();
+    }
+  }
+
+  @Override
+  protected void stopTask() {
+    LOG.info("Stopping Support Bundle Manager");
+    for(Map.Entry<BundleContentGeneratorDefinition, BundleContentGenerator> entry : generators.entrySet()) {
+      String generatorId = entry.getKey().getId();
+
+      try {
+        LOG.debug("Destroying generator {}", generatorId);
+        entry.getValue().destroy(this);
+      } catch (Throwable t) {
+        LOG.error("Can't destroy generator {}", generatorId, t);
+      }
     }
   }
 

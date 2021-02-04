@@ -23,10 +23,22 @@ import java.io.IOException;
 public interface BundleContentGenerator {
 
   /**
+   * Initialize the generator (anything that is required)
+   */
+  public default void init(BundleContext context) {}
+
+  /**
    * Generate the actual content.
    *
    * @param context Context object for this particular bundle.
    * @param writer Output writer where the results should written to
    */
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException;
+
+
+  /**
+   * Destroy the generator (clean any lingering stuff).
+   */
+  public default void destroy(BundleContext context) {}
+
 }
