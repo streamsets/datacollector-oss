@@ -18,7 +18,6 @@ package com.streamsets.datacollector.bundles;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.execution.PipelineStateStore;
 import com.streamsets.datacollector.execution.SnapshotStore;
@@ -55,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -62,7 +62,6 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -92,7 +91,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   /**
    * List describing auto discovered content generators.
    */
-  private List<BundleContentGeneratorDefinition> definitions;
+  private LinkedHashMap<BundleContentGeneratorDefinition, BundleContentGenerator> generators;
 
   /**
    * Redactor to remove sensitive data.
@@ -127,7 +126,7 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
   protected void initTask() {
     Set<String> ids = new HashSet<>();
 
-    ImmutableList.Builder builder = new ImmutableList.Builder();
+    this.generators = new LinkedHashMap<>();
     try {
       InputStream generatorResource = Thread.currentThread().getContextClassLoader().getResourceAsStream(SupportBundleContentGeneratorProcessor.RESOURCE_NAME);
       BufferedReader reader = new BufferedReader(new InputStreamReader(generatorResource));
@@ -148,11 +147,22 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
 
         if(ids.contains(id)) {
           LOG.error("Ignoring duplicate id {} for generator {}.", id, bundleClass.getName());
+          continue;
         } else {
           ids.add(id);
         }
 
-        builder.add(new BundleContentGeneratorDefinition(
+        BundleContentGenerator generator;
+        try {
+          LOG.debug("Generating new instance of {}", bundleClass.getName());
+          generator = bundleClass.newInstance();
+        } catch (Throwable t) {
+          LOG.error("Can't create instance of {}", bundleClass.getName(), t);
+          continue;
+        }
+
+        // We have all the metadata and an instance of the actual generator
+        BundleContentGeneratorDefinition definition = new BundleContentGeneratorDefinition(
           bundleClass,
           def.name(),
           id,
@@ -160,13 +170,18 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
           def.version(),
           def.enabledByDefault(),
           def.order()
-        ));
+        );
+
+        generators.put(definition, generator);
       }
     } catch (Exception e) {
       LOG.error("Was not able to initialize support bundle generator classes.", e);
     }
 
-    definitions = builder.build();
+    // We need to sort all generators by their described order
+    this.generators = generators.entrySet().stream()
+        .sorted(Comparator.comparingInt(a -> a.getKey().getOrder()))
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> b, LinkedHashMap::new));
 
     // Create shared instance of redactor
     try {
@@ -181,21 +196,19 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
    * Returns immutable list with metadata of registered content generators.
    */
   public List<BundleContentGeneratorDefinition> getContentDefinitions() {
-    return definitions;
+    return new ArrayList<>(generators.keySet());
   }
 
   /**
    * Return InputStream from which a new generated resource bundle can be retrieved.
    */
   public SupportBundle generateNewBundle(List<String> generatorNames, BundleType bundleType) throws IOException {
-    List<BundleContentGeneratorDefinition> defs = getRequestedDefinitions(generatorNames);
-
     PipedInputStream inputStream = new PipedInputStream();
     PipedOutputStream outputStream = new PipedOutputStream();
     inputStream.connect(outputStream);
     ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
 
-    executor.submit(() -> generateNewBundleInternal(defs, bundleType, zipOutputStream));
+    executor.submit(() -> generateNewBundleInternal(generatorNames, bundleType, zipOutputStream));
 
     String bundleName = generateBundleName(bundleType);
     String bundleKey = generateBundleDate(bundleType) + "/" + bundleName;
@@ -242,26 +255,8 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
     return builder.toString();
   }
 
-  /**
-   * Orchestrate what definitions should be used for this bundle.
-   *
-   * Either get all definitions that should be used by default or only those specified in the generators argument.
-   */
-  private List<BundleContentGeneratorDefinition> getRequestedDefinitions(List<String> generators) {
-    Stream<BundleContentGeneratorDefinition> stream = definitions.stream();
-    if(generators == null || generators.isEmpty()) {
-      // Filter out default generators
-      stream = stream.filter(BundleContentGeneratorDefinition::isEnabledByDefault);
-    } else {
-      stream = stream.filter(def -> generators.contains(def.getId()));
-    }
-    return stream
-      .sorted(Comparator.comparingInt(BundleContentGeneratorDefinition::getOrder))
-      .collect(Collectors.toList());
-  }
-
   private void generateNewBundleInternal(
-      List<BundleContentGeneratorDefinition> generatorDefinitions,
+      List<String> generatorNames,
       BundleType bundleType,
       ZipOutputStream zipStream
   ) {
@@ -269,8 +264,25 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
       Properties runGenerators = new Properties();
       Properties failedGenerators = new Properties();
 
-      // Let each individual content generator run to generate it's content
-      for(BundleContentGeneratorDefinition definition : generatorDefinitions) {
+      // Iterate over all generators (there is only a few of them)
+      for(Map.Entry<BundleContentGeneratorDefinition, BundleContentGenerator> entry: generators.entrySet()) {
+        BundleContentGeneratorDefinition definition = entry.getKey();
+        BundleContentGenerator generator = entry.getValue();
+
+        // Filter by those that are/aren't active
+        if(generatorNames.isEmpty()) {
+          // If no explicit generators are specified, we will only allow running those that are enabled by default
+          if(!definition.isEnabledByDefault()) {
+            continue;
+          }
+        } else {
+          // Otherwise we will continue only if the generator was specifically allowed
+          if(!generatorNames.contains(definition.getId())) {
+            continue;
+          }
+        }
+
+
         BundleWriterImpl writer = new BundleWriterImpl(
           definition.getKlass().getName(),
           redactor,
@@ -278,7 +290,6 @@ public class SupportBundleManager extends AbstractTask implements BundleContext 
         );
 
         try {
-          BundleContentGenerator generator = definition.createInstance();
           LOG.debug("Generating content with {} generator", definition.getKlass().getName());
           generator.generateContent(this, writer);
           runGenerators.put(definition.getKlass().getName(), String.valueOf(definition.getVersion()));
