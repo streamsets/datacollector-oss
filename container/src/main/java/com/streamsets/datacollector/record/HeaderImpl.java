@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.record;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
@@ -65,6 +66,11 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
   public HeaderImpl() {
     map = new HashMap<>();
     map.put(SOURCE_RECORD_ATTR, null);
+  }
+
+  @VisibleForTesting
+  Map<String, Object> getInternalHeaderMap() {
+    return map;
   }
 
   // for clone() purposes
@@ -328,6 +334,12 @@ public class HeaderImpl implements Record.Header, Predicate<String>, Cloneable, 
       header.getErrorTimestamp(),
       header.getErrorStackTrace()
     );
+    if(header.getErrorJobId() != null) {
+      setErrorJobId(header.getErrorJobId());
+    }
+    if(header.getErrorJobName() != null) {
+      setErrorJobName(header.getErrorJobName());
+    }
   }
 
   public void setErrorContext(String datacollector, String pipelineName) {
