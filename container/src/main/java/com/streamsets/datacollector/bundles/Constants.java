@@ -15,8 +15,6 @@
  */
 package com.streamsets.datacollector.bundles;
 
-import com.amazonaws.util.Base64;
-
 public final class Constants {
 
   // General
@@ -28,27 +26,6 @@ public final class Constants {
 
   public static final String CUSTOMER_ID_FILE = "customer.id";
   public static final String DEFAULT_CUSTOMER_ID = "";
-
-  /**
-   * Uploading support bundles directly
-   */
-  public static final String UPLOAD_ENABLED = "bundle.upload.enabled";
-  public static final boolean DEFAULT_UPLOAD_ENABLED = true;
-
-  public static final String UPLOAD_BUCKET = "bundle.upload.bucket";
-  public static final String DEFAULT_UPLOAD_BUCKET = "customer-support-bundles";
-
-  public static final String UPLOAD_ACCESS = "bundle.upload.access";
-  public static final String DEFAULT_UPLOAD_ACCESS = new String(Base64.decode("QUtJQUpaRzQzUExFSFNMNktMU0E="));
-
-  public static final String UPLOAD_SECRET = "bundle.upload.secret";
-  public static final String DEFAULT_UPLOAD_SECRET = new String(Base64.decode("MUFaNW1VSHNlbXJmYTd3TGNzWkRUdGJieitQNlI0bVVDSGVUMHVYbg=="));
-
-  public static final String UPLOAD_BUFFER_SIZE = "bundle.upload.buffer_size";
-  public static final int DEFAULT_UPLOAD_BUFFER_SIZE = 5 * 1024 * 1024; // 5MB, amazon lower limit
-
-  public static final String UPLOAD_ON_ERROR = "bundle.upload.on_error";
-  public static final boolean DEFAULT_UPLOAD_ON_ERROR = false;
 
   // Log Generator
 
@@ -77,4 +54,15 @@ public final class Constants {
    */
   public static final String PIPELINE_REDACT_REGEXP = "bundle.pipeline.redact_regexp";
   public static final String DEFAULT_PIPELINE_REDACT_REGEXP = "(.*[Pp]assword.*|.*AccessKey.*)";
+
+  // Sdc Info Generator
+
+  /**
+   * Historical ThreadDump configuration
+   */
+  public static final String THREAD_DUMP_COUNT = "bundle.info.thread_dump.count";
+  public static final int DEFAULT_THREAD_DUMP_COUNT = 5;
+
+  public static final String THREAD_DUMP_PERIOD = "bundle.info.thread_dump.period";
+  public static final int DEFAULT_THREAD_DUMP_PERIOD = 5 * 60; // 5 minutes
 }

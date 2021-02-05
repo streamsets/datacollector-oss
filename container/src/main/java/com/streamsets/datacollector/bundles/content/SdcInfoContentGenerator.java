@@ -20,6 +20,7 @@ import com.streamsets.datacollector.bundles.BundleContentGenerator;
 import com.streamsets.datacollector.bundles.BundleContentGeneratorDef;
 import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
+import com.streamsets.datacollector.bundles.Constants;
 import com.streamsets.datacollector.http.GaugeValue;
 import com.streamsets.datacollector.inspector.HealthInspectorManager;
 import com.streamsets.datacollector.inspector.model.HealthReport;
@@ -53,8 +54,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 @BundleContentGeneratorDef(
   name = "SDC Info",
@@ -64,10 +73,60 @@ import java.util.Set;
   // Run Info always first to get all metrics and such before rest of the generators might mess with them (memory, ...).
   order = Integer.MIN_VALUE
 )
-public class SdcInfoContentGenerator implements BundleContentGenerator {
+public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable {
   private static final Logger LOG = LoggerFactory.getLogger(BundleContentGenerator.class);
 
   private static final String FILE = "F";
+
+  // Maximal number of historical thread dumps to keep in memory
+  private int threadDumpMaxCount = 0;
+
+  /**
+   * Executor service (scheduler single threaded).
+   */
+  private ScheduledExecutorService executorService;
+
+  /**
+   * Future for the regular task to update our stats.
+   */
+  private ScheduledFuture future;
+
+  /**
+   * Internal structure to keep thread dumps (N of them) for the purpose of the bundle.
+   */
+  private static class HistoricalThreadInfo {
+    final public LocalDateTime timestamp;
+    final public ThreadInfo[] threadInfo;
+
+    HistoricalThreadInfo(ThreadInfo[] info) {
+      this.threadInfo = info;
+      this.timestamp = LocalDateTime.now();
+    }
+  }
+
+  private final LinkedList<HistoricalThreadInfo> historicalThreadInfos = new LinkedList<>();
+
+  @Override
+  public void init(BundleContext context) {
+    this.threadDumpMaxCount = context.getConfiguration().get(Constants.THREAD_DUMP_COUNT, Constants.DEFAULT_THREAD_DUMP_COUNT);
+
+    if(threadDumpMaxCount > 0) {
+      int period = context.getConfiguration().get(Constants.THREAD_DUMP_PERIOD, Constants.DEFAULT_THREAD_DUMP_PERIOD);
+      this.executorService = Executors.newSingleThreadScheduledExecutor();
+      this.future = executorService.scheduleAtFixedRate(this, period, period, TimeUnit.SECONDS);
+    }
+  }
+
+  @Override
+  public void destroy(BundleContext context) {
+    if(future != null) {
+      this.future.cancel(true);
+    }
+    if(executorService != null) {
+      this.executorService.shutdownNow();
+    }
+  }
+
   private static final String DIR = "D";
 
   @Override
@@ -111,16 +170,30 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
   }
 
   public void threadDump(BundleWriter writer) throws IOException {
+    // Write current thread dump (e.g. right now)
     writer.markStartOfFile("runtime/threads.txt");
+    ThreadInfo[] threads = getThreadInfos();
+    writer.write(threadInfosToString(threads));
+    writer.markEndOfFile();
 
-    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-    ThreadInfo[] threads = threadMXBean.dumpAllThreads(true, true);
+    // Write all historical thread dumps
+    synchronized (this.historicalThreadInfos) {
+      for(HistoricalThreadInfo history : historicalThreadInfos) {
+        writer.markStartOfFile("runtime/threads_" + history.timestamp + ".txt");
+        writer.write(threadInfosToString(history.threadInfo));
+        writer.markEndOfFile();
+      }
+    }
+  }
+
+  private String threadInfosToString(ThreadInfo[] threads) throws IOException {
+    StringBuilder sb = new StringBuilder();
 
     // Sadly we can't easily do info.toString() as the implementation is hardcoded to cut the stack trace only to 8
     // items which does not serve our purpose well. Hence we have custom implementation that prints entire stack trace
     // for all threads.
     for(ThreadInfo info: threads) {
-      StringBuilder sb = new StringBuilder("\"" + info.getThreadName() + "\"" + " Id=" + info.getThreadId() + " " + info.getThreadState());
+      sb.append("\"" + info.getThreadName() + "\"" + " Id=" + info.getThreadId() + " " + info.getThreadState());
       if (info.getLockName() != null) {
         sb.append(" on " + info.getLockName());
       }
@@ -177,11 +250,26 @@ public class SdcInfoContentGenerator implements BundleContentGenerator {
         }
       }
       sb.append('\n');
-
-      writer.write(sb.toString());
     }
 
-    writer.markEndOfFile();
+    return sb.toString();
+  }
+
+  private ThreadInfo[] getThreadInfos() {
+    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
+    return threadMXBean.dumpAllThreads(true, true);
+  }
+
+
+  @Override
+  public void run() {
+    ThreadInfo[] threads = getThreadInfos();
+    synchronized (this.historicalThreadInfos) {
+      this.historicalThreadInfos.add(new HistoricalThreadInfo(threads));
+      if(this.historicalThreadInfos.size() > this.threadDumpMaxCount) {
+        this.historicalThreadInfos.removeLast();
+      }
+    }
   }
 
   private void listDirectory(String configDir, String name, BundleWriter writer) throws IOException {
