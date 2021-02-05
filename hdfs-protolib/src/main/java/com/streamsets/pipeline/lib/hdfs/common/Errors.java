@@ -29,7 +29,7 @@ public enum Errors implements ErrorCode {
     /* LC - okay to add "valid" below? */
   HADOOPFS_04("The custom compression codec '{}' is not a valid compression codec"),
   HADOOPFS_05("The custom compression codec '{}' cannot be loaded: {}"),
-  HADOOPFS_06("The late record time limit expression '{}' is invalid: {}"),
+  HADOOPFS_06("The {} expression '{}' is invalid: {}"),
   HADOOPFS_07("The time driver expression '{}' is invalid: {}"),
   HADOOPFS_08("The maximum file size must be a positive integer or zero to opt out of the option"),
   HADOOPFS_09("The maximum records in a file must be a positive integer or zero to opt out of the option"),

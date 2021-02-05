@@ -778,6 +778,7 @@ public class HdfsTargetConfigBean extends HdfsBaseConfigBean {
               configGroup.name(),
               getConfigBeanPrefix() + configName,
               Errors.HADOOPFS_06,
+              configName,
               configuredValue,
               ex.toString(),
               ex
