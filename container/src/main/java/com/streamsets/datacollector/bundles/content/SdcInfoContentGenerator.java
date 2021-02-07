@@ -108,10 +108,10 @@ public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable
 
   @Override
   public void init(BundleContext context) {
-    this.threadDumpMaxCount = context.getConfiguration().get(Constants.THREAD_DUMP_COUNT, Constants.DEFAULT_THREAD_DUMP_COUNT);
+    this.threadDumpMaxCount = context.getConfiguration().get(Constants.HISTORICAL_THREAD_DUMP_COUNT, Constants.DEFAULT_HISTORICAL_THREAD_DUMP_COUNT);
 
     if(threadDumpMaxCount > 0) {
-      int period = context.getConfiguration().get(Constants.THREAD_DUMP_PERIOD, Constants.DEFAULT_THREAD_DUMP_PERIOD);
+      long period = context.getConfiguration().get(Constants.HISTORICAL_THREAD_DUMP_PERIOD, Constants.DEFAULT_HISTORICAL_THREAD_DUMP_PERIOD);
       this.executorService = Executors.newSingleThreadScheduledExecutor();
       this.future = executorService.scheduleAtFixedRate(this, period, period, TimeUnit.SECONDS);
     }
@@ -158,7 +158,7 @@ public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable
     writeJmx(writer);
 
     // Thread dump
-    threadDump(writer);
+    threadDump(context, writer);
 
     // Health Inspector dump
     HealthInspectorManager healthInspector = new HealthInspectorManager(
@@ -169,14 +169,29 @@ public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable
     writer.writeJson("health_inspector/report.json", healthReport);
   }
 
-  public void threadDump(BundleWriter writer) throws IOException {
-    // Write current thread dump (e.g. right now)
-    writer.markStartOfFile("runtime/threads.txt");
-    ThreadInfo[] threads = getThreadInfos();
-    writer.write(threadInfosToString(threads));
-    writer.markEndOfFile();
+  public void threadDump(BundleContext context, BundleWriter writer) throws IOException {
+    // Write "live" thread dumps
+    int liveThreadMaxCount = context.getConfiguration().get(Constants.LIVE_THREAD_DUMP_COUNT, Constants.DEFAULT_LIVE_THREAD_DUMP_COUNT);
+    long waitTime = context.getConfiguration().get(Constants.LIVE_THREAD_DUMP_PERIOD, Constants.DEFAULT_LIVE_THREAD_DUMP_PERIOD);
+    int current = 0;
+    do {
+      if(current != 0) {
+        try {
+          Thread.sleep(waitTime);
+        } catch (InterruptedException e) {
+          LOG.debug("Ignoring InterruptedException", e);
+          Thread.currentThread().interrupt();
+        }
+      }
+      writer.markStartOfFile("runtime/threads_" + LocalDateTime.now() + ".txt");
+      ThreadInfo[] threads = getThreadInfos();
+      writer.write(threadInfosToString(threads));
+      writer.markEndOfFile();
 
-    // Write all historical thread dumps
+      current += 1;
+    } while( current < liveThreadMaxCount);
+
+    // Write "historical" thread dumps
     synchronized (this.historicalThreadInfos) {
       for(HistoricalThreadInfo history : historicalThreadInfos) {
         writer.markStartOfFile("runtime/threads_" + history.timestamp + ".txt");

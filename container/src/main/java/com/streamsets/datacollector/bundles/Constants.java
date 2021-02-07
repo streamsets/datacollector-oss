@@ -60,9 +60,15 @@ public final class Constants {
   /**
    * Historical ThreadDump configuration
    */
-  public static final String THREAD_DUMP_COUNT = "bundle.info.thread_dump.count";
-  public static final int DEFAULT_THREAD_DUMP_COUNT = 5;
+  public static final String HISTORICAL_THREAD_DUMP_COUNT = "bundle.info.thread_dump.historical.count";
+  public static final int DEFAULT_HISTORICAL_THREAD_DUMP_COUNT = 5;
 
-  public static final String THREAD_DUMP_PERIOD = "bundle.info.thread_dump.period";
-  public static final int DEFAULT_THREAD_DUMP_PERIOD = 5 * 60; // 5 minutes
+  public static final String HISTORICAL_THREAD_DUMP_PERIOD = "bundle.info.thread_dump.historical.period.seconds";
+  public static final long DEFAULT_HISTORICAL_THREAD_DUMP_PERIOD = 5 * 60; // 5 minutes
+
+  public static final String LIVE_THREAD_DUMP_COUNT = "bundle.info.thread_dump.live.count";
+  public static final int DEFAULT_LIVE_THREAD_DUMP_COUNT = 3;
+
+  public static final String LIVE_THREAD_DUMP_PERIOD = "bundle.info.thread_dump.live.period";
+  public static final long DEFAULT_LIVE_THREAD_DUMP_PERIOD = 1 * 1000; // 1 seconds
 }
