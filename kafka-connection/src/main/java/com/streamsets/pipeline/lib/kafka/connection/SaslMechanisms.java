@@ -18,7 +18,7 @@ package com.streamsets.pipeline.lib.kafka.connection;
 import com.streamsets.pipeline.api.Label;
 
 public enum SaslMechanisms implements Label {
-  GSSAPI("GSSAPI", "GSSAPI"),
+  GSSAPI("GSSAPI (Kerberos)", "GSSAPI"),
   PLAIN("PLAIN", "PLAIN"),
   ;
 
