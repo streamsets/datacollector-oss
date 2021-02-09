@@ -19,6 +19,7 @@ import com.google.common.base.Strings;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.OnParseError;
@@ -119,6 +120,7 @@ public class CsvSpoolDirSourceTestUtil {
     DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
     dataFormatConfig.charset = "UTF-8";
     dataFormatConfig.removeCtrlChars = false;
+    dataFormatConfig.csvParser = CsvParser.LEGACY_PARSER;
     dataFormatConfig.csvFileFormat = mode;
     dataFormatConfig.csvHeader = header;
     dataFormatConfig.csvMaxObjectLen = maxLen;

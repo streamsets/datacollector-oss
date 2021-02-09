@@ -278,7 +278,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "LEGACY_PARSER", // TODO: Should be UNIVOCITY, but that requires fixing upgraders in all stages first
+      defaultValue = "UNIVOCITY",
       label = "CSV Parser",
       description = "Choose which underlying parser should be used. For all new pipelines, use the default one and don't bother with the old one.",
       displayPosition = 369,
@@ -288,7 +288,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvParserChooserValues.class)
-  public CsvParser csvParser = CsvParser.LEGACY_PARSER;
+  public CsvParser csvParser = CsvParser.UNIVOCITY;
 
   @ConfigDef(
       required = true,

@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.lineage.LineageEventType;
 import com.streamsets.pipeline.api.lineage.LineageSpecificAttribute;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.OnParseError;
@@ -485,6 +486,7 @@ public class TestSpoolDirSource {
     conf.postProcessing = PostProcessingOptions.NONE;
     conf.retentionTimeMins = 10;
     conf.allowLateDirectory = false;
+    conf.dataFormatConfig.csvParser = CsvParser.LEGACY_PARSER;
     conf.dataFormatConfig.textMaxLineLen = 10;
     conf.dataFormatConfig.onParseError = OnParseError.ERROR;
     conf.dataFormatConfig.maxStackTraceLines = 0;
@@ -547,6 +549,7 @@ public class TestSpoolDirSource {
     conf.postProcessing = PostProcessingOptions.NONE;
     conf.retentionTimeMins = 10;
     conf.allowLateDirectory = false;
+    conf.dataFormatConfig.csvParser = CsvParser.LEGACY_PARSER;
     conf.dataFormatConfig.textMaxLineLen = 10;
     conf.dataFormatConfig.onParseError = OnParseError.ERROR;
     conf.dataFormatConfig.maxStackTraceLines = 0;

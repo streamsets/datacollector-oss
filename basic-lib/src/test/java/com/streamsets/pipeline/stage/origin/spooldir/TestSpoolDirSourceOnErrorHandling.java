@@ -23,6 +23,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.CsvHeader;
 import com.streamsets.pipeline.config.CsvMode;
+import com.streamsets.pipeline.config.CsvParser;
 import com.streamsets.pipeline.config.CsvRecordType;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
@@ -82,6 +83,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     conf.postProcessing = PostProcessingOptions.ARCHIVE;
     conf.archiveDir = dir;
     conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.csvParser = CsvParser.LEGACY_PARSER;
     conf.dataFormatConfig.csvFileFormat = CsvMode.RFC4180;
     conf.dataFormatConfig.csvHeader = CsvHeader.NO_HEADER;
     conf.dataFormatConfig.csvMaxObjectLen = 5;
@@ -420,6 +422,7 @@ public class TestSpoolDirSourceOnErrorHandling {
     conf.postProcessing = PostProcessingOptions.ARCHIVE;
     conf.archiveDir = dir;
     conf.retentionTimeMins = 10;
+    conf.dataFormatConfig.csvParser = CsvParser.LEGACY_PARSER;
     conf.dataFormatConfig.onParseError = OnParseError.ERROR;
     conf.dataFormatConfig.maxStackTraceLines = 0;
 
