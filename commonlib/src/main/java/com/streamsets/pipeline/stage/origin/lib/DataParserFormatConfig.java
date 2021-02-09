@@ -454,7 +454,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       dependsOn = "csvParser",
       triggeredByValue = "UNIVOCITY"
   )
-  public String csvUnivocityFieldSeparator = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER;
+  public String csvUnivocityFieldSeparator = ",";
 
   @ConfigDef(
       required = false,

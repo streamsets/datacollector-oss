@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Redis Consumer",
     description = "Reads data from Redis",
     icon = "redis.png",

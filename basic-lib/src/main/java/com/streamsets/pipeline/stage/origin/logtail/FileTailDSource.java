@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 import com.streamsets.pipeline.config.FileRawSourcePreviewer;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "File Tail",
     description = "Tails a file. It handles rolling files within the same directory",
     icon = "fileTail.png",

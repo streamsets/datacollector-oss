@@ -35,7 +35,7 @@ import com.streamsets.pipeline.stage.origin.lib.FlowFileVersionsChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.OuterDataParserFormatConfig;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "NiFi HTTP Server",
     description = "Listens for requests from a NiFi HTTP endpoint",
     icon="Apache-nifi-logo.png",

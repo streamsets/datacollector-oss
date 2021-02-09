@@ -46,7 +46,7 @@ import java.util.Map;
 
 @ServiceDef(
   provides = DataFormatParserService.class,
-  version = 2,
+  version = 3,
   upgrader = ParserUpgrader.class,
   upgraderDef = "upgrader/DataFormatParserUpgrader.yaml",
   label = "DataFormat Parser"

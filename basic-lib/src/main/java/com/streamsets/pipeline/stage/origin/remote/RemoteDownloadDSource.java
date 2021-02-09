@@ -29,7 +29,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import com.streamsets.pipeline.lib.util.SystemClock;
 
 @StageDef(
-    version = 7,
+    version = 8,
     label = "SFTP/FTP/FTPS Client",
     description = "Uses an SFTP/FTP/FTPS client to read data from a URL.",
     icon = "sftp-client.png",

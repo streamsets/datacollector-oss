@@ -30,7 +30,7 @@ import com.streamsets.pipeline.stage.conf.DataLakeSourceGroups;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Azure Data Lake Storage Gen1",
     description = "Reads data from Azure Data Lake Storage Gen1",
     icon = "data-lake-store-gen1.png",

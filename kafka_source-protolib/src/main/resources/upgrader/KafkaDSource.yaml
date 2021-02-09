@@ -187,3 +187,35 @@ upgrades:
       - configStringMapRemove:
           name: kafkaConfigBean.kafkaConsumerConfigs
           key: sasl.mechanism
+  - toVersion: 14
+    actions:
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: kafkaConfigBean.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

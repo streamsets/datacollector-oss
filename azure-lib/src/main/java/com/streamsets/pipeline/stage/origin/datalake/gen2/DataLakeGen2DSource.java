@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.dirspooler.SpoolDirConfigBean;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Azure Data Lake Storage Gen2",
     description = "Reads data from Azure Data Lake Storage Gen2",
     icon = "data-lake-store-gen2.png",
@@ -39,6 +39,7 @@ import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
     resetOffset = true,
     producesEvents = true,
     upgrader = DataLakeGen2SourceUpgrader.class,
+    upgraderDef = "upgrader/DataLakeGen2DSource.yaml",
     onlineHelpRefUrl ="index.html?contextID=task_sh1_d45_rhb"
 )
 @ConfigGroups(DataLakeGen2SourceGroups.class)

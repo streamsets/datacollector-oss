@@ -27,3 +27,35 @@ upgrades:
       - setConfig:
           name: commonConf.useWebSockets
           value: false
+  - toVersion: 4
+    actions:
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: consumerConfigBean.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

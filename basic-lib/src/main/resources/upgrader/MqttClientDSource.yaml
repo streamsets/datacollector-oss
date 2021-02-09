@@ -36,3 +36,35 @@ upgrades:
       - setConfig:
           name: commonConf.tlsConfig.trustedCertificates
           value: []
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: subscriberConf.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

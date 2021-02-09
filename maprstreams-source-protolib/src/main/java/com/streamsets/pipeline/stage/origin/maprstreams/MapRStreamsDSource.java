@@ -33,7 +33,7 @@ import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import com.streamsets.pipeline.stage.origin.kafka.StandaloneKafkaSourceFactory;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "MapR Streams Consumer",
     description = "Reads data from MapR Streams",
     execution = {ExecutionMode.STANDALONE, ExecutionMode.CLUSTER_YARN_STREAMING},

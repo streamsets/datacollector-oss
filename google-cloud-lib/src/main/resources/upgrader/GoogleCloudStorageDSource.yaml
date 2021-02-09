@@ -22,3 +22,35 @@ upgrades:
       - renameConfig:
           oldNamePattern: ^gcsOriginConfig.credentials.(.*$)
           newNamePattern: gcsOriginConfig.credentials.connection.(0)
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: gcsOriginConfig.dataParserFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

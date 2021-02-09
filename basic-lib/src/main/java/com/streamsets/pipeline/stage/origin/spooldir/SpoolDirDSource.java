@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 11,
+    version = 12,
     label = "Directory",
     description = "Reads files from a directory",
     icon="directory.png",

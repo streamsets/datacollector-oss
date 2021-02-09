@@ -30,7 +30,7 @@ import com.streamsets.pipeline.lib.coap.Groups;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 @StageDef(
-    version = 1,
+    version = 2,
     label = "CoAP Server",
     description = "Listens for requests on a CoAP endpoint",
     icon="coap_multithreaded.png",

@@ -22,3 +22,35 @@ upgrades:
       - setConfig:
           name: dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

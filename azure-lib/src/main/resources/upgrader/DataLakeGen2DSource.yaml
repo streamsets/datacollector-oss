@@ -1,5 +1,5 @@
 #
-# Copyright 2019 StreamSets Inc.
+# Copyright 2021 StreamSets Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,40 +17,35 @@
 upgraderVersion: 1
 
 upgrades:
-  - toVersion: 2
+  - toVersion: 4
     actions:
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.preserveRootElement
-          value: false
-  - toVersion: 3
-    actions:
-      - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvParser
+          name: conf.dataFormatConfig.csvParser
           value: LEGACY_PARSER
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityFieldSeparator
+          name: conf.dataFormatConfig.csvUnivocityFieldSeparator
           value: ${","}
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityLineSeparator
+          name: conf.dataFormatConfig.csvUnivocityLineSeparator
           value: ${"${str:unescapeJava('\\\\n')}"}
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityEscape
+          name: conf.dataFormatConfig.csvUnivocityEscape
           value: ${"\\"}
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityQuote
+          name: conf.dataFormatConfig.csvUnivocityQuote
           value: ${'"'}
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityMaxColumns
+          name: conf.dataFormatConfig.csvUnivocityMaxColumns
           value: 1000
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          name: conf.dataFormatConfig.csvUnivocityMaxCharsPerColumn
           value: 1000
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocitySkipEmptyLines
+          name: conf.dataFormatConfig.csvUnivocitySkipEmptyLines
           value: true
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityAllowComments
+          name: conf.dataFormatConfig.csvUnivocityAllowComments
           value: false
       - setConfig:
-          name: spoolDirConfig.dataFormatConfig.csvUnivocityCommentMarker
+          name: conf.dataFormatConfig.csvUnivocityCommentMarker
           value: ${"#"}

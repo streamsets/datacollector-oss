@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.microservice.ResponseConfigBean;
 import com.streamsets.pipeline.lib.websocket.WebSocketOriginGroups;
 
 @StageDef(
-    version = 6,
+    version = 7,
     label = "WebSocket Client",
     description = "Uses a WebSocket client to read from a resource URL",
     icon = "websockets.png",

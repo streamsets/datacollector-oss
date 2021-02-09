@@ -16,5 +16,37 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: maprstreamsSourceConfigBean.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}
+

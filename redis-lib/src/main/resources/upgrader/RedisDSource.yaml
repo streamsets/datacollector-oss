@@ -22,3 +22,35 @@ upgrades:
       - setConfig:
           name: redisOriginConfigBean.dataFormatConfig.preserveRootElement
           value: false
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: redisOriginConfigBean.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}

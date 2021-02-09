@@ -34,7 +34,7 @@ import com.streamsets.pipeline.lib.event.NoMoreDataEvent;
 import static com.streamsets.pipeline.config.OriginAvroSchemaSource.SOURCE;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Hadoop FS Standalone",
     description = "Reads files from a Hadoop file system",
     icon="hdfs-multithreaded.png",

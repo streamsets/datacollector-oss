@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DSource;
 
 @GenerateResourceBundle
 @StageDef(
-    version = 2,
+    version = 3,
     label = "gRPC Client",
     description = "Processes data from a gRPC server by calling Unary RPC or Server Streaming RPC methods",
     execution = {ExecutionMode.EDGE},
