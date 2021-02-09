@@ -73,8 +73,6 @@ import java.util.Optional;
 import java.util.TreeSet;
 import java.util.UUID;
 
-import static com.streamsets.pipeline.stage.origin.lib.DataFormatParser.DATA_FORMAT_CONFIG_PREFIX;
-
 public class RemoteDownloadSource extends BaseSource implements FileQueueChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDownloadSource.class);
@@ -158,7 +156,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
         getContext(),
         conf.dataFormat,
         Groups.REMOTE.getLabel(),
-        CONF_PREFIX + DATA_FORMAT_CONFIG_PREFIX,
+        CONF_PREFIX + "dataFormatConfig.",
         issues
     );
 

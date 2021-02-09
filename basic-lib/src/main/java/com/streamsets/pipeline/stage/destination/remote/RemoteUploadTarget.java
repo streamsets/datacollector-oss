@@ -45,8 +45,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.streamsets.pipeline.stage.origin.lib.DataFormatParser.DATA_FORMAT_CONFIG_PREFIX;
-
 public class RemoteUploadTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteUploadTarget.class);
@@ -80,7 +78,7 @@ public class RemoteUploadTarget extends BaseTarget {
         getContext(),
         conf.dataFormat,
         Groups.DATA_FORMAT.getLabel(),
-        CONF_PREFIX + DATA_FORMAT_CONFIG_PREFIX,
+        CONF_PREFIX + "dataFormatConfig.",
         issues
     );
 
