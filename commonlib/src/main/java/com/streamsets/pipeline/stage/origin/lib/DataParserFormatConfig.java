@@ -92,6 +92,12 @@ import static com.streamsets.pipeline.stage.common.DataFormatErrors.DATA_FORMAT_
 /**
  * Instances of this object must be called 'dataFormatConfig' exactly for error
  * messages to be placed in the correct location on the UI.
+ *
+ * This config bean got so complex over time that it's pretty much in constant "flux". The current guidance:
+ * * Since the different formats are mutually exclusive, it's o.k. for the displayPosition of different formats
+ *   overlap (it's easier to read and follow).
+ * * Keep options for the same file format close to each other (all CSV should be together, ...).
+ * * Since we display BASIC/ADVANCED Configs separately, try to visually separate them in the order too.
  */
 public class DataParserFormatConfig implements DataFormatConfig {
 
@@ -260,7 +266,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public int jsonMaxObjectLen = 4096;
 
+  //
   // CSV (Delimited configuration)
+  //
 
   // The way to think about CSV configs
   // There are few categorise of configs
@@ -275,35 +283,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   // the field separator), but since we don't have concept of "OR" in our config dependencies, the
   // parser configs are different sets with no overlap.
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "UNIVOCITY",
-      label = "CSV Parser",
-      description = "Choose which underlying parser should be used. For all new pipelines, use the default one and don't bother with the old one.",
-      displayPosition = 369,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "DATA_FORMAT",
-      dependsOn = "dataFormat^",
-      triggeredByValue = "DELIMITED"
-  )
-  @ValueChooserModel(CsvParserChooserValues.class)
-  public CsvParser csvParser = CsvParser.UNIVOCITY;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "CSV",
-      label = "Delimiter Format Type",
-      description = "",
-      displayPosition = 370,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "DATA_FORMAT",
-      dependsOn = "csvParser",
-      triggeredByValue = "LEGACY_PARSER"
-  )
-  @ValueChooserModel(CsvModeChooserValues.class)
-  public CsvMode csvFileFormat = CsvMode.CSV;
+  // CSV - Basic configuration (Starting on 400)
 
   @ConfigDef(
       required = true,
@@ -311,7 +291,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "NO_HEADER",
       label = "Header Line",
       description = "",
-      displayPosition = 380,
+      displayPosition = 400,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
@@ -322,58 +302,26 @@ public class DataParserFormatConfig implements DataFormatConfig {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Allow Extra Columns",
-      description = "When false, rows with more columns than the header are sent to error.",
-      displayPosition = 385,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "DATA_FORMAT",
-      dependencies = {
-          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
-          @Dependency(configName = "csvHeader", triggeredByValues = "WITH_HEADER")
-      }
-  )
-  public boolean csvAllowExtraColumns = false;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.STRING,
-      defaultValue = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX,
-      label = "Extra Column Prefix",
-      description = "Each extra column is labeled with this prefix followed by an integer",
-      displayPosition = 386,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "DATA_FORMAT",
-      dependencies = {
-          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
-          @Dependency(configName = "csvAllowExtraColumns", triggeredByValues = "true")
-      }
-  )
-  public String csvExtraColumnPrefix = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.NUMBER,
-      defaultValue = "1024",
-      label = "Max Record Length (chars)",
-      description = "Larger objects are not processed",
-      displayPosition = 390,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "CSV",
+      label = "Delimiter Format Type",
+      description = "",
+      displayPosition = 405,
+      displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
-      triggeredByValue = "LEGACY_PARSER",
-      min = 1,
-      max = Integer.MAX_VALUE
+      triggeredByValue = "LEGACY_PARSER"
   )
-  public int csvMaxObjectLen = 1024;
+  @ValueChooserModel(CsvModeChooserValues.class)
+  public CsvMode csvFileFormat = CsvMode.CSV;
+
 
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "|",
       label = "Delimiter Character",
-      displayPosition = 400,
+      displayPosition = 410,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -387,7 +335,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_FIELD_DELIMITER,
       label = "Multi Character Field Delimiter",
       description = "Delimiter between fields in multi-character delimited mode.",
-      displayPosition = 405,
+      displayPosition = 415,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -401,7 +349,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL,
       label = "Multi Character Line Delimiter",
       description = "Delimiter between lines (i.e. different records) in multi-character delimited mode.",
-      displayPosition = 406,
+      displayPosition = 420,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -419,7 +367,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Escape Character",
       description = "Character used to escape quote and delimiter characters. To disable select Other and enter " +
           "\\u0000 (unicode codepoint for the NULL character).",
-      displayPosition = 410,
+      displayPosition = 425,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -434,7 +382,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       label = "Quote Character",
       description = "Character used to quote string fields. To disable select Other and enter" +
           " \\u0000 (unicode codepoint for the NULL character).",
-      displayPosition = 420,
+      displayPosition = 430,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvFileFormat",
@@ -447,8 +395,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = ",",
       label = "Field Separator",
-      description = "Separator between fields - can be one or more characters..",
-      displayPosition = 405,
+      description = "Separator between fields - can be one or more characters.",
+      displayPosition = 440,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -460,10 +408,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       required = false,
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\\",
-      label = "Escape Character", // TODO: Problem with a name collision
-      description = "Character used to escape quote and delimiter characters. To disable select Other and enter " +
-          "\\u0000 (unicode codepoint for the NULL character).",
-      displayPosition = 410,
+      label = "Escape Character",
+      description = "Character used to escape quote and delimiter characters.",
+      displayPosition = 445,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -475,10 +422,9 @@ public class DataParserFormatConfig implements DataFormatConfig {
       required = false,
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "\"",
-      label = "Quote Character", // TODO: Problem with a name collision?
-      description = "Character used to quote string fields. To disable select Other and enter" +
-          " \\u0000 (unicode codepoint for the NULL character).",
-      displayPosition = 420,
+      label = "Quote Character",
+      description = "Character used to quote string fields.",
+      displayPosition = 450,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -491,7 +437,8 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.STRING,
       defaultValue = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL,
       label = "Line Separator",
-      displayPosition = 421,
+      description = "One or two characters separating individual records.",
+      displayPosition = 455,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -499,13 +446,79 @@ public class DataParserFormatConfig implements DataFormatConfig {
   )
   public String csvUnivocityLineSeparator = DelimitedDataConstants.DEFAULT_MULTI_CHARACTER_LINE_DELIMITER_EL;
 
+
+  // CSV - Advanced configuration (starting on 500 for older SCH UIs)
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.MODEL,
+      defaultValue = "UNIVOCITY",
+      label = "CSV Parser",
+      description = "CSV parser to use. In new pipelines, use the default Univocity parser for better performance",
+      displayPosition = 500,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "dataFormat^",
+      triggeredByValue = "DELIMITED"
+  )
+  @ValueChooserModel(CsvParserChooserValues.class)
+  public CsvParser csvParser = CsvParser.UNIVOCITY;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Allow Extra Columns",
+      description = "Allows processing rows with more fields than the header. When not enabled, the rows are sent to error",
+      displayPosition = 505,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+          @Dependency(configName = "csvHeader", triggeredByValues = "WITH_HEADER")
+      }
+  )
+  public boolean csvAllowExtraColumns = false;
+
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.STRING,
+      defaultValue = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX,
+      label = "Extra Column Prefix",
+      description = "Each extra column is labeled with this prefix followed by an integer",
+      displayPosition = 510,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependencies = {
+          @Dependency(configName = "dataFormat^", triggeredByValues = "DELIMITED"),
+          @Dependency(configName = "csvAllowExtraColumns", triggeredByValues = "true")
+      }
+  )
+  public String csvExtraColumnPrefix = DelimitedDataConstants.DEFAULT_EXTRA_COLUMN_PREFIX;
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.NUMBER,
+      defaultValue = "1024",
+      label = "Max Record Length (chars)",
+      description = "Larger objects are not processed",
+      displayPosition = 515,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "DATA_FORMAT",
+      dependsOn = "csvParser",
+      triggeredByValue = "LEGACY_PARSER",
+      min = 1,
+      max = Integer.MAX_VALUE
+  )
+  public int csvMaxObjectLen = 1024;
+
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.NUMBER,
       defaultValue = "1000",
       label = "Max Columns",
       description = "Maximal number of columns to parse per line.",
-      displayPosition = 340,
+      displayPosition = 520,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -519,7 +532,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "1000",
       label = "Max Characters Per Column",
       description = "Maximal number of character that will be read per single column.",
-      displayPosition = 341,
+      displayPosition = 525,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -532,7 +545,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Skip Empty Lines",
-      displayPosition = 342,
+      displayPosition = 530,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -545,7 +558,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",
       label = "Allow Comments",
-      displayPosition = 343,
+      displayPosition = 535,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvParser",
@@ -558,7 +571,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "#",
       label = "Comment Character",
-      displayPosition = 343,
+      displayPosition = 540,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvUnivocityAllowComments",
@@ -571,7 +584,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
     type = ConfigDef.Type.BOOLEAN,
     defaultValue = "false",
     label = "Enable comments",
-    displayPosition = 425,
+    displayPosition = 545,
       displayMode = ConfigDef.DisplayMode.BASIC,
     group = "DATA_FORMAT",
     dependsOn = "csvFileFormat",
@@ -584,7 +597,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.CHARACTER,
       defaultValue = "#",
       label = "Comment marker",
-      displayPosition = 426,
+      displayPosition = 550,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "csvEnableComments",
@@ -597,7 +610,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "true",
       label = "Ignore empty lines",
-      displayPosition = 427,
+      displayPosition = 550,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependencies = {
@@ -612,7 +625,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "LIST_MAP",
       label = "Root Field Type",
       description = "",
-      displayPosition = 430,
+      displayPosition = 555,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
@@ -627,7 +640,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "0",
       label = "Lines to Skip",
       description = "Number of lines to skip before reading",
-      displayPosition = 435,
+      displayPosition = 560,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
@@ -642,7 +655,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "false",
       label = "Parse NULLs",
       description = "When checked, configured string constant will be converted into NULL field.",
-      displayPosition = 436,
+      displayPosition = 565,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "dataFormat^",
@@ -656,13 +669,15 @@ public class DataParserFormatConfig implements DataFormatConfig {
       defaultValue = "\\\\N",
       label = "NULL constant",
       description = "String constant that should be converted to a NULL rather then passed as it is.",
-      displayPosition = 437,
+      displayPosition = 570,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "DATA_FORMAT",
       dependsOn = "parseNull",
       triggeredByValue = "true"
   )
   public String nullConstant;
+
+  // XML
 
   @ConfigDef(
       required = false,

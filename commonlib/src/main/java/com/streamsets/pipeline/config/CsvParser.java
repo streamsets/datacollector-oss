@@ -21,10 +21,10 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum CsvParser implements Label {
   // Use the Univocity parser - faster, more feature rich (have support for multi-character delimiters, ...)
-  UNIVOCITY("Better and Faster"),
+  UNIVOCITY("Univocity - faster parser"),
   // Legacy parsing logic, it's actually not a single parser, but rather two depending on subsequent options and their
   // combination user chooses. Complicated and sadly not that clean.
-  LEGACY_PARSER("Older and Slower"),
+  LEGACY_PARSER("Apache Commons - original & slower parser"),
   ;
 
   private final String label;
