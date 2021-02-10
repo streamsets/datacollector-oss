@@ -16,6 +16,7 @@
 package com.streamsets.pipeline.lib.csv;
 
 import com.streamsets.pipeline.api.impl.Utils;
+import com.univocity.parsers.common.TextParsingException;
 import com.univocity.parsers.csv.CsvFormat;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -43,7 +44,7 @@ public class CsvUnivocityDelimitedParser implements DelimitedDataParser {
       int maxCharsPerColumn,
       boolean skipEmptyLines,
       long initialPosition
-  ) {
+  ) throws IOException {
     LOG.debug("Using Univocity CSV Parser");
 
     // Passing configuration down to Univocity
@@ -69,7 +70,11 @@ public class CsvUnivocityDelimitedParser implements DelimitedDataParser {
     parser.beginParsing(reader);
 
     if(headerRow) {
-      this.headers = parser.getContext().parsedHeaders();
+      try {
+        this.headers = parser.getContext().parsedHeaders();
+      } catch (TextParsingException e) {
+        throw new IOException(Utils.format("Failed to read headers: {}", e.toString()), e);
+      }
     } else {
       this.headers = null;
     }
@@ -104,7 +109,11 @@ public class CsvUnivocityDelimitedParser implements DelimitedDataParser {
 
   @Override
   public String[] read() throws IOException {
-    return parser.parseNext();
+    try {
+      return parser.parseNext();
+    } catch (TextParsingException e) {
+      throw new IOException(Utils.format("Failed to parse next record: {}", e.toString()), e);
+    }
   }
 
   @Override

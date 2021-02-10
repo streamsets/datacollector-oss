@@ -60,8 +60,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       OverrunReader reader,
       long readerOffset,
       DelimitedDataParserSettings settings
-  )
-    throws IOException {
+  ) throws IOException {
     this.context = context;
     this.readerId = readerId;
     this.settings = settings;

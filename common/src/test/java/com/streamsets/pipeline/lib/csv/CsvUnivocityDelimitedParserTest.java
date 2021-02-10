@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.lib.csv;
 
-import com.univocity.parsers.common.TextParsingException;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.io.StringReader;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 public class CsvUnivocityDelimitedParserTest {
 
@@ -96,6 +96,24 @@ public class CsvUnivocityDelimitedParserTest {
     assertEquals(3, row.length);
     assertEquals("1", row[0]);
     assertEquals("2,\"Z", row[1]);
+    assertEquals("3", row[2]);
+
+    parser.close();
+  }
+
+  @Test
+  public void nonTypicalQuoteAndEscapeInData() throws IOException {
+    String simpleCsv = "A,B,C\n1,a2,xaZa,3";
+
+    CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
+        .withQuoteChar('a')
+        .withEscapeChar('x')
+        .build();
+
+    String[] row = parser.read();
+    assertEquals(3, row.length);
+    assertEquals("1", row[0]);
+    assertEquals("2,aZ", row[1]);
     assertEquals("3", row[2]);
 
     parser.close();
@@ -201,9 +219,18 @@ public class CsvUnivocityDelimitedParserTest {
     parser.close();
   }
 
-  @Test(expected = TextParsingException.class)
-  public void maxColumns() throws IOException {
-    String simpleCsv = "A,B,C\n1,2,3";
+  @Test(expected = IOException.class)
+  public void maxColumnsInHeader() throws IOException {
+    String simpleCsv = "A,B,C\n1,2";
+
+    CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
+        .withMaxColumns(2)
+        .build();
+  }
+
+  @Test(expected = IOException.class)
+  public void maxColumnsInData() throws IOException {
+    String simpleCsv = "A,B\n1,2,3";
 
     CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
         .withMaxColumns(2)
@@ -212,7 +239,7 @@ public class CsvUnivocityDelimitedParserTest {
     parser.read();
   }
 
-  @Test(expected = TextParsingException.class)
+  @Test(expected = IOException.class)
   public void maxCharsPerColumnInData() throws IOException {
     String simpleCsv = "A,B,C\n1,way too long,3";
 
@@ -223,15 +250,72 @@ public class CsvUnivocityDelimitedParserTest {
     parser.read();
   }
 
-  @Test(expected = TextParsingException.class)
+  @Test
+  public void recoverFromMaxCharsPerColumnInData() throws IOException {
+    String simpleCsv = "A,B,C\n1,2,3\n1,way too long,3\n6,7,8";
+
+    CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
+        .withMaxCharsPerColumn(1)
+        .build();
+
+    String[] row = parser.read();
+    assertEquals(3, row.length);
+    assertEquals("1", row[0]);
+    assertEquals("2", row[1]);
+    assertEquals("3", row[2]);
+
+    try {
+      parser.read();
+      fail();
+    } catch (IOException e) {
+      // Ignore expected exception
+    }
+
+    // This is also "bad" in the sense that the parser doesn't recover from reaching the limit
+    row = parser.read();
+    assertEquals(1, row.length);
+    assertEquals("1", row[0]);
+
+    assertNull(parser.read());
+  }
+
+  @Test
+  public void recoverFromMaxColumnsInData() throws IOException {
+    String simpleCsv = "A,B,C\n1,2,3\n10,20,30,40\n1,2,3";
+
+    CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
+        .withMaxColumns(3)
+        .build();
+
+    String[] row = parser.read();
+    assertEquals(3, row.length);
+    assertEquals("1", row[0]);
+    assertEquals("2", row[1]);
+    assertEquals("3", row[2]);
+
+    try {
+      parser.read();
+      fail();
+    } catch (IOException e) {
+      // Ignore expected exception
+    }
+
+    try {
+      parser.read();
+      fail();
+    } catch (IOException e) {
+      // Ignore expected exception
+      // This is actually "bad" in the sense that the parser isn't able to recover when max number of columns is breached
+    }
+  }
+
+  @Test(expected = IOException.class)
   public void maxCharsPerColumnInHeader() throws IOException {
     String simpleCsv = "A,way too long,C\n1,2,3";
 
     CsvUnivocityDelimitedParser parser = new ParserBuilder(simpleCsv)
         .withMaxCharsPerColumn(1)
         .build();
-
-    parser.read();
   }
 
   @Test
@@ -686,7 +770,7 @@ public class CsvUnivocityDelimitedParserTest {
       return this;
     }
 
-    CsvUnivocityDelimitedParser build() {
+    CsvUnivocityDelimitedParser build() throws IOException {
       return new CsvUnivocityDelimitedParser(
           new StringReader(content),
           quoteChar,
