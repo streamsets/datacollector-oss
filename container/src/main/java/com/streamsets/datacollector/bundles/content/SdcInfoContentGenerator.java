@@ -184,8 +184,8 @@ public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable
         }
       }
       writer.markStartOfFile("runtime/threads_" + LocalDateTime.now() + ".txt");
-      ThreadInfo[] threads = getThreadInfos();
-      writer.write(threadInfosToString(threads));
+      ThreadInfo[] threads = BundleGeneratorUtils.getThreadInfos();
+      writer.write(BundleGeneratorUtils.threadInfosToString(threads));
       writer.markEndOfFile();
 
       current += 1;
@@ -195,90 +195,15 @@ public class SdcInfoContentGenerator implements BundleContentGenerator, Runnable
     synchronized (this.historicalThreadInfos) {
       for(HistoricalThreadInfo history : historicalThreadInfos) {
         writer.markStartOfFile("runtime/threads_" + history.timestamp + ".txt");
-        writer.write(threadInfosToString(history.threadInfo));
+        writer.write(BundleGeneratorUtils.threadInfosToString(history.threadInfo));
         writer.markEndOfFile();
       }
     }
   }
 
-  private String threadInfosToString(ThreadInfo[] threads) throws IOException {
-    StringBuilder sb = new StringBuilder();
-
-    // Sadly we can't easily do info.toString() as the implementation is hardcoded to cut the stack trace only to 8
-    // items which does not serve our purpose well. Hence we have custom implementation that prints entire stack trace
-    // for all threads.
-    for(ThreadInfo info: threads) {
-      sb.append("\"" + info.getThreadName() + "\"" + " Id=" + info.getThreadId() + " " + info.getThreadState());
-      if (info.getLockName() != null) {
-        sb.append(" on " + info.getLockName());
-      }
-      if (info.getLockOwnerName() != null) {
-        sb.append(" owned by \"" + info.getLockOwnerName() + "\" Id=" + info.getLockOwnerId());
-      }
-      if (info.isSuspended()) {
-        sb.append(" (suspended)");
-      }
-      if (info.isInNative()) {
-        sb.append(" (in native)");
-      }
-      sb.append('\n');
-      int i = 0;
-      for(StackTraceElement ste : info.getStackTrace()) {
-        if (i == 0 && info.getLockInfo() != null) {
-          Thread.State ts = info.getThreadState();
-          switch (ts) {
-            case BLOCKED:
-              sb.append("\t-  blocked on " + info.getLockInfo());
-              sb.append('\n');
-              break;
-            case WAITING:
-              sb.append("\t-  waiting on " + info.getLockInfo());
-              sb.append('\n');
-              break;
-            case TIMED_WAITING:
-              sb.append("\t-  waiting on " + info.getLockInfo());
-              sb.append('\n');
-              break;
-            default:
-          }
-        }
-        sb.append("\tat " + ste.toString());
-        sb.append('\n');
-
-        i++;
-
-        for (MonitorInfo mi : info.getLockedMonitors()) {
-          if (mi.getLockedStackDepth() == i) {
-            sb.append("\t-  locked " + mi);
-            sb.append('\n');
-          }
-        }
-      }
-
-      LockInfo[] locks = info.getLockedSynchronizers();
-      if (locks.length > 0) {
-        sb.append("\n\tNumber of locked synchronizers = " + locks.length);
-        sb.append('\n');
-        for (LockInfo li : locks) {
-          sb.append("\t- " + li);
-          sb.append('\n');
-        }
-      }
-      sb.append('\n');
-    }
-
-    return sb.toString();
-  }
-
-  private ThreadInfo[] getThreadInfos() {
-    ThreadMXBean threadMXBean = ManagementFactory.getThreadMXBean();
-    return threadMXBean.dumpAllThreads(true, true);
-  }
-
-
   @Override
   public void run() {
-    ThreadInfo[] threads = getThreadInfos();
+    ThreadInfo[] threads = BundleGeneratorUtils.getThreadInfos();
     synchronized (this.historicalThreadInfos) {
       this.historicalThreadInfos.add(new HistoricalThreadInfo(threads));
       if(this.historicalThreadInfos.size() > this.threadDumpMaxCount) {
