@@ -452,7 +452,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "UNIVOCITY",
+      defaultValue = "LEGACY_PARSER",
       label = "CSV Parser",
       description = "CSV parser to use. In new pipelines, use the default Univocity parser for better performance",
       displayPosition = 500,
@@ -462,7 +462,7 @@ public class DataParserFormatConfig implements DataFormatConfig {
       triggeredByValue = "DELIMITED"
   )
   @ValueChooserModel(CsvParserChooserValues.class)
-  public CsvParser csvParser = CsvParser.UNIVOCITY;
+  public CsvParser csvParser = CsvParser.LEGACY_PARSER;
 
   @ConfigDef(
       required = true,
