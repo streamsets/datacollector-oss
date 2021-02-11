@@ -20,7 +20,6 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.KafkaSecurityUpgradeHelper;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.lib.kafka.connection.SaslMechanisms;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Before;
 import org.junit.Test;
@@ -134,6 +133,24 @@ public class TestMultiKafkaSourceUpgrader {
 
     configs.add(new Config(kafkaConfigsPath, Collections.unmodifiableList(kafkaClientConfigs)));
     configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
+  }
+
+  @Test
+  public void testV8toV9() {
+    Mockito.doReturn(8).when(context).getFromVersion();
+    Mockito.doReturn(9).when(context).getToVersion();
+
+    String stageConfigPath = "conf";
+    String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
+    String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
+
+    configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
+    configs.add(new Config(kafkaMechanismPath, true));
 
     configs = upgrader.upgrade(configs, context);
 

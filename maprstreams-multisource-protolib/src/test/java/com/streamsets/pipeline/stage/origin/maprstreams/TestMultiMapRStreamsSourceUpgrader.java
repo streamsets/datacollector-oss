@@ -122,6 +122,24 @@ public class TestMultiMapRStreamsSourceUpgrader {
     configs = upgrader.upgrade(configs, context);
 
     UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
+    UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, true);
+  }
+
+  @Test
+  public void testV8toV9() {
+    Mockito.doReturn(8).when(context).getFromVersion();
+    Mockito.doReturn(9).when(context).getToVersion();
+
+    String stageConfigPath = "conf";
+    String kafkaSecurityProtocolPath = stageConfigPath+".connectionConfig.connection.securityConfig.securityOption";
+    String kafkaMechanismPath = stageConfigPath+".connectionConfig.connection.securityConfig.saslMechanism";
+
+    configs.add(new Config(kafkaSecurityProtocolPath, "SASL_PLAINTEXT"));
+    configs.add(new Config(kafkaMechanismPath, true));
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
     UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, "PLAIN");
   }
 }

@@ -179,7 +179,7 @@ upgrades:
           lookForName: temp.upgrade.kafka-security.mechanism
           ifValueMatches: "PLAIN"
           name: kafkaConfigBean.connectionConfig.connection.securityConfig.saslMechanism
-          value: PLAIN
+          value: true
       # remove the temp configs we created
       - removeConfigs:
           namePattern: temp.upgrade.kafka-security.mechanism
@@ -219,3 +219,10 @@ upgrades:
       - setConfig:
           name: kafkaConfigBean.dataFormatConfig.csvUnivocityCommentMarker
           value: ${"#"}
+      - setConfig:
+          lookForName: kafkaConfigBean.connectionConfig.connection.securityConfig.saslMechanism
+          ifValueMatches: true
+          name: kafkaConfigBean.connectionConfig.connection.securityConfig.saslMechanism
+          value: "PLAIN"
+          elseName: kafkaConfigBean.connectionConfig.connection.securityConfig.saslMechanism
+          elseValue: "GSSAPI"
