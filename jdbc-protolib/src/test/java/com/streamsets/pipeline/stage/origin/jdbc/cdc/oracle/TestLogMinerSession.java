@@ -16,12 +16,15 @@
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.google.common.collect.ImmutableList;
+import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.ChangeTypeValues;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaTableConfigBean;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
@@ -383,6 +387,36 @@ public class TestLogMinerSession {
     printLogs(dest, "testFindLogs - Test detection of a transient state in a RAC scenario");
     Assert.assertFalse(result);
     Assert.assertTrue(dest.isEmpty());
+  }
+
+  @Rule
+  public ExpectedException exceptionRule = ExpectedException.none();
+
+  @Test
+  public void testErrorJDBC52Format() throws Exception
+  {
+    exceptionRule.expect(StageException.class);
+    exceptionRule.expectMessage("JDBC_52 - Error starting LogMiner: Action: Start - Message: null - SQL State: null - Vendor Code: 0");
+
+    Connection mockConnection = Mockito.mock(Connection.class);
+    Statement mockStatement = Mockito.mock(Statement.class);
+    Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
+    Mockito.when(mockConnection.createStatement().execute(Mockito.any())).thenThrow(new SQLException());
+
+    SchemaTableConfigBean config = new SchemaTableConfigBean();
+    config.schema = "SDC";
+    config.table = "cdc";
+    config.excludePattern = "";
+    List<SchemaTableConfigBean> tablesForMining = ImmutableList.of(config);
+    List<ChangeTypeValues> trackedOperations = ImmutableList.of(ChangeTypeValues.INSERT);
+
+    LogMinerSession.Builder builder = new LogMinerSession.Builder(mockConnection, 18);
+    builder.setTablesForMining(tablesForMining);
+    builder.setTrackedOperations(trackedOperations);
+    builder.setContinuousMine(true);
+
+    LogMinerSession session = builder.build();
+    session.start(LocalDateTime.now(), LocalDateTime.now());
   }
 
   private SchemaTableConfigBean createTableConfig(String schema, String table, String exclusion) {

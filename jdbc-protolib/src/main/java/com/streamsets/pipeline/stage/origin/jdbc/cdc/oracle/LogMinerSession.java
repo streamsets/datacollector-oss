@@ -174,6 +174,9 @@ public class LogMinerSession {
   // Query retrieving the current redo log files registered in the current LogMiner session.
   private static final String SELECT_LOGMNR_LOGS_QUERY = "SELECT FILENAME FROM V$LOGMNR_LOGS ORDER BY LOW_SCN";
 
+  // Patterns to produce messages for JDBC_52 errors
+  private static final String JDBC_52_LONG_PATTERN ="Action: %s - Message: %s - SQL State: %s - Vendor Code: %s";
+
   @VisibleForTesting
   static final String LOG_STATUS_CURRENT = "CURRENT";
 
@@ -460,7 +463,15 @@ public class LogMinerSession {
       }
       activeSession = false;
       LOG.error(JdbcErrors.JDBC_52.getMessage(), e);
-      throw new StageException(JdbcErrors.JDBC_52, e);
+      throw new StageException(
+          JdbcErrors.JDBC_52,
+          String.format(JDBC_52_LONG_PATTERN,
+              "Start",
+              e.getMessage(),
+              e.getSQLState(),
+              e.getErrorCode()
+          )
+      );
     }
 
     return true;
@@ -575,7 +586,16 @@ public class LogMinerSession {
       try (Statement statement = connection.createStatement()) {
         statement.execute(command);
       } catch (SQLException e) {
-        throw new StageException(JdbcErrors.JDBC_52, e);
+        LOG.error(JdbcErrors.JDBC_52.getMessage(), e);
+        throw new StageException(
+            JdbcErrors.JDBC_52,
+            String.format(JDBC_52_LONG_PATTERN,
+                "Load dictionary",
+                e.getMessage(),
+                e.getSQLState(),
+                e.getErrorCode()
+            )
+        );
       }
 
     } else {
@@ -663,7 +683,15 @@ public class LogMinerSession {
       statement.execute(command);
       activeSession = true;
     } catch (SQLException e) {
-      throw new StageException(JdbcErrors.JDBC_52, e);
+      LOG.error(JdbcErrors.JDBC_52.getMessage(), e);
+      throw new StageException(JdbcErrors.JDBC_52,
+          String.format(JDBC_52_LONG_PATTERN,
+              "Get local date & time for SCN",
+              e.getMessage(),
+              e.getSQLState(),
+              e.getErrorCode()
+          )
+      );
     }
 
     // Query LOGMNR_CONTENTS to find the timestamp for the requested SCN

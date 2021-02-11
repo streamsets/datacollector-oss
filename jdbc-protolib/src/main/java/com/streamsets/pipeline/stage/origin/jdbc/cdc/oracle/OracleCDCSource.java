@@ -253,6 +253,10 @@ public class OracleCDCSource extends BaseSource {
   private static final String TABLE_METADATA_TABLE_SCHEMA_CONSTANT = "TABLE_SCHEM";
   private static final String TABLE_METADATA_TABLE_NAME_CONSTANT = "TABLE_NAME";
 
+  // Patterns to produce messages for JDBC_52 errors
+  private static final String JDBC_52_LONG_PATTERN ="Action: %s - Message: %s - SQL State: %s - Vendor Code: %s";
+  private static final String JDBC_52_SHORT_PATTERN ="Action: %s - Message: %s";
+
   private final OracleCDCConfigBean configBean;
   private final HikariPoolConfigBean hikariConfigBean;
   private final List<TableFilter> tableFilters = new ArrayList<>();
@@ -453,7 +457,9 @@ public class OracleCDCSource extends BaseSource {
     } catch (StageException e) {
       LOG.error("Error while trying to setup record generator thread", e);
       generationStarted = false;
-      throw new StageException(JDBC_52, e);
+      throw new StageException(JdbcErrors.JDBC_52,
+          String.format(JDBC_52_SHORT_PATTERN, "Start generator thread", e.getMessage())
+      );
     }
     final Offset os = offset;
     final boolean started = logMinerStarted;
@@ -659,7 +665,13 @@ public class OracleCDCSource extends BaseSource {
             LOG.warn("Last LogMiner session did not start successfully. Will retry", ex);
           } else {
             LOG.error("Error while reading data", ex);
-            addToStageExceptionsQueue(new StageException(JDBC_52, ex));
+            addToStageExceptionsQueue(new StageException(JDBC_52, String.format(
+                JDBC_52_LONG_PATTERN,
+                "Get local date & time for SCN",
+                ex.getMessage(),
+                ex.getSQLState(),
+                ex.getErrorCode()
+            )));
           }
         } catch (StageException e) {
           LOG.error("Error while reading data", e);
@@ -671,7 +683,10 @@ public class OracleCDCSource extends BaseSource {
         } catch (Exception ex) {
           LOG.error("Error while reading data", ex);
           error = true;
-          addToStageExceptionsQueue(new StageException(JDBC_52, ex));
+          addToStageExceptionsQueue(new StageException(
+              JDBC_52,
+              String.format(JDBC_52_SHORT_PATTERN, "Generate records (Exception)", ex.getMessage())
+          ));
         } finally {
           // If an incomplete batch is seen, it means we are going to move the window forward
           // Ending this session and starting a new one helps reduce PGA memory usage.
