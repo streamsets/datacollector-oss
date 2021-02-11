@@ -27,7 +27,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DClusterSourceOffsetCo
 import com.streamsets.pipeline.api.impl.ClusterSource;
 
 @StageDef(
-  version = 6,
+  version = 7,
   label = "Hadoop FS",
   description = "Reads data from Hadoop file system",
   execution = {ExecutionMode.CLUSTER_BATCH , ExecutionMode.EMR_BATCH },
@@ -40,7 +40,11 @@ import com.streamsets.pipeline.api.impl.ClusterSource;
   onlineHelpRefUrl ="index.html?contextID=task_hgl_vgn_vs"
 )
 @ConfigGroups(value = Groups.class)
-@HideConfigs(value = {"clusterHDFSConfigBean.dataFormatConfig.compression", "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText"})
+@HideConfigs(value = {
+    "clusterHDFSConfigBean.dataFormatConfig.compression",
+    "clusterHDFSConfigBean.dataFormatConfig.includeCustomDelimiterInTheText",
+    "clusterHDFSConfigBean.dataFormatConfig.csvParser"
+})
 @GenerateResourceBundle
 public class ClusterHdfsDSource extends DClusterSourceOffsetCommitter implements ErrorListener {
   private Source clusterHDFSSource;

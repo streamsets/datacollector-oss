@@ -16,5 +16,36 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 7
+    actions:
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvParser
+          value: LEGACY_PARSER
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityFieldSeparator
+          value: ${","}
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityLineSeparator
+          value: ${"${str:unescapeJava('\\\\n')}"}
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityEscape
+          value: ${"\\"}
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityQuote
+          value: ${'"'}
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityMaxColumns
+          value: 1000
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityMaxCharsPerColumn
+          value: 1000
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocitySkipEmptyLines
+          value: true
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityAllowComments
+          value: false
+      - setConfig:
+          name: clusterHDFSConfigBean.dataFormatConfig.csvUnivocityCommentMarker
+          value: ${"#"}
