@@ -31,6 +31,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.RegistrationResponseJson;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
 import com.streamsets.lib.security.http.DisconnectedSSOService;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.FailoverSSOService;
 import com.streamsets.lib.security.http.LimitedMethodServer;
 import com.streamsets.lib.security.http.ProxySSOService;
@@ -523,6 +524,7 @@ public abstract class WebServerTask extends AbstractTask implements Registration
     RemoteSSOService remoteSsoService = new RemoteSSOService();
     remoteSsoService.setConfiguration(appConf);
     remoteSsoService.setRegistrationResponseDelegate(this);
+    getRuntimeInfo().setAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY, remoteSsoService.getDpmClientInfo());
     return remoteSsoService;
   }
 

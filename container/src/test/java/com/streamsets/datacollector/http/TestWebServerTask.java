@@ -23,6 +23,7 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.main.StandaloneRuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import org.awaitility.Duration;
 import org.eclipse.jetty.server.ForwardedRequestCustomizer;
@@ -167,6 +168,19 @@ public class TestWebServerTask {
     } finally {
       webServerTask.stopTask();
     }
+  }
+
+  @Test
+  public void testDpmClientInfoInjectionToRuntimeInfo() throws Exception {
+    Configuration serverConf = new Configuration();
+    serverConf.set(RemoteSSOService.SECURITY_SERVICE_APP_AUTH_TOKEN_CONFIG, "applicationToken");
+
+    WebServerTask webServerTask =
+        createWebServerTask(new File("target").getAbsolutePath(), serverConf, Collections.<WebAppProvider>emptySet(),
+            true);
+
+    webServerTask.createRemoteSSOService(serverConf);
+    Assert.assertNotNull(webServerTask.getRuntimeInfo().getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY));
   }
 
   @Test

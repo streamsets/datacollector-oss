@@ -48,6 +48,10 @@ public class Configuration implements com.streamsets.pipeline.api.Configuration 
     fileRefsBaseDir = dir;
   }
 
+  public File getFilRefsBaseDir() {
+    return fileRefsBaseDir;
+  }
+
   public abstract static class Ref {
     private String unresolvedValue;
 

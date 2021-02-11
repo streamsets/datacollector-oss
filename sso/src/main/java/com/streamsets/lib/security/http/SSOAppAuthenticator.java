@@ -15,6 +15,8 @@
  */
 package com.streamsets.lib.security.http;
 
+import com.streamsets.pipeline.api.impl.Utils;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.security.ServerAuthException;
 import org.eclipse.jetty.server.Authentication;
 import org.slf4j.Logger;
@@ -24,6 +26,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 public class SSOAppAuthenticator extends AbstractSSOAuthenticator {
   private static final Logger LOG = LoggerFactory.getLogger(SSOAppAuthenticator.class);
@@ -76,11 +80,20 @@ public class SSOAppAuthenticator extends AbstractSSOAuthenticator {
             }
           } catch (ForbiddenException fex) {
             ret = returnUnauthorized(httpReq, httpRes, fex.getErrorInfo(), componentId, "Request: {}");
+          } catch (MovedException mex) {
+            ret = returnMoved(httpReq, httpRes, mex);
           }
         }
       }
     }
     return ret;
   }
+
+  protected Authentication returnMoved(HttpServletRequest httpReq, HttpServletResponse httpRes, MovedException mex) {
+    httpRes.setHeader(HttpHeader.LOCATION.asString(), mex.getNewUrl(httpReq));
+    httpRes.setStatus(308);
+    return Authentication.SEND_FAILURE;
+  }
+
 
 }

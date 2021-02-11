@@ -253,9 +253,9 @@ public abstract class AbstractSSOService implements SSOService {
     return lockMap;
   }
 
-  private void trace(String message, String token, String component) {
+  private void trace(String message, String token, String... params) {
     if (LOG.isTraceEnabled()) {
-      LOG.trace(message, SSOUtils.tokenForLog(token), component);
+      LOG.trace(message, SSOUtils.tokenForLog(token), params);
     }
   }
 
@@ -307,6 +307,8 @@ public abstract class AbstractSSOService implements SSOService {
               cache.invalidate(token);
               trace("ForbiddenToken '{}' invalid '{}', invalidating in cache", tokenForLog, componentId);
               throw fex;
+            } catch (MovedException mex) {
+              throw mex;
             } catch (Exception ex) {
               if (ex instanceof RuntimeException) {
                 throw (RuntimeException) ex;
@@ -317,6 +319,8 @@ public abstract class AbstractSSOService implements SSOService {
           } else {
             LOG.debug("Token '{}' component '{}' found in cache", tokenForLog, componentId);
           }
+        } catch (MovedException mex) {
+          throw mex;
         } catch (Exception ex) {
           LOG.error(
               "Exception while doing remote validation for token '{}' component '{}': {}",

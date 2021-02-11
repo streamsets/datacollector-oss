@@ -455,5 +455,24 @@ public class TestAbstractSSOService {
     Mockito.verify(appCache, Mockito.times(1)).clear();
   }
 
+  @Test(expected = MovedException.class)
+  public void testValidateMoved() {
+    AbstractSSOService service = Mockito.spy(new ForTestSSOService());
+
+    PrincipalCache cache = Mockito.mock(PrincipalCache.class);
+    Mockito.when(cache.get(eq("t"))).thenReturn(null);
+    Mockito.when(cache.isInvalid(eq("t"))).thenReturn(false);
+    ConcurrentMap<String, Object> lockMap = service.getLockMap();
+    lockMap = Mockito.spy(lockMap);
+    Mockito.doReturn(lockMap).when(service).getLockMap();
+    Callable<SSOPrincipal> callable = new Callable<SSOPrincipal>() {
+      @Override
+      public SSOPrincipal call() throws Exception {
+        throw new MovedException("http://foo");
+      }
+    };
+    service.validate(cache, callable, "t", "c", "x");
+  }
+
 
 }
