@@ -41,7 +41,7 @@ public class NetworkHealthCategory implements HealthCategory {
     String host = context.getConfiguration().get(HOST_KEY, HOST_DEFAULT);
 
     runCommand(builder, "Ping", "Ping to " + host, ImmutableList.of("ping", "-v", "-t", "2", host));
-    runCommand(builder, "Traceroute", "Traceroute to " + host, ImmutableList.of("traceroute", "-w", "1", "-q", "1", "-v", host));
+    runCommand(builder, "Traceroute", "Traceroute to " + host, ImmutableList.of("traceroute", "-w", "1", "-q", "1", host));
 
     return builder.build();
   }

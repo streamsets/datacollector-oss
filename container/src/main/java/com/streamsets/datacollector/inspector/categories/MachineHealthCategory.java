@@ -24,14 +24,18 @@ import com.streamsets.datacollector.util.ProcessUtil;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 public class MachineHealthCategory implements HealthCategory {
+  private static final Logger LOG = LoggerFactory.getLogger(MachineHealthCategory.class);
 
   private static long MB = 1024 * 1024;
 
@@ -63,15 +67,21 @@ public class MachineHealthCategory implements HealthCategory {
     // File descriptors
     HealthCheck.Severity ulimitSeverity = HealthCheck.Severity.GREEN;
     String ulimitDetails = null;
-    ProcessUtil.Output ulimitOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("ulimit", "-n"), 5);
+    List<String> ulimitCommand = ImmutableList.of("sh", "-c", "ulimit -n");
+    ProcessUtil.Output ulimitOutput = ProcessUtil.executeCommandAndLoadOutput(ulimitCommand, 5);
     int ulimit = -1;
     try {
-      ulimit = Integer.parseInt(ulimitOutput.stdout.trim());
-
-      ulimitSeverity = ulimit >= 32768 ? HealthCheck.Severity.GREEN : HealthCheck.Severity.RED;
+      String ulimitStdout = ulimitOutput.stdout.trim();
+      if(ulimitStdout.isEmpty()) {
+        ulimitSeverity = HealthCheck.Severity.RED;
+        ulimitDetails = "Ulimit command failed: " + String.join(" ", ulimitCommand) + "\n" + ulimitOutput.stderr;
+      } else {
+        ulimit = Integer.parseInt(ulimitOutput.stdout.trim());
+        ulimitSeverity = ulimit >= 32768 ? HealthCheck.Severity.GREEN : HealthCheck.Severity.RED;
+      }
     } catch (Throwable e) {
       ulimitSeverity = HealthCheck.Severity.RED;
-      ulimitDetails = ExceptionUtils.getStackTrace(e);
+      ulimitDetails = "Ulimit command failed: " + String.join(" ", ulimitCommand) + "\n" + ExceptionUtils.getStackTrace(e);
     }
     builder.addHealthCheck("File Descriptors", ulimitSeverity)
         .withValue(ulimit != -1 ? ulimit : null)
@@ -82,6 +92,12 @@ public class MachineHealthCategory implements HealthCategory {
     String sdcUser = System.getProperty("user.name");
     ProcessUtil.Output userProcessesOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("ps", "-u", sdcUser, "-U", sdcUser), 5);
     int userProcesses = -1;
+    if(!userProcessesOutput.success) {
+      // On certain systems some of the options (-u or -U) aren't available, in that case we revert to use only ps
+      LOG.debug("Can't use ps -U -u: {}", userProcessesOutput.stderr);
+      userProcessesOutput = ProcessUtil.executeCommandAndLoadOutput(ImmutableList.of("ps"), 5);
+    }
+
     if(userProcessesOutput.success && userProcessesOutput.stdout != null) {
       userProcesses = userProcessesOutput.stdout.split("\n").length;
     }
