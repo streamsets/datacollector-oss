@@ -325,6 +325,7 @@ public class HttpProcessor extends SingleLaneProcessor {
     resolvedRecords.clear();
     long start = System.currentTimeMillis();
     Iterator<Record> records = batch.getRecords();
+    boolean close = false;
     while (records.hasNext()) {
 
       boolean uninterrupted = true;
@@ -344,7 +345,6 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
 
       List<Record> addToBatchRecords;
-      boolean close;
       List<Record> recordsResponse;
 
       Record currentRecord = null;
@@ -400,7 +400,7 @@ public class HttpProcessor extends SingleLaneProcessor {
       }
     }
 
-    if (!resolvedRecords.isEmpty()) {
+    if (!resolvedRecords.isEmpty() && !close) {
       reprocessIfRequired(batchMaker);
     }
   }
