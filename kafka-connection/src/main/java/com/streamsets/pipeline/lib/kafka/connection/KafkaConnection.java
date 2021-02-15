@@ -30,7 +30,7 @@ import com.streamsets.pipeline.api.InterfaceStability;
     label = "Kafka",
     type = KafkaConnection.TYPE,
     description = "Connects to Kafka",
-    version = 1,
+    version = 2,
     upgraderDef = "upgrader/KafkaConnectionUpgrader.yaml",
     supportedEngines = { ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER }
 )

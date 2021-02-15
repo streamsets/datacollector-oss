@@ -16,5 +16,22 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 2
+    actions:
+      # First we treat the case where securityConfig.saslMechanism doesn't exist, i.e. we're upgrading
+      # from a connection created with SDC 3.20.0 or older
+      - setConfig:
+          lookForName: securityConfig.saslMechanism
+          elseName: securityConfig.saslMechanism
+          elseValue: "GSSAPI"
+      # Then we treat the case where we are upgrading from a connection created with SDC 3.21.0. Since we didn't
+      # add the upgrader for that version
+      - setConfig:
+          lookForName: securityConfig.saslMechanism
+          ifValueMatches: true
+          name: securityConfig.saslMechanism
+          value: "PLAIN"
+          elseName: securityConfig.saslMechanism
+          elseValue: "GSSAPI"
+
