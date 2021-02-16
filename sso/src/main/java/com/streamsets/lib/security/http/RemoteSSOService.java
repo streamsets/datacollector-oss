@@ -342,7 +342,7 @@ public class RemoteSSOService extends AbstractSSOService {
     SSOPrincipalJson principal = null;
 
     try {
-      int movedTries = 5; // in practice it would never do 5 tries, do to a race condition could do 2 tries
+      int tries = 2; // we only loop  if there is permanent redirect
       do {
         RestClient.Response response = restCall.call();
         int status = response.getStatus();
@@ -367,8 +367,8 @@ public class RemoteSSOService extends AbstractSSOService {
           ));
         }
 
-      } while (principal == null && movedTries-- > 0);
-      if (principal == null && movedTries == 0) {
+      } while (principal == null && tries-- > 0);
+      if (principal == null && tries == 0) {
         throw new ForbiddenException(TOO_MANY_PERMANENT_REDIR);
       }
     } catch (Exception ex){

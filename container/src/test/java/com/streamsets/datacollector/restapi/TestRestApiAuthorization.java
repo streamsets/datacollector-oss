@@ -26,6 +26,8 @@ import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.testing.NetworkUtils;
 import dagger.ObjectGraph;
@@ -36,6 +38,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -48,6 +51,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -93,6 +97,30 @@ public class TestRestApiAuthorization {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
+  private static void setDummyDpmClientInfo(RuntimeInfo runtimeInfo) {
+    runtimeInfo.setAttribute(
+        DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY,
+        new DpmClientInfo() {
+          @Override
+          public String getDpmBaseUrl() {
+            return "http://localhost:18631";
+          }
+
+          @Override
+          public Map<String, String> getHeaders() {
+            return ImmutableMap.of(
+                SSOConstants.X_APP_COMPONENT_ID, "componentId",
+                SSOConstants.X_APP_AUTH_TOKEN, "authToken"
+            );
+          }
+
+          @Override
+          public void setDpmBaseUrl(String dpmBaseUrl) {
+
+          }
+        });
+  }
+
   private String startServer(boolean authzEnabled) throws  Exception {
     int port = NetworkUtils.getRandomPort();
     Configuration conf = new Configuration();
@@ -110,6 +138,7 @@ public class TestRestApiAuthorization {
     ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
     RuntimeInfo runtimeInfo = dagger.get(RuntimeInfo.class);
     runtimeInfo.setAttribute(RuntimeInfo.LOG4J_CONFIGURATION_URL_ATTR, new URL("file://" + baseDir + "/log4j.properties"));
+    setDummyDpmClientInfo(runtimeInfo);
     server = dagger.get(TaskWrapper.class);
     server.init();
     server.run();

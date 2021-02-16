@@ -21,6 +21,7 @@ import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.pipeline.api.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.glassfish.jersey.client.ClientConfig;
@@ -41,10 +42,13 @@ import javax.ws.rs.core.Response;
 import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 public class EventClientImpl implements EventClient {
   private static final Logger LOG = LoggerFactory.getLogger(EventClientImpl.class);
-  private final Client client;
+
+  private final Configuration conf;
+  private final Supplier<DpmClientInfo> dpmClientInfoSupplier;
   public static final String EVENT_CONNECT_TIMEOUT = "event.connect.timeout";
   public static final String EVENT_READ_TIMEOUT = "event.read.timeout";
   public static final int EVENT_CONNECT_TIMEOUT_DEFAULT = 10000;
@@ -52,12 +56,20 @@ public class EventClientImpl implements EventClient {
   // to be 60 seconds
   public static final int EVENT_READ_TIMEOUT_DEFAULT = 60000;
 
-  public EventClientImpl(Configuration conf) {
+  public EventClientImpl(Configuration conf, Supplier<DpmClientInfo> clientInfoSupplier) {
+    this.conf = conf;
+    this.dpmClientInfoSupplier = clientInfoSupplier;
+  }
+
+  private Client getRestClient() {
+    DpmClientInfo clientInfo = dpmClientInfoSupplier.get();
     ClientConfig clientConfig = new ClientConfig()
         .property(ClientProperties.CONNECT_TIMEOUT, conf.get(EVENT_CONNECT_TIMEOUT, EVENT_CONNECT_TIMEOUT_DEFAULT))
         .property(ClientProperties.READ_TIMEOUT, conf.get(EVENT_READ_TIMEOUT, EVENT_READ_TIMEOUT_DEFAULT));
-    this.client = ClientBuilder.newClient(clientConfig);
-    client.register(new CsrfProtectionFilter("CSRF"));
+    clientConfig.register(new MovedDpmJerseyClientFilter(clientInfo));
+    clientConfig.register(new CsrfProtectionFilter("CSRF"));
+    return ClientBuilder.newClient(clientConfig);
+
   }
 
   @Override
@@ -67,11 +79,12 @@ public class EventClientImpl implements EventClient {
     Map<String, String> headerParams,
     boolean compression,
     List<ClientEventJson> clientEventJson) throws EventException {
+    Client client = getRestClient();
     if (compression) {
       client.register(GZipEncoder.class);
       client.register(EncodingFilter.class);
     }
-    WebTarget target = client.target(path);
+    WebTarget target = client.target(dpmClientInfoSupplier.get().getDpmBaseUrl() + path);
 
     for (Map.Entry<String, String> entry : queryParams.entrySet()) {
       target = target.queryParam(entry.getKey(), entry.getValue());
@@ -80,6 +93,9 @@ public class EventClientImpl implements EventClient {
     Invocation.Builder builder = target.request();
 
     for (Map.Entry<String, String> entry : headerParams.entrySet()) {
+      builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
+    }
+    for (Map.Entry<String, String> entry : dpmClientInfoSupplier.get().getHeaders().entrySet()) {
       builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
     }
 
@@ -101,13 +117,13 @@ public class EventClientImpl implements EventClient {
   }
 
   private void _submitSync(
-      String absoluteTargetUrl,
+      String path,
       Map<String, String> queryParams,
       Map<String, String> headerParams,
       Object entity,
       long retryAttempts
   ) {
-    WebTarget webTarget = client.target(absoluteTargetUrl);
+    WebTarget webTarget = getRestClient().target(dpmClientInfoSupplier.get().getDpmBaseUrl() + path);
     int delaySecs = 1;
     int attempts = 0;
     while (attempts < retryAttempts || retryAttempts == -1) {
@@ -126,6 +142,9 @@ public class EventClientImpl implements EventClient {
         }
         Invocation.Builder builder = webTarget.request();
         for (Map.Entry<String, String> entry : headerParams.entrySet()) {
+          builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
+        }
+        for (Map.Entry<String, String> entry : dpmClientInfoSupplier.get().getHeaders().entrySet()) {
           builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
         }
         response = entity != null ? builder.post(Entity.json(entity)) : builder.post(null);
@@ -155,23 +174,23 @@ public class EventClientImpl implements EventClient {
 
   @Override
   public void submit(
-      String absoluteTargetUrl,
+      String path,
       Map<String, String> queryParams,
       Map<String, String> headerParams,
       List<SDCMetricsJson> sdcMetricsJsons,
       long retryAttempts
   ) {
-    _submitSync(absoluteTargetUrl, queryParams, headerParams, sdcMetricsJsons, retryAttempts);
+    _submitSync(path, queryParams, headerParams, sdcMetricsJsons, retryAttempts);
   }
 
   @Override
   public void sendSyncEvents(
-      String absoluteTargetUrl,
+      String path,
       Map<String, String> queryParams,
       Map<String, String> headerParams,
       Event event,
       long retryAttempts) {
-    _submitSync(absoluteTargetUrl, queryParams, headerParams, event, retryAttempts);
+    _submitSync(path, queryParams, headerParams, event, retryAttempts);
   }
 
   private static void sleep(int secs) {

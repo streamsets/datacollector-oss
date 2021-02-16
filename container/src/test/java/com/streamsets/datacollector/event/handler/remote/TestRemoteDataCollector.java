@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.event.handler.remote;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
 import com.streamsets.datacollector.callback.CallbackInfo;
 import com.streamsets.datacollector.callback.CallbackObjectType;
@@ -66,6 +67,8 @@ import com.streamsets.datacollector.util.PipelineDirectoryUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
@@ -82,7 +85,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.mockito.Mockito;
 
-import javax.ws.rs.core.MultivaluedMap;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -812,12 +814,36 @@ public class TestRemoteDataCollector {
 
   }
 
+  private void mockDpmClientInfo(RuntimeInfo runtimeInfoMock) {
+    Mockito.when(runtimeInfoMock.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
+        .thenReturn(new DpmClientInfo() {
+          @Override
+          public String getDpmBaseUrl() {
+            return "http://localhost:18631";
+          }
+
+          @Override
+          public Map<String, String> getHeaders() {
+            return ImmutableMap.of(
+                SSOConstants.X_APP_COMPONENT_ID, "componentId",
+                SSOConstants.X_APP_AUTH_TOKEN, "authToken"
+            );
+          }
+
+          @Override
+          public void setDpmBaseUrl(String dpmBaseUrl) {
+
+          }
+        });
+  }
+
   @Test
   public void testValidateConfigs() throws Exception {
     try {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
       Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
+      mockDpmClientInfo(runtimeInfo);
       BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
       Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -851,6 +877,7 @@ public class TestRemoteDataCollector {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
       Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("");
       Mockito.when(runtimeInfo.getId()).thenReturn("fakeId");
+      mockDpmClientInfo(runtimeInfo);
       BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
       Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -901,6 +928,7 @@ public class TestRemoteDataCollector {
   public void testGetPipelineStatus() throws Exception {
     try {
       RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+      mockDpmClientInfo(runtimeInfo);
       AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
       File testFolder = tempFolder.newFolder();
       Mockito.when(runtimeInfo.getDataDir()).thenReturn(testFolder.getAbsolutePath());
@@ -970,6 +998,7 @@ public class TestRemoteDataCollector {
   @Test
   public void testAclOnSavePipeline() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -1010,6 +1039,7 @@ public class TestRemoteDataCollector {
   @Test
   public void testSyncAcl() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -1041,6 +1071,7 @@ public class TestRemoteDataCollector {
   @Test
   public void testEncryptCredentialsEnabledOnSave() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -1086,6 +1117,7 @@ public class TestRemoteDataCollector {
   @Test
   public void testSavePipelineOffset() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -1129,6 +1161,7 @@ public class TestRemoteDataCollector {
   @Test
   public void testRemotePipelines() throws Exception {
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
@@ -1192,6 +1225,8 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testPipelineStateExists() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     Manager manager = Mockito.mock(StandaloneAndClusterPipelineManager.class);
@@ -1206,7 +1241,7 @@ public class TestRemoteDataCollector {
         pipelineStateStore,
         Mockito.mock(AclStoreTask.class),
         Mockito.mock(RemoteStateEventListener.class),
-        Mockito.mock(RuntimeInfo.class),
+        runtimeInfo,
         buildInfo,
         Mockito.mock(AclCacheHelper.class),
         Mockito.mock(StageLibraryTask.class),
@@ -1218,6 +1253,8 @@ public class TestRemoteDataCollector {
 
   @Test
   public void testRunnerCount() throws Exception {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     try {
@@ -1230,7 +1267,7 @@ public class TestRemoteDataCollector {
           Mockito.mock(PipelineStateStore.class),
           Mockito.mock(AclStoreTask.class),
           Mockito.mock(RemoteStateEventListener.class),
-          Mockito.mock(RuntimeInfo.class),
+          runtimeInfo,
           buildInfo,
           Mockito.mock(AclCacheHelper.class),
           Mockito.mock(StageLibraryTask.class),
@@ -1270,6 +1307,7 @@ public class TestRemoteDataCollector {
     BuildInfo buildInfo = Mockito.mock(BuildInfo.class);
     Mockito.when(buildInfo.getVersion()).thenReturn("3.17.0");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    mockDpmClientInfo(runtimeInfo);
     AclStoreTask aclStoreTask = Mockito.mock(AclStoreTask.class);
     final MockManager manager = new MockManager();
     RemoteDataCollector dataCollector = new RemoteDataCollector(

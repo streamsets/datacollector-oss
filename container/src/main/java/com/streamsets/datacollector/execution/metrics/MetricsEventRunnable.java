@@ -25,6 +25,7 @@ import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.config.StageConfiguration;
 import com.streamsets.datacollector.creation.PipelineBeanCreator;
 import com.streamsets.datacollector.creation.PipelineConfigBean;
+import com.streamsets.datacollector.event.client.impl.MovedDpmJerseyClientFilter;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.execution.EventListenerManager;
 import com.streamsets.datacollector.execution.PipelineState;
@@ -42,11 +43,12 @@ import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.store.PipelineStoreException;
 import com.streamsets.datacollector.util.AggregatorUtil;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +58,7 @@ import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
@@ -107,7 +110,6 @@ public class MetricsEventRunnable implements Runnable {
   private final int retryAttempts = 5;
   private boolean timeSeriesAnalysis = true;
   private volatile boolean isPipelineStopped = false;
-  private WebTarget webTarget;
   private Stopwatch stopwatch = null;
 
   @Inject
@@ -349,16 +351,6 @@ public class MetricsEventRunnable implements Runnable {
               break;
           }
         }
-
-        String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(
-            RemoteSSOService.DPM_BASE_URL_CONFIG,
-            RemoteSSOService.DPM_BASE_URL_DEFAULT
-        ));
-        String remoteTimeSeriesUrl = remoteBaseURL + CONTROL_HUB_METRICS_URL;
-        Client client = ClientBuilder.newBuilder().build();
-        client.register(new CsrfProtectionFilter("CSRF"));
-        client.register(SnappyWriterInterceptor.class);
-        webTarget = client.target(remoteTimeSeriesUrl);
       }
     } catch (PipelineStoreException e) {
       LOG.error(Utils.format("Error when reading pipeline state: {}", e.getErrorMessage(), e));
@@ -420,15 +412,22 @@ public class MetricsEventRunnable implements Runnable {
       attempts++;
       Response response = null;
       try {
-        response = webTarget.request()
-            .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
-            .header(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken().replaceAll("(\\r|\\n)", ""))
-            .header(SSOConstants.X_APP_COMPONENT_ID, runtimeInfo.getId())
-            .post(
-                Entity.json(
-                    sdcMetricsJsonList
-                )
-            );
+        DpmClientInfo clientInfo = runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY);
+
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(new MovedDpmJerseyClientFilter(clientInfo));
+        clientConfig.register(new CsrfProtectionFilter("CSRF"));
+        clientConfig.register(SnappyWriterInterceptor.class);
+        String remoteTimeSeriesUrl = clientInfo.getDpmBaseUrl() + CONTROL_HUB_METRICS_URL;
+        Client client = ClientBuilder.newBuilder().newClient(clientConfig);
+        WebTarget webTarget = client.target(remoteTimeSeriesUrl);
+
+        Invocation.Builder invocationBuilder = webTarget.request().header(
+            SSOConstants.X_REST_CALL,
+            SSOConstants.SDC_COMPONENT_NAME
+        );
+        clientInfo.getHeaders().entrySet().forEach(e -> invocationBuilder.header(e.getKey(), e.getValue()));
+        response = invocationBuilder.post(Entity.json(sdcMetricsJsonList));
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {
           LOG.trace("Sending metrics was successful");
           return;

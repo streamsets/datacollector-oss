@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.http;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.execution.dagger.AsterModuleForTest;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.main.MainStandalonePipelineManagerModule;
@@ -23,6 +24,7 @@ import com.streamsets.datacollector.main.RuntimeModule;
 import com.streamsets.datacollector.task.Task;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.testing.NetworkUtils;
 import dagger.ObjectGraph;
@@ -72,6 +74,30 @@ public class TestStatsREST {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.STATIC_WEB_DIR);
   }
 
+  private static void setDummyDpmClientInfo(RuntimeInfo runtimeInfo) {
+    runtimeInfo.setAttribute(
+        DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY,
+        new DpmClientInfo() {
+          @Override
+          public String getDpmBaseUrl() {
+            return "http://localhost:18631";
+          }
+
+          @Override
+          public Map<String, String> getHeaders() {
+            return ImmutableMap.of(
+                SSOConstants.X_APP_COMPONENT_ID, "componentId",
+                SSOConstants.X_APP_AUTH_TOKEN, "authToken"
+            );
+          }
+
+          @Override
+          public void setDpmBaseUrl(String dpmBaseUrl) {
+
+          }
+        });
+  }
+
   private String startServer() throws Exception {
     try {
 
@@ -84,6 +110,7 @@ public class TestStatsREST {
       conf.save(writer);
       writer.close();
       ObjectGraph dagger = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
+      setDummyDpmClientInfo(dagger.get(RuntimeInfo.class));
       server = dagger.get(TaskWrapper.class);
 
       server.init();

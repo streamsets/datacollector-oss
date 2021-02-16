@@ -16,14 +16,20 @@
 package com.streamsets.datacollector.util;
 
 import com.google.common.collect.ImmutableMap;
+import com.streamsets.datacollector.event.client.impl.MovedDpmJerseyClientFilter;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.execution.CommitPipelineJson;
 import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
+import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOPrincipal;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -35,14 +41,19 @@ public class ControlHubUtil {
 
   public static PipelineConfigurationJson publishPipeline(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       CommitPipelineJson commitPipelineModel
   ) throws IOException, PipelineException {
     SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
     String userAuthToken = ssoPrincipal.getTokenStr();
-    try (Response response = ClientBuilder.newClient()
-        .target(controlHubBaseUrl + "pipelinestore/rest/v1/pipelines")
-        .register(new CsrfProtectionFilter())
+
+    ClientConfig clientConfig = new ClientConfig();
+    clientConfig.register(new MovedDpmJerseyClientFilter(dpmClientInfo));
+    clientConfig.register(new CsrfProtectionFilter("CSRF"));
+    Client client = ClientBuilder.newClient(clientConfig);
+
+    try (Response response = client
+        .target(dpmClientInfo.getDpmBaseUrl() + "pipelinestore/rest/v1/pipelines")
         .request()
         .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
         .header(SSOConstants.X_REST_CALL, true)
@@ -65,14 +76,15 @@ public class ControlHubUtil {
 
   public static Response getPipelines(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       int offset,
       int len,
       String executionModes
   ) {
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "pipelinestore/rest/v1/pipelines",
+        dpmClientInfo,
+        "pipelinestore/rest/v1/pipelines",
         ImmutableMap.of(
             "offset", offset,
             "len", len,
@@ -83,19 +95,20 @@ public class ControlHubUtil {
 
   public static Response getPipeline(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       String pipelineCommitId
   ) {
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "pipelinestore/rest/v1/pipelineCommit/" + pipelineCommitId,
+        dpmClientInfo,
+        "pipelinestore/rest/v1/pipelineCommit/" + pipelineCommitId,
         null
     );
   }
 
   public static Response getPipelineCommitHistory(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       String pipelineId,
       int offset,
       int len,
@@ -103,7 +116,8 @@ public class ControlHubUtil {
   ) {
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "pipelinestore/rest/v1/pipeline/" + pipelineId + "/log",
+        dpmClientInfo,
+        "pipelinestore/rest/v1/pipeline/" + pipelineId + "/log",
         ImmutableMap.of(
             "offset", offset,
             "len", len,
@@ -112,24 +126,29 @@ public class ControlHubUtil {
     );
   }
 
-  public static Response getRemoteRoles(HttpServletRequest request, String controlHubBaseUrl) {
+  public static Response getRemoteRoles(
+      HttpServletRequest request,
+      DpmClientInfo dpmClientInfo
+  ) {
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "security/rest/v1/currentUser",
+        dpmClientInfo,
+         "security/rest/v1/currentUser",
         null
     );
   }
 
   public static Response getControlHubUsers(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       int offset,
       int len
   ) {
     String orgId = getOrganizationId(request);
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "security/rest/v1/organization/" + orgId + "/users",
+        dpmClientInfo,
+        "security/rest/v1/organization/" + orgId + "/users",
         ImmutableMap.of(
             "offset", offset,
             "len", len
@@ -139,14 +158,15 @@ public class ControlHubUtil {
 
   public static Response getControlHubGroups(
       HttpServletRequest request,
-      String controlHubBaseUrl,
+      DpmClientInfo dpmClientInfo,
       int offset,
       int len
   ) {
     String orgId = getOrganizationId(request);
     return getProxyMethod(
         request,
-        controlHubBaseUrl + "security/rest/v1/organization/" + orgId + "/groups",
+        dpmClientInfo,
+        "security/rest/v1/organization/" + orgId + "/groups",
         ImmutableMap.of(
             "offset", offset,
             "len", len
@@ -156,14 +176,18 @@ public class ControlHubUtil {
 
   private static Response getProxyMethod(
       HttpServletRequest request,
+      DpmClientInfo dpmClientInfo,
       String resourceUrl,
       Map<String, Object> queryParams
   ) {
+    ClientConfig clientConfig = new ClientConfig();
+    clientConfig.register(new MovedDpmJerseyClientFilter(dpmClientInfo));
+    clientConfig.register(new CsrfProtectionFilter("CSRF"));
+    Client client = ClientBuilder.newClient(clientConfig);
+
     SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
     String userAuthToken = ssoPrincipal.getTokenStr();
-    WebTarget webTarget = ClientBuilder.newClient()
-        .target(resourceUrl)
-        .register(new CsrfProtectionFilter());
+    WebTarget webTarget = client.target(dpmClientInfo.getDpmBaseUrl() + resourceUrl);
 
     if (queryParams != null) {
       queryParams.forEach(webTarget::queryParam);

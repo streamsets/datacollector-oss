@@ -15,6 +15,7 @@
  */
 package com.streamsets.datacollector.execution.dagger;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.PipelineConfiguration;
 import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.execution.PipelineStatus;
@@ -36,6 +37,8 @@ import com.streamsets.datacollector.store.impl.SlavePipelineStoreTask;
 import com.streamsets.datacollector.task.TaskWrapper;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.SSOConstants;
 import dagger.ObjectGraph;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -48,6 +51,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -69,10 +73,35 @@ public class TestPipelineManagerModule {
     System.getProperties().remove(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR);
   }
 
+  private static void setDummyDpmClientInfo(RuntimeInfo runtimeInfo) {
+    runtimeInfo.setAttribute(
+        DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY,
+        new DpmClientInfo() {
+          @Override
+          public String getDpmBaseUrl() {
+            return "http://localhost:18631";
+          }
+
+          @Override
+          public Map<String, String> getHeaders() {
+            return ImmutableMap.of(
+                SSOConstants.X_APP_COMPONENT_ID, "componentId",
+                SSOConstants.X_APP_AUTH_TOKEN, "authToken"
+            );
+          }
+
+          @Override
+          public void setDpmBaseUrl(String dpmBaseUrl) {
+
+          }
+        });
+  }
+
   @Test
   public void testStandalonePipelineManagerModule() throws PipelineException {
     //Start SDC and get an instance of PipelineTask
     ObjectGraph objectGraph = ObjectGraph.create(MainStandalonePipelineManagerModule.createForTest(AsterModuleForTest.class));
+    setDummyDpmClientInfo(objectGraph.get(RuntimeInfo.class));
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     Assert.assertTrue(taskWrapper.getTask() instanceof PipelineTask);
     Assert.assertNotNull(objectGraph.get(Configuration.class));
@@ -122,6 +151,7 @@ public class TestPipelineManagerModule {
   public void testSlavePipelineManagerModule() throws PipelineException {
     ObjectGraph objectGraph = ObjectGraph.create(MainSlavePipelineManagerModule.createForTest(AsterModuleForTest.class));
     ((SlaveRuntimeInfo)objectGraph.get(RuntimeInfo.class)).setId("id");
+    setDummyDpmClientInfo(objectGraph.get(RuntimeInfo.class));
     TaskWrapper taskWrapper = objectGraph.get(TaskWrapper.class);
     taskWrapper.init();
     Assert.assertTrue(taskWrapper.getTask() instanceof SlavePipelineTask);

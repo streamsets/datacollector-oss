@@ -86,6 +86,7 @@ import com.streamsets.datacollector.util.DisconnectedSecurityUtils;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.http.AbstractSSOService;
 import com.streamsets.lib.security.http.DisconnectedSSOManager;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.impl.Utils;
@@ -262,8 +263,6 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     percentOfWaitIntervalBeforeSkip = conf.get(PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP, DEFAULT_PERCENT_OF_WAIT_INTERVAL_BEFORE_SKIP);
     requestHeader = new HashMap<>();
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
-    requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
-    requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, this.runtimeInfo.getId());
     PipelineBeanCreator.prepareForConnections(conf, runtimeInfo);
     stopWatch = Stopwatch.createUnstarted();
     stopWatchForSyncEvents = Stopwatch.createUnstarted();
@@ -288,15 +287,12 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         }
       }
     }
-    String remoteBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
-        RemoteSSOService.DPM_BASE_URL_DEFAULT
-    ));
-    jobRunnerMetricsUrl = remoteBaseURL + "jobrunner/rest/v1/jobs/metrics";
-    messagingEventsUrl = remoteBaseURL + RemoteDataCollector.MESSAGING_EVENTS_URL;
-    jobRunnerPipelineStatusEventsUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUSES_ENDPOINT;
-    jobRunnerPipelineStatusEventUrl = remoteBaseURL + REMOTE_URL_PIPELINE_STATUS_ENDPOINT;
-    jobRunnerSdcProcessMetricsEventUrl = remoteBaseURL + REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT;
-    jobRunnerSdcHeartBeatUrl = remoteBaseURL + REMOTE_URL_SDC_HEARTBEAT_ENDPOINT;
+    jobRunnerMetricsUrl =  "jobrunner/rest/v1/jobs/metrics";
+    messagingEventsUrl = RemoteDataCollector.MESSAGING_EVENTS_URL;
+    jobRunnerPipelineStatusEventsUrl = REMOTE_URL_PIPELINE_STATUSES_ENDPOINT;
+    jobRunnerPipelineStatusEventUrl = REMOTE_URL_PIPELINE_STATUS_ENDPOINT;
+    jobRunnerSdcProcessMetricsEventUrl = REMOTE_URL_SDC_PROCESS_METRICS_ENDPOINT;
+    jobRunnerSdcHeartBeatUrl = REMOTE_URL_SDC_HEARTBEAT_ENDPOINT;
 
     // Control Hub WebSocket Tunneling for Control Hub UI to Data Collector Communication
     webSocketToRestDispatcher = new WebSocketToRestDispatcher(conf, runtimeInfo, executorService);
@@ -329,7 +325,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     LOG.info("Will send sync events: {}", this.shouldSendSyncEvents);
     executorService.submit(new EventHandlerCallable(
         remoteDataCollector,
-        new EventClientImpl(conf),
+        new EventClientImpl(conf, () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)),
         jsonToFromDto,
         new ArrayList<>(),
         new ArrayList<>(),
@@ -346,7 +342,10 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         runtimeInfo
     ));
     if (shouldSendSyncEvents) {
-      HeartbeatSender heartbeatSender =  new HeartbeatSender(new EventClientImpl(conf));
+      HeartbeatSender heartbeatSender = new HeartbeatSender(new EventClientImpl(
+          conf,
+          () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)
+      ));
       syncEventsExecutorService.scheduleAtFixedRate(
           heartbeatSender,
           1000,
@@ -354,7 +353,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
           TimeUnit.MILLISECONDS
       );
       syncEventsExecutorService.submit(new SyncEventSender(
-          new EventClientImpl(conf),
+          new EventClientImpl(conf, () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)),
           remoteDataCollector,
           jsonToFromDto,
           sendAllStatusEventsInterval,

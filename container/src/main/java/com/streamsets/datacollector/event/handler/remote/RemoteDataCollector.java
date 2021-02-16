@@ -61,6 +61,7 @@ import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.Issues;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.acl.dto.Acl;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -149,15 +150,10 @@ public class RemoteDataCollector implements DataCollector {
     this.blobStoreTask = blobStoreTask;
     this.eventHandlerExecutor = eventHandlerExecutor;
     PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
-    String remoteBaseURL = RemoteSSOService.getValidURL(configuration.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
-        RemoteSSOService.DPM_BASE_URL_DEFAULT
-    ));
     requestHeader = new HashMap<>();
     requestHeader.put(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
-    requestHeader.put(SSOConstants.X_APP_AUTH_TOKEN, runtimeInfo.getAppAuthToken());
-    requestHeader.put(SSOConstants.X_APP_COMPONENT_ID, runtimeInfo.getId());
-    jobRunnerMetricsUrl = remoteBaseURL + JOB_METRICS_URL;
-    eventClient = new EventClientImpl(configuration);
+    jobRunnerMetricsUrl = JOB_METRICS_URL;
+    eventClient = new EventClientImpl(configuration, () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY));
   }
 
   PipelineStoreTask getPipelineStoreTask() {
