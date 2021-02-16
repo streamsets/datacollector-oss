@@ -558,49 +558,34 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
 
   @Override
   public boolean shouldQueue(RemoteFile remoteFile) {
-    // Case: We started up for the first time, so anything we see must be queued
-    if (currentOffset == null) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Initial file: {}", remoteFile.getFilePath());
-      }
-      return true;
-    }
+    boolean shouldQueue = false;
     // We poll for new files only when fileQueue is empty, so we don't need to check if this file is in the queue.
     // The file can be in the fileQueue only if the file was already queued in this iteration -
     // which is not possible, since we are iterating through the children,
     // so this is the first time we are seeing the file.
-
-    // Case: It is the same file as we were reading, but we have not read the whole thing, so queue it again
-    // - recovering from a shutdown.
-    if ((remoteFile.getFilePath().equals(currentOffset.fileName))
-        && !(currentOffset.getOffset().equals(MINUS_ONE))) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Offset not complete: {}. Re-queueing.", remoteFile.getFilePath());
-      }
-      return true;
+    if (currentOffset == null) {
+      // Case: We started up for the first time, so anything we see must be queued
+      LOG.trace("Initial file: {}", remoteFile.getFilePath());
+      shouldQueue = true;
+    } else if (remoteFile.getFilePath().equals(currentOffset.fileName) &&
+        !(currentOffset.getOffset().equals(MINUS_ONE))) {
+      // Case: It is the same file as we were reading, but we have not read the whole thing, so queue it again
+      // - recovering from a shutdown.
+      LOG.trace("Offset not complete: {}. Re-queueing.", remoteFile.getFilePath());
+      shouldQueue = true;
+    } else if (remoteFile.getLastModified() > currentOffset.timestamp &&
+        !(remoteFile.getFilePath().equals(currentOffset.fileName))) {
+      // Case: The file is newer than the last one we read/are reading, and its not the same last one
+      LOG.trace("Updated file: {}", remoteFile.getFilePath());
+      shouldQueue = true;
+    } else if ((remoteFile.getLastModified() == currentOffset.timestamp) &&
+        (remoteFile.getFilePath().compareTo(currentOffset.fileName) > 0)) {
+      // Case: The file has the same timestamp as the last one we read, but is lexicographically higher, and we
+      // have not queued it before.
+      LOG.trace("Same timestamp as currentOffset, lexicographically higher file: {}", remoteFile.getFilePath());
+      shouldQueue = true;
     }
-
-    // Case: The file is newer than the last one we read/are reading, and its not the same last one
-    if ((remoteFile.getLastModified() > currentOffset.timestamp)
-        && !(remoteFile.getFilePath().equals(currentOffset.fileName))) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Updated file: {}", remoteFile.getFilePath());
-      }
-      return true;
-    }
-
-    // Case: The file has the same timestamp as the last one we read, but is lexicographically higher,
-    // and we have not queued it before.
-    if ((remoteFile.getLastModified() == currentOffset.timestamp)
-        && (remoteFile.getFilePath().compareTo(currentOffset.fileName) > 0)) {
-      if (LOG.isTraceEnabled()) {
-        LOG.trace("Same timestamp as currentOffset, lexicographically higher file: {}", remoteFile.getFilePath());
-      }
-      return true;
-    }
-
-    // For all other things .. we don't add.
-    return false;
+    return shouldQueue;
   }
 
   @Override
@@ -646,5 +631,13 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   @VisibleForTesting
   void setDelegate(RemoteDownloadSourceDelegate delegate) {
     this.delegate = delegate;
+  }
+
+  @VisibleForTesting
+  Offset getCurrentOffset() { return currentOffset; }
+
+  @VisibleForTesting
+  void setCurrentOffset(Offset currentOffset) {
+    this.currentOffset = currentOffset;
   }
 }

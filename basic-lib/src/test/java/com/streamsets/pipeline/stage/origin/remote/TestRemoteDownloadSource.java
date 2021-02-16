@@ -34,6 +34,7 @@ import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.remote.FTPAndSSHDUnitTest;
+import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.lib.util.SystemClock;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
@@ -1809,6 +1810,40 @@ public class TestRemoteDownloadSource extends FTPAndSSHDUnitTest {
     destroyAndValidate(runner);
   }
 
+  @Test
+  public void testShouldQueueWithCorrectOffsets() {
+    RemoteDownloadSource rms = new TestRemoteDownloadSourceBuilder(scheme, port).build();
+    RemoteFile remoteFile = Mockito.mock(RemoteFile.class);
+    Mockito.when(remoteFile.getFilePath()).thenReturn("b");
+    Mockito.when(remoteFile.getLastModified()).thenReturn(2L);
+    Offset[] offsets = {
+        null,
+        new Offset("b", 2L, "0"),
+        new Offset("a", 1L, "-1"),
+        new Offset("a", 2L, "-1")};
+    for (Offset offset: offsets) {
+      rms.setCurrentOffset(offset);
+      Assert.assertTrue(rms.shouldQueue(remoteFile));
+    }
+  }
+
+  @Test
+  public void testShouldQueueWithIncorrectOffsets() {
+    RemoteDownloadSource rms = new TestRemoteDownloadSourceBuilder(scheme, port).build();
+    RemoteFile remoteFile = Mockito.mock(RemoteFile.class);
+    Mockito.when(remoteFile.getFilePath()).thenReturn("b");
+    Mockito.when(remoteFile.getLastModified()).thenReturn(2L);
+    Offset[] offsets = {
+        new Offset("b", 2L, "-1"),
+        new Offset("c", 3L, "-1"),
+        new Offset("b", 3L, "-1"),
+        new Offset("c", 2L, "-1"),
+        new Offset("b", 1L, "-1")};
+    for (Offset offset: offsets) {
+      rms.setCurrentOffset(offset);
+      Assert.assertFalse(rms.shouldQueue(remoteFile));
+    }
+  }
 
   private void destroyAndValidate(SourceRunner runner) throws Exception {
     runner.runDestroy();
