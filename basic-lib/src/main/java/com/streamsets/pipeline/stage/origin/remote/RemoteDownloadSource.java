@@ -41,6 +41,7 @@ import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
 import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
@@ -72,12 +73,18 @@ import java.util.NavigableSet;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RemoteDownloadSource extends BaseSource implements FileQueueChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteDownloadSource.class);
   private static final String CONF_PREFIX = "conf.";
   private static final String MINUS_ONE = "-1";
+
+  private static final Pattern URL_PATTERN_FTP = Pattern.compile("(ftp://).*:?.*");
+  private static final Pattern URL_PATTERN_FTPS = Pattern.compile("(ftps://).*:?.*");
+  private static final Pattern URL_PATTERN_SFTP = Pattern.compile("(sftp://).*:?.*");
 
   static final String NOTHING_READ = "null";
 
@@ -176,15 +183,29 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
       }
     }
 
+    if (conf.remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(conf.remoteConfig.remoteAddress).matches()
+      || conf.remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(conf.remoteConfig.remoteAddress).matches()
+      || conf.remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(conf.remoteConfig.remoteAddress).matches()) {
+      issues.add(
+          getContext().createConfigIssue(
+              com.streamsets.pipeline.stage.origin.remote.Groups.REMOTE.name(),
+              CONF_PREFIX + "remoteConfig.remoteAddress",
+              Errors.REMOTE_DOWNLOAD_11,
+              conf.remoteConfig.remoteAddress,
+              conf.remoteConfig.protocol
+          )
+      );
+    }
+
     validateFilePattern(issues);
     rateLimitElEval = FileRefUtil.createElEvalForRateLimit(getContext());
     rateLimitElVars = getContext().createELVars();
 
     if (issues.isEmpty()) {
-      if (FTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
+      if (conf.remoteConfig.protocol == Protocol.FTP || conf.remoteConfig.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
-      } else if (SFTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
+      } else if (conf.remoteConfig.protocol == Protocol.SFTP) {
         delegate = new SFTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
       }

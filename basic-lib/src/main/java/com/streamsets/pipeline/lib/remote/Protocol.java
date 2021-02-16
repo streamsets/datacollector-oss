@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 
 @GenerateResourceBundle
-public enum SecurityMode implements Label {
+public enum Protocol implements Label {
   SFTP("SFTP"),
   FTP("FTP"),
   FTPS("FTPS"),
@@ -27,7 +27,7 @@ public enum SecurityMode implements Label {
 
   private final String label;
 
-  SecurityMode(String label) { this.label = label; }
+  Protocol(String label) { this.label = label; }
 
   @Override
   public String getLabel() {

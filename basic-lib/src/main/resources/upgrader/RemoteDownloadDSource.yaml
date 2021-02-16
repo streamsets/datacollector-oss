@@ -41,17 +41,17 @@ upgrades:
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^ftp:.*"
-          name: conf.remoteConfig.securityMode
+          name: conf.remoteConfig.protocol
           value: "FTP"
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^ftps:.*"
-          name: conf.remoteConfig.securityMode
+          name: conf.remoteConfig.protocol
           value: "FTPS"
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^sftp:.*"
-          name: conf.remoteConfig.securityMode
+          name: conf.remoteConfig.protocol
           value: "SFTP"
   - toVersion: 8
     actions:

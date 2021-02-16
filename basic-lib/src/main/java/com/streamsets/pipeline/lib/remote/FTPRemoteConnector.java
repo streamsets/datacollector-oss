@@ -68,10 +68,6 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     super(remoteConfig);
   }
 
-  public static boolean handlesScheme(String scheme) {
-    return FTP_SCHEME.equals(scheme) || FTPS_SCHEME.equals(scheme);
-  }
-
   @Override
   protected void initAndConnect(
       List<Stage.ConfigIssue> issues,

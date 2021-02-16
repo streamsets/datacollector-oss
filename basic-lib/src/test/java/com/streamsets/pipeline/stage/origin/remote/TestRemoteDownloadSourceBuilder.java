@@ -21,9 +21,11 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
 import com.streamsets.pipeline.lib.remote.Authentication;
+import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.util.SystemClock;
 
 import java.time.Clock;
+import java.util.Locale;
 
 public class TestRemoteDownloadSourceBuilder {
 
@@ -34,6 +36,7 @@ public class TestRemoteDownloadSourceBuilder {
   private final int port;
 
   private String remoteHost;
+  private Protocol protocol;
   private boolean userDirIsRoot;
   private DataFormat dataFormat;
   private String errorArchive;
@@ -59,6 +62,7 @@ public class TestRemoteDownloadSourceBuilder {
     this.port = port;
     // init defaults
     this.remoteHost = scheme.name() + "://localhost:" + port + "/";
+    this.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
     this.userDirIsRoot = true;
     this.dataFormat = DataFormat.JSON;
     this.errorArchive = null;
@@ -77,6 +81,11 @@ public class TestRemoteDownloadSourceBuilder {
 
   public TestRemoteDownloadSourceBuilder withRemoteHost(String remoteHost) {
     this.remoteHost = remoteHost;
+    return this;
+  }
+
+  public TestRemoteDownloadSourceBuilder withProtocol(Protocol protocol) {
+    this.protocol = protocol;
     return this;
   }
 
@@ -153,6 +162,7 @@ public class TestRemoteDownloadSourceBuilder {
   public RemoteDownloadSource build() {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
     configBean.remoteConfig.remoteAddress = remoteHost;
+    configBean.remoteConfig.protocol = protocol;
     configBean.remoteConfig.userDirIsRoot = userDirIsRoot;
     configBean.remoteConfig.username = () -> TESTUSER;
     configBean.remoteConfig.auth = Authentication.PASSWORD;

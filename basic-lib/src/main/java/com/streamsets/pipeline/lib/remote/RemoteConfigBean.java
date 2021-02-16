@@ -44,14 +44,14 @@ public class RemoteConfigBean {
       required = true,
       type = ConfigDef.Type.MODEL,
       defaultValue = "SFTP",
-      label = "Security Mode",
-      description = "Security Mode to connect to the server.",
-      displayPosition = 20,
+      label = "Protocol",
+      description = "Protocol to connect to the server.",
+      displayPosition = 15,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#0"
   )
-  @ValueChooserModel(SecurityModeChooserValues.class)
-  public SecurityMode securityMode = SecurityMode.SFTP;
+  @ValueChooserModel(ProtocolChooserValues.class)
+  public Protocol protocol = Protocol.SFTP;
 
   @ConfigDef(
       required = true,
@@ -88,7 +88,7 @@ public class RemoteConfigBean {
       displayPosition = 60,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
-      dependsOn = "securityMode",
+      dependsOn = "protocol",
       triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSModeChooserValues.class)
@@ -105,7 +105,7 @@ public class RemoteConfigBean {
       displayPosition = 65,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
-      dependsOn = "securityMode",
+      dependsOn = "protocol",
       triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSDataChannelProtectionLevelChooserValues.class)
@@ -240,7 +240,7 @@ public class RemoteConfigBean {
       displayPosition = 70,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "securityMode",
+      dependsOn = "protocol",
       triggeredByValue = "FTPS"
   )
   public boolean useFTPSClientCert;
@@ -348,7 +348,7 @@ public class RemoteConfigBean {
       displayPosition = 80,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "securityMode",
+      dependsOn = "protocol",
       triggeredByValue = "FTPS"
   )
   @ValueChooserModel(FTPSTrustStoreChooserValues.class)

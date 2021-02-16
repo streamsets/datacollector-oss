@@ -22,6 +22,7 @@ import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.Target;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
+import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
@@ -46,6 +47,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static org.awaitility.Awaitility.await;
@@ -140,6 +142,7 @@ public class TestRemoteLocationExecutor extends FTPAndSSHDUnitTest {
 
      // Connection related settings
      configBean.remoteConfig.remoteAddress = remoteHost;
+     configBean.remoteConfig.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
      configBean.remoteConfig.userDirIsRoot = userDirisRoot;
      configBean.remoteConfig.username = () -> TESTUSER;
      configBean.remoteConfig.auth = Authentication.PASSWORD;
@@ -159,6 +162,7 @@ public class TestRemoteLocationExecutor extends FTPAndSSHDUnitTest {
 
     // Connection related settings
     configBean.remoteConfig.remoteAddress = remoteHost;
+    configBean.remoteConfig.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
     configBean.remoteConfig.userDirIsRoot = userDirisRoot;
     configBean.remoteConfig.username = () -> TESTUSER;
     configBean.remoteConfig.auth = Authentication.PASSWORD;

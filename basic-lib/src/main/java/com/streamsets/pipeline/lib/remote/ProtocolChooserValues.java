@@ -17,9 +17,9 @@ package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class SecurityModeChooserValues extends BaseEnumChooserValues<Authentication> {
+public class ProtocolChooserValues extends BaseEnumChooserValues<Protocol> {
 
-  public SecurityModeChooserValues() {
-    super(SecurityMode.class);
+  public ProtocolChooserValues() {
+    super(Protocol.class);
   }
 }

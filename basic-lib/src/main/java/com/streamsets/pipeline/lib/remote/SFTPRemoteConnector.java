@@ -58,10 +58,6 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
     super(remoteConfig);
   }
 
-  public static boolean handlesScheme(String scheme) {
-    return SFTP_SCHEME.equals(scheme);
-  }
-
   @Override
   public void initAndConnect(
       List<Stage.ConfigIssue> issues,

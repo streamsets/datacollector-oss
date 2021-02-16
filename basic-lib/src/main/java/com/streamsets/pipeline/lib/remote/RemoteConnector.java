@@ -73,11 +73,11 @@ public abstract class RemoteConnector {
     URI uri;
     try {
       uri = new URI(uriString);
-      if (FTPRemoteConnector.handlesScheme(uri.getScheme())) {
+      if (config.protocol == Protocol.FTP || config.protocol == Protocol.FTPS) {
         if (uri.getPort() == -1) {
           uri = UriBuilder.fromUri(uri).port(FTPRemoteConnector.DEFAULT_PORT).build();
         }
-      } else if (SFTPRemoteConnector.handlesScheme(uri.getScheme())) {
+      } else if (config.protocol == Protocol.SFTP) {
         if (uri.getPort() == -1) {
           uri = UriBuilder.fromUri(uri).port(SFTPRemoteConnector.DEFAULT_PORT).build();
         }

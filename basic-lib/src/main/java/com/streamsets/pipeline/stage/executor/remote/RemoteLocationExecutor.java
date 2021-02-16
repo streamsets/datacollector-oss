@@ -26,12 +26,14 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
+import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConfigBean;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
 import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
+import com.streamsets.pipeline.stage.origin.remote.RemoteDownloadConfigBean;
 import org.apache.commons.lang3.StringUtils;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
@@ -43,12 +45,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 public class RemoteLocationExecutor extends BaseExecutor {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteLocationExecutor.class);
   private final RemoteConfigBean remoteConfig;
   private final PostProcessingFileActionsConfig action;
+
+  private static final Pattern URL_PATTERN_FTP = Pattern.compile("(ftp://).*:?.*");
+  private static final Pattern URL_PATTERN_FTPS = Pattern.compile("(ftps://).*:?.*");
+  private static final Pattern URL_PATTERN_SFTP = Pattern.compile("(sftp://).*:?.*");
 
   private ErrorRecordHandler errorRecordHandler;
   private Map<String, ELEval> evals;
@@ -79,11 +86,25 @@ public class RemoteLocationExecutor extends BaseExecutor {
 
     URI remoteURI = RemoteConnector.getURI(remoteConfig, issues, getContext(), Groups.REMOTE);
 
+    if (remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(remoteConfig.remoteAddress).matches()
+        || remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(remoteConfig.remoteAddress).matches()
+        || remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(remoteConfig.remoteAddress).matches()) {
+      issues.add(
+          getContext().createConfigIssue(
+              com.streamsets.pipeline.stage.executor.remote.Groups.REMOTE.name(),
+              "remoteConfig.remoteAddress",
+              com.streamsets.pipeline.stage.executor.remote.Errors.REMOTE_LOCATION_EXECUTOR_05,
+              remoteConfig.remoteAddress,
+              remoteConfig.protocol
+          )
+      );
+    }
+
     if (issues.isEmpty()) {
-      if (FTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
+      if (remoteConfig.protocol == Protocol.FTP || remoteConfig.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteLocationExecutorDelegate(remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
-      } else if (SFTPRemoteConnector.handlesScheme(remoteURI.getScheme())) {
+      } else if (remoteConfig.protocol == Protocol.SFTP) {
         delegate = new SFTPRemoteLocationExecutorDelegate(remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
       }

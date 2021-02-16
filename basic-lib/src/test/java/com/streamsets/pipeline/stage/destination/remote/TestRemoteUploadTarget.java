@@ -29,6 +29,7 @@ import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
+import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
@@ -53,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -513,6 +515,7 @@ public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
   ) {
     RemoteUploadConfigBean configBean = new RemoteUploadConfigBean();
     configBean.remoteConfig.remoteAddress = remoteHost;
+    configBean.remoteConfig.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
     configBean.remoteConfig.userDirIsRoot = userDirIsRoot;
     configBean.remoteConfig.username = () -> TESTUSER;
     configBean.remoteConfig.auth = Authentication.PASSWORD;

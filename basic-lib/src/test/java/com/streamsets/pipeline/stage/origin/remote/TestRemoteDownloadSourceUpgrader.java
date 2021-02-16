@@ -142,18 +142,19 @@ public class TestRemoteDownloadSourceUpgrader {
     configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftp://host:port"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "FTP");
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "FTP");
 
     configs.clear();
     configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftps://host:port"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "FTPS");
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "FTPS");
 
     configs.clear();
     configs.add(new Config(dataFormatPrefix + "remoteAddress", "sftp://host:port"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "securityMode", "SFTP");
+    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "SFTP");
   }
+
 }
