@@ -30,7 +30,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.attribute.PosixFilePermission;
@@ -60,7 +59,7 @@ public class RuntimeEL {
     name = "conf",
     description = "Retrieves the value of the config property from sdc runtime configuration")
   public static String conf(
-    @ElParam("conf") String conf) throws IOException {
+    @ElParam("conf") String conf) {
     String value = null;
     if(RUNTIME_CONF_PROPS != null) {
       value = RUNTIME_CONF_PROPS.getProperty(conf);
@@ -68,7 +67,7 @@ public class RuntimeEL {
     if(value == null) {
       //Returning a null value instead of throwing an exception results in coercion of the value to the expected
       //return type. This leads to counter intuitive validation error messages.
-      throw new IllegalArgumentException(Utils.format("Could not resolve property '{}'", conf).toString());
+      throw new IllegalArgumentException(Utils.format("Could not resolve property '{}'", conf));
     }
     return value;
   }
@@ -97,7 +96,7 @@ public class RuntimeEL {
           "Collector resources directory. If restricted is set to 'true', the file must be readable only by its " +
           "owner."
   )
-  public static String loadResourceRaw(
+  public static synchronized String loadResourceRaw(
       @ElParam("fileName") String fileName,
       @ElParam("restricted") boolean restricted
   ) {
@@ -197,7 +196,7 @@ public class RuntimeEL {
     prefix = "sdc",
     name = "hostname",
     description = "Return hostname where SDC runs")
-  public static String hostname() throws UnknownHostException {
+  public static String hostname() {
     return HOSTNAME;
   }
 
