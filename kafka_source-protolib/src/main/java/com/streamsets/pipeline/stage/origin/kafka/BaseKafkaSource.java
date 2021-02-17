@@ -282,86 +282,68 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
   ) throws StageException {
     List<Record> records = new ArrayList<>();
     if (payload == null) {
-      Record record = getContext().createRecord(messageId);
-      record.set(Field.create(payload));
-      errorRecordHandler.onError(
-          new OnRecordErrorException(
-              record,
-              KafkaErrors.KAFKA_74,
-              messageId
-          )
-      );
-      return records;
-    }
+      LOG.debug("NULL value (tombstone) read, it has been discarded");
+    } else {
 
-    try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
+      try (DataParser parser = Utils.checkNotNull(parserFactory, "Initialization failed").getParser(messageId, payload)) {
 
-      Record record = null;
-      boolean recoverableExceptionHit;
-      do {
-        try {
-          recoverableExceptionHit = false;
-          record = parser.parse();
-        } catch (RecoverableDataParserException e) {
-          recoverableExceptionHit = true;
-          handleException(getContext(), getContext(), messageId, e, e.getUnparsedRecord());
-
-          //Go to next record
-          continue;
-        }
-
-        if (record != null) {
-          if (timestamp != 0) {
-            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
-            record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
-          }
-          record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
-          record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
-          record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
-
+        Record record = null;
+        boolean recoverableExceptionHit;
+        do {
           try {
-            MessageKeyUtil.handleMessageKey(messageKey, conf.keyCaptureMode, record, conf.keyCaptureField, conf.keyCaptureAttribute);
-          } catch (Exception e) {
-            throw new OnRecordErrorException(
-                record,
-                KafkaErrors.KAFKA_201,
-                partition,
-                offset,
-                e.getMessage(),
-                e
-            );
+            recoverableExceptionHit = false;
+            record = parser.parse();
+          } catch (RecoverableDataParserException e) {
+            recoverableExceptionHit = true;
+            handleException(getContext(), getContext(), messageId, e, e.getUnparsedRecord());
+
+            //Go to next record
+            continue;
           }
 
+          if (record != null) {
+            if (timestamp != 0) {
+              record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
+              record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+            }
+            record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, conf.topic);
+            record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, partition);
+            record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+
+            try {
+              MessageKeyUtil.handleMessageKey(messageKey,
+                  conf.keyCaptureMode,
+                  record,
+                  conf.keyCaptureField,
+                  conf.keyCaptureAttribute
+              );
+            } catch (Exception e) {
+              throw new OnRecordErrorException(record, KafkaErrors.KAFKA_201, partition, offset, e.getMessage(), e);
+            }
+
+            records.add(record);
+          }
+        } while (record != null || recoverableExceptionHit);
+      } catch (IOException | DataParserException ex) {
+        Record record = getContext().createRecord(messageId);
+        record.set(Field.create(payload));
+        String exMessage = ex.toString();
+        if (ex.getClass().toString().equals("class com.fasterxml.jackson.core.JsonParseException")) {
+          // SDC-15723. Trying to catch this exception is hard, as its behaviour is not expected.
+          // This workaround using its String seems to be the best way to do it.
+          exMessage = "Cannot parse JSON from record";
+        }
+        errorRecordHandler.onError(new OnRecordErrorException(record, KafkaErrors.KAFKA_37, messageId, exMessage, ex));
+      }
+      if (conf.produceSingleRecordPerMessage) {
+        List<Field> list = new ArrayList<>();
+        records.forEach(record -> list.add(record.get()));
+        if (!list.isEmpty()) {
+          Record record = records.get(0);
+          record.set(Field.create(Field.Type.LIST, list));
+          records.clear();
           records.add(record);
         }
-      } while (record != null || recoverableExceptionHit);
-    } catch (IOException | DataParserException ex) {
-      Record record = getContext().createRecord(messageId);
-      record.set(Field.create(payload));
-      String exMessage = ex.toString();
-      if (ex.getClass().toString().equals("class com.fasterxml.jackson.core.JsonParseException")) {
-        // SDC-15723. Trying to catch this exception is hard, as its behaviour is not expected.
-        // This workaround using its String seems to be the best way to do it.
-        exMessage = "Cannot parse JSON from record";
-      }
-      errorRecordHandler.onError(
-          new OnRecordErrorException(
-              record,
-              KafkaErrors.KAFKA_37,
-              messageId,
-              exMessage,
-              ex
-          )
-      );
-    }
-    if (conf.produceSingleRecordPerMessage) {
-      List<Field> list = new ArrayList<>();
-      records.forEach(record -> list.add(record.get()));
-      if(!list.isEmpty()) {
-        Record record = records.get(0);
-        record.set(Field.create(Field.Type.LIST, list));
-        records.clear();
-        records.add(record);
       }
     }
     return records;
