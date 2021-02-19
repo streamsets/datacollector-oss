@@ -31,6 +31,7 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
+import com.streamsets.pipeline.lib.remote.Authentication;
 import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
 import com.streamsets.pipeline.lib.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
@@ -87,20 +88,6 @@ public class RemoteUploadTarget extends BaseTarget {
         CONF_PREFIX + "dataFormatConfig.",
         issues
     );
-
-    if (conf.remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(conf.remoteConfig.remoteAddress).matches()
-        || conf.remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(conf.remoteConfig.remoteAddress).matches()
-        || conf.remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(conf.remoteConfig.remoteAddress).matches()) {
-      issues.add(
-          getContext().createConfigIssue(
-              com.streamsets.pipeline.stage.destination.remote.Groups.REMOTE.name(),
-              CONF_PREFIX + "remoteConfig.remoteAddress",
-              com.streamsets.pipeline.stage.destination.remote.Errors.REMOTE_UPLOAD_05,
-              conf.remoteConfig.remoteAddress,
-              conf.remoteConfig.protocol
-          )
-      );
-    }
 
     this.remoteURI = RemoteConnector.getURI(conf.remoteConfig, issues, getContext(), Groups.REMOTE);
 

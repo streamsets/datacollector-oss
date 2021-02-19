@@ -46,6 +46,7 @@ import java.nio.file.Paths;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -59,6 +60,8 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
   private static final String FTP_SCHEME = "ftp";
   private static final String FTPS_SCHEME = "ftps";
   public static final int DEFAULT_PORT = 21;
+  private static final Pattern URL_PATTERN_FTP = Pattern.compile("(ftp://).*:?.*");
+  private static final Pattern URL_PATTERN_FTPS = Pattern.compile("(ftps://).*:?.*");
 
   protected FileSystemOptions options;
   protected URI remoteURI;
@@ -237,6 +240,19 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     }
     if (remoteConfig.dataTimeout > 0) {
       configBuilder.setDataTimeout(options, remoteConfig.dataTimeout * 1000);
+    }
+
+    if (remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(remoteConfig.remoteAddress).matches()
+        || remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(remoteConfig.remoteAddress).matches()) {
+      issues.add(
+          context.createConfigIssue(
+              credGroup.getLabel(),
+              CONF_PREFIX + "remoteAddress",
+              Errors.REMOTE_17,
+              remoteConfig.remoteAddress,
+              remoteConfig.protocol
+          )
+      );
     }
 
     // Only actually try to connect and authenticate if there were no issues

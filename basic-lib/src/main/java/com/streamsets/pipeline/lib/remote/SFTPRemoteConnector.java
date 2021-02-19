@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Handles all of the logic about connecting to an SFTP server, including config verification.  Subclasses can get
@@ -48,6 +49,7 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
   private static final Logger LOG = LoggerFactory.getLogger(SFTPRemoteConnector.class);
   private static final String SFTP_SCHEME = "sftp";
   public static final int DEFAULT_PORT = 22;
+  private static final Pattern URL_PATTERN_SFTP = Pattern.compile("(sftp://).*:?.*");
 
   protected File knownHostsFile;
   protected SSHClient sshClient;
@@ -197,6 +199,18 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
           e.getMessage(),
           e
       ));
+    }
+
+    if (remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(remoteConfig.remoteAddress).matches()) {
+      issues.add(
+          context.createConfigIssue(
+              credGroup.getLabel(),
+              CONF_PREFIX + "remoteAddress",
+              Errors.REMOTE_17,
+              remoteConfig.remoteAddress,
+              remoteConfig.protocol
+          )
+      );
     }
 
     // Only actually try to connect and authenticate if there were no issues

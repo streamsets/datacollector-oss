@@ -32,6 +32,7 @@ public class RemoteConfigBean {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.STRING,
+      defaultValue = "sftp://host:port",
       label = "Resource URL",
       description = "Specify the SFTP/FTP/FTPS URL",
       displayPosition = 10,
@@ -212,7 +213,11 @@ public class RemoteConfigBean {
       description = "If enabled, will only connect to the host if the host is in the known hosts file.",
       displayPosition = 50,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1"
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "protocol",
+              triggeredByValues = "SFTP")
+      }
   )
   public boolean strictHostChecking;
 
@@ -419,7 +424,11 @@ public class RemoteConfigBean {
           " significantly reducing performance.",
       displayPosition = 100,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0"
+      group = "#0",
+      dependencies = {
+          @Dependency(configName = "protocol",
+              triggeredByValues = "SFTP")
+      }
   )
   public boolean disableReadAheadStream;
 

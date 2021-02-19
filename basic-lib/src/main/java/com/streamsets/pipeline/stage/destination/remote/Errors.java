@@ -27,7 +27,6 @@ public enum Errors implements ErrorCode {
   REMOTE_UPLOAD_03("Error happened when writing to file '{}'. Reason: {}"),
 
   REMOTE_UPLOAD_04("Data Format '{}' is not supported"),
-  REMOTE_UPLOAD_05("The prefix of the url {} does not correspond to the selected protocol {}."),
   ;
 
   private final String msg;

@@ -24,8 +24,6 @@ public enum Errors implements ErrorCode {
   REMOTE_LOCATION_EXECUTOR_02("File: {} does not exist at remote location"),
   REMOTE_LOCATION_EXECUTOR_03("Error when performing file action : {}. Error Message: {}"),
   REMOTE_LOCATION_EXECUTOR_04("File: {} already exists in new target directory"),
-
-  REMOTE_LOCATION_EXECUTOR_05("The prefix of the url {} does not correspond to the selected protocol {}."),
   ;
 
   private final String msg;

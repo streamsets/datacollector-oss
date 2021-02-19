@@ -31,7 +31,6 @@ public enum Errors implements ErrorCode {
   REMOTE_DOWNLOAD_08("Problem setting archive directory: {}"),
   REMOTE_DOWNLOAD_09("Batch size greater than maximal batch size allowed in sdc.properties, maxBatchSize: {}"),
   REMOTE_DOWNLOAD_10("Cannot read file {}"),
-  REMOTE_DOWNLOAD_11("The prefix of the url {} does not correspond to the selected protocol {}."),
   ;
 
   private final String msg;

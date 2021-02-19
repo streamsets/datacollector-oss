@@ -86,20 +86,6 @@ public class RemoteLocationExecutor extends BaseExecutor {
 
     URI remoteURI = RemoteConnector.getURI(remoteConfig, issues, getContext(), Groups.REMOTE);
 
-    if (remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(remoteConfig.remoteAddress).matches()
-        || remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(remoteConfig.remoteAddress).matches()
-        || remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(remoteConfig.remoteAddress).matches()) {
-      issues.add(
-          getContext().createConfigIssue(
-              com.streamsets.pipeline.stage.executor.remote.Groups.REMOTE.name(),
-              "remoteConfig.remoteAddress",
-              com.streamsets.pipeline.stage.executor.remote.Errors.REMOTE_LOCATION_EXECUTOR_05,
-              remoteConfig.remoteAddress,
-              remoteConfig.protocol
-          )
-      );
-    }
-
     if (issues.isEmpty()) {
       if (remoteConfig.protocol == Protocol.FTP || remoteConfig.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteLocationExecutorDelegate(remoteConfig);

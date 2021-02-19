@@ -82,10 +82,6 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
   private static final String CONF_PREFIX = "conf.";
   private static final String MINUS_ONE = "-1";
 
-  private static final Pattern URL_PATTERN_FTP = Pattern.compile("(ftp://).*:?.*");
-  private static final Pattern URL_PATTERN_FTPS = Pattern.compile("(ftps://).*:?.*");
-  private static final Pattern URL_PATTERN_SFTP = Pattern.compile("(sftp://).*:?.*");
-
   static final String NOTHING_READ = "null";
 
   static final String REMOTE_URI = "remoteUri";
@@ -181,20 +177,6 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
       } else {
         archiveDir = conf.archiveDir.endsWith("/") ? conf.archiveDir : conf.archiveDir + "/";
       }
-    }
-
-    if (conf.remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(conf.remoteConfig.remoteAddress).matches()
-      || conf.remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(conf.remoteConfig.remoteAddress).matches()
-      || conf.remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(conf.remoteConfig.remoteAddress).matches()) {
-      issues.add(
-          getContext().createConfigIssue(
-              com.streamsets.pipeline.stage.origin.remote.Groups.REMOTE.name(),
-              CONF_PREFIX + "remoteConfig.remoteAddress",
-              Errors.REMOTE_DOWNLOAD_11,
-              conf.remoteConfig.remoteAddress,
-              conf.remoteConfig.protocol
-          )
-      );
     }
 
     validateFilePattern(issues);
