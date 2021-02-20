@@ -26,7 +26,7 @@ import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 @ConnectionDef(
-    label = "MySQL Connection",
+    label = "MySQL",
     type = MySQLConnection.TYPE,
     description = "Connects to MySQL",
     version = 1,
