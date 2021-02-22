@@ -85,6 +85,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
   private ELEval queryEval;
 
   private final String query;
+  private final boolean validateColumnMappings;
   private final List<JdbcFieldColumnMapping> columnMappings;
   private final MultipleValuesBehavior multipleValuesBehavior;
   private final int maxClobSize;
@@ -109,6 +110,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
 
   public JdbcLookupProcessor(
       String query,
+      Boolean validateColumnMappings,
       List<JdbcFieldColumnMapping> columnMappings,
       MultipleValuesBehavior multipleValuesBehavior,
       MissingValuesBehavior missingValuesBehavior,
@@ -119,6 +121,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       CacheConfig cacheConfig
   ) {
     this.query = query;
+    this.validateColumnMappings = validateColumnMappings;
     this.columnMappings = columnMappings;
     this.multipleValuesBehavior = multipleValuesBehavior;
     this.missingValuesBehavior = missingValuesBehavior;
@@ -164,7 +167,7 @@ public class JdbcLookupProcessor extends SingleLaneRecordProcessor {
       this.defaultValue = calculateDefault(context, issues);
     }
 
-    if(issues.isEmpty()) {
+    if(issues.isEmpty() && this.validateColumnMappings) {
       try (Connection validationConnection = dataSource.getConnection();
            Statement statement = validationConnection.createStatement()) {
         String preparedQuery = prepareQuery(query);

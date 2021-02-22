@@ -87,4 +87,14 @@ public class TestJdbcLookupUpgrader {
         "connection."
     );
   }
+
+  @Test
+  public void testUpgradeV5toV6() throws StageException {
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    List<Config> upgradedConfigs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(upgradedConfigs, "validateColumnMappings", false);
+  }
 }

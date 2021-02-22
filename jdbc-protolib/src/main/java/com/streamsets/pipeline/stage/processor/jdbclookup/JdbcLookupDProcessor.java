@@ -40,7 +40,7 @@ import com.streamsets.pipeline.stage.processor.kv.CacheConfig;
 import java.util.List;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "JDBC Lookup",
     description = "Lookup values via JDBC to enrich records.",
     icon = "rdbms.png",
@@ -64,6 +64,18 @@ public class JdbcLookupDProcessor extends DProcessor {
       group = "JDBC"
   )
   public String query;
+
+  @ConfigDef(
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      required = true,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "true",
+      label = "Validate Column Mappings",
+      description = "Requires that all columns listed in the Column Mappings configuration exist in the database",
+      displayPosition = 29,
+      group = "JDBC"
+  )
+  public boolean validateColumnMappings;
 
   @ConfigDef(
       required = true,
@@ -159,6 +171,7 @@ public class JdbcLookupDProcessor extends DProcessor {
   protected Processor createProcessor() {
     return new JdbcLookupProcessor(
       query,
+      validateColumnMappings,
       columnMappings,
       multipleValuesBehavior,
       missingValuesBehavior,

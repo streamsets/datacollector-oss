@@ -36,3 +36,8 @@ upgrades:
       - setConfig:
           name: unknownTypeAction
           value: STOP_PIPELINE
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: validateColumnMappings
+          value: false

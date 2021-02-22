@@ -129,6 +129,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -155,6 +156,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -192,6 +194,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -230,6 +233,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -275,6 +279,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -314,6 +319,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.PASS_RECORD_ON)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -360,6 +366,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -382,6 +389,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -402,6 +410,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -445,6 +454,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -490,6 +500,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -513,6 +524,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .setOnRecordError(OnRecordError.TO_ERROR)
         .addOutputLane("lane")
         .build();
@@ -538,6 +550,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -577,6 +590,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -601,6 +615,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -646,6 +661,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -685,6 +701,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
@@ -728,6 +745,7 @@ public class TestJdbcLookup {
         .addConfiguration("missingValuesBehavior", MissingValuesBehavior.SEND_TO_ERROR)
         .addConfiguration("maxClobSize", 1000)
         .addConfiguration("maxBlobSize", 1000)
+        .addConfiguration("validateColumnMappings", true)
         .addOutputLane("lane")
         .build();
 
