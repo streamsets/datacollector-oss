@@ -22,7 +22,9 @@ import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.tunneling.TunnelingRequest;
 import com.streamsets.datacollector.tunneling.TunnelingResponse;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Server;
@@ -38,7 +40,9 @@ import org.mockito.Mockito;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Collections;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 import static com.streamsets.datacollector.event.handler.remote.WebSocketToRestDispatcher.AVAILABLE_APPS_ENDPOINT;
 import static com.streamsets.datacollector.event.handler.remote.WebSocketToRestDispatcher.TUNNELING_CONNECT_ENDPOINT;
@@ -73,21 +77,39 @@ public class TestWebSocketToRestDispatcher {
         WebSocketToRestDispatcher.TUNNELING_ENABLED_CONFIG,
         WebSocketToRestDispatcher.TUNNELING_ENABLED_CONFIG_DEFAULT
     )).thenReturn(enabled);
-    Mockito.when(configuration.get(
-        RemoteSSOService.DPM_BASE_URL_CONFIG,
-        RemoteSSOService.DPM_BASE_URL_DEFAULT
-    )).thenReturn(server.getURI().toString());
     return configuration;
   }
 
   @Test
   public void testIsTunnelingEnabled() {
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    DpmClientInfo dpmClientInfo = new DpmClientInfo() {
+      @Override
+      public String getDpmBaseUrl() {
+        return server.getURI().toString();
+      }
+
+      @Override
+      public Map<String, String> getHeaders() {
+        return ImmutableMap.of(
+            SSOConstants.X_APP_COMPONENT_ID, "componentId",
+            SSOConstants.X_APP_AUTH_TOKEN, "appAuthToken"
+        );
+      }
+
+      @Override
+      public void setDpmBaseUrl(String dpmBaseUrl) {
+
+      }
+    };
+    Mockito.when(runtimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
+        .thenReturn((Supplier<DpmClientInfo>) () -> dpmClientInfo);
     WebSocketToRestDispatcher webSocketToRestDispatcher = new WebSocketToRestDispatcher(
         getMockConfiguration(false),
-        Mockito.mock(RuntimeInfo.class),
+        runtimeInfo,
         Mockito.mock(SafeScheduledExecutorService.class)
     );
-    Assert.assertFalse(webSocketToRestDispatcher.isTunnelingEnabled(server.getURI().toString()));
+    Assert.assertFalse(webSocketToRestDispatcher.isTunnelingEnabled());
   }
 
   @Test
@@ -95,6 +117,27 @@ public class TestWebSocketToRestDispatcher {
     RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(mockRuntimeInfo.getOriginalHttpUrl())
         .thenReturn(StringUtils.stripEnd(server.getURI().toString(), "/"));
+    DpmClientInfo dpmClientInfo = new DpmClientInfo() {
+      @Override
+      public String getDpmBaseUrl() {
+        return server.getURI().toString();
+      }
+
+      @Override
+      public Map<String, String> getHeaders() {
+        return ImmutableMap.of(
+            SSOConstants.X_APP_COMPONENT_ID, "componentId",
+            SSOConstants.X_APP_AUTH_TOKEN, "appAuthToken"
+        );
+      }
+
+      @Override
+      public void setDpmBaseUrl(String dpmBaseUrl) {
+
+      }
+    };
+    Mockito.when(mockRuntimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
+        .thenReturn((Supplier<DpmClientInfo>) () -> dpmClientInfo);
     WebSocketToRestDispatcher webSocketToRestDispatcher = new WebSocketToRestDispatcher(
         getMockConfiguration(true),
         mockRuntimeInfo,
