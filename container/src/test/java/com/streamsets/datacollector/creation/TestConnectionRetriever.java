@@ -15,144 +15,127 @@
  */
 package com.streamsets.datacollector.creation;
 
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
+import com.streamsets.datacollector.event.client.impl.MovedDpmJerseyClientFilter;
 import com.streamsets.datacollector.main.RuntimeInfo;
-import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
-import com.streamsets.lib.security.http.RestClient;
+import com.streamsets.lib.security.http.SSOConstants;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.Invocation;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Response;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class TestConnectionRetriever {
 
   @Test
-  public void testGet() throws Exception {
+  public void testRetriever() throws Exception {
+    DpmClientInfo dpmClientInfo = new DpmClientInfo() {
+      @Override
+      public String getDpmBaseUrl() {
+        return "http://streamsets1.com/";
+      }
+
+      @Override
+      public Map<String, String> getHeaders() {
+        return ImmutableMap.of(
+            SSOConstants.X_APP_COMPONENT_ID, "componentId",
+            SSOConstants.X_APP_AUTH_TOKEN, "appAuthToken"
+        );
+      }
+
+      @Override
+      public void setDpmBaseUrl(String dpmBaseUrl) {
+
+      }
+    };
     Configuration configuration = new Configuration();
     configuration.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "streamsets1.com");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("appAuthToken");
+    Mockito.when(runtimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
+        .thenReturn(((Supplier) () -> dpmClientInfo));
     Mockito.when(runtimeInfo.getId()).thenReturn("componentId");
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
-    RestClient.Builder builder = Mockito.spy(RestClient.builder("http://streamsets.com"));
-    RestClient restClient = Mockito.mock(RestClient.class);
-    Mockito.doReturn(restClient).when(builder).build();
-    RestClient.Response response = Mockito.mock(RestClient.Response.class);
-    Mockito.when(restClient.get()).thenReturn(response);
-    Mockito.when(response.haveData()).thenReturn(true);
-    Mockito.when(response.successful()).thenReturn(true);
-    List<ConfigConfigurationJson> configs = new ArrayList<>();
-    configs.add(new ConfigConfigurationJson("a", "A"));
-    configs.add(new ConfigConfigurationJson("b", "B"));
-    ConnectionConfigurationJson ccj = new ConnectionConfigurationJson("type1", "1", configs);
-    Mockito.when(response.getData(ConnectionConfigurationJson.class)).thenReturn(ccj);
-    ConnectionRetriever connectionRetriever = Mockito.spy(
-        new FakeConnectionRetriever(configuration, runtimeInfo, builder)
+
+    Client client = Mockito.mock(Client.class);
+    WebTarget target = Mockito.mock(WebTarget.class);
+    Mockito.when(client.target(Mockito.eq("http://streamsets1.com/connection/rest/v1/connection/connId/configs")))
+        .thenReturn(target);
+    WebTarget target1 = Mockito.mock(WebTarget.class);
+    Mockito.when(target.queryParam(Mockito.eq("user"), Mockito.eq("user1"))).thenReturn(target1);
+    target = target1;
+    Invocation.Builder builder = Mockito.mock(Invocation.Builder.class);
+    Mockito.when(target.request()).thenReturn(builder);
+    Response response = Mockito.mock(Response.class);
+    Mockito.when(builder.get()).thenReturn(response);
+    Mockito.when(response.getStatusInfo()).thenReturn(Response.Status.OK);
+    ConnectionConfigurationJson json = Mockito.mock(ConnectionConfigurationJson.class);
+    Mockito.when(response.readEntity(Mockito.eq(ConnectionConfigurationJson.class))).thenReturn(json);
+    ConnectionConfiguration conn = Mockito.mock(ConnectionConfiguration.class);
+    Mockito.when(json.getConnectionConfiguration()).thenReturn(conn);
+
+    ConnectionRetriever retriever = new ConnectionRetriever(configuration, runtimeInfo);
+
+    // verify configuration
+
+    ClientConfig cc = retriever.getClientConfig();
+    Set<Class> instances = cc.getInstances().stream().map(i -> i.getClass()).collect(Collectors.toSet());
+    Assert.assertTrue(instances.contains(MovedDpmJerseyClientFilter.class));
+    Assert.assertTrue(instances.contains(CsrfProtectionFilter.class));
+
+    // REST call
+
+    retriever = Mockito.spy(retriever);
+    Mockito.doReturn(client).when(retriever).getClient();
+
+    ConfigInjector.Context context = Mockito.mock(ConfigInjector.Context.class);
+    Mockito.when(context.getUser()).thenReturn("user1");
+
+    //OK
+
+    Assert.assertEquals(conn, retriever.get("connId", context));
+
+    Mockito.verify(builder, Mockito.times(1)).header(
+        Mockito.eq(SSOConstants.X_APP_COMPONENT_ID),
+        Mockito.eq("componentId")
     );
-    ConfigInjector.Context context = Mockito.mock(ConfigInjector.Context.class);
-    Mockito.when(context.getUser()).thenReturn("user1");
-    ConnectionConfiguration cc = connectionRetriever.get("connId", context);
-
-    Assert.assertEquals("type1", cc.getType());
-    Assert.assertEquals(1, cc.getVersion());
-    Assert.assertEquals(2, cc.getConfiguration().size());
-    Mockito.verify(connectionRetriever).getRestClientBuilder("streamsets1.com/");
-    Mockito.verify(builder).path("/connection/rest/v1/connection/connId/configs");
-    Mockito.verify(builder).json(true);
-    Mockito.verify(builder).csrf(true);
-    Mockito.verify(builder).appAuthToken("appAuthToken");
-    Mockito.verify(builder).componentId("componentId");
-    Mockito.verify(builder).queryParam("user", "user1");
-  }
-
-  @Test
-  public void testGetDpmDisabled() {
-    Configuration configuration = new Configuration();
-    configuration.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "streamsets1.com");
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false); // DPM disabled
-    ConnectionRetriever connectionRetriever = Mockito.spy(new ConnectionRetriever(configuration, runtimeInfo));
-    ConfigInjector.Context context = Mockito.mock(ConfigInjector.Context.class);
-    ConnectionConfiguration cc = connectionRetriever.get("connId", context);
-
-    Assert.assertNull(cc);
-    Mockito.verify(context).createIssue(CreationError.CREATION_1105);
-    Mockito.verify(connectionRetriever, Mockito.times(0)).getRestClientBuilder(Mockito.anyString());
-  }
-
-  @Test
-  public void testGetHttpError() throws Exception {
-    Configuration configuration = new Configuration();
-    configuration.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "streamsets1.com");
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("appAuthToken");
-    Mockito.when(runtimeInfo.getId()).thenReturn("componentId");
-    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
-    RestClient.Builder builder = Mockito.spy(RestClient.builder("http://streamsets.com"));
-    RestClient restClient = Mockito.mock(RestClient.class);
-    Mockito.doReturn(restClient).when(builder).build();
-    RestClient.Response response = Mockito.mock(RestClient.Response.class);
-    Mockito.when(restClient.get()).thenReturn(response);
-    Mockito.when(response.haveData()).thenReturn(true);
-    Mockito.when(response.successful()).thenReturn(false);  // HTTP Error
-    Mockito.when(response.getError()).thenReturn(Collections.singletonMap("message", "some HTTP problem"));
-    ConnectionRetriever connectionRetriever = new FakeConnectionRetriever(configuration, runtimeInfo, builder);
-    ConfigInjector.Context context = Mockito.mock(ConfigInjector.Context.class);
-    Mockito.when(context.getUser()).thenReturn("user1");
-    ConnectionConfiguration cc = connectionRetriever.get("connId", context);
-
-    Assert.assertNull(cc);
-    ArgumentCaptor<String> argCaptor = ArgumentCaptor.forClass(String.class);
-    Mockito.verify(context).createIssue(Mockito.eq(CreationError.CREATION_1104), argCaptor.capture());
-    Assert.assertTrue(argCaptor.getValue().contains("some HTTP problem"));
-  }
-
-  @Test
-  public void testGetIOException() throws Exception {
-    Configuration configuration = new Configuration();
-    configuration.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "streamsets1.com");
-    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
-    Mockito.when(runtimeInfo.getAppAuthToken()).thenReturn("appAuthToken");
-    Mockito.when(runtimeInfo.getId()).thenReturn("componentId");
-    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
-    RestClient.Builder builder = Mockito.spy(RestClient.builder("http://streamsets.com"));
-    RestClient restClient = Mockito.mock(RestClient.class);
-    Mockito.doReturn(restClient).when(builder).build();
-    IOException ioe = new IOException("some IO problem");
-    Mockito.when(restClient.get()).thenThrow(ioe); // IOException
-    ConnectionRetriever connectionRetriever = new FakeConnectionRetriever(configuration, runtimeInfo, builder);
-    ConfigInjector.Context context = Mockito.mock(ConfigInjector.Context.class);
-    Mockito.when(context.getUser()).thenReturn("user1");
-    ConnectionConfiguration cc = connectionRetriever.get("connId", context);
-
-    Assert.assertNull(cc);
-    Mockito.verify(context).createIssue(
-        CreationError.CREATION_1104,
-        ioe.getMessage(),
-        ioe
+    Mockito.verify(builder, Mockito.times(1)).header(
+        Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN),
+        Mockito.eq("appAuthToken")
     );
+    Mockito.verify(context, Mockito.times(1)).getUser();
+    Mockito.verifyNoMoreInteractions(context);
+
+    //NOT OK
+    Mockito.when(response.getStatusInfo()).thenReturn(Response.Status.FORBIDDEN);
+    Assert.assertNull(retriever.get("connId", context));
+    Mockito.verify(context, Mockito.times(1)).createIssue(
+        Mockito.eq(CreationError.CREATION_1104),
+        Mockito.eq(Response.Status.FORBIDDEN.getStatusCode()),
+        Mockito.anyString()
+    );
+
+    // dpm disabled
+    Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(false);
+    Assert.assertNull(retriever.get("connId", context));
+    Mockito.verify(context, Mockito.times(1)).createIssue(
+        Mockito.eq(CreationError.CREATION_1105)
+    );
+
+
   }
 
-  private static class FakeConnectionRetriever extends ConnectionRetriever {
-
-    private final RestClient.Builder builder;
-
-    public FakeConnectionRetriever(Configuration configuration, RuntimeInfo runtimeInfo, RestClient.Builder builder) {
-      super(configuration, runtimeInfo);
-      this.builder = builder;
-    }
-
-    @Override
-    protected RestClient.Builder getRestClientBuilder(String schBaseUrl) {
-      return builder;
-    }
-  }
 }
