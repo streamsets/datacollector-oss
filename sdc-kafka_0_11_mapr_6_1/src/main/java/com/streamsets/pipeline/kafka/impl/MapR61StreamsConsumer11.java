@@ -73,7 +73,7 @@ public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
 
   @Override
   protected void validateAutoOffsetReset(List<Stage.ConfigIssue> issues) throws StageException {
-    if(KafkaAutoOffsetReset.TIMESTAMP.equals(kafkaAutoOffsetReset)) {
+    if(KafkaAutoOffsetReset.TIMESTAMP.getLabel().equals(kafkaAutoOffsetReset)) {
       issues.add(context.createConfigIssue(
           KafkaOriginGroups.KAFKA.name(),
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,

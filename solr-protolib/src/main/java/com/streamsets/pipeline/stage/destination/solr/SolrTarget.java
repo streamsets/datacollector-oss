@@ -174,7 +174,7 @@ public class SolrTarget extends BaseTarget {
         }
       } catch (Exception ex) {
         String configName = "conf.solrURI";
-        if(InstanceTypeOptions.SOLR_CLOUD.equals(conf.instanceType.getInstanceType())) {
+        if(InstanceTypeOptions.SOLR_CLOUD.getLabel().equals(conf.instanceType.getInstanceType())) {
           configName = "conf.zookeeperConnect";
         }
         issues.add(createSolrConfigIssue(configName, Errors.SOLR_03, ex.toString(), ex));
@@ -203,56 +203,58 @@ public class SolrTarget extends BaseTarget {
           if (recordSolrFields == null) {
             correctRecord = false;
             handleError(record, Errors.SOLR_10, conf.recordSolrFieldsPath);
-          }
-
-          Field.Type recordSolrFieldType = recordSolrFields.getType();
-          Map<String, Field> recordFieldMap = null;
-
-          if (recordSolrFieldType == Field.Type.MAP) {
-            recordFieldMap = recordSolrFields.getValueAsMap();
-          } else if (recordSolrFieldType == Field.Type.LIST_MAP) {
-            recordFieldMap = recordSolrFields.getValueAsListMap();
+            record = null;
           } else {
-            correctRecord = false;
-            handleError(record, Errors.SOLR_09, conf.recordSolrFieldsPath, recordSolrFields.getType().name());
-          }
 
-          if (correctRecord) {
-            // for each record field check if it's in the solr required fields list and save it for later
-            if (requiredFieldNamesMap != null && !requiredFieldNamesMap.isEmpty()) {
-              correctRecord = checkRecordContainsSolrFields(
-                  recordFieldMap,
-                  record,
-                  requiredFieldNamesMap,
-                  Errors.SOLR_07
-              );
+            Field.Type recordSolrFieldType = recordSolrFields.getType();
+            Map<String, Field> recordFieldMap = null;
+  
+            if (recordSolrFieldType == Field.Type.MAP) {
+              recordFieldMap = recordSolrFields.getValueAsMap();
+            } else if (recordSolrFieldType == Field.Type.LIST_MAP) {
+              recordFieldMap = recordSolrFields.getValueAsListMap();
+            } else {
+              correctRecord = false;
+              handleError(record, Errors.SOLR_09, conf.recordSolrFieldsPath, recordSolrFields.getType().name());
             }
-
-            // check record contain optional fields if needed
-            if (!conf.ignoreOptionalFields) {
-              if (optionalFieldNamesMap != null && !optionalFieldNamesMap.isEmpty()) {
+  
+            if (correctRecord) {
+              // for each record field check if it's in the solr required fields list and save it for later
+              if (requiredFieldNamesMap != null && !requiredFieldNamesMap.isEmpty()) {
                 correctRecord = checkRecordContainsSolrFields(
                     recordFieldMap,
                     record,
-                    optionalFieldNamesMap,
-                    Errors.SOLR_08
+                    requiredFieldNamesMap,
+                    Errors.SOLR_07
                 );
               }
-            }
-
-            if (correctRecord) {
-              // add fields to fieldMap to later add document to Solr
-              for (Map.Entry<String, Field> recordFieldMapEntry : recordFieldMap.entrySet()) {
-                fieldMap.put(
-                    recordFieldMapEntry.getKey(),
-                    JsonUtil.fieldToJsonObject(record, recordFieldMapEntry.getValue())
-                );
+  
+              // check record contain optional fields if needed
+              if (!conf.ignoreOptionalFields) {
+                if (optionalFieldNamesMap != null && !optionalFieldNamesMap.isEmpty()) {
+                  correctRecord = checkRecordContainsSolrFields(
+                      recordFieldMap,
+                      record,
+                      optionalFieldNamesMap,
+                      Errors.SOLR_08
+                  );
+                }
+              }
+  
+              if (correctRecord) {
+                // add fields to fieldMap to later add document to Solr
+                for (Map.Entry<String, Field> recordFieldMapEntry : recordFieldMap.entrySet()) {
+                  fieldMap.put(
+                      recordFieldMapEntry.getKey(),
+                      JsonUtil.fieldToJsonObject(record, recordFieldMapEntry.getValue())
+                  );
+                }
               }
             }
-          }
-
-          if (!correctRecord) {
-            record = null;
+  
+            if (!correctRecord) {
+              record = null;
+            }
           }
         } catch (OnRecordErrorException ex) {
           errorRecordHandler.onError(ex);

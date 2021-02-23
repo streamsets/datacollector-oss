@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.streamsets.pipeline.stage.processor.controlHub;
+package com.streamsets.pipeline.stage.origin.grpcclient;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;

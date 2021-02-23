@@ -106,7 +106,7 @@ public class DelimitedDataParserFactory extends DataParserFactory {
             .withQuote((char) getSettings().getConfig(DelimitedDataConstants.QUOTE_CONFIG))
             .withIgnoreEmptyLines(getSettings().getConfig(DelimitedDataConstants.IGNORE_EMPTY_LINES_CONFIG));
 
-        if (getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
+        if ((boolean) getSettings().getConfig(DelimitedDataConstants.COMMENT_ALLOWED_CONFIG)) {
           csvFormat = csvFormat.withCommentMarker((char) getSettings().getConfig(
               DelimitedDataConstants.COMMENT_MARKER_CONFIG)
           );
