@@ -28,6 +28,8 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.OnRecordErrorException;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.lib.operation.UnsupportedOperationAction;
+import com.streamsets.pipeline.lib.salesforce.connection.AuthType;
+import com.streamsets.pipeline.lib.salesforce.connection.SalesforceJWTResponse;
 import com.streamsets.pipeline.lib.salesforce.connection.mutualauth.ClientSSLTransportFactory;
 import com.streamsets.pipeline.lib.salesforce.connection.mutualauth.MutualAuthConfigBean;
 import com.streamsets.pipeline.lib.salesforce.connection.mutualauth.MutualAuthConnectorConfig;
@@ -78,9 +80,20 @@ public class ForceUtils {
   public static ConnectorConfig getPartnerConfig(ForceConfigBean conf, SessionRenewer sessionRenewer) throws StageException {
     ConnectorConfig config = new ConnectorConfig();
 
-    config.setUsername(conf.connection.username.get());
-    config.setPassword(conf.connection.password.get());
-    config.setAuthEndpoint("https://"+conf.connection.authEndpoint+"/services/Soap/u/"+conf.connection.apiVersion);
+    if (conf.connection.authType.equals(AuthType.BASIC)) {
+      config.setUsername(conf.connection.username.get());
+      config.setPassword(conf.connection.password.get());
+      config.setAuthEndpoint("https://"+conf.connection.authEndpoint+"/services/Soap/u/"+conf.connection.apiVersion);
+    } else if (conf.connection.authType.equals(AuthType.OAUTH)) {
+      try {
+        SalesforceJWTResponse sessionConfig = conf.connection.getSessionConfig();
+        config.setServiceEndpoint(sessionConfig.getInstanceUrl() + "/services/Soap/u/" + conf.connection.apiVersion);
+        config.setSessionId(sessionConfig.getAccessToken());
+      } catch (Exception e) {
+        throw new StageException(Errors.FORCE_47);
+      }
+    }
+
     config.setCompression(conf.useCompression);
     config.setTraceMessage(conf.showTrace);
     config.setSessionRenewer(sessionRenewer);

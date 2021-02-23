@@ -167,4 +167,14 @@ public class TestWaveAnalyticsUpgrader {
 
     Assert.assertEquals(20, configs.size());
   }
+
+  @Test
+  public void testV4toV5Upgrade() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.connection.authType", "BASIC");
+  }
 }

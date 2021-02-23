@@ -90,3 +90,9 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf.mutualAuth.underlyingConfig
           newNamePattern: conf.connection.mutualAuth.underlyingConfig
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: conf.connection.authType
+          value: "BASIC"
+

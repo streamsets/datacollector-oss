@@ -25,7 +25,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DTarget;
 import com.streamsets.pipeline.lib.waveanalytics.WaveAnalyticsConfigBean;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Einstein Analytics",
     description = "Writes data to Salesforce Einstein Analytics",
     icon = "analytics.png",

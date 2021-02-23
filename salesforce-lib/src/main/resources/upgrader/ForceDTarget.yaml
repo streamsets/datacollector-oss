@@ -91,3 +91,8 @@ upgrades:
       - renameConfig:
           oldNamePattern: forceConfig.mutualAuth.underlyingConfig
           newNamePattern: forceConfig.connection.mutualAuth.underlyingConfig
+  - toVersion: 4
+    actions:
+      - setConfig:
+          name: forceConfig.connection.authType
+          value: "BASIC"

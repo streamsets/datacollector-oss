@@ -106,4 +106,14 @@ public class TestForceTargetUpgrader {
 
     Assert.assertEquals(20, configs.size());
   }
+
+  @Test
+  public void testV3toV4Upgrade() {
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "forceConfig.connection.authType", "BASIC");
+  }
 }

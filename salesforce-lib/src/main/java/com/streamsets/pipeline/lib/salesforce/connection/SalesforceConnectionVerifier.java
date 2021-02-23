@@ -18,7 +18,6 @@ package com.streamsets.pipeline.lib.salesforce.connection;
 
 import com.sforce.soap.partner.PartnerConnection;
 import com.sforce.ws.ConnectorConfig;
-import com.sforce.ws.ConnectionException;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ConfigGroups;
@@ -80,15 +79,47 @@ public class SalesforceConnectionVerifier extends ConnectionVerifier {
 
     try {
       ConnectorConfig partnerConfig = new ConnectorConfig();
-      partnerConfig.setUsername(connection.username.get());
-      partnerConfig.setPassword(connection.password.get());
-      partnerConfig.setAuthEndpoint("https://"+connection.authEndpoint+"/services/Soap/u/"+connection.apiVersion);
 
-      if (connection.useProxy) {
-        partnerConfig.setProxy(connection.proxyHostname, connection.proxyPort);
-        if (connection.useProxyCredentials) {
-          partnerConfig.setProxyUsername(connection.proxyUsername.get());
-          partnerConfig.setProxyPassword(connection.proxyPassword.get());
+      // If Basic auth is chosen, we set the username and password in partner config.
+      if (connection.authType.equals(AuthType.BASIC)) {
+        partnerConfig.setUsername(connection.username.get());
+        partnerConfig.setPassword(connection.password.get());
+        partnerConfig.setAuthEndpoint("https://" + connection.authEndpoint + "/services/Soap/u/" + connection.apiVersion);
+
+        if (connection.useProxy) {
+          partnerConfig.setProxy(connection.proxyHostname, connection.proxyPort);
+          if (connection.useProxyCredentials) {
+            partnerConfig.setProxyUsername(connection.proxyUsername.get());
+            partnerConfig.setProxyPassword(connection.proxyPassword.get());
+          }
+        }
+      }
+
+      // If OAuth, we get the session ID via an HTTP request passing a signed JWT bearer token.
+      // The session config returned from the HTTP request includes the instance URL used for connecting.
+      if (connection.authType.equals(AuthType.OAUTH)) {
+        try {
+          SalesforceJWTResponse sessionConfig = connection.getSessionConfig();
+          String serviceEndpoint = sessionConfig.getInstanceUrl() + "/services/Soap/u/" + connection.apiVersion;
+          partnerConfig.setServiceEndpoint(serviceEndpoint);
+          partnerConfig.setSessionId(sessionConfig.getAccessToken());
+        } catch (JWTGenerationException e) {
+          LOG.debug(Errors.FORCE_48.getMessage());
+          issues.add(getContext().createConfigIssue("Salesforce", "connection", Errors.FORCE_48));
+        } catch (SessionIdFailureException e) {
+          LOG.debug(Errors.FORCE_49.getMessage());
+          issues.add(getContext().createConfigIssue(
+              "Salesforce",
+              "connection",
+              Errors.FORCE_49
+          ));
+        } catch (Exception e) {
+          issues.add(getContext().createConfigIssue(
+              "Salesforce",
+              "connection",
+              Errors.FORCE_50,
+              e.getMessage()
+          ));
         }
       }
 
@@ -98,18 +129,14 @@ public class SalesforceConnectionVerifier extends ConnectionVerifier {
         PartnerConfig creates the connection and obtains a session ID that is added as an attribute to partnerConfig.
         If the login was successful, it is populated; otherwise, it stays empty.
       */
-      new PartnerConnection(partnerConfig);
-      if (partnerConfig.getSessionId().isEmpty()) {
-        issues.add(
-            getContext().createConfigIssue(
-                "Salesforce",
-                "connection",
-                Errors.FORCE_47
-            )
-        );
-        LOG.debug(Errors.FORCE_47.getMessage());
-      } else {
-        LOG.debug("Successfully authenticated as {}", connection.username);
+      if (issues.isEmpty()) {
+        new PartnerConnection(partnerConfig);
+        if (partnerConfig.getSessionId().isEmpty()) {
+          issues.add(getContext().createConfigIssue("Salesforce", "connection", Errors.FORCE_47));
+          LOG.debug(Errors.FORCE_47.getMessage());
+        } else {
+          LOG.debug("Successfully authenticated as {}", connection.username);
+        }
       }
     } catch (Exception ex) {
       LOG.debug(Errors.FORCE_47.getMessage());

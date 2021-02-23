@@ -152,4 +152,14 @@ public class TestForceLookupProcessorUpgrader extends TestForceInputUpgrader {
 
     Assert.assertEquals(20, configs.size());
   }
+
+  @Test
+  public void testV5toV6Upgrade() {
+    Mockito.doReturn(5).when(context).getFromVersion();
+    Mockito.doReturn(6).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "forceConfig.connection.authType", "BASIC");
+  }
 }

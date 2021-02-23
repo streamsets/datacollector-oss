@@ -16,7 +16,6 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
 upgrades:
   - toVersion: 4
     actions:
@@ -91,3 +90,8 @@ upgrades:
       - renameConfig:
           oldNamePattern: forceConfig.mutualAuth.underlyingConfig
           newNamePattern: forceConfig.connection.mutualAuth.underlyingConfig
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: forceConfig.connection.authType
+          value: "BASIC"

@@ -32,11 +32,59 @@
   <name>StreamSets Data Collector Salesforce Connection</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <force-api.version>39.0.0</force-api.version>
+    <jjwt.version>0.7.0</jjwt.version>
+    <jakarta.version>2.3.2</jakarta.version>
+    <javax.version>2.0.1</javax.version>
+  </properties>
+
+  <!-- Note: This connection module has more dependencies than most connection modules.
+       Should we ever add a Salesforce connector in Transformer, we'll need to move these elsewhere.
+       However we don't anticipate doing so, so we can add more dependencies here with no issue. -->
   <dependencies>
     <dependency>
       <groupId>com.streamsets</groupId>
       <artifactId>streamsets-datacollector-api</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-net-commonlib</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.force.api</groupId>
+      <artifactId>force-wsc</artifactId>
+      <version>${force-api.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>${jjwt.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>${jakarta.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.ws.rs</groupId>
+      <artifactId>javax.ws.rs-api</artifactId>
+      <version>${javax.version}</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.core</groupId>
+      <artifactId>jersey-client</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.glassfish.jersey.media</groupId>
+      <artifactId>jersey-media-json-jackson</artifactId>
+      <scope>compile</scope>
     </dependency>
 
     <!-- Test Dependencies -->
@@ -51,15 +99,36 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.force.api</groupId>
-      <artifactId>force-wsc</artifactId>
-      <version>39.0.0</version>
-      <scope>compile</scope>
+      <groupId>com.streamsets</groupId>
+      <artifactId>streamsets-datacollector-upgrader</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.streamsets</groupId>
-      <artifactId>streamsets-datacollector-net-commonlib</artifactId>
+      <artifactId>streamsets-datacollector-stagesupport</artifactId>
+      <type>test-jar</type>
+      <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <version>${jackson.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+      <version>${jackson.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 
   <build>
