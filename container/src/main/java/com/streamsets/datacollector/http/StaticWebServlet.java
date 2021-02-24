@@ -17,6 +17,7 @@ package com.streamsets.datacollector.http;
 
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.util.Configuration;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -25,6 +26,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.function.Supplier;
 
 public class StaticWebServlet extends DefaultServlet {
 
@@ -32,14 +34,8 @@ public class StaticWebServlet extends DefaultServlet {
   private final static String HEADLESS_URL_TEMPLATE = HEADLESS_URL + "?url={}";
   private final static String ASSETS_FOLDER = "/assets/";
   private final RuntimeInfo runtimeInfo;
-  private final String headlessHelperUrl;
 
   public StaticWebServlet(RuntimeInfo runtimeInfo, Configuration conf) {
-    String controlHubUrl = RemoteSSOService.getValidURL(conf.get(
-        RemoteSSOService.DPM_BASE_URL_CONFIG,
-        RemoteSSOService.DPM_BASE_URL_DEFAULT
-    ));
-    this.headlessHelperUrl = Utils.format(HEADLESS_URL_TEMPLATE, controlHubUrl);
     this.runtimeInfo = runtimeInfo;
   }
 
@@ -50,6 +46,10 @@ public class StaticWebServlet extends DefaultServlet {
         !request.getPathInfo().contains(HEADLESS_URL) &&
         !request.getPathInfo().contains(ASSETS_FOLDER)
     ) {
+      String controlHubUrl = ((Supplier<DpmClientInfo>) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY))
+          .get()
+          .getDpmBaseUrl();
+      String headlessHelperUrl = Utils.format(HEADLESS_URL_TEMPLATE, controlHubUrl);
       // When connected to the latest Control Hub instance, Data Collector functions as a headless engine without a UI.
       response.sendRedirect(headlessHelperUrl);
     } else {
