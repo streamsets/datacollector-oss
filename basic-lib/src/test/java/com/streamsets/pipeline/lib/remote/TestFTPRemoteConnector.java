@@ -72,32 +72,6 @@ public class TestFTPRemoteConnector extends RemoteConnectorTestBase {
     connector.close();
   }
 
-  @Test
-  public void testStrictHostChecking() throws Exception {
-    FTPRemoteConnectorForTest connector = new FTPRemoteConnectorForTest(getBean(
-        getScheme() + "://localhost:" + port + "/",
-        true,
-        false,
-        TESTUSER,
-        TESTPASS,
-        null,
-        null,
-        null,
-        false,
-        null
-    ));
-
-    List<Stage.ConfigIssue> issues = initAndCheckIssue(
-        connector,
-        "CREDENTIALS",
-        "conf.remoteConfig.strictHostChecking",
-        Errors.REMOTE_07
-    );
-    Assert.assertEquals(1, issues.size());
-
-    connector.close();
-  }
-
   @Override
   protected String getTestWrongPassMessage() {
     return "Could not connect to FTP server on \"localhost\".";

@@ -82,9 +82,6 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     LOG.info("Starting connection to remote server");
     options = new FileSystemOptions();
     this.remoteURI = remoteURI;
-    if (remoteConfig.strictHostChecking) {
-      issues.add(context.createConfigIssue(credGroup.getLabel(), CONF_PREFIX + "strictHostChecking", Errors.REMOTE_07));
-    }
     switch (remoteConfig.auth) {
       case PRIVATE_KEY:
         issues.add(context.createConfigIssue(credGroup.getLabel(), CONF_PREFIX + "privateKey", Errors.REMOTE_06));
