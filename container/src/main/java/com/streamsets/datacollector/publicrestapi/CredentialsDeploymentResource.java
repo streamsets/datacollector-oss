@@ -154,7 +154,6 @@ public class CredentialsDeploymentResource {
       conf.load(reader);
     }
 
-    conf.unset(RemoteSSOService.DPM_BASE_URL_CONFIG);
     conf.set(RemoteSSOService.DPM_ENABLED, true);
 
     conf.set(
@@ -173,11 +172,8 @@ public class CredentialsDeploymentResource {
     try (FileWriter writer = new FileWriter(dpmProperties)) {
       conf.save(writer);
     }
-    Files.write(
-        Paths.get(dpmProperties.getPath()) ,
-        (RemoteSSOService.DPM_BASE_URL_CONFIG + "=" + credentialsBeanJson.getDpmUrl()).getBytes(),
-        StandardOpenOption.APPEND
-    );
+    // using RemoteSSOService.DpmClientInfo
+    RemoteSSOService.persistNewDpmBaseUrl(conf.getFilRefsBaseDir(), credentialsBeanJson.getDpmUrl());
     runtimeInfo.setDPMEnabled(true);
     LOG.info("DPM token deployed");
   }

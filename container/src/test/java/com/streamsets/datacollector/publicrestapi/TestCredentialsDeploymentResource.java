@@ -54,6 +54,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
@@ -117,7 +118,7 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
     dpmProps.setProperty("x", "y");
     dpmProps.setProperty("z", "a");
     dpmProps.setProperty("dpm.enabled", "false");
-    dpmProps.setProperty("dpm.base.url", "http://localhost:18631");
+    dpmProps.setProperty("dpm.base.url", "@dpm-url.txt@");
     File dpmFile = new File(RuntimeInfoTestInjector.confDir, "dpm.properties");
 
     try (FileWriter fw = new FileWriter(sdcFile)) {
@@ -126,6 +127,11 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
 
     try (FileWriter fw = new FileWriter(dpmFile)) {
       dpmProps.store(fw, "");
+    }
+
+    File dpmUrlFile = new File(RuntimeInfoTestInjector.confDir, RemoteSSOService.DPM_URL_FILE);
+    try (FileWriter fw = new FileWriter(dpmUrlFile)) {
+      fw.write("http://localhost:18631");
     }
 
     Response response = null;
@@ -181,12 +187,16 @@ public class TestCredentialsDeploymentResource extends JerseyTest{
       Assert.assertEquals("true", dpmProps.getProperty("dpm.enabled"));
       Assert.assertEquals(Configuration.FileRef.PREFIX + "application-token.txt" + Configuration.FileRef.SUFFIX,
           dpmProps.getProperty("dpm.appAuthToken"));
-      Assert.assertEquals("https://dpm.streamsets.com:18631", dpmProps.getProperty("dpm.base.url"));
-
+      Assert.assertEquals("@dpm-url.txt@", dpmProps.getProperty("dpm.base.url"));
       Assert.assertEquals(StringUtils.join(labels.toArray(), ","), dpmProps.getProperty(RemoteEventHandlerTask
           .REMOTE_JOB_LABELS));
       Assert.assertEquals("deployment1:org", dpmProps.getProperty(RemoteSSOService.DPM_DEPLOYMENT_ID));
 
+      String dpmUrl = Files.readFirstLine(
+          new File(RuntimeInfoTestInjector.confDir, "dpm-url.txt"),
+          Charset.defaultCharset()
+      );
+      Assert.assertEquals("https://dpm.streamsets.com:18631", dpmUrl);
 
       File tokenFile = new File(RuntimeInfoTestInjector.confDir, "application-token.txt");
       try (FileInputStream fr = new FileInputStream(tokenFile)) {

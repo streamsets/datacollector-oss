@@ -395,11 +395,22 @@ public class RemoteSSOService extends AbstractSSOService {
     createRestClientBuilders(baseUrl);
   }
 
-  //saves new DPM base URL in predefine DPM_URL_FILE (etc/dpm-url.txt)
-  //the engine configuration must be 'dpm.base.url=@dpm-url.txt@' for this work correctly
+  /**
+   * Only used by this class.
+   */
   @VisibleForTesting
   void persistNewDpmBaseUrl(String baseUrl) {
-    File dpmUrlFile = new File(conf.getFilRefsBaseDir(), DPM_URL_FILE);
+    persistNewDpmBaseUrl(conf.getFilRefsBaseDir(), baseUrl);
+  }
+
+    /**
+     * The engine configuration must be 'dpm.base.url=@dpm-url.txt@' for this work correctly.
+     * <p/>
+     * This static method is to be used by other classes.
+     */
+  //saves new DPM base URL in predefine DPM_URL_FILE (etc/dpm-url.txt)
+  public static void persistNewDpmBaseUrl(File dir, String baseUrl) {
+    File dpmUrlFile = new File(dir, DPM_URL_FILE);
     try (Writer w = new FileWriter(dpmUrlFile)) {
       w.write(baseUrl);
     } catch (IOException ex) {
