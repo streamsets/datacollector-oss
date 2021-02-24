@@ -23,7 +23,7 @@ public class Kafka08ValidationUtilFactory extends SdcKafkaValidationUtilFactory 
   }
 
   @Override
-  public KafkaValidationUtil08 create() {
-    return new KafkaValidationUtil08();
+  public KafkaValidationUtil08 create(boolean overrideConfigurations) {
+    return new KafkaValidationUtil08(overrideConfigurations);
   }
 }

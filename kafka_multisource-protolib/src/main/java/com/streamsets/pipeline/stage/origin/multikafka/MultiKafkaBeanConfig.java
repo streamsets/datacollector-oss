@@ -24,6 +24,8 @@ import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetReset;
 import com.streamsets.pipeline.lib.kafka.KafkaAutoOffsetResetValues;
+import com.streamsets.pipeline.lib.kafka.KafkaConstants;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.kafka.connection.KafkaConnectionConfigBean;
 import com.streamsets.pipeline.lib.kafka.KafkaSecurityUtil;
 import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureMode;
@@ -31,10 +33,19 @@ import com.streamsets.pipeline.stage.origin.kafka.KeyCaptureModeChooserValues;
 import com.streamsets.pipeline.stage.origin.lib.DataParserFormatConfig;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class MultiKafkaBeanConfig {
+
+  private static final String KAFKA_CONFIGS = "kafkaOptions";
+  private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  private static final String MAX_POLL_RECORDS = "max.poll.records";
+
   @ConfigDefBean(groups = "KAFKA")
   public DataParserFormatConfig dataFormatConfig = new DataParserFormatConfig();
 
@@ -157,6 +168,18 @@ public class MultiKafkaBeanConfig {
   public Map<String, String> kafkaOptions;
 
   @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Override Stage Configurations",
+      description = "Enables overriding stage properties with Kafka Configuration properties",
+      displayPosition = 80,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0"
+  )
+  public boolean overrideConfigurations = false;
+
+  @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
       label = "Key Deserializer",
@@ -212,6 +235,7 @@ public class MultiKafkaBeanConfig {
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.MODEL,
+
       label = "Value Deserializer",
       description = "Method used to deserialize the Kafka message value. Set to Confluent when the Avro schema ID is embedded in each message.",
       defaultValue = "DEFAULT",
@@ -239,10 +263,41 @@ public class MultiKafkaBeanConfig {
     KafkaSecurityUtil.validateAdditionalProperties(
         connectionConfig.connection.securityConfig,
         kafkaOptions,
+        overrideConfigurations,
         KafkaOriginGroups.KAFKA.name(),
         "conf.kafkaOptions",
         issues,
         context
     );
+    if (!overrideConfigurations) {
+      validateAdditionalProperties(context, issues);
+    }
+  }
+
+  private void validateAdditionalProperties(
+      Stage.Context context,
+      List<Stage.ConfigIssue> issues
+  ) {
+    Set<String> forbiddenProperties = new HashSet<>(Arrays.asList(
+        KafkaConstants.BOOTSTRAP_SERVERS,
+        KafkaConstants.GROUP_ID,
+        MAX_POLL_RECORDS,
+        KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG,
+        KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG,
+        KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG
+    ));
+    if (!dataFormatConfig.basicAuth.get().isEmpty()) {
+      forbiddenProperties.addAll(Arrays.asList(
+          KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE,
+          KafkaConstants.BASIC_AUTH_USER_INFO
+      ));
+    }
+    if (!Collections.disjoint(forbiddenProperties, kafkaOptions.keySet())) {
+      issues.add(context.createConfigIssue(
+          Groups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+          KafkaErrors.KAFKA_14)
+      );
+    }
   }
 }

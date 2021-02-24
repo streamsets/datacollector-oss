@@ -16,11 +16,13 @@
 package com.streamsets.pipeline.stage.origin.kafka.cluster;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import com.streamsets.datacollector.cluster.ClusterModeConstants;
 import com.streamsets.pipeline.api.BatchMaker;
 import com.streamsets.pipeline.api.ErrorListener;
 import com.streamsets.pipeline.api.OffsetCommitter;
 import com.streamsets.pipeline.api.Record;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.impl.ClusterSource;
 import com.streamsets.pipeline.cluster.Consumer;
@@ -28,14 +30,18 @@ import com.streamsets.pipeline.cluster.ControlChannel;
 import com.streamsets.pipeline.cluster.DataChannel;
 import com.streamsets.pipeline.cluster.Producer;
 import com.streamsets.pipeline.impl.OffsetAndResult;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.stage.origin.kafka.BaseKafkaSource;
 import com.streamsets.pipeline.stage.origin.kafka.KafkaConfigBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
 
@@ -186,6 +192,23 @@ public class ClusterKafkaSource extends BaseKafkaSource implements OffsetCommitt
   @Override
   public void postDestroy() {
     //don't do anything
+  }
+
+  @Override
+  protected void validateAdditionalProperties(Map<String, String> additionalProperties, List<Stage.ConfigIssue> issues) {
+    Set<String> forbiddenProperties = ImmutableSet.of(
+        BROKER_LIST,
+        ZOOKEEPER_CONNECT,
+        TOPIC,
+        CONSUMER_GROUP
+    );
+    if (!conf.overrideConfigurations && !Collections.disjoint(forbiddenProperties, additionalProperties.keySet())) {
+      issues.add(getContext().createConfigIssue(
+          KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+          KafkaErrors.KAFKA_14)
+      );
+    }
   }
 
 }

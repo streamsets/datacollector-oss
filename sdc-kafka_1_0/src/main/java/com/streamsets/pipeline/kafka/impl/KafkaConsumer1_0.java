@@ -48,7 +48,8 @@ public class KafkaConsumer1_0 extends BaseKafkaConsumer11 {
       int batchSize,
       boolean isTimestampEnabled,
       String kafkaAutoOffsetReset,
-      long timestampToSearchOffsets
+      long timestampToSearchOffsets,
+      boolean overrideConfigurations
   ) {
     super(
         bootStrapServers,
@@ -59,7 +60,8 @@ public class KafkaConsumer1_0 extends BaseKafkaConsumer11 {
         batchSize,
         isTimestampEnabled,
         kafkaAutoOffsetReset,
-        timestampToSearchOffsets
+        timestampToSearchOffsets,
+        overrideConfigurations
     );
   }
 

@@ -49,9 +49,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.streamsets.pipeline.Utils.KAFKA_CONFIG_BEAN_PREFIX;
 import static com.streamsets.pipeline.Utils.KAFKA_CONNECTION_CONFIG_BEAN_PREFIX;
@@ -78,7 +82,7 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
 
   public BaseKafkaSource(KafkaConfigBean conf) {
     this.conf = conf;
-    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
+    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create(conf.overrideConfigurations);
   }
 
   @Override
@@ -141,13 +145,14 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
     KafkaSecurityUtil.validateAdditionalProperties(
         conf.connectionConfig.connection.securityConfig,
         conf.kafkaConsumerConfigs,
+        conf.overrideConfigurations,
         KafkaOriginGroups.KAFKA.name(),
         KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
         issues,
         getContext()
     );
 
-    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaConsumerConfigs);
+    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaConsumerConfigs, conf.overrideConfigurations);
 
     if (conf.connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
@@ -207,10 +212,13 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
       );
     }
 
+    if (!conf.overrideConfigurations) {
+      validateAdditionalProperties(conf.kafkaConsumerConfigs, issues);
+    }
+
     //validate connecting to kafka
     if (issues.isEmpty()) {
       Map<String, Object> kafkaConsumerConfigs = new HashMap<>();
-      kafkaConsumerConfigs.putAll(conf.kafkaConsumerConfigs);
       kafkaConsumerConfigs.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, conf.keyDeserializer.getKeyClass());
       kafkaConsumerConfigs.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, conf.valueDeserializer.getValueClass());
       kafkaConsumerConfigs.put(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
@@ -223,6 +231,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         kafkaConsumerConfigs.put(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
       }
 
+      kafkaConsumerConfigs.putAll(conf.kafkaConsumerConfigs);
+
       ConsumerFactorySettings settings = new ConsumerFactorySettings(
           conf.zookeeperConnect,
           conf.connectionConfig.connection.metadataBrokerList,
@@ -234,7 +244,8 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
           conf.maxBatchSize,
           conf.timestampsEnabled,
           conf.kafkaAutoOffsetReset.name(),
-          conf.timestampToSearchOffsets
+          conf.timestampToSearchOffsets,
+          conf.overrideConfigurations
       );
       kafkaConsumer = SdcKafkaConsumerFactory.create(settings).create();
       kafkaConsumer.validate(issues, getContext());
@@ -375,6 +386,27 @@ public abstract class BaseKafkaSource extends BaseSource implements OffsetCommit
         }
       default:
         throw new IllegalStateException(Utils.format("Unknown on error value '{}'", stageContext, ex));
+    }
+  }
+
+  protected void validateAdditionalProperties(Map<String, String> additionalProperties, List<Stage.ConfigIssue> issues) {
+    Set<String> forbiddenProperties = new HashSet<>(Arrays.asList(
+        KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG,
+        KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG,
+        KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG
+    ));
+    if (!conf.dataFormatConfig.basicAuth.get().isEmpty()) {
+      forbiddenProperties.addAll(Arrays.asList(
+          KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE,
+          KafkaConstants.BASIC_AUTH_USER_INFO
+      ));
+    }
+    if (!Collections.disjoint(forbiddenProperties, additionalProperties.keySet())) {
+      issues.add(getContext().createConfigIssue(
+          KafkaOriginGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+          KafkaErrors.KAFKA_14)
+      );
     }
   }
 }

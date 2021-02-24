@@ -33,7 +33,8 @@ public class KafkaConsumer10 extends KafkaConsumer09 {
       Source.Context context,
       int batchSize,
       boolean isTimestampEnabled,
-      String kafkaAutoOffsetReset
+      String kafkaAutoOffsetReset,
+      boolean overrideConfigurations
   ) {
     super(bootStrapServers,
         topic,
@@ -42,7 +43,8 @@ public class KafkaConsumer10 extends KafkaConsumer09 {
         context,
         batchSize,
         isTimestampEnabled,
-        kafkaAutoOffsetReset
+        kafkaAutoOffsetReset,
+        overrideConfigurations
     );
   }
 

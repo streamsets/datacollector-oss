@@ -87,7 +87,7 @@ public class KafkaConnectionVerifier extends ConnectionVerifier {
     props.setProperty("bootstrap.servers", connection.metadataBrokerList);
 
     Map<String, String> securityProperties = new HashMap<>();
-    KafkaSecurityUtil.addSecurityConfigs(connection.securityConfig, securityProperties);
+    KafkaSecurityUtil.addSecurityConfigs(connection.securityConfig, securityProperties, false);
     securityProperties.forEach(props::setProperty);
 
     try (AdminClient client = KafkaAdminClient.create(props)) {

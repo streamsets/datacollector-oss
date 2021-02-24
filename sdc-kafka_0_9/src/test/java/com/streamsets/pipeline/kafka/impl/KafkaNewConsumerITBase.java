@@ -194,7 +194,6 @@ public abstract class KafkaNewConsumerITBase {
       StageException {
     Map<String, Object> props = new HashMap<>();
     props.put("auto.commit.interval.ms", "1000");
-    props.put("auto.offset.reset", "earliest");
     props.put("session.timeout.ms", "30000");
     props.put("partition.assignment.strategy", "org.apache.kafka.clients.consumer.RoundRobinAssignor");
     props.put(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -260,7 +259,8 @@ public abstract class KafkaNewConsumerITBase {
         100,
         false,
         KafkaAutoOffsetReset.EARLIEST.name().toLowerCase(),
-        0
+        0,
+        false
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(settings);
     return sdcKafkaConsumerFactory.create();

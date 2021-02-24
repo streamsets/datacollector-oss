@@ -160,6 +160,18 @@ public class MapRStreamsTargetConfig {
   )
   public Map<String, String> kafkaProducerConfigs;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Override Stage Configurations",
+      description = "Enables overriding stage properties with Kafka Configuration properties",
+      displayPosition = 70,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "#0"
+  )
+  public boolean overrideConfigurations = false;
+
 
   // Private members
 
@@ -185,7 +197,7 @@ public class MapRStreamsTargetConfig {
     this.allowedTopics = new HashSet<>();
     this.invalidTopicMap = new HashMap<>();
     allowAllTopics = false;
-    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
+    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create(false);
 
     //check if the topic contains EL expression with record: functions
     //If yes, then validate the EL expression. Do not validate for existence of topic
@@ -247,7 +259,8 @@ public class MapRStreamsTargetConfig {
           partitionStrategy,
           null,
           dataFormat,
-          false
+          false,
+          overrideConfigurations
       );
       kafkaProducer = SdcKafkaProducerFactory.create(settings).create();
       try {

@@ -22,6 +22,7 @@ import com.streamsets.pipeline.kafka.api.SdcKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.BaseKafkaValidationUtil;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -40,6 +41,12 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
   private static final Logger LOG = LoggerFactory.getLogger(KafkaValidationUtil09.class);
   private static final String KAFKA_VERSION = "0.9";
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.kafkaConfig.";
+
+  private final boolean overrideConfigurations;
+
+  KafkaValidationUtil09(boolean overrideConfigurations) {
+    this.overrideConfigurations = overrideConfigurations;
+  }
 
   @Override
   public String getVersion() {
@@ -147,7 +154,7 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
     props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-    addSecurityProperties(kafkaClientConfigs, props);
+    addUserConfiguredProperties(kafkaClientConfigs, props);
 
     return new KafkaConsumer<>(props);
   }
@@ -170,24 +177,22 @@ public class KafkaValidationUtil09 extends BaseKafkaValidationUtil implements Sd
     } else {
       props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 60000);
     }
-    addSecurityProperties(kafkaClientConfigs, props);
+    addUserConfiguredProperties(kafkaClientConfigs, props);
 
     return new KafkaProducer<>(props);
   }
 
-  private static void addSecurityProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
     //The following options, if specified, are ignored : "bootstrap.servers", "key.serializer" and "value.serializer"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
-      kafkaClientConfigs.remove(Kafka09Constants.BOOTSTRAP_SERVERS_KEY);
       kafkaClientConfigs.remove(Kafka09Constants.KEY_SERIALIZER_KEY);
       kafkaClientConfigs.remove(Kafka09Constants.VALUE_SERIALIZER_KEY);
+      if (!overrideConfigurations) {
+        kafkaClientConfigs.remove(Kafka09Constants.BOOTSTRAP_SERVERS_KEY);
+      }
 
-      for (Map.Entry<String, Object> clientConfig : kafkaClientConfigs.entrySet()) {
-        if(clientConfig.getKey().startsWith("ssl.") ||
-          clientConfig.getKey().startsWith("sasl.") ||
-          clientConfig.getKey().equals("security.protocol")) {
-          props.put(clientConfig.getKey(), clientConfig.getValue());
-        }
+      for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
+        props.put(producerConfig.getKey(), producerConfig.getValue());
       }
     }
   }

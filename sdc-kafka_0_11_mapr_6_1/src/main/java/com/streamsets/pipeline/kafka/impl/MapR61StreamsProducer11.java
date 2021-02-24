@@ -16,9 +16,13 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -26,8 +30,11 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class MapR61StreamsProducer11 extends KafkaProducer09 {
 
@@ -47,9 +54,10 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
       String metadataBrokerList,
       Map<String, Object> kafkaProducerConfigs,
       PartitionStrategy partitionStrategy,
-      boolean sendWriteResponse
+      boolean sendWriteResponse,
+      boolean overrideConfigurations
   ) {
-    super(metadataBrokerList, kafkaProducerConfigs, partitionStrategy, sendWriteResponse);
+    super(metadataBrokerList, kafkaProducerConfigs, partitionStrategy, sendWriteResponse, overrideConfigurations);
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;
   }
@@ -66,7 +74,8 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
     }
   }
 
-  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+  @Override
+  protected void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
     //The following options, if specified, are ignored : "key.serializer" and "value.serializer"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
       kafkaClientConfigs.remove(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG);
@@ -110,5 +119,21 @@ public class MapR61StreamsProducer11 extends KafkaProducer09 {
     // throwing of this exception results in stopped pipeline as it is not handled by KafkaTarget
     // Retry feature at the pipeline level will re attempt
     return new StageException(MapRStreamsErrors.MAPRSTREAMS_20, e.toString(), e);
+  }
+
+  protected void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    Set<String> forbiddenProperties = ImmutableSet.of(
+        STREAMS_PARTITIONER_CLASS,
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG
+
+    );
+    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet()))) {
+      issues.add(context.createConfigIssue(
+          KafkaDestinationGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+          KafkaErrors.KAFKA_14)
+      );
+    }
   }
 }

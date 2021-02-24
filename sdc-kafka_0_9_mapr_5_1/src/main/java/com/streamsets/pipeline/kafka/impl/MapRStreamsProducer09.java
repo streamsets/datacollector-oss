@@ -16,9 +16,13 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
+import com.google.common.collect.ImmutableSet;
+import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
+import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import com.streamsets.pipeline.lib.maprstreams.MapRStreamsErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
@@ -26,8 +30,11 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 
 public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
 
@@ -40,17 +47,23 @@ public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
   public static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
   public static final String STREAMS_PARTITIONER_CLASS = "streams.partitioner.class";
 
+  protected static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
+  protected static final String KAFKA_CONFIGS = "kafkaProducerConfigs";
+
   private final Map<String, Object> kafkaProducerConfigs;
   private final PartitionStrategy partitionStrategy;
+  private final boolean overrideConfigurations;
 
   public MapRStreamsProducer09(
-    Map<String, Object> kafkaProducerConfigs,
-    PartitionStrategy partitionStrategy,
-    boolean sendWriteResponse
+      Map<String, Object> kafkaProducerConfigs,
+      PartitionStrategy partitionStrategy,
+      boolean sendWriteResponse,
+      boolean overrideConfigurations
   ) {
     super(sendWriteResponse);
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;
+    this.overrideConfigurations = overrideConfigurations;
   }
 
   private void configurePartitionStrategy(Properties props, PartitionStrategy partitionStrategy) {
@@ -68,8 +81,10 @@ public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
   private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
     //The following options, if specified, are ignored : "key.serializer" and "value.serializer"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
-      kafkaClientConfigs.remove(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG);
-      kafkaClientConfigs.remove(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG);
+      if (!overrideConfigurations) {
+        kafkaClientConfigs.remove(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG);
+        kafkaClientConfigs.remove(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG);
+      }
 
       for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
@@ -109,5 +124,24 @@ public class MapRStreamsProducer09 extends BaseKafkaProducer09 {
     // throwing of this exception results in stopped pipeline as it is not handled by KafkaTarget
     // Retry feature at the pipeline level will re attempt
     return new StageException(MapRStreamsErrors.MAPRSTREAMS_20, e.toString(), e);
+  }
+
+  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    validateAdditionalProperties(issues, context);
+  }
+
+  private void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
+    Set<String> forbiddenProperties = ImmutableSet.of(
+        KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG,
+        KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG,
+        ProducerConfig.PARTITIONER_CLASS_CONFIG
+    );
+    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet()))) {
+      issues.add(context.createConfigIssue(
+          KafkaDestinationGroups.KAFKA.name(),
+          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
+          KafkaErrors.KAFKA_14)
+      );
+    }
   }
 }

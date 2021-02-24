@@ -21,6 +21,10 @@ public class KafkaValidationUtil11 extends KafkaValidationUtil09 implements SdcK
 
   private static final String KAFKA_VERSION = "0.11";
 
+  KafkaValidationUtil11(boolean overrideConfigurations) {
+    super(overrideConfigurations);
+  }
+
   @Override
   public String getVersion() {
     return KAFKA_VERSION;

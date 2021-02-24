@@ -23,7 +23,7 @@ public class MapRStreams09ValidationUtilFactory extends SdcKafkaValidationUtilFa
   }
 
   @Override
-  public MapRStreamsValidationUtil09 create() {
-    return new MapRStreamsValidationUtil09();
+  public MapRStreamsValidationUtil09 create(boolean overrideConfigurations) {
+    return new MapRStreamsValidationUtil09(overrideConfigurations);
   }
 }

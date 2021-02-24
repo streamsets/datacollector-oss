@@ -83,7 +83,7 @@ public class TestSecuriityUtil {
   @Test
   public void testAddSecurityConfigsPlaintext() {
     securityConfig.securityOption = KafkaSecurityOptions.PLAINTEXT;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(1, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.PLAINTEXT.getProtocol(), configMap.get(SECURITY_PROTOCOL));
@@ -92,7 +92,7 @@ public class TestSecuriityUtil {
   @Test
   public void testAddSecurityConfigsSsl() {
     securityConfig.securityOption = KafkaSecurityOptions.SSL;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(5, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SSL.getProtocol(), configMap.get(SECURITY_PROTOCOL));
@@ -109,7 +109,7 @@ public class TestSecuriityUtil {
   @Test
   public void testAddSecurityConfigsSslAuth() {
     securityConfig.securityOption = KafkaSecurityOptions.SSL_AUTH;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(9, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SSL_AUTH.getProtocol(), configMap.get(SECURITY_PROTOCOL));
@@ -135,7 +135,7 @@ public class TestSecuriityUtil {
   public void testAddSecurityConfigsSaslPlaintext() {
     securityConfig.securityOption = KafkaSecurityOptions.SASL_PLAINTEXT;
     securityConfig.saslMechanism = SaslMechanisms.GSSAPI;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(3, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SASL_PLAINTEXT.getProtocol(), configMap.get(SECURITY_PROTOCOL));
@@ -149,7 +149,7 @@ public class TestSecuriityUtil {
   public void testAddSecurityConfigsSaslSsl() {
     securityConfig.securityOption = KafkaSecurityOptions.SASL_SSL;
     securityConfig.saslMechanism = SaslMechanisms.GSSAPI;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(7, configMap.size());
     Assert.assertNotNull(configMap.get(SECURITY_PROTOCOL));
     Assert.assertEquals(KafkaSecurityOptions.SASL_SSL.getProtocol(), configMap.get(SECURITY_PROTOCOL));
@@ -170,7 +170,7 @@ public class TestSecuriityUtil {
   @Test
   public void testAddSecurityConfigsEmptyOptions() {
     securityConfig.securityOption = null;
-    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap);
+    KafkaSecurityUtil.addSecurityConfigs(securityConfig, configMap, false);
     Assert.assertEquals(0, configMap.size());
   }
 
@@ -181,6 +181,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,
@@ -200,6 +201,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,
@@ -223,6 +225,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,
@@ -239,6 +242,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,
@@ -258,6 +262,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,
@@ -273,6 +278,7 @@ public class TestSecuriityUtil {
     KafkaSecurityUtil.validateAdditionalProperties(
         securityConfig,
         additionalPropeties,
+        false,
         "testConfigGroupName",
         "testConfigName",
         issues,

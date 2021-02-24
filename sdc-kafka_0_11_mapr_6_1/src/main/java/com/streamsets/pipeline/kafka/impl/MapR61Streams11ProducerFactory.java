@@ -37,7 +37,8 @@ public class MapR61Streams11ProducerFactory extends SdcKafkaProducerFactory {
         settings.getMetadataBrokerList(),
         settings.getKafkaProducerConfigs(),
         settings.getPartitionStrategy(),
-        settings.isSendWriteResponse()
+        settings.isSendWriteResponse(),
+        settings.getOverrideConfigurations()
     );
   }
 }

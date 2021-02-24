@@ -23,7 +23,7 @@ public class MapR61Streams11ValidationUtilFactory extends SdcKafkaValidationUtil
   }
 
   @Override
-  public MapR61StreamsValidationUtil11 create() {
-    return new MapR61StreamsValidationUtil11();
+  public MapR61StreamsValidationUtil11 create(boolean overrideConfigurations) {
+    return new MapR61StreamsValidationUtil11(overrideConfigurations);
   }
 }

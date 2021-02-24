@@ -58,7 +58,8 @@ public abstract class BaseKafkaConsumer11 extends KafkaConsumer09 {
       int batchSize,
       boolean isTimestampsEnabled,
       String kafkaAutoOffsetReset,
-      long timestampToSearchOffsets
+      long timestampToSearchOffsets,
+      boolean overrideConfigurations
   ) {
     super(
         bootStrapServers,
@@ -68,22 +69,27 @@ public abstract class BaseKafkaConsumer11 extends KafkaConsumer09 {
         context,
         batchSize,
         isTimestampsEnabled,
-        kafkaAutoOffsetReset
+        kafkaAutoOffsetReset,
+        overrideConfigurations
     );
     this.timestampToSearchOffsets = timestampToSearchOffsets;
 
     auxiliaryKafkaConsumerProperties = new Properties();
     // First set any and all properties set by user, this is super important as all security properties will be set here
-    if (kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
+    if (!overrideConfigurations && kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
       auxiliaryKafkaConsumerProperties.putAll(kafkaConsumerConfigs);
     }
-    // And finally finish setting the rest of what we need
+    // And finish setting the rest of what we need
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroup);
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, OffsetResetStrategy.NONE.name().toLowerCase());
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootStrapServers);
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false");
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
     auxiliaryKafkaConsumerProperties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+    // If the user wants to override stage configurations we set the consumer properties again
+    if (overrideConfigurations && kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
+      auxiliaryKafkaConsumerProperties.putAll(kafkaConsumerConfigs);
+    }
   }
 
   @Override

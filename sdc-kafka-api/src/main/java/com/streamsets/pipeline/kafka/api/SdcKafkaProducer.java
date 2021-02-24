@@ -23,6 +23,8 @@ import java.util.List;
 
 public interface SdcKafkaProducer {
 
+  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context);
+
   public void init() throws StageException;
 
   public void destroy();

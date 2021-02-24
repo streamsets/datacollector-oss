@@ -65,7 +65,7 @@ public class KafkaValidationUtil09IT {
 
     port = NetworkUtils.getRandomPort();
     kafkaServer = TestUtil09.createKafkaServer(port, zkConnect, false);
-    sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
+    sdcKafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create(false);
   }
 
   @AfterClass

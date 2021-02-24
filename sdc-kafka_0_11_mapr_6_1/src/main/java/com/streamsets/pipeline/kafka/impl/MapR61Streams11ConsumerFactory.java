@@ -42,7 +42,8 @@ public class MapR61Streams11ConsumerFactory extends SdcKafkaConsumerFactory {
         settings.getBatchSize(),
         settings.isTimestampsEnabled(),
         settings.getKafkaAutoOffsetReset(),
-        settings.getTimestampToSearchOffsets()
+        settings.getTimestampToSearchOffsets(),
+        settings.getOverrideConfigurations()
     );
   }
 }
