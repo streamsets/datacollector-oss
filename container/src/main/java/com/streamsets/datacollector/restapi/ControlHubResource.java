@@ -70,7 +70,6 @@ public class ControlHubResource {
   private final StageLibraryTask stageLibrary;
   private final CredentialStoresTask credentialStoresTask;
   private final Configuration config;
-  private final String controlHubBaseUrl;
   private final RuntimeInfo runtimeInfo;
   private final DpmClientInfo dpmClientInfo;
   private final BuildInfo buildInfo;
@@ -93,10 +92,6 @@ public class ControlHubResource {
     this.stageLibrary = stageLibrary;
     this.credentialStoresTask = credentialStoresTask;
     this.store = store;
-    this.controlHubBaseUrl = RemoteSSOService.getValidURL(config.get(
-        RemoteSSOService.DPM_BASE_URL_CONFIG,
-        RemoteSSOService.DPM_BASE_URL_DEFAULT
-    ));
     this.user = principal.getName();
   }
 

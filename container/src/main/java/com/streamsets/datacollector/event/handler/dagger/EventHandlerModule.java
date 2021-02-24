@@ -18,14 +18,13 @@ package com.streamsets.datacollector.event.handler.dagger;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
 import com.streamsets.datacollector.event.handler.NoOpEventHandlerTask;
 import com.streamsets.datacollector.event.handler.remote.ColonCompatibleRemoteDataCollector;
+import com.streamsets.datacollector.event.handler.remote.PipelineIdEncodedRemoteDatacollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteDataCollector;
 import com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask;
-import com.streamsets.datacollector.event.handler.remote.PipelineIdEncodedRemoteDatacollector;
 import com.streamsets.datacollector.main.BuildInfo;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import dagger.Module;
 import dagger.Provides;
@@ -58,10 +57,6 @@ public class EventHandlerModule {
     String applicationToken = runtimeInfo.getAppAuthToken();
     if (isDPMEnabled && applicationToken != null && applicationToken.trim()
         .length() > 0 && !runtimeInfo.isClusterSlave()) {
-      String remoteBaseURL = RemoteSSOService.getValidURL(conf.get(RemoteSSOService.DPM_BASE_URL_CONFIG,
-          RemoteSSOService.DPM_BASE_URL_DEFAULT
-      ));
-      String targetURL = remoteBaseURL + "messaging/rest/v1/events";
       eventHandlerTask = new RemoteEventHandlerTask(
           new PipelineIdEncodedRemoteDatacollector(new ColonCompatibleRemoteDataCollector(remoteDataCollector)),
           eventHandlerExecutor,
