@@ -106,15 +106,8 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
 
   private Cache<String, RunnerInfo> runnerCache;
   private Cache<String, Previewer> previewerCache;
-  static final long DEFAULT_RUNNER_EXPIRY_INTERVAL = 5*60*1000;
-  static final String RUNNER_EXPIRY_INTERVAL = "runner.expiry.interval";
-  static final long DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY = 5*60*1000;
-  static final String RUNNER_EXPIRY_INITIAL_DELAY = "runner.expiry.initial.delay";
   static final boolean DEFAULT_RUNNER_RESTART_PIPELINES = true;
   static final String RUNNER_RESTART_PIPELINES = "runner.boot.pipeline.restart";
-  private final long runnerExpiryInterval;
-  private final long runnerExpiryInitialDelay;
-  private ScheduledFuture<?> runnerExpiryFuture;
   private ScheduledFuture<?> previewCleanerFuture;
   private static final String NAME_AND_REV_SEPARATOR = "::";
 
@@ -124,8 +117,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     super(PIPELINE_MANAGER);
     this.objectGraph = objectGraph;
     this.objectGraph.inject(this);
-    runnerExpiryInterval = this.configuration.get(RUNNER_EXPIRY_INTERVAL, DEFAULT_RUNNER_EXPIRY_INTERVAL);
-    runnerExpiryInitialDelay = configuration.get(RUNNER_EXPIRY_INITIAL_DELAY, DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY);
     eventListenerManager.addStateEventListener(resourceManager);
     MetricsConfigurator.registerJmxMetrics(runtimeInfo.getMetrics());
     kafkaKerberosUtil = new KafkaKerberosUtil(configuration);
@@ -285,8 +276,10 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     runnerCache = new MetricsCache<>(
       runtimeInfo.getMetrics(),
       "manager-runner-cache",
-      CacheBuilder.newBuilder().build())
-    ;
+        CacheBuilder.newBuilder()
+            .build());
+    RunnerEvictionListener runnerEvictionListener = new RunnerEvictionListener(runnerCache);
+    eventListenerManager.addStateEventListener(runnerEvictionListener);
 
     // On SDC start up we will try by default start all pipelines that were running at the time SDC was shut down. This
     // can however be disabled via sdc.properties config. Especially helpful when starting all pipeline at once could
@@ -331,39 +324,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
         LOG.error(Utils.format("Error while processing pipeline '{}::{}'", name, rev), ex);
       }
     }
-
-    runnerExpiryFuture = managerExecutor.scheduleAtFixedRate(new Runnable() {
-      @Override
-      public void run() {
-        for (RunnerInfo runnerInfo : runnerCache.asMap().values()) {
-          Runner runner = runnerInfo.runner;
-          try {
-            LOG.debug("Runner for pipeline '{}::{}' is in status: '{}'", runner.getName(), runner.getRev(),
-              runner.getState());
-            removeRunnerIfNotActive(runner);
-          } catch (PipelineStoreException ex) {
-            if (ex.getErrorCode() == ContainerError.CONTAINER_0209) {
-              LOG.debug(
-                  "Pipeline state file for pipeline: '{}::{}' was already deleted; removing runner from cache",
-                  runner.getName(),
-                  runner.getRev(),
-                  ex.toString(),
-                  ex
-              );
-              runnerCache.invalidate(getNameAndRevString(runner.getName(), runner.getRev()));
-            } else {
-              LOG.warn(
-                  "Cannot remove runner for pipeline: '{}::{}' due to '{}'; memory leak is possible",
-                  runner.getName(),
-                  runner.getRev(),
-                  ex.toString(),
-                  ex
-              );
-            }
-          }
-        }
-      }
-    }, runnerExpiryInitialDelay, runnerExpiryInterval, TimeUnit.MILLISECONDS);
   }
 
   @VisibleForTesting
@@ -428,9 +388,6 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     if(previewerCache != null) {
       previewerCache.invalidateAll();
     }
-    if(runnerExpiryFuture != null) {
-      runnerExpiryFuture.cancel(true);
-    }
     if (previewCleanerFuture != null) {
       previewCleanerFuture.cancel(true);
     }
@@ -473,17 +430,21 @@ public class StandaloneAndClusterPipelineManager extends AbstractTask implements
     return new StatsCollectorRunner(runner, statsCollector);
   }
 
-  private String getNameAndRevString(String name, String rev) {
+  static String getNameAndRevString(String name, String rev) {
     return name + NAME_AND_REV_SEPARATOR + rev;
   }
 
-  private static class RunnerInfo {
+  static class RunnerInfo {
     private final Runner runner;
     private ExecutionMode executionMode;
 
-    private RunnerInfo(Runner runner, ExecutionMode executionMode) {
+    RunnerInfo(Runner runner, ExecutionMode executionMode) {
       this.runner = runner;
       this.executionMode = executionMode;
+    }
+
+    public Runner getRunner() {
+      return runner;
     }
   }
 

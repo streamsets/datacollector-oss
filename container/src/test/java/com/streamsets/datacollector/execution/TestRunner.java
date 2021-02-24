@@ -38,7 +38,7 @@ import java.util.Map;
 
 public class TestRunner {
 
-  static class Runner1 implements Runner {
+  public static class Runner1 implements Runner {
     @Override
     public String getName() {
       return null;

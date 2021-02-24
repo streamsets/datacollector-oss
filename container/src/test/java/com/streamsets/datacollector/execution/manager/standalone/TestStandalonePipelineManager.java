@@ -126,12 +126,8 @@ public class TestStandalonePipelineManager {
   )
   public static class TestPipelineManagerModule {
     private static Logger LOG = LoggerFactory.getLogger(TestPipelineManagerModule.class);
-    private final long expiry;
-    private final long initialExpiryDelay;
 
-    public TestPipelineManagerModule(long expiry, long initialExpiryDelay) {
-      this.initialExpiryDelay = initialExpiryDelay;
-      this.expiry = expiry;
+    public TestPipelineManagerModule() {
     }
 
     @Provides @Singleton
@@ -174,8 +170,6 @@ public class TestStandalonePipelineManager {
     @Provides @Singleton
     public Configuration provideConfiguration() {
       Configuration configuration = new Configuration();
-      configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INTERVAL, expiry);
-      configuration.set(StandaloneAndClusterPipelineManager.RUNNER_EXPIRY_INITIAL_DELAY, initialExpiryDelay);
       return configuration;
     }
 
@@ -326,14 +320,9 @@ public class TestStandalonePipelineManager {
   }
 
   private void setUpManager(
-      long expiry,
-      long initialThreadExpiryDelay,
       boolean isDPMEnabled
   ) {
-    final ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineManagerModule(
-        expiry,
-        initialThreadExpiryDelay
-    ));
+    final ObjectGraph objectGraph = ObjectGraph.create(new TestPipelineManagerModule());
     RuntimeInfo info = objectGraph.get(RuntimeInfo.class);
     info.setDPMEnabled(isDPMEnabled);
     pipelineStoreTask = objectGraph.get(PipelineStoreTask.class);
@@ -349,11 +338,7 @@ public class TestStandalonePipelineManager {
     System.setProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR, "./target/var");
     File f = new File(System.getProperty(RuntimeModule.SDC_PROPERTY_PREFIX + RuntimeInfo.DATA_DIR));
     FileUtils.deleteDirectory(f);
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false
-    );
+    setUpManager(false);
   }
 
   @After
@@ -453,16 +438,12 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        true
+    setUpManager(true
     );
 
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    assertTrue(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("remote", "0"));
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
@@ -472,17 +453,12 @@ public class TestStandalonePipelineManager {
     // Make sure that handover between the sub-tests is done properly
     assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("remote", "0"));
 
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false
+    setUpManager(false
     );
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    // no runner is created
-    assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("remote", "0"));
 
   }
 
@@ -493,33 +469,24 @@ public class TestStandalonePipelineManager {
     pipelineManager.stop();
     pipelineStoreTask.stop();
 
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false
+    setUpManager(false
     );
 
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     List<PipelineState> pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    assertTrue(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
 
     pipelineManager.stop();
     pipelineStoreTask.stop();
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.FINISHING, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
 
-    setUpManager(
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INTERVAL,
-        StandaloneAndClusterPipelineManager.DEFAULT_RUNNER_EXPIRY_INITIAL_DELAY,
-        false
+    setUpManager(false
     );
     await().atMost(Duration.FIVE_SECONDS).until(numPipelinesEqualTo(pipelineManager, 1));
 
     pipelineStates = pipelineManager.getPipelines();
     assertEquals(1, pipelineStates.size());
-    // no runner is created
-    assertFalse(((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0"));
   }
 
   @Test
@@ -536,46 +503,13 @@ public class TestStandalonePipelineManager {
     pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.RUNNING_ERROR, "blah", null, ExecutionMode
         .STANDALONE, null, 0, 0);
     pipelineManager = null;
-    setUpManager(100, 0, false);
+    setUpManager(false);
     await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
       @Override
       public Boolean call() throws Exception {
         return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0");
       }
     });
-  }
-
-
-  @Test
-  public void testPipelineRunnersAtDifferentTimesExpiry() throws Exception {
-    pipelineStoreTask.create("user", "aaaa", "label","blah", false, false, new HashMap<String, Object>());
-    pipelineStoreTask.create("user", "bbbb", "label","blah", false, false, new HashMap<String, Object>());
-    setUpManager(100, 0, false);
-
-    pipelineManager.getRunner("aaaa", "0");
-    pipelineStateStore.saveState("user", "aaaa", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
-
-    await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
-      @Override
-      public Boolean call() throws Exception {
-        return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("aaaa", "0");
-      }
-    });
-
-    pipelineManager.getRunner( "aaaa", "0");
-    pipelineStateStore.saveState("user", "bbbb", "0", PipelineStatus.STOPPED, "blah", null, ExecutionMode.STANDALONE, null, 0, 0);
-
-    pipelineManager.stop();
-    pipelineStoreTask.stop();
-
-    await().atMost(Duration.FIVE_SECONDS).until(new Callable<Boolean>() {
-      @Override
-      public Boolean call() throws Exception {
-        return !((StandaloneAndClusterPipelineManager) pipelineManager).isRunnerPresent("bbbb", "0");
-      }
-    });
-
-
   }
 
   @Test

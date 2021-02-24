@@ -246,6 +246,7 @@ public class TestStandaloneRunner {
     assertEquals(PipelineStatus.DISCONNECTED, runner.getState().getStatus());
     pipelineStateStore.saveState("admin", TestUtil.MY_PIPELINE, "0", PipelineStatus.STOPPED, "test save STOPPED", null,
       ExecutionMode.STANDALONE, null, 0, 0);
+    runner = pipelineManager.getRunner( TestUtil.MY_PIPELINE, "0");
     runner.start(new StartPipelineContextBuilder("admin").build());
     assertEquals(PipelineStatus.STARTING, runner.getState().getStatus());
     /* TODO wait for RUNNING below should not be necessary. Without it, however, the following events occur:
