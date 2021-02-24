@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.io.Resources;
+import com.streamsets.datacollector.event.client.impl.MovedDpmJerseyClientFilter;
 import com.streamsets.datacollector.log.LogStreamer;
 import com.streamsets.datacollector.log.LogUtils;
 import com.streamsets.datacollector.main.RuntimeInfo;
@@ -28,6 +29,7 @@ import com.streamsets.datacollector.store.impl.AclPipelineStoreTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.datacollector.util.PipelineException;
+import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.lib.security.http.SSOPrincipal;
@@ -39,6 +41,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
 import javax.annotation.security.DenyAll;
@@ -53,6 +57,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericType;
@@ -75,6 +80,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @Path("/v1/system")
 @Api(value = "system")
@@ -380,33 +386,41 @@ public class LogResource {
 
   private String isJobAccessibleFromControlHub(HttpServletRequest request, String jobId) {
     String controlHubPipelineName = null;
-    String dpmBaseURL = config.get(RemoteSSOService.DPM_BASE_URL_CONFIG, "");
-    if (dpmBaseURL.endsWith("/")) {
-      dpmBaseURL = dpmBaseURL.substring(0, dpmBaseURL.length() - 1);
-    }
-
-    // Get DPM user auth token from request cookie
-    SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
-    String userAuthToken = ssoPrincipal.getTokenStr();
-
-    Response response = null;
-    try {
-      response = ClientBuilder.newClient()
-          .target(dpmBaseURL + "/jobrunner/rest/v1/job/" + jobId)
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
-          .header(SSOConstants.X_REST_CALL, true)
+    if (runtimeInfo.isDPMEnabled()) {
+      DpmClientInfo dpmClientInfo =
+          ((Supplier<DpmClientInfo>) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY))
           .get();
-      if (response.getStatus() == Response.Status.OK.getStatusCode()) {
-        Map<String, Object> job = response.readEntity(new GenericType<Map<String,Object>>() {});
-        if (job != null && job.containsKey("pipelineName")) {
-          controlHubPipelineName = (String)job.get("pipelineName");
+
+      // Get DPM user auth token from request cookie
+      SSOPrincipal ssoPrincipal = (SSOPrincipal) request.getUserPrincipal();
+      String userAuthToken = ssoPrincipal.getTokenStr();
+
+      Response response = null;
+      try {
+        // no need to use the MovedDpmJerseyClientFilter filter as this is a call using the user session
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(new MovedDpmJerseyClientFilter(dpmClientInfo));
+        clientConfig.register(new CsrfProtectionFilter("CSRF"));
+        Client client = ClientBuilder.newClient(clientConfig);
+
+        response = client
+            .target(dpmClientInfo.getDpmBaseUrl() + "jobrunner/rest/v1/job/" + jobId)
+            .register(new CsrfProtectionFilter("CSRF"))
+            .request()
+            .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
+            .header(SSOConstants.X_REST_CALL, true)
+            .get();
+        if (response.getStatus() == Response.Status.OK.getStatusCode()) {
+          Map<String, Object> job = response.readEntity(new GenericType<Map<String, Object>>() {
+          });
+          if (job != null && job.containsKey("pipelineName")) {
+            controlHubPipelineName = (String) job.get("pipelineName");
+          }
         }
-      }
-    } finally {
-      if (response != null) {
-        response.close();
+      } finally {
+        if (response != null) {
+          response.close();
+        }
       }
     }
     return controlHubPipelineName;
