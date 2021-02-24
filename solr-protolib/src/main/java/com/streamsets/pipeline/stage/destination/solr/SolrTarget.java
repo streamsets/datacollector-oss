@@ -174,7 +174,7 @@ public class SolrTarget extends BaseTarget {
         }
       } catch (Exception ex) {
         String configName = "conf.solrURI";
-        if(InstanceTypeOptions.SOLR_CLOUD.getLabel().equals(conf.instanceType.getInstanceType())) {
+        if(InstanceTypeOptions.SOLR_CLOUD.equals(conf.instanceType)) {
           configName = "conf.zookeeperConnect";
         }
         issues.add(createSolrConfigIssue(configName, Errors.SOLR_03, ex.toString(), ex));
