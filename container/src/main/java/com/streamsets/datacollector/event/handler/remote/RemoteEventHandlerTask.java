@@ -403,6 +403,30 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
 
   @Override
   public void stopTask() {
+    if (shouldSendSyncEvents) {
+      EventClient eventClient = new EventClientImpl(conf,
+          () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)
+      );
+      List<PipelineStatusEvent> pipelineStatusEventList = new ArrayList<>();
+      try {
+        for (PipelineAndValidationStatus pipelineAndValidationStatus : remoteDataCollector.getPipelines()) {
+          pipelineStatusEventList.add(createPipelineStatusEvent(jsonToFromDto, pipelineAndValidationStatus));
+        }
+        PipelineStatusEvents pipelineStatusEvents = new PipelineStatusEvents();
+        pipelineStatusEvents.setPipelineStatusEventList(pipelineStatusEventList);
+        LOG.info("Sending status of all pipelines one last time in shutdown hook");
+        eventClient.sendSyncEvents(jobRunnerPipelineStatusEventsUrl,
+            new HashMap<>(),
+            requestHeader,
+            pipelineStatusEvents,
+            1
+        );
+      } catch (Exception e) {
+        LOG.error("Cannot send pipeline status events in shutdown hook: {}", e, e);
+      }
+    } else {
+      LOG.info("Doing nothing as sending events in shutdown hook is not supported as sync events is set to false");
+    }
     webSocketToRestDispatcher.stopTask();
     executorService.shutdownNow();
   }

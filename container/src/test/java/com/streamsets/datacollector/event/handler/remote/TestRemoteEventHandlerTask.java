@@ -31,6 +31,8 @@ import org.mockito.Mockito;
 import java.io.File;
 import java.util.UUID;
 
+import static com.streamsets.datacollector.event.handler.remote.RemoteEventHandlerTask.SHOULD_SEND_SYNC_EVENTS;
+
 public class TestRemoteEventHandlerTask {
 
   @Test
@@ -61,4 +63,26 @@ public class TestRemoteEventHandlerTask {
     );
   }
 
+  @Test
+  public void testSendingStatusOfPipelinesInvokedOnShutdown() throws Exception {
+    RemoteDataCollector remoteDataCollector = Mockito.mock(RemoteDataCollector.class);
+    SafeScheduledExecutorService executorService = Mockito.mock(SafeScheduledExecutorService.class);
+    StageLibraryTask stageLibrary = Mockito.mock(StageLibraryTask.class);
+    RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
+    final BuildInfo buildInfo = ProductBuildInfo.getDefault();
+    Configuration conf = new Configuration();
+    conf.set(SHOULD_SEND_SYNC_EVENTS, true);
+    RemoteEventHandlerTask task = new RemoteEventHandlerTask(
+        remoteDataCollector,
+        executorService,
+        executorService,
+        stageLibrary,
+        buildInfo,
+        runtimeInfo,
+        conf,
+        null
+    );
+    task.stopTask();
+    Mockito.verify(remoteDataCollector, Mockito.times(1)).getPipelines();
+  }
 }
