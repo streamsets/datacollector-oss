@@ -13,28 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.remote;
+package com.streamsets.pipeline.stage.connection.remote;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
 import org.apache.commons.vfs2.provider.ftps.FtpsDataChannelProtectionLevel;
 
 @GenerateResourceBundle
-public enum FTPSTrustStore implements Label {
-  ALLOW_ALL("Allow All"),
-  FILE("File"),
-  REMOTE_TRUSTSTORE("Remote Truststore"),
-  JVM_DEFAULT("JVM Default"),
+public enum FTPSDataChannelProtectionLevel implements Label {
+  // There's actually 4 levels, but nobody seems to actually use the other two, and even the RFC says not to use them
+  // https://tools.ietf.org/html/rfc4217#page-10
+  CLEAR("Clear", FtpsDataChannelProtectionLevel.C),
+  PRIVATE("Private", FtpsDataChannelProtectionLevel.P),
   ;
 
   private final String label;
+  private final FtpsDataChannelProtectionLevel level;
 
-  FTPSTrustStore(String label) {
+  FTPSDataChannelProtectionLevel(String label, FtpsDataChannelProtectionLevel level) {
     this.label = label;
+    this.level = level;
   }
 
   @Override
   public String getLabel() {
     return label;
+  }
+
+  public FtpsDataChannelProtectionLevel getLevel() {
+    return level;
   }
 }

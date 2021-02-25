@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
+import com.streamsets.pipeline.stage.connection.remote.Authentication;
+import com.streamsets.pipeline.stage.connection.remote.RemoteConnection;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -270,20 +272,21 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
       String privateKeyPlainText
   ) {
     RemoteConfigBean configBean = new RemoteConfigBean();
-    configBean.remoteAddress = remoteHost;
+    configBean.connection = new RemoteConnection();
+    configBean.connection.remoteAddress = remoteHost;
     configBean.userDirIsRoot = userDirIsRoot;
     configBean.createPathIfNotExists = createPathIfNotExists;
-    configBean.username = () -> username;
-    configBean.password = () -> password;
+    configBean.connection.credentials.username = () -> username;
+    configBean.connection.credentials.password = () -> password;
     configBean.privateKey = privateKey;
     configBean.privateKeyPlainText = () -> privateKeyPlainText;
     configBean.privateKeyPassphrase = () -> passphrase;
-    configBean.knownHosts = knownHostsFile;
-    configBean.strictHostChecking = !noHostChecking;
+    configBean.connection.credentials.knownHosts = knownHostsFile;
+    configBean.connection.credentials.strictHostChecking = !noHostChecking;
     if (password != null) {
-      configBean.auth = Authentication.PASSWORD;
+      configBean.connection.credentials.auth = Authentication.PASSWORD;
     } else {
-      configBean.auth = Authentication.PRIVATE_KEY;
+      configBean.connection.credentials.auth = Authentication.PRIVATE_KEY;
     }
     if (privateKeyPlainText == null) {
       configBean.privateKeyProvider = PrivateKeyProvider.FILE;
@@ -304,7 +307,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
     connector.initAndConnect(
         issues,
         Mockito.mock(Stage.Context.class),
-        URI.create(connector.remoteConfig.remoteAddress),
+        URI.create(connector.remoteConfig.connection.remoteAddress),
         remoteGroup,
         credGroup
     );
@@ -326,7 +329,7 @@ public abstract class RemoteConnectorTestBase extends FTPAndSSHDUnitTest {
     connector.initAndConnect(
         issues,
         createContextAndCheckIssue(expectedConfigGroup, expectedConfigName, expectedErrorCode, expectedArgs),
-        URI.create(connector.remoteConfig.remoteAddress),
+        URI.create(connector.remoteConfig.connection.remoteAddress),
         remoteGroup,
         credGroup
     );

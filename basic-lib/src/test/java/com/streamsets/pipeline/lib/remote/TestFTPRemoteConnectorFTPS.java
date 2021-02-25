@@ -17,6 +17,9 @@ package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
+import com.streamsets.pipeline.stage.connection.remote.FTPSDataChannelProtectionLevel;
+import com.streamsets.pipeline.stage.connection.remote.FTPSMode;
+import com.streamsets.pipeline.stage.connection.remote.FTPSTrustStore;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -567,17 +570,17 @@ public class TestFTPRemoteConnectorFTPS extends TestFTPRemoteConnector {
         true,
         null
     );
-    configBean.ftpsMode = mode;
-    configBean.ftpsDataChannelProtectionLevel = protLevel;
+    configBean.connection.ftpsMode = mode;
+    configBean.connection.ftpsDataChannelProtectionLevel = protLevel;
     if (keystoreFile != null) {
-      configBean.useFTPSClientCert = true;
+      configBean.connection.credentials.useFTPSClientCert = true;
       configBean.ftpsClientCertKeystoreFile = keystoreFile;
       configBean.ftpsClientCertKeystoreType = keystoreType;
       configBean.ftpsClientCertKeystorePassword = () -> keystorePassword;
     } else {
-      configBean.useFTPSClientCert = false;
+      configBean.connection.credentials.useFTPSClientCert = false;
     }
-    configBean.ftpsTrustStoreProvider = truststoreProvider;
+    configBean.connection.credentials.ftpsTrustStoreProvider = truststoreProvider;
     if (truststoreProvider == FTPSTrustStore.FILE) {
       configBean.ftpsTruststoreFile = truststoreFile;
       configBean.ftpsTruststoreType = truststoreType;

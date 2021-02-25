@@ -25,15 +25,12 @@ import com.streamsets.pipeline.api.el.ELEvalException;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
-import com.streamsets.pipeline.lib.remote.Protocol;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConfigBean;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
-import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
-import com.streamsets.pipeline.stage.origin.remote.RemoteDownloadConfigBean;
 import org.apache.commons.lang3.StringUtils;
 import org.mortbay.log.Log;
 import org.slf4j.Logger;
@@ -87,10 +84,10 @@ public class RemoteLocationExecutor extends BaseExecutor {
     URI remoteURI = RemoteConnector.getURI(remoteConfig, issues, getContext(), Groups.REMOTE);
 
     if (issues.isEmpty()) {
-      if (remoteConfig.protocol == Protocol.FTP || remoteConfig.protocol == Protocol.FTPS) {
+      if (remoteConfig.connection.protocol == Protocol.FTP || remoteConfig.connection.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteLocationExecutorDelegate(remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
-      } else if (remoteConfig.protocol == Protocol.SFTP) {
+      } else if (remoteConfig.connection.protocol == Protocol.SFTP) {
         delegate = new SFTPRemoteLocationExecutorDelegate(remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
       }

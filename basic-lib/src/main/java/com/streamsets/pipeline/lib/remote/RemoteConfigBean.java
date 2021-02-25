@@ -16,6 +16,8 @@
 package com.streamsets.pipeline.lib.remote;
 
 import com.streamsets.pipeline.api.ConfigDef;
+import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.ConnectionDef;
 import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
@@ -23,6 +25,7 @@ import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.lib.tls.KeyStoreTypeChooserValues;
+import com.streamsets.pipeline.stage.connection.remote.RemoteConnection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,28 +34,25 @@ public class RemoteConfigBean {
 
   @ConfigDef(
       required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "sftp://host:port",
-      label = "Resource URL",
-      description = "Specify the SFTP/FTP/FTPS URL",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
-  )
-  public String remoteAddress;
-
-  @ConfigDef(
-      required = true,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "SFTP",
-      label = "Protocol",
-      description = "Protocol to connect to the server.",
-      displayPosition = 15,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#0"
+      connectionType = RemoteConnection.TYPE,
+      defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
+      label = "Connection",
+      group = "#0",
+      displayPosition = 5
   )
-  @ValueChooserModel(ProtocolChooserValues.class)
-  public Protocol protocol = Protocol.SFTP;
+  @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
+  public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
+
+  @ConfigDefBean(
+      dependencies = {
+          @Dependency(
+              configName = "connectionSelection",
+              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
+          )
+      }
+  )
+  public RemoteConnection connection;
 
   @ConfigDef(
       required = true,
@@ -81,86 +81,13 @@ public class RemoteConfigBean {
   @ConfigDef(
       required = false,
       type = ConfigDef.Type.MODEL,
-      defaultValue = "EXPLICIT",
-      label = "FTPS Mode",
-      description = "FTP encryption negotiation mode. \"Implicit\" mode assumes that encryption will be used " +
-          "immediately. \"Explicit\" mode (also called FTPES) means that plain FTP will be used to connect and " +
-          "then encryption will be negotiated.",
-      displayPosition = 60,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0",
-      dependsOn = "protocol",
-      triggeredByValue = "FTPS"
-  )
-  @ValueChooserModel(FTPSModeChooserValues.class)
-  public FTPSMode ftpsMode = FTPSMode.EXPLICIT;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "PRIVATE",
-      label = "FTPS Data Channel Protection Level",
-      description = "Sets the FTPS data channel protection level to either \"Clear\" (equivalent of \"PROT C\") or " +
-          "\"Private\" (equivalent of \"PROT P\").  \"Private\" means that the communication and data are both " +
-          "encrypted, while \"Clear\" means that only the communication is encrypted.",
-      displayPosition = 65,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0",
-      dependsOn = "protocol",
-      triggeredByValue = "FTPS"
-  )
-  @ValueChooserModel(FTPSDataChannelProtectionLevelChooserValues.class)
-  public FTPSDataChannelProtectionLevel ftpsDataChannelProtectionLevel = FTPSDataChannelProtectionLevel.PRIVATE;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "NONE",
-      label = "Authentication",
-      description = "The authentication method to use to login to remote server",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1"
-  )
-  @ValueChooserModel(AuthenticationChooserValues.class)
-  public Authentication auth = Authentication.NONE;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Username",
-      description = "Username to use to login to the remote server",
-      displayPosition = 15,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1",
-      dependsOn = "auth",
-      triggeredByValue = {"PASSWORD", "PRIVATE_KEY"}
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
-      description = "Password to use to login to the remote server. If private key is specified, that is used.",
-      displayPosition = 20,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1",
-      dependsOn = "auth",
-      triggeredByValue = {"PASSWORD"}
-  )
-  public CredentialValue password;
-
-  @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.MODEL,
       defaultValue = "FILE",
       label = "Private Key Provider",
       description = "Provide the private key via a file or plain text",
       displayPosition = 25,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "auth",
+      dependsOn = "connection.credentials.auth",
       triggeredByValue = {"PRIVATE_KEY"}
   )
   @ValueChooserModel(PrivateKeyProviderChooserValues.class)
@@ -200,55 +127,10 @@ public class RemoteConfigBean {
       displayPosition = 40,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "auth",
+      dependsOn = "connection.credentials.auth",
       triggeredByValue = {"PRIVATE_KEY"}
   )
   public CredentialValue privateKeyPassphrase;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "true",
-      label = "Strict Host Checking",
-      description = "If enabled, will only connect to the host if the host is in the known hosts file.",
-      displayPosition = 50,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1",
-      dependencies = {
-          @Dependency(configName = "protocol",
-              triggeredByValues = "SFTP")
-      }
-  )
-  public boolean strictHostChecking;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      label = "Known Hosts file",
-      description = "Full path to the file that lists the host keys of all known hosts." +
-          "This must be specified if the strict host checking is enabled.",
-      group = "#1",
-      displayPosition = 60,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      dependsOn = "strictHostChecking",
-      triggeredByValue = "true"
-  )
-  public String knownHosts;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Use Client Certificate for FTPS",
-      description = "Enable this if the FTPS Server requires mutual authentication. The client will need to provide " +
-          "a keystore file containing the client certificate.",
-      displayPosition = 70,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1",
-      dependsOn = "protocol",
-      triggeredByValue = "FTPS"
-  )
-  public boolean useFTPSClientCert;
 
   @ConfigDef(
       required = false,
@@ -257,7 +139,7 @@ public class RemoteConfigBean {
       label = "Use Remote Keystore",
       displayPosition = 71,
       group = "#1",
-      dependsOn = "useFTPSClientCert",
+      dependsOn = "connection.credentials.useFTPSClientCert",
       triggeredByValue = "true"
   )
   public boolean useRemoteKeyStore;
@@ -271,7 +153,7 @@ public class RemoteConfigBean {
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
       dependencies = {
-          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "connection.credentials.useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
       }
   )
@@ -286,7 +168,7 @@ public class RemoteConfigBean {
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
       dependencies = {
-          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "connection.credentials.useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
       }
   )
@@ -300,7 +182,7 @@ public class RemoteConfigBean {
       displayPosition = 74,
       group = "#1",
       dependencies = {
-          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "connection.credentials.useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "true")
       }
   )
@@ -317,7 +199,7 @@ public class RemoteConfigBean {
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
       dependencies = {
-          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "connection.credentials.useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
       }
   )
@@ -334,30 +216,11 @@ public class RemoteConfigBean {
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
       dependencies = {
-          @Dependency(configName = "useFTPSClientCert", triggeredByValues = "true"),
+          @Dependency(configName = "connection.credentials.useFTPSClientCert", triggeredByValues = "true"),
           @Dependency(configName = "useRemoteKeyStore", triggeredByValues = "false")
       }
   )
   public CredentialValue ftpsClientCertKeystorePassword = () -> "";
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.MODEL,
-      defaultValue = "ALLOW_ALL",
-      label = "FTPS Truststore Provider",
-      description = "Providing a Truststore allows the client to verify the FTPS Server's certificate. " +
-          "\"Allow All\" will allow any certificate, skipping validation. " +
-          "\"File\" will allow providing a truststore file containing the certificate. " +
-          "\"Remote Truststore\" allows providing a list of trusted certificates to build the truststore" +
-          "\"JVM Default\" will use the JVM's default truststore.",
-      displayPosition = 80,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "#1",
-      dependsOn = "protocol",
-      triggeredByValue = "FTPS"
-  )
-  @ValueChooserModel(FTPSTrustStoreChooserValues.class)
-  public FTPSTrustStore ftpsTrustStoreProvider = FTPSTrustStore.ALLOW_ALL;
 
   @ConfigDef(
       required = true,
@@ -367,7 +230,7 @@ public class RemoteConfigBean {
       displayPosition = 81,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "ftpsTrustStoreProvider",
+      dependsOn = "connection.credentials.ftpsTrustStoreProvider",
       triggeredByValue = "FILE"
   )
   public String ftpsTruststoreFile;
@@ -379,7 +242,7 @@ public class RemoteConfigBean {
       label = "Trusted Certificates",
       displayPosition = 82,
       group = "#1",
-      dependsOn = "ftpsTrustStoreProvider",
+      dependsOn = "connection.credentials.ftpsTrustStoreProvider",
       triggeredByValue = "REMOTE_TRUSTSTORE"
   )
   @ListBeanModel
@@ -394,7 +257,7 @@ public class RemoteConfigBean {
       displayPosition = 83,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "ftpsTrustStoreProvider",
+      dependsOn = "connection.credentials.ftpsTrustStoreProvider",
       triggeredByValue = "FILE"
   )
   @ValueChooserModel(KeyStoreTypeChooserValues.class)
@@ -409,7 +272,7 @@ public class RemoteConfigBean {
       displayPosition = 84,
       displayMode = ConfigDef.DisplayMode.BASIC,
       group = "#1",
-      dependsOn = "ftpsTrustStoreProvider",
+      dependsOn = "connection.credentials.ftpsTrustStoreProvider",
       triggeredByValue = {"FILE"}
   )
   public CredentialValue ftpsTruststorePassword = () -> "";
@@ -426,7 +289,7 @@ public class RemoteConfigBean {
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "#0",
       dependencies = {
-          @Dependency(configName = "protocol",
+          @Dependency(configName = "connection.protocol",
               triggeredByValues = "SFTP")
       }
   )

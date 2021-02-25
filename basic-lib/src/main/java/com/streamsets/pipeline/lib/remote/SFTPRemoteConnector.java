@@ -19,6 +19,7 @@ import com.streamsets.pipeline.api.ConfigIssueContext;
 import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import net.schmizz.sshj.DefaultConfig;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.SFTPClient;
@@ -68,8 +69,9 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
       Label remoteGroup,
       Label credGroup
   ) {
-    if (remoteConfig.knownHosts != null && !remoteConfig.knownHosts.isEmpty()) {
-      this.knownHostsFile = new File(remoteConfig.knownHosts);
+    if (remoteConfig.connection.credentials.knownHosts != null
+        && !remoteConfig.connection.credentials.knownHosts.isEmpty()) {
+      this.knownHostsFile = new File(remoteConfig.connection.credentials.knownHosts);
     } else {
       this.knownHostsFile = null;
     }
@@ -83,7 +85,7 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
     sshClient = new SSHClient(sshConfig);
     sshClientRebuilder.setConfig(sshConfig);
 
-    if (remoteConfig.strictHostChecking) {
+    if (remoteConfig.connection.credentials.strictHostChecking) {
       if (knownHostsFile != null) {
         if (knownHostsFile.exists() && knownHostsFile.isFile() && knownHostsFile.canRead()) {
           try {
@@ -123,7 +125,7 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
     KeyProvider keyProvider = null;
     String password = null;
     try {
-      switch (remoteConfig.auth) {
+      switch (remoteConfig.connection.credentials.auth) {
         case PRIVATE_KEY:
           String privateKeyPassphrase = resolveCredential(
               remoteConfig.privateKeyPassphrase,
@@ -201,14 +203,15 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
       ));
     }
 
-    if (remoteConfig.protocol == Protocol.SFTP && !URL_PATTERN_SFTP.matcher(remoteConfig.remoteAddress).matches()) {
+    if (remoteConfig.connection.protocol == Protocol.SFTP
+        && !URL_PATTERN_SFTP.matcher(remoteConfig.connection.remoteAddress).matches()) {
       issues.add(
           context.createConfigIssue(
               credGroup.getLabel(),
               CONF_PREFIX + "remoteAddress",
               Errors.REMOTE_17,
-              remoteConfig.remoteAddress,
-              remoteConfig.protocol
+              remoteConfig.connection.remoteAddress,
+              remoteConfig.connection.protocol
           )
       );
     }
@@ -219,7 +222,7 @@ public abstract class SFTPRemoteConnector extends RemoteConnector {
       try {
         sshClient.connect(remoteURI.getHost(), remoteURI.getPort());
         sshClientRebuilder.setHostPort(remoteURI.getHost(), remoteURI.getPort());
-        switch (remoteConfig.auth) {
+        switch (remoteConfig.connection.credentials.auth) {
           case PRIVATE_KEY:
             sshClient.authPublickey(username, keyProvider);
             break;

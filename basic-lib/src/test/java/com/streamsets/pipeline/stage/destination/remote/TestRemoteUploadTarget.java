@@ -29,13 +29,14 @@ import com.streamsets.pipeline.config.WholeFileExistsAction;
 import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.io.fileref.FileRefTestUtil;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
-import com.streamsets.pipeline.lib.remote.Protocol;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
 import com.streamsets.pipeline.sdk.ContextInfoCreator;
 import com.streamsets.pipeline.sdk.DataCollectorServicesUtils;
 import com.streamsets.pipeline.sdk.TargetRunner;
-import com.streamsets.pipeline.lib.remote.Authentication;
+import com.streamsets.pipeline.stage.connection.remote.Authentication;
 import com.streamsets.pipeline.lib.remote.FTPAndSSHDUnitTest;
+import com.streamsets.pipeline.stage.connection.remote.RemoteConnection;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.sshd.common.FactoryManager;
 import org.apache.sshd.common.PropertyResolverUtils;
@@ -514,13 +515,14 @@ public class TestRemoteUploadTarget extends FTPAndSSHDUnitTest {
       WholeFileExistsAction wholeFileExistsAction
   ) {
     RemoteUploadConfigBean configBean = new RemoteUploadConfigBean();
-    configBean.remoteConfig.remoteAddress = remoteHost;
-    configBean.remoteConfig.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
+    configBean.remoteConfig.connection = new RemoteConnection();
+    configBean.remoteConfig.connection.remoteAddress = remoteHost;
+    configBean.remoteConfig.connection.protocol = Protocol.valueOf(scheme.name().toUpperCase(Locale.ROOT));
     configBean.remoteConfig.userDirIsRoot = userDirIsRoot;
-    configBean.remoteConfig.username = () -> TESTUSER;
-    configBean.remoteConfig.auth = Authentication.PASSWORD;
-    configBean.remoteConfig.password = () -> TESTPASS;
-    configBean.remoteConfig.strictHostChecking = false;
+    configBean.remoteConfig.connection.credentials.username = () -> TESTUSER;
+    configBean.remoteConfig.connection.credentials.auth = Authentication.PASSWORD;
+    configBean.remoteConfig.connection.credentials.password = () -> TESTPASS;
+    configBean.remoteConfig.connection.credentials.strictHostChecking = false;
     configBean.dataFormat = dataFormat;
     configBean.dataFormatConfig.fileNameEL = fileNameEL;
     configBean.dataFormatConfig.wholeFileExistsAction = wholeFileExistsAction;

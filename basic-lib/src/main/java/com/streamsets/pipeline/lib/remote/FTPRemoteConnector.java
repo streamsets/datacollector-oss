@@ -22,6 +22,8 @@ import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.tls.CredentialValueBean;
 import com.streamsets.pipeline.lib.tls.KeyStoreType;
+import com.streamsets.pipeline.stage.connection.remote.FTPSTrustStore;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import org.apache.commons.net.util.KeyManagerUtils;
 import org.apache.commons.net.util.TrustManagerUtils;
 import org.apache.commons.vfs2.FileObject;
@@ -82,7 +84,7 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     LOG.info("Starting connection to remote server");
     options = new FileSystemOptions();
     this.remoteURI = remoteURI;
-    switch (remoteConfig.auth) {
+    switch (remoteConfig.connection.credentials.auth) {
       case PRIVATE_KEY:
         issues.add(context.createConfigIssue(credGroup.getLabel(), CONF_PREFIX + "privateKey", Errors.REMOTE_06));
         break;
@@ -108,12 +110,12 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     FtpFileSystemConfigBuilder configBuilder = FtpFileSystemConfigBuilder.getInstance();
     if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
       configBuilder = FtpsFileSystemConfigBuilder.getInstance();
-      FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, remoteConfig.ftpsMode.getMode());
+      FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, remoteConfig.connection.ftpsMode.getMode());
       FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(
           options,
-          remoteConfig.ftpsDataChannelProtectionLevel.getLevel()
+          remoteConfig.connection.ftpsDataChannelProtectionLevel.getLevel()
       );
-      if (remoteConfig.useFTPSClientCert) {
+      if (remoteConfig.connection.credentials.useFTPSClientCert) {
         String keyStorePassword = resolveCredential(
             remoteConfig.ftpsClientCertKeystorePassword,
             CONF_PREFIX + "ftpsClientCertKeystorePassword",
@@ -167,11 +169,11 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
           credGroup
       );
 
-      switch (remoteConfig.ftpsTrustStoreProvider) {
+      switch (remoteConfig.connection.credentials.ftpsTrustStoreProvider) {
         case FILE:
         case REMOTE_TRUSTSTORE:
           KeyStore trustStore;
-          if (remoteConfig.ftpsTrustStoreProvider == FTPSTrustStore.REMOTE_TRUSTSTORE) {
+          if (remoteConfig.connection.credentials.ftpsTrustStoreProvider == FTPSTrustStore.REMOTE_TRUSTSTORE) {
             KeyStoreBuilder builder = new KeyStoreBuilder();
             remoteConfig.ftpsTrustedCertificates.forEach(cert -> builder.addCertificatePem(cert.get()));
             trustStore = builder.build();
@@ -239,15 +241,17 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
       configBuilder.setDataTimeout(options, remoteConfig.dataTimeout * 1000);
     }
 
-    if (remoteConfig.protocol == Protocol.FTP && !URL_PATTERN_FTP.matcher(remoteConfig.remoteAddress).matches()
-        || remoteConfig.protocol == Protocol.FTPS && !URL_PATTERN_FTPS.matcher(remoteConfig.remoteAddress).matches()) {
+    if (remoteConfig.connection.protocol == Protocol.FTP
+        && !URL_PATTERN_FTP.matcher(remoteConfig.connection.remoteAddress).matches()
+        || remoteConfig.connection.protocol == Protocol.FTPS
+        && !URL_PATTERN_FTPS.matcher(remoteConfig.connection.remoteAddress).matches()) {
       issues.add(
           context.createConfigIssue(
               credGroup.getLabel(),
               CONF_PREFIX + "remoteAddress",
               Errors.REMOTE_17,
-              remoteConfig.remoteAddress,
-              remoteConfig.protocol
+              remoteConfig.connection.remoteAddress,
+              remoteConfig.connection.protocol
           )
       );
     }

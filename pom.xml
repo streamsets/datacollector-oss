@@ -264,6 +264,7 @@
     <module>azure-lib</module>
     <module>azure-keyvault-credentialstore-lib</module>
     <module>basic-lib</module>
+    <module>file-transfer-connection</module>
     <module>bigtable-lib</module>
     <module>crypto-lib</module>
     <module>cyberark-credentialstore-lib</module>

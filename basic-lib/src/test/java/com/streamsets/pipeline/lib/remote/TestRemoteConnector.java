@@ -21,6 +21,7 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.stage.connection.remote.RemoteConnection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -71,7 +72,8 @@ public class TestRemoteConnector {
   ) throws Exception {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     RemoteConfigBean conf = new RemoteConfigBean();
-    conf.remoteAddress =
+    conf.connection = new RemoteConnection();
+    conf.connection.remoteAddress =
         scheme + "://" +
         (userInfo == null ? "" : userInfo + "@") +
         host +
@@ -114,7 +116,8 @@ public class TestRemoteConnector {
           }
         });
     RemoteConfigBean conf = new RemoteConfigBean();
-    conf.remoteAddress = address;
+    conf.connection = new RemoteConnection();
+    conf.connection.remoteAddress = address;
     URI uri = RemoteConnector.getURI(conf, issues, context, group);
     Assert.assertNull(uri);
     assertNumIssues(issues, 1);
@@ -175,9 +178,10 @@ public class TestRemoteConnector {
     Mockito.when(group.getLabel()).thenReturn("CREDENTIALS");
     ConfigIssueContext context = Mockito.mock(ConfigIssueContext.class);
     RemoteConfigBean conf = new RemoteConfigBean();
+    conf.connection = new RemoteConnection();
     CredentialValue cred = Mockito.mock(CredentialValue.class);
     Mockito.when(cred.get()).thenReturn("user3");
-    conf.username = cred;
+    conf.connection.credentials.username = cred;
 
     URI uri = URI.create("sftp://user1:pass@host");
     RemoteConnector connector = createRemoteConnector(conf);
@@ -209,9 +213,10 @@ public class TestRemoteConnector {
     Mockito.when(group.getLabel()).thenReturn("CREDENTIALS");
     ConfigIssueContext context = Mockito.mock(ConfigIssueContext.class);
     RemoteConfigBean conf = new RemoteConfigBean();
+    conf.connection = new RemoteConnection();
     CredentialValue cred = Mockito.mock(CredentialValue.class);
     Mockito.when(cred.get()).thenReturn("pass2");
-    conf.password = cred;
+    conf.connection.credentials.password = cred;
 
     URI uri = URI.create("sftp://user:pass1@host");
     RemoteConnector connector = createRemoteConnector(conf);

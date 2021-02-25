@@ -20,11 +20,11 @@ import com.streamsets.pipeline.config.Compression;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.config.JsonMode;
 import com.streamsets.pipeline.config.PostProcessingOptions;
-import com.streamsets.pipeline.lib.remote.Authentication;
-import com.streamsets.pipeline.lib.remote.Protocol;
+import com.streamsets.pipeline.stage.connection.remote.Authentication;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import com.streamsets.pipeline.lib.util.SystemClock;
+import com.streamsets.pipeline.stage.connection.remote.RemoteConnection;
 
-import java.time.Clock;
 import java.util.Locale;
 
 public class TestRemoteDownloadSourceBuilder {
@@ -161,13 +161,14 @@ public class TestRemoteDownloadSourceBuilder {
 
   public RemoteDownloadSource build() {
     RemoteDownloadConfigBean configBean = new RemoteDownloadConfigBean();
-    configBean.remoteConfig.remoteAddress = remoteHost;
-    configBean.remoteConfig.protocol = protocol;
+    configBean.remoteConfig.connection = new RemoteConnection();
+    configBean.remoteConfig.connection.remoteAddress = remoteHost;
+    configBean.remoteConfig.connection.protocol = protocol;
     configBean.remoteConfig.userDirIsRoot = userDirIsRoot;
-    configBean.remoteConfig.username = () -> TESTUSER;
-    configBean.remoteConfig.auth = Authentication.PASSWORD;
-    configBean.remoteConfig.password = () -> TESTPASS;
-    configBean.remoteConfig.strictHostChecking = false;
+    configBean.remoteConfig.connection.credentials.username = () -> TESTUSER;
+    configBean.remoteConfig.connection.credentials.auth = Authentication.PASSWORD;
+    configBean.remoteConfig.connection.credentials.password = () -> TESTPASS;
+    configBean.remoteConfig.connection.credentials.strictHostChecking = false;
     configBean.dataFormat = dataFormat;
     configBean.errorArchiveDir = errorArchive;
     configBean.dataFormatConfig.jsonContent = JsonMode.MULTIPLE_OBJECTS;

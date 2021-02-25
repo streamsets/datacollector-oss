@@ -31,12 +31,9 @@ import com.streamsets.pipeline.lib.event.WholeFileProcessedEvent;
 import com.streamsets.pipeline.lib.generator.DataGenerator;
 import com.streamsets.pipeline.lib.generator.DataGeneratorFactory;
 import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
-import com.streamsets.pipeline.lib.remote.Authentication;
-import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
-import com.streamsets.pipeline.lib.remote.Protocol;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
-import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,17 +43,12 @@ import java.net.URI;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RemoteUploadTarget extends BaseTarget {
 
   private static final Logger LOG = LoggerFactory.getLogger(RemoteUploadTarget.class);
   private static final String CONF_PREFIX = "conf.";
   public static final String EVENT_PATH_FIELD_NAME = "path";
-
-  private static final Pattern URL_PATTERN_FTP = Pattern.compile("(ftp://).*:?.*");
-  private static final Pattern URL_PATTERN_FTPS = Pattern.compile("(ftps://).*:?.*");
-  private static final Pattern URL_PATTERN_SFTP = Pattern.compile("(sftp://).*:?.*");
 
   private URI remoteURI;
   private final RemoteUploadConfigBean conf;
@@ -92,10 +84,10 @@ public class RemoteUploadTarget extends BaseTarget {
     this.remoteURI = RemoteConnector.getURI(conf.remoteConfig, issues, getContext(), Groups.REMOTE);
 
     if (issues.isEmpty()) {
-      if (conf.remoteConfig.protocol == Protocol.FTP || conf.remoteConfig.protocol == Protocol.FTPS) {
+      if (conf.remoteConfig.connection.protocol == Protocol.FTP || conf.remoteConfig.connection.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteUploadTargetDelegate(conf.remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
-      } else if (conf.remoteConfig.protocol == Protocol.SFTP) {
+      } else if (conf.remoteConfig.connection.protocol == Protocol.SFTP) {
         delegate = new SFTPRemoteUploadTargetDelegate(conf.remoteConfig);
         delegate.initAndConnect(issues, getContext(), remoteURI);
       }

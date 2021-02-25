@@ -13,13 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.remote;
+package com.streamsets.pipeline.stage.connection.remote;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class ProtocolChooserValues extends BaseEnumChooserValues<Protocol> {
+@GenerateResourceBundle
+public enum Protocol implements Label {
+  SFTP("SFTP"),
+  FTP("FTP"),
+  FTPS("FTPS"),
+  ;
 
-  public ProtocolChooserValues() {
-    super(Protocol.class);
+  private final String label;
+
+  Protocol(String label) { this.label = label; }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

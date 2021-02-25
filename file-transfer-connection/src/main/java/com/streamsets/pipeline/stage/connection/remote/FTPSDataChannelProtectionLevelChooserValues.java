@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2019 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.remote;
+package com.streamsets.pipeline.stage.connection.remote;
 
 import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
 
-public class AuthenticationChooserValues extends BaseEnumChooserValues<Authentication> {
+public class FTPSDataChannelProtectionLevelChooserValues extends BaseEnumChooserValues<FTPSDataChannelProtectionLevel> {
 
-  public AuthenticationChooserValues() {
-    super(Authentication.class);
+  public FTPSDataChannelProtectionLevelChooserValues() {
+    super(FTPSDataChannelProtectionLevel.class);
   }
 }

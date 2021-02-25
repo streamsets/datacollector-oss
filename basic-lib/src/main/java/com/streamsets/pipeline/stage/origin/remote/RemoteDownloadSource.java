@@ -40,11 +40,9 @@ import com.streamsets.pipeline.lib.io.fileref.FileRefUtil;
 import com.streamsets.pipeline.lib.parser.DataParser;
 import com.streamsets.pipeline.lib.parser.DataParserException;
 import com.streamsets.pipeline.lib.parser.RecoverableDataParserException;
-import com.streamsets.pipeline.lib.remote.FTPRemoteConnector;
-import com.streamsets.pipeline.lib.remote.Protocol;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 import com.streamsets.pipeline.lib.remote.RemoteConnector;
 import com.streamsets.pipeline.lib.remote.RemoteFile;
-import com.streamsets.pipeline.lib.remote.SFTPRemoteConnector;
 import com.streamsets.pipeline.stage.common.DefaultErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import com.streamsets.pipeline.stage.common.HeaderAttributeConstants;
@@ -73,8 +71,6 @@ import java.util.NavigableSet;
 import java.util.Optional;
 import java.util.TreeSet;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class RemoteDownloadSource extends BaseSource implements FileQueueChecker {
 
@@ -184,10 +180,10 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     rateLimitElVars = getContext().createELVars();
 
     if (issues.isEmpty()) {
-      if (conf.remoteConfig.protocol == Protocol.FTP || conf.remoteConfig.protocol == Protocol.FTPS) {
+      if (conf.remoteConfig.connection.protocol == Protocol.FTP || conf.remoteConfig.connection.protocol == Protocol.FTPS) {
         delegate = new FTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
-      } else if (conf.remoteConfig.protocol == Protocol.SFTP) {
+      } else if (conf.remoteConfig.connection.protocol == Protocol.SFTP) {
         delegate = new SFTPRemoteDownloadSourceDelegate(conf);
         delegate.initAndConnect(issues, getContext(), remoteURI, archiveDir);
       }
@@ -269,7 +265,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             LOG.debug("Sending New File Event. File: {}", next.getFilePath());
             NewFileEvent.EVENT_CREATOR.create(getContext()).with(
                 NewFileEvent.FILE_PATH,
-                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath())
+                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.connection.remoteAddress, next.getFilePath())
             ).createAndSend();
             sendLineageEvent(next);
 
@@ -278,7 +274,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
           if (conf.dataFormat == DataFormat.WHOLE_FILE) {
             Map<String, Object> metadata = new HashMap<>(7);
             long size = delegate.populateMetadata(next.getFilePath(), metadata);
-            metadata.put(HeaderAttributeConstants.FILE, RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath()));
+            metadata.put(HeaderAttributeConstants.FILE, RemoteFile.getAbsolutePathFileName(conf.remoteConfig.connection.remoteAddress, next.getFilePath()));
             metadata.put(HeaderAttributeConstants.FILE_NAME, FilenameUtils.getName(next.getFilePath()));
             metadata.put(REMOTE_URI, remoteURI.toString());
 
@@ -354,7 +350,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
         if (record != null) {
           record.getHeader().setAttribute(REMOTE_URI, remoteURI.toString());
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE,
-              RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath()));
+              RemoteFile.getAbsolutePathFileName(conf.remoteConfig.connection.remoteAddress, next.getFilePath()));
           record.getHeader().setAttribute(HeaderAttributeConstants.FILE_NAME,
               FilenameUtils.getName(next.getFilePath())
           );
@@ -382,7 +378,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
             );
             FinishedFileEvent.EVENT_CREATOR.create(getContext()).with(
                 FinishedFileEvent.FILE_PATH,
-                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.remoteAddress, next.getFilePath())
+                RemoteFile.getAbsolutePathFileName(conf.remoteConfig.connection.remoteAddress, next.getFilePath())
             ).with(FinishedFileEvent.RECORD_COUNT, perFileRecordCount).with(
                 FinishedFileEvent.ERROR_COUNT,
                 perFileErrorCount
@@ -621,7 +617,7 @@ public class RemoteDownloadSource extends BaseSource implements FileQueueChecker
     event.setSpecificAttribute(LineageSpecificAttribute.ENDPOINT_TYPE, EndPointType.FTP.name());
     event.setSpecificAttribute(LineageSpecificAttribute.DESCRIPTION, conf.filePattern);
     Map<String, String> props = new HashMap<>();
-    props.put("Resource URL", conf.remoteConfig.remoteAddress);
+    props.put("Resource URL", conf.remoteConfig.connection.remoteAddress);
     event.setProperties(props);
     getContext().publishLineageEvent(event);
   }

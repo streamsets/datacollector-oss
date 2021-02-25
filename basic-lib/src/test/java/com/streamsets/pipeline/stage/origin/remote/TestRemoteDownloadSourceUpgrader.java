@@ -19,9 +19,8 @@ import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.config.upgrade.UpgraderTestUtils;
-import com.streamsets.pipeline.lib.remote.Authentication;
+import com.streamsets.pipeline.stage.connection.remote.Authentication;
 import com.streamsets.pipeline.lib.remote.PrivateKeyProvider;
-import com.streamsets.pipeline.stage.origin.websocketserver.WebSocketServerPushSourceUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
 import org.junit.Before;
@@ -138,23 +137,45 @@ public class TestRemoteDownloadSourceUpgrader {
     Mockito.doReturn(6).when(context).getFromVersion();
     Mockito.doReturn(7).when(context).getToVersion();
 
-    String dataFormatPrefix = "conf.remoteConfig.";
-    configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftp://host:port"));
+    String remoteConfigPrefix = "conf.remoteConfig.";
+    String connectionPrefix = remoteConfigPrefix + "connection.";
+    String credentialsPrefix = connectionPrefix + "credentials.";
+
+    configs.add(new Config(remoteConfigPrefix + "remoteAddress", "ftp://host:port"));
+    configs.add(new Config(remoteConfigPrefix + "ftpsMode", "EXPLICIT"));
+    configs.add(new Config(remoteConfigPrefix + "ftpsDataChannelProtectionLevel", "PRIVATE"));
+    configs.add(new Config(remoteConfigPrefix + "auth", "NONE"));
+    configs.add(new Config(remoteConfigPrefix + "username", ""));
+    configs.add(new Config(remoteConfigPrefix + "password", ""));
+    configs.add(new Config(remoteConfigPrefix + "strictHostChecking", "true"));
+    configs.add(new Config(remoteConfigPrefix + "knownHosts", ""));
+    configs.add(new Config(remoteConfigPrefix + "useFTPSClientCert", "false"));
+    configs.add(new Config(remoteConfigPrefix + "ftpsTrustStoreProvider", "ALLOW_ALL"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "FTP");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "protocol", "FTP");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "remoteAddress", "ftp://host:port");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "ftpsMode", "EXPLICIT");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "ftpsDataChannelProtectionLevel", "PRIVATE");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "auth", "NONE");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "username", "");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "password", "");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "strictHostChecking", "true");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "knownHosts", "");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "useFTPSClientCert", "false");
+    UpgraderTestUtils.assertExists(configs, credentialsPrefix + "ftpsTrustStoreProvider", "ALLOW_ALL");
 
     configs.clear();
-    configs.add(new Config(dataFormatPrefix + "remoteAddress", "ftps://host:port"));
+    configs.add(new Config(remoteConfigPrefix + "remoteAddress", "ftps://host:port"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "FTPS");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "protocol", "FTPS");
 
     configs.clear();
-    configs.add(new Config(dataFormatPrefix + "remoteAddress", "sftp://host:port"));
+    configs.add(new Config(remoteConfigPrefix + "remoteAddress", "sftp://host:port"));
     configs = upgrader.upgrade(configs, context);
 
-    UpgraderTestUtils.assertExists(configs, dataFormatPrefix + "protocol", "SFTP");
+    UpgraderTestUtils.assertExists(configs, connectionPrefix + "protocol", "SFTP");
   }
 
 }

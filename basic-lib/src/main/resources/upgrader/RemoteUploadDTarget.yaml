@@ -16,7 +16,6 @@
 
 upgraderVersion: 1
 
-# No upgrade rules defined
 upgrades:
   - toVersion: 2
     actions:
@@ -37,15 +36,45 @@ upgrades:
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^ftp:.*"
-          name: conf.remoteConfig.protocol
+          name: conf.remoteConfig.connection.protocol
           value: "FTP"
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^ftps:.*"
-          name: conf.remoteConfig.protocol
+          name: conf.remoteConfig.connection.protocol
           value: "FTPS"
       - setConfig:
           lookForName: conf.remoteConfig.remoteAddress
           ifValueMatches: "^sftp:.*"
-          name: conf.remoteConfig.protocol
+          name: conf.remoteConfig.connection.protocol
           value: "SFTP"
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.remoteAddress
+          newNamePattern: conf.remoteConfig.connection.remoteAddress
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.ftpsMode
+          newNamePattern: conf.remoteConfig.connection.ftpsMode
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.ftpsDataChannelProtectionLevel
+          newNamePattern: conf.remoteConfig.connection.ftpsDataChannelProtectionLevel
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.auth
+          newNamePattern: conf.remoteConfig.connection.credentials.auth
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.username
+          newNamePattern: conf.remoteConfig.connection.credentials.username
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.password
+          newNamePattern: conf.remoteConfig.connection.credentials.password
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.strictHostChecking
+          newNamePattern: conf.remoteConfig.connection.credentials.strictHostChecking
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.knownHosts
+          newNamePattern: conf.remoteConfig.connection.credentials.knownHosts
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.useFTPSClientCert
+          newNamePattern: conf.remoteConfig.connection.credentials.useFTPSClientCert
+      - renameConfig:
+          oldNamePattern: conf.remoteConfig.ftpsTrustStoreProvider
+          newNamePattern: conf.remoteConfig.connection.credentials.ftpsTrustStoreProvider

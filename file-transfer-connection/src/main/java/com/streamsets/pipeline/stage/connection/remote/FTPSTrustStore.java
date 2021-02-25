@@ -13,13 +13,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.remote;
+package com.streamsets.pipeline.stage.connection.remote;
 
-import com.streamsets.pipeline.api.base.BaseEnumChooserValues;
+import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.api.Label;
 
-public class FTPSTrustStoreChooserValues extends BaseEnumChooserValues<FTPSTrustStore> {
+@GenerateResourceBundle
+public enum FTPSTrustStore implements Label {
+  ALLOW_ALL("Allow All"),
+  FILE("File"),
+  REMOTE_TRUSTSTORE("Remote Truststore"),
+  JVM_DEFAULT("JVM Default"),
+  ;
 
-  public FTPSTrustStoreChooserValues() {
-    super(FTPSTrustStore.class);
+  private final String label;
+
+  FTPSTrustStore(String label) {
+    this.label = label;
+  }
+
+  @Override
+  public String getLabel() {
+    return label;
   }
 }

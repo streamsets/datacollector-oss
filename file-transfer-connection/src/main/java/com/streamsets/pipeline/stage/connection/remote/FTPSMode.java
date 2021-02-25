@@ -13,26 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.pipeline.lib.remote;
+package com.streamsets.pipeline.stage.connection.remote;
 
 import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.Label;
-import org.apache.commons.vfs2.provider.ftps.FtpsDataChannelProtectionLevel;
+import org.apache.commons.vfs2.provider.ftps.FtpsMode;
 
 @GenerateResourceBundle
-public enum FTPSDataChannelProtectionLevel implements Label {
-  // There's actually 4 levels, but nobody seems to actually use the other two, and even the RFC says not to use them
-  // https://tools.ietf.org/html/rfc4217#page-10
-  CLEAR("Clear", FtpsDataChannelProtectionLevel.C),
-  PRIVATE("Private", FtpsDataChannelProtectionLevel.P),
+public enum FTPSMode implements Label {
+  EXPLICIT("Explicit", FtpsMode.EXPLICIT),
+  IMPLICIT("Implicit", FtpsMode.IMPLICIT),
   ;
 
   private final String label;
-  private final FtpsDataChannelProtectionLevel level;
+  private final FtpsMode mode;
 
-  FTPSDataChannelProtectionLevel(String label, FtpsDataChannelProtectionLevel level) {
+  FTPSMode(String label, FtpsMode mode) {
     this.label = label;
-    this.level = level;
+    this.mode = mode;
   }
 
   @Override
@@ -40,7 +38,7 @@ public enum FTPSDataChannelProtectionLevel implements Label {
     return label;
   }
 
-  public FtpsDataChannelProtectionLevel getLevel() {
-    return level;
+  public FtpsMode getMode() {
+    return mode;
   }
 }

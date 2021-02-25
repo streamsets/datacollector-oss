@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Label;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.stage.connection.remote.Protocol;
 
 import javax.ws.rs.core.UriBuilder;
 import java.io.IOException;
@@ -47,7 +48,7 @@ public abstract class RemoteConnector {
       ConfigIssueContext context,
       Label group
   ) {
-    String uriString = config.remoteAddress;
+    String uriString = config.connection.remoteAddress;
 
     // This code handles the case where the username or password, if given in the URI, contains an '@' character.  We
     // need to percent-encode it (i.e. "%40") or else the URI parsing will appear to succeed but be done incorrectly
@@ -73,11 +74,11 @@ public abstract class RemoteConnector {
     URI uri;
     try {
       uri = new URI(uriString);
-      if (config.protocol == Protocol.FTP || config.protocol == Protocol.FTPS) {
+      if (config.connection.protocol == Protocol.FTP || config.connection.protocol == Protocol.FTPS) {
         if (uri.getPort() == -1) {
           uri = UriBuilder.fromUri(uri).port(FTPRemoteConnector.DEFAULT_PORT).build();
         }
-      } else if (config.protocol == Protocol.SFTP) {
+      } else if (config.connection.protocol == Protocol.SFTP) {
         if (uri.getPort() == -1) {
           uri = UriBuilder.fromUri(uri).port(SFTPRemoteConnector.DEFAULT_PORT).build();
         }
@@ -135,7 +136,7 @@ public abstract class RemoteConnector {
       }
       return userInfo;
     }
-    return resolveCredential(remoteConfig.username, CONF_PREFIX + "username", issues, context, group);
+    return resolveCredential(remoteConfig.connection.credentials.username, CONF_PREFIX + "username", issues, context, group);
   }
 
   protected String resolvePassword(
@@ -148,7 +149,7 @@ public abstract class RemoteConnector {
     if (userInfo != null && userInfo.contains(USER_INFO_SEPARATOR)) {
       return userInfo.substring(userInfo.indexOf(USER_INFO_SEPARATOR) + 1);
     }
-    return resolveCredential(remoteConfig.password, CONF_PREFIX + "password", issues, context, group);
+    return resolveCredential(remoteConfig.connection.credentials.password, CONF_PREFIX + "password", issues, context, group);
   }
 
   protected abstract void initAndConnect(

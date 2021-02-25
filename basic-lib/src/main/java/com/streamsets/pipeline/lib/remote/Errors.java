@@ -20,13 +20,14 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 
 @GenerateResourceBundle
 public enum Errors implements ErrorCode {
+  REMOTE_00("Failed to connect to {} with the providen credentials"),
   REMOTE_01("Given URI is invalid {}"),
   REMOTE_02("URI: '{}' is invalid. Must begin with 'ftp://' or 'sftp://'"),
   REMOTE_03("known_hosts file: {} does not exist or is not accessible"),
   REMOTE_04("Strict Host Checking is enabled but known_hosts file not specified"),
   REMOTE_05("Private Key file: {} does not exist or is not accessible"),
   REMOTE_06("Private Key authentication is supported only with SFTP"),
-
+  REMOTE_07("Unrecognized authentication type {}"),
   REMOTE_08("Can't resolve credential: {}"),
   REMOTE_09("Error accessing remote directory: {}"),
   REMOTE_10("Unable to load Private Key: {}"),
