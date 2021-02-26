@@ -168,6 +168,7 @@
 
     <module>aws-secrets-manager-credentialstore-protolib</module>
     <module>azure-keyvault-credentialstore-protolib</module>
+    <module>cyberark-credentialstore-protolib</module>
     <module>lookup-protolib</module>
 
     <module>hdfs-protolib</module>
