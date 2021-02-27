@@ -23,7 +23,6 @@ import com.streamsets.datacollector.tunneling.TunnelingRequest;
 import com.streamsets.datacollector.tunneling.TunnelingResponse;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DpmClientInfo;
-import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +41,6 @@ import java.nio.ByteBuffer;
 import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Supplier;
 
 import static com.streamsets.datacollector.event.handler.remote.WebSocketToRestDispatcher.AVAILABLE_APPS_ENDPOINT;
 import static com.streamsets.datacollector.event.handler.remote.WebSocketToRestDispatcher.TUNNELING_CONNECT_ENDPOINT;
@@ -103,7 +101,7 @@ public class TestWebSocketToRestDispatcher {
       }
     };
     Mockito.when(runtimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
-        .thenReturn((Supplier<DpmClientInfo>) () -> dpmClientInfo);
+        .thenReturn(dpmClientInfo);
     WebSocketToRestDispatcher webSocketToRestDispatcher = new WebSocketToRestDispatcher(
         getMockConfiguration(false),
         runtimeInfo,
@@ -137,7 +135,7 @@ public class TestWebSocketToRestDispatcher {
       }
     };
     Mockito.when(mockRuntimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
-        .thenReturn((Supplier<DpmClientInfo>) () -> dpmClientInfo);
+        .thenReturn(dpmClientInfo);
     WebSocketToRestDispatcher webSocketToRestDispatcher = new WebSocketToRestDispatcher(
         getMockConfiguration(true),
         mockRuntimeInfo,

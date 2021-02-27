@@ -387,9 +387,7 @@ public class LogResource {
   private String isJobAccessibleFromControlHub(HttpServletRequest request, String jobId) {
     String controlHubPipelineName = null;
     if (runtimeInfo.isDPMEnabled()) {
-      DpmClientInfo dpmClientInfo =
-          ((Supplier<DpmClientInfo>) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY))
-          .get();
+      DpmClientInfo dpmClientInfo = runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY);
 
       // Get DPM user auth token from request cookie
       SSOPrincipal ssoPrincipal = (SSOPrincipal) request.getUserPrincipal();

@@ -36,7 +36,6 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class TestConnectionRetriever {
@@ -66,7 +65,7 @@ public class TestConnectionRetriever {
     configuration.set(RemoteSSOService.DPM_BASE_URL_CONFIG, "streamsets1.com");
     RuntimeInfo runtimeInfo = Mockito.mock(RuntimeInfo.class);
     Mockito.when(runtimeInfo.getAttribute(Mockito.eq(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)))
-        .thenReturn(((Supplier) () -> dpmClientInfo));
+        .thenReturn(dpmClientInfo);
     Mockito.when(runtimeInfo.getId()).thenReturn("componentId");
     Mockito.when(runtimeInfo.isDPMEnabled()).thenReturn(true);
 

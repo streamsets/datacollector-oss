@@ -46,8 +46,7 @@ public class StaticWebServlet extends DefaultServlet {
         !request.getPathInfo().contains(HEADLESS_URL) &&
         !request.getPathInfo().contains(ASSETS_FOLDER)
     ) {
-      String controlHubUrl = ((Supplier<DpmClientInfo>) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY))
-          .get()
+      String controlHubUrl = ((DpmClientInfo) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY))
           .getDpmBaseUrl();
       String headlessHelperUrl = Utils.format(HEADLESS_URL_TEMPLATE, controlHubUrl);
       // When connected to the latest Control Hub instance, Data Collector functions as a headless engine without a UI.

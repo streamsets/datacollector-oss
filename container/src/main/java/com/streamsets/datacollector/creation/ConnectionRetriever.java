@@ -75,7 +75,7 @@ public class ConnectionRetriever {
   }
 
   private DpmClientInfo getDpmClientInfo() {
-    return ((Supplier<DpmClientInfo>) runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)).get();
+    return runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY);
   }
 
   @VisibleForTesting
