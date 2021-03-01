@@ -21,6 +21,7 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.pipeline.api.ElConstant;
 import com.streamsets.pipeline.api.ElFunction;
 import com.streamsets.pipeline.api.ElParam;
+import com.streamsets.pipeline.api.el.SdcEL;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class RuntimeEL {
   private static Properties RUNTIME_CONF_PROPS = null;
   private static String AUTH_TOKEN = null;
   private static String HOSTNAME = null;
+  private static String SDC_ID = null;
   private static RuntimeInfo runtimeInfo;
 
   @ElConstant(name = "NULL", description = "NULL value")
@@ -152,6 +154,9 @@ public class RuntimeEL {
 
       AUTH_TOKEN = runtimeInfo.getAppAuthToken();
       HOSTNAME = configuration.get(WebServerTask.HTTP_BIND_HOST, InetAddress.getLocalHost().getCanonicalHostName());
+      // We get the SDC Id using SdcEL own method to make sure that, if that function changes its behaviour, this function
+      // will also behave the same way.
+      SDC_ID = SdcEL.getId();
 
       RUNTIME_CONF_PROPS = new Properties();
       String runtimeConfLocation = configuration.get(RUNTIME_CONF_LOCATION_KEY, RUNTIME_CONF_LOCATION_DEFAULT);
@@ -199,6 +204,12 @@ public class RuntimeEL {
   public static String hostname() {
     return HOSTNAME;
   }
+
+  @ElFunction(
+      prefix = "sdc",
+      name = "id",
+      description = "Returns the unique ID for the SDC")
+  public static String sdcId() { return SDC_ID; }
 
   @ElFunction(
       prefix = "runtime",

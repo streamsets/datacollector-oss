@@ -29,7 +29,9 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageType;
+import com.streamsets.pipeline.api.impl.Utils;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -39,8 +41,20 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 
 public class TestPreconditionsPredicate {
+
+  @BeforeClass
+  public static void setup() throws IOException {
+    final String sdcId = UUID.randomUUID().toString();
+    Utils.setSdcIdCallable(new Callable<String>() {
+      @Override
+      public String call() {
+        return sdcId;
+      }
+    });
+  }
 
   private Stage.Context createContext() {
     return new StageContext(
