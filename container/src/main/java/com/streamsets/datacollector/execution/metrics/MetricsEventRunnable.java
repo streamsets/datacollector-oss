@@ -416,7 +416,6 @@ public class MetricsEventRunnable implements Runnable {
 
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.register(new MovedDpmJerseyClientFilter(clientInfo));
-        clientConfig.register(new CsrfProtectionFilter("CSRF"));
         clientConfig.register(SnappyWriterInterceptor.class);
         String remoteTimeSeriesUrl = clientInfo.getDpmBaseUrl() + CONTROL_HUB_METRICS_URL;
         Client client = ClientBuilder.newBuilder().newClient(clientConfig);
@@ -426,6 +425,7 @@ public class MetricsEventRunnable implements Runnable {
             SSOConstants.X_REST_CALL,
             SSOConstants.SDC_COMPONENT_NAME
         );
+        invocationBuilder.header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
         clientInfo.getHeaders().entrySet().forEach(e -> invocationBuilder.header(e.getKey(), e.getValue()));
         response = invocationBuilder.post(Entity.json(sdcMetricsJsonList));
         if (response.getStatus() == HttpURLConnection.HTTP_OK) {

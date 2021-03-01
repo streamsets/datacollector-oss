@@ -22,6 +22,7 @@ import com.streamsets.datacollector.event.json.ClientEventJson;
 import com.streamsets.datacollector.event.json.SDCMetricsJson;
 import com.streamsets.datacollector.event.json.ServerEventJson;
 import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.SSOConstants;
 import com.streamsets.pipeline.api.Configuration;
 import com.streamsets.pipeline.api.impl.Utils;
 import org.glassfish.jersey.client.ClientConfig;
@@ -67,7 +68,6 @@ public class EventClientImpl implements EventClient {
         .property(ClientProperties.CONNECT_TIMEOUT, conf.get(EVENT_CONNECT_TIMEOUT, EVENT_CONNECT_TIMEOUT_DEFAULT))
         .property(ClientProperties.READ_TIMEOUT, conf.get(EVENT_READ_TIMEOUT, EVENT_READ_TIMEOUT_DEFAULT));
     clientConfig.register(new MovedDpmJerseyClientFilter(clientInfo));
-    clientConfig.register(new CsrfProtectionFilter("CSRF"));
     return ClientBuilder.newClient(clientConfig);
 
   }
@@ -95,6 +95,7 @@ public class EventClientImpl implements EventClient {
     for (Map.Entry<String, String> entry : headerParams.entrySet()) {
       builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
     }
+    builder.header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
     for (Map.Entry<String, String> entry : dpmClientInfoSupplier.get().getHeaders().entrySet()) {
       builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
     }
@@ -144,6 +145,7 @@ public class EventClientImpl implements EventClient {
         for (Map.Entry<String, String> entry : headerParams.entrySet()) {
           builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
         }
+        builder.header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
         for (Map.Entry<String, String> entry : dpmClientInfoSupplier.get().getHeaders().entrySet()) {
           builder = builder.header(entry.getKey(), removeNewLine(entry.getValue()));
         }

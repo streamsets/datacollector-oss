@@ -23,6 +23,7 @@ import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConnectionConfigurationJson;
 import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DpmClientInfo;
+import com.streamsets.lib.security.http.SSOConstants;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
@@ -53,6 +54,7 @@ public class ConnectionRetriever {
         target = target.queryParam(USER_PARAM, context.getUser());
 
         Invocation.Builder builder = target.request();
+        builder.header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
         for (Map.Entry<String, String> entry : getDpmClientInfo().getHeaders().entrySet()) {
           builder.header(entry.getKey(), entry.getValue().trim());
         }
@@ -82,7 +84,6 @@ public class ConnectionRetriever {
   ClientConfig getClientConfig() {
     ClientConfig clientConfig = new ClientConfig();
     clientConfig.register(new MovedDpmJerseyClientFilter(getDpmClientInfo()));
-    clientConfig.register(new CsrfProtectionFilter("CSRF"));
     return clientConfig;
   }
 

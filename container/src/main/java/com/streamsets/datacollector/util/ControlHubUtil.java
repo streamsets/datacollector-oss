@@ -49,14 +49,13 @@ public class ControlHubUtil {
 
     ClientConfig clientConfig = new ClientConfig();
     clientConfig.register(new MovedDpmJerseyClientFilter(dpmClientInfo));
-    clientConfig.register(new CsrfProtectionFilter("CSRF"));
     Client client = ClientBuilder.newClient(clientConfig);
 
     try (Response response = client
         .target(dpmClientInfo.getDpmBaseUrl() + "pipelinestore/rest/v1/pipelines")
         .request()
         .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
-        .header(SSOConstants.X_REST_CALL, true)
+        .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
         .put(Entity.json(commitPipelineModel))) {
       if (response.getStatus() == Response.Status.CREATED.getStatusCode()) {
         Map<String, Object> responseData = response.readEntity(Map.class);
@@ -182,7 +181,6 @@ public class ControlHubUtil {
   ) {
     ClientConfig clientConfig = new ClientConfig();
     clientConfig.register(new MovedDpmJerseyClientFilter(dpmClientInfo));
-    clientConfig.register(new CsrfProtectionFilter("CSRF"));
     Client client = ClientBuilder.newClient(clientConfig);
 
     SSOPrincipal ssoPrincipal = (SSOPrincipal)request.getUserPrincipal();
@@ -196,7 +194,7 @@ public class ControlHubUtil {
     return webTarget
         .request()
         .header(SSOConstants.X_USER_AUTH_TOKEN, userAuthToken)
-        .header(SSOConstants.X_REST_CALL, true)
+        .header(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME)
         .get();
   }
 

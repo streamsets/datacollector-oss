@@ -25,7 +25,6 @@ import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.lib.security.http.SSOConstants;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -93,7 +92,6 @@ public class TestConnectionRetriever {
     ClientConfig cc = retriever.getClientConfig();
     Set<Class> instances = cc.getInstances().stream().map(i -> i.getClass()).collect(Collectors.toSet());
     Assert.assertTrue(instances.contains(MovedDpmJerseyClientFilter.class));
-    Assert.assertTrue(instances.contains(CsrfProtectionFilter.class));
 
     // REST call
 
@@ -114,6 +112,10 @@ public class TestConnectionRetriever {
     Mockito.verify(builder, Mockito.times(1)).header(
         Mockito.eq(SSOConstants.X_APP_AUTH_TOKEN),
         Mockito.eq("appAuthToken")
+    );
+    Mockito.verify(builder, Mockito.times(1)).header(
+        Mockito.eq(SSOConstants.X_REST_CALL),
+        Mockito.eq(SSOConstants.SDC_COMPONENT_NAME)
     );
     Mockito.verify(context, Mockito.times(1)).getUser();
     Mockito.verifyNoMoreInteractions(context);
