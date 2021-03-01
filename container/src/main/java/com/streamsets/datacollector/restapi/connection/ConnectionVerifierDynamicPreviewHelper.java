@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.config.json.PipelineConfigAndRulesJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.event.dto.EventType;
@@ -27,6 +28,7 @@ import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelinePreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
@@ -35,7 +37,9 @@ import com.streamsets.datacollector.restapi.bean.PipelineConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.pipeline.api.Config;
+import com.streamsets.pipeline.api.StageException;
 import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -52,6 +56,12 @@ import java.util.UUID;
 public class ConnectionVerifierDynamicPreviewHelper {
 
   private static final Logger LOG = LoggerFactory.getLogger(ConnectionVerifierDynamicPreviewHelper.class);
+
+  private StageLibraryTask stageLibraryTask;
+
+  public ConnectionVerifierDynamicPreviewHelper(StageLibraryTask stageLibraryTask) {
+    this.stageLibraryTask = stageLibraryTask;
+  }
 
   /**
    * Build a VERIFIER >> TRASH pipeline for the given connection, based on the pipeline template
@@ -71,6 +81,14 @@ public class ConnectionVerifierDynamicPreviewHelper {
     PipelineConfigurationJson pipelineTemplateConfig = pipelineTemplate.getPipelineConfig();
 
     // build verifier stage and replace the raw data origin with it
+    StageDefinition verifierStageDef = stageLibraryTask.getStage(connection.getVerifierDefinition().getLibrary(),
+        connection.getVerifierStageName(), false);
+    if (verifierStageDef == null) {
+      throw new StageException(
+          PreviewError.PREVIEW_0106,
+          connection.getVerifierStageName(),
+          connection.getVerifierDefinition().getLibrary());
+    }
     List<ConfigConfigurationJson> verifierConfig = new ArrayList<>();
     verifierConfig.add(new ConfigConfigurationJson(
         connection.getVerifierDefinition().getVerifierConnectionSelectionFieldName(),
@@ -82,7 +100,7 @@ public class ConnectionVerifierDynamicPreviewHelper {
         connection.getVerifierStageName().concat("_01"),
         connection.getVerifierDefinition().getLibrary(),
         connection.getVerifierStageName(),
-        connection.getVersion(),
+        String.valueOf(verifierStageDef.getVersion()),
         verifierConfig,
         rawDataStage.getUiInfo(),
         ImmutableList.of(),

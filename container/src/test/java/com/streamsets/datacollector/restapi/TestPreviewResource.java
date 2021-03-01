@@ -16,6 +16,7 @@
 package com.streamsets.datacollector.restapi;
 
 import com.streamsets.datacollector.blobstore.BlobStoreTask;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.event.dto.Event;
 import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.handler.EventHandlerTask;
@@ -26,6 +27,7 @@ import com.streamsets.datacollector.execution.Manager;
 import com.streamsets.datacollector.main.RuntimeInfo;
 import com.streamsets.datacollector.main.UserGroupManager;
 import com.streamsets.datacollector.restapi.bean.DynamicPreviewRequestWithOverridesJson;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.util.Configuration;
@@ -82,6 +84,7 @@ public class TestPreviewResource extends JerseyTest {
   static UserGroupManager userGroupManager = PowerMockito.mock(UserGroupManager.class);
   static EventHandlerTask eventHandlerTask = PowerMockito.mock(EventHandlerTask.class);
   static PipelineStoreTask pipelineStoreTask = PowerMockito.mock(PipelineStoreTask.class);
+  static StageLibraryTask stageLibraryTask = PowerMockito.mock(StageLibraryTask.class);
   static BlobStoreTask blobStoreTask = PowerMockito.mock(BlobStoreTask.class);
 
   static RestClient controlHubClient = PowerMockito.mock(RestClient.class);
@@ -145,7 +148,8 @@ public class TestPreviewResource extends JerseyTest {
             userGroupManager,
             eventHandlerTask,
             pipelineStoreTask,
-            blobStoreTask
+            blobStoreTask,
+            stageLibraryTask
         ));
       }
     };
@@ -255,6 +259,15 @@ public class TestPreviewResource extends JerseyTest {
         requestRawJson,
         DynamicPreviewRequestWithOverridesJson.class
     );
+    StageDefinition stageDef = Mockito.mock(StageDefinition.class);
+    PowerMockito
+        .when(stageLibraryTask.getStage(
+            "streamsets-datacollector-aws-lib",
+            "com_streamsets_pipeline_stage_common_s3_AwsS3ConnectionVerifier",
+            false
+            ))
+        .thenReturn(stageDef);
+    Mockito.when(stageDef.getVersion()).thenReturn(1);
     target("/v1/pipeline/dynamicPreview").request()
         .post(Entity.json(connectionVerifierPreviewRequest));
   }

@@ -33,6 +33,7 @@ public enum PreviewError implements ErrorCode {
   PREVIEW_0103("Error executing dynamic preview: could not detect generated pipeline ID after running before actions"),
   PREVIEW_0104("Error executing dynamic preview: remote exception: {}"),
   PREVIEW_0105("Error executing dynamic preview: previewer is unavailable"),
+  PREVIEW_0106("Error executing dynamic preview: could not find stagelib definition for stage {} in library {}"),
   ;
 
   private final String msg;

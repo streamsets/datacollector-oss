@@ -54,6 +54,7 @@ import com.streamsets.datacollector.restapi.bean.StageOutputJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
 import com.streamsets.datacollector.restapi.connection.ConnectionVerifierDynamicPreviewHelper;
 import com.streamsets.datacollector.runner.PipelineRuntimeException;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.AclStoreTask;
 import com.streamsets.datacollector.store.PipelineInfo;
 import com.streamsets.datacollector.store.PipelineStoreTask;
@@ -133,6 +134,7 @@ public class PreviewResource {
   private final String user;
   private final EventHandlerTask eventHandlerTask;
   private final PipelineStoreTask pipelineStoreTask;
+  private final StageLibraryTask stageLibraryTask;
   private final BlobStoreTask blobStoreTask;
   private final RuntimeInfo runtimeInfo;
   private final UserJson currentUser;
@@ -148,7 +150,8 @@ public class PreviewResource {
       UserGroupManager userGroupManager,
       EventHandlerTask eventHandlerTask,
       PipelineStoreTask pipelineStoreTask,
-      BlobStoreTask blobStoreTask
+      BlobStoreTask blobStoreTask,
+      StageLibraryTask stageLibraryTask
   ) {
     this.configuration = configuration;
     this.user = principal.getName();
@@ -156,6 +159,7 @@ public class PreviewResource {
     this.eventHandlerTask = eventHandlerTask;
     this.pipelineStoreTask = pipelineStoreTask;
     this.blobStoreTask = blobStoreTask;
+    this.stageLibraryTask = stageLibraryTask;
     PipelineBeanCreator.prepareForConnections(configuration, runtimeInfo);
 
     if (runtimeInfo.isDPMEnabled()) {
@@ -342,7 +346,7 @@ public class PreviewResource {
     Map<String, ConnectionConfiguration> connections = new HashMap<>();
     if (DynamicPreviewType.CONNECTION_VERIFIER.equals(dynamicPreviewRequest.getType())) {
       // build the dynamic preview pipeline and events
-      ConnectionVerifierDynamicPreviewHelper verifierHelper = new ConnectionVerifierDynamicPreviewHelper();
+      ConnectionVerifierDynamicPreviewHelper verifierHelper = new ConnectionVerifierDynamicPreviewHelper(stageLibraryTask);
       ConnectionDefinitionPreviewJson connection = verifierHelper.getConnectionPreviewJson(dynamicPreviewRequest);
       PipelineEnvelopeJson verifierPipeline = verifierHelper.getVerifierDynamicPreviewPipeline(connection);
       dynamicPreviewEvent = verifierHelper.getVerifierDynamicPreviewEvent(verifierPipeline, dynamicPreviewRequest, currentUser);

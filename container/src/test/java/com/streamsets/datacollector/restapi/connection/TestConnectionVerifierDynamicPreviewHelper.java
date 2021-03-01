@@ -18,6 +18,7 @@ package com.streamsets.datacollector.restapi.connection;
 
 import com.google.common.collect.ImmutableList;
 import com.streamsets.datacollector.config.ConnectionConfiguration;
+import com.streamsets.datacollector.config.StageDefinition;
 import com.streamsets.datacollector.definition.ConnectionVerifierDefinition;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewRequestJson;
 import com.streamsets.datacollector.dynamicpreview.DynamicPreviewType;
@@ -25,6 +26,7 @@ import com.streamsets.datacollector.event.dto.EventType;
 import com.streamsets.datacollector.event.json.DynamicPreviewEventJson;
 import com.streamsets.datacollector.event.json.PipelineSaveEventJson;
 import com.streamsets.datacollector.event.json.PipelineStopAndDeleteEventJson;
+import com.streamsets.datacollector.execution.preview.common.PreviewError;
 import com.streamsets.datacollector.json.ObjectMapperFactory;
 import com.streamsets.datacollector.restapi.bean.BeanHelper;
 import com.streamsets.datacollector.restapi.bean.ConfigConfigurationJson;
@@ -32,9 +34,12 @@ import com.streamsets.datacollector.restapi.bean.ConnectionDefinitionPreviewJson
 import com.streamsets.datacollector.restapi.bean.PipelineEnvelopeJson;
 import com.streamsets.datacollector.restapi.bean.StageConfigurationJson;
 import com.streamsets.datacollector.restapi.bean.UserJson;
+import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
+import com.streamsets.pipeline.api.StageException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,7 +50,12 @@ import java.util.UUID;
 public class TestConnectionVerifierDynamicPreviewHelper {
 
   private static final String LIB_NAME = "streamsets-datacollector-aws-lib";
+  private static final String VERIFIER_STAGE = "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier";
+  // The Verifier stage and Connection versions are not necessarily the same - make sure that's okay
+  private static final int VERIFIER_STAGE_VERSION = 1;
+  private static final int CONNECTION_VERSION = 2;
 
+  private StageLibraryTask stageLibraryTask;
   private ConnectionVerifierDynamicPreviewHelper verifierPreviewHelper;
   private DynamicPreviewRequestJson dynamicPreviewRequest;
   private ConnectionDefinitionPreviewJson connection;
@@ -53,9 +63,22 @@ public class TestConnectionVerifierDynamicPreviewHelper {
 
   @Before
   public void setUp() {
-    verifierPreviewHelper = new ConnectionVerifierDynamicPreviewHelper();
+    stageLibraryTask = prepStageLibraryTask();
+    verifierPreviewHelper = new ConnectionVerifierDynamicPreviewHelper(stageLibraryTask);
     dynamicPreviewRequest = getDynamicPreviewRequest();
     currentUser = getTestUserJson();
+  }
+
+  private StageLibraryTask prepStageLibraryTask() {
+    StageLibraryTask stageLibraryTask = Mockito.mock(StageLibraryTask.class);
+    StageDefinition stageDef = Mockito.mock(StageDefinition.class);
+    Mockito.when(stageLibraryTask.getStage(
+        LIB_NAME,
+        VERIFIER_STAGE.replace(".", "_"),
+        false
+    )).thenReturn(stageDef);
+    Mockito.when(stageDef.getVersion()).thenReturn(VERIFIER_STAGE_VERSION);
+    return stageLibraryTask;
   }
 
   private DynamicPreviewRequestJson getDynamicPreviewRequest() {
@@ -72,14 +95,14 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     config.add(new ConfigConfigurationJson("awsConfig.awsAccessKeyId", "test-key"));
     config.add(new ConfigConfigurationJson("awsConfig.awsSecretAccessKey", "test-secret"));
     connection = new ConnectionDefinitionPreviewJson(
-        "1",
+        String.valueOf(CONNECTION_VERSION),
         "STREAMSETS_AWS_S3",
         config,
         new ConnectionVerifierDefinition(
-            "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
+            VERIFIER_STAGE,
             "connection",
-            "connectionSelection"
-            ,"com.streamsets.pipeline.stage.common.s3.AwsS3Connection",
+            "connectionSelection",
+            "com.streamsets.pipeline.stage.common.s3.AwsS3Connection",
             LIB_NAME
         )
     );
@@ -128,6 +151,23 @@ public class TestConnectionVerifierDynamicPreviewHelper {
     Assert.assertEquals(ImmutableList.of("DevRawDataSource_01OutputLane15397448822820"), verifierStage.getOutputLanes());
     Assert.assertEquals(ImmutableList.of(), verifierStage.getEventLanes());
     Assert.assertEquals(ImmutableList.of(), verifierStage.getServices());
+    Assert.assertEquals(VERIFIER_STAGE_VERSION, Integer.valueOf(verifierStage.getStageVersion()).intValue());
+  }
+
+  @Test
+  public void testGetVerifierDynamicPreviewPipelineVerifierStageNotFound() throws IOException {
+    Mockito.when(stageLibraryTask.getStage(
+        LIB_NAME,
+        VERIFIER_STAGE.replace(".", "_"),
+        false
+    )).thenReturn(null);
+
+    try {
+      verifierPreviewHelper.getVerifierDynamicPreviewPipeline(connection);
+      Assert.fail("Expected StageException");
+    } catch (StageException e) {
+      Assert.assertEquals(PreviewError.PREVIEW_0106, e.getErrorCode());
+    }
   }
 
   @Test

@@ -9,11 +9,11 @@
       "connection": {
         "version" : "1",
         "type" : "STREAMSETS_AWS_S3",
-        "library": "streamsets-datacollector-aws-lib",
         "verifierDefinition": {
           "verifierClass": "com.streamsets.pipeline.stage.common.s3.AwsS3ConnectionVerifier",
           "verifierConnectionFieldName": "connection",
-          "verifierConnectionSelectionFieldName": "connectionSelection"
+          "verifierConnectionSelectionFieldName": "connectionSelection",
+          "library": "streamsets-datacollector-aws-lib"
         },
         "configuration" : [
           {
