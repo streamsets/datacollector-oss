@@ -205,7 +205,7 @@ public class ForceSourceConfigBean extends ForceInputConfigBean {
       displayMode = ConfigDef.DisplayMode.BASIC,
       dependencies = {
           @Dependency(configName = "subscribeToStreaming", triggeredByValues = "true"),
-          @Dependency(configName = "subscriptionType", triggeredByValues = "PLATFORM_EVENT"),
+          @Dependency(configName = "subscriptionType", triggeredByValues = {"PLATFORM_EVENT","CDC"}),
       },
       group = "SUBSCRIBE"
   )

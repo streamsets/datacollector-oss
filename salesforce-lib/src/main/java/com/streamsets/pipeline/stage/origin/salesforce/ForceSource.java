@@ -830,7 +830,7 @@ public class ForceSource extends BaseSource implements ForceStage {
     if (getContext().isPreview()) {
       nextSourceOffset = ForceUtils.READ_EVENTS_FROM_START;
     } else if (null == lastSourceOffset) {
-      if (conf.subscriptionType == SubscriptionType.PLATFORM_EVENT &&
+      if ((conf.subscriptionType == SubscriptionType.PLATFORM_EVENT || conf.subscriptionType == SubscriptionType.CDC) &&
           conf.replayOption == ReplayOption.ALL_EVENTS) {
         nextSourceOffset = ForceUtils.READ_EVENTS_FROM_START;
       } else {
