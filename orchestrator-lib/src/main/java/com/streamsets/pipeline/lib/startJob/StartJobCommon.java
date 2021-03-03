@@ -61,8 +61,8 @@ public class StartJobCommon {
     jobIdConfigVars = context.createELVars();
     jobIdEval = context.createELEval("jobId");
     runtimeParametersEval = context.createELEval("runtimeParameters");
-    if (!conf.baseUrl.endsWith("/")) {
-      conf.baseUrl += "/";
+    if (!conf.controlHubConfig.baseUrl.endsWith("/")) {
+      conf.controlHubConfig.baseUrl += "/";
     }
     if (conf.tlsConfig.isEnabled()) {
       conf.tlsConfig.init(

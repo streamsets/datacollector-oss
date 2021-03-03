@@ -28,7 +28,7 @@ class TestStartJobSourceBuilder {
   }
 
   TestStartJobSourceBuilder baseUrl(String baseUrl) {
-    conf.baseUrl = baseUrl;
+    conf.controlHubConfig.baseUrl = baseUrl;
     return this;
   }
 

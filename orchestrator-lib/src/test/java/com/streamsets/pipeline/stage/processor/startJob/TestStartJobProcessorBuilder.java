@@ -34,7 +34,7 @@ class TestStartJobProcessorBuilder {
   }
 
   TestStartJobProcessorBuilder baseUrl(String baseUrl) {
-    conf.baseUrl = baseUrl;
+    conf.controlHubConfig.baseUrl = baseUrl;
     return this;
   }
 

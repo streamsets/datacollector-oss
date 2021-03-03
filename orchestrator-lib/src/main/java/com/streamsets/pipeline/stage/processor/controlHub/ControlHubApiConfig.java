@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.lib.config.ControlHubConfig;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
@@ -34,19 +35,8 @@ import java.util.Map;
  */
 public class ControlHubApiConfig {
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "https://cloud.streamsets.com/security/rest/v1/currentUser",
-      label = "Control Hub API URL",
-      description = "URL for the Control Hub API",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "HTTP",
-      elDefs = {RecordEL.class, TimeEL.class, TimeNowEL.class},
-      evaluation = ConfigDef.Evaluation.EXPLICIT
-  )
-  public String baseUrl = "https://cloud.streamsets.com/security/rest/v1/currentUser";
+  @ConfigDefBean
+  public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
       required = true,

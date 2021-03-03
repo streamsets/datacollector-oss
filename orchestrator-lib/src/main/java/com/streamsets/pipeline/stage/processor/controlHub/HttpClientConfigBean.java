@@ -70,9 +70,6 @@ public class HttpClientConfigBean {
   )
   public int numThreads = 1;
 
-  @ConfigDefBean(groups = "CREDENTIALS")
-  public ControlHubAuthConfigBean basicAuth = new ControlHubAuthConfigBean();
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,

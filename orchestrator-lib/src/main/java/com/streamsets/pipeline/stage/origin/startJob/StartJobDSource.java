@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
-    version = 2,
+    version = 3,
     label = "Start Jobs",
     description = "Starts Control Hub jobs",
     icon="job.png",

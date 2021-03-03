@@ -55,4 +55,22 @@ public class TestStartJobSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, configPrefix + "certificateChain", new ArrayList<>());
     UpgraderTestUtils.assertExists(configs, configPrefix + "trustedCertificates", new ArrayList<>());
   }
+
+  @Test
+  public void testV2ToV3Upgrade() {
+    configs.add(new Config("conf.baseUrl", "http://sch"));
+    configs.add(new Config("conf.username", "user"));
+    configs.add(new Config("conf.password", "pass"));
+
+    Mockito.doReturn(2).when(context).getFromVersion();
+    Mockito.doReturn(3).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.baseUrl", "http://sch");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.username", "user");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.password", "pass");
+  }
+
 }
+

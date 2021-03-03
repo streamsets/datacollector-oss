@@ -56,8 +56,8 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
     if (conf.tlsConfig.getSslContext() != null) {
       clientBuilder.sslContext(conf.tlsConfig.getSslContext());
     }
-    if (!conf.baseUrl.endsWith("/")) {
-      conf.baseUrl += "/";
+    if (!conf.controlHubConfig.baseUrl.endsWith("/")) {
+      conf.controlHubConfig.baseUrl += "/";
     }
     return issues;
   }
@@ -98,14 +98,14 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
     if (firstRecord != null && outputOrchestratorTasks != null) {
       String userAuthToken = ControlHubApiUtil.getUserAuthToken(
           clientBuilder,
-          conf.baseUrl,
-          conf.username.get(),
-          conf.password.get()
+          conf.controlHubConfig.baseUrl,
+          conf.controlHubConfig.username.get(),
+          conf.controlHubConfig.password.get()
       );
 
       List<Map<String, Object>> jobStatusList = ControlHubApiUtil.waitForJobCompletion(
           clientBuilder,
-          conf.baseUrl,
+          conf.controlHubConfig.baseUrl,
           jobIdList,
           userAuthToken,
           conf.waitTime
@@ -138,7 +138,7 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
 
               MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
                   clientBuilder,
-                  conf.baseUrl,
+                  conf.controlHubConfig.baseUrl,
                   jobId,
                   userAuthToken
               );

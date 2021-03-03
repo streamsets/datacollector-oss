@@ -163,7 +163,7 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
     Iterator<Record> records = batch.getRecords();
     while (records.hasNext()) {
       Record record = records.next();
-      String resolvedUrl = getResolvedUrl(conf.baseUrl, record);
+      String resolvedUrl = getResolvedUrl(conf.controlHubConfig.baseUrl, record);
       String userAuthToken = getUserAuthToken(resolvedUrl);
 
       WebTarget target = httpClientCommon.getClient().target(resolvedUrl);
@@ -325,8 +325,8 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
 
       if (!resolveUrlToTokenMap.containsKey(baseUrl)) {
         Map<String, String> loginJson = new HashMap<>();
-        loginJson.put("userName", conf.client.basicAuth.username.get());
-        loginJson.put("password", conf.client.basicAuth.password.get());
+        loginJson.put("userName", conf.controlHubConfig.username.get());
+        loginJson.put("password", conf.controlHubConfig.password.get());
         response = ClientBuilder.newClient()
             .target(baseUrl + "security/public-rest/v1/authentication/login")
             .register(new CsrfProtectionFilter("CSRF"))

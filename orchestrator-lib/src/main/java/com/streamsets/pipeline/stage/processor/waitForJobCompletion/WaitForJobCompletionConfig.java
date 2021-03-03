@@ -18,21 +18,14 @@ package com.streamsets.pipeline.stage.processor.waitForJobCompletion;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.config.ControlHubConfig;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 public class WaitForJobCompletionConfig {
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "https://cloud.streamsets.com",
-      label = "Control Hub URL",
-      description = "URL for the Control Hub running the jobs",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "JOB"
-  )
-  public String baseUrl = "https://cloud.streamsets.com";
+
+  @ConfigDefBean
+  public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
       required = true,
@@ -47,28 +40,6 @@ public class WaitForJobCompletionConfig {
       max = Integer.MAX_VALUE
   )
   public int waitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Control Hub User Name",
-      description = "Control Hub user to perform status checks",
-      displayPosition = 71,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
-      description = "Password",
-      displayPosition = 72,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue password;
 
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfig = new TlsConfigBean();

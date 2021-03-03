@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.Label;
 
 public enum Groups implements Label {
   JOB("Job"),
-  CREDENTIALS("Credentials"),
+  CONTROL_HUB("Control Hub"),
   TLS("TLS"),
   ;
 

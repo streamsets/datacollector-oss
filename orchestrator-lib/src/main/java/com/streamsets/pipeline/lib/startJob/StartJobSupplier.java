@@ -67,16 +67,16 @@ public class StartJobSupplier implements Supplier<Field> {
     try {
       userAuthToken = ControlHubApiUtil.getUserAuthToken(
           clientBuilder,
-          conf.baseUrl,
-          conf.username.get(),
-          conf.password.get()
+          conf.controlHubConfig.baseUrl,
+          conf.controlHubConfig.username.get(),
+          conf.controlHubConfig.password.get()
       );
       if (jobIdConfig.jobIdType.equals(JobIdType.NAME)) {
         // fetch Job ID using GET jobs REST API using query param filterText=<job name>
         initializeJobId();
       }
       if (conf.resetOrigin) {
-        ControlHubApiUtil.resetOffset(clientBuilder, conf.baseUrl, jobIdConfig.jobId, userAuthToken);
+        ControlHubApiUtil.resetOffset(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId, userAuthToken);
       }
       Map<String, Object> jobStatus = startJob();
       if (conf.runInBackground) {
@@ -94,7 +94,7 @@ public class StartJobSupplier implements Supplier<Field> {
   private void waitForJobCompletion() {
     ThreadUtil.sleep(conf.waitTime);
     Map<String, Object> jobStatus = ControlHubApiUtil
-        .getJobStatus(clientBuilder, conf.baseUrl, jobIdConfig.jobId, userAuthToken);
+        .getJobStatus(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId, userAuthToken);
     String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
     if (status != null && Constants.JOB_SUCCESS_STATES.contains(status)) {
       generateField(jobStatus);
@@ -106,7 +106,7 @@ public class StartJobSupplier implements Supplier<Field> {
   }
 
   private void initializeJobId() {
-    String fetchJobsUrl = conf.baseUrl + "jobrunner/rest/v1/jobs";
+    String fetchJobsUrl = conf.controlHubConfig.baseUrl + "jobrunner/rest/v1/jobs";
     try (Response response = clientBuilder.build()
         .target(fetchJobsUrl)
         .queryParam("filterText", jobIdConfig.jobId)
@@ -136,7 +136,7 @@ public class StartJobSupplier implements Supplier<Field> {
   }
 
   private Map<String, Object> startJob() {
-    String jobStartUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + jobIdConfig.jobId + "/start";
+    String jobStartUrl = conf.controlHubConfig.baseUrl + "jobrunner/rest/v1/job/" + jobIdConfig.jobId + "/start";
     Map<String, Object> runtimeParameters = null;
     if (StringUtils.isNotEmpty(jobIdConfig.runtimeParameters)) {
       try {
@@ -180,7 +180,7 @@ public class StartJobSupplier implements Supplier<Field> {
       startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
       MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
           clientBuilder,
-          conf.baseUrl,
+          conf.controlHubConfig.baseUrl,
           jobIdConfig.jobId,
           userAuthToken
       );

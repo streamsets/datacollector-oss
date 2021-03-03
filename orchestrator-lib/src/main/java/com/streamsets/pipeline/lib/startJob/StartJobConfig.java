@@ -19,7 +19,7 @@ import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.ValueChooserModel;
-import com.streamsets.pipeline.api.credential.CredentialValue;
+import com.streamsets.pipeline.lib.config.ControlHubConfig;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.tls.TlsConfigBean;
@@ -40,17 +40,8 @@ public class StartJobConfig {
   )
   public String taskName;
 
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.STRING,
-      defaultValue = "https://cloud.streamsets.com",
-      label = "Control Hub URL",
-      description = "URL for the Control Hub that runs the specified jobs",
-      displayPosition = 10,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "JOB"
-  )
-  public String baseUrl = "https://cloud.streamsets.com";
+  @ConfigDefBean
+  public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
       required = true,
@@ -179,28 +170,6 @@ public class StartJobConfig {
       triggeredByValue = { "false" }
   )
   public int waitTime;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Control Hub User Name",
-      description = "Control Hub user to start the jobs",
-      displayPosition = 71,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue username;
-
-  @ConfigDef(
-      required = true,
-      type = ConfigDef.Type.CREDENTIAL,
-      label = "Password",
-      description = "Password",
-      displayPosition = 72,
-      displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
-  )
-  public CredentialValue password;
 
   @ConfigDefBean(groups = "TLS")
   public TlsConfigBean tlsConfig = new TlsConfigBean();

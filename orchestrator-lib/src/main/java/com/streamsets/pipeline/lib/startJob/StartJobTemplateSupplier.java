@@ -73,15 +73,19 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
   @Override
   public Field get() {
     try {
-      userAuthToken = ControlHubApiUtil
-          .getUserAuthToken(clientBuilder, conf.baseUrl, conf.username.get(), conf.password.get());
+      userAuthToken = ControlHubApiUtil.getUserAuthToken(
+          clientBuilder,
+          conf.controlHubConfig.baseUrl,
+          conf.controlHubConfig.username.get(),
+          conf.controlHubConfig.password.get()
+      );
       List<Map<String, Object>> jobStatusList = startJobTemplate();
       List<String> jobInstancesIdList = jobStatusList.stream()
           .map(j -> (String) j.get("jobId")).collect(Collectors.toList());
       if (!conf.runInBackground) {
         jobStatusList = ControlHubApiUtil.waitForJobCompletion(
             clientBuilder,
-            conf.baseUrl,
+            conf.controlHubConfig.baseUrl,
             jobInstancesIdList,
             userAuthToken,
             conf.waitTime
@@ -96,7 +100,8 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
   }
 
   private List<Map<String, Object>> startJobTemplate() throws OnRecordErrorException {
-    String jobStartUrl = conf.baseUrl + "jobrunner/rest/v1/job/" + templateJobId + "/createAndStartJobInstances";
+    String jobStartUrl = conf.controlHubConfig.baseUrl + "jobrunner/rest/v1/job/" + templateJobId +
+        "/createAndStartJobInstances";
     List<Map<String, Object>> runtimeParametersList = null;
     if (StringUtils.isNotEmpty(this.runtimeParametersList)) {
       try {
@@ -153,7 +158,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
         startOutput.put(Constants.FINISHED_SUCCESSFULLY_FIELD, Field.create(success));
         MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
             clientBuilder,
-            conf.baseUrl,
+            conf.controlHubConfig.baseUrl,
             jobId,
             userAuthToken
         );

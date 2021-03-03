@@ -32,3 +32,14 @@ upgrades:
       - setConfig:
           name: conf.tlsConfig.trustedCertificates
           value: []
+  - toVersion: 3
+    actions:
+      - renameConfig:
+          oldNamePattern: conf\.baseUrl
+          newNamePattern: conf.controlHubConfig.baseUrl
+      - renameConfig:
+          oldNamePattern: conf\.username
+          newNamePattern: conf.controlHubConfig.username
+      - renameConfig:
+          oldNamePattern: conf\.password
+          newNamePattern: conf.controlHubConfig.password
