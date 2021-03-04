@@ -272,8 +272,10 @@ public class SalesforceConnection {
     // Retrieve Base64-encoded private key from credential store (or pipeline).
     // Strip headers, spaces, and newlines.
     String key = privateKey.get()
-        .replace("-----BEGIN PRIVATE KEY-----\n", "")
+        .replace("-----BEGIN PRIVATE KEY-----", "")
         .replace("-----END PRIVATE KEY-----", "")
+        .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+        .replace("-----END RSA PRIVATE KEY-----", "")
         .replace(" ", "")
         .replace("\n", "")
         .replace("\r", "");
