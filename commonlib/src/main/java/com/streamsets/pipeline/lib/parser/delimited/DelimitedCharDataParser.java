@@ -206,7 +206,7 @@ public class DelimitedCharDataParser extends AbstractDataParser {
       }
       record.set(Field.create(row));
     } else {
-      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>();
+      LinkedHashMap<String, Field> listMap = new LinkedHashMap<>(columns.length);
       for (int i = 0; i < columns.length; i++) {
         String key;
         Field header = (headers != null) ? headers.get(i) : null;
