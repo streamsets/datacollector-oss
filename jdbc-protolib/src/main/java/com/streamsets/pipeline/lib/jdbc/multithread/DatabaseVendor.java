@@ -60,7 +60,7 @@ public enum DatabaseVendor {
   POSTGRESQL(
       ImmutableList.of("jdbc:postgresql:"),
       ImmutableList.of("org.postgresql.Driver"),
-      ImmutableList.of(QuoteChar.DOUBLE_QUOTES.getLabel())
+      ImmutableList.of(QuoteChar.DOUBLE_QUOTES.getLabel(), QuoteChar.NONE.getLabel())
   ),
   SQL_SERVER(
       ImmutableList.of("jdbc:sqlserver:"),
