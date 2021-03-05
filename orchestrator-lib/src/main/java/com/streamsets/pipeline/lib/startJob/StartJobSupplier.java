@@ -25,7 +25,6 @@ import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +45,7 @@ public class StartJobSupplier implements Supplier<Field> {
   private final ErrorRecordHandler errorRecordHandler;
   private final ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
-  private String userAuthToken;
-  private final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+  private final ClientBuilder clientBuilder;
 
   public StartJobSupplier(
       StartJobConfig conf,
@@ -57,26 +55,18 @@ public class StartJobSupplier implements Supplier<Field> {
     this.conf = conf;
     this.jobIdConfig = jobIdConfig;
     this.errorRecordHandler = errorRecordHandler;
-    if (conf.tlsConfig.getSslContext() != null) {
-      clientBuilder.sslContext(conf.tlsConfig.getSslContext());
-    }
+    clientBuilder = conf.controlHubConfig.getClientBuilder();
   }
 
   @Override
   public Field get() {
     try {
-      userAuthToken = ControlHubApiUtil.getUserAuthToken(
-          clientBuilder,
-          conf.controlHubConfig.baseUrl,
-          conf.controlHubConfig.username.get(),
-          conf.controlHubConfig.password.get()
-      );
       if (jobIdConfig.jobIdType.equals(JobIdType.NAME)) {
         // fetch Job ID using GET jobs REST API using query param filterText=<job name>
         initializeJobId();
       }
       if (conf.resetOrigin) {
-        ControlHubApiUtil.resetOffset(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId, userAuthToken);
+        ControlHubApiUtil.resetOffset(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId);
       }
       Map<String, Object> jobStatus = startJob();
       if (conf.runInBackground) {
@@ -94,7 +84,7 @@ public class StartJobSupplier implements Supplier<Field> {
   private void waitForJobCompletion() {
     ThreadUtil.sleep(conf.waitTime);
     Map<String, Object> jobStatus = ControlHubApiUtil
-        .getJobStatus(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId, userAuthToken);
+        .getJobStatus(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId);
     String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
     if (status != null && Constants.JOB_SUCCESS_STATES.contains(status)) {
       generateField(jobStatus);
@@ -110,9 +100,7 @@ public class StartJobSupplier implements Supplier<Field> {
     try (Response response = clientBuilder.build()
         .target(fetchJobsUrl)
         .queryParam("filterText", jobIdConfig.jobId)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .get()) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -152,9 +140,7 @@ public class StartJobSupplier implements Supplier<Field> {
     }
     try (Response response = clientBuilder.build()
         .target(jobStartUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(runtimeParameters))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -181,8 +167,7 @@ public class StartJobSupplier implements Supplier<Field> {
       MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
           clientBuilder,
           conf.controlHubConfig.baseUrl,
-          jobIdConfig.jobId,
-          userAuthToken
+          jobIdConfig.jobId
       );
       startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
     }

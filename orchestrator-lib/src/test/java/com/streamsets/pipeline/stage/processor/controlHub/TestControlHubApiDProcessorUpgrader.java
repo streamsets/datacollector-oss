@@ -72,4 +72,31 @@ public class TestControlHubApiDProcessorUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.password", "pass");
   }
 
+  @Test
+  public void testV3ToV4Upgrade() {
+    configs.add(new Config("conf.client.connectTimeoutMillis", 1));
+    configs.add(new Config("conf.client.readTimeoutMillis", 2));
+    configs.add(new Config("conf.client.numThreads", 3));
+    configs.add(new Config("conf.client.useProxy", true));
+
+    configs.add(new Config("conf.client.proxy.foo", "FOO"));
+    configs.add(new Config("conf.client.tlsConfig.bar", "BAR"));
+    configs.add(new Config("conf.client.requestLoggingConfig.zoo", "ZOO"));
+
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.connectTimeoutMillis", 1);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.readTimeoutMillis", 2);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.numThreads", 3);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.useProxy", true);
+
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.proxy.foo", "FOO");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.tlsConfig.bar", "BAR");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.requestLoggingConfig.zoo", "ZOO");
+
+  }
+
 }

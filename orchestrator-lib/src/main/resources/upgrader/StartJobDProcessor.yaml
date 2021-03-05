@@ -43,3 +43,35 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf\.password
           newNamePattern: conf.controlHubConfig.password
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: conf.controlHubConfig.client.connectTimeoutMillis
+          value: 10000
+      - setConfig:
+          name: conf.controlHubConfig.client.readTimeoutMillis
+          value: 10000
+      - setConfig:
+          name: conf.controlHubConfig.client.useProxy
+          value: false
+      - setConfig:
+          name: conf.controlHubConfig.client.proxy.uri
+          value: ""
+      - setConfig:
+          name: conf.controlHubConfig.client.proxy.username
+          value: ""
+      - setConfig:
+          name: conf.controlHubConfig.client.proxy.password
+          value: ""
+      - renameConfig:
+          oldNamePattern: conf\.tlsConfig\.(.*)
+          newNamePattern: conf.controlHubConfig.client.tlsConfig.(0)
+      - setConfig:
+          name: conf.controlHubConfig.client.requestLoggingConfig.logLevel
+          value: FINE
+      - setConfig:
+          name: conf.controlHubConfig.client.requestLoggingConfig.verbosity
+          value: HEADERS_ONLY
+      - setConfig:
+          name: conf.controlHubConfig.client.requestLoggingConfig.maxEntitySize
+          value: 0

@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Wait for Jobs",
     description = "Waits for Control Hub jobs to complete",
     icon="job.png",
@@ -38,13 +38,15 @@ import com.streamsets.pipeline.lib.startJob.Groups;
 )
 @GenerateResourceBundle
 @HideConfigs({
-    "conf.tlsConfig.useRemoteKeyStore",
-    "conf.tlsConfig.keyStoreFilePath",
-    "conf.tlsConfig.privateKey",
-    "conf.tlsConfig.certificateChain",
-    "conf.tlsConfig.keyStoreType",
-    "conf.tlsConfig.keyStorePassword",
-    "conf.tlsConfig.keyStoreAlgorithm"
+    "conf.controlHubConfig.client.tlsConfig.useRemoteKeyStore",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreFilePath",
+    "conf.controlHubConfig.client.tlsConfig.privateKey",
+    "conf.controlHubConfig.client.tlsConfig.certificateChain",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreType",
+    "conf.controlHubConfig.client.tlsConfig.keyStorePassword",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreAlgorithm",
+    "conf.controlHubConfig.client.requestLoggingConfig.enableRequestLogging",
+    "conf.controlHubConfig.client.numThreads",
 })
 @ConfigGroups(Groups.class)
 public class WaitForJobCompletionDProcessor extends DProcessor {

@@ -115,7 +115,7 @@ public class ControlHubApiProcessor extends SingleLaneProcessor {
    */
   ControlHubApiProcessor(ControlHubApiConfig conf) {
     this.conf = conf;
-    this.httpClientCommon = new HttpClientCommon(conf.client);
+    this.httpClientCommon = new HttpClientCommon(conf.controlHubConfig.client);
   }
 
   /** {@inheritDoc} */

@@ -24,7 +24,7 @@ import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 public class WaitForJobCompletionConfig {
 
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"JOB", "CREDENTIALS", "HTTP", "PROXY", "TLS", "LOGGING"})
   public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
@@ -40,8 +40,5 @@ public class WaitForJobCompletionConfig {
       max = Integer.MAX_VALUE
   )
   public int waitTime;
-
-  @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfig = new TlsConfigBean();
 
 }

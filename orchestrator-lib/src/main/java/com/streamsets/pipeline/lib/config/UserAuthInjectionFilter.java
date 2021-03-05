@@ -1,0 +1,44 @@
+/*
+ * Copyright 2021  StreamSets Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.streamsets.pipeline.lib.config;
+
+import com.streamsets.pipeline.lib.Constants;
+
+import javax.ws.rs.client.ClientRequestContext;
+import javax.ws.rs.client.ClientRequestFilter;
+import java.io.IOException;
+import java.util.function.Supplier;
+
+public class UserAuthInjectionFilter implements ClientRequestFilter {
+  private final Supplier<String> userAuthSupplier;
+  private volatile String userAuth;
+
+  public UserAuthInjectionFilter(Supplier<String> userAuthSupplier) {
+    this.userAuthSupplier = userAuthSupplier;
+  }
+
+  public void filter(ClientRequestContext rc) {
+    if (userAuth == null) {
+      synchronized (this) {
+        if (userAuth == null) {
+          userAuth = userAuthSupplier.get();
+        }
+      }
+    }
+    rc.getHeaders().add(Constants.X_USER_AUTH_TOKEN, userAuth);
+  }
+
+}

@@ -42,3 +42,40 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf\.client\.basicAuth\.password
           newNamePattern: conf.controlHubConfig.password
+  - toVersion: 4
+    actions:
+      - renameConfig:
+          oldNamePattern: conf\.client\.connectTimeoutMillis
+          newNamePattern: conf.controlHubConfig.client.connectTimeoutMillis
+      - renameConfig:
+          oldNamePattern: conf\.client\.readTimeoutMillis
+          newNamePattern: conf.controlHubConfig.client.readTimeoutMillis
+
+      - replaceConfig:
+          name: conf.client.connectTimeoutMillis
+          ifOldValueMatches: 0
+          newValue: 10000
+      - replaceConfig:
+          name: conf.client.readTimeoutMillis
+          ifOldValueMatches: 0
+          newValue: 10000
+
+      - renameConfig:
+          oldNamePattern: conf\.client\.numThreads
+          newNamePattern: conf.controlHubConfig.client.numThreads
+
+      - renameConfig:
+          oldNamePattern: conf\.client\.useProxy
+          newNamePattern: conf.controlHubConfig.client.useProxy
+
+      - renameConfig:
+          oldNamePattern: conf\.client\.proxy\.(.*)
+          newNamePattern: conf.controlHubConfig.client.proxy.(0)
+
+      - renameConfig:
+          oldNamePattern: conf\.client\.tlsConfig\.(.*)
+          newNamePattern: conf.controlHubConfig.client.tlsConfig.(0)
+
+      - renameConfig:
+          oldNamePattern: conf\.client\.requestLoggingConfig\.(.*)
+          newNamePattern: conf.controlHubConfig.client.requestLoggingConfig.(0)

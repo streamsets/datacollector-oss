@@ -42,7 +42,7 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
 
   private static final Logger LOG = LoggerFactory.getLogger(WaitForJobCompletionProcessor.class);
   private final WaitForJobCompletionConfig conf;
-  private final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+  private ClientBuilder clientBuilder;
   private ErrorRecordHandler errorRecordHandler;
 
   WaitForJobCompletionProcessor(WaitForJobCompletionConfig conf) {
@@ -53,11 +53,11 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
-    if (conf.tlsConfig.getSslContext() != null) {
-      clientBuilder.sslContext(conf.tlsConfig.getSslContext());
-    }
-    if (!conf.controlHubConfig.baseUrl.endsWith("/")) {
-      conf.controlHubConfig.baseUrl += "/";
+    if (conf.controlHubConfig.init(getContext(), issues) ) {
+      clientBuilder = conf.controlHubConfig.getClientBuilder();
+      if (!conf.controlHubConfig.baseUrl.endsWith("/")) {
+        conf.controlHubConfig.baseUrl += "/";
+      }
     }
     return issues;
   }
@@ -96,18 +96,10 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
     }
 
     if (firstRecord != null && outputOrchestratorTasks != null) {
-      String userAuthToken = ControlHubApiUtil.getUserAuthToken(
-          clientBuilder,
-          conf.controlHubConfig.baseUrl,
-          conf.controlHubConfig.username.get(),
-          conf.controlHubConfig.password.get()
-      );
-
       List<Map<String, Object>> jobStatusList = ControlHubApiUtil.waitForJobCompletion(
           clientBuilder,
           conf.controlHubConfig.baseUrl,
           jobIdList,
-          userAuthToken,
           conf.waitTime
       );
       Map<String, Map<String, Object>> jobStatusMap = jobStatusList.stream()
@@ -139,8 +131,7 @@ public class WaitForJobCompletionProcessor extends SingleLaneProcessor {
               MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
                   clientBuilder,
                   conf.controlHubConfig.baseUrl,
-                  jobId,
-                  userAuthToken
+                  jobId
               );
               startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
 

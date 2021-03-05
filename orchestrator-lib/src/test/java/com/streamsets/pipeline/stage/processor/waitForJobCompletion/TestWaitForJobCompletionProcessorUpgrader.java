@@ -72,4 +72,25 @@ public class TestWaitForJobCompletionProcessorUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.password", "pass");
   }
 
+  @Test
+  public void testV3ToV4Upgrade() {
+    configs.add(new Config("conf.tlsConfig.foo", "FOO"));
+
+    Mockito.doReturn(3).when(context).getFromVersion();
+    Mockito.doReturn(4).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.tlsConfig.foo", "FOO");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.connectTimeoutMillis", 10000);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.readTimeoutMillis", 10000);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.useProxy", false);
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.proxy.uri", "");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.proxy.username", "");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.proxy.password", "");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.requestLoggingConfig.logLevel", "FINE");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.requestLoggingConfig.verbosity", "HEADERS_ONLY");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.requestLoggingConfig.maxEntitySize", 0);
+  }
+
 }

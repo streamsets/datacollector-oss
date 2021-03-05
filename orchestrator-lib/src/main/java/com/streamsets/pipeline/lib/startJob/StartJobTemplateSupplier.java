@@ -25,7 +25,6 @@ import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.ControlHubApiUtil;
 import com.streamsets.pipeline.stage.common.ErrorRecordHandler;
 import org.apache.commons.lang3.StringUtils;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,8 +49,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
   private final ErrorRecordHandler errorRecordHandler;
   private final ObjectMapper objectMapper = new ObjectMapper();
   private Field responseField = null;
-  private String userAuthToken;
-  private final ClientBuilder clientBuilder = ClientBuilder.newBuilder();
+  private final ClientBuilder clientBuilder;
 
 
   public StartJobTemplateSupplier(
@@ -64,21 +62,12 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
     this.templateJobId = templateJobId;
     this.runtimeParametersList = runtimeParametersList;
     this.errorRecordHandler = errorRecordHandler;
-
-    if (conf.tlsConfig.getSslContext() != null) {
-      clientBuilder.sslContext(conf.tlsConfig.getSslContext());
-    }
+    clientBuilder = conf.controlHubConfig.getClientBuilder();
   }
 
   @Override
   public Field get() {
     try {
-      userAuthToken = ControlHubApiUtil.getUserAuthToken(
-          clientBuilder,
-          conf.controlHubConfig.baseUrl,
-          conf.controlHubConfig.username.get(),
-          conf.controlHubConfig.password.get()
-      );
       List<Map<String, Object>> jobStatusList = startJobTemplate();
       List<String> jobInstancesIdList = jobStatusList.stream()
           .map(j -> (String) j.get("jobId")).collect(Collectors.toList());
@@ -87,7 +76,6 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
             clientBuilder,
             conf.controlHubConfig.baseUrl,
             jobInstancesIdList,
-            userAuthToken,
             conf.waitTime
         );
       }
@@ -123,9 +111,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
 
     try (Response response = clientBuilder.build()
         .target(jobStartUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(jobTemplateCreationInfo))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -159,8 +145,7 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
         MetricRegistryJson jobMetrics = ControlHubApiUtil.getJobMetrics(
             clientBuilder,
             conf.controlHubConfig.baseUrl,
-            jobId,
-            userAuthToken
+            jobId
         );
         startOutput.put(Constants.JOB_METRICS_FIELD, CommonUtil.getMetricsField(jobMetrics));
       }

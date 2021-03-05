@@ -21,7 +21,7 @@ import com.streamsets.pipeline.api.Label;
 @GenerateResourceBundle
 public enum Groups implements Label {
   HTTP("HTTP"),
-  CONTROL_HUB("Control Hub"),
+  CREDENTIALS("Credentials"),
   PROXY("Proxy"),
   TLS("TLS"),
   LOGGING("Logging"),

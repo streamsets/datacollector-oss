@@ -22,7 +22,6 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.config.ControlHubConfig;
 import com.streamsets.pipeline.lib.el.RecordEL;
 import com.streamsets.pipeline.lib.el.TimeNowEL;
-import com.streamsets.pipeline.lib.tls.TlsConfigBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +39,7 @@ public class StartJobConfig {
   )
   public String taskName;
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"JOB", "CREDENTIALS", "HTTP", "PROXY", "TLS", "LOGGING"})
   public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
@@ -170,8 +169,5 @@ public class StartJobConfig {
       triggeredByValue = { "false" }
   )
   public int waitTime;
-
-  @ConfigDefBean(groups = "TLS")
-  public TlsConfigBean tlsConfig = new TlsConfigBean();
 
 }

@@ -64,8 +64,8 @@ public class StartJobCommon {
     if (!conf.controlHubConfig.baseUrl.endsWith("/")) {
       conf.controlHubConfig.baseUrl += "/";
     }
-    if (conf.tlsConfig.isEnabled()) {
-      conf.tlsConfig.init(
+    if (conf.controlHubConfig.client.tlsConfig.isEnabled()) {
+      conf.controlHubConfig.client.tlsConfig.init(
           context,
           Groups.TLS.name(),
           StartPipelineCommon.SSL_CONFIG_PREFIX,
@@ -89,6 +89,8 @@ public class StartJobCommon {
         index++;
       }
     }
+
+    conf.controlHubConfig.init(context, issues);
 
     return issues;
   }

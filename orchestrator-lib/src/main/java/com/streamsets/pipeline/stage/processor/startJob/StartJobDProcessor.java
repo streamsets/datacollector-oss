@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.startJob.Groups;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Start Jobs",
     description = "Starts Control Hub jobs",
     icon="job.png",
@@ -40,13 +40,15 @@ import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 )
 @GenerateResourceBundle
 @HideConfigs({
-    "conf.tlsConfig.useRemoteKeyStore",
-    "conf.tlsConfig.keyStoreFilePath",
-    "conf.tlsConfig.privateKey",
-    "conf.tlsConfig.certificateChain",
-    "conf.tlsConfig.keyStoreType",
-    "conf.tlsConfig.keyStorePassword",
-    "conf.tlsConfig.keyStoreAlgorithm"
+    "conf.controlHubConfig.client.tlsConfig.useRemoteKeyStore",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreFilePath",
+    "conf.controlHubConfig.client.tlsConfig.privateKey",
+    "conf.controlHubConfig.client.tlsConfig.certificateChain",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreType",
+    "conf.controlHubConfig.client.tlsConfig.keyStorePassword",
+    "conf.controlHubConfig.client.tlsConfig.keyStoreAlgorithm",
+    "conf.controlHubConfig.client.requestLoggingConfig.enableRequestLogging",
+    "conf.controlHubConfig.client.numThreads",
 })
 @ConfigGroups(Groups.class)
 public class StartJobDProcessor extends DProcessor {

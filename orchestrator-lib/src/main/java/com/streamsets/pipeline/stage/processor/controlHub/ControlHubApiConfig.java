@@ -18,16 +18,12 @@ package com.streamsets.pipeline.stage.processor.controlHub;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
 import com.streamsets.pipeline.api.FieldSelectorModel;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.config.ControlHubConfig;
 import com.streamsets.pipeline.lib.el.RecordEL;
-import com.streamsets.pipeline.lib.el.TimeEL;
-import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.el.VaultEL;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,7 +31,7 @@ import java.util.Map;
  */
 public class ControlHubApiConfig {
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"HTTP", "CREDENTIALS", "PROXY", "TLS", "LOGGING"})
   public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(
@@ -109,10 +105,6 @@ public class ControlHubApiConfig {
   )
   public String requestBody = "";
 
-
-  @ConfigDefBean
-  public HttpClientConfigBean client = new HttpClientConfigBean();
-
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
@@ -125,7 +117,4 @@ public class ControlHubApiConfig {
   )
   public long maxRequestCompletionSecs = 60L;
 
-  public void init(Stage.Context context, String group, String prefix, List<Stage.ConfigIssue> issues) {
-    client.init(context, group, prefix + "client", issues);
-  }
 }

@@ -38,25 +38,25 @@ public class HttpClientConfigBean {
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Connection Timeout (ms)",
-      defaultValue = "0",
+      defaultValue = "10000",
       description = "HTTP connection timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 120,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
-  public int connectTimeoutMillis = 0;
+  public int connectTimeoutMillis = 10000;
 
   @ConfigDef(
       required = true,
       type = ConfigDef.Type.NUMBER,
       label = "Read Timeout (ms)",
-      defaultValue = "0",
+      defaultValue = "10000",
       description = "HTTP read timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 130,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
       group = "HTTP"
   )
-  public int readTimeoutMillis = 0;
+  public int readTimeoutMillis = 10000;
 
   @ConfigDef(
       required = true,

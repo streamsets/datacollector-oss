@@ -97,11 +97,10 @@ public class HttpClientCommon {
     String proxyUsername = null;
     String proxyPassword = null;
     if(jerseyClientConfig.useProxy) {
-      proxyUsername = jerseyClientConfig.proxy.resolveUsername(context, Groups.PROXY.name(), "conf.client.proxy.", issues);
-      proxyPassword = jerseyClientConfig.proxy.resolvePassword(context, Groups.PROXY.name(), "conf.client.proxy.", issues);
+      proxyUsername = jerseyClientConfig.proxy.resolveUsername(context, Groups.HTTP.name(), "conf.controlHubConfig.client.proxy.", issues);
+      proxyPassword = jerseyClientConfig.proxy.resolvePassword(context, Groups.HTTP.name(), "conf.controlHubConfig.client.proxy.", issues);
     }
 
-    jerseyClientConfig.init(context, Groups.PROXY.name(), "conf.client.", issues);
     // Validation succeeded so configure the client.
     if (issues.isEmpty()) {
       ClientConfig clientConfig = new ClientConfig()

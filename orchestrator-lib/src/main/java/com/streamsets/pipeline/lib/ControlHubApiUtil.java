@@ -21,14 +21,12 @@ import com.streamsets.datacollector.client.model.MetricRegistryJson;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.startJob.StartJobErrors;
 import com.streamsets.pipeline.lib.util.ThreadUtil;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Response;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,40 +35,11 @@ public class ControlHubApiUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(ControlHubApiUtil.class);
 
-  public static String getUserAuthToken(ClientBuilder clientBuilder, String baseUrl, String username, String password) {
-    // 1. Login to DPM to get user auth token
-    Response response = null;
-    try {
-      Map<String, String> loginJson = new HashMap<>();
-      loginJson.put("userName", username);
-      loginJson.put("password", password);
-      response = clientBuilder.build()
-          .target(baseUrl + "security/public-rest/v1/authentication/login")
-          .register(new CsrfProtectionFilter("CSRF"))
-          .request()
-          .post(Entity.json(loginJson));
-      if (response.getStatus() != Response.Status.OK.getStatusCode()) {
-        throw new StageException(
-            StartJobErrors.START_JOB_01,
-            response.getStatus(),
-            response.readEntity(String.class)
-        );
-      }
-      return response.getHeaderString(Constants.X_USER_AUTH_TOKEN);
-    } finally {
-      if (response != null) {
-        response.close();
-      }
-    }
-  }
-
-  public static void resetOffset(ClientBuilder clientBuilder, String baseUrl, String jobId, String userAuthToken) {
+  public static void resetOffset(ClientBuilder clientBuilder, String baseUrl, String jobId) {
     String resetOffsetUrl = baseUrl + "jobrunner/rest/v1/jobs/resetOffset";
     try (Response response = clientBuilder.build()
         .target(resetOffsetUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(ImmutableList.of(jobId)))) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         throw new StageException(
@@ -86,14 +55,12 @@ public class ControlHubApiUtil {
   public static Map<String, Object> getJobStatus(
       ClientBuilder clientBuilder,
       String baseUrl,
-      String jobId,
-      String userAuthToken
+      String jobId
   ) {
     String jobStatusUrl = baseUrl + "jobrunner/rest/v1/job/" + jobId + "/currentStatus";
     try (Response response = clientBuilder.build()
         .target(jobStatusUrl)
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .get()) {
       return (Map<String, Object>)response.readEntity(Map.class);
     }
@@ -102,15 +69,12 @@ public class ControlHubApiUtil {
   public static Map<String, Map<String, Object>> getMultipleJobStatus(
       ClientBuilder clientBuilder,
       String baseUrl,
-      List<String> jobInstancesIdList,
-      String userAuthToken
+      List<String> jobInstancesIdList
   ) {
     String jobStatusUrl = baseUrl + "jobrunner/rest/v1/jobs/status";
     try (Response response = clientBuilder.build()
         .target(jobStatusUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .post(Entity.json(jobInstancesIdList))) {
       return (Map<String, Map<String, Object>>)response.readEntity(Map.class);
     }
@@ -120,7 +84,6 @@ public class ControlHubApiUtil {
       ClientBuilder clientBuilder,
       String baseUrl,
       List<String> jobIdList,
-      String userAuthToken,
       long waitTime
   ) {
     ThreadUtil.sleep(waitTime);
@@ -128,8 +91,7 @@ public class ControlHubApiUtil {
     Map<String, Map<String, Object>> jobStatusMap = ControlHubApiUtil.getMultipleJobStatus(
         clientBuilder,
         baseUrl,
-        jobIdList,
-        userAuthToken
+        jobIdList
     );
     List<Map<String, Object>> jobStatusList = jobStatusMap.keySet()
         .stream()
@@ -143,7 +105,7 @@ public class ControlHubApiUtil {
     }
 
     if (!allDone) {
-      return waitForJobCompletion(clientBuilder, baseUrl, jobIdList, userAuthToken, waitTime);
+      return waitForJobCompletion(clientBuilder, baseUrl, jobIdList, waitTime);
     }
 
     return jobStatusList;
@@ -152,15 +114,12 @@ public class ControlHubApiUtil {
   public static MetricRegistryJson getJobMetrics(
       ClientBuilder clientBuilder,
       String baseUrl,
-      String jobId,
-      String userAuthToken
+      String jobId
   ) {
     String jobStartUrl = baseUrl + "jobrunner/rest/v1/metrics/job/" + jobId;
     try (Response response = clientBuilder.build()
         .target(jobStartUrl)
-        .register(new CsrfProtectionFilter("CSRF"))
         .request()
-        .header(Constants.X_USER_AUTH_TOKEN, userAuthToken)
         .get()) {
       if (response.getStatus() != Response.Status.OK.getStatusCode()) {
         return null;
