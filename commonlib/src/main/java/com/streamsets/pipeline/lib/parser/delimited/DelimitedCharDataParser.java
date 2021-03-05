@@ -54,6 +54,21 @@ public class DelimitedCharDataParser extends AbstractDataParser {
   private List<Field> headers;
   private boolean eof;
 
+  /**
+   * If the delimited parser is configured to work without header, we use numbers as indexes. Converting int to String
+   * can however easily become very expensive operation when done on wide columns and thus we pre-compute String version
+   * of first N indexes and store them statically in memory. Keeping few hundred additional strings is quite cheap for
+   * the gains. We default to 1k indexes (e.g. 1 thousand wide CSV records).
+   */
+  private final static int PRECOMPUTED_INDEXES_SIZE = Integer.parseInt(System.getProperty("com.streamsets.pipeline.lib.parser.delimited.DelimitedCharDataParser.PRECOMPUTED_INDEXES_SIZE", "1000"));
+  private final static String []PRECOMPUTED_INDEXES;
+  static {
+    PRECOMPUTED_INDEXES = new String[PRECOMPUTED_INDEXES_SIZE];
+    for(int i = 0; i < PRECOMPUTED_INDEXES_SIZE; i++) {
+      PRECOMPUTED_INDEXES[i] = String.valueOf(i);
+    }
+  }
+
   public DelimitedCharDataParser(
       ProtoConfigurableEntity.Context context,
       String readerId,
@@ -198,7 +213,11 @@ public class DelimitedCharDataParser extends AbstractDataParser {
         if(header != null) {
           key = header.getValueAsString();
         } else {
-          key = Integer.toString(i);
+          if(i < PRECOMPUTED_INDEXES_SIZE) {
+            key = PRECOMPUTED_INDEXES[i];
+          } else {
+            key = Integer.toString(i);
+          }
         }
         listMap.put(key, getField(columns[i]));
       }
