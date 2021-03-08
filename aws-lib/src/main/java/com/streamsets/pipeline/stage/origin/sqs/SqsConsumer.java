@@ -74,8 +74,7 @@ public class SqsConsumer extends BasePushSource {
   protected List<ConfigIssue> init() {
     List<ConfigIssue> issues = super.init();
 
-    if (conf.connection.region == AwsRegion.OTHER &&
-        (conf.connection.endpoint == null || conf.connection.endpoint.isEmpty())) {
+    if (conf.connection.region == AwsRegion.OTHER && (conf.connection.endpoint == null || conf.connection.endpoint.isEmpty())) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(), SQS_CONFIG_PREFIX + "endpoint", Errors.SQS_01));
 
       return issues;
@@ -104,7 +103,12 @@ public class SqsConsumer extends BasePushSource {
     }
 
     try {
-      credentials = AWSUtil.getCredentialsProvider(conf.connection.awsConfig, getContext(), region);
+      credentials = AWSUtil.getCredentialsProvider(
+          conf.connection.awsConfig,
+          conf.connection.proxyConfig,
+          getContext(),
+          region
+      );
     } catch (StageException e) {
       issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONFIG_PREFIX + "awsConfig",
@@ -243,8 +247,8 @@ public class SqsConsumer extends BasePushSource {
   private static List<String> getQueueUrlsForThread(List<String> allUrls, int threadNumber, int maxThreads) {
     final List<String> urls = new LinkedList<>();
     IntStream.range(0, allUrls.size())
-             .filter(i -> i % maxThreads == threadNumber)
-             .forEach(i -> urls.add(allUrls.get(i)));
+        .filter(i -> i % maxThreads == threadNumber)
+        .forEach(i -> urls.add(allUrls.get(i)));
     return urls;
   }
 
@@ -270,7 +274,11 @@ public class SqsConsumer extends BasePushSource {
         } else if (cause instanceof AmazonSQSException) {
           AmazonSQSException exception = (AmazonSQSException) cause;
           LOG.debug("Error while reading from SQS: %s", cause);
-          throw new StageException(Errors.SQS_13, getQueueName(exception.getLocalizedMessage()), exception.getErrorCode());
+          throw new StageException(
+              Errors.SQS_13,
+              getQueueName(exception.getLocalizedMessage()),
+              exception.getErrorCode()
+          );
         } else {
           LOG.error("ExecutionException attempting to get completion service result: {}", e.getMessage(), e);
           throw new StageException(Errors.SQS_03, e.toString(), e);

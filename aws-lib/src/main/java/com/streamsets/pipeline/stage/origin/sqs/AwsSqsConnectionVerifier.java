@@ -45,52 +45,41 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-@StageDef(
-    version = 1,
+@StageDef(version = 1,
     label = "Amazon SQS Connection Verifier",
     description = "Verifies connections for Amazon SQS",
     upgraderDef = "upgrader/AwsSqsConnectionVerifier.yaml",
-    onlineHelpRefUrl = ""
-)
+    onlineHelpRefUrl = "")
 @HideStage(HideStage.Type.CONNECTION_VERIFIER)
 @ConfigGroups(AwsSqsConnectionGroups.class)
-@ConnectionVerifierDef(
-    verifierType = AwsSqsConnection.TYPE,
+@ConnectionVerifierDef(verifierType = AwsSqsConnection.TYPE,
     connectionFieldName = "connection",
-    connectionSelectionFieldName = "connectionSelection"
-)
+    connectionSelectionFieldName = "connectionSelection")
 public class AwsSqsConnectionVerifier extends ConnectionVerifier {
 
   private static final Logger LOG = LoggerFactory.getLogger(AwsSqsConnectionVerifier.class);
-  
+
   private static final String SQS_CONNECTION_CONFIG_PREFIX = "connection";
 
-  @ConfigDef(
-      required = true,
+  @ConfigDef(required = true,
       type = ConfigDef.Type.MODEL,
       connectionType = AwsSqsConnection.TYPE,
       defaultValue = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL,
-      label = "Connection"
-  )
+      label = "Connection")
   @ValueChooserModel(ConnectionDef.Constants.ConnectionChooserValues.class)
   public String connectionSelection = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL;
 
-  @ConfigDefBean(
-      dependencies = {
-          @Dependency(
-              configName = "connectionSelection",
-              triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
-          )
-      }
-  )
+  @ConfigDefBean(dependencies = {
+      @Dependency(configName = "connectionSelection",
+          triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL)
+  })
   public AwsSqsConnection connection;
 
   @Override
   protected List<ConfigIssue> initConnection() {
     List<Stage.ConfigIssue> issues = new ArrayList<>();
     if (connection.region == AwsRegion.OTHER && (connection.endpoint == null || connection.endpoint.isEmpty())) {
-      issues.add(getContext().createConfigIssue(
-          Groups.SQS.name(),
+      issues.add(getContext().createConfigIssue(Groups.SQS.name(),
           SQS_CONNECTION_CONFIG_PREFIX + "endpoint",
           Errors.SQS_01
       ));
@@ -116,7 +105,12 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
           regions = Regions.fromName(connection.region.getId().toLowerCase());
         }
 
-        credentials = AWSUtil.getCredentialsProvider(connection.awsConfig, getContext(), regions);
+        credentials = AWSUtil.getCredentialsProvider(
+            connection.awsConfig,
+            connection.proxyConfig,
+            getContext(),
+            regions
+        );
       } catch (StageException e) {
         issues.add(getContext().createConfigIssue(Groups.SQS.name(),
             SQS_CONNECTION_CONFIG_PREFIX + "awsConfig",
@@ -128,8 +122,8 @@ public class AwsSqsConnectionVerifier extends ConnectionVerifier {
 
       if (issues.isEmpty()) {
         AmazonSQSClientBuilder builder = AmazonSQSClientBuilder.standard()
-                                                               .withClientConfiguration(clientConfiguration)
-                                                               .withCredentials(credentials);
+            .withClientConfiguration(clientConfiguration)
+            .withCredentials(credentials);
         if (connection.region == AwsRegion.OTHER) {
           builder.withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(connection.endpoint, null));
         } else {

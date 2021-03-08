@@ -35,7 +35,11 @@ public class TestAWSUtil {
     awsConfig.awsAccessKeyId = () -> "abc";
     awsConfig.awsSecretAccessKey = () -> "xyz";
 
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = false;
+
     AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
+        proxyConfig,
         Mockito.mock(Stage.Context.class),
         Regions.DEFAULT_REGION
     );
@@ -51,8 +55,11 @@ public class TestAWSUtil {
     awsConfig.awsAccessKeyId = () -> "";
     awsConfig.awsSecretAccessKey = () -> "";
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
-        awsConfig,
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = false;
+
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
+        proxyConfig,
         Mockito.mock(Stage.Context.class),
         Regions.DEFAULT_REGION
     );
@@ -64,8 +71,11 @@ public class TestAWSUtil {
     AWSConfig awsConfig = new AWSConfig();
     awsConfig.credentialMode = AWSCredentialMode.WITH_IAM_ROLES;
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
-        awsConfig,
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = false;
+
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
+        proxyConfig,
         Mockito.mock(Stage.Context.class),
         Regions.DEFAULT_REGION
     );
@@ -77,8 +87,11 @@ public class TestAWSUtil {
     AWSConfig awsConfig = new AWSConfig();
     awsConfig.credentialMode = AWSCredentialMode.WITH_ANONYMOUS_CREDENTIALS;
 
-    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(
-        awsConfig,
+    ProxyConfig proxyConfig = new ProxyConfig();
+    proxyConfig.useProxy = false;
+
+    AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(awsConfig,
+        proxyConfig,
         Mockito.mock(Stage.Context.class),
         Regions.DEFAULT_REGION
     );

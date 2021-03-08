@@ -96,10 +96,8 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
 
     final String region = connection.region == AwsRegion.OTHER ? connection.customRegion : connection.region.getId();
 
-    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig,
-        getContext(),
-        Regions.fromName(region.toLowerCase())
-    );
+    final AWSCredentialsProvider credentialsProvider = AWSUtil.getCredentialsProvider(connection.awsConfig.credentialMode,
+        connection.awsConfig.awsAccessKeyId.get(), connection.awsConfig.awsSecretAccessKey.get());
 
     Exception unhandledValidationException = null;
 

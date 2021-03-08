@@ -62,14 +62,16 @@ public class S3ConnectionCreator {
   ) {
     Regions regions = Regions.DEFAULT_REGION;
 
-    if (connection.useRegion && !connection.region.equals(AwsRegion.OTHER)){
+    if (connection.useRegion && !connection.region.equals(AwsRegion.OTHER)) {
       regions = Regions.fromName(connection.region.getId().toLowerCase());
     }
 
     AWSCredentialsProvider credentials = AWSUtil.getCredentialsProvider(connection.awsConfig,
+        connection.proxyConfig,
         context,
         regions
     );
+
     ClientConfiguration clientConfig = AWSUtil.getClientConfiguration(connection.proxyConfig);
 
     if (maxErrorRetries >= 0) {
@@ -77,10 +79,10 @@ public class S3ConnectionCreator {
     }
 
     AmazonS3ClientBuilder builder = AmazonS3ClientBuilder.standard()
-                                                         .withCredentials(credentials)
-                                                         .withClientConfiguration(clientConfig)
-                                                         .withChunkedEncodingDisabled(connection.awsConfig.disableChunkedEncoding)
-                                                         .withPathStyleAccessEnabled(usePathAddressModel);
+        .withCredentials(credentials)
+        .withClientConfiguration(clientConfig)
+        .withChunkedEncodingDisabled(connection.awsConfig.disableChunkedEncoding)
+        .withPathStyleAccessEnabled(usePathAddressModel);
 
     if (connection.useRegion) {
       if (connection.region == AwsRegion.OTHER) {

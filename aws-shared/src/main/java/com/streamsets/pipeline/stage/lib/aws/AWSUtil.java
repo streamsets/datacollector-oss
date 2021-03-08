@@ -41,7 +41,12 @@ public class AWSUtil {
 
   private AWSUtil() {}
 
-  public static AWSCredentialsProvider getCredentialsProvider(AWSConfig config, Stage.Context context, Regions region) {
+  public static AWSCredentialsProvider getCredentialsProvider(
+      AWSConfig config,
+      ProxyConfig proxyConfig,
+      Stage.Context context,
+      Regions region
+  ) {
     AWSCredentialsProvider credentialsProvider = DefaultAWSCredentialsProviderChain.getInstance();
     final String accessKeyId = config.awsAccessKeyId != null ? config.awsAccessKeyId.get() : null;
     final String secretAccessKey = config.awsSecretAccessKey != null ? config.awsSecretAccessKey.get() : null;
@@ -61,15 +66,24 @@ public class AWSUtil {
     }
 
     if (config.isAssumeRole) {
+      AWSSecurityTokenServiceClientBuilder awsSecurityTokenServiceClientBuilder =
+          AWSSecurityTokenServiceClientBuilder.standard()
+          .withCredentials(credentialsProvider)
+          .withRegion(region);
+
+      if (proxyConfig.useProxy) {
+        awsSecurityTokenServiceClientBuilder.withClientConfiguration(getClientConfiguration(proxyConfig));
+      }
+
       STSAssumeRoleSessionCredentialsProvider.Builder builder = new STSAssumeRoleSessionCredentialsProvider.Builder(
           config.roleARN.get(),
           config.roleSessionName.isEmpty() ? UUID.randomUUID().toString() : config.roleSessionName
       ).withRoleSessionDurationSeconds(config.sessionDuration)
-       .withStsClient(AWSSecurityTokenServiceClientBuilder.standard().withCredentials(credentialsProvider).withRegion(region).build());
+          .withStsClient(awsSecurityTokenServiceClientBuilder.build());
 
       if (config.setSessionTags) {
         builder.withSessionTags(Collections.singletonList(new Tag().withKey(USER_PRINCIPAL)
-                                                                   .withValue(context.getUserContext().getUser())));
+            .withValue(context.getUserContext().getUser())));
       }
 
       credentialsProvider = builder.build();
