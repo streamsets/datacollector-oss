@@ -16,7 +16,6 @@
 package com.streamsets.datacollector.restapi;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Strings;
 import com.streamsets.datacollector.classpath.ClasspathValidatorResult;
 import com.streamsets.datacollector.config.ConnectionDefinition;
 import com.streamsets.datacollector.config.ServiceDefinition;
@@ -34,11 +33,9 @@ import com.streamsets.datacollector.restapi.bean.DefinitionsJson;
 import com.streamsets.datacollector.restapi.bean.PipelineDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
-import com.streamsets.datacollector.restapi.bean.RepositoryManifestJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
-import com.streamsets.datacollector.restapi.bean.StageLibrariesJson;
 import com.streamsets.datacollector.restapi.bean.StageLibraryExtrasJson;
-import com.streamsets.datacollector.restapi.bean.StageLibraryManifestJson;
+import com.streamsets.datacollector.stagelibrary.StageLibraryUtil;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.util.AuthzRole;
 import com.streamsets.datacollector.util.RestException;
@@ -48,9 +45,6 @@ import com.streamsets.pipeline.api.impl.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -70,7 +64,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
@@ -78,16 +71,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Path("/v1")
@@ -102,9 +92,6 @@ public class StageLibraryResource {
   private static final String PNG_MEDIA_TYPE = "image/png";
   private static final String SVG_MEDIA_TYPE = "image/svg+xml";
   private static final String REPO_URL = "REPO_URL";
-  private static final String STREAMSETS_LIBS_PATH = "/streamsets-libs/";
-  private static final String STREAMSETS_LIBS_FOLDER_NAME = "streamsets-libs";
-  private static final String STREAMSETS_ROOT_DIR_PREFIX = "streamsets-datacollector-";
   private static final String STAGE_LIB_JARS_DIR = "lib";
   private static final String STAGE_LIB_CONF_DIR = "etc";
 
@@ -280,134 +267,38 @@ public class StageLibraryResource {
   public Response installLibraries(
       @QueryParam("withStageLibVersion") boolean withStageLibVersion,
       List<String> libraryIdList
-  ) throws IOException, RestException {
+  ) throws Exception {
     String runtimeDir = runtimeInfo.getRuntimeDir();
     String version = buildInfo.getVersion();
 
     // Find Stage Lib location to each stage library that we should install
-    Map<String, String> libraryUrlList= new HashMap<>();
-    List<RepositoryManifestJson> repoManifestList = stageLibrary.getRepositoryManifestList();
-    if (repoManifestList == null) {
-      repoManifestList = Collections.emptyList();
-    }
-    for(RepositoryManifestJson repositoryManifestJson: repoManifestList) {
-      for (StageLibrariesJson stageLibrariesJson : repositoryManifestJson.getStageLibraries()) {
-        if (stageLibrariesJson.getStageLibraryManifest() != null) {
-          String key = stageLibrariesJson.getStageLibraryManifest().getStageLibId();
-          String lookupKey = key;
-          if (withStageLibVersion) {
-            lookupKey += ":" + stageLibrariesJson.getStagelibVersion();
-          }
+    Map<String, String> libraryUrlList = StageLibraryUtil.getLibraryUrlList(
+        stageLibrary.getRepositoryManifestList(),
+        sdcVersion,
+        withStageLibVersion,
+        libraryIdList
+    );
 
-          if (libraryIdList.contains(lookupKey)) {
-            StageLibraryManifestJson manifest = stageLibrariesJson.getStageLibraryManifest();
-
-            // Validate minimal required SDC version
-            String minSdcVersionString = manifest.getStageLibMinSdcVersion();
-            if(!Strings.isNullOrEmpty(minSdcVersionString)) {
-              Version minSdcVersion = null;
-              try {
-                minSdcVersion = new Version(minSdcVersionString);
-              } catch (Exception e) {
-                LOG.error("Stage library {} version {} min SDC version '{}' is not a valid SDC version",
-                    key,
-                    stageLibrariesJson.getStagelibVersion(),
-                    minSdcVersionString,
-                    e
-                );
-              }
-
-              if(minSdcVersion != null && !sdcVersion.isGreaterOrEqualTo(minSdcVersion)) {
-                throw new RestException(RestErrors.REST_1000,
-                    key,
-                    stageLibrariesJson.getStagelibVersion(),
-                    minSdcVersionString,
-                    buildInfo.getVersion()
-                );
-              }
-            }
-
-            libraryUrlList.put(key, manifest.getStageLibFile());
-          }
-        }
-      }
-    }
-
-    // The sizes should fit
-    if (libraryUrlList.size() != libraryIdList.size()) {
-      Set<String> missingStageLibs = new HashSet<>(libraryIdList);
-      missingStageLibs.removeAll(libraryUrlList.keySet());
-
-      throw new RestException(RestErrors.REST_1001, String.join(", ", missingStageLibs));
-    }
-
-    for (Map.Entry<String, String>  libraryEntry : libraryUrlList.entrySet()) {
-      String libraryId = libraryEntry.getKey();
-      String libraryUrl = libraryEntry.getValue();
-      LOG.info("Installing stage library {} from {}", libraryId, libraryUrl);
-
-      try (Response response = ClientBuilder.newClient()
-          .target(libraryUrl)
-          .request()
-          .get()) {
-
-        String runtimeDirParent = runtimeDir + "/..";
-        String[] runtimeDirStrSplitArr = runtimeDir.split("/");
-        String installDirName = runtimeDirStrSplitArr[runtimeDirStrSplitArr.length - 1];
-        String tarDirRootName = STREAMSETS_ROOT_DIR_PREFIX + version;
-
-        InputStream inputStream = response.readEntity(InputStream.class);
-
-        TarArchiveInputStream myTarFile = new TarArchiveInputStream(new GzipCompressorInputStream(inputStream));
-
-        TarArchiveEntry entry = myTarFile.getNextTarEntry();
-
-        String directory = null;
-
-        // We currently don't support re-installing libraries, they have to be explicitly uninstalled first
-        Optional<StageLibraryDefinition> installedLibrary = stageLibrary.getLoadedStageLibraries().stream()
-            .filter(lib -> libraryId.equals(lib.getName()))
-            .findFirst();
-        // In case that the library was installed, but SDC wasn't rebooted
-        File libraryDirectory = new File(runtimeDir + STREAMSETS_LIBS_PATH + libraryId);
-        if(installedLibrary.isPresent() || libraryDirectory.exists()) {
-          throw new RestException(RestErrors.REST_1002, libraryId, installedLibrary.isPresent() ? installedLibrary.get().getVersion() : "Unknown");
-        }
-
-        while (entry != null) {
-          if (entry.isDirectory()) {
-            entry = myTarFile.getNextTarEntry();
-            if (directory == null) {
-              // Initialize root folder
-              if (entry.getName().startsWith(STREAMSETS_LIBS_FOLDER_NAME)) {
-                directory = runtimeDir;
-              } else if (!entry.getName().contains(STREAMSETS_LIBS_FOLDER_NAME)) {
-                // legacy stage lib
-                directory = Paths.get(runtimeDir, STREAMSETS_LIBS_FOLDER_NAME).toString();
-              } else {
-                directory = runtimeDirParent;
-              }
-            }
-            continue;
-          }
-
-          File curFile = new File(directory, entry.getName().replace(tarDirRootName, installDirName));
-          File parent = curFile.getParentFile();
-          if (!parent.exists() && !parent.mkdirs()) {
-            // Failed to create directory
-            throw new RestException(RestErrors.REST_1003, parent.getPath());
-          }
-          OutputStream out = new FileOutputStream(curFile);
-          IOUtils.copy(myTarFile, out);
-          out.close();
-          entry = myTarFile.getNextTarEntry();
-        }
-        myTarFile.close();
-
-      }
-    }
+    StageLibraryUtil.installStageLibs(
+        runtimeDir,
+        version,
+        libraryUrlList,
+        libId -> validateStageLibPresence(runtimeDir, libId)
+    );
 
     return Response.ok().build();
+  }
+
+  private void validateStageLibPresence(String runtimeDir, String libraryId) throws Exception {
+    // We currently don't support re-installing libraries, they have to be explicitly uninstalled first
+    Optional<StageLibraryDefinition> installedLibrary = stageLibrary.getLoadedStageLibraries().stream()
+        .filter(lib -> libraryId.equals(lib.getName()))
+        .findFirst();
+    // In case that the library was installed, but SDC wasn't rebooted
+    File libraryDirectory = new File(runtimeDir + StageLibraryUtil.STREAMSETS_LIBS_PATH + libraryId);
+    if(installedLibrary.isPresent() || libraryDirectory.exists()) {
+      throw new RestException(RestErrors.REST_1002, libraryId, installedLibrary.isPresent() ? installedLibrary.get().getVersion() : "Unknown");
+    }
   }
 
   @POST
@@ -424,7 +315,7 @@ public class StageLibraryResource {
         throw new RestException(RestErrors.REST_1005, libraryId);
       }
 
-      File libraryDirectory = new File(runtimeDir + STREAMSETS_LIBS_PATH + libraryId);
+      File libraryDirectory = new File(runtimeDir + StageLibraryUtil.STREAMSETS_LIBS_PATH + libraryId);
       if (libraryDirectory.exists()) {
         FileUtils.deleteDirectory(libraryDirectory);
       }

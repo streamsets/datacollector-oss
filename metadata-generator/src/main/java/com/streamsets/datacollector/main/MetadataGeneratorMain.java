@@ -31,11 +31,11 @@ import com.streamsets.datacollector.restapi.bean.PipelineFragmentDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.PipelineRulesDefinitionJson;
 import com.streamsets.datacollector.restapi.bean.StageDefinitionJson;
 import com.streamsets.datacollector.stagelibrary.ClassLoaderStageLibraryTask;
+import com.streamsets.datacollector.stagelibrary.StageLibraryUtil;
 import com.streamsets.datacollector.stagelibrary.StageLibraryTask;
 import com.streamsets.datacollector.store.PipelineStoreTask;
 import com.streamsets.datacollector.store.impl.PipelineCreator;
 import com.streamsets.datacollector.util.Configuration;
-import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.SDCClassLoader;
 import io.airlift.airline.Cli;
 import io.airlift.airline.Command;
@@ -51,7 +51,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,18 +97,7 @@ public class MetadataGeneratorMain {
 
     @NotNull
     protected SDCClassLoader getStagelibClassLoader(File stagelibJarsDir) throws MalformedURLException {
-      File[] jars = stagelibJarsDir.listFiles(pathname -> pathname.getName().toLowerCase().endsWith(".jar"));
-      List<URL> urls = new ArrayList<>();
-      for (File jar : jars) {
-        urls.add(jar.toURI().toURL());
-      }
-      return SDCClassLoader.getStageClassLoader(
-          "type",
-          stagelibJarsDir.getParentFile().getName(),
-          urls,
-          Thread.currentThread().getContextClassLoader(),
-          false
-      );
+      return StageLibraryUtil.getStageLibClassLoader(stagelibJarsDir);
     }
 
     protected List<ClassLoader> getClassLoaders() throws Exception {

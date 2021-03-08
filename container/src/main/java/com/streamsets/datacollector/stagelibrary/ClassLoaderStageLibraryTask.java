@@ -85,14 +85,10 @@ import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPool;
 import org.apache.commons.pool2.impl.GenericKeyedObjectPoolConfig;
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.ClientProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
@@ -152,15 +148,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
   private static final String DEFAULT_REQUIRED_STAGELIBS = "";
 
-  private static final String NIGHTLY_URL = "http://nightly.streamsets.com/datacollector/";
-  private static final String ARCHIVES_URL = "http://archives.streamsets.com/datacollector/";
-  private static final String LATEST = "latest";
-  private static final String SNAPSHOT = "-SNAPSHOT";
-  private static final String TARBALL_PATH = "/tarball/";
-  private static final String LEGACY_TARBALL_PATH = "/legacy/";
-  private static final String ENTERPRISE_PATH = "enterprise/";
-  private static final String CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS = "package.manager.repository.links";
-  private static final String REPOSITORY_MANIFEST_JSON_PATH = "repository.manifest.json";
+
   private static final String ADDITIONAL = "additional";
   private static final String PRIVATE_POOL_ACTIVE = "active";
   private static final String PRIVATE_POOL_IDLE = "idle";
@@ -1077,25 +1065,10 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
       // initialize when it is called for first time
       repositoryManifestList = new ArrayList<>();
 
+      String repoLinkStr = configuration.get(StageLibraryUtil.CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS, "");
+
       // Initialize Repository Links
-      String [] repoURLList;
-      String repoLinksStr = configuration.get(CONFIG_PACKAGE_MANAGER_REPOSITORY_LINKS, "");
-      if (StringUtils.isEmpty(repoLinksStr)) {
-        String version = buildInfo.getVersion();
-        String repoUrl = ARCHIVES_URL + version + TARBALL_PATH;
-        String legacyRepoUrl = ARCHIVES_URL + version + LEGACY_TARBALL_PATH;
-        if (version.contains(SNAPSHOT)) {
-          repoUrl = NIGHTLY_URL + LATEST + TARBALL_PATH;
-          legacyRepoUrl = NIGHTLY_URL + LATEST + LEGACY_TARBALL_PATH;
-        }
-        repoURLList = new String[] {
-            repoUrl,
-            repoUrl + ENTERPRISE_PATH,
-            legacyRepoUrl
-        };
-      } else {
-        repoURLList = repoLinksStr.split(",");
-      }
+      String[] repoURLList = StageLibraryUtil.getRepoUrls(repoLinkStr, buildInfo.getVersion());
 
       List<StageLibraryManifestJson> installedLibraries = new ArrayList<>();
       List<StageLibraryManifestJson> additionalLibraries = new ArrayList<>();
@@ -1129,21 +1102,19 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
         if (!repoUrl.endsWith("/")) {
           repoUrl = repoUrl + "/";
         }
-        String repoManifestUrl = repoUrl +  REPOSITORY_MANIFEST_JSON_PATH;
-        LOG.info("Reading from Repository Manifest URL: " + repoManifestUrl);
-        RepositoryManifestJson repositoryManifestJson = getRepositoryManifestFile(repoManifestUrl);
+        RepositoryManifestJson repositoryManifestJson = StageLibraryUtil.getRepositoryManifestFile(repoUrl);
         if (repositoryManifestJson != null) {
           repositoryManifestJson.setRepoUrl(repoUrl);
           for(StageLibrariesJson stageLibrariesJson: repositoryManifestJson.getStageLibraries()) {
             String stageLibManifestUrl = repoUrl + stageLibrariesJson.getStagelibManifest();
-            StageLibraryManifestJson stageLibraryManifestJson = getStageLibraryManifestJson(stageLibManifestUrl);
+            StageLibraryManifestJson stageLibraryManifestJson = StageLibraryUtil.getStageLibraryManifestJson(stageLibManifestUrl);
             if (stageLibraryManifestJson != null) {
               stageLibraryManifestJson.setInstalled(
                   installedLibrariesMap.containsKey(stageLibraryManifestJson.getStageLibId() + "::" + stageLibrariesJson.getStagelibVersion())
               );
               stageLibraryManifestJson.setStageLibFile(repoUrl + stageLibraryManifestJson.getStageLibFile());
               stageLibrariesJson.setStageLibraryManifest(stageLibraryManifestJson);
-              if (repoUrl.contains(LEGACY_TARBALL_PATH)) {
+              if (repoUrl.contains(StageLibraryUtil.LEGACY_TARBALL_PATH)) {
                 stageLibrariesJson.setLegacy(true);
               }
               addedLibraryIds.add(stageLibraryManifestJson.getStageLibId());
@@ -1179,6 +1150,7 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
 
     return repositoryManifestList;
   }
+
 
   @Override
   public boolean isMultipleOriginSupported() {
@@ -1233,31 +1205,6 @@ public class ClassLoaderStageLibraryTask extends AbstractTask implements StageLi
   @Override
   public Map<String, EventDefinitionJson> getEventDefinitions() {
     return eventDefinitionMap;
-  }
-
-  private RepositoryManifestJson getRepositoryManifestFile(String repoUrl) {
-    ClientConfig clientConfig = new ClientConfig();
-    clientConfig.property(ClientProperties.READ_TIMEOUT, 2000);
-    clientConfig.property(ClientProperties.CONNECT_TIMEOUT, 2000);
-    RepositoryManifestJson repositoryManifestJson = null;
-    try (Response response = ClientBuilder.newClient(clientConfig).target(repoUrl).request().get()) {
-      InputStream inputStream = response.readEntity(InputStream.class);
-      repositoryManifestJson = ObjectMapperFactory.get().readValue(inputStream, RepositoryManifestJson.class);
-    } catch (Exception ex) {
-      LOG.error("Failed to read repository manifest json", ex);
-    }
-    return repositoryManifestJson;
-  }
-
-  private StageLibraryManifestJson getStageLibraryManifestJson(String stageLibManifestUrl) {
-    StageLibraryManifestJson stageLibManifestJson = null;
-    try (Response response = ClientBuilder.newClient().target(stageLibManifestUrl).request().get()) {
-      InputStream inputStream = response.readEntity(InputStream.class);
-      stageLibManifestJson = ObjectMapperFactory.get().readValue(inputStream, StageLibraryManifestJson.class);
-    }  catch (Exception ex) {
-      LOG.error("Failed to read stage-lib-manifest.json", ex);
-    }
-    return stageLibManifestJson;
   }
 
   private void updatePrivateClassLoaderPoolMetrics() {
