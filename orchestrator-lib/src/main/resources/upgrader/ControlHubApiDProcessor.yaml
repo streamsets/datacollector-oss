@@ -79,3 +79,15 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf\.client\.requestLoggingConfig\.(.*)
           newNamePattern: conf.controlHubConfig.client.requestLoggingConfig.(0)
+
+  - toVersion: 5
+    actions:
+      - setConfig:
+          name: conf.controlHubConfig.authenticationType
+          value: USER_PASSWORD
+      - setConfig:
+          name: conf.controlHubConfig.componentId
+          value: ""
+      - setConfig:
+          name: conf.controlHubConfig.authToken
+          value: ""

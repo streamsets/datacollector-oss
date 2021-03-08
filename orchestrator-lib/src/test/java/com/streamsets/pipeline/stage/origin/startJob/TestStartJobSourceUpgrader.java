@@ -93,5 +93,17 @@ public class TestStartJobSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.client.requestLoggingConfig.maxEntitySize", 0);
   }
 
+  @Test
+  public void testV4ToV5Upgrade() {
+    Mockito.doReturn(4).when(context).getFromVersion();
+    Mockito.doReturn(5).when(context).getToVersion();
+
+    configs = upgrader.upgrade(configs, context);
+
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.authenticationType", "USER_PASSWORD");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.componentId", "");
+    UpgraderTestUtils.assertExists(configs, "conf.controlHubConfig.authToken", "");
+  }
+
 }
 

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.processor.startJob;
 
+import com.streamsets.pipeline.lib.config.AuthenticationType;
 import com.streamsets.pipeline.lib.startJob.JobIdConfig;
 import com.streamsets.pipeline.lib.startJob.StartJobConfig;
 
@@ -43,6 +44,7 @@ class TestStartJobProcessorBuilder {
     jobIdConfig.jobId = jobId;
     jobIdConfig.runtimeParameters = runtimeParameters;
     conf.jobIdConfigList.add(jobIdConfig);
+    conf.controlHubConfig.authenticationType = AuthenticationType.USER_PASSWORD;
     return this;
   }
 

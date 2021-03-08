@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class ControlHubApiConfig {
 
-  @ConfigDefBean(groups = {"HTTP", "CREDENTIALS", "PROXY", "TLS", "LOGGING"})
+  @ConfigDefBean(groups = {"HTTP", "CREDENTIALS", "HTTP", "PROXY", "TLS", "LOGGING"})
   public ControlHubConfig controlHubConfig = new ControlHubConfig();
 
   @ConfigDef(

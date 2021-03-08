@@ -28,6 +28,7 @@ public enum StartJobErrors implements ErrorCode {
   START_JOB_06("Configuration value is required for job ID, at index: {}"),
   START_JOB_07("Failed to fetch a unique job from the given job name: {}, found {} entries"),
   START_JOB_08("Failed to start job: {}"),
+  START_JOB_09("SCH API User Credentials not enabled"),
   ;
 
   private final String msg;

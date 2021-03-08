@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.client.impl;
+package com.streamsets.pipeline.lib.config;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.streamsets.lib.security.http.DpmClientInfo;
-import com.streamsets.lib.security.http.MovedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +39,7 @@ import java.net.URI;
  * <p/>
  * Idea taken from Jersey's {@code HttpAuthenticationFilter}
  * <p/>
- * IMPORTANT: cloned to orchestration module, keep them in sync
+ * IMPORTANT: cloned from messaging-client module, keep them in sync
  */
 public class MovedDpmJerseyClientFilter implements ClientResponseFilter {
   private static final Logger LOG = LoggerFactory.getLogger(MovedDpmJerseyClientFilter.class);
@@ -56,8 +54,24 @@ public class MovedDpmJerseyClientFilter implements ClientResponseFilter {
   }
 
   @VisibleForTesting
-  DpmClientInfo getClientInfo() {
+  public DpmClientInfo getClientInfo() {
     return clientInfo;
+  }
+
+  // IMPORTANT: cloned from sso module MovedException, keep them in sync
+  private static String extractBaseUrl(String url) {
+    String baseUrl = null;
+    int hostStart = url.indexOf("//");
+    if (hostStart > -1) {
+      hostStart += 2;
+      int pathStart = url.indexOf("/", hostStart);
+      if (pathStart == -1) {
+        baseUrl = url;
+      } else {
+        baseUrl = url.substring(0, pathStart);
+      }
+    }
+    return baseUrl;
   }
 
   @Override
@@ -66,7 +80,7 @@ public class MovedDpmJerseyClientFilter implements ClientResponseFilter {
       String newLocation = response.getHeaderString(HTTP_LOCATION_HEADER);
       LOG.info("Received a MOVED_PERMANENTLY to '{}'", newLocation);
       // storing new DPM base URL
-      clientInfo.setDpmBaseUrl(MovedException.extractBaseUrl(newLocation));
+      clientInfo.setDpmBaseUrl(extractBaseUrl(newLocation));
       // repeating request
       repeatRequest(request, response);
     }

@@ -16,10 +16,13 @@
 package com.streamsets.pipeline.lib.config;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.ImmutableMap;
 import com.streamsets.pipeline.api.ConfigDef;
 import com.streamsets.pipeline.api.ConfigDefBean;
+import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
+import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.api.credential.CredentialValue;
 import com.streamsets.pipeline.lib.Constants;
 import com.streamsets.pipeline.lib.http.GrizzlyClientCustomizer;
@@ -37,6 +40,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ControlHubConfig {
+  @VisibleForTesting
+  static final String ALLOW_API_USER_CREDENTIALS = "com.streamsets.pipeline.stage.orchestration.schApiUserCredentials.enabled";
+
+  @VisibleForTesting
+  static final String X_APP_AUTH_TOKEN = "X-SS-App-Auth-Token";
+  @VisibleForTesting
+  static final String X_APP_COMPONENT_ID = "X-SS-App-Component-Id";
+
 
   @ConfigDef(
       required = true,
@@ -52,12 +63,26 @@ public class ControlHubConfig {
 
   @ConfigDef(
       required = true,
+      type = ConfigDef.Type.MODEL,
+      label = "Authentication Type",
+      defaultValue = "API_USER_CREDENTIALS",
+      displayPosition = 20,
+      group = "#1"
+  )
+  @ValueChooserModel(AuthenticationTypeChooserValues.class)
+  public AuthenticationType authenticationType = AuthenticationType.API_USER_CREDENTIALS;
+
+  @ConfigDef(
+      required = true,
       type = ConfigDef.Type.CREDENTIAL,
       label = "User Name",
       description = "Control Hub User Name",
       displayPosition = 30,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "authenticationType",  triggeredByValues = "USER_PASSWORD")
+      }
   )
   public CredentialValue username = () -> "";
 
@@ -68,11 +93,42 @@ public class ControlHubConfig {
       description = "Control Hub Password",
       displayPosition = 40,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "CREDENTIALS"
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "authenticationType",  triggeredByValues = "USER_PASSWORD")
+      }
   )
   public CredentialValue password = () -> "";
 
-  @ConfigDefBean
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Auth ID",
+      description = "Control Hub User Auth ID",
+      displayPosition = 50,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "authenticationType",  triggeredByValues = "API_USER_CREDENTIALS")
+      }
+  )
+  public CredentialValue componentId = () -> "";
+
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.CREDENTIAL,
+      label = "Password",
+      description = "Control Hub User Auth Token",
+      displayPosition = 60,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "authenticationType",  triggeredByValues = "API_USER_CREDENTIALS")
+      }
+  )
+  public CredentialValue authToken = () -> "";
+
+  @ConfigDefBean(groups = { "#2", "#3", "#4", "#5"})
   public HttpClientConfigBean client = new HttpClientConfigBean();
 
   private ClientBuilder userAuthClientBuilder;
@@ -105,7 +161,45 @@ public class ControlHubConfig {
     if (ok) {
       userAuthClientBuilder = createClientBuilder(client.tlsConfig.tlsEnabled, client.useProxy);
       clientBuilder = createClientBuilder(client.tlsConfig.tlsEnabled, client.useProxy);
-      clientBuilder.register(new UserAuthInjectionFilter(() -> getUserAuthToken()));
+      switch (authenticationType) {
+        case USER_PASSWORD:
+          clientBuilder.register(new UserAuthInjectionFilter(() -> getUserAuthToken()));
+          break;
+        case API_USER_CREDENTIALS:
+          if (!context.getConfiguration().get(ALLOW_API_USER_CREDENTIALS, false)) {
+            Stage.ConfigIssue issue = context.createConfigIssue(
+                com.streamsets.pipeline.lib.startJob.Groups.JOB.name(),
+                "conf.controlHubConfig.authenticationType",
+                StartJobErrors.START_JOB_09
+            );
+            issues.add(issue);
+          } else {
+            clientBuilder.register(new MovedDpmJerseyClientFilter(new DpmClientInfo() {
+              @Override
+              public String getDpmBaseUrl() {
+                return ControlHubConfig.this.baseUrl;
+              }
+
+              @Override
+              public Map<String, String> getHeaders() {
+                return ImmutableMap.of(
+                    X_APP_COMPONENT_ID.toLowerCase(),
+                    ControlHubConfig.this.componentId.get(),
+                    X_APP_AUTH_TOKEN.toLowerCase(),
+                    ControlHubConfig.this.authToken.get()
+                );
+              }
+
+              @Override
+              public void setDpmBaseUrl(String dpmBaseUrl) {
+                //LOG
+                ControlHubConfig.this.baseUrl = dpmBaseUrl;
+              }
+            }));
+          }
+          break;
+
+      }
     }
     return ok;
   }

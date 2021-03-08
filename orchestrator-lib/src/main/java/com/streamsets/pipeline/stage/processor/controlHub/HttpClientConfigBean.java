@@ -42,7 +42,7 @@ public class HttpClientConfigBean {
       description = "HTTP connection timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 120,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "HTTP"
+      group = "#0"
   )
   public int connectTimeoutMillis = 10000;
 
@@ -54,7 +54,7 @@ public class HttpClientConfigBean {
       description = "HTTP read timeout in milliseconds. Use 0 for no timeout.",
       displayPosition = 130,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "HTTP"
+      group = "#0"
   )
   public int readTimeoutMillis = 10000;
 
@@ -66,7 +66,7 @@ public class HttpClientConfigBean {
       description = "Maximum number of requests to make in parallel",
       displayPosition = 140,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "HTTP"
+      group = "#0"
   )
   public int numThreads = 1;
 
@@ -78,17 +78,17 @@ public class HttpClientConfigBean {
       defaultValue = "false",
       displayPosition = 160,
       displayMode = ConfigDef.DisplayMode.BASIC,
-      group = "HTTP"
+      group = "#0"
   )
   public boolean useProxy = false;
 
-  @ConfigDefBean(groups = "PROXY")
+  @ConfigDefBean(groups = "#1")
   public HttpProxyConfigBean proxy = new HttpProxyConfigBean();
 
-  @ConfigDefBean(groups = "TLS")
+  @ConfigDefBean(groups = "#2")
   public TlsConfigBean tlsConfig = new TlsConfigBean();
 
-  @ConfigDefBean(groups = "LOGGING")
+  @ConfigDefBean(groups = "#3")
   public RequestLoggingConfigBean requestLoggingConfig = new RequestLoggingConfigBean();
 
   public void init(Stage.Context context, String groupName, String prefix, List<Stage.ConfigIssue> issues) {

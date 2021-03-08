@@ -75,3 +75,15 @@ upgrades:
       - setConfig:
           name: conf.controlHubConfig.client.requestLoggingConfig.maxEntitySize
           value: 0
+
+  - toVersion: 6
+    actions:
+      - setConfig:
+          name: conf.controlHubConfig.authenticationType
+          value: USER_PASSWORD
+      - setConfig:
+          name: conf.controlHubConfig.componentId
+          value: ""
+      - setConfig:
+          name: conf.controlHubConfig.authToken
+          value: ""

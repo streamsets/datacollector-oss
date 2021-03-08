@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.streamsets.datacollector.event.client.impl;
+package com.streamsets.pipeline.lib.config;
 
-import com.streamsets.lib.security.http.DpmClientInfo;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -34,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 
-// IMPORTANT: cloned to orchestration module, keep them in sync
+// IMPORTANT: cloned from messaging-client module, keep them in sync
 public class TestMovedDpmJerseyClientFilter {
 
   @Test
