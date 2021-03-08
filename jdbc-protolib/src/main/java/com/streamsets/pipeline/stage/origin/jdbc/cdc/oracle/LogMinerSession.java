@@ -433,26 +433,24 @@ public class LogMinerSession {
     this.endTime = end;
     String sessionStart = Utils.format(START_TIME_ARG, start.format(dateTimeFormatter));
     String sessionEnd = Utils.format(END_TIME_ARG, end.format(dateTimeFormatter));
-    LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, end);
 
     if (!continuousMine) {
       if (!updateLogList(start, end)) {
         return false;
       }
-
       if (dictionaryFromRedoLogs) {
-        // - When DICT_FROM_REDO_LOGS option is enabled, the mining window must be expanded backwards to cover the
-        //   closest dictionary written in the redo logs: (start, end) becomes (dictionaryBegin, end).
-        // - Also, we cannot use timestamps to define the mining window; we must use SCNs instead. Otherwise an
+        // - We cannot use timestamps to define the mining window; we must use SCNs instead. Otherwise an
         //   "ORA-01291: missing logfile" is raised when the mining window reaches the current online log.
-        BigDecimal firstSCN = adjustMiningWindowLowerLimit();
+        // - We use the adjustMiningWindow* methods to find a valid conversion to SCN limits. The resulting mining
+        //   window after this adjustment always covers the original one and requires exactly the same redo log files.
+        BigDecimal firstSCN = adjustMiningWindowLowerLimit(start);
         BigDecimal lastSCN = adjustMiningWindowUpperLimit();
         sessionStart = Utils.format(START_SCN_ARG, firstSCN.toPlainString());
         sessionEnd = Utils.format(END_SCN_ARG, lastSCN.toPlainString());
-        LOG.info("Mining window upper limit readjusted: {} -> {}.", end, this.endTime);
       }
     }
 
+    LOG.info("Starting LogMiner session for mining window: ({}, {}).", start, this.endTime);
     try (Statement statement = connection.createStatement()) {
       String command = Utils.format(START_LOGMNR_CMD, sessionStart, sessionEnd, this.configOptions);
       statement.execute(command);
@@ -742,6 +740,7 @@ public class LogMinerSession {
    * @throws StageException No redo log was found covering the specified range or database error.
    */
   private boolean updateLogList(LocalDateTime start, LocalDateTime end) {
+    LOG.debug("Update redo log list for interval: ({}, {}).", start, end);
     List<RedoLog> newLogList = new ArrayList<>();
 
     if (dictionaryFromRedoLogs) {
@@ -1117,20 +1116,18 @@ public class LogMinerSession {
   }
 
   /**
-   * Determines the lower bound for the upcoming mining window, when CONTINOUS_MINE option is disabled and dictionary
-   * source is DICT_FROM_REDO_LOG. Updates {@link LogMinerSession#startTime} accordingly.
+   * Adjusts the lower bound for the upcoming mining window. The new lower bound is returned (as SCN) by the function
+   * and, as a side effect, also set (as timestamp) into {@link LogMinerSession#startTime}.
    *
-   * @return The SCN lower bound.
+   * @param start The initial lower bound to be adjusted.
+   *
+   * @return The final SCN lower bound.
    */
-  private BigDecimal adjustMiningWindowLowerLimit() {
-    // The lower limit should point to the dictionary beginning. Note that for a single instance database
-    // this is the lowest FIRST_CHANGE# in `currentLogList`, but this might not be the case in an Oracle RAC database,
-    // as `currentLogList` can contain an older redo log from other thread. Hence we need to explicitly look for
-    // the DICTIONARY_BEGIN.
+  private BigDecimal adjustMiningWindowLowerLimit(LocalDateTime start) {
     RedoLog log = currentLogList.stream()
-                                .filter(RedoLog::isDictionaryBegin)
-                                .min(Comparator.comparing(RedoLog::getFirstChange))
-                                .get();
+        .filter(l -> l.getFirstTime().compareTo(start) <= 0 && l.getNextTime().compareTo(start) > 0)
+        .max(Comparator.comparing(RedoLog::getFirstChange))
+        .get();
     this.startTime = log.getFirstTime();
     return log.getFirstChange();
   }
