@@ -46,6 +46,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProvider;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderProviderFactory;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.cdc.sqlserver.SQLServerCDCSource;
 import com.streamsets.pipeline.stage.origin.jdbc.table.PartitioningMode;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableConfigBeanImpl;
@@ -634,12 +635,13 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
           tableContext.getOffsetColumns()
       ));
     } catch (SQLException e) {
-      LOG.error(
-          "SQLException attempting to update max offsets for TableContext {}: {}",
-          tableContext,
-          e.getMessage(),
-          e
-      );
+      if (!e.getMessage().contains(String.format("Invalid column name '%s'", MSQueryUtil.SYS_CHANGE_VERSION))) {
+        LOG.error("SQLException attempting to update max offsets for TableContext {}: {}",
+            tableContext,
+            e.getMessage(),
+            e
+        );
+      }
     }
   }
 }

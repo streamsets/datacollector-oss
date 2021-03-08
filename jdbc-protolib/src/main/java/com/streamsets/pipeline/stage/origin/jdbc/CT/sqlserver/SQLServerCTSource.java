@@ -28,6 +28,7 @@ import com.streamsets.pipeline.lib.jdbc.multithread.TableContextUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableReadContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableRuntimeContext;
 import com.streamsets.pipeline.lib.jdbc.multithread.cache.SQLServerCTContextLoader;
+import com.streamsets.pipeline.lib.jdbc.multithread.util.MSQueryUtil;
 import com.streamsets.pipeline.lib.jdbc.multithread.util.OffsetQueryUtil;
 import com.streamsets.pipeline.stage.origin.jdbc.AbstractTableJdbcSource;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -129,12 +130,13 @@ public class SQLServerCTSource extends AbstractTableJdbcSource {
           tableContext.getOffsetColumns()
       ));
     } catch (SQLException e) {
-      LOG.error(
-          "SQLException attempting to update max offsets for TableContext {}: {}",
-          tableContext,
-          e.getMessage(),
-          e
-      );
+      if (!e.getMessage().contains(String.format("Invalid column name '%s'", MSQueryUtil.SYS_CHANGE_VERSION))) {
+        LOG.error("SQLException attempting to update max offsets for TableContext {}: {}",
+            tableContext,
+            e.getMessage(),
+            e
+        );
+      }
     }
   }
 
