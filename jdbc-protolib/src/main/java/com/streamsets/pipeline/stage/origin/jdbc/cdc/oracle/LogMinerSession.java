@@ -110,7 +110,7 @@ public class LogMinerSession {
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND "
+      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
       + "     ((FIRST_TIME <= :first AND NEXT_TIME > :first) OR "
       + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
@@ -121,7 +121,7 @@ public class LogMinerSession {
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
       + " FROM V$LOG A, V$DATABASE B, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
-      + "      FROM V$LOGFILE) C "
+      + "      FROM V$LOGFILE WHERE TYPE = 'ONLINE') C "
       + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_ARG_FIRST = ":first";
   private static final String SELECT_REDO_LOGS_ARG_NEXT = ":next";
@@ -134,7 +134,7 @@ public class LogMinerSession {
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
+      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
       + " UNION "
       + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
       + "     (CASE WHEN A.STATUS = 'CURRENT' THEN CURRENT_TIMESTAMP AT TIME ZONE DBTIMEZONE ELSE A.NEXT_TIME END) NEXT_TIME, "
@@ -142,7 +142,7 @@ public class LogMinerSession {
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
       + " FROM V$LOG A, V$DATABASE B, "
       + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
-      + "      FROM V$LOGFILE) C "
+      + "      FROM V$LOGFILE WHERE TYPE = 'ONLINE') C "
       + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_FOR_SCN_ARG = ":scn";
 
@@ -151,16 +151,17 @@ public class LogMinerSession {
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND "
+      + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
       + "       FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
-      + "                        DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
+      + "                        STANDBY_DEST = 'NO' AND DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
       + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# >= (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
-      + "                         DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND THREAD# = :thread) AND "
-      + "    FIRST_CHANGE# <= :scn AND STATUS = 'A' AND THREAD# = :thread "
+      + "                         STANDBY_DEST = 'NO' AND DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND "
+      + "                         THREAD# = :thread) AND "
+      + "    FIRST_CHANGE# <= :scn AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND THREAD# = :thread "
       + " ORDER BY FIRST_CHANGE# ";
   private static final String SELECT_DICTIONARY_TIME_ARG = ":time";
   private static final String SELECT_DICTIONARY_SCN_ARG = ":scn";
