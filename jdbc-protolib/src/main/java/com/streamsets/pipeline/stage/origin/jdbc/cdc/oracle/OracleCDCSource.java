@@ -519,7 +519,9 @@ public class OracleCDCSource extends BaseSource {
   }
 
   private long getDelay(LocalDateTime lastEndTime) {
-    return localDateTimeToEpoch(nowAtDBTz()) - localDateTimeToEpoch(lastEndTime);
+    // Avoid to query Oracle to get the database time -- getDelay can be invoked thousands of times per second.
+    LocalDateTime dbTime = LocalDateTime.now(zoneId);
+    return localDateTimeToEpoch(dbTime) - localDateTimeToEpoch(lastEndTime);
   }
 
   private void generateRecords(Offset startingOffset, LocalDateTime endTime, boolean logMinerStarted) {
