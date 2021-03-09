@@ -35,7 +35,6 @@ import com.streamsets.datacollector.util.PipelineConfigurationUtil;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.datacollector.validation.PipelineConfigurationValidator;
 import com.streamsets.lib.security.http.DpmClientInfo;
-import com.streamsets.lib.security.http.RemoteSSOService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -71,7 +70,6 @@ public class ControlHubResource {
   private final CredentialStoresTask credentialStoresTask;
   private final Configuration config;
   private final RuntimeInfo runtimeInfo;
-  private final DpmClientInfo dpmClientInfo;
   private final BuildInfo buildInfo;
   private final String user;
 
@@ -88,11 +86,14 @@ public class ControlHubResource {
     this.config = config;
     this.buildInfo = buildInfo;
     this.runtimeInfo = runtimeInfo;
-    this.dpmClientInfo = runtimeInfo.getAttribute(RuntimeInfo.DPM_COMPONENT_TYPE_CONFIG);
     this.stageLibrary = stageLibrary;
     this.credentialStoresTask = credentialStoresTask;
     this.store = store;
     this.user = principal.getName();
+  }
+
+  public DpmClientInfo getDpmClientInfo() {
+    return runtimeInfo.getAttribute(RuntimeInfo.DPM_COMPONENT_TYPE_CONFIG);
   }
 
   private void checkIfControlHubEnabled() {
@@ -155,8 +156,7 @@ public class ControlHubResource {
         objectMapper.writeValueAsString(pipelineEnvelopeJson.getLibraryDefinitions())
     );
     PipelineConfigurationJson publishedPipeline = ControlHubUtil.publishPipeline(
-        request,
-        dpmClientInfo,
+        request, getDpmClientInfo(),
         commitPipelineModel
     );
 
@@ -187,7 +187,7 @@ public class ControlHubResource {
       @QueryParam("executionModes") String executionModes
   ) {
     checkIfControlHubEnabled();
-    return ControlHubUtil.getPipelines(request, dpmClientInfo, offset, len, executionModes);
+    return ControlHubUtil.getPipelines(request, getDpmClientInfo(), offset, len, executionModes);
   }
 
   @Path("/pipeline/{pipelineCommitId}")
@@ -204,7 +204,7 @@ public class ControlHubResource {
       @PathParam("pipelineCommitId") String pipelineCommitId
   ) {
     checkIfControlHubEnabled();
-    return ControlHubUtil.getPipeline(request, dpmClientInfo, pipelineCommitId);
+    return ControlHubUtil.getPipeline(request, getDpmClientInfo(), pipelineCommitId);
   }
 
   @Path("/pipeline/{pipelineId}/log")
@@ -225,8 +225,7 @@ public class ControlHubResource {
   ) {
     checkIfControlHubEnabled();
     return ControlHubUtil.getPipelineCommitHistory(
-        request,
-        dpmClientInfo,
+        request, getDpmClientInfo(),
         pipelineId,
         offset,
         len,
@@ -245,7 +244,7 @@ public class ControlHubResource {
   @PermitAll
   public Response getRemoteRoles(@Context HttpServletRequest request) {
     checkIfControlHubEnabled();
-    return ControlHubUtil.getRemoteRoles(request, dpmClientInfo);
+    return ControlHubUtil.getRemoteRoles(request, getDpmClientInfo());
   }
 
   @Path("/users")
@@ -263,7 +262,7 @@ public class ControlHubResource {
       @QueryParam("len") @DefaultValue("50") int len
   ) {
     checkIfControlHubEnabled();
-    return ControlHubUtil.getControlHubUsers(request, dpmClientInfo, offset, len);
+    return ControlHubUtil.getControlHubUsers(request, getDpmClientInfo(), offset, len);
   }
 
   @Path("/groups")
@@ -281,6 +280,7 @@ public class ControlHubResource {
       @QueryParam("len") @DefaultValue("50") int len
   ) {
     checkIfControlHubEnabled();
-    return ControlHubUtil.getControlHubGroups(request, dpmClientInfo, offset, len);
+    return ControlHubUtil.getControlHubGroups(request, getDpmClientInfo(), offset, len);
   }
+
 }
