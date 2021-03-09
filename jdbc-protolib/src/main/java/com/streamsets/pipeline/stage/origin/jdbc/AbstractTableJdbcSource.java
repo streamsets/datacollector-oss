@@ -635,7 +635,8 @@ public abstract class AbstractTableJdbcSource extends BasePushSource implements 
           tableContext.getOffsetColumns()
       ));
     } catch (SQLException e) {
-      if (!e.getMessage().contains(String.format("Invalid column name '%s'", MSQueryUtil.SYS_CHANGE_VERSION))) {
+      if (!e.getMessage().contains(String.format("Invalid column name '%s'", MSQueryUtil.SYS_CHANGE_VERSION)) &&
+          !e.getMessage().contains(String.format("The multi-part identifier \"%s\" could not be bound.", MSQueryUtil.CDC_TXN_WINDOW))){
         LOG.error("SQLException attempting to update max offsets for TableContext {}: {}",
             tableContext,
             e.getMessage(),
