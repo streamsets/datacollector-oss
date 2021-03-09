@@ -326,56 +326,55 @@ public class MultiKafkaSource extends BasePushSource {
       String messageId = getMessageId(topic, partition, offset);
       List<Record> records = new ArrayList<>();
 
-      try (DataParser parser = parserFactory.getParser(messageId, payload)) {
-        Record record = parser.parse();
+      if (payload == null) {
+        LOG.debug("NULL value (tombstone) read, it has been discarded");
+      } else {
+        try (DataParser parser = parserFactory.getParser(messageId, payload)) {
+          Record record = parser.parse();
 
-        while (record != null) {
-          record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, topic);
-          record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, String.valueOf(partition));
-          record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
-          if (conf.timestampsEnabled) {
-            record
-                .getHeader()
-                .setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
-            record
-                .getHeader()
-                .setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
-          }
+          while (record != null) {
+            record.getHeader().setAttribute(HeaderAttributeConstants.TOPIC, topic);
+            record.getHeader().setAttribute(HeaderAttributeConstants.PARTITION, String.valueOf(partition));
+            record.getHeader().setAttribute(HeaderAttributeConstants.OFFSET, String.valueOf(offset));
+            if (conf.timestampsEnabled) {
+              record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP, String.valueOf(timestamp));
+              record.getHeader().setAttribute(HeaderAttributeConstants.KAFKA_TIMESTAMP_TYPE, timestampType);
+            }
 
-          try {
-            MessageKeyUtil.handleMessageKey(messageKey,
-                conf.keyCaptureMode,
-                record,
-                conf.keyCaptureField,
-                conf.keyCaptureAttribute
-            );
-          } catch (Exception e) {
-            throw new OnRecordErrorException(record, KafkaErrors.KAFKA_201, partition, offset, e.getMessage(), e);
+            try {
+              MessageKeyUtil.handleMessageKey(messageKey,
+                  conf.keyCaptureMode,
+                  record,
+                  conf.keyCaptureField,
+                  conf.keyCaptureAttribute
+              );
+            } catch (Exception e) {
+              throw new OnRecordErrorException(record, KafkaErrors.KAFKA_201, partition, offset, e.getMessage(), e);
+            }
+            records.add(record);
+            record = parser.parse();
           }
+        } catch (DataParserException | IOException e) {
+          Record record = getContext().createRecord(messageId);
+          record.set(Field.create(payload));
+          errorRecordHandler.onError(new OnRecordErrorException(record,
+              KafkaErrors.KAFKA_37,
+              messageId,
+              e.toString(),
+              e
+          ));
+        }
+
+        if (conf.produceSingleRecordPerMessage) {
+          List<Field> list = new ArrayList<>();
+          for (Record record : records) {
+            list.add(record.get());
+          }
+          Record record = records.get(0);
+          record.set(Field.create(list));
+          records.clear();
           records.add(record);
-          record = parser.parse();
         }
-      } catch (DataParserException | IOException e) {
-        Record record = getContext().createRecord(messageId);
-        record.set(Field.create(payload));
-        errorRecordHandler.onError(new OnRecordErrorException(
-            record,
-            KafkaErrors.KAFKA_37,
-            messageId,
-            e.toString(),
-            e
-        ));
-      }
-
-      if (conf.produceSingleRecordPerMessage) {
-        List<Field> list = new ArrayList<>();
-        for (Record record : records) {
-          list.add(record.get());
-        }
-        Record record = records.get(0);
-        record.set(Field.create(list));
-        records.clear();
-        records.add(record);
       }
 
       return records;
