@@ -25,7 +25,6 @@ import com.streamsets.datacollector.util.Configuration;
 import com.streamsets.lib.security.http.DpmClientInfo;
 import com.streamsets.lib.security.http.SSOConstants;
 import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.filter.CsrfProtectionFilter;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -33,7 +32,6 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class ConnectionRetriever {
 
@@ -49,6 +47,8 @@ public class ConnectionRetriever {
 
   public ConnectionConfiguration get(String connectionId, ConfigInjector.Context context) {
     if (runtimeInfo.isDPMEnabled()) {
+      ClassLoader current = Thread.currentThread().getContextClassLoader();
+      Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
       try {
         WebTarget target = getClient().target(getDpmClientInfo().getDpmBaseUrl() + CONNECTION_RETRIEVAL_PATH_PREFIX + connectionId + CONNECTION_RETRIEVAL_PATH_POSTFIX);
         target = target.queryParam(USER_PARAM, context.getUser());
@@ -69,6 +69,8 @@ public class ConnectionRetriever {
         }
       } catch (Exception e) {
         context.createIssue(CreationError.CREATION_1104, e.getMessage(), e);
+      } finally {
+        Thread.currentThread().setContextClassLoader(current);
       }
     } else {
       context.createIssue(CreationError.CREATION_1105);
