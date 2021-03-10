@@ -55,7 +55,7 @@ public enum DatabaseVendor {
   ORACLE(
       ImmutableList.of("jdbc:oracle:"),
       ImmutableList.of("oracle.jdbc.driver.OracleDriver", "oracle.jdbc.OracleDriver"),
-      ImmutableList.of(QuoteChar.DOUBLE_QUOTES.getLabel())
+      ImmutableList.of(QuoteChar.DOUBLE_QUOTES.getLabel(), QuoteChar.NONE.getLabel())
   ),
   POSTGRESQL(
       ImmutableList.of("jdbc:postgresql:"),
