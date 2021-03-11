@@ -37,7 +37,7 @@ import com.streamsets.pipeline.api.ValueChooserModel;
 @ConfigGroups(RemoteConnectionGroups.class)
 public class RemoteConnection {
 
-  public static final String TYPE = "STREAMSETS_BASIC";
+  public static final String TYPE = "STREAMSETS_REMOTE_FILE";
 
   @ConfigDefBean(groups = "#1")
   public CredentialsConfig credentials = new CredentialsConfig();
