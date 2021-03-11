@@ -119,6 +119,7 @@ public class MapRStreamsDSource extends DClusterSourceOffsetCommitter implements
       kafkaConfigBean.kafkaAutoOffsetReset = KafkaAutoOffsetReset.LATEST;
     }
     kafkaConfigBean.kafkaConsumerConfigs = maprstreamsSourceConfigBean.kafkaConsumerConfigs;
+    kafkaConfigBean.overrideConfigurations = maprstreamsSourceConfigBean.overrideConfigurations;
     kafkaConfigBean.timestampToSearchOffsets = 0;
     kafkaConfigBean.timestampsEnabled = false;
 

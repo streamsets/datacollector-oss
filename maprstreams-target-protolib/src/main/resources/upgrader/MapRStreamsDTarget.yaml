@@ -17,4 +17,10 @@
 upgraderVersion: 1
 
 # No upgrade rules defined
-upgrades: []
+upgrades:
+  - toVersion: 4
+    actions:
+      - setConfig:
+          name: maprStreamsTargetConfigBean.mapRStreamsTargetConfig.overrideConfigurations
+          value: false
+

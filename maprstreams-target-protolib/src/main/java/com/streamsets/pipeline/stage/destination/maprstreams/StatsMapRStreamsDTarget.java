@@ -27,7 +27,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-    version = 3,
+    version = 4,
     label = "Write to MapR Streams",
     description = "Writes Pipeline Statistic records to MapR Streams",
     icon = "mapr_es.png",

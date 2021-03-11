@@ -121,4 +121,16 @@ public class MapRStreamsSourceConfigBean {
   )
   public Map<String, String> kafkaConsumerConfigs;
 
+  @ConfigDef(
+      required = false,
+      type = ConfigDef.Type.BOOLEAN,
+      defaultValue = "false",
+      label = "Override Stage Configurations",
+      description = "Enables overriding stage properties with Kafka Configuration properties",
+      displayPosition = 130,
+      displayMode = ConfigDef.DisplayMode.ADVANCED,
+      group = "KAFKA"
+  )
+  public boolean overrideConfigurations = false;
+
 }
