@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/DatabricksQuery.html#concept_ixd_1xy_zjb","attributes": {"data-id":"concept_ixd_1xy_zjb",},"menu": {"hasChildren":false,},"tocID":"concept_ixd_1xy_zjb-d46e169767","topics":[]}]});

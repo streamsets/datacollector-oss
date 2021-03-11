@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Origins\/MongoDB.html#concept_of3_bgh_scb","attributes": {"data-id":"concept_of3_bgh_scb",},"menu": {"hasChildren":false,},"tocID":"concept_of3_bgh_scb-d46e83644","topics":[]}]});

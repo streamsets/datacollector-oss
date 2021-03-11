@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"AWS Credentials","shortdesc":"\n                     <p class=\"shortdesc\"></p>\n                  ","href":"datacollector\/UserGuide\/Destinations\/Snowflake.html#concept_sm4_l1s_hgb","attributes": {"data-id":"concept_sm4_l1s_hgb",},"menu": {"hasChildren":false,},"tocID":"concept_sm4_l1s_hgb-d46e161845","topics":[]}]});

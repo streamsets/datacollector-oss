@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Viewing the Health Inspector","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Administration\/Administration_title.html#task_ulx_njq_b4b","attributes": {"data-id":"task_ulx_njq_b4b",},"menu": {"hasChildren":false,},"tocID":"task_ulx_njq_b4b-d46e199701","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Datetime Conversion","shortdesc":"\n                  <p class=\"shortdesc\"></p>\n               ","href":"datacollector\/UserGuide\/Origins\/BigQuery.html#concept_sjp_jy1_l3b","attributes": {"data-id":"concept_sjp_jy1_l3b",},"menu": {"hasChildren":false,},"tocID":"concept_sjp_jy1_l3b-d46e57829","topics":[]}]});

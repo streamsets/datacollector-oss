@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Aggregation Expressions","shortdesc":"\n                  <p class=\"shortdesc\"></p>\n               ","href":"datacollector\/UserGuide\/Processors\/FieldMapper.html#concept_cg1_4gr_zgb","attributes": {"data-id":"concept_cg1_4gr_zgb",},"menu": {"hasChildren":false,},"tocID":"concept_cg1_4gr_zgb-d46e119241","topics":[]}]});

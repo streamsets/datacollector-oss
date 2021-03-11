@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Retrieve Authentication Information","href":"datacollector\/UserGuide\/Origins\/ADLS-G1.html#concept_qnz_jwp_b3b","attributes": {"data-id":"concept_qnz_jwp_b3b",},"menu": {"hasChildren":false,},"tocID":"concept_qnz_jwp_b3b-d46e48632","topics":[]}]});

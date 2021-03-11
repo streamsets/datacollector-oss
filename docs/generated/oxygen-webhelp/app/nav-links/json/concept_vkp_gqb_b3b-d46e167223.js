@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Retrieve Authentication Information","href":"datacollector\/UserGuide\/Executors\/ADLS-G2-FileMeta.html#concept_j2q_kqb_b3b","attributes": {"data-id":"concept_j2q_kqb_b3b",},"menu": {"hasChildren":false,},"tocID":"concept_j2q_kqb_b3b-d46e167257","topics":[]}]});

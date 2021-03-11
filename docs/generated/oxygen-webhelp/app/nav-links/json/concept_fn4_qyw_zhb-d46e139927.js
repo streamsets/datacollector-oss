@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Retrieve Authentication Information","href":"datacollector\/UserGuide\/Destinations\/ADLS-G1-D.html#concept_jwr_vyw_zhb","attributes": {"data-id":"concept_jwr_vyw_zhb",},"menu": {"hasChildren":false,},"tocID":"concept_jwr_vyw_zhb-d46e139959","topics":[]}]});

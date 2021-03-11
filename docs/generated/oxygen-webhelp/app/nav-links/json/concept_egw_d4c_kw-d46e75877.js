@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Header Attributes with the Drift Synchronization Solution","href":"datacollector\/UserGuide\/Origins\/JDBCConsumer.html#concept_tvf_tgp_fx","attributes": {"data-id":"concept_tvf_tgp_fx",},"menu": {"hasChildren":false,},"tocID":"concept_tvf_tgp_fx-d46e76040","topics":[]}]});

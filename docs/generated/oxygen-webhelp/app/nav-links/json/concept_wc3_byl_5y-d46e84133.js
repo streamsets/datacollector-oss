@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"CRUD Operation and CDC Header Attributes","href":"datacollector\/UserGuide\/Origins\/MongoDBOplog.html#concept_isy_thx_ty","attributes": {"data-id":"concept_isy_thx_ty",},"menu": {"hasChildren":false,},"tocID":"concept_isy_thx_ty-d46e84195","topics":[]}]});

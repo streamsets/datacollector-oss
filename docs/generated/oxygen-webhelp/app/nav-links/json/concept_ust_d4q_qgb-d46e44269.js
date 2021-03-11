@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Delimited Data Root Field Type","href":"datacollector\/UserGuide\/Data_Formats\/Delimited.html#concept_zcg_bm4_fs","attributes": {"data-id":"concept_zcg_bm4_fs",},"menu": {"hasChildren":false,},"tocID":"concept_zcg_bm4_fs-d46e44301","topics":[]}]});

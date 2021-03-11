@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring Cluster Batch Mode for MapR","href":"datacollector\/UserGuide\/Cluster_Mode\/MapRRequirements.html#task_n2l_z45_lx","attributes": {"data-id":"task_n2l_z45_lx",},"menu": {"hasChildren":false,},"tocID":"task_n2l_z45_lx-d46e190734","topics":[]}]});

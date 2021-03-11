@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"<span class=\"ph\">Data Collector Edge</span> New Features and Enhancements\n            ","href":"datacollector\/UserGuide\/WhatsNew\/WhatsNew_Title.html#concept_jgf_vyk_1hb","attributes": {"data-id":"concept_jgf_vyk_1hb",},"menu": {"hasChildren":false,},"tocID":"concept_jgf_vyk_1hb-d46e3361","topics":[]}]});

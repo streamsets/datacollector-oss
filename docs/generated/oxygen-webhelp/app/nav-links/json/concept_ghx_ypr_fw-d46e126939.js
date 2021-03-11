@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring an HTTP Router Processor","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Processors\/HTTPRouter.html#task_ny1_rrk_x2b","attributes": {"data-id":"task_ny1_rrk_x2b",},"menu": {"hasChildren":false,},"tocID":"task_ny1_rrk_x2b-d46e126971","topics":[]}]});

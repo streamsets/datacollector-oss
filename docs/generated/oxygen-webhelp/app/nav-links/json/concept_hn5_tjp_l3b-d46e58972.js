@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Record","href":"datacollector\/UserGuide\/Origins\/GroovyScripting.html#concept_fv4_wjp_l3b","attributes": {"data-id":"concept_fv4_wjp_l3b",},"menu": {"hasChildren":false,},"tocID":"concept_fv4_wjp_l3b-d46e59044","topics":[]}]});

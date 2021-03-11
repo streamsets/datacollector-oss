@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Using Stage Events","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Event_Handling\/EventFramework-Title.html#concept_sjr_nrx_4x","attributes": {"data-id":"concept_sjr_nrx_4x",},"menu": {"hasChildren":true,},"tocID":"concept_sjr_nrx_4x-d46e176127","next":"concept_sjr_nrx_4x-d46e176127",}]});

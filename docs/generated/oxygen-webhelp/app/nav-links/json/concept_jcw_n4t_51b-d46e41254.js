@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Pipeline Event Records","href":"datacollector\/UserGuide\/Pipeline_Configuration\/EventGeneration.html#concept_cv3_nqt_51b","attributes": {"data-id":"concept_cv3_nqt_51b",},"menu": {"hasChildren":false,},"tocID":"concept_cv3_nqt_51b-d46e41286","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Destinations\/ADLS-G1-D.html#concept_concept_aps_qhx_zhb","attributes": {"data-id":"concept_concept_aps_qhx_zhb",},"menu": {"hasChildren":false,},"tocID":"concept_concept_aps_qhx_zhb-d46e140395","topics":[]}]});

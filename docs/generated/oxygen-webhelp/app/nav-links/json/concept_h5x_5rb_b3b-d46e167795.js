@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/ADLS-G2-FileMeta.html#concept_dnb_n3g_b3b","attributes": {"data-id":"concept_dnb_n3g_b3b",},"menu": {"hasChildren":false,},"tocID":"concept_dnb_n3g_b3b-d46e167918","topics":[]}]});

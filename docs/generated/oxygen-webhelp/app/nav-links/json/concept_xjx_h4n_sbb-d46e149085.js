@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Destinations\/GCS.html#concept_i21_j4n_sbb","attributes": {"data-id":"concept_i21_j4n_sbb",},"menu": {"hasChildren":false,},"tocID":"concept_i21_j4n_sbb-d46e149168","topics":[]}]});

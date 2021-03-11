@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring an Omniture Origin","href":"datacollector\/UserGuide\/Origins\/Omniture.html#task_of4_wpw_1s","attributes": {"data-id":"task_of4_wpw_1s",},"menu": {"hasChildren":false,},"tocID":"task_of4_wpw_1s-d46e85461","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Aggregate Functions in SOQL Queries","shortdesc":"\n                  <p class=\"shortdesc\"></p>\n               ","href":"datacollector\/UserGuide\/Processors\/SalesforceLookup.html#concept_oc2_zsj_lhb","attributes": {"data-id":"concept_oc2_zsj_lhb",},"menu": {"hasChildren":false,},"tocID":"concept_oc2_zsj_lhb-d46e132966","topics":[]}]});
