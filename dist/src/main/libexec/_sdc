@@ -325,6 +325,52 @@ then
   EXTRA_OPTIONS="-streamsetsLibrariesExtraDir ${STREAMSETS_LIBRARIES_EXTRA_DIR}"
 fi
 
+check_curl_and_tar_installed() {
+  if [[ ! -x "$(which curl)" ]] && [[ ! -x "$(which curl)" ]] ; then
+    echo "Curl and Tar commands are needed to run Deployment Bootstrap"
+    exit -1
+  fi
+}
+
+run_bootstrap() {
+  if [[ -f ${SDC_CONF}/sch-url.txt ]]; then
+    SCH_URL_FROM_FILE=$(cat ${SDC_CONF}/sch-url.txt)
+  fi
+  if [[ -f ${SDC_CONF}/deployment.id ]]; then
+    ID_FROM_FILE=$(cat ${SDC_CONF}/deployment.id)
+  fi
+  if [[ -f ${SDC_CONF}/deployment-token.txt ]]; then
+    TOKEN_FROM_FILE=$(cat ${SDC_CONF}/deployment-token.txt)
+  fi
+  STREAMSETS_DEPLOYMENT_SCH_URL=${STREAMSETS_DEPLOYMENT_SCH_URL:=${SCH_URL_FROM_FILE}}
+  STREAMSETS_DEPLOYMENT_ID=${STREAMSETS_DEPLOYMENT_ID:=${ID_FROM_FILE}}
+  STREAMSETS_DEPLOYMENT_TOKEN=${STREAMSETS_DEPLOYMENT_TOKEN:=${TOKEN_FROM_FILE}}
+
+  STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR=${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR:=${SDC_DIST}}
+
+  if [[ ! -z "${STREAMSETS_DEPLOYMENT_SCH_URL}" ]] && [[ ! -z "${STREAMSETS_DEPLOYMENT_ID}" ]] && [[ ! -z "${STREAMSETS_DEPLOYMENT_TOKEN}" ]]; then
+    if [[ ! -d ${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}/deployment-lib ]]; then
+      check_curl_and_tar_installed
+      curl -o ${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}/bootstrap.tgz -L ${STREAMSETS_DEPLOYMENT_SCH_URL}/engineBootstrap/bootstrap.tgz && \
+      tar xzf ${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}/bootstrap.tgz --directory ${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}
+    else
+      echo "Deployment Boostrap already exists"
+    fi
+    STREAMSETS_BOOTSTRAP_MAIN_CLASS="com.streamsets.engine.deployment.bootstrap.DeploymentBootstrapMain"
+    STREAMSETS_BOOTSTRAP_JAVA_OPTS="-Dstreamsets.deployment.conf.dir=${SDC_CONF} -Dstreamsets.deployment.data.dir=${SDC_DATA} -Dstreamsets.deployment.stage.lib.dir=${STREAMSETS_LIBRARIES_DIR} ${STREAMSETS_BOOTSTRAP_JAVA_OPTS}"
+    ${JAVA} ${STREAMSETS_BOOTSTRAP_JAVA_OPTS} -classpath "${STREAMSETS_DEPLOYMENT_LIB_EXTRACT_DIR}/deployment-lib/lib/*" ${STREAMSETS_BOOTSTRAP_MAIN_CLASS}
+  else
+    echo "Deployment Bootstrap Not triggered"
+  fi
+}
+
+run_sdc() {
+  ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
+    -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
+    -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
+    -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
+}
+
 # we may need to exec the process in some cases. This is determined by option "-exec"
 # Restart will not be possible in such a case
 
@@ -338,11 +384,7 @@ if [ $EXEC -eq 1 ]; then
 else
   status=88
   while [ $status = 88 ]; do
-    ${JAVA} -classpath ${BOOTSTRAP_CLASSPATH} ${SDC_JAVA_OPTS} com.streamsets.pipeline.BootstrapMain \
-    -mainClass ${SDC_MAIN_CLASS} -apiClasspath "${API_CLASSPATH}" -containerClasspath "${CONTAINER_CLASSPATH}" \
-    -streamsetsLibrariesDir "${STREAMSETS_LIBRARIES_DIR}" -userLibrariesDir "${USER_LIBRARIES_DIR}" -configDir ${SDC_CONF} \
-    -libsCommonLibDir "${LIBS_COMMON_LIB_DIR}" ${EXTRA_OPTIONS}
-
+    run_bootstrap && run_sdc
     status=$?
   done
 fi
