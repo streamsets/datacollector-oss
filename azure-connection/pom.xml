@@ -22,12 +22,12 @@
   <parent>
     <artifactId>streamsets-datacollector</artifactId>
     <groupId>com.streamsets</groupId>
-    <version>3.22.0-SNAPSHOT</version>
+    <version>3.23.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>streamsets-datacollector-azure-connection</artifactId>
-  <version>3.22.0-SNAPSHOT</version>
+  <version>3.23.0-SNAPSHOT</version>
   <description>StreamSets Data Collector Azure Connection</description>
 
   <dependencies>
