@@ -173,6 +173,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_605("Error while querying the current database time: {}."),
   JDBC_606("Wal Sender is not active"),
   JDBC_607("CDC Generator is not active. Reason : {}"),
+  JDBC_608("Error checking if database treats empty string as null: {}"),
   ;
 
   private final String msg;

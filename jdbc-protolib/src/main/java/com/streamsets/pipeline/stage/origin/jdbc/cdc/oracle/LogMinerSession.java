@@ -102,6 +102,12 @@ public class LogMinerSession {
   private static final String ADD_LOGFILE_APPEND_CMD = "BEGIN DBMS_LOGMNR.ADD_LOGFILE(?, DBMS_LOGMNR.ADDFILE); END;";
   private static final String REMOVE_LOGFILE_CMD = "BEGIN DBMS_LOGMNR.REMOVE_LOGFILE(?); END;";
 
+  // Query to check if the database is treating '' (empty string) as null.
+  // This is necessary because, although Oracle treats the empty string as null, it warns that this might
+  // not happen in future versions of Oracle. We will interpret the empty string as null only when this query
+  // gives a positive result.
+  public static final String CHECK_EMPTY_STRING_EQUALS_NULL_QUERY = "select 1 from dual where '' is null";
+
   // Template to retrieve the list of redo log files given a time range [first, next) of interest.
   // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
   // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
@@ -194,6 +200,7 @@ public class LogMinerSession {
   private boolean activeSession;
   private LocalDateTime startTime;
   private LocalDateTime endTime;
+  private boolean emptyStringEqualsNull;
 
   /**
    * LogMinerSession builder. It allows configuring optional parameters for the LogMiner session. Actual LogMiner
@@ -271,7 +278,9 @@ public class LogMinerSession {
         configOptions.add(DDL_DICT_TRACKING_OPTION);
       }
 
-      return new LogMinerSession(connection, databaseVersion, createQueryContentStatement(), configOptions);
+      LogMinerSession logMinerSession = new LogMinerSession(connection, databaseVersion, createQueryContentStatement(), configOptions);
+      logMinerSession.decideEmptyStringEqualsNull();
+      return logMinerSession;
     }
 
     /**
@@ -1169,6 +1178,19 @@ public class LogMinerSession {
 
     this.endTime = selected.getNextTime();
     return selected.getNextChange();
+  }
+
+  private void decideEmptyStringEqualsNull() {
+    try (PreparedStatement statement = connection.prepareStatement(CHECK_EMPTY_STRING_EQUALS_NULL_QUERY)) {
+      ResultSet result = statement.executeQuery();
+      this.emptyStringEqualsNull = result.next();
+    } catch (SQLException eSQLException) {
+      throw new StageException(JdbcErrors.JDBC_608, eSQLException.getErrorCode());
+    }
+  }
+
+  public boolean isEmptyStringEqualsNull() {
+     return this.emptyStringEqualsNull;
   }
 
   private List<BigDecimal> getThreadsFromRedoLogs(List<RedoLog> logs) {

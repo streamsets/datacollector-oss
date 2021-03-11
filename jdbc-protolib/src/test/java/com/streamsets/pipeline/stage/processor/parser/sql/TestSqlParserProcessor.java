@@ -20,6 +20,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.OnRecordError;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.impl.Utils;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
 import com.streamsets.pipeline.lib.operation.OperationType;
 import com.streamsets.pipeline.sdk.ProcessorRunner;
@@ -31,6 +32,7 @@ import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.JDBCType;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -552,4 +554,47 @@ public class TestSqlParserProcessor {
     return rsmd;
   }
 
+  @Test
+  public void testObjectToFieldEmptyString() throws Exception {
+    Map<String, Integer> tableColumns = new HashMap<>();
+    for (JDBCType jdbcTpe : JDBCType.values()) {
+      switch (jdbcTpe) {
+        case BIGINT:
+        case BINARY:
+        case LONGVARBINARY:
+        case VARBINARY:
+        case BIT:
+        case BOOLEAN:
+        case CHAR:
+        case LONGNVARCHAR:
+        case LONGVARCHAR:
+        case NCHAR:
+        case NVARCHAR:
+        case VARCHAR:
+        case DECIMAL:
+        case NUMERIC:
+        case DOUBLE:
+        case FLOAT:
+        case REAL:
+        case INTEGER:
+        case SMALLINT:
+        case TINYINT:
+          ParseUtil.generateField(
+              true,
+              jdbcTpe.getName(),
+              "",
+              jdbcTpe.getVendorTypeNumber(),
+              null);
+          ParseUtil.generateField(
+              true,
+              jdbcTpe.getName(),
+              null,
+              jdbcTpe.getVendorTypeNumber(),
+              null);
+          break;
+        default:
+          break;
+      }
+    }
+  }
 }

@@ -27,6 +27,7 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.base.BaseSource;
+import com.streamsets.pipeline.api.impl.ErrorMessage;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.JdbcErrors;
@@ -34,11 +35,11 @@ import com.streamsets.pipeline.lib.jdbc.JdbcUtil;
 import com.streamsets.pipeline.lib.jdbc.PrecisionAndScale;
 import com.streamsets.pipeline.lib.jdbc.UtilsProvider;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.DateTimeColumnHandler;
-import com.streamsets.pipeline.lib.jdbc.parser.sql.UnparseableEmptySQLException;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.ParseUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLListener;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLParser;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.SQLParserUtils;
+import com.streamsets.pipeline.lib.jdbc.parser.sql.UnparseableEmptySQLException;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnparseableSQLException;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeException;
 import com.streamsets.pipeline.lib.operation.OperationType;
@@ -1327,6 +1328,8 @@ public class OracleCDCSource extends BaseSource {
             LOG.trace(GENERATED_RECORD, recordOffset.record, recordOffset.record.getHeader().getAttribute(XID));
           }
         } catch (InterruptedException | ExecutionException ex) {
+          String errorSql = recordFuture != null ? (recordFuture.sql != null ? recordFuture.sql : "Empty"): "Unknown";
+          LOG.error(JDBC_405.getMessage(), errorSql, ex);
           try {
             errorRecordHandler.onError(JDBC_405, ex);
           } catch (StageException stageException) {
@@ -1948,13 +1951,13 @@ public class OracleCDCSource extends BaseSource {
     int columnType = tableSchema.get(column);
 
     return ParseUtil.generateField(
+        logMinerSession.isEmptyStringEqualsNull(),
         column,
         columnValue,
         columnType,
         dateTimeColumnHandler
     );
   }
-
 
   private void alterSession() throws SQLException {
     if (containerized) {

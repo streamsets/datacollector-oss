@@ -19,7 +19,6 @@ import com.streamsets.pipeline.api.Field;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.jdbc.OracleCDCOperationCode;
 import com.streamsets.pipeline.lib.operation.OperationType;
-import com.streamsets.pipeline.stage.origin.jdbc.cdc.SchemaAndTable;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -39,6 +38,8 @@ public final class ParseUtil {
   // https://docs.oracle.com/cd/E16338_01/appdev.112/e13995/constant-values.html#oracle_jdbc_OracleTypes_TIMESTAMPLTZ
   private static final int TIMESTAMP_LTZ_TYPE = -102;
 
+  public static final String EMPTY_STRING = "";
+  public static final String NULL_VALUE = null;
 
   public static final Map<Integer, String> JDBCTypeNames = new HashMap<>();
 
@@ -102,6 +103,27 @@ public final class ParseUtil {
       default:
         return -1;
     }
+  }
+
+  public static String giveActualValue(boolean isEmptyStringEqualsNull, String value) {
+    if (isEmptyStringEqualsNull && value != null && value.equals(EMPTY_STRING)) {
+      return NULL_VALUE;
+    }
+    return value;
+  }
+
+  public static Field generateField(
+      boolean isEmptyStringEqualsNull,
+      String column,
+      String columnValue,
+      int columnType,
+      DateTimeColumnHandler dateTimeColumnHandler
+  ) throws StageException {
+    return generateField(
+        column,
+        giveActualValue(isEmptyStringEqualsNull, columnValue),
+        columnType,
+        dateTimeColumnHandler);
   }
 
   public static Field generateField(

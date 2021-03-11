@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
@@ -104,7 +106,10 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsCollectsAllRedoSequences() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -143,7 +148,11 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsDiscardOnlineLogs() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -181,7 +190,10 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsOnlyPicksCurrentLog() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -207,7 +219,10 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsDetectsTransientStateInCurrentLog() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -238,7 +253,9 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsDetectsTransientStateInArchivedLog() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -276,7 +293,10 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsCollectsAllRedoSequencesInRACDatabase() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -335,7 +355,10 @@ public class TestLogMinerSession {
 
   @Test
   public void testSelectLogsDetectsTransientStateInRACDatabase() throws SQLException {
-    LogMinerSession session = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19)
+    Connection mockConnection = Mockito.mock(Connection.class);
+    mockGlobalQueires(mockConnection);
+
+    LogMinerSession session = new LogMinerSession.Builder(mockConnection, 19)
         .setTablesForMining(ImmutableList.of(createTableConfig("SDC", "TABLE%", "")))
         .setTrackedOperations(ImmutableList.of(ChangeTypeValues.INSERT))
         .build();
@@ -403,6 +426,8 @@ public class TestLogMinerSession {
     Mockito.when(mockConnection.createStatement()).thenReturn(mockStatement);
     Mockito.when(mockConnection.createStatement().execute(Mockito.any())).thenThrow(new SQLException());
 
+    mockGlobalQueires(mockConnection);
+
     SchemaTableConfigBean config = new SchemaTableConfigBean();
     config.schema = "SDC";
     config.table = "cdc";
@@ -449,6 +474,14 @@ public class TestLogMinerSession {
       result.add(log);
     }
     return result;
+  }
+
+  private void mockGlobalQueires(Connection mockConnection) throws SQLException{
+    ResultSet mockResultSet = Mockito.mock(ResultSet.class);
+    Mockito.when(mockResultSet.next()).thenReturn(true);
+    PreparedStatement mockPreparedStatement = Mockito.mock(PreparedStatement.class);
+    Mockito.when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+    Mockito.when(mockConnection.prepareStatement(LogMinerSession.CHECK_EMPTY_STRING_EQUALS_NULL_QUERY)).thenReturn(mockPreparedStatement);
   }
 
   private void printLogs(List<RedoLog> logs, String header) {
