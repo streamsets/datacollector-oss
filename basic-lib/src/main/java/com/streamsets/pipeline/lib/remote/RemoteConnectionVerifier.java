@@ -175,12 +175,22 @@ public class RemoteConnectionVerifier extends ConnectionVerifier {
         break;
     }
 
-    FtpFileSystemConfigBuilder configBuilder = FtpFileSystemConfigBuilder.getInstance();
-    if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
+    if (remoteURI.getScheme() != null) {
+      if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
 
-      FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, connection.ftpsMode.getMode());
-      FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(options,
-          connection.ftpsDataChannelProtectionLevel.getLevel()
+        FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, connection.ftpsMode.getMode());
+        FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(options,
+            connection.ftpsDataChannelProtectionLevel.getLevel()
+        );
+      }
+    } else {
+      issues.add(
+          context.createConfigIssue(
+              CRED_GROUP.getLabel(),
+              CONN_PREFIX + "remoteAddress",
+              Errors.REMOTE_18,
+              connection.remoteAddress
+          )
       );
     }
 

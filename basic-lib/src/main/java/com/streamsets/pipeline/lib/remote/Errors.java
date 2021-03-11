@@ -40,6 +40,7 @@ public enum Errors implements ErrorCode {
   REMOTE_15("Error attempting to create {}manager: {}"),
   REMOTE_16("Certificate Chain must contain at least one certificate"),
   REMOTE_17("The prefix of the url {} does not correspond to the selected protocol {}."),
+  REMOTE_18("The url {} does not use an appropriate URL format.."),
   ;
 
   private final String msg;

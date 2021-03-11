@@ -108,123 +108,124 @@ public abstract class FTPRemoteConnector extends RemoteConnector {
     }
 
     FtpFileSystemConfigBuilder configBuilder = FtpFileSystemConfigBuilder.getInstance();
-    if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
-      configBuilder = FtpsFileSystemConfigBuilder.getInstance();
-      FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, remoteConfig.connection.ftpsMode.getMode());
-      FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(
-          options,
-          remoteConfig.connection.ftpsDataChannelProtectionLevel.getLevel()
-      );
-      if (remoteConfig.connection.credentials.useFTPSClientCert) {
-        String keyStorePassword = resolveCredential(
-            remoteConfig.ftpsClientCertKeystorePassword,
-            CONF_PREFIX + "ftpsClientCertKeystorePassword",
-            issues,
-            context,
-            credGroup
+    if (remoteURI.getScheme() != null) {
+      if (remoteURI.getScheme().equals(FTPS_SCHEME)) {
+        configBuilder = FtpsFileSystemConfigBuilder.getInstance();
+        FtpsFileSystemConfigBuilder.getInstance().setFtpsMode(options, remoteConfig.connection.ftpsMode.getMode());
+        FtpsFileSystemConfigBuilder.getInstance().setDataChannelProtectionLevel(options,
+            remoteConfig.connection.ftpsDataChannelProtectionLevel.getLevel()
         );
-        KeyStore keyStore = null;
-        if (remoteConfig.useRemoteKeyStore) {
-          if (remoteConfig.ftpsCertificateChain.isEmpty()){
-            issues.add(context.createConfigIssue(
-                credGroup.getLabel(),
-                CONF_PREFIX + "ftpsCertificateChain",
-                Errors.REMOTE_16
-            ));
-          } else {
-            keyStore = new KeyStoreBuilder().addCertificatePem(remoteConfig.ftpsCertificateChain.get(0).get()).addPrivateKey(
-                remoteConfig.ftpsPrivateKey.get(),
-                "",
-                remoteConfig.ftpsCertificateChain.stream().map(CredentialValueBean::get).collect(Collectors.toList())
-            ).build();
-          }
-        } else {
-          keyStore = loadKeyStore(
-              remoteConfig.ftpsClientCertKeystoreFile,
-              CONF_PREFIX + "ftpsClientCertKeystoreFile",
-              keyStorePassword,
-              remoteConfig.ftpsClientCertKeystoreType,
-              true,
+        if (remoteConfig.connection.credentials.useFTPSClientCert) {
+          String keyStorePassword = resolveCredential(remoteConfig.ftpsClientCertKeystorePassword,
+              CONF_PREFIX + "ftpsClientCertKeystorePassword",
               issues,
               context,
               credGroup
           );
-        }
-        if (keyStore != null) {
-          setFtpsUserKeyManagerOrTrustManager(keyStore,
-              CONF_PREFIX + "ftpsClientCertKeystoreFile",
-              keyStorePassword,
-              true,
-              issues,
-              context,
-              credGroup
-          );
-        }
-      }
-      String trustStorePassword = resolveCredential(
-          remoteConfig.ftpsTruststorePassword,
-          CONF_PREFIX + "ftpsTruststorePassword",
-          issues,
-          context,
-          credGroup
-      );
-
-      switch (remoteConfig.connection.credentials.ftpsTrustStoreProvider) {
-        case FILE:
-        case REMOTE_TRUSTSTORE:
-          KeyStore trustStore;
-          if (remoteConfig.connection.credentials.ftpsTrustStoreProvider == FTPSTrustStore.REMOTE_TRUSTSTORE) {
-            KeyStoreBuilder builder = new KeyStoreBuilder();
-            remoteConfig.ftpsTrustedCertificates.forEach(cert -> builder.addCertificatePem(cert.get()));
-            trustStore = builder.build();
+          KeyStore keyStore = null;
+          if (remoteConfig.useRemoteKeyStore) {
+            if (remoteConfig.ftpsCertificateChain.isEmpty()) {
+              issues.add(context.createConfigIssue(credGroup.getLabel(),
+                  CONF_PREFIX + "ftpsCertificateChain",
+                  Errors.REMOTE_16
+              ));
+            } else {
+              keyStore = new KeyStoreBuilder().addCertificatePem(remoteConfig.ftpsCertificateChain.get(0).get()).addPrivateKey(remoteConfig.ftpsPrivateKey.get(),
+                  "",
+                  remoteConfig.ftpsCertificateChain.stream().map(CredentialValueBean::get).collect(Collectors.toList())
+              ).build();
+            }
           } else {
-            trustStore = loadKeyStore(
-                remoteConfig.ftpsTruststoreFile,
-                CONF_PREFIX + "ftpsTruststoreFile",
-                trustStorePassword,
+            keyStore = loadKeyStore(remoteConfig.ftpsClientCertKeystoreFile,
+                CONF_PREFIX + "ftpsClientCertKeystoreFile",
+                keyStorePassword,
                 remoteConfig.ftpsClientCertKeystoreType,
-                false,
+                true,
                 issues,
                 context,
                 credGroup
             );
           }
-          setFtpsUserKeyManagerOrTrustManager(
-              trustStore,
-              CONF_PREFIX + "ftpsTruststoreFile",
-              trustStorePassword,
-              false,
-              issues,
-              context,
-              credGroup
-          );
-          break;
-        case JVM_DEFAULT:
-          try {
-            FtpsFileSystemConfigBuilder.getInstance().setTrustManager(options,
-                TrustManagerUtils.getDefaultTrustManager(null)
+          if (keyStore != null) {
+            setFtpsUserKeyManagerOrTrustManager(keyStore,
+                CONF_PREFIX + "ftpsClientCertKeystoreFile",
+                keyStorePassword,
+                true,
+                issues,
+                context,
+                credGroup
             );
-          } catch (GeneralSecurityException e) {
-            issues.add(context.createConfigIssue(
-                credGroup.getLabel(),
-                CONF_PREFIX + "ftpsTruststoreFile",
-                Errors.REMOTE_14,
-                "trust",
-                "JVM",
-                e.getMessage(),
-                e
-            ));
           }
-          break;
-        case ALLOW_ALL:
-          // fall through
-        default:
-          FtpsFileSystemConfigBuilder.getInstance().setTrustManager(
-              options,
-              TrustManagerUtils.getAcceptAllTrustManager()
-          );
-          break;
+        }
+        String trustStorePassword = resolveCredential(remoteConfig.ftpsTruststorePassword,
+            CONF_PREFIX + "ftpsTruststorePassword",
+            issues,
+            context,
+            credGroup
+        );
+
+        switch (remoteConfig.connection.credentials.ftpsTrustStoreProvider) {
+          case FILE:
+          case REMOTE_TRUSTSTORE:
+            KeyStore trustStore;
+            if (remoteConfig.connection.credentials.ftpsTrustStoreProvider == FTPSTrustStore.REMOTE_TRUSTSTORE) {
+              KeyStoreBuilder builder = new KeyStoreBuilder();
+              remoteConfig.ftpsTrustedCertificates.forEach(cert -> builder.addCertificatePem(cert.get()));
+              trustStore = builder.build();
+            } else {
+              trustStore = loadKeyStore(remoteConfig.ftpsTruststoreFile,
+                  CONF_PREFIX + "ftpsTruststoreFile",
+                  trustStorePassword,
+                  remoteConfig.ftpsClientCertKeystoreType,
+                  false,
+                  issues,
+                  context,
+                  credGroup
+              );
+            }
+            setFtpsUserKeyManagerOrTrustManager(trustStore,
+                CONF_PREFIX + "ftpsTruststoreFile",
+                trustStorePassword,
+                false,
+                issues,
+                context,
+                credGroup
+            );
+            break;
+          case JVM_DEFAULT:
+            try {
+              FtpsFileSystemConfigBuilder.getInstance().setTrustManager(options,
+                  TrustManagerUtils.getDefaultTrustManager(null)
+              );
+            } catch (GeneralSecurityException e) {
+              issues.add(context.createConfigIssue(credGroup.getLabel(),
+                  CONF_PREFIX + "ftpsTruststoreFile",
+                  Errors.REMOTE_14,
+                  "trust",
+                  "JVM",
+                  e.getMessage(),
+                  e
+              ));
+            }
+            break;
+          case ALLOW_ALL:
+            // fall through
+          default:
+            FtpsFileSystemConfigBuilder.getInstance().setTrustManager(options,
+                TrustManagerUtils.getAcceptAllTrustManager()
+            );
+            break;
+        }
       }
+    } else {
+      issues.add(
+          context.createConfigIssue(
+              credGroup.getLabel(),
+              CONF_PREFIX + "remoteAddress",
+              Errors.REMOTE_18,
+              remoteConfig.connection.remoteAddress
+          )
+      );
     }
 
     configBuilder.setPassiveMode(options, true);
