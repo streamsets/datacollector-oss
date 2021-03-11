@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Viewing Pipeline Types in Data Collector","href":"datacollector\/UserGuide\/DPM\/PipelineManagement.html#concept_ssy_ns3_hx","attributes": {"data-id":"concept_ssy_ns3_hx",},"menu": {"hasChildren":false,},"tocID":"concept_ssy_ns3_hx-d46e184901","topics":[]}]});

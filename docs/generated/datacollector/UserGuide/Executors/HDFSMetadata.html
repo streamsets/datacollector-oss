@@ -2,7 +2,7 @@
 <!DOCTYPE html
   PUBLIC "" "about:legacy-compat">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:whc="http://www.oxygenxml.com/webhelp/components" xml:lang="en-us" lang="en-us">
-    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The HDFS File Metadata executor changes file metadata, creates an empty file, or removes a file or directory in HDFS or a local file system each time it receives an event. You cannot perform multiple ..." /><meta name="copyright" content="(C) Copyright 2021" /><meta name="DC.rights.owner" content="(C) Copyright 2021" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="HDFS File Metadata" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wgj_slk_fx" /><title>HDFS File Metadata</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_wgj_slk_fx-d46e167736" />         
+    <head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /><link rel="shortcut icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><link rel="icon" href="../../../oxygen-webhelp/template/images/favicon.png"><!----></link><meta name="description" content="The HDFS File Metadata executor changes file metadata, creates an empty file, or removes a file or directory in HDFS or a local file system each time it receives an event. You cannot perform multiple ..." /><meta name="copyright" content="(C) Copyright 2021" /><meta name="DC.rights.owner" content="(C) Copyright 2021" /><meta name="DC.Type" content="concept" /><meta name="DC.Title" content="HDFS File Metadata" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Executors-title.html" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz" /><meta name="DC.Relation" scheme="URI" content="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="prodname" content="Data Collector" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="version" content="3" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="release" content="16" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="modification" content="0" /><meta name="DC.Date.Created" content="2014-10-31" /><meta name="DC.Format" content="XHTML" /><meta name="DC.Identifier" content="concept_wgj_slk_fx" /><title>HDFS File Metadata</title><!--  Generated with Oxygen version 20.0-SNAPSHOT, build number 2018042310.  --><meta name="wh-path2root" content="../../../" /><meta name="wh-toc-id" content="concept_wgj_slk_fx-d46e170226" />         
         
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- Latest compiled and minified Bootstrap CSS -->
@@ -103,99 +103,99 @@
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_l4q_flb_kr-d46e13055" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
-   <li><span data-tocid="concept_ylh_yyz_ky-d46e15831" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
-   <li><span data-tocid="concept_ejk_f1f_5v-d46e26009" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
-   <li><span data-tocid="concept_qsw_cjy_bt-d46e35847" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
-   <li><span data-tocid="concept_qn1_wn4_kq-d46e37719" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
-   <li><span data-tocid="concept_hdr_gyw_41b-d46e41848" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_l4q_flb_kr-d46e13555" class="topicref" data-id="concept_l4q_flb_kr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Installation/Install_title.html">Installation</a></span></span></li>
+   <li><span data-tocid="concept_ylh_yyz_ky-d46e16487" class="topicref" data-id="concept_ylh_yyz_ky" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Configuration/Config_title.html">Configuration</a></span></span></li>
+   <li><span data-tocid="concept_ejk_f1f_5v-d46e27547" class="topicref" data-id="concept_ejk_f1f_5v" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Upgrade/Upgrade_title.html">Upgrade</a></span></span></li>
+   <li><span data-tocid="concept_qsw_cjy_bt-d46e37770" class="topicref" data-id="concept_qsw_cjy_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Design/PipelineDesign_title.html">Pipeline Concepts and Design</a></span></span></li>
+   <li><span data-tocid="concept_qn1_wn4_kq-d46e39642" class="topicref" data-id="concept_qn1_wn4_kq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Configuration/PipelineConfiguration_title.html">Pipeline Configuration</a></span></span></li>
+   <li><span data-tocid="concept_hdr_gyw_41b-d46e43996" class="topicref" data-id="concept_hdr_gyw_41b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Formats/DataFormats-Title.html">Data Formats</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e44108" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
-   <li><span data-tocid="concept_yjl_nc5_jq-d46e114597" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
-   <li><span data-tocid="concept_agj_cfj_br-d46e135525" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
-   <li><span data-tocid="concept_umc_1lk_fx-d46e163456" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
-         <li><span data-tocid="concept_stt_2lk_fx-d46e163478" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e46256" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Origins/Origins_title.html">Origins</a></span></span></li>
+   <li><span data-tocid="concept_yjl_nc5_jq-d46e116745" class="topicref" data-id="concept_yjl_nc5_jq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Processors/Processors_title.html">Processors</a></span></span></li>
+   <li><span data-tocid="concept_agj_cfj_br-d46e137819" class="topicref" data-id="concept_agj_cfj_br" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Destinations/Destinations-title.html">Destinations</a></span></span></li>
+   <li><span data-tocid="concept_umc_1lk_fx-d46e165946" class="topicref" data-id="concept_umc_1lk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-title.html">Executors</a></span></span><ul class="nav nav-list">
+         <li><span data-tocid="concept_stt_2lk_fx-d46e165968" class="topicref" data-id="concept_stt_2lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Executors-overview.html#concept_stt_2lk_fx">Executors</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_zhp_ldk_xhb-d46e163502" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_i22_k2k_xhb-d46e164588" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_zhp_ldk_xhb-d46e165992" class="topicref" data-id="concept_zhp_ldk_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G1-FileMeta.html#concept_zhp_ldk_xhb">ADLS Gen1 File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_i22_k2k_xhb-d46e167078" class="topicref" data-id="concept_i22_k2k_xhb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/ADLS-G2-FileMeta.html#concept_i22_k2k_xhb">ADLS Gen2 File Metadata</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_mvh_bnm_f1b-d46e165674" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
-         <li><span data-tocid="concept_fdc_qrx_jz-d46e166141" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
-         <li><span data-tocid="concept_bzl_3fq_zjb-d46e166431" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
-         <li><span data-tocid="concept_sjs_sfp_qz-d46e167526" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
-         <li class="active"><span data-tocid="concept_wgj_slk_fx-d46e167736" class="topicref" data-id="concept_wgj_slk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span><ul class="nav nav-list">
-               <li><span data-tocid="concept_ggb_d1l_rx-d46e167889" class="topicref" data-id="concept_ggb_d1l_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_ggb_d1l_rx">Related Event Generating Stages</a></span></span></li>
-               <li><span data-tocid="concept_f1n_k24_x1b-d46e167911" class="topicref" data-id="concept_f1n_k24_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_f1n_k24_x1b">Changing Metadata</a></span></span></li>
-               <li><span data-tocid="concept_c2m_td4_x1b-d46e168099" class="topicref" data-id="concept_c2m_td4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_c2m_td4_x1b">Creating an Empty File</a></span></span></li>
-               <li><span data-tocid="concept_yf2_hc4_x1b-d46e168171" class="topicref" data-id="concept_yf2_hc4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_yf2_hc4_x1b">Removing a File or Directory</a></span></span></li>
-               <li><span data-tocid="concept_vhl_mfj_rx-d46e168254" class="topicref" data-id="concept_vhl_mfj_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_vhl_mfj_rx">Event Generation</a></span></span></li>
-               <li><span data-tocid="concept_wjp_3hs_rx-d46e168450" class="topicref" data-id="concept_wjp_3hs_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wjp_3hs_rx">Kerberos Authentication</a></span></span></li>
-               <li><span data-tocid="concept_krb_g2f_pz-d46e168563" class="topicref" data-id="concept_krb_g2f_pz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_krb_g2f_pz">HDFS User</a></span></span></li>
-               <li><span data-tocid="concept_egg_c3s_rx-d46e168686" class="topicref" data-id="concept_egg_c3s_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_egg_c3s_rx">HDFS Properties and Configuration Files</a></span></span></li>
-               <li><span data-tocid="task_m3v_5lk_fx-d46e168819" class="topicref" data-id="task_m3v_5lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#task_m3v_5lk_fx">Configuring an HDFS File Metadata Executor</a></span></span></li>
+         <li><span data-tocid="concept_mvh_bnm_f1b-d46e168164" class="topicref" data-id="concept_mvh_bnm_f1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/AmazonS3.html#concept_mvh_bnm_f1b">Amazon S3</a></span></span></li>
+         <li><span data-tocid="concept_fdc_qrx_jz-d46e168631" class="topicref" data-id="concept_fdc_qrx_jz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Databricks.html#concept_fdc_qrx_jz">Databricks Job Launcher</a></span></span></li>
+         <li><span data-tocid="concept_bzl_3fq_zjb-d46e168921" class="topicref" data-id="concept_bzl_3fq_zjb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/DatabricksQuery.html#concept_bzl_3fq_zjb">Databricks Query </a></span></span></li>
+         <li><span data-tocid="concept_sjs_sfp_qz-d46e170016" class="topicref" data-id="concept_sjs_sfp_qz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Email.html#concept_sjs_sfp_qz">Email</a></span></span></li>
+         <li class="active"><span data-tocid="concept_wgj_slk_fx-d46e170226" class="topicref" data-id="concept_wgj_slk_fx" data-state="expanded"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wgj_slk_fx">HDFS File Metadata</a></span></span><ul class="nav nav-list">
+               <li><span data-tocid="concept_ggb_d1l_rx-d46e170379" class="topicref" data-id="concept_ggb_d1l_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_ggb_d1l_rx">Related Event Generating Stages</a></span></span></li>
+               <li><span data-tocid="concept_f1n_k24_x1b-d46e170401" class="topicref" data-id="concept_f1n_k24_x1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_f1n_k24_x1b">Changing Metadata</a></span></span></li>
+               <li><span data-tocid="concept_c2m_td4_x1b-d46e170589" class="topicref" data-id="concept_c2m_td4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_c2m_td4_x1b">Creating an Empty File</a></span></span></li>
+               <li><span data-tocid="concept_yf2_hc4_x1b-d46e170661" class="topicref" data-id="concept_yf2_hc4_x1b" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_yf2_hc4_x1b">Removing a File or Directory</a></span></span></li>
+               <li><span data-tocid="concept_vhl_mfj_rx-d46e170744" class="topicref" data-id="concept_vhl_mfj_rx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_vhl_mfj_rx">Event Generation</a></span></span></li>
+               <li><span data-tocid="concept_wjp_3hs_rx-d46e170940" class="topicref" data-id="concept_wjp_3hs_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_wjp_3hs_rx">Kerberos Authentication</a></span></span></li>
+               <li><span data-tocid="concept_krb_g2f_pz-d46e171053" class="topicref" data-id="concept_krb_g2f_pz" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_krb_g2f_pz">HDFS User</a></span></span></li>
+               <li><span data-tocid="concept_egg_c3s_rx-d46e171176" class="topicref" data-id="concept_egg_c3s_rx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#concept_egg_c3s_rx">HDFS Properties and Configuration Files</a></span></span></li>
+               <li><span data-tocid="task_m3v_5lk_fx-d46e171309" class="topicref" data-id="task_m3v_5lk_fx" data-state="leaf"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HDFSMetadata.html#task_m3v_5lk_fx">Configuring an HDFS File Metadata Executor</a></span></span></li>
             </ul>
          </li>
-         <li><span data-tocid="concept_kjw_llk_fx-d46e168962" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
-         <li><span data-tocid="concept_j3r_gcv_sx-d46e169420" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
-         <li><span data-tocid="concept_ohx_r5h_z1b-d46e169797" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
-         <li><span data-tocid="concept_bj2_zlk_fx-d46e171023" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
-         <li><span data-tocid="concept_qzm_l4r_kz-d46e171700" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
-         <li><span data-tocid="concept_kcf_sn2_jlb-d46e171982" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
+         <li><span data-tocid="concept_kjw_llk_fx-d46e171452" class="topicref" data-id="concept_kjw_llk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/HiveQuery.html#concept_kjw_llk_fx">Hive Query</a></span></span></li>
+         <li><span data-tocid="concept_j3r_gcv_sx-d46e171910" class="topicref" data-id="concept_j3r_gcv_sx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/JDBCQuery.html#concept_j3r_gcv_sx">JDBC Query</a></span></span></li>
+         <li><span data-tocid="concept_ohx_r5h_z1b-d46e172284" class="topicref" data-id="concept_ohx_r5h_z1b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapRFSFileMeta.html#concept_ohx_r5h_z1b">MapR FS File Metadata</a></span></span></li>
+         <li><span data-tocid="concept_bj2_zlk_fx-d46e173510" class="topicref" data-id="concept_bj2_zlk_fx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/MapReduce.html#concept_bj2_zlk_fx">MapReduce</a></span></span></li>
+         <li><span data-tocid="concept_qzm_l4r_kz-d46e174187" class="topicref" data-id="concept_qzm_l4r_kz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/PipelineFinisher.html#concept_qzm_l4r_kz">Pipeline Finisher</a></span></span></li>
+         <li><span data-tocid="concept_kcf_sn2_jlb-d46e174469" class="topicref" data-id="concept_kcf_sn2_jlb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/SFTP.html#concept_kcf_sn2_jlb">SFTP/FTP/FTPS Client</a><span class="wh-tooltip">
                      
                      <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                      </span></span></span></li>
-         <li><span data-tocid="concept_jsr_zpw_tz-d46e172080" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
-         <li><span data-tocid="concept_cvy_vxb_1z-d46e172310" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span></li>
+         <li><span data-tocid="concept_jsr_zpw_tz-d46e174567" class="topicref" data-id="concept_jsr_zpw_tz" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Shell.html#concept_jsr_zpw_tz">Shell</a></span></span></li>
+         <li><span data-tocid="concept_cvy_vxb_1z-d46e174797" class="topicref" data-id="concept_cvy_vxb_1z" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Executors/Spark.html#concept_cvy_vxb_1z">Spark</a></span></span></li>
       </ul>
    </li>
-   <li><span data-tocid="concept_xxd_f5r_kx-d46e173108" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xxd_f5r_kx-d46e175595" class="topicref" data-id="concept_xxd_f5r_kx" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Event_Handling/EventFramework-Title.html#concept_xxd_f5r_kx">Dataflow Triggers</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_zq5_pb4_flb-d46e175299" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
-   <li><span data-tocid="concept_ugp_kwf_xw-d46e179459" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
-   <li><span data-tocid="concept_fyf_gkq_4bb-d46e182992" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
-   <li><span data-tocid="concept_wwq_gxc_py-d46e185595" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_zq5_pb4_flb-d46e177786" class="topicref" data-id="concept_zq5_pb4_flb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Solutions/Solutions-title.html">Solutions</a></span></span></li>
+   <li><span data-tocid="concept_ugp_kwf_xw-d46e181946" class="topicref" data-id="concept_ugp_kwf_xw" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/DPM/DPM_title.html">StreamSets Control Hub</a></span></span></li>
+   <li><span data-tocid="concept_fyf_gkq_4bb-d46e185479" class="topicref" data-id="concept_fyf_gkq_4bb" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Edge_Mode/EdgePipelines_title.html"><span xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="ph">StreamSets Data Collector Edge</span></a></span></span></li>
+   <li><span data-tocid="concept_wwq_gxc_py-d46e188082" class="topicref" data-id="concept_wwq_gxc_py" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Multithreaded_Pipelines/MultithreadedPipelines.html#concept_wwq_gxc_py">Multithreaded Pipelines</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_gzw_tdm_p2b-d46e186177" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
-   <li><span data-tocid="Orchestrators_Title-d46e186549" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_wr1_ktz_bt-d46e186841" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_fpz_5r4_vs-d46e187323" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
-   <li><span data-tocid="concept_jjk_23z_sq-d46e188423" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
-   <li><span data-tocid="concept_pgk_brx_rr-d46e189379" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_gzw_tdm_p2b-d46e188664" class="topicref" data-id="concept_gzw_tdm_p2b" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Microservice/Microservice_Title.html#concept_gzw_tdm_p2b">Microservice Pipelines</a></span></span></li>
+   <li><span data-tocid="Orchestrators_Title-d46e189036" class="topicref" data-id="Orchestrators_Title" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Orchestration_Pipelines/OrchestrationPipelines_Title.html#Orchestrators_Title">Orchestration Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_wr1_ktz_bt-d46e189328" class="topicref" data-id="concept_wr1_ktz_bt" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/RPC_Pipelines/SDC_RPCpipelines_title.html#concept_wr1_ktz_bt">SDC RPC Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_fpz_5r4_vs-d46e189810" class="topicref" data-id="concept_fpz_5r4_vs" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Cluster_Mode/ClusterPipelines_title.html">Cluster Pipelines</a></span></span></li>
+   <li><span data-tocid="concept_jjk_23z_sq-d46e190910" class="topicref" data-id="concept_jjk_23z_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Data_Preview/DataPreview_Title.html#concept_jjk_23z_sq">Data Preview</a></span></span></li>
+   <li><span data-tocid="concept_pgk_brx_rr-d46e191866" class="topicref" data-id="concept_pgk_brx_rr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Alerts/RulesAlerts_title.html#concept_pgk_brx_rr">Rules and Alerts</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_asx_fdz_sq-d46e192007" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_asx_fdz_sq-d46e194494" class="topicref" data-id="concept_asx_fdz_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Monitoring/PipelineMonitoring_title.html#concept_asx_fdz_sq">Pipeline Monitoring</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_o3l_dtr_5q-d46e193264" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
-   <li><span data-tocid="concept_yms_ftm_sq-d46e195094" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
-   <li><span data-tocid="concept_nls_w1r_ks-d46e200589" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
-   <li><span data-tocid="concept_sh3_frm_tq-d46e201794" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_o3l_dtr_5q-d46e195751" class="topicref" data-id="concept_o3l_dtr_5q" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Pipeline_Maintenance/PipelineMaintenance_title.html#concept_o3l_dtr_5q">Pipeline Maintenance</a></span></span></li>
+   <li><span data-tocid="concept_yms_ftm_sq-d46e197581" class="topicref" data-id="concept_yms_ftm_sq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Administration/Administration_title.html#concept_yms_ftm_sq">Administration</a></span></span></li>
+   <li><span data-tocid="concept_nls_w1r_ks-d46e203061" class="topicref" data-id="concept_nls_w1r_ks" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Tutorial/Tutorial-title.html">Tutorial</a></span></span></li>
+   <li><span data-tocid="concept_sh3_frm_tq-d46e204266" class="topicref" data-id="concept_sh3_frm_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Troubleshooting/Troubleshooting_title.html#concept_sh3_frm_tq">Troubleshooting</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_xbx_rs1_tq-d46e207921" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
-   <li><span data-tocid="concept_jn1_nzb_kv-d46e207976" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_xbx_rs1_tq-d46e211117" class="topicref" data-id="concept_xbx_rs1_tq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Glossary/Glossary_title.html#concept_xbx_rs1_tq">Glossary</a></span></span></li>
+   <li><span data-tocid="concept_jn1_nzb_kv-d46e211172" class="topicref" data-id="concept_jn1_nzb_kv" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-DataFormats/DataFormat_Title.html#concept_jn1_nzb_kv">Data Formats by Stage</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_pvm_yt3_wq-d46e208198" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
-   <li><span data-tocid="concept_vcj_1ws_js-d46e211869" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_pvm_yt3_wq-d46e211394" class="topicref" data-id="concept_pvm_yt3_wq" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Expression_Language/ExpressionLanguage_title.html">Expression Language</a></span></span></li>
+   <li><span data-tocid="concept_vcj_1ws_js-d46e215065" class="topicref" data-id="concept_vcj_1ws_js" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-RegEx/RegEx-Title.html#concept_vcj_1ws_js">Regular Expressions</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
-   <li><span data-tocid="concept_chv_vmj_wr-d46e212092" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
+   <li><span data-tocid="concept_chv_vmj_wr-d46e215288" class="topicref" data-id="concept_chv_vmj_wr" data-state="not-ready"><span class="wh-expand-btn"></span><span class="title"><a href="../../../datacollector/UserGuide/Apx-GrokPatterns/GrokPatterns_title.html#concept_chv_vmj_wr">Grok Patterns</a><span class="wh-tooltip">
                
                <p xmlns:toc="http://www.oxygenxml.com/ns/webhelp/toc" xmlns:xhtml="http://www.w3.org/1999/xhtml" class="shortdesc"></p>
                </span></span></span></li>
@@ -205,13 +205,14 @@
                     
                     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="wh_topic_body">
                         <div class=" wh_topic_content body "><main role="main"><article role="article" aria-labelledby="ariaid-title1"><article class="nested0" aria-labelledby="ariaid-title1" id="concept_wgj_slk_fx">
- <h1 class="title topictitle1" id="ariaid-title1">HDFS File Metadata</h1>
+    <h1 class="title topictitle1" id="ariaid-title1">HDFS File Metadata</h1>
 
- <div class="body conbody">
-  <p class="p">The HDFS File Metadata
-            executor changes file metadata, creates an empty file, or removes a file or directory in
-            HDFS or a local file system each time it receives an event. You cannot perform multiple
-            tasks in the same executor. To perform more than one task, use additional executors. </p>
+    <div class="body conbody">
+        <p class="p">The HDFS File
+            Metadata executor changes file metadata, creates an empty file, or removes a file or
+            directory in HDFS or a local file system each time it receives an event. You cannot
+            perform multiple tasks in the same executor. To perform more than one task, use
+            additional executors. <span class="ph">For information about supported versions, see <a class="xref" href="../Installation/SupportedSystemVersions.html#concept_s5h_bcr_n4b">Supported Systems and Versions</a>.</span></p>
 
         <p class="p">Use the HDFS File Metadata executor as part of an event stream. For example, you might
             use the executor to move a file or change file permissions after it receives a file
@@ -227,16 +228,16 @@
             the owner, permissions, and ACLs for the file. When removing a file or directory, you
             specify the location of the file or directory.</p>
 
-     <p class="p">When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
-         also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
+        <p class="p">When necessary, you can enable Kerberos authentication and specify an HDFS user. You can
+            also use HDFS configuration files and add other HDFS configuration properties as needed. </p>
 
-     <p class="p">You can also configure the executor to generate events for
-                  another event stream. <span class="ph" id="concept_wgj_slk_fx__d40e3033">For more information about dataflow
+        <p class="p">You can also configure the executor to generate events for
+                  another event stream. <span class="ph" id="concept_wgj_slk_fx__d40e3053">For more information about dataflow
                         triggers and the event framework, see <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">Dataflow Triggers Overview</a>.</span></p>
 
         <p class="p">For a solution that describes how to use the HDFS File Metadata executor, see <a class="xref" href="../Solutions/FileManagement.html#concept_d1q_xl4_lx" title="This solution describes how to design a pipeline that writes output files to a destination, moves the files to a different location, and then changes the permissions for the files.">Managing Output Files</a>.</p>
 
- </div>
+    </div>
 
 <article class="topic concept nested1" aria-labelledby="ariaid-title2" id="concept_ggb_d1l_rx">
  <h2 class="title topictitle2" id="ariaid-title2">Related Event Generating Stages</h2>
@@ -526,18 +527,18 @@
             header attributes are stored as String values:
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_brz_3gp_qx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                         <tr>
-                            <th class="entry cellrowborder" id="d252420e682">Record Header Attribute</th>
+                            <th class="entry cellrowborder" id="d254390e688">Record Header Attribute</th>
 
-                            <th class="entry cellrowborder" id="d252420e685">Description</th>
+                            <th class="entry cellrowborder" id="d254390e691">Description</th>
 
                         </tr>
 
                     </thead>
 <tbody class="tbody">
                         <tr>
-                            <td class="entry cellrowborder" headers="d252420e682 ">sdc.event.type</td>
+                            <td class="entry cellrowborder" headers="d254390e688 ">sdc.event.type</td>
 
-                            <td class="entry cellrowborder" headers="d252420e685 ">Event type. Uses the following event type:<ul class="ul" id="concept_omr_3tk_rx__ul_m12_mgp_qx">
+                            <td class="entry cellrowborder" headers="d254390e691 ">Event type. Uses the following event type:<ul class="ul" id="concept_omr_3tk_rx__ul_m12_mgp_qx">
                                     <li class="li">file-changed - Generated when the executor changes file
                                         metadata, including file name, location, permissions or
                                         ACLs.</li>
@@ -554,16 +555,16 @@
                         </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d252420e682 ">sdc.event.version</td>
+              <td class="entry cellrowborder" headers="d254390e688 ">sdc.event.version</td>
 
-              <td class="entry cellrowborder" headers="d252420e685 ">Integer that indicates the version of the event record type.</td>
+              <td class="entry cellrowborder" headers="d254390e691 ">Integer that indicates the version of the event record type.</td>
 
             </tr>
 
                         <tr>
-              <td class="entry cellrowborder" headers="d252420e682 ">sdc.event.creation_timestamp</td>
+              <td class="entry cellrowborder" headers="d254390e688 ">sdc.event.creation_timestamp</td>
 
-              <td class="entry cellrowborder" id="concept_omr_3tk_rx__d196e2666" headers="d252420e685 ">Epoch timestamp when the stage created the event.
+              <td class="entry cellrowborder" id="concept_omr_3tk_rx__d202e2666" headers="d254390e691 ">Epoch timestamp when the stage created the event.
               </td>
 
             </tr>
@@ -585,26 +586,26 @@
                             attribute set to file-changed and include the following fields: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_rzy_xd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d252420e761">Event Field Name</th>
+                                            <th class="entry cellrowborder" id="d254390e767">Event Field Name</th>
 
-                                            <th class="entry cellrowborder" id="d252420e764">Description</th>
+                                            <th class="entry cellrowborder" id="d254390e770">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e761 ">filepath</td>
+                                            <td class="entry cellrowborder" headers="d254390e767 ">filepath</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e764 ">Most recent path and name of the changed file.
+                                            <td class="entry cellrowborder" headers="d254390e770 ">Most recent path and name of the changed file.
                                             </td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e761 ">filename</td>
+                                            <td class="entry cellrowborder" headers="d254390e767 ">filename</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e764 ">Most recent name of the changed file.</td>
+                                            <td class="entry cellrowborder" headers="d254390e770 ">Most recent name of the changed file.</td>
 
                                         </tr>
 
@@ -627,25 +628,25 @@
                             attribute set to file-created and include the following fields: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_jtk_zd2_pz" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d252420e818">Event Field Name</th>
+                                            <th class="entry cellrowborder" id="d254390e824">Event Field Name</th>
 
-                                            <th class="entry cellrowborder" id="d252420e821">Description</th>
+                                            <th class="entry cellrowborder" id="d254390e827">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e818 ">filepath</td>
+                                            <td class="entry cellrowborder" headers="d254390e824 ">filepath</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e821 ">Location where the file was created.</td>
+                                            <td class="entry cellrowborder" headers="d254390e827 ">Location where the file was created.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e818 ">filename</td>
+                                            <td class="entry cellrowborder" headers="d254390e824 ">filename</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e821 ">Name of the file.</td>
+                                            <td class="entry cellrowborder" headers="d254390e827 ">Name of the file.</td>
 
                                         </tr>
 
@@ -670,27 +671,27 @@
                             attribute set to file-removed and include the following fields: 
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="concept_omr_3tk_rx__table_fgd_y2w_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                         <tr>
-                                            <th class="entry cellrowborder" id="d252420e877">Event Field Name</th>
+                                            <th class="entry cellrowborder" id="d254390e883">Event Field Name</th>
 
-                                            <th class="entry cellrowborder" id="d252420e880">Description</th>
+                                            <th class="entry cellrowborder" id="d254390e886">Description</th>
 
                                         </tr>
 
                                     </thead>
 <tbody class="tbody">
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e877 ">filepath</td>
+                                            <td class="entry cellrowborder" headers="d254390e883 ">filepath</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e880 ">Location of the directory that was removed, or
+                                            <td class="entry cellrowborder" headers="d254390e886 ">Location of the directory that was removed, or
                                                 the directory where the removed file was
                                                 located.</td>
 
                                         </tr>
 
                                         <tr>
-                                            <td class="entry cellrowborder" headers="d252420e877 ">filename</td>
+                                            <td class="entry cellrowborder" headers="d254390e883 ">filename</td>
 
-                                            <td class="entry cellrowborder" headers="d252420e880 ">Name of the file that was removed, when
+                                            <td class="entry cellrowborder" headers="d254390e886 ">Name of the file that was removed, when
                                                 applicable.</td>
 
                                         </tr>
@@ -832,48 +833,48 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_yxz_pvs_5x" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1153">General Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1159">General Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1156">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1162">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-              <td class="entry cellrowborder" headers="d252420e1153 ">Name</td>
+              <td class="entry cellrowborder" headers="d254390e1159 ">Name</td>
 
-              <td class="entry cellrowborder" headers="d252420e1156 ">Stage name.</td>
-
-            </tr>
-
-                                <tr>
-              <td class="entry cellrowborder" headers="d252420e1153 ">Description</td>
-
-              <td class="entry cellrowborder" headers="d252420e1156 ">Optional description.</td>
+              <td class="entry cellrowborder" headers="d254390e1162 ">Stage name.</td>
 
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d252420e1153 ">Stage Library</td>
+              <td class="entry cellrowborder" headers="d254390e1159 ">Description</td>
 
-              <td class="entry cellrowborder" headers="d252420e1156 ">Library version that you want to use. </td>
+              <td class="entry cellrowborder" headers="d254390e1162 ">Optional description.</td>
 
             </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1153 "><a class="xref" href="HDFSMetadata.html#concept_vhl_mfj_rx">Produce
+              <td class="entry cellrowborder" headers="d254390e1159 ">Stage Library</td>
+
+              <td class="entry cellrowborder" headers="d254390e1162 ">Library version that you want to use. </td>
+
+            </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d254390e1159 "><a class="xref" href="HDFSMetadata.html#concept_vhl_mfj_rx">Produce
                                             Events</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1156 ">Generates event records when events occur. Use for
+                                    <td class="entry cellrowborder" headers="d254390e1162 ">Generates event records when events occur. Use for
                   <a class="xref" href="../Event_Handling/EventFramework-Title.html#concept_cph_5h4_lx">event handling</a>.</td>
 
                                 </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d252420e1153 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
+              <td class="entry cellrowborder" headers="d254390e1159 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_dnj_bkm_vq">Required Fields</a></td>
 
-              <td class="entry cellrowborder" headers="d252420e1156 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
+              <td class="entry cellrowborder" headers="d254390e1162 ">Fields that must include data for the record to be passed into the stage. <div class="note tip"><span class="tiptitle">Tip:</span> You might include fields that the stage
                   uses.</div>
 <p class="p">Records that do not include all required fields are processed based
                   on the error handling configured for the pipeline.</p>
@@ -882,9 +883,9 @@
             </tr>
 
                                 <tr>
-              <td class="entry cellrowborder" headers="d252420e1153 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
+              <td class="entry cellrowborder" headers="d254390e1159 "><a class="xref" href="../Pipeline_Design/DroppingUnwantedRecords.html#concept_msl_yd4_fs">Preconditions</a></td>
 
-              <td class="entry cellrowborder" headers="d252420e1156 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
+              <td class="entry cellrowborder" headers="d254390e1162 ">Conditions that must evaluate to TRUE to allow a record to enter the stage for
                 processing. Click <span class="ph uicontrol">Add</span> to create additional preconditions.
                   <p class="p">Records that do not meet all preconditions are processed based on the error
                   handling configured for the stage.</p>
@@ -905,21 +906,21 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_sp4_dwk_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1264">HDFS Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1270">HDFS Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1267">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1273">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1264 ">
+                                    <td class="entry cellrowborder" headers="d254390e1270 ">
                                         <p class="p">Hadoop FS URI </p>
 
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1267 ">
+                                    <td class="entry cellrowborder" headers="d254390e1273 ">
                                         <div class="p">URI to use to access files:<ul class="ul" id="task_m3v_5lk_fx__ul_py3_ngs_rx">
                                                 <li class="li">
                                                   <p class="p">To access files in HDFS, enter the HDFS URI to
@@ -938,13 +939,13 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1264 ">
+                                    <td class="entry cellrowborder" headers="d254390e1270 ">
                                         <p class="p"><a class="xref" href="HDFSMetadata.html#concept_krb_g2f_pz">HDFS
                                             User</a></p>
 
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1267 ">
+                                    <td class="entry cellrowborder" headers="d254390e1273 ">
                                         <p class="p">The HDFS user to use to create empty files or change file
                                             metadata in the external system. When you use this
                                             property, make sure the external system is configured
@@ -961,13 +962,13 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1264 ">
+                                    <td class="entry cellrowborder" headers="d254390e1270 ">
                                         <p class="p"><a class="xref" href="HDFSMetadata.html#concept_wjp_3hs_rx">Kerberos
                                                 Authentication</a></p>
 
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1267 ">
+                                    <td class="entry cellrowborder" headers="d254390e1273 ">
                                         <p class="p">Uses Kerberos credentials to connect to the external
                                             system. </p>
 
@@ -980,13 +981,13 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1264 ">
+                                    <td class="entry cellrowborder" headers="d254390e1270 ">
                                         <p class="p"><a class="xref" href="HDFSMetadata.html#concept_egg_c3s_rx">Hadoop FS
                                                 Configuration Directory</a></p>
 
                                     </td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1267 ">
+                                    <td class="entry cellrowborder" headers="d254390e1273 ">
                                         <p class="p">Location of the HDFS configuration files. </p>
 
                                         <p class="p">For a Cloudera Manager installation, enter
@@ -1016,9 +1017,9 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1264 ">Hadoop FS Configuration</td>
+                                    <td class="entry cellrowborder" headers="d254390e1270 ">Hadoop FS Configuration</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1267 ">
+                                    <td class="entry cellrowborder" headers="d254390e1273 ">
                                         <p class="p">Additional HDFS properties to use. </p>
 
                                         <p class="p">To add properties, click <span class="ph uicontrol">Add</span> and
@@ -1042,18 +1043,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_tcf_bhj_rx" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1448">Task Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1454">Task Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1451">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1457">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1448 ">Task</td>
+                                    <td class="entry cellrowborder" headers="d254390e1454 ">Task</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1451 ">Determines the type of task that the executor performs.
+                                    <td class="entry cellrowborder" headers="d254390e1457 ">Determines the type of task that the executor performs.
                                         You can create an empty file, change file metadata, or
                                         remove a file or directory.<p class="p">To do more than one type of
                                             task, add additional executors to the
@@ -1074,18 +1075,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_bdr_hp5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1493">Task Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1499">Task Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1496">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1502">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 ">File Path</td>
+                                    <td class="entry cellrowborder" headers="d254390e1499 ">File Path</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">Expression that represents the full path to the file that
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">Expression that represents the full path to the file that
                                         you want to create.<div class="p">By default, the property uses
                                                 <code class="ph codeph">${record:value('/filepath')}</code>. <div class="note note"><span class="notetitle">Note:</span> In most cases, you will not want to use the
                         default expression. The default expression is more appropriate for changing
@@ -1096,58 +1097,58 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
+                                    <td class="entry cellrowborder" headers="d254390e1499 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
                                             Ownership</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">Select to specify a file owner or group. </td>
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">Select to specify a file owner or group. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 ">New Owner</td>
+                                    <td class="entry cellrowborder" headers="d254390e1499 ">New Owner</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">The user name to become the new owner of the file.
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">The user name to become the new owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 ">New Group</td>
+                                    <td class="entry cellrowborder" headers="d254390e1499 ">New Group</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">The group to become the new group owner of the file.
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">The group to become the new group owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
+                                    <td class="entry cellrowborder" headers="d254390e1499 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
                                             Permissions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">Select to set file permissions in an octal or symbolic
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">Select to set file permissions in an octal or symbolic
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 ">New Permissions</td>
+                                    <td class="entry cellrowborder" headers="d254390e1499 ">New Permissions</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">File permissions in octal or symbolic format.</td>
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">File permissions in octal or symbolic format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
+                                    <td class="entry cellrowborder" headers="d254390e1499 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
                                             ACLs</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">Select to define access control list (ACL) permissions.
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">Select to define access control list (ACL) permissions.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1493 ">New ACLs</td>
+                                    <td class="entry cellrowborder" headers="d254390e1499 ">New ACLs</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1496 ">Define ACLs for the owner, group, and other. You can
+                                    <td class="entry cellrowborder" headers="d254390e1502 ">Define ACLs for the owner, group, and other. You can
                                         optionally define other user and group permissions. For
                                         details, see <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
 
@@ -1165,19 +1166,19 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_dr2_ns5_4z" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1617">Task Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1623">Task Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1620">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1626">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 "><a class="xref" href="HDFSMetadata.html#concept_fmb_rbj_rx">File
+                                    <td class="entry cellrowborder" headers="d254390e1623 "><a class="xref" href="HDFSMetadata.html#concept_fmb_rbj_rx">File
                                         Path</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Expression that represents the full path to the file.
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Expression that represents the full path to the file.
                                             <p class="p">By default, the property uses
                                                 <code class="ph codeph">${record:value('/filepath')}</code>, which
                                             processes data in the filepath field. The Hadoop FS and
@@ -1193,86 +1194,86 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">Move File</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">Move File</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Select to move the file.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New Location</td>
-
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">New location for the file. </td>
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Select to move the file.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">Rename</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New Location</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Select to rename the file.</td>
-
-                                </tr>
-
-                                <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New Name</td>
-
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">New name for the file. </td>
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">New location for the file. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Change
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">Rename</td>
+
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Select to rename the file.</td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New Name</td>
+
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">New name for the file. </td>
+
+                                </tr>
+
+                                <tr>
+                                    <td class="entry cellrowborder" headers="d254390e1623 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Change
                                             Ownership</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Select to change the file owner or group. </td>
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Select to change the file owner or group. </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New Owner</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New Owner</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">The user name to become the new owner of the file.
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">The user name to become the new owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New Group</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New Group</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">The group to become the new group owner of the file.
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">The group to become the new group owner of the file.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
+                                    <td class="entry cellrowborder" headers="d254390e1623 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
                                             Permissions</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Select to set file permissions in an octal or symbolic
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Select to set file permissions in an octal or symbolic
                                         format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New Permissions</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New Permissions</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">File permissions in octal or symbolic format.</td>
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">File permissions in octal or symbolic format.</td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
+                                    <td class="entry cellrowborder" headers="d254390e1623 "><a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Set
                                             ACLs</a></td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Select to define access control list (ACL) permissions.
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Select to define access control list (ACL) permissions.
                                     </td>
 
                                 </tr>
 
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1617 ">New ACLs</td>
+                                    <td class="entry cellrowborder" headers="d254390e1623 ">New ACLs</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1620 ">Define ACLs for the owner, group, and other. You can
+                                    <td class="entry cellrowborder" headers="d254390e1626 ">Define ACLs for the owner, group, and other. You can
                                         optionally define other user and group permissions. For
                                         details, see <a class="xref" href="HDFSMetadata.html#concept_zr1_5ck_rx">Defining the Owner, Group, Permissions, and ACLs</a>.</td>
 
@@ -1290,18 +1291,18 @@
                     
 <div class="tablenoborder"><table cellpadding="4" cellspacing="0" summary="" id="task_m3v_5lk_fx__table_cnj_kp4_x1b" class="table" frame="border" border="1" rules="all"><colgroup><col style="width:30%" /><col style="width:70%" /></colgroup><thead class="thead" style="text-align:left;">
                                 <tr>
-                                    <th class="entry cellrowborder" id="d252420e1783">Task Property</th>
+                                    <th class="entry cellrowborder" id="d254390e1789">Task Property</th>
 
-                                    <th class="entry cellrowborder" id="d252420e1786">Description</th>
+                                    <th class="entry cellrowborder" id="d254390e1792">Description</th>
 
                                 </tr>
 
                             </thead>
 <tbody class="tbody">
                                 <tr>
-                                    <td class="entry cellrowborder" headers="d252420e1783 ">File Path</td>
+                                    <td class="entry cellrowborder" headers="d254390e1789 ">File Path</td>
 
-                                    <td class="entry cellrowborder" headers="d252420e1786 ">Expression that represents the full path to the file or
+                                    <td class="entry cellrowborder" headers="d254390e1792 ">Expression that represents the full path to the file or
                                         directory that you want to remove. <p class="p">The executor removes
                                             directories recursively, removing all subdirectories as
                                             well. Use with caution. For more information, see <a class="xref" href="HDFSMetadata.html#concept_yf2_hc4_x1b">Removing a File or Directory</a>.</p>

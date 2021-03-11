@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Example","href":"datacollector\/UserGuide\/Processors\/SQLParser.html#concept_bnv_cm2_wdb","attributes": {"data-id":"concept_bnv_cm2_wdb",},"menu": {"hasChildren":false,},"tocID":"concept_bnv_cm2_wdb-d46e133946","topics":[]}]});

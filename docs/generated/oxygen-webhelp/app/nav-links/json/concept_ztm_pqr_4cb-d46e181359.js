@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Flattening Records","href":"datacollector\/UserGuide\/Solutions\/JDBC_DriftSyncSolution.html#concept_yjj_vht_pcb","attributes": {"data-id":"concept_yjj_vht_pcb",},"menu": {"hasChildren":false,},"tocID":"concept_yjj_vht_pcb-d46e181391","topics":[]}]});

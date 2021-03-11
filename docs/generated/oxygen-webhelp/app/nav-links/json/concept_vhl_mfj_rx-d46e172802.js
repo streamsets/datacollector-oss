@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/MapRFSFileMeta.html#concept_omr_3tk_rx","attributes": {"data-id":"concept_omr_3tk_rx",},"menu": {"hasChildren":false,},"tocID":"concept_omr_3tk_rx-d46e172905","topics":[]}]});

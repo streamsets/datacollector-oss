@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Configuring a NiFi HTTP Server Origin","shortdesc":"\n               <p class=\"shortdesc\"></p>\n            ","href":"datacollector\/UserGuide\/Origins\/NiFi.html#task_zyq_mqr_xhb","attributes": {"data-id":"task_zyq_mqr_xhb",},"menu": {"hasChildren":false,},"tocID":"task_zyq_mqr_xhb-d46e85405","topics":[]}]});

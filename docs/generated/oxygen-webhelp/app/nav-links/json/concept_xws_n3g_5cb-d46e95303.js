@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"PushTopic Event Record Format","href":"datacollector\/UserGuide\/Origins\/Salesforce.html#concept_ec1_qlq_tx","attributes": {"data-id":"concept_ec1_qlq_tx",},"menu": {"hasChildren":false,},"tocID":"concept_ec1_qlq_tx-d46e95406","topics":[]}]});

@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Sample Responses","href":"datacollector\/UserGuide\/Origins\/WebSocketClient.html#concept_l4n_xby_qfb","attributes": {"data-id":"concept_l4n_xby_qfb",},"menu": {"hasChildren":false,},"tocID":"concept_l4n_xby_qfb-d46e116043","topics":[]}]});

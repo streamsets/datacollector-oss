@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Whole File Names","href":"datacollector\/UserGuide\/Destinations\/GCS.html#concept_p2r_k24_sbb","attributes": {"data-id":"concept_p2r_k24_sbb",},"menu": {"hasChildren":false,},"tocID":"concept_p2r_k24_sbb-d46e149033","topics":[]}]});

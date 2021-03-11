@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Destinations\/ADLS-G2-D.html#concept_fcy_msk_vhb","attributes": {"data-id":"concept_fcy_msk_vhb",},"menu": {"hasChildren":false,},"tocID":"concept_fcy_msk_vhb-d46e141473","topics":[]}]});

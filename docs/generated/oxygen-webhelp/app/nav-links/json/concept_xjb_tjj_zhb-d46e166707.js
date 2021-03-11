@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Event Records","href":"datacollector\/UserGuide\/Executors\/ADLS-G1-FileMeta.html#concept_yv1_tkj_zhb","attributes": {"data-id":"concept_yv1_tkj_zhb",},"menu": {"hasChildren":false,},"tocID":"concept_yv1_tkj_zhb-d46e166830","topics":[]}]});

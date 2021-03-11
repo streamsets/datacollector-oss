@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Viewing Record Header Attributes","href":"datacollector\/UserGuide\/Processors\/Groovy.html#concept_jsz_qdy_1y","attributes": {"data-id":"concept_jsz_qdy_1y",},"menu": {"hasChildren":false,},"tocID":"concept_jsz_qdy_1y-d46e121515","topics":[]}]});

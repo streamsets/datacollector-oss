@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Schema, Table Name, and Exclusion Patterns","href":"datacollector\/UserGuide\/Origins\/OracleCDC.html#concept_gj4_sjq_qcb","attributes": {"data-id":"concept_gj4_sjq_qcb",},"menu": {"hasChildren":false,},"tocID":"concept_gj4_sjq_qcb-d46e87879","topics":[]}]});

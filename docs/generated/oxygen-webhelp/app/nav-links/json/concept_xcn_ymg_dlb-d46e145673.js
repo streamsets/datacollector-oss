@@ -1,0 +1,1 @@
+define({"topics" : [{"title":"Defining the CRUD Operation for CDC Data","href":"datacollector\/UserGuide\/Destinations\/DeltaLake.html#concept_llr_d3s_2lb","attributes": {"data-id":"concept_llr_d3s_2lb",},"menu": {"hasChildren":false,},"tocID":"concept_llr_d3s_2lb-d46e145766","topics":[]}]});
