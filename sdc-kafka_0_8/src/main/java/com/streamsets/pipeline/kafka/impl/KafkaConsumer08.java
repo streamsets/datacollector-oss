@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -34,12 +33,10 @@ import kafka.message.MessageAndMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class KafkaConsumer08 implements SdcKafkaConsumer {
 
@@ -64,8 +61,6 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   public static final String KAFKA_CONFIG_BEAN_PREFIX = "kafkaConfigBean.";
   public static final String KAFKA_AUTO_OFFSET_RESET = "kafkaAutoOffsetReset";
 
-  protected static final String KAFKA_CONFIGS = "kafkaConsumerConfigs";
-
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer08.class);
 
   private ConsumerConnector consumer;
@@ -79,19 +74,11 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   private final Map<String, Object> kafkaConsumerConfigs;
   private final String consumerGroup;
   private ConsumerConfig consumerConfig;
-  private final String kafkaAutoOffsetReset;
-  private final boolean overrideConfigurations;
+  private String kafkaAutoOffsetReset;
 
-  public KafkaConsumer08(
-      String zookeeperConnect,
-      String topic,
-      String consumerGroup,
-      int consumerTimeout,
-      Map<String, Object> kafkaConsumerConfigs,
-      Source.Context context,
-      String kafkaAutoOffsetReset,
-      boolean overrideConfigurations
-  ) {
+  public KafkaConsumer08(String zookeeperConnect, String topic, String consumerGroup,
+                         int consumerTimeout, Map<String, Object> kafkaConsumerConfigs,
+                         Source.Context context, String kafkaAutoOffsetReset) {
     this.topic = topic;
     this.maxWaitTime = consumerTimeout;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
@@ -99,13 +86,11 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
     this.consumerGroup = consumerGroup;
     this.context = context;
     this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   @Override
   public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
     validateKafkaTimestamp(issues);
-    validateAdditionalProperties(issues);
     if (issues.isEmpty()) {
       Properties props = new Properties();
       configureKafkaProperties(props);
@@ -253,16 +238,11 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
     if(kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
+      kafkaConsumerConfigs.remove(ZOOKEEPER_CONNECT_KEY);
+      kafkaConsumerConfigs.remove(GROUP_ID_KEY);
       kafkaConsumerConfigs.remove(AUTO_COMMIT_ENABLED_KEY);
-      if (!overrideConfigurations) {
-        kafkaConsumerConfigs.remove(ZOOKEEPER_CONNECT_KEY);
-        kafkaConsumerConfigs.remove(GROUP_ID_KEY);
-        kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
-        kafkaConsumerConfigs.remove(AUTO_OFFSET_RESET_KEY);
-      }
-      if (this.context.isPreview()) {
-        kafkaConsumerConfigs.remove(AUTO_OFFSET_RESET_KEY);
-      }
+      kafkaConsumerConfigs.remove(CONSUMER_TIMEOUT_KEY);
+      kafkaConsumerConfigs.remove(AUTO_OFFSET_RESET_KEY);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
@@ -276,22 +256,6 @@ public class KafkaConsumer08 implements SdcKafkaConsumer {
           KAFKA_CONFIG_BEAN_PREFIX + KAFKA_AUTO_OFFSET_RESET,
           KafkaErrors.KAFKA_76
       ));
-    }
-  }
-
-  private void validateAdditionalProperties(List<Stage.ConfigIssue> issues) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
-        ZOOKEEPER_CONNECT_KEY,
-        GROUP_ID_KEY,
-        CONSUMER_TIMEOUT_KEY,
-        AUTO_OFFSET_RESET_KEY
-    );
-    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaConsumerConfigs.keySet()))) {
-      issues.add(context.createConfigIssue(
-          KafkaOriginGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
     }
   }
 

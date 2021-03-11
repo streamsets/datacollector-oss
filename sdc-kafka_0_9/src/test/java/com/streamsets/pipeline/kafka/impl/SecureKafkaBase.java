@@ -111,18 +111,17 @@ public abstract class SecureKafkaBase {
     consumerConfig.put(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
     addClientSecurityConfig(consumerConfig);
     ConsumerFactorySettings consumerFactorySettings = new ConsumerFactorySettings(
-        zkConnect,
-        String.format("localhost:%d", getSecurePort()),
-        getTopic(),
-        1000,
-        sourceContext,
-        consumerConfig,
-        "test",
-        100,
-        false,
-        KafkaAutoOffsetReset.EARLIEST.name().toLowerCase(),
-        0,
-        false
+      zkConnect,
+      String.format("localhost:%d", getSecurePort()),
+      getTopic(),
+      1000,
+      sourceContext,
+      consumerConfig,
+      "test",
+      100,
+      false,
+      KafkaAutoOffsetReset.EARLIEST.name().toLowerCase(),
+      0
     );
     SdcKafkaConsumerFactory sdcKafkaConsumerFactory = SdcKafkaConsumerFactory.create(consumerFactorySettings);
     SdcKafkaConsumer sdcKafkaConsumer = sdcKafkaConsumerFactory.create();
@@ -136,12 +135,11 @@ public abstract class SecureKafkaBase {
     kafkaProducerConfigs.put("linger.ms", 1000);
     addClientSecurityConfig(kafkaProducerConfigs);
     ProducerFactorySettings settings = new ProducerFactorySettings(
-        kafkaProducerConfigs,
-        PartitionStrategy.DEFAULT,
-        "localhost:" + getSecurePort(),
-        DataFormat.JSON,
-        false,
-        false
+      kafkaProducerConfigs,
+      PartitionStrategy.DEFAULT,
+      "localhost:" + getSecurePort(),
+      DataFormat.JSON,
+      false
     );
     SdcKafkaProducerFactory sdcKafkaProducerFactory = SdcKafkaProducerFactory.create(settings);
     SdcKafkaProducer sdcKafkaProducer = sdcKafkaProducerFactory.create();

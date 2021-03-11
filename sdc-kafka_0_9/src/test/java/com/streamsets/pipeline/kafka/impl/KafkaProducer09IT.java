@@ -215,12 +215,11 @@ public class KafkaProducer09IT {
 
   private SdcKafkaProducer createSdcKafkaProducer(int port, Map<String, Object> kafkaConfigs) {
     ProducerFactorySettings settings = new ProducerFactorySettings(
-        kafkaConfigs,
-        PartitionStrategy.DEFAULT,
-        "localhost:" + port,
-        DataFormat.JSON,
-        false,
-        false
+      kafkaConfigs,
+      PartitionStrategy.DEFAULT,
+      "localhost:" + port,
+      DataFormat.JSON,
+      false
     );
     SdcKafkaProducerFactory sdcKafkaProducerFactory = SdcKafkaProducerFactory.create(settings);
     return sdcKafkaProducerFactory.create();

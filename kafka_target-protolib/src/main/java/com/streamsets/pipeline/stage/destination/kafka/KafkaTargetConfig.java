@@ -29,6 +29,7 @@ import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.api.impl.Utils;
 import com.streamsets.pipeline.config.DataFormat;
 import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
+import com.streamsets.pipeline.kafka.api.KafkaOriginGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.ProducerFactorySettings;
 import com.streamsets.pipeline.kafka.api.ProducerKeyFormat;
@@ -51,8 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +74,6 @@ public class KafkaTargetConfig {
   private static final long RETRY_BACKOFF_MS_DEFAULT = 1000;
   private static final int TOPIC_WARN_SIZE = 500;
   private static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
-  private static final String KAFKA_CONFIGS = "kafkaProducerConfigs";
   public static final String KAFKA_CONNECTION_CONFIG_BEAN_PREFIX = "conf.connectionConfig.connection.";
 
   @ConfigDef(
@@ -252,18 +250,6 @@ public class KafkaTargetConfig {
 
   @ConfigDef(
       required = false,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Override Stage Configurations",
-      description = "Enables overriding stage properties with Kafka Configuration properties",
-      displayPosition = 80,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "#0"
-  )
-  public boolean overrideConfigurations = false;
-
-  @ConfigDef(
-      required = false,
       type = ConfigDef.Type.STRING,
       defaultValue = "${avro:decode(record:attribute('avroKeySchema'),base64:decodeBytes(record:attribute('kafkaMessageKey')))}",
       label = "Kafka Message Key",
@@ -345,6 +331,10 @@ public class KafkaTargetConfig {
       validateConfluentSerializerConfigs(context, issues);
     }
 
+    // Configure serializers.
+    kafkaProducerConfigs.put(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, keySerializer.getKeyClass());
+    kafkaProducerConfigs.put(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
+
     List<String> schemaRegistryUrls = new ArrayList<>();
     String userInfo = "";
     if (dataGeneratorFormatConfig.avroSchemaSource == REGISTRY &&
@@ -357,26 +347,21 @@ public class KafkaTargetConfig {
       userInfo = dataGeneratorFormatConfig.basicAuthUserInfoForRegistration.get();
     }
 
-    if (!overrideConfigurations) {
-      validateAdditionalProperties(userInfo, issues, context);
-    }
-
-    // Configure serializers.
-    putConfig(KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG, keySerializer.getKeyClass());
-    putConfig(KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG, valueSerializer.getValueClass());
-
-    putConfig(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG, Joiner.on(",").join(schemaRegistryUrls));
+    kafkaProducerConfigs.put(
+        KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
+        Joiner.on(",").join(schemaRegistryUrls)
+    );
 
     if (userInfo != null && !userInfo.isEmpty()) {
-      putConfig(KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE, KafkaConstants.USER_INFO);
-      putConfig(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
+      kafkaProducerConfigs.put(KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE, KafkaConstants.USER_INFO);
+      kafkaProducerConfigs.put(KafkaConstants.BASIC_AUTH_USER_INFO, userInfo);
     }
 
     this.topicPartitionMap = new HashMap<>();
     this.allowedTopics = new HashSet<>();
     this.invalidTopicMap = new HashMap<>();
     allowAllTopics = false;
-    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create(overrideConfigurations);
+    kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
     //metadata broker list should be one or more <host>:<port> separated by a comma
     kafkaBrokers = kafkaValidationUtil.validateKafkaBrokerConnectionString(
         issues,
@@ -389,14 +374,13 @@ public class KafkaTargetConfig {
     KafkaSecurityUtil.validateAdditionalProperties(
         connectionConfig.connection.securityConfig,
         kafkaProducerConfigs,
-        overrideConfigurations,
-        KafkaDestinationGroups.KAFKA.name(),
+        KafkaOriginGroups.KAFKA.name(),
         KAFKA_CONFIG_BEAN_PREFIX + "kafkaProducerConfigs",
         issues,
         context
     );
 
-    KafkaSecurityUtil.addSecurityConfigs(connectionConfig.connection.securityConfig, kafkaProducerConfigs, overrideConfigurations);
+    KafkaSecurityUtil.addSecurityConfigs(connectionConfig.connection.securityConfig, kafkaProducerConfigs);
 
     if (connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, context)) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
@@ -469,12 +453,10 @@ public class KafkaTargetConfig {
           partitionStrategy,
           connectionConfig.connection.metadataBrokerList,
           dataFormat,
-          sendResponse,
-          overrideConfigurations
+          sendResponse
       );
       kafkaProducer = SdcKafkaProducerFactory.create(settings).create();
       try {
-        kafkaProducer.validate(issues, context);
         kafkaProducer.init();
       } catch (StageException ex) {
         issues.add(context.createConfigIssue(null, null, ex.getErrorCode(), ex.getParams()));
@@ -487,7 +469,7 @@ public class KafkaTargetConfig {
     if(messageKeyFormat == ProducerKeyFormat.AVRO && keySerializer != CONFLUENT){
       issues.add(
           context.createConfigIssue(
-              KafkaDestinationGroups.KAFKA.name(),
+              KafkaOriginGroups.KAFKA.name(),
               KAFKA_CONFIG_BEAN_PREFIX + "keySerializer",
               KafkaErrors.KAFKA_77,
               keySerializer
@@ -502,7 +484,7 @@ public class KafkaTargetConfig {
     } catch (ClassNotFoundException ignored) { // NOSONAR
       issues.add(
           context.createConfigIssue(
-              KafkaDestinationGroups.KAFKA.name(),
+              KafkaOriginGroups.KAFKA.name(),
               KAFKA_CONFIG_BEAN_PREFIX + "keyDeserializer",
               KafkaErrors.KAFKA_73
           )
@@ -866,33 +848,6 @@ public class KafkaTargetConfig {
 
   SdcKafkaProducer getKafkaProducer() {
     return kafkaProducer;
-  }
-
-  private void validateAdditionalProperties(String userInfo, List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = new HashSet<>(Arrays.asList(
-        KafkaConstants.KEY_SERIALIZER_CLASS_CONFIG,
-        KafkaConstants.VALUE_SERIALIZER_CLASS_CONFIG,
-        KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG
-    ));
-    if (userInfo != null && !userInfo.isEmpty()) {
-      forbiddenProperties.addAll(Arrays.asList(
-          KafkaConstants.BASIC_AUTH_USER_INFO,
-          KafkaConstants.BASIC_AUTH_CREDENTIAL_SOURCE
-      ));
-    }
-    if (!Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet())) {
-      issues.add(context.createConfigIssue(
-          KafkaDestinationGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
-    }
-  }
-
-  private void putConfig(String key, String value) {
-    if (overrideConfigurations || !kafkaProducerConfigs.containsKey(key)) {
-      kafkaProducerConfigs.put(key, value);
-    }
   }
 
 }

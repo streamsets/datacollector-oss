@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -28,11 +27,9 @@ import org.apache.kafka.common.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
 
@@ -44,7 +41,6 @@ public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
   private final String consumerGroup;
   private final Map<String, Object> kafkaConsumerConfigs;
   private final String kafkaAutoOffsetReset;
-  private final boolean overrideConfigurations;
 
   private static final Logger LOG = LoggerFactory.getLogger(MapR61StreamsConsumer11.class);
 
@@ -57,8 +53,7 @@ public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
       int batchSize,
       boolean isTimestampEnabled,
       String kafkaAutoOffsetReset,
-      long timestampToSearchOffsets,
-      boolean overrideConfigurations
+      long timestampToSearchOffsets
   ) {
     super(bootStrapServers != null ? bootStrapServers : "",
         topic,
@@ -68,14 +63,12 @@ public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
         batchSize,
         isTimestampEnabled,
         kafkaAutoOffsetReset,
-        timestampToSearchOffsets,
-        overrideConfigurations
+        timestampToSearchOffsets
     );
     this.consumerGroup = consumerGroup;
     this.context = context;
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   @Override
@@ -139,37 +132,15 @@ public class MapR61StreamsConsumer11 extends BaseKafkaConsumer11 {
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
     if (kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
-      if (!overrideConfigurations) {
-        kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
-      }
-      if (this.context.isPreview()) {
-        kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
-      }
+      kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
-    }
-  }
-
-  @Override
-  protected void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
-        ConsumerConfig.GROUP_ID_CONFIG,
-        ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG,
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
-    );
-    if (!(overrideConfigurations || Collections.disjoint(kafkaConsumerConfigs.keySet(), forbiddenProperties))) {
-      issues.add(context.createConfigIssue(KafkaOriginGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14
-      ));
     }
   }
 

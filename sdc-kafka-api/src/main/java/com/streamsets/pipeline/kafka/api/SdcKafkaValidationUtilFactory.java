@@ -21,5 +21,5 @@ public abstract class SdcKafkaValidationUtilFactory {
     return FactoriesBean.getKafkaValidationUtilFactory();
   }
 
-  public abstract SdcKafkaValidationUtil create(boolean overrideConfigurations);
+  public abstract SdcKafkaValidationUtil create();
 }

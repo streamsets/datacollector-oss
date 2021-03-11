@@ -16,24 +16,18 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Stage;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
-import com.streamsets.pipeline.lib.kafka.KafkaErrors;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class KafkaProducer20 extends KafkaProducer09 {
 
@@ -52,14 +46,12 @@ public class KafkaProducer20 extends KafkaProducer09 {
       String metadataBrokerList,
       Map<String, Object> kafkaProducerConfigs,
       PartitionStrategy partitionStrategy,
-      boolean sendWriteResponse,
-      boolean overrideConfigurations
+      boolean sendWriteResponse
   ) {
     super(metadataBrokerList,
         kafkaProducerConfigs,
         partitionStrategy,
-        sendWriteResponse,
-        overrideConfigurations);
+        sendWriteResponse);
 
     this.metadataBrokerList = metadataBrokerList;
     this.kafkaProducerConfigs = kafkaProducerConfigs;
@@ -91,6 +83,17 @@ public class KafkaProducer20 extends KafkaProducer09 {
       props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, EXPRESSION_PARTITIONER_CLASS);
     } else if (partitionStrategy == PartitionStrategy.DEFAULT) {
       // org.apache.kafka.clients.producer.internals.DefaultPartitioner
+    }
+  }
+
+  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+    //The following options, if specified, are ignored : "bootstrap.servers"
+    if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
+      kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
+
+      for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
+        props.put(producerConfig.getKey(), producerConfig.getValue());
+      }
     }
   }
 

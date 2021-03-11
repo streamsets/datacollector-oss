@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 
 public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory<SdcKafkaProducer> {
   private static final Logger LOG = LoggerFactory.getLogger(SdcKafkaProducerPooledObjectFactory.class);
@@ -40,16 +39,9 @@ public class SdcKafkaProducerPooledObjectFactory extends BasePooledObjectFactory
         kafkaTargetConfig.connectionConfig.connection.metadataBrokerList,
         kafkaTargetConfig.kafkaProducerConfigs
     );
-    Map<String, Object> kafkaProducerConfigs = kafkaTargetConfig.kafkaProducerConfigs == null ?
-        Collections.<String, Object>emptyMap() :
-        new HashMap<String, Object>(kafkaTargetConfig.kafkaProducerConfigs);
-    settings = new ProducerFactorySettings(
-        kafkaProducerConfigs,
-        PartitionStrategy.ROUND_ROBIN,
-        kafkaTargetConfig.connectionConfig.connection.metadataBrokerList,
-        dataFormat,
-        false,
-        kafkaTargetConfig.overrideConfigurations
+    settings = new ProducerFactorySettings(kafkaTargetConfig.kafkaProducerConfigs == null
+        ? Collections.<String, Object>emptyMap() : new HashMap<String, Object>(kafkaTargetConfig.kafkaProducerConfigs),
+        PartitionStrategy.ROUND_ROBIN, kafkaTargetConfig.connectionConfig.connection.metadataBrokerList, dataFormat, false
     );
   }
 

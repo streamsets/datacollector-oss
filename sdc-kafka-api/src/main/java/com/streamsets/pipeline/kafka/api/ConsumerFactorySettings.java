@@ -32,21 +32,19 @@ public class ConsumerFactorySettings {
   private final boolean isTimestampsEnabled;
   private final String kafkaAutoOffsetReset;
   private final long timestampToSearchOffsets;
-  private final boolean overrideConfigurations;
 
   public ConsumerFactorySettings(
-      String zookeeperConnect,
-      String bootstrapServers,
-      String topic,
-      int maxWaitTime,
-      Source.Context context,
-      Map<String, Object> kafkaConsumerConfigs,
-      String consumerGroup,
-      int batchSize,
-      boolean isTimestampsEnabled,
-      String kafkaAutoOffsetReset,
-      long timestampToSearchOffsets,
-      boolean overrideConfigurations
+    String zookeeperConnect,
+    String bootstrapServers,
+    String topic,
+    int maxWaitTime,
+    Source.Context context,
+    Map<String, Object> kafkaConsumerConfigs,
+    String consumerGroup,
+    int batchSize,
+    boolean isTimestampsEnabled,
+    String kafkaAutoOffsetReset,
+    long timestampToSearchOffsets
 
   ) {
     this.zookeeperConnect = zookeeperConnect;
@@ -60,7 +58,6 @@ public class ConsumerFactorySettings {
     this.isTimestampsEnabled = isTimestampsEnabled;
     this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
     this.timestampToSearchOffsets = timestampToSearchOffsets;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   public String getBootstrapServers() {
@@ -105,9 +102,5 @@ public class ConsumerFactorySettings {
 
   public long getTimestampToSearchOffsets() {
     return timestampToSearchOffsets;
-  }
-
-  public boolean getOverrideConfigurations() {
-    return overrideConfigurations;
   }
 }

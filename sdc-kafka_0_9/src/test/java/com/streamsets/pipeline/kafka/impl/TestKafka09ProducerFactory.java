@@ -35,7 +35,6 @@ public class TestKafka09ProducerFactory {
         PartitionStrategy.DEFAULT,
         "",
         DataFormat.JSON,
-        false,
         false
     );
     SdcKafkaProducerFactory sdcKafkaProducerFactory = SdcKafkaProducerFactory.create(settings);

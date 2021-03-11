@@ -15,12 +15,10 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Record;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.config.DataFormat;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.kafka.api.SdcKafkaProducer;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -36,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class KafkaProducer08 implements SdcKafkaProducer {
 
@@ -56,9 +53,6 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   private static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
   private static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
 
-  public static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
-  public static final String KAFKA_CONFIGS = "kafkaProducerConfigs";
-
   /*Topic to readData from*/
   /*Host on which the seed broker is running*/
   private final String metadataBrokerList;
@@ -67,21 +61,18 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   private final PartitionStrategy partitionStrategy;
   private List<KeyedMessage> messageList;
   private Producer producer;
-  private final boolean overrideConfigurations;
 
   public KafkaProducer08(
       String metadataBrokerList,
       DataFormat producerPayloadType,
       PartitionStrategy partitionStrategy,
-      Map<String, Object> kafkaProducerConfigs,
-      boolean overrideConfigurations
+      Map<String, Object> kafkaProducerConfigs
   ) {
     this.metadataBrokerList = metadataBrokerList;
     this.producerPayloadType = producerPayloadType;
     this.partitionStrategy = partitionStrategy;
     this.messageList = new ArrayList<>();
     this.kafkaProducerConfigs = kafkaProducerConfigs;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   @Override
@@ -147,7 +138,7 @@ public class KafkaProducer08 implements SdcKafkaProducer {
 
 
   private void configureSerializer(Properties props, DataFormat producerPayloadType) {
-    if (producerPayloadType == DataFormat.TEXT) {
+    if(producerPayloadType == DataFormat.TEXT) {
       props.put(SERIALIZER_CLASS_KEY, DEFAULT_ENCODER_CLASS);
     }
   }
@@ -165,38 +156,16 @@ public class KafkaProducer08 implements SdcKafkaProducer {
   }
 
   private void addUserConfiguredProperties(Properties props) {
-    // Key and value serializers are always ignored, since we use our own values
-    // Metadata broker list and partitioner class can be overridden provided it is specified
+    //The following options, if specified, are ignored : "metadata.broker.list", "producer.type",
+    // "key.serializer.class", "partitioner.class", "serializer.class".
     if (kafkaProducerConfigs != null && !kafkaProducerConfigs.isEmpty()) {
+      kafkaProducerConfigs.remove(METADATA_BROKER_LIST_KEY);
       kafkaProducerConfigs.remove(KEY_SERIALIZER_CLASS_KEY);
       kafkaProducerConfigs.remove(SERIALIZER_CLASS_KEY);
-      if (!overrideConfigurations) {
-        kafkaProducerConfigs.remove(METADATA_BROKER_LIST_KEY);
-        kafkaProducerConfigs.remove(PARTITIONER_CLASS_KEY);
-      }
 
       for (Map.Entry<String, Object> producerConfig : kafkaProducerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
     }
   }
-
-  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    validateAdditionalProperties(issues, context);
-  }
-
-  private void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
-        METADATA_BROKER_LIST_KEY,
-        PARTITIONER_CLASS_KEY
-    );
-    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet()))) {
-      issues.add(context.createConfigIssue(
-          KafkaDestinationGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
-    }
-  }
-
 }

@@ -56,12 +56,6 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
   public static final String ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_SERIALIZER = "org.apache.kafka.common.serialization.StringSerializer";
   public static final String ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_DESERIALIZER = "org.apache.kafka.common.serialization.StringDeserializer";
 
-  private final boolean overrideConfigurations;
-
-  MapR61StreamsValidationUtil11(boolean overrideConfigurations) {
-    this.overrideConfigurations = overrideConfigurations;
-  }
-
   @Override
   public String getVersion() {
     return KAFKA_VERSION;
@@ -234,26 +228,11 @@ public class MapR61StreamsValidationUtil11 extends BaseKafkaValidationUtil imple
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, ORG_APACHE_KAFKA_COMMON_SERIALIZATION_STRING_SERIALIZER);
 
     // Check if user has configured 'max.block.ms' option, otherwise wait for 60 seconds to fetch metadata
-    if (kafkaClientConfigs == null || !kafkaClientConfigs.containsKey(STREAMS_RPC_TIMEOUT_MS)) {
+    if (kafkaClientConfigs != null && kafkaClientConfigs.containsKey(STREAMS_RPC_TIMEOUT_MS)) {
+      props.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, kafkaClientConfigs.get(STREAMS_RPC_TIMEOUT_MS));
+    } else {
       props.put(STREAMS_RPC_TIMEOUT_MS, 60000);
     }
-
-    addUserConfiguredProperties(kafkaClientConfigs, props);
-
     return new KafkaProducer<>(props);
-  }
-
-  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
-    //The following options, if specified, are ignored : "key.serializer" and "value.serializer"
-    if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
-      if (!overrideConfigurations) {
-        kafkaClientConfigs.remove(Kafka09Constants.KEY_SERIALIZER_KEY);
-        kafkaClientConfigs.remove(Kafka09Constants.VALUE_SERIALIZER_KEY);
-      }
-
-      for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
-        props.put(producerConfig.getKey(), producerConfig.getValue());
-      }
-    }
   }
 }

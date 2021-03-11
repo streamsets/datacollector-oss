@@ -42,10 +42,6 @@ public class MapR52StreamsValidationUtil09 extends MapRStreamsValidationUtil09  
   private static final Logger LOG = LoggerFactory.getLogger(MapR52StreamsValidationUtil09.class);
   private final Set<String> streamCache = new HashSet<>();
 
-  MapR52StreamsValidationUtil09(boolean overrideConfigurations) {
-    super(overrideConfigurations);
-  }
-
   @Override
   public boolean validateTopicExistence(
     Stage.Context context,

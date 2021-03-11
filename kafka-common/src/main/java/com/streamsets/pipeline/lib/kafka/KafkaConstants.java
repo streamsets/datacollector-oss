@@ -16,8 +16,6 @@
 package com.streamsets.pipeline.lib.kafka;
 
 public class KafkaConstants {
-  public static final String BOOTSTRAP_SERVERS = "bootstrap.servers";
-  public static final String GROUP_ID = "group.id";
   public static final String KEY_DESERIALIZER_CLASS_CONFIG = "key.deserializer";
   public static final String VALUE_DESERIALIZER_CLASS_CONFIG = "value.deserializer";
   public static final String KEY_SERIALIZER_CLASS_CONFIG = "key.serializer";
@@ -31,4 +29,5 @@ public class KafkaConstants {
   public static final String AUTO_OFFSET_RESET_CONFIG = "auto.offset.reset";
   public static final String AUTO_OFFSET_RESET_PREVIEW_VALUE = "earliest";
   public static final String AUTO_COMMIT_OFFEST = "enable.auto.commit";
+
 }

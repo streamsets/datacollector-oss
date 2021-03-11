@@ -46,10 +46,6 @@ public class KafkaValidationUtil08 extends BaseKafkaValidationUtil implements Sd
   private static final int METADATA_READER_TIME_OUT = 10000;
   private static final int BUFFER_SIZE = 64 * 1024;
 
-  KafkaValidationUtil08(boolean overrideConfigurations) {
-
-  }
-
   @Override
   public String getVersion() {
     return Kafka08Constants.KAFKA_VERSION;

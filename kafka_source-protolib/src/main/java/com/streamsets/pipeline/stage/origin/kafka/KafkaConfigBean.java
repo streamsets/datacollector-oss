@@ -254,18 +254,6 @@ public class KafkaConfigBean {
   public Map<String, String> kafkaConsumerConfigs = new HashMap<>();
 
   @ConfigDef(
-      required = false,
-      type = ConfigDef.Type.BOOLEAN,
-      defaultValue = "false",
-      label = "Override Stage Configurations",
-      description = "Enables overriding stage properties with Kafka Configuration properties",
-      displayPosition = 130,
-      displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "KAFKA"
-  )
-  public boolean overrideConfigurations = false;
-
-  @ConfigDef(
       required = true,
       type = ConfigDef.Type.BOOLEAN,
       defaultValue = "false",

@@ -37,8 +37,7 @@ public class Kafka09ProducerFactory extends SdcKafkaProducerFactory {
         settings.getMetadataBrokerList(),
         settings.getKafkaProducerConfigs(),
         settings.getPartitionStrategy(),
-        settings.isSendWriteResponse(),
-        settings.getOverrideConfigurations()
+        settings.isSendWriteResponse()
     );
   }
 }

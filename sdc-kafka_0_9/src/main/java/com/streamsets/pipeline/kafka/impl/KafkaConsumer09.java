@@ -15,7 +15,6 @@
  */
 package com.streamsets.pipeline.kafka.impl;
 
-import com.google.common.collect.ImmutableSet;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
@@ -30,17 +29,13 @@ import org.apache.kafka.common.KafkaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class KafkaConsumer09 extends BaseKafkaConsumer09 {
 
   private static final boolean AUTO_COMMIT_ENABLED_DEFAULT = false;
-
-  protected static final String KAFKA_CONFIGS = "kafkaConsumerConfigs";
 
   private static final Logger LOG = LoggerFactory.getLogger(KafkaConsumer09.class);
 
@@ -50,7 +45,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private final Map<String, Object> kafkaConsumerConfigs;
   private final boolean isTimestampsEnabled;
   protected String kafkaAutoOffsetReset;
-  private final boolean overrideConfigurations;
 
   public KafkaConsumer09(
       String bootStrapServers,
@@ -60,8 +54,7 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
       Source.Context context,
       int batchSize,
       boolean isTimestampsEnabled,
-      String kafkaAutoOffsetReset,
-      boolean overrideConfigurations
+      String kafkaAutoOffsetReset
   ) {
     super(topic, context, batchSize);
     this.bootStrapServers = bootStrapServers;
@@ -70,7 +63,6 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
     this.kafkaConsumerConfigs = kafkaConsumerConfigs;
     this.isTimestampsEnabled = isTimestampsEnabled;
     this.kafkaAutoOffsetReset = kafkaAutoOffsetReset;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   @Override
@@ -128,40 +120,14 @@ public class KafkaConsumer09 extends BaseKafkaConsumer09 {
   private void addUserConfiguredProperties(Properties props) {
     //The following options, if specified, are ignored :
     if (kafkaConsumerConfigs != null && !kafkaConsumerConfigs.isEmpty()) {
+      kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
+      kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
       kafkaConsumerConfigs.remove(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG);
-      if (!overrideConfigurations) {
-        kafkaConsumerConfigs.remove(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.GROUP_ID_CONFIG);
-        kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
-      }
-      if (this.context.isPreview()) {
-        kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
-      }
+      kafkaConsumerConfigs.remove(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaConsumerConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
-    }
-  }
-
-  @Override
-  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    validateAdditionalProperties(issues, context);
-    super.validate(issues, context);
-  }
-
-  protected void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
-        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-        ConsumerConfig.GROUP_ID_CONFIG,
-        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG
-    );
-    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaConsumerConfigs.keySet()))) {
-      issues.add(context.createConfigIssue(
-          KafkaOriginGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
     }
   }
 

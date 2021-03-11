@@ -16,10 +16,7 @@
 package com.streamsets.pipeline.kafka.impl;
 
 
-import com.google.common.collect.ImmutableSet;
-import com.streamsets.pipeline.api.Stage;
 import com.streamsets.pipeline.api.StageException;
-import com.streamsets.pipeline.kafka.api.KafkaDestinationGroups;
 import com.streamsets.pipeline.kafka.api.PartitionStrategy;
 import com.streamsets.pipeline.lib.kafka.KafkaConstants;
 import com.streamsets.pipeline.lib.kafka.KafkaErrors;
@@ -27,14 +24,12 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.Set;
 
 public class KafkaProducer09 extends BaseKafkaProducer09 {
 
@@ -45,26 +40,20 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
   public static final String ROUND_ROBIN_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.RoundRobinPartitioner";
   public static final String EXPRESSION_PARTITIONER_CLASS = "com.streamsets.pipeline.kafka.impl.ExpressionPartitioner";
 
-  protected static final String KAFKA_CONFIG_BEAN_PREFIX = "conf.";
-  protected static final String KAFKA_CONFIGS = "kafkaProducerConfigs";
-
   private final String metadataBrokerList;
   private final Map<String, Object> kafkaProducerConfigs;
   private final PartitionStrategy partitionStrategy;
-  protected final boolean overrideConfigurations;
 
   public KafkaProducer09(
       String metadataBrokerList,
       Map<String, Object> kafkaProducerConfigs,
       PartitionStrategy partitionStrategy,
-      boolean sendWriteResponse,
-      boolean overrideConfigurations
+      boolean sendWriteResponse
   ) {
     super(sendWriteResponse);
     this.metadataBrokerList = metadataBrokerList;
     this.kafkaProducerConfigs = kafkaProducerConfigs;
     this.partitionStrategy = partitionStrategy;
-    this.overrideConfigurations = overrideConfigurations;
   }
 
   @Override
@@ -105,35 +94,14 @@ public class KafkaProducer09 extends BaseKafkaProducer09 {
     }
   }
 
-  public void validate(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    validateAdditionalProperties(issues, context);
-  }
-
-  protected void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
-    //The following options, if specified, are ignored : "bootstrap.servers", "partitioner.class"
+  private void addUserConfiguredProperties(Map<String, Object> kafkaClientConfigs, Properties props) {
+    //The following options, if specified, are ignored : "bootstrap.servers"
     if (kafkaClientConfigs != null && !kafkaClientConfigs.isEmpty()) {
-      if (!overrideConfigurations) {
-        kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
-        kafkaClientConfigs.remove(ProducerConfig.PARTITIONER_CLASS_CONFIG);
-      }
+      kafkaClientConfigs.remove(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG);
 
       for (Map.Entry<String, Object> producerConfig : kafkaClientConfigs.entrySet()) {
         props.put(producerConfig.getKey(), producerConfig.getValue());
       }
-    }
-  }
-
-  protected void validateAdditionalProperties(List<Stage.ConfigIssue> issues, Stage.Context context) {
-    Set<String> forbiddenProperties = ImmutableSet.of(
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-        ProducerConfig.PARTITIONER_CLASS_CONFIG
-    );
-    if (!(overrideConfigurations || Collections.disjoint(forbiddenProperties, kafkaProducerConfigs.keySet()))) {
-      issues.add(context.createConfigIssue(
-          KafkaDestinationGroups.KAFKA.name(),
-          KAFKA_CONFIG_BEAN_PREFIX + KAFKA_CONFIGS,
-          KafkaErrors.KAFKA_14)
-      );
     }
   }
 

@@ -55,8 +55,6 @@ public class MultiKafkaSource extends BasePushSource {
 
   private static final String MULTI_KAFKA_DATA_FORMAT_CONFIG_PREFIX = "dataFormatConfig.";
 
-  private static final String MAX_POLL_RECORDS = "max.poll.records";
-
   private final MultiKafkaBeanConfig conf;
   private final AtomicBoolean shutdownCalled = new AtomicBoolean(false);
   private int batchSize;
@@ -91,9 +89,9 @@ public class MultiKafkaSource extends BasePushSource {
       );
     }
 
-    SdcKafkaValidationUtil kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create(false);
+    SdcKafkaValidationUtil kafkaValidationUtil = SdcKafkaValidationUtilFactory.getInstance().create();
 
-    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaOptions, conf.overrideConfigurations);
+    KafkaSecurityUtil.addSecurityConfigs(conf.connectionConfig.connection.securityConfig, conf.kafkaOptions);
 
     if (conf.connectionConfig.connection.securityConfig.provideKeytab && kafkaValidationUtil.isProvideKeytabAllowed(issues, getContext())) {
       keytabFileName = kafkaKerberosUtil.saveUserKeytab(
@@ -192,10 +190,11 @@ public class MultiKafkaSource extends BasePushSource {
   // no trespassing...
   private Properties getKafkaProperties(Stage.Context context) {
     Properties props = new Properties();
+    props.putAll(conf.kafkaOptions);
 
-    props.setProperty(KafkaConstants.BOOTSTRAP_SERVERS, conf.connectionConfig.connection.metadataBrokerList);
-    props.setProperty(KafkaConstants.GROUP_ID, conf.consumerGroup);
-    props.setProperty(MAX_POLL_RECORDS, String.valueOf(batchSize));
+    props.setProperty("bootstrap.servers", conf.connectionConfig.connection.metadataBrokerList);
+    props.setProperty("group.id", conf.consumerGroup);
+    props.setProperty("max.poll.records", String.valueOf(batchSize));
     props.setProperty(KafkaConstants.KEY_DESERIALIZER_CLASS_CONFIG, conf.keyDeserializer.getKeyClass());
     props.setProperty(KafkaConstants.VALUE_DESERIALIZER_CLASS_CONFIG, conf.valueDeserializer.getValueClass());
     props.setProperty(KafkaConstants.CONFLUENT_SCHEMA_REGISTRY_URL_CONFIG,
@@ -213,8 +212,6 @@ public class MultiKafkaSource extends BasePushSource {
     if (context.isPreview()) {
       props.setProperty(KafkaConstants.AUTO_OFFSET_RESET_CONFIG, KafkaConstants.AUTO_OFFSET_RESET_PREVIEW_VALUE);
     }
-
-    props.putAll(conf.kafkaOptions);
 
     return props;
   }
