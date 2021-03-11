@@ -27,7 +27,7 @@ import com.streamsets.pipeline.lib.jdbc.connection.common.JdbcConnectionGroups;
 @InterfaceAudience.LimitedPrivate
 @InterfaceStability.Unstable
 @ConnectionDef(
-    label = "Postgres",
+    label = "PostgreSQL",
     type = PostgresConnection.TYPE,
     description = "Connects to PostgreSQL",
     version = 1,
