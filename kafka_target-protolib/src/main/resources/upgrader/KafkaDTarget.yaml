@@ -188,4 +188,7 @@ upgrades:
           value: "PLAIN"
           elseName: conf.connectionConfig.connection.securityConfig.saslMechanism
           elseValue: "GSSAPI"
+      - setConfig:
+          name: conf.overrideConfigurations
+          value: false
 
