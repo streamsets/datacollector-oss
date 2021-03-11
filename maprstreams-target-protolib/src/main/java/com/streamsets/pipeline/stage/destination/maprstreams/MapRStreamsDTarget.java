@@ -26,7 +26,7 @@ import com.streamsets.pipeline.stage.destination.kafka.KafkaTargetConfig;
 import com.streamsets.pipeline.stage.destination.lib.ToOriginResponseConfig;
 
 @StageDef(
-  version = 4,
+  version = 3,
   label = "MapR Streams Producer",
   description = "Writes data to MapR Streams",
   icon = "mapr_es.png",
@@ -55,7 +55,6 @@ public class MapRStreamsDTarget extends DTarget {
     kafkaConfigBean.dataFormat = maprStreamsTargetConfigBean.dataFormat;
     kafkaConfigBean.dataGeneratorFormatConfig = maprStreamsTargetConfigBean.dataGeneratorFormatConfig;
     kafkaConfigBean.kafkaProducerConfigs = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.kafkaProducerConfigs;
-    kafkaConfigBean.overrideConfigurations = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.overrideConfigurations;
     kafkaConfigBean.partition = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partition;
     kafkaConfigBean.partitionStrategy = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.partitionStrategy;
     kafkaConfigBean.runtimeTopicResolution = maprStreamsTargetConfigBean.mapRStreamsTargetConfig.runtimeTopicResolution;
