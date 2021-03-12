@@ -49,7 +49,7 @@ import com.streamsets.pipeline.lib.jdbc.PostgresHikariPoolConfigBean;
 })
 public class PostgresCDCDSource extends DSourceOffsetCommitter {
 
-  @ConfigDefBean
+  @ConfigDefBean(groups = {"JDBC", "CREDENTIALS"})
   public PostgresHikariPoolConfigBean hikariConf = new PostgresHikariPoolConfigBean();
 
   @ConfigDefBean
