@@ -23,13 +23,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.google.common.annotations.VisibleForTesting;
@@ -131,20 +126,22 @@ public class ThycoticCredentialStore implements CredentialStore {
       issues.add(context.createConfigIssue(Errors.THYCOTIC_00, THYCOTIC_SECRET_SERVER_PASSWORD));
     }
 
-    if (!checkSecretServerConnection()) {
-      issues.add(context.createConfigIssue(Errors.THYCOTIC_02, THYCOTIC_SECRET_SERVER_URL));
+    if (issues.isEmpty()) {
+      authRenewal = new AuthRenewalTask(getClient(), secretServerUrl, username, password);
+      if (!checkSecretServerConnection()) {
+        String wrongUrl = context.getConfig(THYCOTIC_SECRET_SERVER_URL);
+        issues.add(context.createConfigIssue(Errors.THYCOTIC_02, wrongUrl));
+      }
     }
 
     if (issues.isEmpty()) {
-      authRenewal = new AuthRenewalTask(getClient(), secretServerUrl, username, password);
-
       cacheExpirationSeconds = configuration.get(CACHE_EXPIRATION_PROP, CACHE_EXPIRATION_DEFAULT);
 
       credentialCache = CacheBuilder.newBuilder()
           .expireAfterAccess(getCacheExpirationSeconds(), TimeUnit.SECONDS)
           .build(new CacheLoader<String, CredentialValue>() {
             @Override
-            public CredentialValue load(String key) throws Exception {
+            public CredentialValue load(String key) {
               return ThycoticCredentialStore.this.createCredentialValue(key);
             }
           });
@@ -164,19 +161,13 @@ public class ThycoticCredentialStore implements CredentialStore {
 
   @VisibleForTesting
   protected boolean checkSecretServerConnection() {
-    HttpPost httpPost = new HttpPost(secretServerUrl + "/oauth2/token");
-    List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-    nvps.add(new BasicNameValuePair("username", username));
-    nvps.add(new BasicNameValuePair("password", password));
-    nvps.add(new BasicNameValuePair("grant_type", GRANT_TYPE));
     try {
-      httpPost.setEntity(new UrlEncodedFormEntity(nvps));
-      CloseableHttpResponse response = getClient().execute(httpPost);
-      if (response.getStatusLine().getStatusCode() == 200) {
+      String authToken = authRenewal.fetchAccessToken();
+      if (authToken != null) {
         return true;
       }
-    } catch (IOException e) {
-      LOG.debug("Error in connecting to the secret server: ", e);
+    } catch (Exception e) {
+      LOG.debug("Error in connecting to the Secret Server: ", e);
     }
     return false;
   }

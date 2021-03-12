@@ -86,7 +86,7 @@ public class AuthRenewalTask {
   }
 
   @VisibleForTesting
-  protected String fetchAccessToken() throws Exception {
+  public String fetchAccessToken() throws Exception {
     HttpPost httpPost = new HttpPost(secretServerUrl + "/oauth2/token");
     List<NameValuePair> nvps = new ArrayList<NameValuePair>();
     nvps.add(new BasicNameValuePair("username", username));

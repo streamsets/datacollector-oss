@@ -36,7 +36,7 @@ public class TestThycoticCredentialStore {
 
     store.init(context);
     Mockito.when(context.getConfig(Mockito.any())).thenReturn(null);
-    Assert.assertEquals(4, store.init(context).size());
+    Assert.assertEquals(3, store.init(context).size());
   }
 
   @Test
