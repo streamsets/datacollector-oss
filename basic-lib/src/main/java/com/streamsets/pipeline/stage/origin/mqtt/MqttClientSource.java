@@ -100,9 +100,6 @@ public class MqttClientSource implements PushSource, MqttCallback {
         dispatchHttpReceiverErrors(100);
       }
 
-      for (String topicFilter: subscriberConf.topicFilters) {
-        mqttClient.unsubscribe(topicFilter);
-      }
     } catch(MqttException me) {
       throw new StageException(Errors.MQTT_04, me, me);
     }
