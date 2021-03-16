@@ -333,6 +333,28 @@ check_curl_and_tar_installed() {
 }
 
 run_bootstrap() {
+  case $STREAMSETS_DEPLOYMENT_TYPE in
+  "" | SELF)
+    CSP_ENV_FILE=""
+    export STREAMSETS_DEPLOYMENT_TYPE="SELF"
+    ;;
+  EC2)
+    CSP_ENV_FILE=${SDC_HOME}/libexec/csp-envs/ec2-env.sh
+    ;;
+  *)
+    CSP_ENV_FILE=""
+    echo "Unknown STREAMSETS_DEPLOYMENT_TYPE: ${STREAMSETS_DEPLOYMENT_TYPE}"
+    ;;
+  esac
+  if [[ ! -z ${CSP_ENV_FILE} ]]; then
+    echo "Loading Deployment Bootstrap environment for ${STREAMSETS_DEPLOYMENT_TYPE}"
+    if [ -f ${CSP_ENV_FILE} ]; then
+      source ${CSP_ENV_FILE}
+    else
+      echo "Deployment Bootstrap environment for ${STREAMSETS_DEPLOYMENT_TYPE} not found"
+    fi
+  fi
+
   if [[ -f ${SDC_CONF}/sch-url.txt ]]; then
     SCH_URL_FROM_FILE=$(cat ${SDC_CONF}/sch-url.txt)
   fi

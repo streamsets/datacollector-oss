@@ -89,6 +89,17 @@
       <filtered>true</filtered>
     </fileSet>
 
+    <!-- libexec/csp-envs -->
+    <fileSet>
+      <directory>${basedir}/src/main</directory>
+      <outputDirectory>/</outputDirectory>
+      <includes>
+        <include>libexec/csp-envs/*</include>
+      </includes>
+      <fileMode>0755</fileMode>
+      <filtered>true</filtered>
+    </fileSet>
+
     <!-- configuration -->
     <fileSet>
       <directory>${basedir}/src/main/etc</directory>
