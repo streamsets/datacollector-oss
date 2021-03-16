@@ -24,7 +24,7 @@ import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Control Hub API",
     description = "Calls a Control Hub API",
     icon="streamsets.png",

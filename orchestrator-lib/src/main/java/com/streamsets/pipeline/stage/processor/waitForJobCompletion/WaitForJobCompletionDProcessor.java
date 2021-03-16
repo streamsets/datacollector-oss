@@ -26,7 +26,7 @@ import com.streamsets.pipeline.api.base.configurablestage.DProcessor;
 import com.streamsets.pipeline.lib.startJob.Groups;
 
 @StageDef(
-    version = 4,
+    version = 5,
     label = "Wait for Jobs",
     description = "Waits for Control Hub jobs to complete",
     icon="job.png",
