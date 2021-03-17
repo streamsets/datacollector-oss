@@ -169,7 +169,7 @@ public class StartPipelineCommon {
     );
     resolvedPipelineIdConfig.runtimeParameters = runtimeParametersEval.eval(
         pipelineIdConfigVars,
-        pipelineIdConfig.runtimeParameters,
+        pipelineIdConfig.propagateRuntimeParameters ? pipelineIdConfig.runtimeParameters : "",
         String.class
     );
     return new StartPipelineSupplier(

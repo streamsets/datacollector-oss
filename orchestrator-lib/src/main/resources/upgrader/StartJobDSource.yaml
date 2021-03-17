@@ -87,3 +87,12 @@ upgrades:
       - setConfig:
           name: conf.controlHubConfig.authToken
           value: ""
+
+  - toVersion: 6
+    actions:
+      - iterateListConfig:
+          name: conf.jobIdConfigList
+          actions:
+            - setConfig:
+                name: propagateRuntimeParameters
+                value: true

@@ -99,7 +99,7 @@ public class StartJobConfig {
 
   @ConfigDef(
       required = false,
-      defaultValue = "[{}]",
+      defaultValue = "[]",
       type = ConfigDef.Type.TEXT,
       label = "Job Instance Runtime Parameters",
       description = "Runtime parameters and values for each job instance",

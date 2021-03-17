@@ -103,6 +103,9 @@ public class StartJobTemplateSupplier implements Supplier<Field> {
         );
       }
     }
+    if (runtimeParametersList == null) {
+      runtimeParametersList = new ArrayList<>();
+    }
 
     Map<String, Object> jobTemplateCreationInfo = new HashMap<>();
     jobTemplateCreationInfo.put("namePostfixType", conf.instanceNameSuffix);

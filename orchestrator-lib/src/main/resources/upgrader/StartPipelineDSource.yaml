@@ -32,3 +32,12 @@ upgrades:
       - setConfig:
           name: conf.tlsConfig.trustedCertificates
           value: []
+
+  - toVersion: 4
+    actions:
+      - iterateListConfig:
+          name: conf.pipelineIdConfigList
+          actions:
+            - setConfig:
+                name: propagateRuntimeParameters
+                value: true

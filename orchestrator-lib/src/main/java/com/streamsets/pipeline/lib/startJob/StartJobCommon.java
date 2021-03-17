@@ -134,7 +134,7 @@ public class StartJobCommon {
         );
         resolvedJobIdConfig.runtimeParameters = runtimeParametersEval.eval(
             jobIdConfigVars,
-            jobIdConfig.runtimeParameters,
+            jobIdConfig.propagateRuntimeParameters ? jobIdConfig.runtimeParameters : "",
             String.class
         );
         CompletableFuture<Field> future = CompletableFuture.supplyAsync(new StartJobSupplier(

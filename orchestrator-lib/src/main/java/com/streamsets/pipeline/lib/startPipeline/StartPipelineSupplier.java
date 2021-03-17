@@ -101,6 +101,7 @@ public class StartPipelineSupplier implements Supplier<Field> {
         managerApi.resetOffset(pipelineIdConfig.pipelineId, Constants.REV);
       }
       Map<String, Object> runtimeParameters = null;
+      // Before submitting, we already cleared the replacement runtime parameters if propagateRuntimeParameters is set to false.
       if (StringUtils.isNotEmpty(pipelineIdConfig.runtimeParameters)) {
         runtimeParameters = objectMapper.readValue(pipelineIdConfig.runtimeParameters, Map.class);
       }

@@ -48,7 +48,7 @@ public class PipelineIdConfig {
 
   @ConfigDef(
       required = false,
-      defaultValue = "{}",
+      defaultValue = "",
       type = ConfigDef.Type.TEXT,
       label = "Runtime Parameters",
       description = "Runtime parameters to pass to the pipeline",
@@ -59,5 +59,19 @@ public class PipelineIdConfig {
       evaluation = ConfigDef.Evaluation.EXPLICIT
   )
   public String runtimeParameters;
+
+  @ConfigDef(
+      required = false,
+      defaultValue = "true",
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Replace Existing",
+      description = "Replaces all parameters defined in the pipeline with the specified parameters",
+      displayPosition = 40,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "JOB",
+      elDefs = {RecordEL.class, TimeNowEL.class},
+      evaluation = ConfigDef.Evaluation.EXPLICIT
+  )
+  public boolean propagateRuntimeParameters = true;
 
 }

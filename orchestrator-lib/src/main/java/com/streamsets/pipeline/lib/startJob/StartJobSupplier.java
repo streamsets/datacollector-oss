@@ -133,6 +133,7 @@ public class StartJobSupplier implements Supplier<Field> {
   private Map<String, Object> startJob() {
     String jobStartUrl = conf.controlHubConfig.baseUrl + "jobrunner/rest/v1/job/" + jobIdConfig.jobId + "/start";
     Map<String, Object> runtimeParameters = null;
+    // Before submitting, we already cleared the replacement runtime parameters if propagateRuntimeParameters is set to false.
     if (StringUtils.isNotEmpty(jobIdConfig.runtimeParameters)) {
       try {
         runtimeParameters = objectMapper.readValue(jobIdConfig.runtimeParameters, Map.class);
