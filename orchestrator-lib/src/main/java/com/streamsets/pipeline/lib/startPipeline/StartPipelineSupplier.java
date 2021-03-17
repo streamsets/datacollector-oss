@@ -121,15 +121,19 @@ public class StartPipelineSupplier implements Supplier<Field> {
     return responseField;
   }
 
+  /*
+  Doing a self-referential call to enter in a wait loop can potentially create a
+  StackOverfkowException, and could provoke an unestable JVM due to OutOfMemmoryException.
+ */
   private void waitForPipelineCompletion() throws Exception {
-    PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineIdConfig.pipelineId, Constants.REV);
-    if (Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus())) {
-      generateField(pipelineStateJson);
-    } else if (Constants.PIPELINE_ERROR_STATES.contains(pipelineStateJson.getStatus())) {
-      generateField(pipelineStateJson);
-    } else {
+    while (true) {
+      PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineIdConfig.pipelineId, Constants.REV);
+      if (Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus()) ||
+          Constants.PIPELINE_ERROR_STATES.contains(pipelineStateJson.getStatus())) {
+        generateField(pipelineStateJson);
+        return;
+      }
       ThreadUtil.sleep(conf.waitTime);
-      waitForPipelineCompletion();
     }
   }
 

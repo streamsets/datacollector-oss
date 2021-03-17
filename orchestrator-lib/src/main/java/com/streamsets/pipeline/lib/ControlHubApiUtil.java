@@ -80,35 +80,40 @@ public class ControlHubApiUtil {
     }
   }
 
+  /*
+  Doing a self-referential call to enter in a wait loop can potentially create a
+  StackOverfkowException, and could provoke an unestable JVM due to OutOfMemmoryException.
+ */
   public static List<Map<String, Object>> waitForJobCompletion(
       ClientBuilder clientBuilder,
       String baseUrl,
       List<String> jobIdList,
       long waitTime
   ) {
-    ThreadUtil.sleep(waitTime);
+    while (true) {
+      ThreadUtil.sleep(waitTime);
 
-    Map<String, Map<String, Object>> jobStatusMap = ControlHubApiUtil.getMultipleJobStatus(
-        clientBuilder,
-        baseUrl,
-        jobIdList
-    );
-    List<Map<String, Object>> jobStatusList = jobStatusMap.keySet()
-        .stream()
-        .map(jobStatusMap::get)
-        .collect(Collectors.toList());
+      Map<String, Map<String, Object>> jobStatusMap = ControlHubApiUtil.getMultipleJobStatus(
+          clientBuilder,
+          baseUrl,
+          jobIdList
+      );
+      List<Map<String, Object>> jobStatusList = jobStatusMap
+          .keySet()
+          .stream()
+          .map(jobStatusMap::get)
+          .collect(Collectors.toList());
 
-    boolean allDone = true;
-    for(Map<String, Object> jobStatus: jobStatusList) {
-      String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-      allDone &= (Constants.JOB_SUCCESS_STATES.contains(status) || Constants.JOB_ERROR_STATES.contains(status));
+      boolean allDone = true;
+      for(Map<String, Object> jobStatus: jobStatusList) {
+        String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
+        allDone &= (Constants.JOB_SUCCESS_STATES.contains(status) || Constants.JOB_ERROR_STATES.contains(status));
+      }
+
+      if (allDone) {
+        return jobStatusList;
+      }
     }
-
-    if (!allDone) {
-      return waitForJobCompletion(clientBuilder, baseUrl, jobIdList, waitTime);
-    }
-
-    return jobStatusList;
   }
 
   public static MetricRegistryJson getJobMetrics(

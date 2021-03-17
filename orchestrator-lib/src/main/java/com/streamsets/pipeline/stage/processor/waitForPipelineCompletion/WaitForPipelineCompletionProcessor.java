@@ -179,22 +179,26 @@ public class WaitForPipelineCompletionProcessor extends SingleLaneProcessor {
     }
   }
 
+  /*
+  Doing a self-referential call to enter in a wait loop can potentially create a
+  StackOverfkowException, and could provoke an unestable JVM due to OutOfMemmoryException.
+ */
   private Map<String, PipelineStateJson> waitForPipelinesCompletion(List<String> pipelineIdList) throws Exception {
-    boolean allDone = true;
-    Map<String, PipelineStateJson> statusMap = new HashMap<>();
-    for (String pipelineId: pipelineIdList) {
-      PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineId, "0");
-      statusMap.put(pipelineId, pipelineStateJson);
-      if (!Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus()) &&
-          !Constants.PIPELINE_ERROR_STATES.contains(pipelineStateJson.getStatus())) {
-        allDone = false;
+    while (true) {
+      boolean allDone = true;
+      Map<String, PipelineStateJson> statusMap = new HashMap<>();
+      for (String pipelineId : pipelineIdList) {
+        PipelineStateJson pipelineStateJson = managerApi.getPipelineStatus(pipelineId, "0");
+        statusMap.put(pipelineId, pipelineStateJson);
+        if (!Constants.PIPELINE_SUCCESS_STATES.contains(pipelineStateJson.getStatus()) &&
+            !Constants.PIPELINE_ERROR_STATES.contains(pipelineStateJson.getStatus())) {
+          allDone = false;
+        }
       }
-    }
-    if (!allDone) {
+      if (allDone) {
+        return statusMap;
+      }
       ThreadUtil.sleep(conf.waitTime);
-      return waitForPipelinesCompletion(pipelineIdList);
     }
-    return statusMap;
   }
-
 }

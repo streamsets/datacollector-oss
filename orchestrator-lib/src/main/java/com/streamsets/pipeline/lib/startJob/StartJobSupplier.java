@@ -81,17 +81,24 @@ public class StartJobSupplier implements Supplier<Field> {
     return responseField;
   }
 
+  /*
+    Doing a self-referential call to enter in a wait loop can potentially create a
+    StackOverfkowException, and could provoke an unestable JVM due to OutOfMemmoryException.
+   */
   private void waitForJobCompletion() {
-    ThreadUtil.sleep(conf.waitTime);
-    Map<String, Object> jobStatus = ControlHubApiUtil
-        .getJobStatus(clientBuilder, conf.controlHubConfig.baseUrl, jobIdConfig.jobId);
-    String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
-    if (status != null && Constants.JOB_SUCCESS_STATES.contains(status)) {
-      generateField(jobStatus);
-    } else if (status != null && Constants.JOB_ERROR_STATES.contains(status)) {
-      generateField(jobStatus);
-    } else {
-      waitForJobCompletion();
+    while(true) {
+      ThreadUtil.sleep(conf.waitTime);
+      Map<String, Object> jobStatus = ControlHubApiUtil.getJobStatus(clientBuilder,
+          conf.controlHubConfig.baseUrl,
+          jobIdConfig.jobId
+      );
+      String status = jobStatus.containsKey("status") ? (String) jobStatus.get("status") : null;
+      if (status != null &&
+          (Constants.JOB_SUCCESS_STATES.contains(status) ||
+           Constants.JOB_ERROR_STATES.contains(status))) {
+        generateField(jobStatus);
+        return;
+      }
     }
   }
 
