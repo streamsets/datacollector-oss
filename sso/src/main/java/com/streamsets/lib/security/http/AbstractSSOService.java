@@ -217,9 +217,6 @@ public abstract class AbstractSSOService implements SSOService {
   public SSOPrincipal validateAppToken(String authToken, String componentId) {
     SSOPrincipal principal =
         validate(appPrincipalCache, createAppRemoteValidation(authToken, componentId), authToken, componentId, "App");
-    if (principal != null && !principal.getPrincipalId().equals(componentId)) {
-      principal = null;
-    }
     return principal;
   }
 
