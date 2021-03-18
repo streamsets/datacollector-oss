@@ -233,11 +233,13 @@ public class RecordWriterManager {
     }
     // we up the record date to the greatest one based on the template
     Date newRecordDate = pathResolver.getCeilingDate(recordDate);
+    long timeToLiveMillis;
     if (newRecordDate != null) {
-      return preventOverflow(newRecordDate.getTime() + cutOffMillis) - now.getTime();
+      timeToLiveMillis = preventOverflow(newRecordDate.getTime() + cutOffMillis) - now.getTime();
     } else {
-      return recordDate.getTime() + cutOffMillis - now.getTime();
+      timeToLiveMillis = recordDate.getTime() + cutOffMillis - now.getTime();
     }
+    return timeToLiveMillis;
   }
 
   RecordWriter createWriter(FileSystem fs, Path path, long timeToLiveMillis) throws StageException, IOException {
