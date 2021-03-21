@@ -323,24 +323,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
   public void runTask() {
     this.shouldSendSyncEvents = conf.get(SHOULD_SEND_SYNC_EVENTS, SHOULD_SEND_SYNC_EVENTS_DEFAULT);
     LOG.info("Will send sync events: {}", this.shouldSendSyncEvents);
-    executorService.submit(new EventHandlerCallable(
-        remoteDataCollector,
-        new EventClientImpl(conf, () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)),
-        jsonToFromDto,
-        new ArrayList<>(),
-        new ArrayList<>(),
-        getStartupReportEvent(),
-        executorService,
-        defaultPingFrequency,
-        appDestinationList,
-        processAppDestinationList,
-        requestHeader,
-        stopWatch,
-        sendAllStatusEventsInterval,
-        sendAllPipelineMetricsInterval,
-        new LinkedHashMap<>(),
-        runtimeInfo
-    ));
+    executorService.submit(createEventHandlerCallable(getStartupReportEvent()));
     if (shouldSendSyncEvents) {
       HeartbeatSender heartbeatSender = new HeartbeatSender(new EventClientImpl(
           conf,
@@ -368,7 +351,30 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
     webSocketToRestDispatcher.runTask();
   }
 
-  private ClientEvent getStartupReportEvent() {
+  @VisibleForTesting
+  EventHandlerCallable createEventHandlerCallable(ClientEvent startupEvent) {
+    return new EventHandlerCallable(
+        remoteDataCollector,
+        new EventClientImpl(conf, () -> runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY)),
+        jsonToFromDto,
+        new ArrayList<>(),
+        new ArrayList<>(),
+        startupEvent,
+        executorService,
+        defaultPingFrequency,
+        appDestinationList,
+        processAppDestinationList,
+        requestHeader,
+        stopWatch,
+        sendAllStatusEventsInterval,
+        sendAllPipelineMetricsInterval,
+        new LinkedHashMap<>(),
+        runtimeInfo
+    );
+  }
+
+  @VisibleForTesting
+  ClientEvent getStartupReportEvent() {
     List<StageInfo> stageInfoList = new ArrayList<StageInfo>();
     for (StageDefinition stageDef : stageLibrary.getStages()) {
       stageInfoList.add(new StageInfo(stageDef.getName(), stageDef.getVersion(), stageDef.getLibrary()));
@@ -388,6 +394,7 @@ public class RemoteEventHandlerTask extends AbstractTask implements EventHandler
         labelList,
         OFFSET_PROTOCOL_VERSION,
         Strings.emptyToNull(runtimeInfo.getDeploymentId()),
+        Strings.emptyToNull(conf.get(RemoteSSOService.DPM_CSP_DEPLOYMENT_ID, null)),
         runtime.maxMemory()
     );
     return new ClientEvent(

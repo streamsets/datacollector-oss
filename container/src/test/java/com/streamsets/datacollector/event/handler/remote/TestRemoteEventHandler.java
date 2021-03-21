@@ -97,6 +97,7 @@ import com.streamsets.datacollector.util.ContainerError;
 import com.streamsets.datacollector.util.PipelineException;
 import com.streamsets.lib.security.acl.dto.Acl;
 import com.streamsets.lib.security.acl.json.AclJson;
+import com.streamsets.lib.security.http.RemoteSSOService;
 import com.streamsets.pipeline.BootstrapMain;
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.ExecutionMode;
@@ -104,6 +105,7 @@ import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.lib.executor.SafeScheduledExecutorService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.ByteArrayOutputStream;
@@ -1155,6 +1157,42 @@ public class TestRemoteEventHandler {
   }
 
   @Test
+  public void testGetStartupReportEvent() {
+    MessagingJsonToFromDto jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_CSP_DEPLOYMENT_ID, "bar");
+    final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
+    final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
+    MockRemoteDataCollector mockRemoteDataCollector = new MockRemoteDataCollector();
+    final RemoteEventHandlerTask remoteEventHandlerTask = Mockito.spy(new RemoteEventHandlerTask(
+        mockRemoteDataCollector,
+        new SafeScheduledExecutorService(1, "testSyncSender"),
+        new SafeScheduledExecutorService(1, "testSyncSender"),
+        mockStageLibraryTask,
+        buildInfo,
+        mockRuntimeInfo,
+        conf
+    ));
+    ArgumentCaptor<ClientEvent> startupEventCaptor = ArgumentCaptor.forClass(ClientEvent.class);
+
+    //call runtask should call
+    remoteEventHandlerTask.runTask();
+    Mockito.verify(remoteEventHandlerTask).getStartupReportEvent();
+    Mockito.verify(remoteEventHandlerTask).createEventHandlerCallable(startupEventCaptor.capture());
+
+    ClientEvent clientEvent = startupEventCaptor.getValue();
+    Assert.assertNotNull(clientEvent);
+
+    Assert.assertEquals(clientEvent.getEventType(), EventType.SDC_INFO_EVENT);
+    Event event = clientEvent.getEvent();
+    Assert.assertTrue(event instanceof SDCInfoEvent);
+    SDCInfoEvent sdcInfoEvent = (SDCInfoEvent) event;
+    Assert.assertEquals("bar", sdcInfoEvent.getCspDeploymentId());
+    Assert.assertEquals(buildInfo.getVersion(), sdcInfoEvent.getSdcBuildInfo().getVersion());
+
+  }
+
+  @Test
   public void testSendSDCInfoEvent() throws Exception {
     MessagingJsonToFromDto jsonToFromDto = MessagingJsonToFromDto.INSTANCE;
     List<ClientEvent> ackEventJsonList = new ArrayList<ClientEvent>();
@@ -1173,6 +1211,7 @@ public class TestRemoteEventHandler {
         Arrays.asList("label_1", "label_2"),
         2,
         "foo",
+        "bar",
         10000
     );
     ClientEvent clientEvent = new ClientEvent(
@@ -1187,6 +1226,8 @@ public class TestRemoteEventHandler {
     final MockBaseEventSenderReceiver eventSenderReceiver = new MockBaseEventSenderReceiver();
     final StageLibraryTask mockStageLibraryTask = new MockStages.MockStageLibraryTask.Builder().build();
     final RuntimeInfo mockRuntimeInfo = Mockito.mock(RuntimeInfo.class);
+    Configuration conf = new Configuration();
+    conf.set(RemoteSSOService.DPM_CSP_DEPLOYMENT_ID, "bar");
     final RemoteEventHandlerTask remoteEventHandlerTask = new RemoteEventHandlerTask(
         mockRemoteDataCollector,
         new SafeScheduledExecutorService(1, "testSendSDCInfoEvent"),
@@ -1194,7 +1235,7 @@ public class TestRemoteEventHandler {
         mockStageLibraryTask,
         buildInfo,
         mockRuntimeInfo,
-        new Configuration()
+        conf
     );
     EventHandlerCallable remoteEventHandler = remoteEventHandlerTask.new EventHandlerCallable(
         mockRemoteDataCollector,
@@ -1235,6 +1276,7 @@ public class TestRemoteEventHandler {
     assertEquals(1, stageInfoListJson.get(0).getStageVersion());
     assertEquals("stageLib", stageInfoListJson.get(0).getLibraryName());
     assertEquals(Arrays.asList("label_1", "label_2"), sdcInfoJson.getLabels());
+    assertEquals("bar", sdcInfoJson.getCspDeploymentId());
     payload = mockBaseEventSenderReceiver.clientJson.get(1).getPayload();
     PipelineStatusEventsJson statusEventJson = jsonToFromDto.deserialize(payload,
         new TypeReference<PipelineStatusEventsJson>() {

@@ -28,6 +28,7 @@ public class SDCInfoEvent implements Event {
   private boolean edge = false;
   private int offsetProtocolVersion;
   private String deploymentId;
+  private String cspDeploymentId;
   private long totalMemory;
 
   public SDCInfoEvent() {
@@ -42,6 +43,7 @@ public class SDCInfoEvent implements Event {
       List<String> labels,
       int offsetProtocolVersion,
       String deploymentId,
+      String cspDeploymentId,
       long totalMemory
   ) {
     this.sdcId = id;
@@ -52,6 +54,7 @@ public class SDCInfoEvent implements Event {
     this.labels = labels;
     this.offsetProtocolVersion = offsetProtocolVersion;
     this.deploymentId = deploymentId;
+    this.cspDeploymentId = cspDeploymentId;
     this.totalMemory = totalMemory;
   }
 
@@ -133,6 +136,14 @@ public class SDCInfoEvent implements Event {
 
   public void setDeploymentId(String deploymentId) {
     this.deploymentId = deploymentId;
+  }
+
+  public String getCspDeploymentId() {
+    return cspDeploymentId;
+  }
+
+  public void setCspDeploymentId(String cspDeploymentId) {
+    this.cspDeploymentId = cspDeploymentId;
   }
 
   public long getTotalMemory() {

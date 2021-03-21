@@ -29,6 +29,7 @@ public class SDCInfoEventJson implements EventJson {
   // default for sdc 2.4 and below is 1
   private int offsetProtocolVersion = 1;
   private String deploymentId;
+  private String cspDeploymentId;
   private long totalMemory;
 
   public String getSdcId() {
@@ -109,6 +110,14 @@ public class SDCInfoEventJson implements EventJson {
 
   public void setDeploymentId(String deploymentId) {
     this.deploymentId = deploymentId;
+  }
+
+  public String getCspDeploymentId() {
+    return cspDeploymentId;
+  }
+
+  public void setCspDeploymentId(String cspDeploymentId) {
+    this.cspDeploymentId = cspDeploymentId;
   }
 
   public long getTotalMemory() {
