@@ -129,7 +129,7 @@ public class MapRStreamsSourceConfigBean {
       description = "Enables overriding stage properties with Kafka Configuration properties",
       displayPosition = 130,
       displayMode = ConfigDef.DisplayMode.ADVANCED,
-      group = "KAFKA"
+      group = "MAPR_STREAMS"
   )
   public boolean overrideConfigurations = false;
 
