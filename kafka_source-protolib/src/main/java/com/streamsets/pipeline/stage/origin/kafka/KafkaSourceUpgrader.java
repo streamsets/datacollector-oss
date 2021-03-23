@@ -170,9 +170,9 @@ public class KafkaSourceUpgrader implements StageUpgrader {
   private static void upgradeV6ToV7(List<Config> configs) {
     String autoOffsetReset = "null";
     for (Config config : configs) {
-      if ("kafkaOptions".equals(config.getName())) {
-        Map<String, String> kafkaOptions = (Map<String, String>) config.getValue();
-        autoOffsetReset = kafkaOptions.remove("auto.offset.reset");
+      if ("kafkaConsumerConfigs".equals(config.getName())) {
+        Map<String, String> kafkaConsumerConfigs = (Map<String, String>) config.getValue();
+        autoOffsetReset = kafkaConsumerConfigs.remove("auto.offset.reset");
       }
     }
 

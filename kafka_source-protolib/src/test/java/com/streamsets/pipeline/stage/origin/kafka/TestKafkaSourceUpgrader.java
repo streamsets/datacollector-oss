@@ -120,22 +120,21 @@ public class TestKafkaSourceUpgrader {
     configs.add(new Config("produceSingleRecordPerMessage", false));
     configs.add(new Config("maxBatchSize", 1000));
     configs.add(new Config("maxWaitTime", 10));
-    configs.add(new Config("kafkaConsumerConfigs", null));
     configs.add(new Config("charset", "UTF-8"));
     configs.add(new Config("removeCtrlChars", false));
     configs.add(new Config("textMaxLineLen", 1024));
 
-    Map<String, String> kafkaOptions = new HashMap<>();
-    kafkaOptions.put("auto.offset.reset", "latest");
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "latest");
 
-    configs.add(new Config("kafkaOptions", kafkaOptions));
-    Assert.assertTrue(!kafkaOptions.isEmpty());
+    configs.add(new Config("kafkaConsumerConfigs", kafkaConsumerConfigs));
+    Assert.assertFalse(kafkaConsumerConfigs.isEmpty());
 
     KafkaSourceUpgrader kafkaSourceUpgrader = new KafkaSourceUpgrader();
     kafkaSourceUpgrader.upgrade("a", "b", "c", 6, 7, configs);
 
     Assert.assertEquals(KafkaAutoOffsetReset.LATEST, configs.get(configs.size() - 2).getValue());
-    Assert.assertTrue(kafkaOptions.isEmpty());
+    Assert.assertTrue(kafkaConsumerConfigs.isEmpty());
 
   }
 
@@ -240,5 +239,24 @@ public class TestKafkaSourceUpgrader {
     UpgraderTestUtils.assertExists(configs, kafkaSecurityProtocolPath, "SASL_PLAINTEXT");
     UpgraderTestUtils.assertExists(configs, kafkaMechanismPath, "PLAIN");
     UpgraderTestUtils.assertExists(configs, stageConfigPath + ".overrideConfigurations", false);
+  }
+
+  @Test
+  public void testV14ToV15() {
+    Mockito.doReturn(14).when(context).getFromVersion();
+    Mockito.doReturn(15).when(context).getToVersion();
+
+    Map<String, String> kafkaConsumerConfigs = new HashMap<>();
+    kafkaConsumerConfigs.put("auto.offset.reset", "latest");
+
+    configs.add(new Config("kafkaConsumerConfigs", kafkaConsumerConfigs));
+    configs.add(new Config("kafkaAutoOffsetReset", KafkaAutoOffsetReset.LATEST));
+    Assert.assertFalse(kafkaConsumerConfigs.isEmpty());
+
+    upgrader.upgrade(configs, context);
+
+    Assert.assertEquals(KafkaAutoOffsetReset.LATEST, configs.stream().filter(config -> "kafkaAutoOffsetReset".equals(
+        config.getName())).findFirst().get().getValue());
+    Assert.assertEquals(1, kafkaConsumerConfigs.size());
   }
 }

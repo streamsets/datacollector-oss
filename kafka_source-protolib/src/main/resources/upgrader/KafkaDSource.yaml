@@ -229,3 +229,8 @@ upgrades:
       - setConfig:
           name: kafkaConfigBean.overrideConfigurations
           value: false
+  - toVersion: 15
+    actions:
+      - configStringMapRemove:
+          name: kafkaConfigBean.kafkaConsumerConfigs
+          key: auto.offset.reset
