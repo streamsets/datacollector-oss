@@ -22,3 +22,17 @@ upgrades:
       - setConfig:
           name: stepConcurrency
           value: 1
+  - toVersion: 3
+    actions:
+      - setConfig:
+          name: defineBootstrapActions
+          value: false
+      - setConfig:
+          name: bootstrapActionSource
+          value: IN_S3
+      - setConfig:
+          name: bootstrapActions
+          value: []
+      - setConfig:
+          name: bootstrapActionScripts
+          value: []

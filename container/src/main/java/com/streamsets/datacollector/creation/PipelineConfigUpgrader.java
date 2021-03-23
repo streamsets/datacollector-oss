@@ -24,9 +24,10 @@ import com.streamsets.pipeline.api.ExecutionMode;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.StageUpgrader;
 import com.streamsets.pipeline.api.impl.Utils;
-import com.streamsets.pipeline.lib.aws.SseOption;
 import com.streamsets.pipeline.config.upgrade.UpgraderUtils;
+import com.streamsets.pipeline.lib.aws.SseOption;
 import com.streamsets.pipeline.lib.googlecloud.GoogleCloudConfig;
+import com.streamsets.pipeline.stage.common.emr.BootstrapActionSource;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.lib.aws.AWSCredentialMode;
 import org.apache.commons.lang3.BooleanUtils;
@@ -184,7 +185,14 @@ public class PipelineConfigUpgrader implements StageUpgrader {
         // fall through
       case 21:
         upgradeV21ToV22(configs);
-        break;
+        if (to == 22) {
+          break;
+        }
+      case 22:
+        upgradeV22ToV23(configs);
+        if (to == 23) {
+          break;
+        }
       default:
         throw new IllegalStateException(Utils.format("Unexpected fromVersion {}", context.getFromVersion()));
     }
@@ -532,6 +540,18 @@ public class PipelineConfigUpgrader implements StageUpgrader {
   private void upgradeV21ToV22(List<Config> configs) {
     configs.add(new Config("sdcEmrConnection.stepConcurrency", 1));
     configs.add(new Config("transformerEmrConnection.stepConcurrency", 1));
+  }
+
+  private void upgradeV22ToV23(final List<Config> configs) {
+    configs.add(new Config("sdcEmrConnection.defineBootstrapActions", false));
+    configs.add(new Config("sdcEmrConnection.bootstrapActionSource", BootstrapActionSource.IN_S3));
+    configs.add(new Config("sdcEmrConnection.bootstrapActions", new ArrayList<>()));
+    configs.add(new Config("sdcEmrConnection.bootstrapActionScripts", new ArrayList<>()));
+
+    configs.add(new Config("transformerEmrConnection.defineBootstrapActions", false));
+    configs.add(new Config("transformerEmrConnection.bootstrapActionSource", BootstrapActionSource.IN_S3));
+    configs.add(new Config("transformerEmrConnection.bootstrapActions", new ArrayList<>()));
+    configs.add(new Config("transformerEmrConnection.bootstrapActionScripts", new ArrayList<>()));
   }
 
   private static void moveCommonEMRConfigsToConnection(

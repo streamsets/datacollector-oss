@@ -17,6 +17,7 @@ package com.streamsets.datacollector.lib.emr;
 
 import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.GenerateResourceBundle;
+import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 
 @GenerateResourceBundle
 public enum EMRErrors implements ErrorCode {
@@ -31,6 +32,10 @@ public enum EMRErrors implements ErrorCode {
   EMR_1110("{} bucket does not exist: {}"),
   EMR_1200("Cluster ID not found: {}"),
   EMR_1250("Invalid Cluster ID: {}"),
+  EMR_1300("The maximum number of bootstrap actions is " + EMRClusterConnection.MAX_BOOTSTRAP_ACTION_COUNT + ", but was {}"),
+  EMR_1310("At least 1 bootstrap action is required"),
+  EMR_1320("Location cannot be empty"),
+  EMR_1330("Script cannot be empty"),
   ;
   private final String msg;
 

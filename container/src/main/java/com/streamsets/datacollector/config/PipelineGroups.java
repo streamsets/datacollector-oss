@@ -24,6 +24,7 @@ public enum PipelineGroups implements Label {
   BAD_RECORDS("Error Records"),
   STATS("Statistics"),
   EMR("EMR"),
+  BOOTSTRAP_ACTIONS("Bootstrap Actions"),
   DATAPROC("Dataproc"),
   ADVANCED("Advanced"),
   ;
@@ -32,6 +33,8 @@ public enum PipelineGroups implements Label {
   public static final String EMR_GROUP_NAME = "EMR";
   // this is the Cluster tab, which is the consolidated place for cluster configurations in Transformer
   public static final String CLUSTER_GROUP_NAME = "CLUSTER";
+
+  public static final String BOOTSTRAP_ACTIONS_NAME = "BOOTSTRAP_ACTIONS";
 
   private final String label;
 

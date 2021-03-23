@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,23 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.streamsets.pipeline.stage.common.emr;
 
-import com.streamsets.pipeline.api.Label;
+import com.streamsets.pipeline.api.ConfigDef;
 
-public enum EMRClusterConnectionGroups implements Label {
-    EMR("EMR"),
-    BOOTSTRAP_ACTIONS("Bootstrap Actions");
-
-    private final String label;
-
-    EMRClusterConnectionGroups(String label) {
-        this.label = label;
-    }
-
-    @Override
-    public String getLabel() {
-        return label;
-    }
+public class BootstrapActionScript {
+  @ConfigDef(
+      required = true,
+      type = ConfigDef.Type.TEXT,
+      label = "Scripts",
+      description = "Content of a bootstrap action script",
+      displayPosition = 2131,
+      defaultValue = "",
+      lines = 5
+  )
+  public String script;
 }

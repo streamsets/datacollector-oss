@@ -24,6 +24,7 @@ import com.streamsets.pipeline.api.Dependency;
 import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.InterfaceAudience;
 import com.streamsets.pipeline.api.InterfaceStability;
+import com.streamsets.pipeline.api.ListBeanModel;
 import com.streamsets.pipeline.api.StageException;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.aws.AwsInstanceType;
@@ -33,6 +34,8 @@ import com.streamsets.pipeline.stage.lib.aws.AwsRegion;
 import com.streamsets.pipeline.stage.lib.aws.AwsRegionChooserValues;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @InterfaceAudience.LimitedPrivate
@@ -41,7 +44,7 @@ import java.util.Properties;
     label = "Amazon EMR Cluster Manager",
     type = EMRClusterConnection.TYPE,
     description = "Connects to Amazon EMR",
-    version = 2,
+    version = 3,
     upgraderDef = "upgrader/EMRClusterConnection.yaml",
     supportedEngines = {ConnectionEngine.COLLECTOR, ConnectionEngine.TRANSFORMER}
 )
@@ -53,6 +56,7 @@ public class EMRClusterConnection {
 
   public static final String SERVICE_ROLE_DEFAULT = "EMR_DefaultRole";
   public static final String JOB_FLOW_ROLE_DEFAULT = "EMR_EC2_DefaultRole";
+  public static final int MAX_BOOTSTRAP_ACTION_COUNT = 16;
 
   @ConfigDefBean()
   public AWSConfig awsConfig;
@@ -102,6 +106,66 @@ public class EMRClusterConnection {
       displayPosition = 2000
   )
   public boolean provisionNewCluster = false;
+
+  @ConfigDef(
+      required = false,
+      defaultValue = "false",
+      type = ConfigDef.Type.BOOLEAN,
+      label = "Define Bootstrap Actions",
+      description = "Enables actions to be executed on bootstraping a pipeline",
+      group = "#0",
+      displayPosition = 2100,
+      dependsOn = "provisionNewCluster",
+      triggeredByValue = "true"
+  )
+  public boolean defineBootstrapActions = false;
+
+  @ConfigDef(
+      required = true,
+      defaultValue = "IN_S3",
+      type = ConfigDef.Type.MODEL,
+      label = "Bootstrap Actions Source",
+      description = "Defines where bootstrap action should be taken from",
+      displayPosition = 2110,
+      displayMode = ConfigDef.DisplayMode.BASIC,
+      group = "#1",
+      dependsOn = "defineBootstrapActions",
+      triggeredByValue = "true"
+  )
+  @ValueChooserModel(BootstrapActionSourceChooser.class)
+  public BootstrapActionSource bootstrapActionSource = BootstrapActionSource.IN_S3;
+
+  @ConfigDef(
+      required = true,
+      label = "Bootstrap Actions",
+      description = "S3 URIs of bootstrap actions and their arguments",
+      type = ConfigDef.Type.MODEL,
+      displayPosition = 2120,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
+          @Dependency(configName = "defineBootstrapActions", triggeredByValues = "true"),
+          @Dependency(configName = "bootstrapActionSource", triggeredByValues = "IN_S3")
+      }
+  )
+  @ListBeanModel
+  public List<BootstrapAction> bootstrapActions = new ArrayList<>();
+
+  @ConfigDef(
+      required = true,
+      label = "Bootstrap Action Scripts",
+      description = "Contents of bootstrap actions",
+      type = ConfigDef.Type.MODEL,
+      displayPosition = 2130,
+      group = "#1",
+      dependencies = {
+          @Dependency(configName = "provisionNewCluster", triggeredByValues = "true"),
+          @Dependency(configName = "defineBootstrapActions", triggeredByValues = "true"),
+          @Dependency(configName = "bootstrapActionSource", triggeredByValues = "IN_PIPELINE")
+      }
+  )
+  @ListBeanModel
+  public List<BootstrapActionScript> bootstrapActionScripts = new ArrayList<>();
 
   @ConfigDef(
       required = true,

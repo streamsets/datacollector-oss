@@ -17,7 +17,6 @@ package com.streamsets.datacollector.lib.emr;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduce;
 import com.amazonaws.services.elasticmapreduce.AmazonElasticMapReduceClientBuilder;
 import com.amazonaws.services.elasticmapreduce.model.AmazonElasticMapReduceException;
@@ -37,6 +36,7 @@ import com.streamsets.pipeline.api.ErrorCode;
 import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
+import com.streamsets.pipeline.stage.common.emr.BootstrapActionSource;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnection;
 import com.streamsets.pipeline.stage.common.emr.EMRClusterConnectionGroups;
 import com.streamsets.pipeline.stage.lib.aws.AWSUtil;
@@ -49,6 +49,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @StageDef(
     version = 1,
@@ -172,6 +173,8 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
         );
       }
 
+      validateBootstrapActions(issues);
+
       /*
          Configs we will purposefully not validate, which apply when provisioning new clusters
 
@@ -228,6 +231,70 @@ public class EMRClusterConnectionVerifier extends ConnectionVerifier {
     }
 
     return issues;
+  }
+
+  private void validateBootstrapActions(final List<ConfigIssue> issues) {
+    if (connection.defineBootstrapActions) {
+      if (connection.bootstrapActionSource == BootstrapActionSource.IN_PIPELINE) {
+        validateInPipelineBootstrapActions(issues);
+      } else if (connection.bootstrapActionSource == BootstrapActionSource.IN_S3) {
+        validateInS3BootstrapActions(issues);
+      } else {
+        throw new UnsupportedOperationException(connection.bootstrapActionSource + " is not supported");
+      }
+    }
+  }
+
+  private void validateInS3BootstrapActions(final List<ConfigIssue> issues) {
+    if (connection.bootstrapActions.isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActions",
+          EMRErrors.EMR_1310
+      ));
+    } else if (connection.bootstrapActions.size() > EMRClusterConnection.MAX_BOOTSTRAP_ACTION_COUNT) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActions",
+          EMRErrors.EMR_1300,
+          connection.bootstrapActions.size()
+      ));
+    }
+    if (connection.bootstrapActions.stream().anyMatch(
+        ba -> Optional.ofNullable(ba.location).orElse("").trim().isEmpty()
+    )) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActions",
+          EMRErrors.EMR_1320
+      ));
+    }
+  }
+
+  private void validateInPipelineBootstrapActions(final List<ConfigIssue> issues) {
+    if (connection.bootstrapActionScripts.isEmpty()) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActionScripts",
+          EMRErrors.EMR_1310
+      ));
+    } else if (connection.bootstrapActionScripts.size() > EMRClusterConnection.MAX_BOOTSTRAP_ACTION_COUNT) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActionScripts",
+          EMRErrors.EMR_1300,
+          connection.bootstrapActionScripts.size()
+      ));
+    }
+    if (connection.bootstrapActionScripts.stream().anyMatch(
+        bas -> Optional.ofNullable(bas.script).orElse("").trim().isEmpty()
+    )) {
+      issues.add(getContext().createConfigIssue(
+          EMRClusterConnectionGroups.EMR.name(),
+          "connection.bootstrapActionScripts",
+          EMRErrors.EMR_1330
+      ));
+    }
   }
 
   private void validateS3URI(

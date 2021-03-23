@@ -69,12 +69,16 @@ import java.util.Map;
 @HideConfigs({
     // hide the assume role configs until they can be implemented for connection catalog
     "sdcEmrConnection.awsConfig.isAssumeRole",
-    "transformerEmrConnection.awsConfig.isAssumeRole"
+    "transformerEmrConnection.awsConfig.isAssumeRole",
+    "sdcEmrConnection.defineBootstrapActions",
+    "sdcEmrConnection.bootstrapActionSource",
+    "sdcEmrConnection.bootstrapActions",
+    "sdcEmrConnection.bootstrapActionScripts"
 })
 @ConfigGroups(PipelineGroups.class)
 public class PipelineConfigBean implements Stage {
 
-  public static final int VERSION = 22;
+  public static final int VERSION = 23;
 
   public static final String DEFAULT_STATS_AGGREGATOR_LIBRARY_NAME = "streamsets-datacollector-basic-lib";
 
@@ -610,7 +614,7 @@ public class PipelineConfigBean implements Stage {
               triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
           )
       },
-      groups = PipelineGroups.EMR_GROUP_NAME
+      groups = {PipelineGroups.EMR_GROUP_NAME, PipelineGroups.BOOTSTRAP_ACTIONS_NAME}
   )
   public EMRClusterConnection sdcEmrConnection;
 
@@ -657,7 +661,7 @@ public class PipelineConfigBean implements Stage {
               triggeredByValues = ConnectionDef.Constants.CONNECTION_SELECT_MANUAL
           )
       },
-      groups = PipelineGroups.CLUSTER_GROUP_NAME
+      groups = {PipelineGroups.CLUSTER_GROUP_NAME, PipelineGroups.BOOTSTRAP_ACTIONS_NAME}
   )
   public EMRClusterConnection transformerEmrConnection;
 
