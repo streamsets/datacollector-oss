@@ -425,20 +425,18 @@ public class HttpProcessor extends SingleLaneProcessor {
         ((conf.pagination.mode == PaginationMode.LINK_FIELD) || (conf.pagination.mode == PaginationMode.LINK_HEADER)) &&
             haveMorePages
     );
-    boolean isLink = !(
-        conf.pagination.mode == PaginationMode.BY_PAGE ||
-            conf.pagination.mode == PaginationMode.BY_OFFSET ||
-            conf.pagination.mode == PaginationMode.NONE
-    );
+    boolean isLink = conf.pagination.mode == PaginationMode.BY_PAGE ||
+            conf.pagination.mode == PaginationMode.BY_OFFSET
+    ;
 
     HttpResponseActionConfigBean action = statusToActionConfigs.get(responseState.lastStatus);
-    boolean numRetriesExceed = action != null && (responseState.retryCount > action.getMaxNumRetries());
+    boolean numRetriesExceed = action != null && responseState.retryCount > action.getMaxNumRetries();
     return (waitTimeNotExp &&
         uninterrupted &&
         !lastRequestTimedOut &&
         !close &&
         conf.multipleValuesBehavior != MultipleValuesBehavior.FIRST_ONLY &&
-        (thereIsNextLink || !isLink || appliedRetryAction) &&
+        (thereIsNextLink || isLink || appliedRetryAction) &&
         !numRetriesExceed)
         || renewedToken;
   }
