@@ -21,11 +21,11 @@
     <parent>
         <groupId>com.streamsets</groupId>
         <artifactId>streamsets-datacollector-stage-lib-parent</artifactId>
-        <version>3.22.0</version>
+        <version>3.22.1-SNAPSHOT</version>
         <relativePath>../stage-lib-parent</relativePath>
     </parent>
     <artifactId>streamsets-datacollector-cdh_6-stagelib-base</artifactId>
-    <version>3.22.0</version>
+    <version>3.22.1-SNAPSHOT</version>
     <description>Base module for CDH 6.x stage libs. Includes dependency management sections to centralize handling of
         Cloudera 6 specific dependency clashes/resolutions.
     </description>
