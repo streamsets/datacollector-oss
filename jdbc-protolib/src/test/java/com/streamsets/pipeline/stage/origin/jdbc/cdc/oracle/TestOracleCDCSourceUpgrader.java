@@ -17,9 +17,12 @@ package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.Config;
 import com.streamsets.pipeline.api.StageUpgrader;
+import com.streamsets.pipeline.lib.jdbc.connection.upgrader.JdbcConnectionUpgradeTestUtil;
 import com.streamsets.pipeline.lib.jdbc.parser.sql.UnsupportedFieldTypeValues;
+import com.streamsets.pipeline.stage.origin.jdbc.cdc.postgres.PostgresCDCSourceUpgrader;
 import com.streamsets.pipeline.upgrader.SelectorStageUpgrader;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -32,6 +35,17 @@ import java.util.List;
 import java.util.Map;
 
 public class TestOracleCDCSourceUpgrader {
+
+  private StageUpgrader oracleCDCSourceUpgrader;
+  JdbcConnectionUpgradeTestUtil connectionUpgradeTester;
+
+  @Before
+  public void setUp() {
+    URL yamlResource = ClassLoader.getSystemClassLoader().getResource("upgrader/OracleCDCDSource.yaml");
+    oracleCDCSourceUpgrader = new SelectorStageUpgrader("stage", null, yamlResource);
+    connectionUpgradeTester = new JdbcConnectionUpgradeTestUtil();
+  }
+
   @Test
   public void upgradeV1ToV2() throws Exception {
     List<Config> configs = new ArrayList<>(1);
@@ -207,5 +221,22 @@ public class TestOracleCDCSourceUpgrader {
       map.put(c.getName(), c.getValue());
     }
     return map;
+  }
+
+  @Test
+  public void upgradeV13TOV14() {
+    StageUpgrader.Context context = Mockito.mock(StageUpgrader.Context.class);
+    Mockito.doReturn(13).when(context).getFromVersion();
+    Mockito.doReturn(14).when(context).getToVersion();
+
+    List<Config> configs = new ArrayList<>();
+
+    connectionUpgradeTester.testJdbcConnectionIntroduction(
+        configs,
+        oracleCDCSourceUpgrader,
+        context,
+        "hikariConf.",
+        "connection."
+    );
   }
 }

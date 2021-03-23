@@ -1,5 +1,5 @@
 #
-# Copyright 2019 StreamSets Inc.
+# Copyright 2017 StreamSets Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,3 +28,17 @@ upgrades:
           value: SELECT_FOR_UPDATE
           lookForName: oracleCDCConfigBean.parseQuery
           ifValueMatches: True
+  - toVersion: 14
+    actions:
+      - renameConfig:
+          oldNamePattern: hikariConf.connectionString
+          newNamePattern: hikariConf.connection.connectionString
+      - renameConfig:
+          oldNamePattern: hikariConf.useCredentials
+          newNamePattern: hikariConf.connection.useCredentials
+      - renameConfig:
+          oldNamePattern: hikariConf.username
+          newNamePattern: hikariConf.connection.username
+      - renameConfig:
+          oldNamePattern: hikariConf.password
+          newNamePattern: hikariConf.connection.password

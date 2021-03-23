@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
 import com.streamsets.pipeline.api.ConfigDefBean;
@@ -22,11 +23,10 @@ import com.streamsets.pipeline.api.HideConfigs;
 import com.streamsets.pipeline.api.Source;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DSource;
-import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
-import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.OracleHikariPoolConfigBean;
 
 @StageDef(
-    version = 13,
+    version = 14,
     label = "Oracle CDC Client",
     description = "Origin that an read change events from an Oracle Database",
     icon = "rdbms.png",
@@ -44,8 +44,8 @@ import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
 })
 public class OracleCDCDSource extends DSource {
 
-  @ConfigDefBean
-  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
+  @ConfigDefBean(groups = {"JDBC", "CREDENTIALS"})
+  public OracleHikariPoolConfigBean hikariConf = new OracleHikariPoolConfigBean();
 
   @ConfigDefBean
   public OracleCDCConfigBean oracleCDCConfigBean = new OracleCDCConfigBean();
