@@ -47,6 +47,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -279,7 +280,9 @@ public final class StageLibraryUtil {
     File[] stageLibFolders = new File(stageLibDir).listFiles(File::isDirectory);
     List<SDCClassLoader> stageLibClassLoaders = new ArrayList<>();
     if (stageLibFolders != null && stageLibFolders.length > 0) {
-      stageLibClassLoaders.add(getStageLibClassLoader(new File(stageLibDir, "lib")));
+      for (File stageLibFolder : stageLibFolders) {
+        stageLibClassLoaders.add(getStageLibClassLoader(new File(stageLibFolder, "lib")));
+      }
     }
     return stageLibClassLoaders;
   }
