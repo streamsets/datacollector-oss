@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 StreamSets Inc.
+ * Copyright 2021 StreamSets Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,13 +21,13 @@ import com.streamsets.pipeline.api.GenerateResourceBundle;
 import com.streamsets.pipeline.api.PushSource;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.base.configurablestage.DPushSource;
-import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.SQLServerHikariPoolConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
 import com.streamsets.pipeline.stage.origin.jdbc.table.QuoteChar;
 import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 
 @StageDef(
-    version = 5,
+    version = 6,
     label = "SQL Server CDC Client",
     description = "Origin that an read change events from an MS SQL Server Database",
     icon = "sql-server-multithreaded.png",
@@ -43,7 +43,7 @@ import com.streamsets.pipeline.stage.origin.jdbc.table.TableJdbcConfigBean;
 public class SQLServerCDCDSource extends DPushSource {
 
   @ConfigDefBean
-  public BrandedHikariPoolConfigBean hikariConf = new BrandedHikariPoolConfigBean();
+  public SQLServerHikariPoolConfigBean hikariConf = new SQLServerHikariPoolConfigBean();
 
   @ConfigDefBean
   public CommonSourceConfigBean commonSourceConfigBean = new CommonSourceConfigBean();

@@ -15,9 +15,10 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.CT.sqlserver;
 
-import com.streamsets.pipeline.lib.jdbc.BrandedHikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.SQLServerHikariPoolConfigBean;
 import com.streamsets.pipeline.lib.jdbc.ConnectionPropertyBean;
 import com.streamsets.pipeline.lib.jdbc.HikariPoolConfigBean;
+import com.streamsets.pipeline.lib.jdbc.connection.SQLServerConnection;
 import com.streamsets.pipeline.lib.jdbc.multithread.BatchTableStrategy;
 import com.streamsets.pipeline.lib.jdbc.multithread.TableOrderStrategy;
 import com.streamsets.pipeline.stage.origin.jdbc.CommonSourceConfigBean;
@@ -194,11 +195,12 @@ public class SQLServerCTSourceTestBuilder {
   }
 
   public SQLServerCTSource build() {
-    BrandedHikariPoolConfigBean hikariPoolConfigBean = new BrandedHikariPoolConfigBean();
-    hikariPoolConfigBean.useCredentials = useCredentials;
-    hikariPoolConfigBean.connectionString = connectionString;
-    hikariPoolConfigBean.username = () -> username;
-    hikariPoolConfigBean.password = () -> password;
+    SQLServerHikariPoolConfigBean hikariPoolConfigBean = new SQLServerHikariPoolConfigBean();
+    hikariPoolConfigBean.connection = new SQLServerConnection();
+    hikariPoolConfigBean.connection.useCredentials = useCredentials;
+    hikariPoolConfigBean.connection.connectionString = connectionString;
+    hikariPoolConfigBean.connection.username = () -> username;
+    hikariPoolConfigBean.connection.password = () -> password;
     hikariPoolConfigBean.driverClassName = driverClassName;
     hikariPoolConfigBean.driverProperties = driverProperties;
     hikariPoolConfigBean.connectionTestQuery = connectionTestQuery;
