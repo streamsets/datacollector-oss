@@ -93,7 +93,7 @@ public class ControlHubResource {
   }
 
   public DpmClientInfo getDpmClientInfo() {
-    return runtimeInfo.getAttribute(RuntimeInfo.DPM_COMPONENT_TYPE_CONFIG);
+    return runtimeInfo.getAttribute(DpmClientInfo.RUNTIME_INFO_ATTRIBUTE_KEY);
   }
 
   private void checkIfControlHubEnabled() {
