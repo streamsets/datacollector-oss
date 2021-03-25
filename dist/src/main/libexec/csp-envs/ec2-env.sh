@@ -20,19 +20,38 @@ if [[ ! -x "$(which aws)" ]]; then
   exit -1
 fi
 
-data=$(curl --silent http://169.254.169.254/latest/user-data --connect-timeout 10)
-
-IFS=$'\n' data=($data)
-
-for value in ${data[@]}
-do
-  IFS='=' pair=($value)
-  if [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_SCH_URL" ]; then
-    export STREAMSETS_DEPLOYMENT_SCH_URL="${pair[1]}"
-  elif [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_ID" ]; then
-    export STREAMSETS_DEPLOYMENT_ID="${pair[1]}"
-  elif [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_TOKEN_PARAM_NAME" ]; then
-    region=$(curl --silent http://169.254.169.254/latest/meta-data/placement/region --connect-timeout 10)
-    export STREAMSETS_DEPLOYMENT_TOKEN=$(aws ssm get-parameter --region "$region" --name "${pair[1]}" --with-decryption --query Parameter.Value | tr -d '"')
+http_count=0
+for http_count in {0..2}; do
+  http_code=$(curl --silent --output /dev/null --write-out "%{http_code}" http://169.254.169.254/latest/user-data --connect-timeout 10)
+  if [ "200" = "${http_code}" ]; then
+    break
+  else
+    sleep $(expr 2 + $http_count \* 2)
   fi
 done
+
+if [ "200" != "${http_code}" ]; then
+  echo "Could not reach AWS Metadata Service"
+  exit -1
+fi
+
+do_source() {
+  data=$(curl --silent http://169.254.169.254/latest/user-data --connect-timeout 10)
+
+  local IFS=$'\n'
+  data=($data)
+
+  for value in ${data[@]}; do
+    local IFS='='
+    pair=($value)
+    if [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_SCH_URL" ]; then
+      export STREAMSETS_DEPLOYMENT_SCH_URL="${pair[1]}"
+    elif [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_ID" ]; then
+      export STREAMSETS_DEPLOYMENT_ID="${pair[1]}"
+    elif [ "${pair[0]}" = "STREAMSETS_DEPLOYMENT_TOKEN_PARAM_NAME" ]; then
+      region=$(curl --silent http://169.254.169.254/latest/meta-data/placement/region --connect-timeout 10)
+      export STREAMSETS_DEPLOYMENT_TOKEN=$(aws ssm get-parameter --region "$region" --name "${pair[1]}" --with-decryption --query Parameter.Value | tr -d '"')
+    fi
+  done
+}
+do_source

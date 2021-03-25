@@ -355,8 +355,8 @@ run_bootstrap() {
     fi
   fi
 
-  if [[ -f ${SDC_CONF}/sch-url.txt ]]; then
-    SCH_URL_FROM_FILE=$(cat ${SDC_CONF}/sch-url.txt)
+  if [[ -f ${SDC_CONF}/dpm-url.txt ]]; then
+    SCH_URL_FROM_FILE=$(cat ${SDC_CONF}/dpm-url.txt)
   fi
   if [[ -f ${SDC_CONF}/deployment.id ]]; then
     ID_FROM_FILE=$(cat ${SDC_CONF}/deployment.id)
