@@ -110,7 +110,7 @@ public class LogMinerSession {
 
   // Template to retrieve the list of redo log files given a time range [first, next) of interest.
   // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
-  // are replaced by the CURRENT_TIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
+  // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
   // handling.
   private static final String SELECT_REDO_LOGS_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
@@ -122,7 +122,7 @@ public class LogMinerSession {
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
       + " UNION "
       + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
-      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN CURRENT_TIMESTAMP AT TIME ZONE DBTIMEZONE ELSE A.NEXT_TIME END) NEXT_TIME, "
+      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
       + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
       + " FROM V$LOG A, V$DATABASE B, "
@@ -134,7 +134,7 @@ public class LogMinerSession {
 
   // Template to retrieve the list of redo log files whose SCN range (first, next) covers a given SCN of interest.
   // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
-  // are replaced by the CURRENT_TIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
+  // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
   // handling.
   private static final String SELECT_REDO_LOGS_FOR_SCN_QUERY =
       " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
@@ -143,7 +143,7 @@ public class LogMinerSession {
       + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
       + " UNION "
       + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
-      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN CURRENT_TIMESTAMP AT TIME ZONE DBTIMEZONE ELSE A.NEXT_TIME END) NEXT_TIME, "
+      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
       + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
       + " FROM V$LOG A, V$DATABASE B, "
@@ -452,7 +452,8 @@ public class LogMinerSession {
         // - We cannot use timestamps to define the mining window; we must use SCNs instead. Otherwise an
         //   "ORA-01291: missing logfile" is raised when the mining window reaches the current online log.
         // - We use the adjustMiningWindow* methods to find a valid conversion to SCN limits. The resulting mining
-        //   window after this adjustment always covers the original one and requires exactly the same redo log files.
+        //   window limits can be slightly different but always cover the original ones and require exactly the same
+        //   redo log files.
         BigDecimal firstSCN = adjustMiningWindowLowerLimit(start);
         BigDecimal lastSCN = adjustMiningWindowUpperLimit();
         sessionStart = Utils.format(START_SCN_ARG, firstSCN.toPlainString());

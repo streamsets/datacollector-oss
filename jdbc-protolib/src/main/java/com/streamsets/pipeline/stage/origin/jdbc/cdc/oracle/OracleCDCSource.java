@@ -150,6 +150,7 @@ public class OracleCDCSource extends BaseSource {
   private static final String GET_OLDEST_SCN =
       "SELECT FIRST_CHANGE#, STATUS from GV$ARCHIVED_LOG WHERE STATUS = 'A' AND FIRST_CHANGE# > ? ORDER BY FIRST_CHANGE#";
   private static final String SWITCH_TO_CDB_ROOT = "ALTER SESSION SET CONTAINER = CDB$ROOT";
+  private static final String SET_SESSION_TIMEZONE = "ALTER SESSION SET TIME_ZONE = DBTIMEZONE";
   private static final String ROWID = "ROWID";
   private static final String PREFIX = "oracle.cdc.";
   public static final String SSN = PREFIX + "SSN";
@@ -285,6 +286,7 @@ public class OracleCDCSource extends BaseSource {
   private PreparedStatement numericFormat;
   private PreparedStatement switchContainer;
   private PreparedStatement tsTzStatement;
+  private PreparedStatement setSessionTimezone;
 
   private final ThreadLocal<ParseTreeWalker> parseTreeWalker = ThreadLocal.withInitial(ParseTreeWalker::new);
   private final ThreadLocal<SQLListener> sqlListener = ThreadLocal.withInitial(SQLListener::new);
@@ -1807,6 +1809,7 @@ public class OracleCDCSource extends BaseSource {
     tsTzStatement = connection.prepareStatement(NLS_TIMESTAMP_TZ_FORMAT);
     numericFormat = connection.prepareStatement(NLS_NUMERIC_FORMAT);
     switchContainer = connection.prepareStatement(SWITCH_TO_CDB_ROOT);
+    setSessionTimezone = connection.prepareStatement(SET_SESSION_TIMEZONE);
   }
 
   private BigDecimal getEndingSCN() throws SQLException {
@@ -1964,6 +1967,7 @@ public class OracleCDCSource extends BaseSource {
     tsStatement.execute();
     numericFormat.execute();
     tsTzStatement.execute();
+    setSessionTimezone.execute();
   }
 
   private void discardOldUncommitted(LocalDateTime startTime) {
