@@ -57,7 +57,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 @WebSocket
 public class WebSocketToRestDispatcher {
@@ -72,6 +71,7 @@ public class WebSocketToRestDispatcher {
   static final String TUNNELING_CONNECT_ENDPOINT = "tunneling/rest/v1/connect";
   private static final String PER_MESSAGE_DEFLATE = "permessage-deflate";
   private static final String PING_MESSAGE = "ping";
+  private static final String ENGINE_ID_HEADER_NAME = "X-SS-Engine-Id";
   private final Configuration conf;
   private final RuntimeInfo runtimeInfo;
   private final SafeScheduledExecutorService executorService;
@@ -134,6 +134,7 @@ public class WebSocketToRestDispatcher {
       ClientUpgradeRequest request = new ClientUpgradeRequest();
       request.addExtensions(ExtensionConfig.parse(PER_MESSAGE_DEFLATE)); // for message compression
       request.setHeader(SSOConstants.X_REST_CALL, SSOConstants.SDC_COMPONENT_NAME);
+      request.setHeader(ENGINE_ID_HEADER_NAME, runtimeInfo.getId());
       for (Map.Entry<String, String> header : getDpmClientInfo().getHeaders().entrySet()) {
         request.setHeader(header.getKey(), header.getValue().trim());
       }
