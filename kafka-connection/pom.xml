@@ -22,12 +22,12 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root-lib</artifactId>
-    <version>3.20.0</version>
+    <version>3.20.0-0031</version>
     <relativePath>../root-lib</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>streamsets-datacollector-kafka-connection</artifactId>
-  <version>3.20.0</version>
+  <version>3.20.0-0031</version>
   <description>StreamSets Data Collector Kafka Connection</description>
   <name>StreamSets Data Collector Kafka Connection</name>
   <packaging>jar</packaging>

@@ -23,11 +23,11 @@
   <parent>
     <groupId>com.streamsets</groupId>
     <artifactId>streamsets-datacollector-root</artifactId>
-    <version>3.20.0</version>
+    <version>3.20.0-0031</version>
     <relativePath>../root</relativePath>
   </parent>
   <artifactId>streamsets-aster-client</artifactId>
-  <version>3.20.0</version>
+  <version>3.20.0-0031</version>
   <description>StreamSets Aster Client</description>
   <name>StreamSets Aster Client</name>
   <packaging>jar</packaging>

@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.streamsets</groupId>
   <artifactId>streamsets-datacollector</artifactId>
-  <version>3.20.0</version>
+  <version>3.20.0-0031</version>
   <description>StreamSets Data Collector</description>
   <name>StreamSets Data Collector</name>
   <packaging>pom</packaging>
@@ -92,8 +92,8 @@
     <wholefile-transformer-lib>wholefile-transformer-lib</wholefile-transformer-lib>
     <windows-lib>windows-lib</windows-lib>
     <rootProject>true</rootProject>
-    <datacollector-api.version>3.20.0</datacollector-api.version>
-    <datacollector-spark-api.version>3.20.0</datacollector-spark-api.version>
+    <datacollector-api.version>3.20.0-0031</datacollector-api.version>
+    <datacollector-spark-api.version>3.20.0-0031</datacollector-spark-api.version>
     <thycotic-credentialstore-lib>thycotic-credentialstore-lib</thycotic-credentialstore-lib>
   </properties>
 
