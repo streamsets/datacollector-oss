@@ -109,7 +109,6 @@ public class JerseyClientUtil {
     }
     if (!StringUtils.isEmpty(password)) {
       clientBuilder.property(ClientProperties.PROXY_PASSWORD, password);
-      LOG.debug("Using Proxy Password: '{}'", password);
     }
 
     return clientBuilder;
