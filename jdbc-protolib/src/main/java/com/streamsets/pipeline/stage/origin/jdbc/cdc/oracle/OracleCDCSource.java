@@ -719,11 +719,16 @@ public class OracleCDCSource extends BaseSource {
                 }
               }
 
-              if (sessionWindowInCurrent) {
-                sleepCurrentThread(MINING_WAIT_TIME_MS);
+              if (logMinerSession.isSessionIntegrityGuaranteed()) {
+                if (sessionWindowInCurrent) {
+                  sleepCurrentThread(MINING_WAIT_TIME_MS);
+                }
+                startTime = adjustStartTime(endTime);
+                endTime = getEndTimeForStartTime(startTime);
+              } else {
+                LOG.info("LogMiner session integrity cannot be guaranteed. There is at least one online redo log that " +
+                    "could have been rotated while mining it. Retrying process for the current mining window...");
               }
-              startTime = adjustStartTime(endTime);
-              endTime = getEndTimeForStartTime(startTime);
             }
           } catch (StageException ex) {
             LOG.error("Error while attempting to prepare a new LogMinerSession", ex);

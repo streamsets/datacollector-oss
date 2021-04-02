@@ -44,6 +44,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
@@ -113,15 +114,15 @@ public class LogMinerSession {
   // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
   // handling.
   private static final String SELECT_REDO_LOGS_QUERY =
-      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
+      " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
+      + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
       + "     ((FIRST_TIME <= :first AND NEXT_TIME > :first) OR "
       + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
       + " UNION "
-      + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
+      + " SELECT C.MEMBER, A.GROUP#, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
       + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
       + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
@@ -137,12 +138,12 @@ public class LogMinerSession {
   // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
   // handling.
   private static final String SELECT_REDO_LOGS_FOR_SCN_QUERY =
-      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
+      " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
+      + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
       + " UNION "
-      + " SELECT C.MEMBER, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
+      + " SELECT C.MEMBER, A.GROUP#, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
       + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
       + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
       + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
@@ -154,15 +155,15 @@ public class LogMinerSession {
 
   // Templates to retrieve the redo logs containing the LogMiner dictionary valid for transactions with SCN >= :scn.
   private static final String SELECT_DICTIONARY_END_QUERY =
-      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
+      " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
+      + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
       + "       FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                        STANDBY_DEST = 'NO' AND DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
-      " SELECT NAME, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, DICTIONARY_BEGIN, "
-      + "    DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
+      " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
+      + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# >= (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
       + "                         STANDBY_DEST = 'NO' AND DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND "
@@ -172,6 +173,20 @@ public class LogMinerSession {
   private static final String SELECT_DICTIONARY_TIME_ARG = ":time";
   private static final String SELECT_DICTIONARY_SCN_ARG = ":scn";
   private static final String SELECT_DICTIONARY_THREAD_ARG = ":thread";
+
+  // Template to retrieve the list of online redo log files.
+  // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
+  // are replaced by the LOCALTIMESTAMP and CURRENT_SCN. This will enable an easier redo log and mining window
+  // handling.
+  private static final String SELECT_ONLINE_REDO_LOGS_QUERY =
+      " SELECT C.MEMBER, A.GROUP#, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
+      + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
+      + "     A.FIRST_CHANGE#, (CASE WHEN A.STATUS = 'CURRENT' THEN B.CURRENT_SCN ELSE A.NEXT_CHANGE# END) NEXT_CHANGE#, "
+      + "     'NO' AS DICTIONARY_BEGIN, 'NO' AS DICTIONARY_END, A.STATUS, 'YES' AS ONLINE_LOG, A.ARCHIVED "
+      + " FROM V$LOG A, V$DATABASE B, "
+      + "     (SELECT GROUP#, MEMBER, ROW_NUMBER() OVER (PARTITION BY GROUP# ORDER BY GROUP#) AS ROWNO "
+      + "      FROM V$LOGFILE WHERE TYPE = 'ONLINE') C "
+      + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
 
   // Templates for the getLocalDateTimeForSCN utility function.
   private static final String SELECT_TIMESTAMP_FOR_SCN =
@@ -513,6 +528,9 @@ public class LogMinerSession {
    * records returned are limited to the range specified by the {@link LogMinerSession#start} invocation and the
    * arguments passed to this function.
    *
+   * If CONTINUOUS_MINE is disabled, use {@link LogMinerSession#isSessionIntegrityGuaranteed} after processing the
+   * returned CDC records to ensure there were no data loss situation involved.
+   *
    * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
    * @param endTime Upper, exclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
    * @return A wrapper over the ResultSet with the CDC records retrieved.
@@ -538,6 +556,9 @@ public class LogMinerSession {
    * LogMinerSession must have been started with {@link LogMinerSession#start} before invoking this function. The CDC
    * records returned are limited to the range specified by the {@link LogMinerSession#start} invocation and the
    * arguments passed to this function.
+   *
+   * If CONTINUOUS_MINE is disabled, use {@link LogMinerSession#isSessionIntegrityGuaranteed} after processing the
+   * returned CDC records to ensure there were no data loss situation involved.
    *
    * @param startTime Lower, inclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
    * @param endTime Upper, exclusive limit for the TIMESTAMP column in V$LOGMNR_CONTENTS.
@@ -568,6 +589,50 @@ public class LogMinerSession {
 
     queryContentStatement.setFetchSize(1);
     return new LogMinerResultSetWrapper(queryContentStatement.executeQuery(), databaseVersion);
+  }
+
+  /**
+   * Check if the active LogMiner session integrity can be guaranteed.
+   *
+   * When CONTINUOUS_MINE is disabled, the integrity of a LogMiner session can be compromised when one of the online
+   * redo logs loaded for mining is overwritten due to a log rotation. Under this scenario, the ResultSet returned by
+   * {@link LogMinerSession#queryContent} can silently fail and stop returning results as in a normal "no more pending data"
+   * scenario.
+   *
+   * This method checks the sequence number for the loaded online logs to detect if they have changed since the
+   * initialization of the active LogMiner session. If they have changed, then the active LogMiner session could have
+   * been compromised and consequently there could be missing CDC records in the returned ResultSet.
+   *
+   * When CONTINUOUS_MINE option is enabled, then LogMiner actively monitors and internally solves this situation
+   * with no active steps required by LogMinerSession. Consequently, this method always returns {@code true}.
+   *
+   * @return {@code true} if the integrity can be guaranteed, {@code false} otherwise.
+   */
+  public boolean isSessionIntegrityGuaranteed() {
+    if (continuousMine) {
+      return true;
+    }
+    List<RedoLog> updatedOnlineLogs = getOnlineLogs();
+
+    for (RedoLog currentLog : currentLogList) {
+      if (currentLog.isOnlineLog()) {
+        Optional<RedoLog> updatedLog = updatedOnlineLogs.stream()
+            .filter(log -> log.getGroup().equals(currentLog.getGroup()))
+            .findFirst();
+
+        if (updatedLog.isPresent()) {
+          if (!currentLog.getSequence().equals(updatedLog.get().getSequence())) {
+            LOG.debug("Sequence number for {} has changed from {} to {}.",
+                currentLog.getPath(), currentLog.getSequence(), updatedLog.get().getSequence());
+            return false;
+          }
+        } else {
+          LOG.error(JdbcErrors.JDBC_609.getMessage(), currentLog.getGroup());
+          throw new StageException(JdbcErrors.JDBC_609, currentLog.getGroup());
+        }
+      }
+    }
+    return true;
   }
 
   /**
@@ -845,15 +910,16 @@ public class LogMinerSession {
             rs.getString(1),
             rs.getBigDecimal(2),
             rs.getBigDecimal(3),
-            rs.getTimestamp(4),
+            rs.getBigDecimal(4),
             rs.getTimestamp(5),
-            rs.getBigDecimal(6),
+            rs.getTimestamp(6),
             rs.getBigDecimal(7),
-            rs.getBoolean(8),
+            rs.getBigDecimal(8),
             rs.getBoolean(9),
-            rs.getString(10),
-            rs.getBoolean(11),
-            rs.getBoolean(12)
+            rs.getBoolean(10),
+            rs.getString(11),
+            rs.getBoolean(12),
+            rs.getBoolean(13)
         );
       } else {
         throw new StageException(JdbcErrors.JDBC_601, Utils.format("no dictionary found before {}", start));
@@ -873,15 +939,16 @@ public class LogMinerSession {
             rs.getString(1),
             rs.getBigDecimal(2),
             rs.getBigDecimal(3),
-            rs.getTimestamp(4),
+            rs.getBigDecimal(4),
             rs.getTimestamp(5),
-            rs.getBigDecimal(6),
+            rs.getTimestamp(6),
             rs.getBigDecimal(7),
-            rs.getBoolean(8),
+            rs.getBigDecimal(8),
             rs.getBoolean(9),
-            rs.getString(10),
-            rs.getBoolean(11),
-            rs.getBoolean(12)
+            rs.getBoolean(10),
+            rs.getString(11),
+            rs.getBoolean(12),
+            rs.getBoolean(13)
         );
         result.add(log);
       }
@@ -922,15 +989,16 @@ public class LogMinerSession {
             rs.getString(1),
             rs.getBigDecimal(2),
             rs.getBigDecimal(3),
-            rs.getTimestamp(4),
+            rs.getBigDecimal(4),
             rs.getTimestamp(5),
-            rs.getBigDecimal(6),
+            rs.getTimestamp(6),
             rs.getBigDecimal(7),
-            rs.getBoolean(8),
+            rs.getBigDecimal(8),
             rs.getBoolean(9),
-            rs.getString(10),
-            rs.getBoolean(11),
-            rs.getBoolean(12)
+            rs.getBoolean(10),
+            rs.getString(11),
+            rs.getBoolean(12),
+            rs.getBoolean(13)
         );
         src.add(log);
       }
@@ -964,15 +1032,16 @@ public class LogMinerSession {
             rs.getString(1),
             rs.getBigDecimal(2),
             rs.getBigDecimal(3),
-            rs.getTimestamp(4),
+            rs.getBigDecimal(4),
             rs.getTimestamp(5),
-            rs.getBigDecimal(6),
+            rs.getTimestamp(6),
             rs.getBigDecimal(7),
-            rs.getBoolean(8),
+            rs.getBigDecimal(8),
             rs.getBoolean(9),
-            rs.getString(10),
-            rs.getBoolean(11),
-            rs.getBoolean(12)
+            rs.getBoolean(10),
+            rs.getString(11),
+            rs.getBoolean(12),
+            rs.getBoolean(13)
         );
         src.add(log);
       }
@@ -982,6 +1051,40 @@ public class LogMinerSession {
     }
 
     return selectLogs(scn, src, dest);
+  }
+
+  /**
+   * Returns the list of online redo logs.
+   */
+  private List<RedoLog> getOnlineLogs() {
+    List<RedoLog> src = new ArrayList<>();
+
+    try (PreparedStatement statement = connection.prepareCall(SELECT_ONLINE_REDO_LOGS_QUERY)) {
+      ResultSet rs = statement.executeQuery();
+      while (rs.next()) {
+        RedoLog log = new RedoLog(
+            rs.getString(1),
+            rs.getBigDecimal(2),
+            rs.getBigDecimal(3),
+            rs.getBigDecimal(4),
+            rs.getTimestamp(5),
+            rs.getTimestamp(6),
+            rs.getBigDecimal(7),
+            rs.getBigDecimal(8),
+            rs.getBoolean(9),
+            rs.getBoolean(10),
+            rs.getString(11),
+            rs.getBoolean(12),
+            rs.getBoolean(13)
+        );
+        src.add(log);
+      }
+    }
+    catch (SQLException e) {
+      throw new StageException(JdbcErrors.JDBC_603, e);
+    }
+
+    return src;
   }
 
   @VisibleForTesting
