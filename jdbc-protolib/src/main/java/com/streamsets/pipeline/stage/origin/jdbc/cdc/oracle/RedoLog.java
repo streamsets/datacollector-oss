@@ -25,6 +25,7 @@ import java.util.Objects;
 
 public class RedoLog {
   private final String path;
+  private final BigDecimal group;
   private final BigDecimal thread;
   private final BigDecimal sequence;
   private final LocalDateTime firstTime;
@@ -39,6 +40,7 @@ public class RedoLog {
 
   public RedoLog(
       String path,
+      BigDecimal group,
       BigDecimal thread,
       BigDecimal sequence,
       LocalDateTime firstTime,
@@ -52,6 +54,7 @@ public class RedoLog {
       boolean archived
   ) {
     this.path = Preconditions.checkNotNull(path);
+    this.group = group;
     this.thread = Preconditions.checkNotNull(thread);
     this.sequence = Preconditions.checkNotNull(sequence);
     this.firstTime = Preconditions.checkNotNull(firstTime);
@@ -67,6 +70,7 @@ public class RedoLog {
 
   public RedoLog(
       String path,
+      BigDecimal group,
       BigDecimal thread,
       BigDecimal sequence,
       Timestamp firstTime,
@@ -80,10 +84,13 @@ public class RedoLog {
       boolean archived
   ) {
     this(path,
+        group,
         thread,
         sequence,
-        firstTime.toLocalDateTime(),
-        nextTime == null ? null : nextTime.toLocalDateTime(), firstChange, nextChange,
+        firstTime == null ? null : firstTime.toLocalDateTime(),
+        nextTime == null ? null : nextTime.toLocalDateTime(),
+        firstChange,
+        nextChange,
         dictionaryBegin,
         dictionaryEnd,
         status,
@@ -127,6 +134,7 @@ public class RedoLog {
         onlineLog == log.onlineLog &&
         archived == log.archived &&
         path.equals(log.path) &&
+        Objects.equals(group, log.group) &&
         thread.equals(log.thread) &&
         sequence.equals(log.sequence) &&
         firstTime.equals(log.firstTime) &&
@@ -140,6 +148,7 @@ public class RedoLog {
   public int hashCode() {
     return Objects.hash(
         path,
+        group,
         thread,
         sequence,
         firstTime,
@@ -156,6 +165,10 @@ public class RedoLog {
 
   public String getPath() {
     return path;
+  }
+
+  public BigDecimal getGroup() {
+    return group;
   }
 
   public BigDecimal getThread() {

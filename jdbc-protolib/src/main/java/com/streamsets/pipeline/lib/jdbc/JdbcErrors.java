@@ -174,6 +174,7 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_606("Wal Sender is not active"),
   JDBC_607("CDC Generator is not active. Reason : {}"),
   JDBC_608("Error checking if database treats empty string as null: {}"),
+  JDBC_609("Could not find an online log for redo group {}"),
   ;
 
   private final String msg;
