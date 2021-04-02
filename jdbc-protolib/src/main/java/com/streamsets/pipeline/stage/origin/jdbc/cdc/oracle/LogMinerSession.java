@@ -39,6 +39,7 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -808,14 +809,16 @@ public class LogMinerSession {
    * The V$LOGMNR_LOGS list is automatically handled by LogMiner when CONTINUOUS_MINE option is active. So in that
    * case there is no need to use this method.
    *
-   * @param start The initial SCN to mine.
-   * @param end The final SCN to mine.
+   * @param startTime The initial SCN to mine.
+   * @param endTime The final SCN to mine.
    * @return True if log list was updated, false when it was not possible due to some required redo logs being in a
    *     transient state (i.e. current online log is required but log rotation is in progress, or archiving process
    *     for a relevant log is in progress).
    * @throws StageException No redo log was found covering the specified range or database error.
    */
-  private boolean updateLogList(LocalDateTime start, LocalDateTime end) {
+  private boolean updateLogList(LocalDateTime startTime, LocalDateTime endTime) {
+    LocalDateTime start = startTime.truncatedTo(ChronoUnit.SECONDS);
+    LocalDateTime end = endTime.truncatedTo(ChronoUnit.SECONDS);
     LOG.debug("Update redo log list for interval: ({}, {}).", start, end);
     List<RedoLog> newLogList = new ArrayList<>();
 
@@ -1088,7 +1091,9 @@ public class LogMinerSession {
   }
 
   @VisibleForTesting
-  boolean selectLogs(LocalDateTime start, LocalDateTime end, List<RedoLog> src, List<RedoLog> dest) {
+  boolean selectLogs(LocalDateTime startTime, LocalDateTime endTime, List<RedoLog> src, List<RedoLog> dest) {
+    LocalDateTime start = startTime.truncatedTo(ChronoUnit.SECONDS);
+    LocalDateTime end = endTime.truncatedTo(ChronoUnit.SECONDS);
     List<RedoLog> onlineLogs = new ArrayList<>();
     List<RedoLog> selectedLogs = new ArrayList<>();
 
@@ -1233,11 +1238,12 @@ public class LogMinerSession {
    * Adjusts the lower bound for the upcoming mining window. The new lower bound is returned (as SCN) by the function
    * and, as a side effect, also set (as timestamp) into {@link LogMinerSession#startTime}.
    *
-   * @param start The initial lower bound to be adjusted.
+   * @param startTime The initial lower bound to be adjusted.
    *
    * @return The final SCN lower bound.
    */
-  private BigDecimal adjustMiningWindowLowerLimit(LocalDateTime start) {
+  private BigDecimal adjustMiningWindowLowerLimit(LocalDateTime startTime) {
+    LocalDateTime start = startTime.truncatedTo(ChronoUnit.SECONDS);
     RedoLog log = currentLogList.stream()
         .filter(l -> l.getFirstTime().compareTo(start) <= 0 && l.getNextTime().compareTo(start) > 0)
         .max(Comparator.comparing(RedoLog::getFirstChange))
