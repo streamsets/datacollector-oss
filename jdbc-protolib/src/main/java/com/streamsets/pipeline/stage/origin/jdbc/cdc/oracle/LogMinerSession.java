@@ -119,7 +119,7 @@ public class LogMinerSession {
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
-      + "     ((FIRST_TIME <= :first AND NEXT_TIME > :first) OR "
+      + "     ((FIRST_TIME <= :first AND NEXT_TIME >= :first) OR "
       + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
       + " UNION "
@@ -142,7 +142,7 @@ public class LogMinerSession {
       " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# > :scn "
+      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# >= :scn "
       + " UNION "
       + " SELECT C.MEMBER, A.GROUP#, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
       + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
@@ -1121,9 +1121,9 @@ public class LogMinerSession {
     }
 
     for (RedoLog log : onlineLogs) {
-      boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 && log.getNextTime().compareTo(start) > 0;
+      boolean overlapLeft = log.getFirstTime().compareTo(start) <= 0 && log.getNextTime().compareTo(start) >= 0;
       boolean overlapRight = log.getFirstTime().compareTo(end) < 0 && log.getNextTime().compareTo(end) >= 0;
-      boolean inclusion = log.getFirstTime().compareTo(start) > 0 && log.getNextTime().compareTo(end) <= 0;
+      boolean inclusion = log.getFirstTime().compareTo(start) > 0 && log.getNextTime().compareTo(end) < 0;
 
       if (overlapLeft || overlapRight || inclusion) {
         if (!log.isArchived()) {
@@ -1196,7 +1196,7 @@ public class LogMinerSession {
 
     for (RedoLog log : onlineLogs) {
       boolean leftCondition = log.getFirstChange().compareTo(scn) <= 0;
-      boolean rightCondition = log.getNextChange().compareTo(scn) > 0;
+      boolean rightCondition = log.getNextChange().compareTo(scn) >= 0;
 
       if (leftCondition && rightCondition) {
         if (!log.isArchived()) {
@@ -1244,12 +1244,25 @@ public class LogMinerSession {
    */
   private BigDecimal adjustMiningWindowLowerLimit(LocalDateTime startTime) {
     LocalDateTime start = startTime.truncatedTo(ChronoUnit.SECONDS);
-    RedoLog log = currentLogList.stream()
-        .filter(l -> l.getFirstTime().compareTo(start) <= 0 && l.getNextTime().compareTo(start) > 0)
-        .max(Comparator.comparing(RedoLog::getFirstChange))
-        .get();
-    this.startTime = log.getFirstTime();
-    return log.getFirstChange();
+    List<BigDecimal> threads = getThreadsFromRedoLogs(this.currentLogList);
+    RedoLog selected = null;
+
+    // Find the greatest lower bound for `start`
+    for (BigDecimal threadNo : threads) {
+      RedoLog candidate = this.currentLogList.stream()
+          .filter(l -> l.getThread().equals(threadNo) &&
+              l.getFirstTime().compareTo(start) <= 0 &&
+              l.getNextTime().compareTo(start) >= 0)
+          .min(Comparator.comparing(RedoLog::getNextChange))
+          .get();
+
+      if (selected == null || selected.getNextChange().compareTo(candidate.getNextChange()) < 0) {
+        selected = candidate;
+      }
+    }
+
+    this.startTime = selected.getFirstTime();
+    return selected.getFirstChange();
   }
 
   /**
