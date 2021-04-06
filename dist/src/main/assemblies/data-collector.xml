@@ -133,7 +133,7 @@
     <!-- resources dir -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/resources</outputDirectory>
+      <outputDirectory>/externalResources/resources</outputDirectory>
     </fileSet>
 
     <!-- data dir -->
@@ -191,13 +191,13 @@
     <!-- Create an empty user-libs -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/user-libs</outputDirectory>
+      <outputDirectory>/externalResources/user-libs</outputDirectory>
     </fileSet>
 
     <!-- Create an empty streamsets-libs-extras -->
     <fileSet>
       <directory>${basedir}/src/main/emptydir</directory>
-      <outputDirectory>/streamsets-libs-extras</outputDirectory>
+      <outputDirectory>/externalResources/streamsets-libs-extras</outputDirectory>
     </fileSet>
 
     <!-- basic-lib -->

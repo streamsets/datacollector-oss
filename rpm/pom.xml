@@ -203,13 +203,13 @@
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/user-libs</directory>
+                  <directory>${sdc.dir}/externalResources/user-libs</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/user-libs</location>
+                      <location>${sdc.distroot}/externalResources/user-libs</location>
                     </source>
                   </sources>
                 </mapping>
@@ -506,13 +506,13 @@
                   </sources>
                 </mapping>
                 <mapping>
-                  <directory>${sdc.dir}/user-libs</directory>
+                  <directory>${sdc.dir}/externalResources/user-libs</directory>
                   <filemode>755</filemode>
                   <username>root</username>
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>${sdc.distroot}/user-libs</location>
+                      <location>${sdc.distroot}/externalResources/user-libs</location>
                     </source>
                   </sources>
                 </mapping>

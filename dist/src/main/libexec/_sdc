@@ -85,7 +85,8 @@ SDC_HOSTNAME=`hostname -f`
 SDC_CONF=${SDC_CONF:=${SDC_HOME}/etc}
 SDC_DATA=${SDC_DATA:=${SDC_HOME}/data}
 SDC_LOG=${SDC_LOG:=${SDC_HOME}/log}
-SDC_RESOURCES=${SDC_RESOURCES:=${SDC_HOME}/resources}
+SDC_EXTERNAL_RESOURCES=${SDC_EXTERNAL_RESOURCES:=${SDC_HOME}/externalResources}
+SDC_RESOURCES=${SDC_RESOURCES:=${SDC_EXTERNAL_RESOURCES}/resources}
 
 # Use the percentage rate of available memory for the heap size if SDC_HEAP_SIZE_PERCENTAGE is
 # specified and the calculated size is greater than 512m but limited by ulimit and cgroup. Note that
@@ -151,9 +152,9 @@ LIBS_COMMON_LIB_DIR=${LIBS_COMMON_LIB_DIR:="${SDC_DIST}/libs-common-lib"}
 
 STREAMSETS_LIBRARIES_DIR="${STREAMSETS_LIBRARIES_DIR:=${SDC_DIST}/streamsets-libs}"
 
-STREAMSETS_LIBRARIES_EXTRA_DIR="${STREAMSETS_LIBRARIES_EXTRA_DIR:=${SDC_DIST}/streamsets-libs-extras}"
+STREAMSETS_LIBRARIES_EXTRA_DIR="${STREAMSETS_LIBRARIES_EXTRA_DIR:=${SDC_EXTERNAL_RESOURCES}/streamsets-libs-extras}"
 
-USER_LIBRARIES_DIR="${USER_LIBRARIES_DIR:=${SDC_DIST}/user-libs}"
+USER_LIBRARIES_DIR="${USER_LIBRARIES_DIR:=${SDC_EXTERNAL_RESOURCES}/user-libs}"
 
 # add system properties for configurable directories
 SDC_JAVA_OPTS="${SDC_JAVA_OPTS} -Dsdc.libraries.dir=${STREAMSETS_LIBRARIES_DIR} \
@@ -295,6 +296,7 @@ then
   echo "  CONF                           : ${SDC_CONF}"
   echo "  DATA                           : ${SDC_DATA}"
   echo "  LOG                            : ${SDC_LOG}"
+  echo "  SDC_EXTERNAL_RESOURCES         : ${SDC_EXTERNAL_RESOURCES}"
   echo "  RESOURCES                      : ${SDC_RESOURCES}"
   echo "  KAFKA_JAAS_CONF                : ${SDC_KAFKA_JAAS_CONF}"
   echo "  KRB5CCNAME                     : ${KRB5CCNAME}"

@@ -163,7 +163,7 @@ public class BootstrapCluster {
       // in cluster mode, the library extra dir files from the master are collapsed on the library dir
       streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null,
                                                                      systemStageLibs, libsCommonLibDir);
-      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, userStageLibs,
+      userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/externalResources/user-libs", null, userStageLibs,
                                                                libsCommonLibDir);
     }
     Map<String, List<URL>> libsUrls = new LinkedHashMap<String, List<URL>> ();

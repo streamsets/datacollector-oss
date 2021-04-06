@@ -201,7 +201,7 @@ public abstract class RuntimeInfo {
   }
 
   public String getResourcesDir() {
-    return System.getProperty(propertyPrefix + RESOURCES_DIR, getRuntimeDir() + "/resources");
+    return System.getProperty(propertyPrefix + RESOURCES_DIR, getRuntimeDir() + "/externalResources/resources");
   }
 
   public String getLibsExtraDir() {

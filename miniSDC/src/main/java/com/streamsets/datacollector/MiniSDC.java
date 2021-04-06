@@ -54,7 +54,7 @@ public class MiniSDC {
     apiUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/api-lib/*.jar");
     containerUrls = BootstrapMain.getClasspathUrls(libraryRoot + "/container-lib/*.jar");
     streamsetsLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/streamsets-libs", null, null, null);
-    userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/user-libs", null, null, null);
+    userLibsUrls = BootstrapMain.getStageLibrariesClasspaths(libraryRoot + "/externalResources/user-libs", null, null, null);
 
     ClassLoader apiCL = SDCClassLoader.getAPIClassLoader(apiUrls, ClassLoader.getSystemClassLoader());
     containerCL = SDCClassLoader.getContainerCLassLoader(containerUrls, apiCL);
