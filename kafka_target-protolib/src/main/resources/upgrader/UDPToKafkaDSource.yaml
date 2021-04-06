@@ -138,3 +138,12 @@ upgrades:
       - renameConfig:
           oldNamePattern: kafkaTargetConfig.metadataBrokerList
           newNamePattern: kafkaTargetConfig.connectionConfig.connection.metadataBrokerList
+  - toVersion: 5
+    actions:
+      - setConfig:
+          lookForName: conf.connectionConfig.connection.securityConfig.saslMechanism
+          ifValueMatches: true
+          name: conf.connectionConfig.connection.securityConfig.saslMechanism
+          value: "PLAIN"
+          elseName: conf.connectionConfig.connection.securityConfig.saslMechanism
+          elseValue: "GSSAPI"

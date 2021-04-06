@@ -152,3 +152,12 @@ upgrades:
       - renameConfig:
           oldNamePattern: conf.metadataBrokerList
           newNamePattern: conf.connectionConfig.connection.metadataBrokerList
+  - toVersion: 7
+    actions:
+      - setConfig:
+          lookForName: conf.connectionConfig.connection.securityConfig.saslMechanism
+          ifValueMatches: true
+          name: conf.connectionConfig.connection.securityConfig.saslMechanism
+          value: "PLAIN"
+          elseName: conf.connectionConfig.connection.securityConfig.saslMechanism
+          elseValue: "GSSAPI"
