@@ -257,7 +257,8 @@ public class PipelineConfigurationUtil {
       PipelineConfiguration pipelineConfig,
       RuleDefinitions ruleDefinitions,
       boolean includeLibraryDefinitions,
-      boolean includePlainTextCredentials
+      boolean includePlainTextCredentials,
+      boolean includeStageIcons
   ) {
     //Always auto decrypt credentials stored by managed store
     PipelineCredentialHandler.getDecrypter(stageLibrary, credentialStoresTask, configuration)
@@ -317,7 +318,10 @@ public class PipelineConfigurationUtil {
       List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
       definitions.setStages(stages);
 
-      definitions.setStageIcons(stageIcons);
+      if (includeStageIcons) {
+        definitions.setStageIcons(stageIcons);
+      }
+
 
       List<PipelineDefinitionJson> pipeline = new ArrayList<>(1);
       pipeline.add(BeanHelper.wrapPipelineDefinition(stageLibrary.getPipeline()));
@@ -350,7 +354,8 @@ public class PipelineConfigurationUtil {
       StageLibraryTask stageLibrary,
       PipelineFragmentConfiguration pipelineFragmentConfig,
       RuleDefinitions ruleDefinitions,
-      boolean includeLibraryDefinitions
+      boolean includeLibraryDefinitions,
+      boolean includeStageIcons
   ) {
     PipelineFragmentEnvelopeJson pipelineFragmentEnvelope = new PipelineFragmentEnvelopeJson();
     pipelineFragmentEnvelope.setPipelineFragmentConfig(
@@ -385,7 +390,10 @@ public class PipelineConfigurationUtil {
       List<StageDefinitionJson> stages = new ArrayList<>(BeanHelper.wrapStageDefinitions(stageDefinitions));
       definitions.setStages(stages);
 
-      definitions.setStageIcons(stageIcons);
+      if (includeStageIcons) {
+        definitions.setStageIcons(stageIcons);
+      }
+
 
       List<PipelineFragmentDefinitionJson> pipelineFragment = new ArrayList<>(1);
       pipelineFragment.add(BeanHelper.wrapPipelineFragmentDefinition(stageLibrary.getPipelineFragment()));

@@ -622,7 +622,8 @@ public class PipelineStoreResource {
                 envelope,
                 false,
                 false,
-                encryptCredentials
+                encryptCredentials,
+                false
             );
             successEntities.add(envelope.getPipelineConfig().getInfo());
           } catch (Exception ex) {
@@ -651,6 +652,7 @@ public class PipelineStoreResource {
       List<String> pipelineIds,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
       @QueryParam("includePlainTextCredentials") @DefaultValue("true") boolean includePlainTextCredentials,
+      @QueryParam("includeStageIcons") @DefaultValue("true") boolean includeStageIcons,
       @Context SecurityContext context
   ) {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -668,7 +670,8 @@ public class PipelineStoreResource {
               pipelineConfig,
               ruleDefinitions,
               includeLibraryDefinitions,
-              includePlainTextCredentials
+              includePlainTextCredentials,
+              includeStageIcons
           );
           pipelineZip.putNextEntry(new ZipEntry(pipelineConfig.getPipelineId() + ".json"));
           pipelineZip.write(ObjectMapperFactory.get().writeValueAsString(pipelineEnvelope).getBytes());
@@ -895,7 +898,8 @@ public class PipelineStoreResource {
               pipelineConfig,
               ruleDefinitions,
               false,
-              true
+              true,
+              false
           ))
           .build();
     } else {
@@ -985,6 +989,7 @@ public class PipelineStoreResource {
               stageLibrary,
               pipelineFragmentConfig,
               ruleDefinitions,
+              false,
               false
           ))
           .build();
@@ -1168,7 +1173,8 @@ public class PipelineStoreResource {
       @QueryParam("rev") @DefaultValue("0") String rev,
       @QueryParam("attachment") @DefaultValue("false") Boolean attachment,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("false") boolean includeLibraryDefinitions,
-      @QueryParam("includePlainTextCredentials") @DefaultValue("true") boolean includePlainTextCredentials
+      @QueryParam("includePlainTextCredentials") @DefaultValue("true") boolean includePlainTextCredentials,
+      @QueryParam("includeStageIcons") @DefaultValue("true") boolean includeStageIcons
   ) throws PipelineException {
     PipelineInfo pipelineInfo = store.getInfo(name);
     RestAPIUtils.injectPipelineInMDC(pipelineInfo.getTitle(), pipelineInfo.getPipelineId());
@@ -1191,7 +1197,8 @@ public class PipelineStoreResource {
         pipelineConfig,
         ruleDefinitions,
         includeLibraryDefinitions,
-        includePlainTextCredentials
+        includePlainTextCredentials,
+        includeStageIcons
     );
 
     if (attachment) {
@@ -1223,6 +1230,7 @@ public class PipelineStoreResource {
       @QueryParam("draft") @DefaultValue("false") boolean draft,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
       @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials,
+      @QueryParam("includeStageIcons") @DefaultValue("true") boolean includeStageIcons,
       @ApiParam(name="pipelineEnvelope", required = true) PipelineEnvelopeJson pipelineEnvelope
   ) throws PipelineException {
     RestAPIUtils.injectPipelineInMDC("*");
@@ -1234,7 +1242,8 @@ public class PipelineStoreResource {
         pipelineEnvelope,
         draft,
         includeLibraryDefinitions,
-        encryptCredentials
+        encryptCredentials,
+        includeStageIcons
     );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
@@ -1257,7 +1266,8 @@ public class PipelineStoreResource {
       @QueryParam("autoGeneratePipelineId") @DefaultValue("false") boolean autoGeneratePipelineId,
       @QueryParam("draft") @DefaultValue("false") boolean draft,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
-      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials
+      @QueryParam("encryptCredentials") @DefaultValue("false") boolean encryptCredentials,
+      @QueryParam("includeStageIcons") @DefaultValue("true") boolean includeStageIcons
   ) throws PipelineException, IOException {
     RestAPIUtils.injectPipelineInMDC("*");
     PipelineEnvelopeJson pipelineEnvelope = getPipelineEnvelopeFromFromUrl(pipelineHttpUrl);
@@ -1269,7 +1279,8 @@ public class PipelineStoreResource {
         pipelineEnvelope,
         draft,
         includeLibraryDefinitions,
-        encryptCredentials
+        encryptCredentials,
+        includeStageIcons
     );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(pipelineEnvelope).build();
@@ -1325,7 +1336,8 @@ public class PipelineStoreResource {
       PipelineEnvelopeJson pipelineEnvelope,
       boolean draft,
       boolean includeLibraryDefinitions,
-      boolean encryptCredentials
+      boolean encryptCredentials,
+      boolean includeStageIcons
   ) throws PipelineException {
     PipelineConfigurationJson pipelineConfigurationJson = pipelineEnvelope.getPipelineConfig();
     PipelineConfiguration pipelineConfig = BeanHelper.unwrapPipelineConfiguration(pipelineConfigurationJson);
@@ -1400,7 +1412,8 @@ public class PipelineStoreResource {
         pipelineConfig,
         ruleDefinitions,
         includeLibraryDefinitions,
-        true
+        true,
+        includeStageIcons
     );
   }
 
@@ -1414,10 +1427,17 @@ public class PipelineStoreResource {
       @PathParam("fragmentId") String fragmentId,
       @QueryParam("draft") @DefaultValue("true") boolean draft,
       @QueryParam("includeLibraryDefinitions") @DefaultValue("true") boolean includeLibraryDefinitions,
+      @QueryParam("includeStageIcons") @DefaultValue("true") boolean includeStageIcons,
       PipelineFragmentEnvelopeJson fragmentEnvelope
   ) {
     RestAPIUtils.injectPipelineInMDC("*");
-    fragmentEnvelope = importPipelineFragmentEnvelope(fragmentId, fragmentEnvelope, draft, includeLibraryDefinitions);
+    fragmentEnvelope = importPipelineFragmentEnvelope(
+        fragmentId,
+        fragmentEnvelope,
+        draft,
+        includeLibraryDefinitions,
+        includeStageIcons
+    );
     return Response.ok().
         type(MediaType.APPLICATION_JSON).entity(fragmentEnvelope).build();
   }
@@ -1426,7 +1446,8 @@ public class PipelineStoreResource {
       String fragmentId,
       PipelineFragmentEnvelopeJson fragmentEnvelope,
       boolean draft,
-      boolean includeLibraryDefinitions
+      boolean includeLibraryDefinitions,
+      boolean includeStageIcons
   ) {
     // Supporting only static validation of uploaded pipeline fragment & rules, not saving contents in disk
     PipelineFragmentConfigurationJson fragmentConfigurationJson = fragmentEnvelope.getPipelineFragmentConfig();
@@ -1458,7 +1479,8 @@ public class PipelineStoreResource {
         stageLibrary,
         fragmentConfig,
         ruleDefinitions,
-        includeLibraryDefinitions
+        includeLibraryDefinitions,
+        includeStageIcons
     );
   }
 

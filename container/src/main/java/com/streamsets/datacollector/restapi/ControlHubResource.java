@@ -140,6 +140,7 @@ public class ControlHubResource {
         pipelineConfiguration,
         ruleDefinitions,
         true,
+        true,
         true
     );
     ObjectMapper objectMapper = ObjectMapperFactory.get();
