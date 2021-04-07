@@ -71,7 +71,8 @@ public enum Errors implements ErrorCode {
   FORCE_47("Failed to log in to Salesforce with provided credentials."),
   FORCE_48("Problem generating JWT. Ensure consumer key, secret, and private key are correctly formatted."),
   FORCE_49("Failure to obtain session ID from Salesforce. Ensure that your app is authorized."),
-  FORCE_50("Unexpected error generating Salesforce client: {}")
+  FORCE_50("Unexpected error generating Salesforce client: {}"),
+  FORCE_51("Wrong API version number")
   ;
   private final String msg;
 

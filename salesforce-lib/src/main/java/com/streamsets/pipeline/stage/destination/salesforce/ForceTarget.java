@@ -36,6 +36,7 @@ import com.streamsets.pipeline.api.el.ELEval;
 import com.streamsets.pipeline.api.el.ELVars;
 import com.streamsets.pipeline.lib.cache.CacheCleaner;
 import com.streamsets.pipeline.lib.el.ELUtils;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceTargetConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceUtils;
 import com.streamsets.pipeline.lib.salesforce.Errors;
@@ -177,6 +178,14 @@ public class ForceTarget extends BaseTarget {
         EXTERNAL_ID_NAME,
         Errors.FORCE_24, issues
     );
+
+    if (!conf.connection.apiVersion.matches("\\d*.0")){
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "apiVersion", Errors.FORCE_51
+          )
+      );
+    }
 
     if (issues.isEmpty()) {
       customMappings = new TreeMap<>();

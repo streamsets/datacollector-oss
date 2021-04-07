@@ -52,6 +52,7 @@ import com.streamsets.pipeline.lib.el.TimeNowEL;
 import com.streamsets.pipeline.lib.salesforce.BulkRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.DataType;
 import com.streamsets.pipeline.lib.salesforce.Errors;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceLookupConfigBean;
 import com.streamsets.pipeline.lib.salesforce.ForceRecordCreator;
 import com.streamsets.pipeline.lib.salesforce.ForceSDCFieldMapping;
@@ -150,6 +151,14 @@ public class ForceLookupProcessor extends SingleLaneRecordProcessor implements F
     errorRecordHandler = new DefaultErrorRecordHandler(getContext());
 
     queryEval = getContext().createELEval("soqlQuery");
+
+    if (!conf.connection.apiVersion.matches("\\d*.0")){
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "apiVersion", Errors.FORCE_51
+          )
+      );
+    }
 
     if (issues.isEmpty()) {
       try {

@@ -29,6 +29,8 @@ import com.streamsets.pipeline.api.HideStage;
 import com.streamsets.pipeline.api.StageDef;
 import com.streamsets.pipeline.api.ValueChooserModel;
 import com.streamsets.pipeline.lib.salesforce.Errors;
+import com.streamsets.pipeline.lib.salesforce.ForceConfigBean;
+import com.streamsets.pipeline.stage.origin.salesforce.Groups;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -121,6 +123,14 @@ public class SalesforceConnectionVerifier extends ConnectionVerifier {
               e.getMessage()
           ));
         }
+      }
+
+      if (!connection.apiVersion.matches("\\d*.0")){
+        issues.add(
+            getContext().createConfigIssue(
+                Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "apiVersion", Errors.FORCE_51
+            )
+        );
       }
 
       /*

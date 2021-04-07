@@ -453,6 +453,14 @@ public class WaveAnalyticsTarget extends BaseTarget {
         .ofNullable(conf.init(getContext(), CONF_PREFIX ))
         .ifPresent(issues::addAll);
 
+    if (!conf.connection.apiVersion.matches("\\d*.0")){
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "apiVersion", com.streamsets.pipeline.lib.salesforce.Errors.FORCE_51
+          )
+      );
+    }
+
     try {
       ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new WaveSessionRenewer());
       connection = Connector.newConnection(partnerConfig);

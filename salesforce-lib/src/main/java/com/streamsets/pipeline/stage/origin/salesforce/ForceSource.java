@@ -253,6 +253,15 @@ public class ForceSource extends BaseSource implements ForceStage {
       );
     }
 
+    if (!conf.connection.apiVersion.matches("\\d*.0")){
+      issues.add(
+          getContext().createConfigIssue(
+              Groups.FORCE.name(), ForceConfigBean.CONF_PREFIX + "apiVersion", Errors.FORCE_51
+          )
+      );
+    }
+
+
     if (issues.isEmpty()) {
       try {
         ConnectorConfig partnerConfig = ForceUtils.getPartnerConfig(conf, new ForceSessionRenewer());
