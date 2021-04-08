@@ -2020,7 +2020,8 @@ public class OracleCDCSource extends BaseSource {
   private boolean expired(Map.Entry<TransactionIdKey, HashQueue<RecordSequence>> entry, LocalDateTime startTime) {
     return startTime != null && // Can be null if starting from SCN and first batch is not complete yet.
         entry.getKey().txnStartTime.isBefore(startTime.minusSeconds(configBean.txnWindow)) &&
-        entry.getValue().peek().seq == 1;
+        (entry.getValue().isEmpty() || // Can be empty when we processed only "rollback=1" operations in this window.
+         entry.getValue().peek().seq == 1);
   }
 
   @VisibleForTesting
