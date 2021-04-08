@@ -21,8 +21,13 @@ import com.streamsets.datacollector.bundles.BundleContext;
 import com.streamsets.datacollector.bundles.BundleWriter;
 import com.streamsets.datacollector.bundles.Constants;
 import com.streamsets.datacollector.log.LogUtils;
+import com.streamsets.datacollector.util.ProcessUtil;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,7 +35,6 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.io.FilenameFilter;
 
 @BundleContentGeneratorDef(
   name = "Logs",
@@ -41,24 +45,11 @@ import java.io.FilenameFilter;
   order = Integer.MAX_VALUE
 )
 public class LogContentGenerator implements BundleContentGenerator {
+  private static final Logger LOG = LoggerFactory.getLogger(LogContentGenerator.class);
+
   @Override
   public void generateContent(BundleContext context, BundleWriter writer) throws IOException {
-    // Sort the log files in descending manner (e.g. get the most up to date logs first)
-    List<File> logFiles = Arrays.stream(LogUtils.getLogFiles(context.getRuntimeInfo()))
-      .sorted((f1, f2) -> f1.lastModified() < f2.lastModified() ? 1 : -1)
-      .collect(Collectors.toList());
-
-    // Write as many log files as for which we have actual space
-    long availableSpace = context.getConfiguration().get(Constants.LOG_MAX_SIZE, Constants.DEFAULT_LOG_MAX_SIZE);
-    for(File logFile : logFiles) {
-      // As long as we have not exhausted quota for logs
-      if(availableSpace <= 0) {
-        break;
-      }
-
-      writer.write("", logFile.toPath(), logFile.length() - availableSpace);
-      availableSpace -= logFile.length();
-    }
+    final String DMESG_FILE = "dmesg.txt";
 
     // GC log
     long availableGcSpace = context.getConfiguration().get(Constants.LOG_GC_MAX_SIZE, Constants.DEFAULT_LOG_GC_MAX_SIZE);
@@ -66,8 +57,8 @@ public class LogContentGenerator implements BundleContentGenerator {
     if(Files.exists(gcLog)) {
       writer.write("", gcLog, Files.size(gcLog) - availableGcSpace);
     }
-    //JVM crash File
 
+    //JVM crash File
     long availableHsSpace = context.getConfiguration().get(Constants.LOG_HS_MAX_SIZE, Constants.DEFAULT_LOG_HS_MAX_SIZE);
     File dir = new File(context.getRuntimeInfo().getLogDir());
     File[] hsFiles = dir.listFiles(new FilenameFilter() {
@@ -79,7 +70,7 @@ public class LogContentGenerator implements BundleContentGenerator {
     if (hsFiles != null) {
       for(File hsFile : hsFiles) {
         // As long as we have not exhausted quota for logs
-        if(availableHsSpace <= 0) {
+        if (availableHsSpace <= 0) {
           break;
         }
         writer.write("", hsFile.toPath(), hsFile.length() - availableHsSpace);
@@ -88,6 +79,35 @@ public class LogContentGenerator implements BundleContentGenerator {
       }
     }
 
+    // try to add dmesg output to the Support Bundle.
+    try {
+      final ProcessUtil.Output output = ProcessUtil.executeCommandAndLoadOutput(Arrays.asList("dmesg"), 5);
+      if (output.success) {
+        writer.write(DMESG_FILE, IOUtils.toInputStream(output.stdout));
+      } else {
+        writer.write(DMESG_FILE, IOUtils.toInputStream(output.stderr));
+      }
+    } catch (IOException ex) {
+      LOG.error("Cannot execute dmesg command {}", ex.getMessage(), ex);
+    }
+
+    // Process the sdc.log files last so we include any information like the possible logging above.
+    // Sort the log files in descending manner (e.g. get the most up to date logs first)
+    List<File> logFiles = Arrays.stream(LogUtils.getLogFiles(context.getRuntimeInfo()))
+        .sorted((f1, f2) -> f1.lastModified() < f2.lastModified() ? 1 : -1)
+        .collect(Collectors.toList());
+
+    // Write as many log files as for which we have actual space
+    long availableSpace = context.getConfiguration().get(Constants.LOG_MAX_SIZE, Constants.DEFAULT_LOG_MAX_SIZE);
+    for (File logFile : logFiles) {
+      // As long as we have not exhausted quota for logs
+      if (availableSpace <= 0) {
+        break;
+      }
+
+      writer.write("", logFile.toPath(), logFile.length() - availableSpace);
+      availableSpace -= logFile.length();
+    }
   }
 }
 
