@@ -74,8 +74,8 @@ public class TestLogMinerSession {
     LogMinerSession.Builder builder = new LogMinerSession.Builder(Mockito.mock(Connection.class), 19);
     String condition = builder.buildTablesCondition(tables);
     Assert.assertEquals(
-        "((SEG_OWNER LIKE '_SYS_' AND (TABLE_NAME LIKE '%PATTERN1%' OR TABLE_NAME LIKE '%PATTERN2%'))" +
-            " OR (SEG_OWNER LIKE '%SDC%' AND (TABLE_NAME IN ('TABLE1'))))",
+        "((SEG_OWNER LIKE '%SDC%' AND (TABLE_NAME IN ('TABLE1')))" +
+            " OR (SEG_OWNER LIKE '_SYS_' AND (TABLE_NAME LIKE '%PATTERN1%' OR TABLE_NAME LIKE '%PATTERN2%')))",
         condition
     );
 

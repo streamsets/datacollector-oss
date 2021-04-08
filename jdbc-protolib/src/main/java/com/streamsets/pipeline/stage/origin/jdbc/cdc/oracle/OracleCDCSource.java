@@ -878,6 +878,9 @@ public class OracleCDCSource extends BaseSource {
     if (record.getOperationCode() == ROLLBACK_CODE || record.getScn().compareTo(lastCommitSCN) < 0) {
       bufferedRecordsLock.lock();
       try {
+        HashQueue<RecordSequence> records = bufferedRecords.getOrDefault(key, EMPTY_LINKED_HASHSET);
+        records.completeInserts();
+        records.close();
         bufferedRecords.remove(key);
         LOG.debug(ROLLBACK_MESSAGE, key.txnId);
       } finally {
@@ -2000,6 +2003,11 @@ public class OracleCDCSource extends BaseSource {
             }
           }
           txnDiscarded.incrementAndGet();
+          HashQueue<RecordSequence> records = entry.getValue();
+          if (records != null) {
+            records.completeInserts();
+            records.close();
+          }
           iter.remove();
         }
       }

@@ -15,6 +15,7 @@
  */
 package com.streamsets.pipeline.stage.origin.jdbc.cdc.oracle;
 
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -27,29 +28,42 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.NoSuchElementException;
 
+/*
+We remove all commit-related actions and references as we are using mmap files with no expected failover behavior.
+It would be necessary to reconsider this decision if in the future this class relies on other supporting DBMap
+entities.
+ */
 public class FileBackedHashQueue<E> implements HashQueue<E> {
 
-  public static final int MB_100 = 100 * 1024 * 1024;
+  /* Some benchmarks show that there is a huge performance penalty using the old MB_100 (100 * 1024 * 1024) value.
+  For small transactions, the old size is too big, and transactions are about 50 times slower with it.
+  For large transactions, there are no essential noticeable differences starting from our proposed size. With
+  transactions up to 1.000.000 operations, this value seems to be close the its optimum.
+   */
+  public static final int MB_1 = 1024 * 1024;
   private HTreeMap underlying;
   private final DB db;
-  private boolean committed = false;
   private E tail;
+  private File folder;
 
   private LinkedHashSet<RsIdSsn> keys = new LinkedHashSet<>();
 
   public FileBackedHashQueue(File file) throws IOException {
+    this.folder = file;
     Files.createDirectories(file.toPath());
     Path f = Files.createTempDirectory(file.toPath(), "db-");
     db = DBMaker.fileDB(new File(f.toFile(), "dbFile"))
-        .allocateStartSize(MB_100)
-        .allocateIncrement(MB_100)
+        .allocateStartSize(MB_1)
+        .allocateIncrement(MB_1)
         .closeOnJvmShutdown()
         .fileDeleteAfterOpen()
         .fileDeleteAfterClose()
         .fileMmapEnable()
         .fileLockDisable()
-        .transactionEnable()
+        .cleanerHackEnable()
+        .fileMmapPreclearDisable()
         .make();
 
     underlying = db.hashMap("t").create();
@@ -164,24 +178,40 @@ public class FileBackedHashQueue<E> implements HashQueue<E> {
   @Override
   @SuppressWarnings("unchecked")
   public E element() {
-    throw new UnsupportedOperationException();
+    Iterator<RsIdSsn> it = keys.iterator();
+    RsIdSsn key = it.next();
+    if (key == null) {
+      throw new NoSuchElementException();
+    }
+    return (E) underlying.get(key);
   }
 
   @Override
   public E peek() {
-    return underlying.isEmpty() ? null : element();
+    if (!underlying.isEmpty()) {
+      try {
+        return element();
+      } catch (NoSuchElementException eNoSuchElementException) {
+        return null;
+      }
+    }
+    return null;
   }
 
   public void close() {
+    this.underlying.close();
     this.db.close();
+    try {
+      FileUtils.deleteDirectory(folder);
+      underlying = null;
+      keys = null;
+    } catch (Throwable eThrowable) {
+    }
   }
 
   @Override
   public void completeInserts() {
-    if (!committed) {
-      db.commit();
-      committed = true;
-    }
+    return;
   }
 
   private class FileBackedHashQueueIterator implements Iterator<E> {
