@@ -118,7 +118,7 @@ public class LogMinerSession {
       " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
+      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND "
       + "     ((FIRST_TIME <= :first AND NEXT_TIME >= :first) OR "
       + "      (FIRST_TIME < :next AND NEXT_TIME >= :next) OR "
       + "      (FIRST_TIME > :first AND NEXT_TIME < :next)) "
@@ -133,6 +133,7 @@ public class LogMinerSession {
       + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_ARG_FIRST = ":first";
   private static final String SELECT_REDO_LOGS_ARG_NEXT = ":next";
+  private static final String SELECT_REDO_LOGS_ARG_RESETLOGS = ":resetLogsId";
 
   // Template to retrieve the list of redo log files whose SCN range (first, next) covers a given SCN of interest.
   // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
@@ -142,7 +143,8 @@ public class LogMinerSession {
       " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND FIRST_CHANGE# <= :scn AND NEXT_CHANGE# >= :scn "
+      + " WHERE STATUS = 'A' AND STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND "
+      + "     FIRST_CHANGE# <= :scn AND NEXT_CHANGE# >= :scn "
       + " UNION "
       + " SELECT C.MEMBER, A.GROUP#, A.THREAD#, A.SEQUENCE#, A.FIRST_TIME, "
       + "     (CASE WHEN A.STATUS = 'CURRENT' THEN LOCALTIMESTAMP ELSE A.NEXT_TIME END) NEXT_TIME, "
@@ -153,27 +155,31 @@ public class LogMinerSession {
       + "      FROM V$LOGFILE WHERE TYPE = 'ONLINE') C "
       + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
   private static final String SELECT_REDO_LOGS_FOR_SCN_ARG = ":scn";
+  private static final String SELECT_REDO_LOGS_FOR_SCN_RESETLOGS_ARG = ":resetLogsId";
 
   // Templates to retrieve the redo logs containing the LogMiner dictionary valid for transactions with SCN >= :scn.
   private static final String SELECT_DICTIONARY_END_QUERY =
       " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
-      + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND "
+      + " WHERE DICTIONARY_END = 'YES' AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND "
       + "       FIRST_CHANGE# = (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
-      + "                        STANDBY_DEST = 'NO' AND DICTIONARY_END = 'YES' AND FIRST_TIME <= :time) ";
+      + "                        STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND DICTIONARY_END = 'YES' AND "
+      + "                        FIRST_TIME <= :time) ";
   private static final String SELECT_DICTIONARY_LOGS_QUERY =
       " SELECT NAME, NULL GROUP#, THREAD#, SEQUENCE#, FIRST_TIME, NEXT_TIME, FIRST_CHANGE#, NEXT_CHANGE#, "
       + "    DICTIONARY_BEGIN, DICTIONARY_END, STATUS, 'NO' AS ONLINE_LOG, 'YES' AS ARCHIVED "
       + " FROM V$ARCHIVED_LOG "
       + " WHERE FIRST_CHANGE# >= (SELECT MAX(FIRST_CHANGE#) FROM V$ARCHIVED_LOG WHERE STATUS = 'A' AND "
-      + "                         STANDBY_DEST = 'NO' AND DICTIONARY_BEGIN = 'YES' AND FIRST_CHANGE# <= :scn AND "
-      + "                         THREAD# = :thread) AND "
-      + "    FIRST_CHANGE# <= :scn AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND THREAD# = :thread "
+      + "                         STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND DICTIONARY_BEGIN = 'YES' AND "
+      + "                         FIRST_CHANGE# <= :scn AND THREAD# = :thread) AND "
+      + "    FIRST_CHANGE# <= :scn AND STATUS = 'A' AND STANDBY_DEST = 'NO' AND RESETLOGS_ID = :resetLogsId AND "
+      + "    THREAD# = :thread "
       + " ORDER BY FIRST_CHANGE# ";
   private static final String SELECT_DICTIONARY_TIME_ARG = ":time";
   private static final String SELECT_DICTIONARY_SCN_ARG = ":scn";
   private static final String SELECT_DICTIONARY_THREAD_ARG = ":thread";
+  private static final String SELECT_DICTIONARY_RESETLOGS_ARG = ":resetLogsId";
 
   // Template to retrieve the list of online redo log files.
   // Note the default NEXT_TIME and NEXT_CHANGE# values for the CURRENT online logs (null and <max SCN> respectively)
@@ -189,6 +195,12 @@ public class LogMinerSession {
       + "      FROM V$LOGFILE WHERE TYPE = 'ONLINE') C "
       + " WHERE A.GROUP# = C.GROUP# AND A.MEMBERS = C.ROWNO";
 
+  // Query to retrieve the resetlogs id for the current database incarnation. This is used to filter the V$ARCHIVED_LOG
+  // view and take only redo logs from the current incarnation.
+  @VisibleForTesting
+  static final String SELECT_CURRENT_DATABASE_INCARNATION_QUERY =
+      "SELECT RESETLOGS_ID FROM V$DATABASE_INCARNATION WHERE STATUS = 'CURRENT'";
+
   // Templates for the getLocalDateTimeForSCN utility function.
   private static final String SELECT_TIMESTAMP_FOR_SCN =
       "SELECT TIMESTAMP FROM V$LOGMNR_CONTENTS WHERE SCN >= ? ORDER BY SCN";
@@ -202,6 +214,7 @@ public class LogMinerSession {
 
   @VisibleForTesting
   static final String LOG_STATUS_CURRENT = "CURRENT";
+  static final String RESETLOGS_STATUS_CURRENT = "CURRENT";
 
   private final Connection connection;
   private final int databaseVersion;
@@ -213,6 +226,7 @@ public class LogMinerSession {
   private final DateTimeFormatter dateTimeFormatter;
   private final List<RedoLog> currentLogList;
   private final PreparedStatement queryContentStatement;
+  private final BigDecimal resetLogsId;
   private boolean activeSession;
   private LocalDateTime startTime;
   private LocalDateTime endTime;
@@ -427,6 +441,7 @@ public class LogMinerSession {
         .appendPattern(DATETIME_FORMAT)
         .toFormatter();
     currentLogList = new ArrayList<>();
+    resetLogsId = queryCurrentResetLogsId();
   }
 
   /**
@@ -726,10 +741,14 @@ public class LogMinerSession {
     }
 
     if (!success || logList.isEmpty()) {
-      throw new StageException(
-          JdbcErrors.JDBC_604,
-          scn.toPlainString(),
-          Utils.format("Unable to find a valid redo log (success={}, logs={})", success, logList));
+      String description = Utils.format(
+          "Unable to find in the current database incarnation a redo log covering the given SCN (ResetLogsId={}, success={}, logs={})",
+          resetLogsId.toPlainString(),
+          success,
+          logList
+      );
+      LOG.error(JdbcErrors.JDBC_604.getMessage(), scn.toPlainString(), description);
+      throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString(), description);
     }
     logList.sort(Comparator.comparing(RedoLog::getNextChange));
     BigDecimal lastSCN = logList.get(logList.size() - 1).getNextChange();
@@ -775,10 +794,13 @@ public class LogMinerSession {
       statement.setMaxRows(1);
       ResultSet rs = statement.executeQuery();
       if (!rs.next()) {
-        throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString(), "V$LOGMNR_CONTENTS returned no result");
+        String description = "V$LOGMNR_CONTENTS returned no result";
+        LOG.error(JdbcErrors.JDBC_604.getMessage(), scn.toPlainString(), description);
+        throw new StageException(JdbcErrors.JDBC_604, scn.toPlainString(), description);
       }
       result = rs.getTimestamp(TIMESTAMP_COLUMN).toLocalDateTime();
     } catch (SQLException e) {
+      LOG.error(JdbcErrors.JDBC_603.getMessage(), e.getMessage(), e);
       throw new StageException(JdbcErrors.JDBC_603, e);
     }
 
@@ -905,7 +927,10 @@ public class LogMinerSession {
     List<RedoLog> result = new ArrayList<>();
     RedoLog dictionaryEnd;
 
-    String query = SELECT_DICTIONARY_END_QUERY.replace(SELECT_DICTIONARY_TIME_ARG, dateTimeToString(start));
+    String query = SELECT_DICTIONARY_END_QUERY
+        .replace(SELECT_DICTIONARY_TIME_ARG, dateTimeToString(start))
+        .replace(SELECT_DICTIONARY_RESETLOGS_ARG, resetLogsId.toPlainString());
+
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
       if (rs.next()) {
@@ -933,7 +958,8 @@ public class LogMinerSession {
 
     query = SELECT_DICTIONARY_LOGS_QUERY
         .replace(SELECT_DICTIONARY_SCN_ARG, dictionaryEnd.getFirstChange().toPlainString())
-        .replace(SELECT_DICTIONARY_THREAD_ARG, dictionaryEnd.getThread().toPlainString());
+        .replace(SELECT_DICTIONARY_THREAD_ARG, dictionaryEnd.getThread().toPlainString())
+        .replace(SELECT_DICTIONARY_RESETLOGS_ARG, resetLogsId.toPlainString());
 
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
@@ -983,7 +1009,8 @@ public class LogMinerSession {
 
     String query = SELECT_REDO_LOGS_QUERY
         .replace(SELECT_REDO_LOGS_ARG_FIRST, dateTimeToString(start))
-        .replace(SELECT_REDO_LOGS_ARG_NEXT, dateTimeToString(end));
+        .replace(SELECT_REDO_LOGS_ARG_NEXT, dateTimeToString(end))
+        .replace(SELECT_REDO_LOGS_ARG_RESETLOGS, resetLogsId.toPlainString());
 
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
@@ -1026,7 +1053,9 @@ public class LogMinerSession {
    */
   private boolean findLogs(BigDecimal scn, List<RedoLog> dest) {
     List<RedoLog> src = new ArrayList<>();
-    String query = SELECT_REDO_LOGS_FOR_SCN_QUERY.replace(SELECT_REDO_LOGS_FOR_SCN_ARG, scn.toPlainString());
+    String query = SELECT_REDO_LOGS_FOR_SCN_QUERY
+        .replace(SELECT_REDO_LOGS_FOR_SCN_ARG, scn.toPlainString())
+        .replace(SELECT_REDO_LOGS_FOR_SCN_RESETLOGS_ARG, resetLogsId.toPlainString());
 
     try (PreparedStatement statement = connection.prepareCall(query)) {
       ResultSet rs = statement.executeQuery();
@@ -1300,6 +1329,31 @@ public class LogMinerSession {
 
     this.endTime = selected.getNextTime();
     return selected.getNextChange();
+  }
+
+  /**
+   * Queries Oracle to get the ResetLogs ID for the current database incarnation.
+   *
+   * @return The current ResetLogs Id.
+   * @throws StageException The database query returned no results or an error.
+   */
+  private BigDecimal queryCurrentResetLogsId() {
+    BigDecimal resetlogsId;
+
+    try (PreparedStatement statement = connection.prepareCall(SELECT_CURRENT_DATABASE_INCARNATION_QUERY)) {
+      ResultSet rs = statement.executeQuery();
+      if (!rs.next()) {
+        String message = "Query returned no rows";
+        LOG.error(JdbcErrors.JDBC_610.getMessage(), message);
+        throw new StageException(JdbcErrors.JDBC_610, message);
+      }
+      resetlogsId = rs.getBigDecimal(1);
+    } catch (SQLException e) {
+      LOG.error(JdbcErrors.JDBC_610.getMessage(), e.getMessage());
+      throw new StageException(JdbcErrors.JDBC_610, e.getMessage());
+    }
+
+    return resetlogsId;
   }
 
   private void decideEmptyStringEqualsNull() {

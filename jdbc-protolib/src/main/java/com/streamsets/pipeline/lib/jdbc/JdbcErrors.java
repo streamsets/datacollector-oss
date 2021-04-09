@@ -169,12 +169,13 @@ public enum JdbcErrors implements ErrorCode {
   JDBC_601("Could not find a valid LogMiner dictionary: {}"),
   JDBC_602("Could not find any redo log file for datetime {}"),
   JDBC_603("Error while retrieving LogMiner metadata: {}"),
-  JDBC_604("Failed to find a valid SCN >= {}: {}"),
+  JDBC_604("Could not get a datetime for SCN = {}: {}"),
   JDBC_605("Error while querying the current database time: {}."),
   JDBC_606("Wal Sender is not active"),
   JDBC_607("CDC Generator is not active. Reason : {}"),
   JDBC_608("Error checking if database treats empty string as null: {}"),
   JDBC_609("Could not find an online log for redo group {}"),
+  JDBC_610("Error while querying the database incarnation history: {}"),
   ;
 
   private final String msg;

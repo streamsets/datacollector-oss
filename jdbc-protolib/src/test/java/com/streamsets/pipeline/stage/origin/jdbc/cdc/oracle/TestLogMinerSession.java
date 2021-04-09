@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -483,6 +484,13 @@ public class TestLogMinerSession {
     PreparedStatement mockPreparedStatement = Mockito.mock(PreparedStatement.class);
     Mockito.when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
     Mockito.when(mockConnection.prepareStatement(LogMinerSession.CHECK_EMPTY_STRING_EQUALS_NULL_QUERY)).thenReturn(mockPreparedStatement);
+
+    ResultSet incarnationsResultSet = Mockito.mock(ResultSet.class);
+    Mockito.when(incarnationsResultSet.next()).thenReturn(true).thenReturn(false);
+    Mockito.when(incarnationsResultSet.getBigDecimal(1)).thenReturn(BigDecimal.valueOf(11111));
+    CallableStatement incarnationsPreparedStatement = Mockito.mock(CallableStatement.class);
+    Mockito.when(incarnationsPreparedStatement.executeQuery()).thenReturn(incarnationsResultSet);
+    Mockito.when(mockConnection.prepareCall(LogMinerSession.SELECT_CURRENT_DATABASE_INCARNATION_QUERY)).thenReturn(incarnationsPreparedStatement);
   }
 
   private void printLogs(List<RedoLog> logs, String header) {
